@@ -36,7 +36,7 @@ public struct Toucan {
         }
 
         // wipe output directory - @TODO: better validation
-        if output.path.contains("dist") {
+        if output.path.contains("dist") || output.path.contains("docs") {
             let list = fileManager.listDirectory(
                 at: output,
                 includingHiddenItems: true
