@@ -5,11 +5,11 @@ struct GenerateCommand: ParsableCommand {
 
     static var _commandName: String = "generate"
 
-    @Argument(help: "The phrase to repeat.")
+    @Argument(help: "The input directory.")
     var input: String
 
-    @Option(name: .shortAndLong)
-    var output: String = "./dist"
+    @Argument(help: "The output directory.")
+    var output: String = "./docs"
 
     func run() throws {
         let toucan = Toucan(

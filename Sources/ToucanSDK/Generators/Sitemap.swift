@@ -5,7 +5,7 @@ struct Sitemap {
     let config: Config
     let pages: [Page]
     let posts: [Post]
-    let outputDir: URL
+    let outputUrl: URL
 
     func generate() throws {
         let sitemapTemplate = SitemapTemplate(
@@ -21,7 +21,7 @@ struct Sitemap {
         )
 
         let sitemapUrl =
-            outputDir
+            outputUrl
             .appendingPathComponent("sitemap")
             .appendingPathExtension("xml")
 

@@ -3,15 +3,21 @@ import Foundation
 
 public struct Toucan {
 
-    let input: URL
-    let output: URL
+    public let inputUrl: URL
+    public let outputUrl: URL
 
     public init(
         inputPath: String,
         outputPath: String
     ) {
-        self.input = URL(fileURLWithPath: inputPath)
-        self.output = URL(fileURLWithPath: outputPath)
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        func getSafeUrl(_ path: String, home: String) -> URL {
+            .init(
+                fileURLWithPath: path.replacingOccurrences(["~": home])
+            ).standardized
+        }
+        self.inputUrl = getSafeUrl(inputPath, home: home)
+        self.outputUrl = getSafeUrl(outputPath, home: home)
     }
 
     public func generate() throws {
@@ -19,46 +25,48 @@ public struct Toucan {
         let fileManager = FileManager.default
 
         // input
-        let publicDir = input.appendingPathComponent("public")
-        let contentsDir = input.appendingPathComponent("contents")
-        let templatesDir = input.appendingPathComponent("templates")
-        let postsDir = contentsDir.appendingPathComponent("posts")
-        let pagesDir = contentsDir.appendingPathComponent("pages")
+        let publicUrl = inputUrl.appendingPathComponent("public")
+        let contentsUrl = inputUrl.appendingPathComponent("contents")
+        let templatesUrl = inputUrl.appendingPathComponent("templates")
+        let postsUrl = contentsUrl.appendingPathComponent("posts")
+        let pagesUrl = contentsUrl.appendingPathComponent("pages")
 
         // output
-        let assetsDir =
-            output
+        let assetsUrl =
+            outputUrl
             .appendingPathComponent("images")
             .appendingPathComponent("assets")
 
-        if !fileManager.directoryExists(at: output) {
-            try fileManager.createDirectory(at: output)
+        if !fileManager.directoryExists(at: outputUrl) {
+            try fileManager.createDirectory(at: outputUrl)
         }
 
-        // wipe output directory - @TODO: better validation
-        if output.path.contains("dist") || output.path.contains("docs") {
+        // wipe output directory if it's probably dist or docs folder
+        if outputUrl.path.contains("dist") || outputUrl.path.contains("docs") {
             let list = fileManager.listDirectory(
-                at: output,
+                at: outputUrl,
                 includingHiddenItems: true
             )
             for path in list {
-                try fileManager.delete(at: output.appendingPathComponent(path))
+                try fileManager.delete(at: outputUrl.appendingPathComponent(path))
             }
         }
         
-        
+        guard fileManager.listDirectory(at: outputUrl).isEmpty else {
+            fatalError("Output directory should be empty.")
+        }
 
         // copy public files
-        for path in fileManager.listDirectory(at: publicDir) {
+        for path in fileManager.listDirectory(at: publicUrl) {
             try fileManager.copy(
-                from: publicDir.appendingPathComponent(path),
-                to: output.appendingPathComponent(path)
+                from: publicUrl.appendingPathComponent(path),
+                to: outputUrl.appendingPathComponent(path)
             )
         }
 
         // create assets directory
-        if !fileManager.directoryExists(at: assetsDir) {
-            try fileManager.createDirectory(at: assetsDir)
+        if !fileManager.directoryExists(at: assetsUrl) {
+            try fileManager.createDirectory(at: assetsUrl)
         }
 
         let formatter = DateFormatter()
@@ -67,7 +75,7 @@ public struct Toucan {
         let contentParser = ContentParser()
         var slugs = Set<String>()
 
-        let indexUrl = contentsDir.appendingPathComponent("index.md")
+        let indexUrl = contentsUrl.appendingPathComponent("index.md")
         let indexMeta = try metadataParser.parse(at: indexUrl)
         let config = Config(
             baseUrl: indexMeta["baseUrl"] ?? "./",
@@ -77,7 +85,7 @@ public struct Toucan {
         )
 
         // process posts
-        let postURLs = getContentURLsToProcess(at: postsDir, using: fileManager)
+        let postURLs = getContentURLsToProcess(at: postsUrl, using: fileManager)
         var posts: [Post] = []
         for url in postURLs {
             let contentsUrl = url.appendingPathComponent("contents.md")
@@ -99,7 +107,7 @@ public struct Toucan {
             let availableAssets = try processContentAssets(
                 at: url,
                 slug: slug,
-                assetsDir: assetsDir,
+                assetsUrl: assetsUrl,
                 fileManager: fileManager
             )
 
@@ -137,8 +145,8 @@ public struct Toucan {
                 tags: tags,
                 html: html,
                 config: config,
-                templatesDir: templatesDir,
-                outputDir: output,
+                templatesUrl: templatesUrl,
+                outputUrl: outputUrl,
                 modificationDate: modificationDate
             )
             try post.generate()
@@ -147,7 +155,7 @@ public struct Toucan {
 
         var pages: [Page] = []
         // process pages
-        let pageURLs = getContentURLsToProcess(at: pagesDir, using: fileManager)
+        let pageURLs = getContentURLsToProcess(at: pagesUrl, using: fileManager)
         for url in pageURLs {
             let contentsUrl = url.appendingPathComponent("contents.md")
             let modificationDate = try fileManager.modificationDate(
@@ -168,7 +176,7 @@ public struct Toucan {
             let availableAssets = try processContentAssets(
                 at: url,
                 slug: slug,
-                assetsDir: assetsDir,
+                assetsUrl: assetsUrl,
                 fileManager: fileManager
             )
 
@@ -189,8 +197,8 @@ public struct Toucan {
                 meta: meta,
                 slug: slug,
                 html: html,
-                templatesDir: templatesDir,
-                outputDir: output,
+                templatesUrl: templatesUrl,
+                outputUrl: outputUrl,
                 modificationDate: modificationDate
             )
 
@@ -199,27 +207,27 @@ public struct Toucan {
         }
 
         let home = Home(
-            contentsDir: contentsDir,
+            contentsUrl: contentsUrl,
             config: config,
             posts: posts,
-            templatesDir: templatesDir,
-            outputDir: output
+            templatesUrl: templatesUrl,
+            outputUrl: outputUrl
         )
         try home.generate()
 
         let notFound = NotFound(
-            contentsDir: contentsDir,
+            contentsUrl: contentsUrl,
             config: config,
             posts: posts,
-            templatesDir: templatesDir,
-            outputDir: output
+            templatesUrl: templatesUrl,
+            outputUrl: outputUrl
         )
         try notFound.generate()
 
         let rss = RSS(
             config: config,
             posts: posts,
-            outputDir: output
+            outputUrl: outputUrl
         )
         try rss.generate()
 
@@ -227,7 +235,7 @@ public struct Toucan {
             config: config,
             pages: pages,
             posts: posts,
-            outputDir: output
+            outputUrl: outputUrl
         )
         try sitemap.generate()
     }
@@ -270,12 +278,12 @@ extension Toucan {
     fileprivate func processContentAssets(
         at url: URL,
         slug: String,
-        assetsDir: URL,
+        assetsUrl: URL,
         fileManager: FileManager
     ) throws -> [String] {
         var assets: [String] = []
         // create assets dir
-        let assetsDir = assetsDir.appendingPathComponent(slug)
+        let assetsDir = assetsUrl.appendingPathComponent(slug)
         try fileManager.createDirectory(at: assetsDir)
 
         // check for image assets

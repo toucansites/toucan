@@ -8,13 +8,13 @@ struct Post {
     let tags: [String]
     let html: String
     let config: Config
-    let templatesDir: URL
-    let outputDir: URL
+    let templatesUrl: URL
+    let outputUrl: URL
     let modificationDate: Date
 
     func generate() throws {
         let postTemplate = PostTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
                 contents: html,
@@ -24,7 +24,7 @@ struct Post {
         )
 
         let indexTemplate = IndexTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
                 contents: try postTemplate.render()
@@ -32,7 +32,7 @@ struct Post {
         )
 
         let htmlUrl =
-            outputDir
+            outputUrl
             .appendingPathComponent(slug)
             .appendingPathExtension("html")
 

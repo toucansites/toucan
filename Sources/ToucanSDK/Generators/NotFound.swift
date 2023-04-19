@@ -2,14 +2,14 @@ import Foundation
 
 struct NotFound {
 
-    let contentsDir: URL
+    let contentsUrl: URL
     let config: Config
     let posts: [Post]
-    let templatesDir: URL
-    let outputDir: URL
+    let templatesUrl: URL
+    let outputUrl: URL
 
     func generate() throws {
-        let notFoundUrl = contentsDir.appendingPathComponent("404.md")
+        let notFoundUrl = contentsUrl.appendingPathComponent("404.md")
         let notFoundMeta = try MetadataParser().parse(at: notFoundUrl)
         let html = try ContentParser().parse(
             at: notFoundUrl,
@@ -19,7 +19,7 @@ struct NotFound {
         )
 
         let notFoundTemplate = NotFoundTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 title: notFoundMeta["title"] ?? "",
                 description: notFoundMeta["description"] ?? "",
@@ -28,7 +28,7 @@ struct NotFound {
         )
 
         let indexTemplate = IndexTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 meta: .init(
                     site: config.title,
@@ -43,7 +43,7 @@ struct NotFound {
         )
 
         let indexOutputUrl =
-            outputDir
+            outputUrl
             .appendingPathComponent("404")
             .appendingPathExtension("html")
 

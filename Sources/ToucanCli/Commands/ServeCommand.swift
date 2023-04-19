@@ -5,24 +5,29 @@ import HummingbirdFoundation
 import ToucanSDK
 
 protocol AppArguments {
-    var dir: String { get }
+    var path: String { get }
 }
 
 extension HBApplication {
 
     func configure(_ args: AppArguments) throws {
 
-        let workDir: String
-        if args.dir.hasPrefix("/") {
-            workDir = args.dir
+        let workPath: String
+        if args.path.hasPrefix("/") {
+            workPath = args.path
+        }
+        else if args.path.hasPrefix("~") {
+            let homePath = FileManager.default.homeDirectoryForCurrentUser.path
+            workPath = homePath + "/" + String(args.path.dropFirst())
         }
         else {
-            workDir = FileManager.default.currentDirectoryPath + "/" + args.dir
+            let currentPath = FileManager.default.currentDirectoryPath
+            workPath = currentPath + "/" + args.path
         }
 
         middleware.add(
             HBFileMiddleware(
-                workDir,
+                workPath,
                 searchForIndexHtml: true,
                 application: self
             )
@@ -41,7 +46,7 @@ struct ServeCommand: ParsableCommand, AppArguments {
     var port: Int = 8080
 
     @Option(name: .shortAndLong)
-    var dir: String = ""
+    var path: String = "."
 
     func run() throws {
         let app = HBApplication(

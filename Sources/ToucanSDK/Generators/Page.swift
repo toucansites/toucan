@@ -5,13 +5,13 @@ struct Page {
     let meta: Meta
     let slug: String
     let html: String
-    let templatesDir: URL
-    let outputDir: URL
+    let templatesUrl: URL
+    let outputUrl: URL
     let modificationDate: Date
 
     func generate() throws {
         let pageTemplate = PageTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
                 contents: html
@@ -19,7 +19,7 @@ struct Page {
         )
 
         let indexTemplate = IndexTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
                 contents: try pageTemplate.render()
@@ -27,7 +27,7 @@ struct Page {
         )
 
         let htmlUrl =
-            outputDir
+            outputUrl
             .appendingPathComponent(slug)
             .appendingPathExtension("html")
 

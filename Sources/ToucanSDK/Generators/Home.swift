@@ -2,14 +2,14 @@ import Foundation
 
 struct Home {
 
-    let contentsDir: URL
+    let contentsUrl: URL
     let config: Config
     let posts: [Post]
-    let templatesDir: URL
-    let outputDir: URL
+    let templatesUrl: URL
+    let outputUrl: URL
 
     func generate() throws {
-        let homeUrl = contentsDir.appendingPathComponent("home.md")
+        let homeUrl = contentsUrl.appendingPathComponent("home.md")
         let homeMeta = try MetadataParser().parse(at: homeUrl)
 
         let homePosts = posts.sorted { lhs, rhs in
@@ -19,7 +19,7 @@ struct Home {
 
         let homeContents = try homePosts.map { post in
             let homePostTemplate = HomePostTemplate(
-                templatesDir: templatesDir,
+                templatesUrl: templatesUrl,
                 context: .init(
                     meta: post.meta,
                     date: config.formatter.string(from: post.date)
@@ -30,7 +30,7 @@ struct Home {
         .joined(separator: "\n")
 
         let homeTemplate = HomeTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 title: homeMeta["title"] ?? "",
                 description: homeMeta["description"] ?? "",
@@ -39,7 +39,7 @@ struct Home {
         )
 
         let indexTemplate = IndexTemplate(
-            templatesDir: templatesDir,
+            templatesUrl: templatesUrl,
             context: .init(
                 meta: .init(
                     site: config.title,
@@ -54,7 +54,7 @@ struct Home {
         )
 
         let indexOutputUrl =
-            outputDir
+            outputUrl
             .appendingPathComponent("index")
             .appendingPathExtension("html")
 

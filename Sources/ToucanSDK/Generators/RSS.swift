@@ -4,7 +4,7 @@ struct RSS {
 
     let config: Config
     let posts: [Post]
-    let outputDir: URL
+    let outputUrl: URL
 
     func generate() throws {
         let rssTemplate = RSSTemplate(
@@ -20,7 +20,7 @@ struct RSS {
         )
 
         let rssUrl =
-            outputDir
+            outputUrl
             .appendingPathComponent("rss")
             .appendingPathExtension("xml")
 
