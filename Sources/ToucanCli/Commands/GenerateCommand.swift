@@ -5,10 +5,10 @@ struct GenerateCommand: ParsableCommand {
 
     static var _commandName: String = "generate"
 
-    @Argument(help: "The input directory.")
-    var input: String
+    @Argument(help: "The input directory (default: src).")
+    var input: String = "./src"
 
-    @Argument(help: "The output directory.")
+    @Argument(help: "The output directory (default: docs).")
     var output: String = "./docs"
 
     func run() throws {
