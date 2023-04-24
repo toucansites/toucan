@@ -81,7 +81,7 @@ public struct Toucan {
             baseUrl: indexMeta["baseUrl"] ?? "./",
             title: indexMeta["title"] ?? "Untitled",
             description: indexMeta["description"] ?? "",
-            language: indexMeta["description"] ?? "en-US"
+            language: indexMeta["language"] ?? "en-US"
         )
 
         // process posts

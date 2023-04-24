@@ -11,8 +11,9 @@ struct RSSTemplate {
 
     let formatter: DateFormatter = {
         let formatter = DateFormatter()
+//        formatter.locale = .init(identifier: "en_US_POSIX")
         formatter.setLocalizedDateFormatFromTemplate(
-            "ddd, dd MMM yyyy HH:mm:ss +ZZZZ"
+            "EEE, dd MMM yyyy HH:mm:ss Z"
         )
         return formatter
     }()
@@ -54,7 +55,7 @@ struct RSSTemplate {
                 <link>\(config.baseUrl)</link>
                 <language>\(config.language)</language>
                 <lastBuildDate>\(now)</lastBuildDate>
-                <pubDate>\(pubDate)</pubDate>
+                <pubDate>\(formatter.string(from: pubDate))</pubDate>
                 <ttl>250</ttl>
                 <atom:link href="\(config.baseUrl)rss.xml" rel="self" type="application/rss+xml"/>\n
             \(contents)

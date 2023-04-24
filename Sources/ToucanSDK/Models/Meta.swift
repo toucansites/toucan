@@ -13,7 +13,7 @@ struct Meta {
         [
             "site": site,
             "baseUrl": baseUrl,
-            "slug": slug,
+            "slug": slug + "/",
             "title": title,
             "description": description,
             "image": image,
@@ -21,6 +21,6 @@ struct Meta {
     }
 
     var permalink: String {
-        baseUrl + slug
+        baseUrl + slug + "/"
     }
 }
