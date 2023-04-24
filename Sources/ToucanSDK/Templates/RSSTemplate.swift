@@ -11,10 +11,9 @@ struct RSSTemplate {
 
     let formatter: DateFormatter = {
         let formatter = DateFormatter()
-//        formatter.locale = .init(identifier: "en_US_POSIX")
-        formatter.setLocalizedDateFormatFromTemplate(
-            "EEE, dd MMM yyyy HH:mm:ss Z"
-        )
+        formatter.locale = .init(identifier: "en_US_POSIX")
+        formatter.timeZone = .init(secondsFromGMT: 0)
+        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
         return formatter
     }()
 
