@@ -5,6 +5,8 @@ import HummingbirdFoundation
 import ToucanSDK
 
 protocol AppArguments {
+    var hostname: String { get }
+    var port: Int { get }
     var path: String { get }
 }
 
@@ -24,10 +26,14 @@ extension HBApplication {
             let currentPath = FileManager.default.currentDirectoryPath
             workPath = currentPath + "/" + args.path
         }
+        
+        let url = URL(fileURLWithPath: workPath).standardized
+
+        print("🤖 Site preview available at: http://\(args.hostname):\(args.port)/ -> serving from: \(url.absoluteString) ")
 
         middleware.add(
             HBFileMiddleware(
-                workPath,
+                url.absoluteString,
                 searchForIndexHtml: true,
                 application: self
             )
@@ -45,14 +51,14 @@ struct ServeCommand: ParsableCommand, AppArguments {
     @Option(name: .shortAndLong)
     var port: Int = 8080
 
-    @Option(name: .shortAndLong)
-    var path: String = "."
+    @Argument(help: "The source folder to serve (defualt: docs).")
+    var path: String = "./docs"
 
     func run() throws {
         let app = HBApplication(
             configuration: .init(
                 address: .hostname(hostname, port: port),
-                serverName: "Toucanbird"
+                serverName: "Toucan"
             )
         )
         try app.configure(self)

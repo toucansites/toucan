@@ -8,10 +8,10 @@ struct WatchCommand: ParsableCommand {
 
     static var _commandName: String = "watch"
 
-    @Argument(help: "The input directory.")
-    var input: String
+    @Argument(help: "The input directory (default: src).")
+    var input: String = "./src"
 
-    @Argument(help: "The output directory.")
+    @Argument(help: "The output directory (default: docs).")
     var output: String = "./docs"
     
     func run() throws {
@@ -38,7 +38,7 @@ struct WatchCommand: ParsableCommand {
         eventStream.setDispatchQueue(DispatchQueue.main)
         
         try eventStream.start()
-        print("Watching: `\(toucan.inputUrl.path)` -> \(toucan.outputUrl.path).")
+        print("👀 Watching: `\(toucan.inputUrl.path)` -> \(toucan.outputUrl.path).")
         dispatchMain()
     }
 }

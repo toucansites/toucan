@@ -13,7 +13,8 @@ struct Meta {
         [
             "site": site,
             "baseUrl": baseUrl,
-            "slug": slug + "/",
+            "slug": slug,
+            "permalink": permalink,
             "title": title,
             "description": description,
             "image": image,
@@ -21,6 +22,10 @@ struct Meta {
     }
 
     var permalink: String {
-        baseUrl + slug + "/"
+        var permalink = baseUrl + slug
+        if !permalink.hasSuffix("/") {
+            permalink += "/"
+        }
+        return permalink
     }
 }
