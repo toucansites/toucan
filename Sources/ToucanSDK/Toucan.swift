@@ -2,7 +2,7 @@ import FileManagerKit
 import Foundation
 
 public struct Toucan {
-
+    
     public let inputUrl: URL
     public let outputUrl: URL
 
@@ -20,7 +20,7 @@ public struct Toucan {
         self.outputUrl = getSafeUrl(outputPath, home: home)
     }
 
-    public func generate() throws {
+    public func generate(_ baseUrl: String?) throws {
 
         let fileManager = FileManager.default
 
@@ -77,8 +77,9 @@ public struct Toucan {
 
         let indexUrl = contentsUrl.appendingPathComponent("index.md")
         let indexMeta = try metadataParser.parse(at: indexUrl)
+        
         let config = Config(
-            baseUrl: indexMeta["baseUrl"] ?? "./",
+            baseUrl: baseUrl ?? indexMeta["baseUrl"] ?? "./",
             title: indexMeta["title"] ?? "Untitled",
             description: indexMeta["description"] ?? "",
             language: indexMeta["language"] ?? "en-US"

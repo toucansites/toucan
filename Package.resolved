@@ -6,7 +6,7 @@
       "location" : "https://github.com/BinaryBirds/file-manager-kit",
       "state" : {
         "branch" : "main",
-        "revision" : "f4f27f1b4dd6f1c658c3f6dcd9a969d15b5d7cea"
+        "revision" : "3469a9b2d3204a78136e51557e684bccd3ad03e9"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird",
       "state" : {
-        "revision" : "3c0766502f21ea4532506658b9af9fb700bfe353",
-        "version" : "1.4.0"
+        "revision" : "a2b45b9aa5e09b1a2fa0a20b5dc3e9c208297d6a",
+        "version" : "1.5.1"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird-core.git",
       "state" : {
-        "revision" : "b1f07ff02ea17ca4d6e23c233149fafb77bb8bd2",
-        "version" : "1.2.1"
+        "revision" : "4458f691653db58ac55a1aa8ef978709cd7e0749",
+        "version" : "1.3.1"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JohnSundell/Ink",
       "state" : {
-        "revision" : "77c3d8953374a9cf5418ef0bd7108524999de85a",
-        "version" : "0.5.1"
+        "revision" : "bcc9f219900a62c4210e6db726035d7f03ae757b",
+        "version" : "0.6.0"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-metrics.git",
       "state" : {
-        "revision" : "e8bced74bc6d747745935e469f45d03f048d6cbd",
-        "version" : "2.3.4"
+        "revision" : "34025104068262db0cc998ace178975c5ff4f36b",
+        "version" : "2.4.0"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "9b2848d76f5caad08b97e71a04345aa5bdb23a06",
-        "version" : "2.49.0"
+        "revision" : "6213ba7a06febe8fef60563a4a7d26a4085783cf",
+        "version" : "2.54.0"
       }
     },
     {
@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-extras.git",
       "state" : {
-        "revision" : "cc1e5275079380c859417dbea8588531f1a90ec3",
-        "version" : "1.18.0"
+        "revision" : "0e0d0aab665ff1a0659ce75ac003081f2b1c8997",
+        "version" : "1.19.0"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "38feec96bcd929028939107684073554bf01abeb",
-        "version" : "1.25.2"
+        "revision" : "a8ccf13fa62775277a5d56844878c828bbb3be1a",
+        "version" : "1.27.0"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-ssl.git",
       "state" : {
-        "revision" : "4fb7ead803e38949eb1d6fabb849206a72c580f3",
-        "version" : "2.23.0"
+        "revision" : "e866a626e105042a6a72a870c88b4c531ba05f83",
+        "version" : "2.24.0"
       }
     },
     {
@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-transport-services.git",
       "state" : {
-        "revision" : "c0d9a144cfaec8d3d596aadde3039286a266c15c",
-        "version" : "1.15.0"
+        "revision" : "41f4098903878418537020075a4d8a6e20a0b182",
+        "version" : "1.17.0"
       }
     },
     {

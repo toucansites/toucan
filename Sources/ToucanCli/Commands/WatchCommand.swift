@@ -14,13 +14,16 @@ struct WatchCommand: ParsableCommand {
     @Argument(help: "The output directory (default: docs).")
     var output: String = "./docs"
     
+    @Option(name: .shortAndLong, help: "The base url to use.")
+    var baseUrl: String? = nil
+    
     func run() throws {
         let toucan = Toucan(
             inputPath: input,
             outputPath: output
         )
 
-        try? toucan.generate()        
+        try? toucan.generate(baseUrl)
         let eventStream = try EonilFSEventStream(
             pathsToWatch: [toucan.inputUrl.path],
             sinceWhen: .now,
@@ -31,7 +34,7 @@ struct WatchCommand: ParsableCommand {
                     return
                 }
                 print("Generating site...")
-                try? toucan.generate()
+                try? toucan.generate(baseUrl)
                 print("Site re-generated.")
             })
         
