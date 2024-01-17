@@ -61,9 +61,10 @@ struct ContentParser {
                 return html
             }
             input = String(input.dropFirst(8).dropLast(3))
-            let code = highlighter.highlight(input).trimmingCharacters(
-                in: .whitespacesAndNewlines
-            )
+            let code = highlighter.highlight(input)
+                .trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
             return #"<pre><code class="language-swift">\#(code)</code></pre>"#
         }
 

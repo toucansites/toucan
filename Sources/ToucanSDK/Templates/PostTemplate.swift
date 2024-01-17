@@ -13,9 +13,10 @@ struct PostTemplate {
             userDefined + meta.templateVariables + [
                 "contents": contents,
                 "date": date,
-                "tags": tags.map { #"<span class="tag">\#($0)</span>"# }.joined(
-                    separator: "\n"
-                ),
+                "tags": tags.map { #"<span class="tag">\#($0)</span>"# }
+                    .joined(
+                        separator: "\n"
+                    ),
             ]
         }
     }

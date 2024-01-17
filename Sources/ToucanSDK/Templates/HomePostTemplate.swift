@@ -11,9 +11,10 @@ struct HomePostTemplate {
         var templateVariables: [String: String] {
             userDefined + meta.templateVariables + [
                 "date": date,
-                "tags": tags.map { #"<span class="tag">\#($0)</span>"# }.joined(
-                    separator: "\n"
-                ),
+                "tags": tags.map { #"<span class="tag">\#($0)</span>"# }
+                    .joined(
+                        separator: "\n"
+                    ),
             ]
         }
     }

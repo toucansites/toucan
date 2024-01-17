@@ -31,10 +31,11 @@ struct Page {
             .appendingPathComponent(slug)
             .appendingPathExtension("html")
 
-        try indexTemplate.render().write(
-            to: htmlUrl,
-            atomically: true,
-            encoding: .utf8
-        )
+        try indexTemplate.render()
+            .write(
+                to: htmlUrl,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

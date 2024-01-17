@@ -36,20 +36,21 @@ struct Post {
         let htmlUrl =
             outputUrl
             .appendingPathComponent(slug)
-        
+
         if !FileManager.default.directoryExists(at: htmlUrl) {
             try FileManager.default.createDirectory(at: htmlUrl)
         }
-        
+
         let fileUrl =
             htmlUrl
             .appendingPathComponent("index")
             .appendingPathExtension("html")
 
-        try indexTemplate.render().write(
-            to: fileUrl,
-            atomically: true,
-            encoding: .utf8
-        )
+        try indexTemplate.render()
+            .write(
+                to: fileUrl,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

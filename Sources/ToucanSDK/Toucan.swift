@@ -2,7 +2,7 @@ import FileManagerKit
 import Foundation
 
 public struct Toucan {
-    
+
     public let inputUrl: URL
     public let outputUrl: URL
 
@@ -14,7 +14,8 @@ public struct Toucan {
         func getSafeUrl(_ path: String, home: String) -> URL {
             .init(
                 fileURLWithPath: path.replacingOccurrences(["~": home])
-            ).standardized
+            )
+            .standardized
         }
         self.inputUrl = getSafeUrl(inputPath, home: home)
         self.outputUrl = getSafeUrl(outputPath, home: home)
@@ -48,10 +49,12 @@ public struct Toucan {
                 includingHiddenItems: true
             )
             for path in list {
-                try fileManager.delete(at: outputUrl.appendingPathComponent(path))
+                try fileManager.delete(
+                    at: outputUrl.appendingPathComponent(path)
+                )
             }
         }
-        
+
         guard fileManager.listDirectory(at: outputUrl).isEmpty else {
             fatalError("Output directory should be empty.")
         }
@@ -77,7 +80,7 @@ public struct Toucan {
 
         let indexUrl = contentsUrl.appendingPathComponent("index.md")
         let indexMeta = try metadataParser.parse(at: indexUrl)
-        
+
         let config = Config(
             baseUrl: baseUrl ?? indexMeta["baseUrl"] ?? "./",
             title: indexMeta["title"] ?? "Untitled",
@@ -125,9 +128,10 @@ public struct Toucan {
                 metadata: metadata
             )
 
-            let tags = (metadata["tags"] ?? "").split(separator: ",").map {
-                $0.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
+            let tags = (metadata["tags"] ?? "").split(separator: ",")
+                .map {
+                    $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
 
             var postDate = Date()
             if let rawDate = metadata["date"],
