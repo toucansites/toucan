@@ -11,12 +11,13 @@ struct NotFound {
     func generate() throws {
         let notFoundUrl = contentsUrl.appendingPathComponent("404.md")
         let notFoundMeta = try MetadataParser().parse(at: notFoundUrl)
-        let html = try ContentParser().parse(
-            at: notFoundUrl,
-            baseUrl: config.baseUrl,
-            slug: "404",
-            assets: []
-        )
+        let html = try ContentParser()
+            .parse(
+                at: notFoundUrl,
+                baseUrl: config.baseUrl,
+                slug: "404",
+                assets: []
+            )
 
         let notFoundTemplate = NotFoundTemplate(
             templatesUrl: templatesUrl,
@@ -47,10 +48,11 @@ struct NotFound {
             .appendingPathComponent("404")
             .appendingPathExtension("html")
 
-        try indexTemplate.render().write(
-            to: indexOutputUrl,
-            atomically: true,
-            encoding: .utf8
-        )
+        try indexTemplate.render()
+            .write(
+                to: indexOutputUrl,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

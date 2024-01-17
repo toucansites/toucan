@@ -24,10 +24,11 @@ struct RSS {
             .appendingPathComponent("rss")
             .appendingPathExtension("xml")
 
-        try rssTemplate.render().write(
-            to: rssUrl,
-            atomically: true,
-            encoding: .utf8
-        )
+        try rssTemplate.render()
+            .write(
+                to: rssUrl,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

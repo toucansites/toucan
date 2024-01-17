@@ -25,10 +25,11 @@ struct Sitemap {
             .appendingPathComponent("sitemap")
             .appendingPathExtension("xml")
 
-        try sitemapTemplate.render().write(
-            to: sitemapUrl,
-            atomically: true,
-            encoding: .utf8
-        )
+        try sitemapTemplate.render()
+            .write(
+                to: sitemapUrl,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

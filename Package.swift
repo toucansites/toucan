@@ -1,10 +1,10 @@
-// swift-tools-version:5.8
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
     name: "toucan",
     platforms: [
-        .macOS(.v10_15),
+        .macOS(.v12),
     ],
     products: [
         .executable(name: "toucan", targets: ["ToucanCli"]),
@@ -13,11 +13,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/hummingbird-project/hummingbird",
-            from: "1.5.0"
+            from: "1.12.0"
         ),
         .package(
             url: "https://github.com/apple/swift-argument-parser",
-            from: "1.2.0"
+            from: "1.3.0"
         ),
         .package(
             url: "https://github.com/JohnSundell/Ink",
@@ -28,13 +28,13 @@ let package = Package(
             from: "0.16.0"
         ),
         .package(
+            url: "https://github.com/BinaryBirds/file-manager-kit",
+            from: "0.1.0"
+        ),
+        .package(
             url: "https://github.com/eonil/FSEvents",
             branch: "master"
         ),
-        .package(
-            url: "https://github.com/BinaryBirds/file-manager-kit",
-            branch: "main"
-        )
     ],
     targets: [
         .target(name: "ToucanSDK", dependencies: [
@@ -70,14 +70,7 @@ let package = Package(
                     name: "EonilFSEvents",
                     package: "FSEvents"
                 ),
-                
                 .target(name: "ToucanSDK"),
-            ],
-            swiftSettings: [
-                .unsafeFlags(
-                    ["-cross-module-optimization"],
-                    .when(configuration: .release)
-                ),
             ]
         ),
         

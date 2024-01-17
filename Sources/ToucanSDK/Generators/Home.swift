@@ -12,22 +12,26 @@ struct Home {
         let homeUrl = contentsUrl.appendingPathComponent("home.md")
         let homeMeta = try MetadataParser().parse(at: homeUrl)
 
-        let homePosts = posts.sorted { lhs, rhs in
-            return lhs.date > rhs.date
-        }
-        .prefix(20)
+        let homePosts =
+            posts.sorted { lhs, rhs in
+                return lhs.date > rhs.date
+            }
+            .prefix(20)
 
-        let homeContents = try homePosts.map { post in
-            let homePostTemplate = HomePostTemplate(
-                templatesUrl: templatesUrl,
-                context: .init(
-                    meta: post.meta,
-                    date: config.formatter.string(from: post.date)
+        let homeContents =
+            try homePosts.map { post in
+                let homePostTemplate = HomePostTemplate(
+                    templatesUrl: templatesUrl,
+                    context: .init(
+                        meta: post.meta,
+                        date: config.formatter.string(from: post.date),
+                        tags: post.tags,
+                        userDefined: post.userDefined
+                    )
                 )
-            )
-            return try homePostTemplate.render()
-        }
-        .joined(separator: "\n")
+                return try homePostTemplate.render()
+            }
+            .joined(separator: "\n")
 
         let homeTemplate = HomeTemplate(
             templatesUrl: templatesUrl,
@@ -58,10 +62,11 @@ struct Home {
             .appendingPathComponent("index")
             .appendingPathExtension("html")
 
-        try indexTemplate.render().write(
-            to: indexOutputUrl,
-            atomically: true,
-            encoding: .utf8
-        )
+        try indexTemplate.render()
+            .write(
+                to: indexOutputUrl,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

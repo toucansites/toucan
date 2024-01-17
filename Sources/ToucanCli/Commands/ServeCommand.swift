@@ -26,10 +26,12 @@ extension HBApplication {
             let currentPath = FileManager.default.currentDirectoryPath
             workPath = currentPath + "/" + args.path
         }
-        
+
         let url = URL(fileURLWithPath: workPath).standardized
 
-        print("🤖 Site preview available at: http://\(args.hostname):\(args.port)/ -> serving from: \(url.absoluteString) ")
+        print(
+            "🤖 Site preview available at: http://\(args.hostname):\(args.port)/ -> serving from: \(url.absoluteString) "
+        )
 
         middleware.add(
             HBFileMiddleware(
