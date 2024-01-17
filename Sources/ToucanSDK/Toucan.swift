@@ -148,7 +148,8 @@ public struct Toucan {
                 config: config,
                 templatesUrl: templatesUrl,
                 outputUrl: outputUrl,
-                modificationDate: modificationDate
+                modificationDate: modificationDate,
+                userDefined: metadata
             )
             try post.generate()
             posts.append(post)

@@ -7,9 +7,10 @@ struct PostTemplate {
         let contents: String
         let date: String
         let tags: [String]
+        let userDefined: [String: String]
 
         var templateVariables: [String: String] {
-            meta.templateVariables + [
+            userDefined + meta.templateVariables + [
                 "contents": contents,
                 "date": date,
                 "tags": tags.map { #"<span class="tag">\#($0)</span>"# }.joined(

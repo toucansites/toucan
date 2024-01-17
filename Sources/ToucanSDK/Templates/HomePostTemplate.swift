@@ -5,10 +5,15 @@ struct HomePostTemplate {
     struct Context {
         let meta: Meta
         let date: String
+        let tags: [String]
+        let userDefined: [String: String]
 
         var templateVariables: [String: String] {
-            meta.templateVariables + [
-                "date": date
+            userDefined + meta.templateVariables + [
+                "date": date,
+                "tags": tags.map { #"<span class="tag">\#($0)</span>"# }.joined(
+                    separator: "\n"
+                ),
             ]
         }
     }

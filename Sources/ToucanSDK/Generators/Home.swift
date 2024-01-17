@@ -22,7 +22,9 @@ struct Home {
                 templatesUrl: templatesUrl,
                 context: .init(
                     meta: post.meta,
-                    date: config.formatter.string(from: post.date)
+                    date: config.formatter.string(from: post.date),
+                    tags: post.tags,
+                    userDefined: post.userDefined
                 )
             )
             return try homePostTemplate.render()

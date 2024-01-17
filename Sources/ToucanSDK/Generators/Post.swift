@@ -11,6 +11,7 @@ struct Post {
     let templatesUrl: URL
     let outputUrl: URL
     let modificationDate: Date
+    let userDefined: [String: String]
 
     func generate() throws {
         let postTemplate = PostTemplate(
@@ -19,7 +20,8 @@ struct Post {
                 meta: meta,
                 contents: html,
                 date: config.formatter.string(from: date),
-                tags: tags
+                tags: tags,
+                userDefined: userDefined
             )
         )
 
