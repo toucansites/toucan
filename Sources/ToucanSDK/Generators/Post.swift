@@ -7,18 +7,20 @@ struct Post {
     let date: Date
     let tags: [String]
     let html: String
+    let postCoverImageHtml: String
     let config: Config
     let templatesUrl: URL
-    let outputUrl: URL
     let modificationDate: Date
     let userDefined: [String: String]
 
-    func generate() throws {
+    func generate() throws -> String {
+
         let postTemplate = PostTemplate(
             templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
                 contents: html,
+                postCoverImageHtml: postCoverImageHtml,
                 date: config.formatter.string(from: date),
                 tags: tags,
                 userDefined: userDefined
@@ -29,28 +31,11 @@ struct Post {
             templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
-                contents: try postTemplate.render()
+                contents: try postTemplate.render(),
+                showMetaImage: !postCoverImageHtml.isEmpty
             )
         )
-
-        let htmlUrl =
-            outputUrl
-            .appendingPathComponent(slug)
-
-        if !FileManager.default.directoryExists(at: htmlUrl) {
-            try FileManager.default.createDirectory(at: htmlUrl)
-        }
-
-        let fileUrl =
-            htmlUrl
-            .appendingPathComponent("index")
-            .appendingPathExtension("html")
-
-        try indexTemplate.render()
-            .write(
-                to: fileUrl,
-                atomically: true,
-                encoding: .utf8
-            )
+        return try indexTemplate.render()
     }
+
 }

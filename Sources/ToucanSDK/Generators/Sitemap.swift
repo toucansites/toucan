@@ -5,9 +5,8 @@ struct Sitemap {
     let config: Config
     let pages: [Page]
     let posts: [Post]
-    let outputUrl: URL
 
-    func generate() throws {
+    func generate() throws -> String {
         let sitemapTemplate = SitemapTemplate(
             items: pages.map {
                 .init(permalink: $0.meta.permalink, date: $0.modificationDate)
@@ -19,17 +18,7 @@ struct Sitemap {
                     )
                 }
         )
-
-        let sitemapUrl =
-            outputUrl
-            .appendingPathComponent("sitemap")
-            .appendingPathExtension("xml")
-
-        try sitemapTemplate.render()
-            .write(
-                to: sitemapUrl,
-                atomically: true,
-                encoding: .utf8
-            )
+        return try sitemapTemplate.render()
     }
+
 }

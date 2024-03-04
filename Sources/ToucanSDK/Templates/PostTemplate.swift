@@ -5,12 +5,14 @@ struct PostTemplate {
     struct Context {
         let meta: Meta
         let contents: String
+        let postCoverImageHtml: String
         let date: String
         let tags: [String]
         let userDefined: [String: String]
 
         var templateVariables: [String: String] {
             userDefined + meta.templateVariables + [
+                "post-image": postCoverImageHtml,
                 "contents": contents,
                 "date": date,
                 "tags": tags.map { #"<span class="tag">\#($0)</span>"# }

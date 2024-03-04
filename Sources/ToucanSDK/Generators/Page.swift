@@ -6,10 +6,9 @@ struct Page {
     let slug: String
     let html: String
     let templatesUrl: URL
-    let outputUrl: URL
     let modificationDate: Date
 
-    func generate() throws {
+    func generate() throws -> String {
         let pageTemplate = PageTemplate(
             templatesUrl: templatesUrl,
             context: .init(
@@ -22,20 +21,11 @@ struct Page {
             templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
-                contents: try pageTemplate.render()
+                contents: try pageTemplate.render(),
+                showMetaImage: true
             )
         )
-
-        let htmlUrl =
-            outputUrl
-            .appendingPathComponent(slug)
-            .appendingPathExtension("html")
-
-        try indexTemplate.render()
-            .write(
-                to: htmlUrl,
-                atomically: true,
-                encoding: .utf8
-            )
+        return try indexTemplate.render()
     }
+
 }

@@ -5,10 +5,15 @@ struct IndexTemplate {
     struct Context {
         let meta: Meta
         let contents: String
+        let showMetaImage: Bool
 
         var templateVariables: [String: String] {
             meta.templateVariables + [
-                "contents": contents
+                "index-meta-image":
+                    ((showMetaImage)
+                    ? "<meta property=\"og:image\" content=\"{baseUrl}{image}\">"
+                    : ""),
+                "contents": contents,
             ]
         }
     }

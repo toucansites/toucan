@@ -4,9 +4,8 @@ struct RSS {
 
     let config: Config
     let posts: [Post]
-    let outputUrl: URL
 
-    func generate() throws {
+    func generate() throws -> String {
         let rssTemplate = RSSTemplate(
             items: posts.map {
                 .init(
@@ -19,16 +18,7 @@ struct RSS {
             config: config
         )
 
-        let rssUrl =
-            outputUrl
-            .appendingPathComponent("rss")
-            .appendingPathExtension("xml")
-
-        try rssTemplate.render()
-            .write(
-                to: rssUrl,
-                atomically: true,
-                encoding: .utf8
-            )
+        return try rssTemplate.render()
     }
+
 }

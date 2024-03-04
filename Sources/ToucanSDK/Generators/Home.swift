@@ -6,9 +6,8 @@ struct Home {
     let config: Config
     let posts: [Post]
     let templatesUrl: URL
-    let outputUrl: URL
 
-    func generate() throws {
+    func generate() throws -> String {
         let homeUrl = contentsUrl.appendingPathComponent("home.md")
         let homeMeta = try MetadataParser().parse(at: homeUrl)
 
@@ -20,11 +19,16 @@ struct Home {
 
         let homeContents =
             try homePosts.map { post in
+                var homePostImage = ""
+                if !post.postCoverImageHtml.isEmpty {
+                    homePostImage = "<img src=\"{image}\">"
+                }
                 let homePostTemplate = HomePostTemplate(
                     templatesUrl: templatesUrl,
                     context: .init(
                         meta: post.meta,
                         date: config.formatter.string(from: post.date),
+                        homePostImage: homePostImage,
                         tags: post.tags,
                         userDefined: post.userDefined
                     )
@@ -51,22 +55,14 @@ struct Home {
                     slug: "",
                     title: homeMeta["title"] ?? "",
                     description: homeMeta["description"] ?? "",
-                    image: homeMeta["image"] ?? ""
+                    image: homeMeta["image"] ?? "",
+                    language: config.language
                 ),
-                contents: try homeTemplate.render()
+                contents: try homeTemplate.render(),
+                showMetaImage: true
             )
         )
-
-        let indexOutputUrl =
-            outputUrl
-            .appendingPathComponent("index")
-            .appendingPathExtension("html")
-
-        try indexTemplate.render()
-            .write(
-                to: indexOutputUrl,
-                atomically: true,
-                encoding: .utf8
-            )
+        return try indexTemplate.render()
     }
+
 }

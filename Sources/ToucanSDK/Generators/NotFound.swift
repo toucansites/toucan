@@ -6,9 +6,8 @@ struct NotFound {
     let config: Config
     let posts: [Post]
     let templatesUrl: URL
-    let outputUrl: URL
 
-    func generate() throws {
+    func generate() throws -> String {
         let notFoundUrl = contentsUrl.appendingPathComponent("404.md")
         let notFoundMeta = try MetadataParser().parse(at: notFoundUrl)
         let html = try ContentParser()
@@ -37,22 +36,14 @@ struct NotFound {
                     slug: "404",
                     title: notFoundMeta["title"] ?? "",
                     description: notFoundMeta["description"] ?? "",
-                    image: notFoundMeta["image"] ?? ""
+                    image: notFoundMeta["image"] ?? "",
+                    language: config.language
                 ),
-                contents: try notFoundTemplate.render()
+                contents: try notFoundTemplate.render(),
+                showMetaImage: true
             )
         )
-
-        let indexOutputUrl =
-            outputUrl
-            .appendingPathComponent("404")
-            .appendingPathExtension("html")
-
-        try indexTemplate.render()
-            .write(
-                to: indexOutputUrl,
-                atomically: true,
-                encoding: .utf8
-            )
+        return try indexTemplate.render()
     }
+
 }

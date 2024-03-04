@@ -8,6 +8,7 @@ struct Meta {
     let title: String
     let description: String
     let image: String
+    let language: String
 
     var templateVariables: [String: String] {
         [
@@ -18,6 +19,7 @@ struct Meta {
             "title": title,
             "description": description,
             "image": image,
+            "language": language,
         ]
     }
 
