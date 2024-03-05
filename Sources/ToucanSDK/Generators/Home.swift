@@ -19,16 +19,16 @@ struct Home {
 
         let homeContents =
             try homePosts.map { post in
-                var homePostImage = ""
-                if !post.postCoverImageHtml.isEmpty {
-                    homePostImage = "<img src=\"{image}\">"
+                var hidden = "hidden"
+                if post.hasPostCoverImage {
+                    hidden = ""
                 }
                 let homePostTemplate = HomePostTemplate(
                     templatesUrl: templatesUrl,
                     context: .init(
                         meta: post.meta,
                         date: config.formatter.string(from: post.date),
-                        homePostImage: homePostImage,
+                        hidden: hidden,
                         tags: post.tags,
                         userDefined: post.userDefined
                     )

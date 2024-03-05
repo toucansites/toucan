@@ -3,15 +3,15 @@ import XCTest
 
 final class AppTests: XCTestCase {
 
-    func testPosts() async throws {
+    func testPosts() throws {
 
         var toucanFilesKit = ToucanFilesKit()
         try toucanFilesKit.createURLs(URL(fileURLWithPath: "./Tests/src"))
-        try toucanFilesKit.createInfo(needToCopy: true)
+        try toucanFilesKit.createInfo(needToCopy: false)
 
         var toucanContentKit = ToucanContentKit()
         try toucanContentKit.create(
-            baseUrl: "https://binarybirds.com/",
+            baseUrl: nil,
             contentsUrl: toucanFilesKit.contentsUrl,
             templatesUrl: toucanFilesKit.templatesUrl,
             postFileInfos: toucanFilesKit.postFileInfos,
@@ -19,15 +19,9 @@ final class AppTests: XCTestCase {
         )
 
         for post in toucanContentKit.posts {
-            let content = try post.generate().replacingOccurrences(of: " ", with: "")
-                .replacingOccurrences(of: "\n", with: "")
-                .replacingOccurrences(of: "\r", with: "")
-
+            let content = try post.generate()
             let distUrl = URL(fileURLWithPath: "./Tests/dist/").appendingPathComponent(post.slug).appendingPathComponent("/index.html")
-            let goalContent = try String(contentsOf: distUrl).replacingOccurrences(of: " ", with: "")
-                .replacingOccurrences(of: "\n", with: "")
-                .replacingOccurrences(of: "\r", with: "")
-           
+            let goalContent = try String(contentsOf: distUrl)
             XCTAssertEqual(content, goalContent)
         }
 

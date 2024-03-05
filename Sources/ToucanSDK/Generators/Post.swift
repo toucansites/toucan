@@ -7,7 +7,7 @@ struct Post {
     let date: Date
     let tags: [String]
     let html: String
-    let postCoverImageHtml: String
+    let hasPostCoverImage: Bool
     let config: Config
     let templatesUrl: URL
     let modificationDate: Date
@@ -20,19 +20,18 @@ struct Post {
             context: .init(
                 meta: meta,
                 contents: html,
-                postCoverImageHtml: postCoverImageHtml,
+                hasPostCoverImage: hasPostCoverImage,
                 date: config.formatter.string(from: date),
                 tags: tags,
                 userDefined: userDefined
             )
         )
-
         let indexTemplate = IndexTemplate(
             templatesUrl: templatesUrl,
             context: .init(
                 meta: meta,
                 contents: try postTemplate.render(),
-                showMetaImage: !postCoverImageHtml.isEmpty
+                showMetaImage: hasPostCoverImage
             )
         )
         return try indexTemplate.render()

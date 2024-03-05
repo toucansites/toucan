@@ -9,7 +9,7 @@ struct IndexTemplate {
 
         var templateVariables: [String: String] {
             meta.templateVariables + [
-                "index-meta-image":
+                "_index-meta-image":
                     ((showMetaImage)
                     ? "<meta property=\"og:image\" content=\"{baseUrl}{image}\">"
                     : ""),

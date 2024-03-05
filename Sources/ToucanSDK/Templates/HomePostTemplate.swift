@@ -5,14 +5,14 @@ struct HomePostTemplate {
     struct Context {
         let meta: Meta
         let date: String
-        let homePostImage: String
+        let hidden: String
         let tags: [String]
         let userDefined: [String: String]
 
         var templateVariables: [String: String] {
             userDefined + meta.templateVariables + [
+                "hidden": hidden,
                 "date": date,
-                "home-post-image": homePostImage,
                 "tags": tags.map { #"<span class="tag">\#($0)</span>"# }
                     .joined(
                         separator: "\n"
@@ -35,7 +35,7 @@ struct HomePostTemplate {
 
     func render() throws -> String {
         let templateUrl = templatesUrl.appendingPathComponent(file)
-        let template = try String(contentsOf: templateUrl)
+        let template = try String(contentsOf: templateUrl)    
         return template.replacingTemplateVariables(context.templateVariables)
     }
 }

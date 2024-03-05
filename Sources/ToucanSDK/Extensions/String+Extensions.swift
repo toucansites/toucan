@@ -21,7 +21,8 @@ extension String {
         _ dictionary: [String: String]
     ) -> String {
         var result = self
-        for (key, value) in dictionary {
+        let sorted = dictionary.sorted(by: <)
+        for (key, value) in sorted {
             result = result.replacingOccurrences(of: key, with: value)
         }
         return result

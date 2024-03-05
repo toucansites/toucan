@@ -24,12 +24,6 @@ struct ToucanContentKit {
 
         let indexUrl = contentsUrl.appendingPathComponent("index.md")
         let indexMeta = try metadataParser.parse(at: indexUrl)
-        let postCoverImageTemplateUrl = templatesUrl.appendingPathComponent(
-            "post-cover-image.html"
-        )
-        let postCoverImageTemplate = try String(
-            contentsOf: postCoverImageTemplateUrl
-        )
 
         let config = Config(
             baseUrl: baseUrl ?? indexMeta["baseUrl"] ?? "./",
@@ -74,18 +68,13 @@ struct ToucanContentKit {
                 print("[WARNING] Date issues in `\(slug)`.")
             }
 
-            var postCoverImageHtml = ""
-            if postInfo.hasPostImage {
-                postCoverImageHtml = postCoverImageTemplate
-            }
-
             let post = Post(
                 meta: meta,
                 slug: slug,
                 date: postDate,
                 tags: tags,
                 html: html,
-                postCoverImageHtml: postCoverImageHtml,
+                hasPostCoverImage: postInfo.hasPostImage,
                 config: config,
                 templatesUrl: templatesUrl,
                 modificationDate: postInfo.modificationDate,
