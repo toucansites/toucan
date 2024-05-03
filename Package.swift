@@ -4,7 +4,11 @@ import PackageDescription
 let package = Package(
     name: "toucan",
     platforms: [
-        .macOS(.v12),
+        .macOS(.v13),
+        .iOS(.v16),
+        .tvOS(.v16),
+        .watchOS(.v9),
+        .visionOS(.v1),
     ],
     products: [
         .executable(name: "toucan-cli", targets: ["toucan-cli"]),
