@@ -1,14 +1,13 @@
 import ArgumentParser
-import ToucanSDK
+import Toucan
 
-struct GenerateCommand: ParsableCommand {
+@main
+struct ToucanCommand: ParsableCommand {
 
-    static var _commandName: String = "generate"
-
-    @Argument(help: "The input directory (default: src).")
+    @Argument(help: "The input directory (default: ./src).")
     var input: String = "./src"
 
-    @Argument(help: "The output directory (default: docs).")
+    @Argument(help: "The output directory (default: ./docs).")
     var output: String = "./docs"
 
     @Option(name: .shortAndLong, help: "The base url to use.")
