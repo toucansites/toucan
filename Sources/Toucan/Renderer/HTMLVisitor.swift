@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 03/05/2024.
 //
@@ -34,7 +34,7 @@ enum Content {
 struct HTMLVisitor: MarkupVisitor {
 
     typealias Result = String
-    
+
     // MARK: - private functions
 
     private mutating func tag(
@@ -43,10 +43,11 @@ struct HTMLVisitor: MarkupVisitor {
         attributes: [Attribute] = [],
         content: Content
     ) -> Result {
-        let attributeString = attributes
+        let attributeString =
+            attributes
             .map { #"\#($0.key)="\#($0.value)""# }
             .joined(separator: " ")
-        
+
         let tag = [name, attributeString]
             .filter { !$0.isEmpty }
             .joined(separator: " ")
@@ -67,7 +68,7 @@ struct HTMLVisitor: MarkupVisitor {
         }
         return result
     }
-    
+
     // MARK: - visitor functions
 
     mutating func defaultVisit(_ markup: any Markup) -> Result {
@@ -77,18 +78,17 @@ struct HTMLVisitor: MarkupVisitor {
         }
         return result
     }
-    
-    // MARK: - elements
-    
 
-//    mutating func visit(_ markup: Markup) -> Result {
-//        fatalError()
-//    }
+    // MARK: - elements
+
+    //    mutating func visit(_ markup: Markup) -> Result {
+    //        fatalError()
+    //    }
 
     mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> Result {
         tag(name: "blockquote", content: .children(blockQuote.children))
     }
-    
+
     mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> Result {
         var attributes: [Attribute] = []
         if let language = codeBlock.language {
@@ -111,13 +111,13 @@ struct HTMLVisitor: MarkupVisitor {
         )
     }
 
-//    mutating func visitCustomBlock(_ customBlock: CustomBlock) -> Result {
-//        fatalError()
-//    }
+    //    mutating func visitCustomBlock(_ customBlock: CustomBlock) -> Result {
+    //        fatalError()
+    //    }
 
-//    mutating func visitDocument(_ document: Document) -> Result {
-//        fatalError()
-//    }
+    //    mutating func visitDocument(_ document: Document) -> Result {
+    //        fatalError()
+    //    }
 
     mutating func visitHeading(_ heading: Heading) -> Result {
         tag(
@@ -129,7 +129,7 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitThematicBreak(_ thematicBreak: ThematicBreak) -> Result {
         tag(name: "hr", type: .short, content: .value(""))
     }
-    
+
     mutating func visitHTMLBlock(_ html: HTMLBlock) -> Result {
         html.rawHTML
     }
@@ -153,17 +153,17 @@ struct HTMLVisitor: MarkupVisitor {
         return tag(name: "p", content: .children(paragraph.children))
     }
 
-//    mutating func visitBlockDirective(_ blockDirective: BlockDirective) -> Result {
-//        fatalError()
-//    }
+    //    mutating func visitBlockDirective(_ blockDirective: BlockDirective) -> Result {
+    //        fatalError()
+    //    }
 
     mutating func visitInlineCode(_ inlineCode: InlineCode) -> Result {
         tag(name: "code", content: .value(inlineCode.code))
     }
-    
-//    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
-//        fatalError()
-//    }
+
+    //    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
+    //        fatalError()
+    //    }
 
     mutating func visitEmphasis(_ emphasis: Emphasis) -> Result {
         tag(name: "em", content: .children(emphasis.children))
@@ -172,7 +172,7 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitImage(_ image: Image) -> Result {
         guard let source = image.source else {
             return ""
-        }        
+        }
         return tag(
             name: "img",
             type: .short,
@@ -199,12 +199,12 @@ struct HTMLVisitor: MarkupVisitor {
                 .init(
                     key: "href",
                     value: link.destination ?? "#"
-                ),
+                )
             ],
             content: .children(link.children)
         )
     }
-    
+
     mutating func visitSoftBreak(_ softBreak: SoftBreak) -> Result {
         tag(name: "br", type: .short, content: .value(""))
     }
@@ -222,48 +222,48 @@ struct HTMLVisitor: MarkupVisitor {
     }
 
     // NOTE: not supported yet...
-//    mutating func visitTable(_ table: Table) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitTableHead(_ tableHead: Table.Head) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitTableBody(_ tableBody: Table.Body) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitTableRow(_ tableRow: Table.Row) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitTableCell(_ tableCell: Table.Cell) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitSymbolLink(_ symbolLink: SymbolLink) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitInlineAttributes(_ attributes: InlineAttributes) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitDoxygenDiscussion(_ doxygenDiscussion: DoxygenDiscussion) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitDoxygenNote(_ doxygenNote: DoxygenNote) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitDoxygenParameter(_ doxygenParam: DoxygenParameter) -> Result {
-//        fatalError()
-//    }
-//
-//    mutating func visitDoxygenReturns(_ doxygenReturns: DoxygenReturns) -> Result {
-//        fatalError()
-//    }
+    //    mutating func visitTable(_ table: Table) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitTableHead(_ tableHead: Table.Head) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitTableBody(_ tableBody: Table.Body) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitTableRow(_ tableRow: Table.Row) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitTableCell(_ tableCell: Table.Cell) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitSymbolLink(_ symbolLink: SymbolLink) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitInlineAttributes(_ attributes: InlineAttributes) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitDoxygenDiscussion(_ doxygenDiscussion: DoxygenDiscussion) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitDoxygenNote(_ doxygenNote: DoxygenNote) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitDoxygenParameter(_ doxygenParam: DoxygenParameter) -> Result {
+    //        fatalError()
+    //    }
+    //
+    //    mutating func visitDoxygenReturns(_ doxygenReturns: DoxygenReturns) -> Result {
+    //        fatalError()
+    //    }
 
 }

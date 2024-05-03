@@ -1,0 +1,26 @@
+name: Run checks
+
+on:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  
+  run-checks:
+    # runs-on: macOS-latest
+    runs-on: self-hosted
+    steps:
+    
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    
+    - name: Install Dependencies
+      run: |
+        brew install mint
+        mint install NickLockwood/SwiftFormat@0.53.4 --no-link
+    
+    - name: run script
+      run: ./scripts/run-checks.sh

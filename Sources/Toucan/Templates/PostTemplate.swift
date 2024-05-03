@@ -12,7 +12,8 @@ struct PostTemplate {
 
         var templateVariables: [String: String] {
             userDefined + meta.templateVariables + [
-                "_post-image": ((hasPostCoverImage)
+                "_post-image":
+                    ((hasPostCoverImage)
                     ? """
                     <section class=\"wrapper\">
                         <img id=\"post-image\" src=\"{baseUrl}{image}\">

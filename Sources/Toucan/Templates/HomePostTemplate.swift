@@ -35,7 +35,7 @@ struct HomePostTemplate {
 
     func render() throws -> String {
         let templateUrl = templatesUrl.appendingPathComponent(file)
-        let template = try String(contentsOf: templateUrl)    
+        let template = try String(contentsOf: templateUrl)
         return template.replacingTemplateVariables(context.templateVariables)
     }
 }

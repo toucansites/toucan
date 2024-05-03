@@ -1,28 +1,5 @@
 import Foundation
 
-
-//struct ContentParser {
-//
-//    func parse(
-//        at url: URL,
-//        baseUrl: String,
-//        slug: String,
-//        assets: [String]
-//    ) throws -> String {
-//        let parser = createParser(
-//            baseUrl: baseUrl,
-//            slug: slug,
-//            assets: assets
-//        )
-//        let rawMarkdown = try String(contentsOf: url)
-//        return parser.parse(rawMarkdown).html
-//    }
-//
-//    func createParser(
-//        baseUrl: String,
-//        slug: String,
-//        assets: [String]
-//    ) -> MarkdownParser {
 //        let linkModifier = Modifier(target: .links) { html, markdown in
 //            if !html.contains(baseUrl) {
 //                return html.replacingOccurrences(
@@ -53,19 +30,7 @@ import Foundation
 //            return html
 //        }
 //
-//        let highlighter = SyntaxHighlighter(format: HTMLOutputFormat())
-//        let splashModifier = Modifier(target: .codeBlocks) { html, markdown in
-//            var input = String(markdown)
-//            guard input.hasPrefix("```swift") else {
-//                return html
-//            }
-//            input = String(input.dropFirst(8).dropLast(3))
-//            let code = highlighter.highlight(input)
-//                .trimmingCharacters(
-//                    in: .whitespacesAndNewlines
-//                )
-//            return #"<pre><code class="language-swift">\#(code)</code></pre>"#
-//        }
+//
 //
 //        let imageModifier = Modifier(target: .images) { html, markdown in
 //            let input = String(markdown)
@@ -101,16 +66,3 @@ import Foundation
 //                """#
 //        }
 //
-//        var parser = MarkdownParser()
-//        let modifiers = [
-//            linkModifier,
-//            splashModifier,
-//            imageModifier,
-//            bqModifier,
-//        ]
-//        for modifier in modifiers {
-//            parser.addModifier(modifier)
-//        }
-//        return parser
-//    }
-//}
