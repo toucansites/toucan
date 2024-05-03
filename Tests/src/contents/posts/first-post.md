@@ -3,7 +3,8 @@ slug: first_post
 title: First post
 description: The first post
 date: 2024/02/26
-tags: Swift, Toucan
+tags: swift, uikit
+authors: tibor-bodecs, foo
 ---
 
 
