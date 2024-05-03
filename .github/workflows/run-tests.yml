@@ -34,7 +34,6 @@ jobs:
     strategy:
       matrix:
         image:
-          - 'swift:5.9'
           - 'swift:5.10'
     container:
       image: ${{ matrix.image }}
