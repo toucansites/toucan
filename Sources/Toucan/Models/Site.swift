@@ -10,8 +10,8 @@ struct Site {
     let baseUrl: String
     let name: String
     let description: String
-    let image: String
-    let language: String
+    let imageUrl: String?
+    let language: String?
 
     let pages: [Page]
     let posts: [Post]

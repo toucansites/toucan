@@ -16,7 +16,7 @@ final class ToucanTests: XCTestCase {
             baseUrl: "https://binarybirds.com",
             name: "Binary Birds",
             description: "Lorem ipsum",
-            image: "http://foo.jpg",
+            imageUrl: "http://foo.jpg",
             language: "en_US",
             pages: [
                 .init(
@@ -24,7 +24,7 @@ final class ToucanTests: XCTestCase {
                         slug: "about",
                         title: "About us",
                         description: "Lorem ipsum",
-                        image: "about.jpg"
+                        imageUrl: "about.jpg"
                     )
                 )
             ],
@@ -34,7 +34,7 @@ final class ToucanTests: XCTestCase {
                         slug: "foo",
                         title: "Foo",
                         description: "Foo",
-                        image: "foo.jpg"
+                        imageUrl: "foo.jpg"
                     ),
                     authors: [
                         "tiborbodecs"
@@ -50,7 +50,7 @@ final class ToucanTests: XCTestCase {
                         slug: "tiborbodecs",
                         title: "Tibor Bödecs",
                         description: "about the author",
-                        image: "tiborbodecs.jpg"
+                        imageUrl: "tiborbodecs.jpg"
                     )
                 )
             ],
@@ -60,7 +60,7 @@ final class ToucanTests: XCTestCase {
                         slug: "swift",
                         title: "Swift",
                         description: "Swift tag",
-                        image: "swift.jpg"
+                        imageUrl: "swift.jpg"
                     )
                 )
             ]
