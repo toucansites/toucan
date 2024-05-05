@@ -19,9 +19,9 @@ final class ContentLoaderTests: XCTestCase {
             .dropLast(2)
             .joined(separator: "/")
 
-        let baseUrl = URL(filePath: path)
-        let srcUrl = baseUrl.appending(path: "src")
-        let contentsUrl = srcUrl.appending(path: "contents")
+        let baseUrl = URL(fileURLWithPath: path)
+        let srcUrl = baseUrl.appendingPathComponent("src")
+        let contentsUrl = srcUrl.appendingPathComponent("contents")
 
         let loader = ContentLoader(path: contentsUrl.path)
 

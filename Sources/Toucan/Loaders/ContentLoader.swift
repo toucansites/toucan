@@ -21,12 +21,12 @@ struct ContentLoader {
 
     func load() throws -> Site {
 
-        let workUrl = URL(filePath: path)
-        let pagesUrl = workUrl.appending(path: "pages")
-        let postsUrl = workUrl.appending(path: "posts")
-        let authorsUrl = workUrl.appending(path: "authors")
-        let tagsUrl = workUrl.appending(path: "tags")
-        let indexUrl = workUrl.appending(path: "index.md")
+        let workUrl = URL(fileURLWithPath: path)
+        let pagesUrl = workUrl.appendingPathComponent("pages")
+        let postsUrl = workUrl.appendingPathComponent("posts")
+        let authorsUrl = workUrl.appendingPathComponent("authors")
+        let tagsUrl = workUrl.appendingPathComponent("tags")
+        let indexUrl = workUrl.appendingPathComponent("index.md")
 
         let pageFiles = listMarkdownFiles(at: pagesUrl)
         let postFiles = listMarkdownFiles(at: postsUrl)
@@ -38,7 +38,7 @@ struct ContentLoader {
         /// load pages
         let pages = try pageFiles.map { file in
             let slug = String(file.dropLast(3))  // drop .md extension
-            let url = pagesUrl.appending(path: file)
+            let url = pagesUrl.appendingPathComponent(file)
             let markdown = try String(contentsOf: url)
             let metadata = metadataParser.parse(markdown: markdown)
 
@@ -59,7 +59,7 @@ struct ContentLoader {
         /// load posts
         let posts = try postFiles.map { file in
             let slug = String(file.dropLast(3))  // drop .md extension
-            let url = postsUrl.appending(path: file)
+            let url = postsUrl.appendingPathComponent(file)
             let markdown = try String(contentsOf: url)
             let metadata = metadataParser.parse(markdown: markdown)
 
@@ -85,7 +85,7 @@ struct ContentLoader {
         /// load authors
         let authors = try authorFiles.map { file in
             let slug = String(file.dropLast(3))  // drop .md extension
-            let url = authorsUrl.appending(path: file)
+            let url = authorsUrl.appendingPathComponent(file)
             let markdown = try String(contentsOf: url)
             let metadata = metadataParser.parse(markdown: markdown)
 
@@ -106,7 +106,7 @@ struct ContentLoader {
         /// load tags
         let tags = try tagFiles.map { file in
             let slug = String(file.dropLast(3))  // drop .md extension
-            let url = tagsUrl.appending(path: file)
+            let url = tagsUrl.appendingPathComponent(file)
             let markdown = try String(contentsOf: url)
             let metadata = metadataParser.parse(markdown: markdown)
 
