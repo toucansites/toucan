@@ -1,0 +1,33 @@
+{{<index}}
+
+{{$main}}
+{{#content}}
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="{{date}}">{{date}}</time>
+            <h1 class="title">{{title}}</h1>
+            <p class="excerpt">{{excerpt}}</p>
+            {{#tags}}
+            <div class="meta">
+                {{> _partials.tag}}
+            </div>
+            {{/tags}}
+        </section>
+        
+        {{> _partials.figure}}
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    {{& body}}
+        
+    </section>
+
+</article>
+{{/content}}
+{{/main}}
+
+{{/index}}
+

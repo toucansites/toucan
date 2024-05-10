@@ -8,41 +8,6 @@
 import XCTest
 @testable import Toucan
 
-struct SiteContext {
-    let baseUrl: String
-    let name: String
-    let tagline: String
-    let imageUrl: String?
-    let language: String?
-}
-
-struct MetadataContext {
-    let permalink: String
-    let title: String
-    let description: String
-    let imageUrl: String?
-}
-
-struct TemplateContext<T> {
-    let site: SiteContext
-    let metadata: MetadataContext
-    let contents: T
-}
-
-struct PostCardContext {
-    let title: String
-    let exceprt: String
-    let date: String
-    let figure: FigureContext?
-}
-
-struct FigureContext {
-    let src: String
-    let darkSrc: String?
-    let alt: String?
-    let title: String?
-}
-
 final class TemplateLibraryTests: XCTestCase {
 
     func testHomePageTemplate() throws {
@@ -66,7 +31,7 @@ final class TemplateLibraryTests: XCTestCase {
 
         let templates = try TemplateLibrary(templatesUrl: templatesUrl)
 
-        let context = TemplateContext(
+        let context = PageContext(
             site: .init(
                 baseUrl: site.baseUrl,
                 name: site.name,
@@ -80,8 +45,8 @@ final class TemplateLibraryTests: XCTestCase {
                 description: "doloor sit amet",
                 imageUrl: nil
             ),
-            contents: [
-                PostCardContext(
+            content: [
+                PostContext(
                     title: "foo",
                     exceprt: "foo",
                     date: "2022",
@@ -98,6 +63,110 @@ final class TemplateLibraryTests: XCTestCase {
 
         let res = try templates.render(
             template: "pages.home",
+            with: context
+        )
+        print(res!)
+    }
+
+    func testSinglePageTemplate() throws {
+
+        let path =
+            "/"
+            + #file
+            .split(separator: "/")
+            .dropLast(2)
+            .joined(separator: "/")
+
+        let baseUrl = URL(fileURLWithPath: path)
+        let srcUrl = baseUrl.appendingPathComponent("src")
+        let contentsUrl = srcUrl.appendingPathComponent("contents")
+        let templatesUrl = srcUrl.appendingPathComponent("templates")
+
+        let loader = ContentLoader(path: contentsUrl.path)
+
+        let site = try loader.load()
+
+        let templates = try TemplateLibrary(templatesUrl: templatesUrl)
+
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.baseUrl + "slug-comes-here/",
+                title: "Lorem ipsum",
+                description: "doloor sit amet",
+                imageUrl: nil
+            ),
+            content: "just a <b>simple</b> page"
+
+        )
+
+        let res = try templates.render(
+            template: "pages.single.page",
+            with: context
+        )
+        print(res!)
+    }
+
+    func testSinglePostTemplate() throws {
+
+        let path =
+            "/"
+            + #file
+            .split(separator: "/")
+            .dropLast(2)
+            .joined(separator: "/")
+
+        let baseUrl = URL(fileURLWithPath: path)
+        let srcUrl = baseUrl.appendingPathComponent("src")
+        let contentsUrl = srcUrl.appendingPathComponent("contents")
+        let templatesUrl = srcUrl.appendingPathComponent("templates")
+
+        let loader = ContentLoader(path: contentsUrl.path)
+
+        let site = try loader.load()
+
+        let templates = try TemplateLibrary(templatesUrl: templatesUrl)
+
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.baseUrl + "slug-comes-here/",
+                title: "Lorem ipsum",
+                description: "doloor sit amet",
+                imageUrl: nil
+            ),
+            content: SinglePostContext(
+                title: "foo",
+                exceprt: "bar",
+                date: "2025",
+                figure: .init(
+                    src: "http://lorempixel.com/light.jpg",
+                    darkSrc: "http://lorempixel.com/dark.jpg",
+                    alt: "foo",
+                    title: "lorem foo"
+                ),
+                tags: [
+                    .init(permalink: "https://bb.com/foo", name: "Foo")
+                ],
+                body: "<b>lorem ipsum</b> dolor sit amet"
+            )
+
+        )
+
+        let res = try templates.render(
+            template: "pages.single.post",
             with: context
         )
         print(res!)
