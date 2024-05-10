@@ -8,7 +8,7 @@
 import XCTest
 @testable import Toucan
 
-final class MetadataParserTests: XCTestCase {
+final class FrontMatterParserTests: XCTestCase {
 
     func testBasics() throws {
 
