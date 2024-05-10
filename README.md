@@ -59,19 +59,30 @@ site.config.md
 
 ## Pagination & tags
 
-/posts.html 
-/posts/page/1.html -> canonical blog.html
-/posts/page/2.html
-/posts/page/3.html
+reserved slugs:
+/css
+/images
+/js
 
+/index.html                 index page 
 
-/tags               => list of all tags
-/tags/foo.html
-/tags/bar.html
+/page1/index.html           page entries
+/page2/index.html
 
+/post1/index.html           post entries
+/post2/index.html
 
-/authors
-/authors/tibor-bodecs
+/posts/index.html           list of all blog posts, paginated
+/posts/page/1/index.html    canonical = /posts/index.html
+/posts/page/2/index.html
+/posts/page/3/index.html
+
+/tags/index.html            list of all tags (not paginated)
+/tags/foo/index.html
+/tags/bar/index.html
+
+/authors/index.html         list of all authors (not paginated)
+/authors/tibor-bodecs/index.html
 
 
 

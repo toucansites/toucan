@@ -12,15 +12,27 @@ struct ContentLoader {
 
     let path: String
 
-    private func listMarkdownFiles(at url: URL) -> [String] {
-        FileManager
-            .default
-            .listDirectory(at: url)
-            .filter { $0.hasSuffix(".md") }
+    // MARK: - private
+
+    private func getMarkdownURLs(
+        at url: URL,
+        using fileManager: FileManager = .default
+    ) -> [URL] {
+        var toProcess: [URL] = []
+        let dirEnum = fileManager.enumerator(atPath: url.path)
+        while let file = dirEnum?.nextObject() as? String {
+            let url = url.appendingPathComponent(file)
+            guard url.pathExtension.lowercased() == "md" else {
+                continue
+            }
+            toProcess.append(url)
+        }
+        return toProcess
     }
 
     func load() throws -> Site {
 
+        let fileManager = FileManager.default
         let workUrl = URL(fileURLWithPath: path)
         let pagesUrl = workUrl.appendingPathComponent("pages")
         let postsUrl = workUrl.appendingPathComponent("posts")
@@ -28,115 +40,157 @@ struct ContentLoader {
         let tagsUrl = workUrl.appendingPathComponent("tags")
         let indexUrl = workUrl.appendingPathComponent("index.md")
 
-        let pageFiles = listMarkdownFiles(at: pagesUrl)
-        let postFiles = listMarkdownFiles(at: postsUrl)
-        let authorFiles = listMarkdownFiles(at: authorsUrl)
-        let tagFiles = listMarkdownFiles(at: tagsUrl)
+        let pageFiles = getMarkdownURLs(at: pagesUrl, using: fileManager)
+        let postFiles = getMarkdownURLs(at: postsUrl, using: fileManager)
+        let authorFiles = getMarkdownURLs(at: authorsUrl, using: fileManager)
+        let tagFiles = getMarkdownURLs(at: tagsUrl, using: fileManager)
 
-        let metadataParser = MetadataParser()
+        let frontMatterParser = FrontMatterParser()
 
         /// load pages
-        let pages = try pageFiles.map { file in
-            let slug = String(file.dropLast(3))  // drop .md extension
-            let url = pagesUrl.appendingPathComponent(file)
-            let markdown = try String(contentsOf: url)
-            let metadata = metadataParser.parse(markdown: markdown)
+        let pages = try pageFiles.map { url in
+            let id = String(url.lastPathComponent.dropLast(3))
+            let creation = try fileManager.creationDate(at: url)
+            let lastModification = try fileManager.modificationDate(at: url)
 
-            let title = metadata["title"] ?? ""
-            let description = metadata["description"] ?? ""
-            let imageUrl = metadata["imageUrl"]
+            let markdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: markdown)
+
+            let slug = frontMatter["slug"] ?? id
+            let title = frontMatter["title"] ?? ""
+            let description = frontMatter["description"] ?? ""
+            let imageUrl = frontMatter["imageUrl"]
 
             return Page(
+                id: id,
+                slug: slug,
                 metatags: .init(
-                    slug: slug,
-                    title: title,
-                    description: description,
-                    imageUrl: imageUrl
-                )
-            )
-        }
-
-        /// load posts
-        let posts = try postFiles.map { file in
-            let slug = String(file.dropLast(3))  // drop .md extension
-            let url = postsUrl.appendingPathComponent(file)
-            let markdown = try String(contentsOf: url)
-            let metadata = metadataParser.parse(markdown: markdown)
-
-            let title = metadata["title"] ?? ""
-            let description = metadata["description"] ?? ""
-            let imageUrl = metadata["imageUrl"]
-
-            let authors = metadata["authors"]
-            let tags = metadata["tags"]
-
-            return Post(
-                metatags: .init(
-                    slug: slug,
                     title: title,
                     description: description,
                     imageUrl: imageUrl
                 ),
-                authors: [],
-                tags: []
+                publication: creation,
+                lastModification: lastModification,
+                variables: frontMatter,
+                markdown: markdown
+            )
+        }
+
+        /// load posts
+        let posts = try postFiles.map { url in
+            let id = String(url.lastPathComponent.dropLast(3))
+            let creation = try fileManager.creationDate(at: url)
+            let lastModification = try fileManager.modificationDate(at: url)
+
+            let markdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: markdown)
+
+            let slug = frontMatter["slug"] ?? id
+            let title = frontMatter["title"] ?? ""
+            let description = frontMatter["description"] ?? ""
+            let imageUrl = frontMatter["imageUrl"]
+
+            let authors = frontMatter["authors"] ?? ""
+            let tags = frontMatter["tags"] ?? ""
+
+            let authorIds =
+                authors
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+            let tagIds =
+                tags
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+            return Post(
+                id: id,
+                slug: slug,
+                metatags: .init(
+                    title: title,
+                    description: description,
+                    imageUrl: imageUrl
+                ),
+                publication: creation,
+                lastModification: lastModification,
+                variables: frontMatter,
+                markdown: markdown,
+                authorIds: authorIds,
+                tagIds: tagIds
             )
         }
 
         /// load authors
-        let authors = try authorFiles.map { file in
-            let slug = String(file.dropLast(3))  // drop .md extension
-            let url = authorsUrl.appendingPathComponent(file)
-            let markdown = try String(contentsOf: url)
-            let metadata = metadataParser.parse(markdown: markdown)
+        let authors = try authorFiles.map { url in
+            let id = String(url.lastPathComponent.dropLast(3))
+            let creation = try fileManager.creationDate(at: url)
+            let lastModification = try fileManager.modificationDate(at: url)
 
-            let title = metadata["title"] ?? ""
-            let description = metadata["description"] ?? ""
-            let imageUrl = metadata["imageUrl"]
+            let markdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: markdown)
+
+            let slug = frontMatter["slug"] ?? id
+            let title = frontMatter["title"] ?? ""
+            let description = frontMatter["description"] ?? ""
+            let imageUrl = frontMatter["imageUrl"]
 
             return Author(
+                id: id,
+                slug: slug,
                 metatags: .init(
-                    slug: slug,
                     title: title,
                     description: description,
                     imageUrl: imageUrl
-                )
+                ),
+                publication: creation,
+                lastModification: lastModification,
+                variables: frontMatter,
+                markdown: markdown
             )
         }
 
         /// load tags
-        let tags = try tagFiles.map { file in
-            let slug = String(file.dropLast(3))  // drop .md extension
-            let url = tagsUrl.appendingPathComponent(file)
-            let markdown = try String(contentsOf: url)
-            let metadata = metadataParser.parse(markdown: markdown)
+        let tags = try tagFiles.map { url in
+            let id = String(url.lastPathComponent.dropLast(3))
+            let creation = try fileManager.creationDate(at: url)
+            let lastModification = try fileManager.modificationDate(at: url)
 
-            let title = metadata["title"] ?? ""
-            let description = metadata["description"] ?? ""
-            let imageUrl = metadata["imageUrl"]
+            let markdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: markdown)
+
+            let slug = frontMatter["slug"] ?? id
+            let title = frontMatter["title"] ?? ""
+            let description = frontMatter["description"] ?? ""
+            let imageUrl = frontMatter["imageUrl"]
 
             return Tag(
+                id: id,
+                slug: slug,
                 metatags: .init(
-                    slug: slug,
                     title: title,
                     description: description,
                     imageUrl: imageUrl
-                )
+                ),
+                publication: creation,
+                lastModification: lastModification,
+                variables: frontMatter,
+                markdown: markdown
             )
         }
 
         let markdown = try String(contentsOf: indexUrl)
-        let metadata = metadataParser.parse(markdown: markdown)
+        let frontMatter = frontMatterParser.parse(markdown: markdown)
 
-        let baseUrl = metadata["baseUrl"] ?? ""
-        let name = metadata["name"] ?? ""
-        let description = metadata["description"] ?? ""
-        let imageUrl = metadata["imageUrl"]
-        let language = metadata["language"]
+        let baseUrl = frontMatter["baseUrl"] ?? ""
+        let name = frontMatter["name"] ?? ""
+        let tagline = frontMatter["tagline"] ?? ""
+        let imageUrl = frontMatter["imageUrl"]
+        let language = frontMatter["language"]
 
         return .init(
             baseUrl: baseUrl,
             name: name,
-            description: description,
+            tagline: tagline,
             imageUrl: imageUrl,
             language: language,
             pages: pages,

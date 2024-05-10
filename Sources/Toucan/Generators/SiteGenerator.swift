@@ -1,42 +1,76 @@
-//import FileManagerKit
-//import Foundation
 //
-//extension ToucanFilesKit {
+//  File.swift
 //
-//    func checkSlug(
-//        metaData: [String: String],
-//        slugs: Set<String>,
-//        url: URL
-//    ) -> String {
-//        guard
-//            let slug = metaData["slug"],
-//            !slug.isEmpty,
-//            !slugs.contains(slug)
-//        else {
-//            fatalError(
-//                "Invalid or missing slug \(metaData["slug"] ?? "n/a"), \(url.path)"
-//            )
-//        }
-//        return slug
-//    }
 //
-//    func getContentURLsToProcess(
-//        at url: URL,
-//        using fileManager: FileManager = .default
-//    ) -> [URL] {
-//        var toProcess: [URL] = []
-//        let dirEnum = fileManager.enumerator(atPath: url.path)
-//        while let file = dirEnum?.nextObject() as? String {
-//            let url = url.appendingPathComponent(file)
-//            guard url.lastPathComponent.lowercased() == "contents.md" else {
-//                continue
-//            }
-//            toProcess.append(url.deletingLastPathComponent())
-//        }
-//        return toProcess
-//    }
+//  Created by Tibor Bodecs on 07/05/2024.
 //
-//    func processContentAssets(
+
+import Foundation
+import Algorithms
+
+struct SiteGenerator {
+
+    let site: Site
+    let path: String
+
+    func generate() throws {
+        let fileManager = FileManager.default
+        let output = URL(fileURLWithPath: path)
+
+        if fileManager.exists(at: output) {
+            try fileManager.removeItem(at: output)
+        }
+        try fileManager.createDirectory(at: output)
+
+        let postPages = site.posts
+            .sorted(by: { $0.publication > $1.publication })
+            .chunks(ofCount: 2)
+
+        let htmlRenderer = HTMLRenderer()
+
+        let postsDirUrl = output.appendingPathComponent("posts")
+        try fileManager.createDirectory(at: postsDirUrl)
+
+        for (index, posts) in postPages.enumerated() {
+            let postPageDirUrl =
+                postsDirUrl
+                .appendingPathComponent("\(index+1)")
+
+            try fileManager.createDirectory(at: postPageDirUrl)
+
+            let postPageUrl =
+                postPageDirUrl
+                .appendingPathComponent("index.html")
+
+            try "\(index+1)"
+                .write(
+                    to: postPageUrl,
+                    atomically: true,
+                    encoding: .utf8
+                )
+
+            for item in posts {
+
+                let postDirUrl = output.appendingPathComponent(item.slug)
+                try fileManager.createDirectory(at: postDirUrl)
+
+                let postUrl = postDirUrl.appendingPathComponent("index.html")
+
+                // TODO: use proper rendering...
+                let html = htmlRenderer.render(markdown: item.markdown)
+
+                try html.write(
+                    to: postUrl,
+                    atomically: true,
+                    encoding: .utf8
+                )
+            }
+        }
+
+    }
+}
+
+//func processContentAssets(
 //        at url: URL,
 //        slug: String,
 //        assetsUrl: URL,

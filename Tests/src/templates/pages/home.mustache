@@ -1,13 +1,20 @@
+{{<index}}
+
+{{$main}}
 <div id="posts" class="wrapper">
     <header>
-        <h1>\(title)</h1>
-        <p>\(description)</p>
+        <h1>{{site.name}}</h1>
+        <p>{{site.tagline}}</p>
         <br>
         <a href="mailto:binarybirdsofficial@gmail.com">Contact us</a>
     </header>
 
     <div class="grid">
-        \(posts)
+    {{#contents}}
+        {{> _partials.post}}
+    {{/contents}}
     </div>
-
 </div>
+{{/main}}
+
+{{/index}}

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 03/05/2024.
 //
 
-struct MetadataParser {
+struct FrontMatterParser {
 
     func parse(
         markdown: String

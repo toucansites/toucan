@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html {{#site.language}}lang="{{.}}"{{/site.language}}>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>{{metadata.title}} - {{site.name}}</title>
+    <meta name="description" content="{{site.tagline}}">
+    
+    <meta property="og:url" content="{{metadata.permalink}}">
+    <meta property="og:title" content="{{metadata.title}} - {{site.name}}">
+    <meta property="og:description" content="{{metadata.description}}">
+    {{#metadata.imageUrl}}
+    <meta property="og:image" content="{{.}}" />
+    {{/metadata.imageUrl}}
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{metadata.title}} - {{site.name}}">
+    <meta name="twitter:description" content="{{metadata.description}}">
+    {{#metadata.imageUrl}}
+    <meta name="twitter:image" content="{{.}}">
+    {{/metadata.imageUrl}}
+    
+    <link rel="stylesheet" href="{{site.baseUrl}}css/style.css">
+    <link rel="stylesheet" href="{{site.baseUrl}}css/syntax.css">
+
+    <link rel="shortcut icon" href="{{site.baseUrl}}images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{{site.baseUrl}}images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="{{site.baseUrl}}images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="{{site.baseUrl}}images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{site.baseUrl}}images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{site.baseUrl}}images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{site.baseUrl}}images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{site.baseUrl}}images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{site.baseUrl}}images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{site.baseUrl}}images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{site.baseUrl}}images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="page-header">
+        <a href="{{site.baseUrl}}">
+            <figure>
+                <picture>
+                    <source 
+                        srcset="{{site.baseUrl}}images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img 
+                        id="logo-image"
+                        src="{{site.baseUrl}}images/logos/logo.png"
+                        alt="Logo of {{site.name}}"
+                        title="{{site.name}}"
+                    >
+                </picture>
+            </figure>
+        </a>
+    </header>
+    
+    <main>
+
+    {{$main}}
+        <p>---</p>
+    {{/main}}
+
+    </main>
+
+    <footer>
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="{{site.baseUrl}}images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="{{site.baseUrl}}images/logos/logo.png"
+                        alt="Logo of {{site.name}}"
+                        title="{{site.name}}"
+                    >
+                </picture>
+            </figure>
+
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p> 
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="{{site.baseUrl}}rss.xml" target="_blank">RSS</a> ·
+                <a href="{{site.baseUrl}}sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+
+            <p class="small">{{site.name}} &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

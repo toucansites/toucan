@@ -4,7 +4,9 @@ title: First post
 description: The first post
 date: 2024/02/26
 tags: swift, uikit
-authors: tibor-bodecs, foo
+authors: tiborbodecs, foo
+template: custom-post.html
+
 ---
 
 

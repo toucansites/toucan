@@ -22,7 +22,7 @@ final class MetadataParserTests: XCTestCase {
             Lorem ipsum dolor sit amet.
             """#
 
-        let parser = MetadataParser()
+        let parser = FrontMatterParser()
         let metadata = parser.parse(markdown: input)
 
         let expectation: [String: String] = [

@@ -29,11 +29,18 @@ extension String {
     }
 
     func replacingTemplateVariables(
-        _ dictionary: [String: String]
+        _ dictionary: [String: String],
+        _ prefix: String? = nil
     ) -> String {
         var values: [String: String] = [:]
+
+        var pre = ""
+        if let prefix {
+            pre = prefix + "."
+        }
+
         for (key, value) in dictionary {
-            values["{" + key + "}"] = value
+            values["{" + pre + key + "}"] = value
         }
         return replacingOccurrences(values)
     }

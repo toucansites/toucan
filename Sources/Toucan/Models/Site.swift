@@ -9,7 +9,7 @@ struct Site {
 
     let baseUrl: String
     let name: String
-    let description: String
+    let tagline: String
     let imageUrl: String?
     let language: String?
 
@@ -21,8 +21,7 @@ struct Site {
 
 extension Site {
 
-    var metatags: [Metatags] {
-        pages.map(\.metatags) + posts.map(\.metatags) + authors.map(\.metatags)
-            + tags.map(\.metatags)
+    var contents: [ContentType] {
+        pages + posts + authors + tags
     }
 }

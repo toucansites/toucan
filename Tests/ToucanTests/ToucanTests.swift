@@ -15,61 +15,81 @@ final class ToucanTests: XCTestCase {
         let site = Site(
             baseUrl: "https://binarybirds.com",
             name: "Binary Birds",
-            description: "Lorem ipsum",
+            tagline: "Lorem ipsum",
             imageUrl: "http://foo.jpg",
             language: "en_US",
             pages: [
                 .init(
+                    id: "about",
+                    slug: "about",
                     metatags: .init(
-                        slug: "about",
                         title: "About us",
                         description: "Lorem ipsum",
                         imageUrl: "about.jpg"
-                    )
+                    ),
+                    publication: Date(),
+                    lastModification: Date(),
+                    variables: [:],
+                    markdown: ""
                 )
             ],
             posts: [
                 .init(
+                    id: "foo",
+                    slug: "foo",
                     metatags: .init(
-                        slug: "foo",
                         title: "Foo",
                         description: "Foo",
                         imageUrl: "foo.jpg"
                     ),
-                    authors: [
+                    publication: Date(),
+                    lastModification: Date(),
+                    variables: [:],
+                    markdown: "",
+                    authorIds: [
                         "tiborbodecs"
                     ],
-                    tags: [
+                    tagIds: [
                         "swift"
                     ]
                 )
             ],
             authors: [
                 .init(
+                    id: "tiborbodecs",
+                    slug: "tibor-bodecs",
                     metatags: .init(
-                        slug: "tiborbodecs",
                         title: "Tibor Bödecs",
                         description: "about the author",
                         imageUrl: "tiborbodecs.jpg"
-                    )
+                    ),
+                    publication: Date(),
+                    lastModification: Date(),
+                    variables: [:],
+                    markdown: ""
                 )
             ],
             tags: [
                 .init(
+                    id: "swift",
+                    slug: "swift",
                     metatags: .init(
-                        slug: "swift",
                         title: "Swift",
                         description: "Swift tag",
                         imageUrl: "swift.jpg"
-                    )
+                    ),
+                    publication: Date(),
+                    lastModification: Date(),
+                    variables: [:],
+                    markdown: ""
                 )
             ]
         )
 
-        let slugs = site.metatags.map(\.slug).sorted()
-        let uniqueSlugs = Array(Set(slugs)).sorted()
+        let contentSlugs = site.contents.map(\.slug).sorted()
+        let uniqueContentSlugs = Array(Set(contentSlugs)).sorted()
 
-        XCTAssertEqual(slugs, uniqueSlugs)
+        XCTAssertEqual(contentSlugs, uniqueContentSlugs)
     }
 
 }

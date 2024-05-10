@@ -6,7 +6,6 @@
 //
 
 struct Metatags {
-    let slug: String
     let title: String
     let description: String
     let imageUrl: String?
