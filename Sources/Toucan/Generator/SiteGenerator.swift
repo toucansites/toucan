@@ -11,16 +11,19 @@ import Algorithms
 struct SiteGenerator {
 
     let site: Site
-    let path: String
+    let templatesUrl: URL
+    let outputUrl: URL
 
     func generate() throws {
         let fileManager = FileManager.default
-        let output = URL(fileURLWithPath: path)
+        let templates = try TemplateLibrary(
+            templatesUrl: templatesUrl
+        )
 
-        if fileManager.exists(at: output) {
-            try fileManager.removeItem(at: output)
+        if fileManager.exists(at: outputUrl) {
+            try fileManager.removeItem(at: outputUrl)
         }
-        try fileManager.createDirectory(at: output)
+        try fileManager.createDirectory(at: outputUrl)
 
         let postPages = site.posts
             .sorted(by: { $0.publication > $1.publication })
@@ -28,7 +31,7 @@ struct SiteGenerator {
 
         let htmlRenderer = HTMLRenderer()
 
-        let postsDirUrl = output.appendingPathComponent("posts")
+        let postsDirUrl = outputUrl.appendingPathComponent("posts")
         try fileManager.createDirectory(at: postsDirUrl)
 
         for (index, posts) in postPages.enumerated() {
@@ -49,21 +52,54 @@ struct SiteGenerator {
                     encoding: .utf8
                 )
 
-            for item in posts {
-
-                let postDirUrl = output.appendingPathComponent(item.slug)
+            for post in posts {
+                let postDirUrl = outputUrl.appendingPathComponent(post.slug)
                 try fileManager.createDirectory(at: postDirUrl)
-
                 let postUrl = postDirUrl.appendingPathComponent("index.html")
+                let postBody = htmlRenderer.render(markdown: post.markdown)
 
-                // TODO: use proper rendering...
-                let html = htmlRenderer.render(markdown: item.markdown)
-
-                try html.write(
-                    to: postUrl,
-                    atomically: true,
-                    encoding: .utf8
+                let context = PageContext(
+                    site: .init(
+                        baseUrl: site.baseUrl,
+                        name: site.name,
+                        tagline: site.tagline,
+                        imageUrl: site.imageUrl,
+                        language: site.language
+                    ),
+                    metadata: .init(
+                        permalink: site.baseUrl + post.slug,
+                        title: post.metatags.title,
+                        description: post.metatags.description,
+                        imageUrl: post.metatags.imageUrl
+                    ),
+                    content: SinglePostContext(
+                        title: post.metatags.title,
+                        exceprt: post.metatags.description,
+                        date: "\(post.publication)",  // TODO: date formatter
+                        figure: .init(
+                            src: "http://lorempixel.com/light.jpg",
+                            darkSrc: "http://lorempixel.com/dark.jpg",
+                            alt: post.metatags.title,
+                            title: post.metatags.title
+                        ),
+                        tags: [
+                            .init(permalink: "https://bb.com/foo", name: "Foo")
+                        ],
+                        body: postBody
+                    )
                 )
+
+                let html = try templates.render(
+                    template: "pages.single.post",
+                    with: context
+                )
+
+                try html?
+                    .write(
+                        to: postUrl,
+                        atomically: true,
+                        encoding: .utf8
+                    )
             }
         }
 

@@ -8,6 +8,20 @@
 import Foundation
 import FileManagerKit
 
+extension String {
+
+    func dropFrontMatter() -> String {
+        if starts(with: "---") {
+            return
+                self
+                .split(separator: "---")
+                .dropFirst()
+                .joined(separator: "---")
+        }
+        return self
+    }
+}
+
 struct ContentLoader {
 
     let path: String
@@ -82,8 +96,8 @@ struct ContentLoader {
             let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
-            let markdown = try String(contentsOf: url)
-            let frontMatter = frontMatterParser.parse(markdown: markdown)
+            let rawMarkdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
@@ -114,7 +128,7 @@ struct ContentLoader {
                 publication: creation,
                 lastModification: lastModification,
                 variables: frontMatter,
-                markdown: markdown,
+                markdown: rawMarkdown.dropFrontMatter(),
                 authorIds: authorIds,
                 tagIds: tagIds
             )
@@ -126,8 +140,8 @@ struct ContentLoader {
             let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
-            let markdown = try String(contentsOf: url)
-            let frontMatter = frontMatterParser.parse(markdown: markdown)
+            let rawMarkdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
@@ -145,7 +159,7 @@ struct ContentLoader {
                 publication: creation,
                 lastModification: lastModification,
                 variables: frontMatter,
-                markdown: markdown
+                markdown: rawMarkdown.dropFrontMatter()
             )
         }
 
@@ -155,8 +169,8 @@ struct ContentLoader {
             let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
-            let markdown = try String(contentsOf: url)
-            let frontMatter = frontMatterParser.parse(markdown: markdown)
+            let rawMarkdown = try String(contentsOf: url)
+            let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
@@ -174,12 +188,12 @@ struct ContentLoader {
                 publication: creation,
                 lastModification: lastModification,
                 variables: frontMatter,
-                markdown: markdown
+                markdown: rawMarkdown.dropFrontMatter()
             )
         }
 
-        let markdown = try String(contentsOf: indexUrl)
-        let frontMatter = frontMatterParser.parse(markdown: markdown)
+        let rawMarkdown = try String(contentsOf: indexUrl)
+        let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
         let baseUrl = frontMatter["baseUrl"] ?? ""
         let name = frontMatter["name"] ?? ""

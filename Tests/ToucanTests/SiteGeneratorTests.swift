@@ -8,9 +8,9 @@
 import XCTest
 @testable import Toucan
 
-final class ContentLoaderTests: XCTestCase {
+final class SiteGeneratorTests: XCTestCase {
 
-    func testLoad() throws {
+    func testGeneration() throws {
 
         let path =
             "/"
@@ -33,6 +33,13 @@ final class ContentLoaderTests: XCTestCase {
         XCTAssertEqual(site.pages.count, 2)
         XCTAssertEqual(site.authors.count, 2)
         XCTAssertEqual(site.tags.count, 2)
+
+        let generator = SiteGenerator(
+            site: site,
+            templatesUrl: templatesUrl,
+            outputUrl: distUrl
+        )
+        try generator.generate()
     }
 
 }
