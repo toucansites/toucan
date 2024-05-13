@@ -41,6 +41,7 @@ extension Post {
 struct SiteGenerator {
 
     let site: Site
+    //    let contentsUrl: URL
     let templatesUrl: URL
     let publicFilesUrl: URL
     let outputUrl: URL
@@ -62,6 +63,13 @@ struct SiteGenerator {
         }
     }
 
+    func copyAssets() throws {
+        let tagsDirUrl = outputUrl.appendingPathComponent("assets")
+        try fileManager.createDirectory(at: tagsDirUrl)
+
+        // TODO: copy assets for the contents
+    }
+
     func generate() throws {
         // TODO: check reserved slugs
         let templates = try TemplateLibrary(
@@ -69,7 +77,7 @@ struct SiteGenerator {
         )
         try resetOutputDirectory()
         try copyPublicFiles()
-        // TODO: copy assets
+        try copyAssets()
 
         let htmlRenderer = HTMLRenderer()
         try renderPosts(templates, htmlRenderer: htmlRenderer)
