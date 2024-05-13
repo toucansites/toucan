@@ -57,4 +57,23 @@ struct TemplateLibrary {
         }
         return library.render(object, withTemplate: template)
     }
+
+    func render(
+        template: String,
+        with object: Any,
+        to destination: URL
+    ) throws {
+        guard self.ids.contains(template) else {
+            throw Error.missingTemplate(template)
+        }
+        try library.render(
+            object,
+            withTemplate: template
+        )?
+        .write(
+            to: destination,
+            atomically: true,
+            encoding: .utf8
+        )
+    }
 }

@@ -12,18 +12,32 @@ struct SiteGenerator {
 
     let site: Site
     let templatesUrl: URL
+    let publicFilesUrl: URL
     let outputUrl: URL
+    let fileManager = FileManager.default
 
-    func generate() throws {
-        let fileManager = FileManager.default
-        let templates = try TemplateLibrary(
-            templatesUrl: templatesUrl
-        )
-
+    func resetOutputDirectory() throws {
         if fileManager.exists(at: outputUrl) {
             try fileManager.removeItem(at: outputUrl)
         }
         try fileManager.createDirectory(at: outputUrl)
+    }
+
+    func copyPublicFiles() throws {
+        for file in fileManager.listDirectory(at: publicFilesUrl) {
+            try fileManager.copyItem(
+                at: publicFilesUrl.appendingPathComponent(file),
+                to: outputUrl.appendingPathComponent(file)
+            )
+        }
+    }
+
+    func generate() throws {
+        let templates = try TemplateLibrary(
+            templatesUrl: templatesUrl
+        )
+        try resetOutputDirectory()
+        try copyPublicFiles()
 
         let postPages = site.posts
             .sorted(by: { $0.publication > $1.publication })
@@ -35,9 +49,11 @@ struct SiteGenerator {
         try fileManager.createDirectory(at: postsDirUrl)
 
         for (index, posts) in postPages.enumerated() {
+            let pageIndex = index + 1
+
             let postPageDirUrl =
                 postsDirUrl
-                .appendingPathComponent("\(index+1)")
+                .appendingPathComponent("\(pageIndex)")
 
             try fileManager.createDirectory(at: postPageDirUrl)
 
@@ -45,12 +61,13 @@ struct SiteGenerator {
                 postPageDirUrl
                 .appendingPathComponent("index.html")
 
-            try "\(index+1)"
-                .write(
-                    to: postPageUrl,
-                    atomically: true,
-                    encoding: .utf8
-                )
+            try renderPostsPage(
+                templates,
+                posts: Array(posts),
+                pageIndex: index,
+                pageCount: postPages.count,
+                to: postPageUrl
+            )
 
             for post in posts {
                 let postDirUrl = outputUrl.appendingPathComponent(post.slug)
@@ -58,51 +75,148 @@ struct SiteGenerator {
                 let postUrl = postDirUrl.appendingPathComponent("index.html")
                 let postBody = htmlRenderer.render(markdown: post.markdown)
 
-                let context = PageContext(
-                    site: .init(
-                        baseUrl: site.baseUrl,
-                        name: site.name,
-                        tagline: site.tagline,
-                        imageUrl: site.imageUrl,
-                        language: site.language
-                    ),
-                    metadata: .init(
-                        permalink: site.baseUrl + post.slug,
-                        title: post.metatags.title,
-                        description: post.metatags.description,
-                        imageUrl: post.metatags.imageUrl
-                    ),
-                    content: SinglePostContext(
-                        title: post.metatags.title,
-                        exceprt: post.metatags.description,
-                        date: "\(post.publication)",  // TODO: date formatter
-                        figure: .init(
-                            src: "http://lorempixel.com/light.jpg",
-                            darkSrc: "http://lorempixel.com/dark.jpg",
-                            alt: post.metatags.title,
-                            title: post.metatags.title
-                        ),
-                        tags: [
-                            .init(permalink: "https://bb.com/foo", name: "Foo")
-                        ],
-                        body: postBody
-                    )
+                try renderSimplePost(
+                    templates,
+                    post: post,
+                    body: postBody,
+                    to: postUrl
                 )
-
-                let html = try templates.render(
-                    template: "pages.single.post",
-                    with: context
-                )
-
-                try html?
-                    .write(
-                        to: postUrl,
-                        atomically: true,
-                        encoding: .utf8
-                    )
             }
         }
 
+        try renderHomePage(templates)
+    }
+
+    // MARK: -
+
+    func renderPostsPage(
+        _ templates: TemplateLibrary,
+        posts: [Post],
+        pageIndex index: Int,
+        pageCount count: Int,
+        to destination: URL
+    ) throws {
+        let pageIndex = index + 1
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.permalink("posts/\(pageIndex)"),
+                title: "posts page 1",
+                description: "posts page 1 description",
+                imageUrl: nil
+            ),
+            content: PostsContext(
+                posts: posts.map {
+                    post in
+                    PostContext(
+                        title: post.metatags.title,
+                        exceprt: post.metatags.description,
+                        date: "\(post.publication)",
+                        figure: .init(
+                            src: post.metatags.imageUrl ?? "",
+                            darkSrc: nil,
+                            alt: post.metatags.title,
+                            title: post.metatags.title
+                        )
+                    )
+                },
+                pagination: (0..<count)
+                    .map { idx in
+                        let currentPageIndex = idx + 1
+                        return .init(
+                            name: "\(currentPageIndex)",
+                            url: site.permalink("posts/\(currentPageIndex)"),
+                            isCurrent: index == idx
+                        )
+                    }
+            )
+        )
+
+        try templates.render(
+            template: "pages.posts",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderSimplePost(
+        _ templates: TemplateLibrary,
+        post: Post,
+        body: String,
+        to destination: URL
+    ) throws {
+
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.permalink(post.slug),
+                title: post.metatags.title,
+                description: post.metatags.description,
+                imageUrl: post.metatags.imageUrl
+            ),
+            content: SinglePostContext(
+                title: post.metatags.title,
+                exceprt: post.metatags.description,
+                date: "\(post.publication)",  // TODO: date formatter
+                figure: .init(
+                    src: "http://lorempixel.com/light.jpg",
+                    darkSrc: "http://lorempixel.com/dark.jpg",
+                    alt: post.metatags.title,
+                    title: post.metatags.title
+                ),
+                tags: [
+                    .init(permalink: site.permalink("foo"), name: "Foo")
+                ],
+                body: body
+            )
+        )
+
+        try templates.render(
+            template: "pages.single.post",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderHomePage(_ templates: TemplateLibrary) throws {
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.permalink(""),
+                title: "home page",
+                description: "home page description",
+                imageUrl: nil
+            ),
+            content: PostsContext(
+                posts: [],
+                pagination: []
+            )
+        )
+
+        let indexUrl = outputUrl.appendingPathComponent("index.html")
+        try templates.render(
+            template: "pages.home",
+            with: context,
+            to: indexUrl
+        )
     }
 }
 

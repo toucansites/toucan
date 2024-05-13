@@ -22,6 +22,7 @@ final class SiteGeneratorTests: XCTestCase {
         let baseUrl = URL(fileURLWithPath: path)
         let srcUrl = baseUrl.appendingPathComponent("src")
         let templatesUrl = srcUrl.appendingPathComponent("templates")
+        let publicFilesUrl = srcUrl.appendingPathComponent("public")
         let contentsUrl = srcUrl.appendingPathComponent("contents")
         let distUrl = baseUrl.appendingPathComponent("dist")
 
@@ -37,6 +38,7 @@ final class SiteGeneratorTests: XCTestCase {
         let generator = SiteGenerator(
             site: site,
             templatesUrl: templatesUrl,
+            publicFilesUrl: publicFilesUrl,
             outputUrl: distUrl
         )
         try generator.generate()

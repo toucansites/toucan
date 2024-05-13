@@ -40,7 +40,7 @@ final class TemplateLibraryTests: XCTestCase {
                 language: site.language
             ),
             metadata: .init(
-                permalink: site.baseUrl + "slug-comes-here/",
+                permalink: site.permalink("slug-comes-here"),
                 title: "Lorem ipsum",
                 description: "doloor sit amet",
                 imageUrl: nil
@@ -97,7 +97,7 @@ final class TemplateLibraryTests: XCTestCase {
                 language: site.language
             ),
             metadata: .init(
-                permalink: site.baseUrl + "slug-comes-here/",
+                permalink: site.permalink("slug-comes-here"),
                 title: "Lorem ipsum",
                 description: "doloor sit amet",
                 imageUrl: nil
@@ -142,7 +142,7 @@ final class TemplateLibraryTests: XCTestCase {
                 language: site.language
             ),
             metadata: .init(
-                permalink: site.baseUrl + "slug-comes-here/",
+                permalink: site.permalink("slug-comes-here"),
                 title: "Lorem ipsum",
                 description: "doloor sit amet",
                 imageUrl: nil

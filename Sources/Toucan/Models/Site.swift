@@ -21,6 +21,14 @@ struct Site {
 
 extension Site {
 
+    func permalink(_ value: String) -> String {
+        let uncheckedValue = baseUrl + value
+        if uncheckedValue.hasSuffix("/") {
+            return uncheckedValue
+        }
+        return uncheckedValue + "/"
+    }
+
     var contents: [ContentType] {
         pages + posts + authors + tags
     }
