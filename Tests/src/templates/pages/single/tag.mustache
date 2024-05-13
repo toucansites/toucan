@@ -1,9 +1,20 @@
 {{<index}}
 
 {{$main}}
-<div class="tag content-wrapper">
-    {{& content}}
+
+<div id="posts" class="wrapper">
+    <header>
+        <h1>{{content.name}}</h1>
+        <p>{{content.description}}</p>
+    </header>
+
+    <div class="grid">
+    {{#content.posts}}
+        {{> _partials.post}}
+    {{/content.posts}}
+    </div>
 </div>
+
 {{/main}}
 
 {{/index}}

@@ -144,7 +144,7 @@ struct ContentLoader {
             let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
-            let title = frontMatter["title"] ?? ""
+            let name = frontMatter["name"] ?? ""
             let description = frontMatter["description"] ?? ""
             let imageUrl = frontMatter["imageUrl"]
 
@@ -152,7 +152,7 @@ struct ContentLoader {
                 id: id,
                 slug: slug,
                 metatags: .init(
-                    title: title,
+                    title: name,
                     description: description,
                     imageUrl: imageUrl
                 ),
@@ -173,7 +173,7 @@ struct ContentLoader {
             let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
-            let title = frontMatter["title"] ?? ""
+            let name = frontMatter["name"] ?? ""
             let description = frontMatter["description"] ?? ""
             let imageUrl = frontMatter["imageUrl"]
 
@@ -181,7 +181,7 @@ struct ContentLoader {
                 id: id,
                 slug: slug,
                 metatags: .init(
-                    title: title,
+                    title: name,
                     description: description,
                     imageUrl: imageUrl
                 ),

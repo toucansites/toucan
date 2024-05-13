@@ -8,6 +8,36 @@
 import Foundation
 import Algorithms
 
+extension Site {
+
+    func getContext() -> SiteContext {
+        .init(
+            baseUrl: baseUrl,
+            name: name,
+            tagline: tagline,
+            imageUrl: imageUrl,
+            language: language
+        )
+    }
+}
+
+extension Post {
+
+    func getContext() -> PostContext {
+        .init(
+            title: metatags.title,
+            exceprt: metatags.description,
+            date: "\(publication)",
+            figure: .init(
+                src: metatags.imageUrl ?? "",
+                darkSrc: nil,
+                alt: metatags.title,
+                title: metatags.title
+            )
+        )
+    }
+}
+
 struct SiteGenerator {
 
     let site: Site
@@ -33,14 +63,15 @@ struct SiteGenerator {
     }
 
     func generate() throws {
+        // TODO: check reserved slugs
         let templates = try TemplateLibrary(
             templatesUrl: templatesUrl
         )
         try resetOutputDirectory()
         try copyPublicFiles()
+        // TODO: copy assets
 
         let htmlRenderer = HTMLRenderer()
-
         try renderPosts(templates, htmlRenderer: htmlRenderer)
         try renderTags(templates, htmlRenderer: htmlRenderer)
         try renderAuthors(templates, htmlRenderer: htmlRenderer)
@@ -76,7 +107,7 @@ struct SiteGenerator {
 
             let tagBody = htmlRenderer.render(markdown: tag.markdown)
 
-            try renderSimpleTag(
+            try renderSingleTag(
                 templates,
                 tag: tag,
                 body: tagBody,
@@ -109,7 +140,7 @@ struct SiteGenerator {
 
             let tagBody = htmlRenderer.render(markdown: author.markdown)
 
-            try renderSimpleAuthor(
+            try renderSingleAuthor(
                 templates,
                 author: author,
                 body: tagBody,
@@ -173,7 +204,7 @@ struct SiteGenerator {
                 let postUrl = postDirUrl.appendingPathComponent("index.html")
                 let postBody = htmlRenderer.render(markdown: post.markdown)
 
-                try renderSimplePost(
+                try renderSinglePost(
                     templates,
                     post: post,
                     body: postBody,
@@ -182,6 +213,8 @@ struct SiteGenerator {
             }
         }
     }
+
+    // MARK: -
 
     func renderPostsPage(
         _ templates: TemplateLibrary,
@@ -192,13 +225,7 @@ struct SiteGenerator {
     ) throws {
         let pageIndex = index + 1
         let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
+            site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink("posts/\(pageIndex)"),
                 title: "posts page 1",
@@ -206,20 +233,7 @@ struct SiteGenerator {
                 imageUrl: nil
             ),
             content: PostsContext(
-                posts: posts.map {
-                    post in
-                    PostContext(
-                        title: post.metatags.title,
-                        exceprt: post.metatags.description,
-                        date: "\(post.publication)",
-                        figure: .init(
-                            src: post.metatags.imageUrl ?? "",
-                            darkSrc: nil,
-                            alt: post.metatags.title,
-                            title: post.metatags.title
-                        )
-                    )
-                },
+                posts: posts.map { $0.getContext() },
                 pagination: (0..<count)
                     .map { idx in
                         let currentPageIndex = idx + 1
@@ -239,7 +253,66 @@ struct SiteGenerator {
         )
     }
 
-    func renderSimplePost(
+    // MARK: -
+
+    func renderSingleTag(
+        _ templates: TemplateLibrary,
+        tag: Tag,
+        body: String,
+        to destination: URL
+    ) throws {
+        let context = PageContext(
+            site: site.getContext(),
+            metadata: .init(
+                permalink: site.permalink(tag.slug),
+                title: tag.metatags.title,
+                description: tag.metatags.description,
+                imageUrl: tag.metatags.imageUrl
+            ),
+            content: SingleTagContext(
+                name: tag.metatags.title,
+                description: tag.metatags.description,
+                posts: site.postsBy(tagId: tag.id).map { $0.getContext() }
+            )
+        )
+
+        try templates.render(
+            template: "pages.single.tag",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderSingleAuthor(
+        _ templates: TemplateLibrary,
+        author: Author,
+        body: String,
+        to destination: URL
+    ) throws {
+
+        let context = PageContext(
+            site: site.getContext(),
+            metadata: .init(
+                permalink: site.permalink(author.slug),
+                title: author.metatags.title,
+                description: author.metatags.description,
+                imageUrl: author.metatags.imageUrl
+            ),
+            content: SingleAuthorContext(
+                name: author.metatags.title,
+                description: author.metatags.description,
+                posts: site.postsBy(authorId: author.id).map { $0.getContext() }
+            )
+        )
+
+        try templates.render(
+            template: "pages.single.author",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderSinglePost(
         _ templates: TemplateLibrary,
         post: Post,
         body: String,
@@ -247,13 +320,7 @@ struct SiteGenerator {
     ) throws {
 
         let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
+            site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(post.slug),
                 title: post.metatags.title,
@@ -284,77 +351,11 @@ struct SiteGenerator {
         )
     }
 
-    func renderSimpleTag(
-        _ templates: TemplateLibrary,
-        tag: Tag,
-        body: String,
-        to destination: URL
-    ) throws {
-
-        let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
-            metadata: .init(
-                permalink: site.permalink(tag.slug),
-                title: tag.metatags.title,
-                description: tag.metatags.description,
-                imageUrl: tag.metatags.imageUrl
-            ),
-            content: "foo"
-        )
-
-        try templates.render(
-            template: "pages.single.tag",
-            with: context,
-            to: destination
-        )
-    }
-
-    func renderSimpleAuthor(
-        _ templates: TemplateLibrary,
-        author: Author,
-        body: String,
-        to destination: URL
-    ) throws {
-
-        let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
-            metadata: .init(
-                permalink: site.permalink(author.slug),
-                title: author.metatags.title,
-                description: author.metatags.description,
-                imageUrl: author.metatags.imageUrl
-            ),
-            content: "foo"
-        )
-
-        try templates.render(
-            template: "pages.single.author",
-            with: context,
-            to: destination
-        )
-    }
+    // MARK: -
 
     func renderHomePage(_ templates: TemplateLibrary) throws {
         let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
+            site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
                 title: "home page",
