@@ -41,4 +41,8 @@ extension Site {
         posts.filter { $0.authorIds.contains(authorId) }
     }
 
+    func page(id: String) -> Page? {
+        pages.filter { $0.id == id }.first
+    }
+
 }

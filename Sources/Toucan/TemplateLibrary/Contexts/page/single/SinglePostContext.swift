@@ -10,6 +10,6 @@ struct SinglePostContext {
     let exceprt: String
     let date: String
     let figure: FigureContext?
-    let tags: [TagContext]
+    let tags: ArrayContext<TagContext>
     let body: String
 }

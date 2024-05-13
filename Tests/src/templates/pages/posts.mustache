@@ -9,17 +9,21 @@
         <a href="mailto:binarybirdsofficial@gmail.com">Contact us</a>
     </header>
 
+{{#content.posts.hasElements}}
     <div class="grid">
-    {{#content.posts}}
+    {{#content.posts.elements}}
         {{> _partials.post}}
-    {{/content.posts}}
+    {{/content.posts.elements}}
     </div>
-    
+{{/content.posts.hasElements}}
+
+{{#content.pagination.hasElements}}
     <div class="pagination">
-        {{#content.pagination}}
+        {{#content.pagination.elements}}
             {{> _partials.pagination}}
-        {{/content.pagination}}
+        {{/content.pagination.elements}}
     </div>
+{{/content.pagination.hasElements}}
 </div>
 {{/main}}
 

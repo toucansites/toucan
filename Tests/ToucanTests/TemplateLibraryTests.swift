@@ -57,8 +57,8 @@ final class TemplateLibraryTests: XCTestCase {
                         title: "lorem foo"
                     )
                 )
-            ]
-
+            ],
+            userDefined: [:]
         )
 
         let res = try templates.render(
@@ -102,7 +102,8 @@ final class TemplateLibraryTests: XCTestCase {
                 description: "doloor sit amet",
                 imageUrl: nil
             ),
-            content: "just a <b>simple</b> page"
+            content: "just a <b>simple</b> page",
+            userDefined: [:]
 
         )
 
@@ -157,12 +158,12 @@ final class TemplateLibraryTests: XCTestCase {
                     alt: "foo",
                     title: "lorem foo"
                 ),
-                tags: [
+                tags: .init([
                     .init(permalink: "https://bb.com/foo", name: "Foo")
-                ],
+                ]),
                 body: "<b>lorem ipsum</b> dolor sit amet"
-            )
-
+            ),
+            userDefined: [:]
         )
 
         let res = try templates.render(

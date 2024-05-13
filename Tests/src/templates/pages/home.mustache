@@ -3,23 +3,24 @@
 {{$main}}
 <div id="posts" class="wrapper">
     <header>
-        <h1>{{site.name}}</h1>
-        <p>{{site.tagline}}</p>
+        <h1>{{metadata.title}}</h1>
+        <p>{{metadata.description}}</p>
         <br>
-        <a href="mailto:binarybirdsofficial@gmail.com">Contact us</a>
+        <a href="{{userDefined.ctaUrl}}">{{userDefined.ctaLabel}}</a>
     </header>
 
-    <div class="grid">
-    {{#content.posts}}
-        {{> _partials.post}}
-    {{/content.posts}}
-    </div>
     
-    <div class="pagination">
-        {{#content.pagination}}
-            {{> _partials.pagination}}
-        {{/content.pagination}}
+    {{#content.posts.hasElements}}
+    <div class="grid">
+    {{#content.posts.elements}}
+        {{> _partials.post}}
+    {{/content.posts.elements}}
     </div>
+    {{/content.posts.hasElements}}
+    {{^content.posts.hasElements}}
+    Empty.
+    {{/content.posts.hasElements}}
+
 </div>
 {{/main}}
 

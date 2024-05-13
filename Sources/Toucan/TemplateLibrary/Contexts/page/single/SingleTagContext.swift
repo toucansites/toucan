@@ -8,5 +8,5 @@
 struct SingleTagContext {
     let name: String
     let description: String
-    let posts: [PostContext]
+    let posts: ArrayContext<PostContext>
 }

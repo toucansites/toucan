@@ -227,23 +227,28 @@ struct SiteGenerator {
         let context = PageContext(
             site: site.getContext(),
             metadata: .init(
-                permalink: site.permalink("posts/\(pageIndex)"),
+                permalink: site.permalink("posts/page/\(pageIndex)"),
                 title: "posts page 1",
                 description: "posts page 1 description",
                 imageUrl: nil
             ),
             content: PostsContext(
-                posts: posts.map { $0.getContext() },
-                pagination: (0..<count)
-                    .map { idx in
-                        let currentPageIndex = idx + 1
-                        return .init(
-                            name: "\(currentPageIndex)",
-                            url: site.permalink("posts/\(currentPageIndex)"),
-                            isCurrent: index == idx
-                        )
-                    }
-            )
+                posts: .init(posts.map { $0.getContext() }),
+                pagination: .init(
+                    (0..<count)
+                        .map { idx in
+                            let currentPageIndex = idx + 1
+                            return .init(
+                                name: "\(currentPageIndex)",
+                                url: site.permalink(
+                                    "posts/page/\(currentPageIndex)"
+                                ),
+                                isCurrent: index == idx
+                            )
+                        }
+                )
+            ),
+            userDefined: [:]
         )
 
         try templates.render(
@@ -272,8 +277,11 @@ struct SiteGenerator {
             content: SingleTagContext(
                 name: tag.metatags.title,
                 description: tag.metatags.description,
-                posts: site.postsBy(tagId: tag.id).map { $0.getContext() }
-            )
+                posts: .init(
+                    site.postsBy(tagId: tag.id).map { $0.getContext() }
+                )
+            ),
+            userDefined: [:]
         )
 
         try templates.render(
@@ -301,8 +309,11 @@ struct SiteGenerator {
             content: SingleAuthorContext(
                 name: author.metatags.title,
                 description: author.metatags.description,
-                posts: site.postsBy(authorId: author.id).map { $0.getContext() }
-            )
+                posts: .init(
+                    site.postsBy(authorId: author.id).map { $0.getContext() }
+                )
+            ),
+            userDefined: [:]
         )
 
         try templates.render(
@@ -337,11 +348,12 @@ struct SiteGenerator {
                     alt: post.metatags.title,
                     title: post.metatags.title
                 ),
-                tags: [
+                tags: .init([
                     .init(permalink: site.permalink("foo"), name: "Foo")
-                ],
+                ]),
                 body: body
-            )
+            ),
+            userDefined: [:]
         )
 
         try templates.render(
@@ -354,18 +366,22 @@ struct SiteGenerator {
     // MARK: -
 
     func renderHomePage(_ templates: TemplateLibrary) throws {
+
+        let page = site.page(id: "home")
+
         let context = PageContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
-                title: "home page",
-                description: "home page description",
+                title: page?.metatags.title ?? "Home",
+                description: page?.metatags.description ?? "Home page",
                 imageUrl: nil
             ),
-            content: PostsContext(
-                posts: [],
-                pagination: []
-            )
+            content: HomeContext(
+                // TODO: sort by & first N
+                posts: .init(site.posts.map { $0.getContext() })
+            ),
+            userDefined: page?.variables ?? [:]
         )
 
         let indexUrl = outputUrl.appendingPathComponent("index.html")

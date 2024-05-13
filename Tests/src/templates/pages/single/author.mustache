@@ -8,11 +8,14 @@
         <p>{{content.description}}</p>
     </header>
 
+{{#content.posts.hasElements}}
     <div class="grid">
-    {{#content.posts}}
+    {{#content.posts.elements}}
         {{> _partials.post}}
-    {{/content.posts}}
+    {{/content.posts.elements}}
     </div>
+{{/content.posts.hasElements}}
+
 </div>
 
 {{/main}}

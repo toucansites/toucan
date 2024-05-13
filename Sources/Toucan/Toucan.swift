@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 03/05/2024.
 //
 
+import Foundation
+
 /// A static site generator.
 public struct Toucan {
 
@@ -31,42 +33,7 @@ public struct Toucan {
     public func generate(
         _ baseUrl: String?
     ) throws {
-        //
-        //        var toucanFilesKit = ToucanFilesKit()
-        //        try toucanFilesKit.createURLs(inputUrl)
-        //        try toucanFilesKit.createOutputs(outputUrl)
-        //        try toucanFilesKit.createInfo(needToCopy: true)
-        //
-        //        var toucanContentKit = ToucanContentKit()
-        //        try toucanContentKit.create(
-        //            baseUrl: baseUrl,
-        //            contentsUrl: toucanFilesKit.contentsUrl,
-        //            templatesUrl: toucanFilesKit.templatesUrl,
-        //            postFileInfos: toucanFilesKit.postFileInfos,
-        //            pageFileInfos: toucanFilesKit.pageFileInfos
-        //        )
-        //
-        //        for post in toucanContentKit.posts {
-        //            let content = try post.generate()
-        //            try toucanFilesKit.savePostContentToFile(post.slug, content)
-        //        }
-        //
-        //        for page in toucanContentKit.pages {
-        //            let content = try page.generate()
-        //            try toucanFilesKit.savePageContentToFile(page.slug, content)
-        //        }
-        //
-        //        let homeContent = try toucanContentKit.home?.generate()
-        //        try toucanFilesKit.saveHomeContentToFile(homeContent)
-        //
-        //        let notFoundContent = try toucanContentKit.notFound?.generate()
-        //        try toucanFilesKit.saveNotFoundContentToFile(notFoundContent)
-        //
-        //        let rssContent = try toucanContentKit.rss?.generate()
-        //        try toucanFilesKit.saveRSSContentToFile(rssContent)
-        //
-        //        let sitemapContent = try toucanContentKit.sitemap?.generate()
-        //        try toucanFilesKit.saveSiteMapContentToFile(sitemapContent)
+
     }
 
 }

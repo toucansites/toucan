@@ -8,6 +8,13 @@
 import Foundation
 import Mustache
 
+extension String {
+
+    func minifyHTML() -> String {
+        self
+    }
+}
+
 struct TemplateLibrary {
 
     enum Error: Swift.Error {
@@ -70,10 +77,12 @@ struct TemplateLibrary {
             object,
             withTemplate: template
         )?
+        .minifyHTML()
         .write(
             to: destination,
             atomically: true,
             encoding: .utf8
         )
     }
+
 }

@@ -9,4 +9,5 @@ struct PageContext<T> {
     let site: SiteContext
     let metadata: MetadataContext
     let content: T
+    let userDefined: [String: String]
 }

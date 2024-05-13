@@ -8,11 +8,11 @@
             <time datetime="{{date}}">{{date}}</time>
             <h1 class="title">{{title}}</h1>
             <p class="excerpt">{{excerpt}}</p>
-            {{#tags}}
+            {{#tags.elements}}
             <div class="meta">
                 {{> _partials.tag}}
             </div>
-            {{/tags}}
+            {{/tags.elements}}
         </section>
         
         {{> _partials.figure}}
