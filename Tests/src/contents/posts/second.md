@@ -1,5 +1,5 @@
 ---
-slug: second_post
+slug: second-post
 title: Second post
 description: The second post
 date: 2024/02/27

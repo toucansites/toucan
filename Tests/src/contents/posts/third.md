@@ -1,5 +1,5 @@
 ---
-slug: third_post
+slug: third-post
 title: Third post
 description: The third post
 date: 2024/02/28
