@@ -39,11 +39,94 @@ struct SiteGenerator {
         try resetOutputDirectory()
         try copyPublicFiles()
 
+        let htmlRenderer = HTMLRenderer()
+
+        try renderPosts(templates, htmlRenderer: htmlRenderer)
+        try renderTags(templates, htmlRenderer: htmlRenderer)
+        try renderAuthors(templates, htmlRenderer: htmlRenderer)
+
+        try renderHomePage(templates)
+        // TODO: render 404 page
+        // TODO: render RSS.xml
+        // TODO: render sitemap.xml
+        // TODO: robots.txt?
+    }
+
+    // MARK: -
+
+    func renderTags(
+        _ templates: TemplateLibrary,
+        htmlRenderer: HTMLRenderer
+    ) throws {
+
+        let tagsDirUrl = outputUrl.appendingPathComponent("tags")
+        try fileManager.createDirectory(at: tagsDirUrl)
+
+        for tag in site.tags {
+
+            let tagPageDirUrl =
+                tagsDirUrl
+                .appendingPathComponent(tag.slug)
+
+            try fileManager.createDirectory(at: tagPageDirUrl)
+
+            let tagPageUrl =
+                tagPageDirUrl
+                .appendingPathComponent("index.html")
+
+            let tagBody = htmlRenderer.render(markdown: tag.markdown)
+
+            try renderSimpleTag(
+                templates,
+                tag: tag,
+                body: tagBody,
+                to: tagPageUrl
+            )
+        }
+
+        // TODO: render tags/index.html
+    }
+
+    func renderAuthors(
+        _ templates: TemplateLibrary,
+        htmlRenderer: HTMLRenderer
+    ) throws {
+
+        let authorsDirUrl = outputUrl.appendingPathComponent("authors")
+        try fileManager.createDirectory(at: authorsDirUrl)
+
+        for author in site.authors {
+
+            let authorPageDirUrl =
+                authorsDirUrl
+                .appendingPathComponent(author.slug)
+
+            try fileManager.createDirectory(at: authorPageDirUrl)
+
+            let tagPageUrl =
+                authorPageDirUrl
+                .appendingPathComponent("index.html")
+
+            let tagBody = htmlRenderer.render(markdown: author.markdown)
+
+            try renderSimpleAuthor(
+                templates,
+                author: author,
+                body: tagBody,
+                to: tagPageUrl
+            )
+        }
+
+        // TODO: render authors/index.html
+    }
+
+    func renderPosts(
+        _ templates: TemplateLibrary,
+        htmlRenderer: HTMLRenderer
+    ) throws {
         let postPages = site.posts
             .sorted(by: { $0.publication > $1.publication })
             .chunks(ofCount: 2)
-
-        let htmlRenderer = HTMLRenderer()
 
         let postsDirUrl = outputUrl.appendingPathComponent("posts")
         try fileManager.createDirectory(at: postsDirUrl)
@@ -53,6 +136,7 @@ struct SiteGenerator {
 
             let postPageDirUrl =
                 postsDirUrl
+                .appendingPathComponent("page")
                 .appendingPathComponent("\(pageIndex)")
 
             try fileManager.createDirectory(at: postPageDirUrl)
@@ -61,6 +145,7 @@ struct SiteGenerator {
                 postPageDirUrl
                 .appendingPathComponent("index.html")
 
+            // TODO: add canonical if index == 0
             try renderPostsPage(
                 templates,
                 posts: Array(posts),
@@ -68,6 +153,19 @@ struct SiteGenerator {
                 pageCount: postPages.count,
                 to: postPageUrl
             )
+
+            if index == 0 {
+                let postsUrl =
+                    postsDirUrl
+                    .appendingPathComponent("index.html")
+                try renderPostsPage(
+                    templates,
+                    posts: Array(posts),
+                    pageIndex: index,
+                    pageCount: postPages.count,
+                    to: postsUrl
+                )
+            }
 
             for post in posts {
                 let postDirUrl = outputUrl.appendingPathComponent(post.slug)
@@ -83,11 +181,7 @@ struct SiteGenerator {
                 )
             }
         }
-
-        try renderHomePage(templates)
     }
-
-    // MARK: -
 
     func renderPostsPage(
         _ templates: TemplateLibrary,
@@ -185,6 +279,68 @@ struct SiteGenerator {
 
         try templates.render(
             template: "pages.single.post",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderSimpleTag(
+        _ templates: TemplateLibrary,
+        tag: Tag,
+        body: String,
+        to destination: URL
+    ) throws {
+
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.permalink(tag.slug),
+                title: tag.metatags.title,
+                description: tag.metatags.description,
+                imageUrl: tag.metatags.imageUrl
+            ),
+            content: "foo"
+        )
+
+        try templates.render(
+            template: "pages.single.tag",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderSimpleAuthor(
+        _ templates: TemplateLibrary,
+        author: Author,
+        body: String,
+        to destination: URL
+    ) throws {
+
+        let context = PageContext(
+            site: .init(
+                baseUrl: site.baseUrl,
+                name: site.name,
+                tagline: site.tagline,
+                imageUrl: site.imageUrl,
+                language: site.language
+            ),
+            metadata: .init(
+                permalink: site.permalink(author.slug),
+                title: author.metatags.title,
+                description: author.metatags.description,
+                imageUrl: author.metatags.imageUrl
+            ),
+            content: "foo"
+        )
+
+        try templates.render(
+            template: "pages.single.author",
             with: context,
             to: destination
         )
