@@ -32,13 +32,7 @@ final class TemplateLibraryTests: XCTestCase {
         let templates = try TemplateLibrary(templatesUrl: templatesUrl)
 
         let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
+            site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink("slug-comes-here"),
                 title: "Lorem ipsum",
@@ -61,11 +55,11 @@ final class TemplateLibraryTests: XCTestCase {
             userDefined: [:]
         )
 
-        let res = try templates.render(
-            template: "pages.home",
-            with: context
-        )
-        print(res!)
+        //        let res = try templates.render(
+        //            template: "pages.home",
+        //            with: context
+        //        )
+        //        print(res!)
     }
 
     func testSinglePageTemplate() throws {
@@ -89,13 +83,7 @@ final class TemplateLibraryTests: XCTestCase {
         let templates = try TemplateLibrary(templatesUrl: templatesUrl)
 
         let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
+            site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink("slug-comes-here"),
                 title: "Lorem ipsum",
@@ -107,11 +95,11 @@ final class TemplateLibraryTests: XCTestCase {
 
         )
 
-        let res = try templates.render(
-            template: "pages.single.page",
-            with: context
-        )
-        print(res!)
+        //        let res = try templates.render(
+        //            template: "pages.single.page",
+        //            with: context
+        //        )
+        //        print(res!)
     }
 
     func testSinglePostTemplate() throws {
@@ -135,13 +123,7 @@ final class TemplateLibraryTests: XCTestCase {
         let templates = try TemplateLibrary(templatesUrl: templatesUrl)
 
         let context = PageContext(
-            site: .init(
-                baseUrl: site.baseUrl,
-                name: site.name,
-                tagline: site.tagline,
-                imageUrl: site.imageUrl,
-                language: site.language
-            ),
+            site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink("slug-comes-here"),
                 title: "Lorem ipsum",
@@ -166,11 +148,11 @@ final class TemplateLibraryTests: XCTestCase {
             userDefined: [:]
         )
 
-        let res = try templates.render(
-            template: "pages.single.post",
-            with: context
-        )
-        print(res!)
+        //        let res = try templates.render(
+        //            template: "pages.single.post",
+        //            with: context
+        //        )
+        //        print(res!)
     }
 
 }

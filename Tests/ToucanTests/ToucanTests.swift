@@ -15,8 +15,6 @@ final class ToucanTests: XCTestCase {
         let site = Site(
             baseUrl: "https://binarybirds.com",
             name: "Binary Birds",
-            tagline: "Lorem ipsum",
-            imageUrl: "http://foo.jpg",
             language: "en_US",
             pages: [
                 .init(

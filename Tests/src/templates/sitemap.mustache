@@ -1,8 +1,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
+    {{#urls.hasElements}}
     <url>
-        <loc>\(item.permalink)</loc>
-        <lastmod>\(formatter.string(from: item.date))</lastmod>
+        {{#urls.elements}}
+        <loc>{{location}}</loc>
+        <lastmod>{{lastModification}}</lastmod>
+        {{/urls.elements}}
     </url>
-
+    {{/urls.hasElements}}
 </urlset>

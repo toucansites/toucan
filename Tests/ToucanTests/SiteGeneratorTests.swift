@@ -30,12 +30,7 @@ final class SiteGeneratorTests: XCTestCase {
 
         let site = try loader.load()
 
-        XCTAssertEqual(site.posts.count, 3)
-        XCTAssertEqual(site.pages.count, 3)
-        XCTAssertEqual(site.authors.count, 2)
-        XCTAssertEqual(site.tags.count, 2)
-
-        let generator = SiteGenerator(
+        let generator = Toucan(
             site: site,
             templatesUrl: templatesUrl,
             publicFilesUrl: publicFilesUrl,

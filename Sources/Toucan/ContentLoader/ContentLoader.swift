@@ -52,7 +52,7 @@ struct ContentLoader {
         let postsUrl = workUrl.appendingPathComponent("posts")
         let authorsUrl = workUrl.appendingPathComponent("authors")
         let tagsUrl = workUrl.appendingPathComponent("tags")
-        let indexUrl = workUrl.appendingPathComponent("index.md")
+        let siteUrl = workUrl.appendingPathComponent("site.md")
 
         let pageFiles = getMarkdownURLs(at: pagesUrl, using: fileManager)
         let postFiles = getMarkdownURLs(at: postsUrl, using: fileManager)
@@ -192,20 +192,16 @@ struct ContentLoader {
             )
         }
 
-        let rawMarkdown = try String(contentsOf: indexUrl)
+        let rawMarkdown = try String(contentsOf: siteUrl)
         let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
         let baseUrl = frontMatter["baseUrl"] ?? ""
         let name = frontMatter["name"] ?? ""
-        let tagline = frontMatter["tagline"] ?? ""
-        let imageUrl = frontMatter["imageUrl"]
         let language = frontMatter["language"]
 
         return .init(
             baseUrl: baseUrl,
             name: name,
-            tagline: tagline,
-            imageUrl: imageUrl,
             language: language,
             pages: pages,
             posts: posts,

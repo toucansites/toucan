@@ -9,8 +9,6 @@ struct Site {
 
     let baseUrl: String
     let name: String
-    let tagline: String
-    let imageUrl: String?
     let language: String?
 
     let pages: [Page]

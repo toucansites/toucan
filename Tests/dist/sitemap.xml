@@ -1,0 +1,26 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://localhost:3000/authors/</loc>
+        <lastmod>2024-05-14</lastmod>
+        <loc>http://localhost:3000/home/</loc>
+        <lastmod>2024-05-14</lastmod>
+        <loc>http://localhost:3000/404/</loc>
+        <lastmod>2024-04-12</lastmod>
+        <loc>http://localhost:3000/posts/</loc>
+        <lastmod>2024-05-13</lastmod>
+        <loc>http://localhost:3000/first-post/</loc>
+        <lastmod>2024-05-13</lastmod>
+        <loc>http://localhost:3000/third-post/</loc>
+        <lastmod>2024-05-13</lastmod>
+        <loc>http://localhost:3000/second-post/</loc>
+        <lastmod>2024-05-13</lastmod>
+        <loc>http://localhost:3000/nandi/</loc>
+        <lastmod>2024-05-07</lastmod>
+        <loc>http://localhost:3000/tibor-bodecs/</loc>
+        <lastmod>2024-05-13</lastmod>
+        <loc>http://localhost:3000/swift/</loc>
+        <lastmod>2024-05-13</lastmod>
+        <loc>http://localhost:3000/server/</loc>
+        <lastmod>2024-05-13</lastmod>
+    </url>
+</urlset>

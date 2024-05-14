@@ -14,10 +14,6 @@ struct ToucanCommand: ParsableCommand {
     var baseUrl: String? = nil
 
     func run() throws {
-        let toucan = Toucan(
-            inputPath: input,
-            outputPath: output
-        )
-        try toucan.generate(baseUrl)
+
     }
 }
