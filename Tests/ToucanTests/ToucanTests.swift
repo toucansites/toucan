@@ -14,13 +14,14 @@ final class ToucanTests: XCTestCase {
 
         let site = Site(
             baseUrl: "https://binarybirds.com",
-            name: "Binary Birds",
+            title: "Binary Birds",
+            description: "The official site",
             language: "en_US",
             pages: [
                 .init(
                     id: "about",
                     slug: "about",
-                    metatags: .init(
+                    meta: .init(
                         title: "About us",
                         description: "Lorem ipsum",
                         imageUrl: "about.jpg"
@@ -35,7 +36,7 @@ final class ToucanTests: XCTestCase {
                 .init(
                     id: "foo",
                     slug: "foo",
-                    metatags: .init(
+                    meta: .init(
                         title: "Foo",
                         description: "Foo",
                         imageUrl: "foo.jpg"
@@ -56,7 +57,7 @@ final class ToucanTests: XCTestCase {
                 .init(
                     id: "tiborbodecs",
                     slug: "tibor-bodecs",
-                    metatags: .init(
+                    meta: .init(
                         title: "Tibor Bödecs",
                         description: "about the author",
                         imageUrl: "tiborbodecs.jpg"
@@ -71,7 +72,7 @@ final class ToucanTests: XCTestCase {
                 .init(
                     id: "swift",
                     slug: "swift",
-                    metatags: .init(
+                    meta: .init(
                         title: "Swift",
                         description: "Swift tag",
                         imageUrl: "swift.jpg"

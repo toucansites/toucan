@@ -6,5 +6,19 @@
 //
 
 struct RSSContext {
-    let posts: ArrayContext<PostContext>
+
+    struct ItemContext {
+        let permalink: String
+        let title: String
+        let description: String
+        let publicationDate: String
+    }
+
+    let title: String
+    let description: String
+    let baseUrl: String
+    let language: String?
+    let lastBuildDate: String
+    let publicationDate: String
+    let items: ArrayContext<ItemContext>
 }

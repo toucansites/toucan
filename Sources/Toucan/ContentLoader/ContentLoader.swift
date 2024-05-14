@@ -78,7 +78,7 @@ struct ContentLoader {
             return Page(
                 id: id,
                 slug: slug,
-                metatags: .init(
+                meta: .init(
                     title: title,
                     description: description,
                     imageUrl: imageUrl
@@ -120,7 +120,7 @@ struct ContentLoader {
             return Post(
                 id: id,
                 slug: slug,
-                metatags: .init(
+                meta: .init(
                     title: title,
                     description: description,
                     imageUrl: imageUrl
@@ -144,15 +144,15 @@ struct ContentLoader {
             let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
-            let name = frontMatter["name"] ?? ""
+            let title = frontMatter["title"] ?? ""
             let description = frontMatter["description"] ?? ""
             let imageUrl = frontMatter["imageUrl"]
 
             return Author(
                 id: id,
                 slug: slug,
-                metatags: .init(
-                    title: name,
+                meta: .init(
+                    title: title,
                     description: description,
                     imageUrl: imageUrl
                 ),
@@ -173,15 +173,15 @@ struct ContentLoader {
             let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
             let slug = frontMatter["slug"] ?? id
-            let name = frontMatter["name"] ?? ""
+            let title = frontMatter["title"] ?? ""
             let description = frontMatter["description"] ?? ""
             let imageUrl = frontMatter["imageUrl"]
 
             return Tag(
                 id: id,
                 slug: slug,
-                metatags: .init(
-                    title: name,
+                meta: .init(
+                    title: title,
                     description: description,
                     imageUrl: imageUrl
                 ),
@@ -196,12 +196,14 @@ struct ContentLoader {
         let frontMatter = frontMatterParser.parse(markdown: rawMarkdown)
 
         let baseUrl = frontMatter["baseUrl"] ?? ""
-        let name = frontMatter["name"] ?? ""
+        let title = frontMatter["title"] ?? ""
+        let description = frontMatter["description"] ?? ""
         let language = frontMatter["language"]
 
         return .init(
             baseUrl: baseUrl,
-            name: name,
+            title: title,
+            description: description,
             language: language,
             pages: pages,
             posts: posts,

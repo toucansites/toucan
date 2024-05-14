@@ -7,5 +7,5 @@
 
 struct AuthorContext {
     let permalink: String
-    let name: String
+    let title: String
 }

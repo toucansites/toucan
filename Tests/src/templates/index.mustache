@@ -4,18 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <title>{{metadata.title}} - {{site.name}}</title>
+    <title>{{metadata.title}} - {{site.title}}</title>
     <meta name="description" content="{{metadata.description}}">
     
     <meta property="og:url" content="{{metadata.permalink}}">
-    <meta property="og:title" content="{{metadata.title}} - {{site.name}}">
+    <meta property="og:title" content="{{metadata.title}} - {{site.title}}">
     <meta property="og:description" content="{{metadata.description}}">
     {{#metadata.imageUrl}}
     <meta property="og:image" content="{{.}}" />
     {{/metadata.imageUrl}}
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{metadata.title}} - {{site.name}}">
+    <meta name="twitter:title" content="{{metadata.title}} - {{site.title}}">
     <meta name="twitter:description" content="{{metadata.description}}">
     {{#metadata.imageUrl}}
     <meta name="twitter:image" content="{{.}}">
@@ -51,8 +51,8 @@
                     <img 
                         id="logo-image"
                         src="{{site.baseUrl}}images/logos/logo.png"
-                        alt="Logo of {{site.name}}"
-                        title="{{site.name}}"
+                        alt="Logo of {{site.title}}"
+                        title="{{site.title}}"
                     >
                 </picture>
             </figure>
@@ -78,8 +78,8 @@
                     <img
                         id="logo-image"
                         src="{{site.baseUrl}}images/logos/logo.png"
-                        alt="Logo of {{site.name}}"
-                        title="{{site.name}}"
+                        alt="Logo of {{site.title}}"
+                        title="{{site.title}}"
                     >
                 </picture>
             </figure>
@@ -95,7 +95,7 @@
                 <a href="{{site.baseUrl}}sitemap.xml" target="_blank">Sitemap</a>
             </p>
 
-            <p class="small">{{site.name}} &copy; 2022 - 2024.</p>
+            <p class="small">{{site.title}} &copy; 2022 - 2024.</p>
         </section>
     </footer>
 </body>

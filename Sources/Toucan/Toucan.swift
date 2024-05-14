@@ -44,6 +44,7 @@ public struct Toucan {
     func generate() throws {
         // TODO: check reserved slugs
         let templates = try TemplateLibrary(
+            site: site,
             templatesUrl: templatesUrl
         )
         try resetOutputDirectory()
@@ -56,12 +57,14 @@ public struct Toucan {
         try renderAuthors(templates, htmlRenderer: htmlRenderer)
 
         let indexUrl = outputUrl.appendingPathComponent("index.html")
-        try templates.renderHomePage(site: site, to: indexUrl)
+        try templates.renderHomePage(to: indexUrl)
         // TODO: render 404 page
-        // TODO: render RSS.xml
+
+        let rssUrl = outputUrl.appendingPathComponent("rss.xml")
+        try templates.renderRSS(to: rssUrl)
 
         let sitemapUrl = outputUrl.appendingPathComponent("sitemap.xml")
-        try templates.renderSitemap(site: site, to: sitemapUrl)
+        try templates.renderSitemap(to: sitemapUrl)
         // TODO: robots.txt?
     }
 
@@ -90,7 +93,6 @@ public struct Toucan {
             let tagBody = htmlRenderer.render(markdown: tag.markdown)
 
             try templates.renderSingleTag(
-                site: site,
                 tag: tag,
                 body: tagBody,
                 to: tagPageUrl
@@ -123,7 +125,6 @@ public struct Toucan {
             let tagBody = htmlRenderer.render(markdown: author.markdown)
 
             try templates.renderSingleAuthor(
-                site: site,
                 author: author,
                 body: tagBody,
                 to: tagPageUrl
@@ -160,7 +161,6 @@ public struct Toucan {
 
             // TODO: add canonical if index == 0
             try templates.renderPostsPage(
-                site: site,
                 posts: Array(posts),
                 pageIndex: index,
                 pageCount: postPages.count,
@@ -172,7 +172,6 @@ public struct Toucan {
                     postsDirUrl
                     .appendingPathComponent("index.html")
                 try templates.renderPostsPage(
-                    site: site,
                     posts: Array(posts),
                     pageIndex: index,
                     pageCount: postPages.count,
@@ -187,7 +186,6 @@ public struct Toucan {
                 let postBody = htmlRenderer.render(markdown: post.markdown)
 
                 try templates.renderSinglePost(
-                    site: site,
                     post: post,
                     body: postBody,
                     to: postUrl

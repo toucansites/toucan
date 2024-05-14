@@ -29,7 +29,10 @@ final class TemplateLibraryTests: XCTestCase {
 
         let site = try loader.load()
 
-        let templates = try TemplateLibrary(templatesUrl: templatesUrl)
+        let templates = try TemplateLibrary(
+            site: site,
+            templatesUrl: templatesUrl
+        )
 
         let context = PageContext(
             site: site.getContext(),
@@ -80,7 +83,10 @@ final class TemplateLibraryTests: XCTestCase {
 
         let site = try loader.load()
 
-        let templates = try TemplateLibrary(templatesUrl: templatesUrl)
+        let templates = try TemplateLibrary(
+            site: site,
+            templatesUrl: templatesUrl
+        )
 
         let context = PageContext(
             site: site.getContext(),
@@ -120,7 +126,10 @@ final class TemplateLibraryTests: XCTestCase {
 
         let site = try loader.load()
 
-        let templates = try TemplateLibrary(templatesUrl: templatesUrl)
+        let templates = try TemplateLibrary(
+            site: site,
+            templatesUrl: templatesUrl
+        )
 
         let context = PageContext(
             site: site.getContext(),
@@ -141,7 +150,7 @@ final class TemplateLibraryTests: XCTestCase {
                     title: "lorem foo"
                 ),
                 tags: .init([
-                    .init(permalink: "https://bb.com/foo", name: "Foo")
+                    .init(permalink: "https://bb.com/foo", title: "Foo")
                 ]),
                 body: "<b>lorem ipsum</b> dolor sit amet"
             ),

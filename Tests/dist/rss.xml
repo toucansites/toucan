@@ -1,0 +1,35 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<channel>
+    <title>Binary Birds</title>
+    <description>The official site for BB.</description>
+    <link>http://localhost:3000/</link>
+    <language>en-US</language>
+    <lastBuildDate>Tue, 14 May 2024 11:48:37 +0000</lastBuildDate>
+    <pubDate>Fri, 12 Apr 2024 14:18:55 +0000</pubDate>
+    <ttl>250</ttl>
+    <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+
+<item>
+    <guid isPermaLink="true">http://localhost:3000/first-post/</guid>
+    <title><![CDATA[ First post ]]></title>
+    <description><![CDATA[ The first post ]]></description>
+    <link>http://localhost:3000/first-post/</link>
+    <pubDate>Fri, 12 Apr 2024 14:18:55 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/third-post/</guid>
+    <title><![CDATA[ Third post ]]></title>
+    <description><![CDATA[ The third post ]]></description>
+    <link>http://localhost:3000/third-post/</link>
+    <pubDate>Fri, 12 Apr 2024 14:18:55 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/second-post/</guid>
+    <title><![CDATA[ Second post ]]></title>
+    <description><![CDATA[ The second post ]]></description>
+    <link>http://localhost:3000/second-post/</link>
+    <pubDate>Fri, 12 Apr 2024 14:18:55 +0000</pubDate>
+</item>
+
+</channel>
+</rss>

@@ -7,6 +7,6 @@
 
 struct SiteContext {
     let baseUrl: String
-    let name: String
+    let title: String
     let language: String?
 }

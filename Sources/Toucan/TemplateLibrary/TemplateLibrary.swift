@@ -20,7 +20,7 @@ extension Site {
     func getContext() -> SiteContext {
         .init(
             baseUrl: baseUrl,
-            name: name,
+            title: title,
             language: language
         )
     }
@@ -28,16 +28,18 @@ extension Site {
 
 extension Post {
 
-    func getContext() -> PostContext {
+    func getContext(
+        formatter: DateFormatter
+    ) -> PostContext {
         .init(
-            title: metatags.title,
-            exceprt: metatags.description,
-            date: "\(publication)",
+            title: meta.title,
+            exceprt: meta.description,
+            date: formatter.string(from: publication),
             figure: .init(
-                src: metatags.imageUrl ?? "",
+                src: meta.imageUrl ?? "",
                 darkSrc: nil,
-                alt: metatags.title,
-                title: metatags.title
+                alt: meta.title,
+                title: meta.title
             )
         )
     }
@@ -49,10 +51,12 @@ struct TemplateLibrary {
         case missingTemplate(String)
     }
 
+    private let site: Site
     private let library: MustacheLibrary
     private let ids: [String]
 
     init(
+        site: Site,
         templatesUrl: URL
     ) throws {
         let ext = "mustache"
@@ -79,6 +83,7 @@ struct TemplateLibrary {
                 )
             }
         }
+        self.site = site
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
     }
@@ -116,24 +121,29 @@ struct TemplateLibrary {
     // MARK: -
 
     func renderSingleTag(
-        site: Site,
         tag: Tag,
         body: String,
         to destination: URL
     ) throws {
+        let formatter = DateFormatters().standard
         let context = PageContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(tag.slug),
-                title: tag.metatags.title,
-                description: tag.metatags.description,
-                imageUrl: tag.metatags.imageUrl
+                title: tag.meta.title,
+                description: tag.meta.description,
+                imageUrl: tag.meta.imageUrl
             ),
             content: SingleTagContext(
-                name: tag.metatags.title,
-                description: tag.metatags.description,
+                title: tag.meta.title,
+                description: tag.meta.description,
                 posts: .init(
-                    site.postsBy(tagId: tag.id).map { $0.getContext() }
+                    site.postsBy(tagId: tag.id)
+                        .map {
+                            $0.getContext(
+                                formatter: formatter
+                            )
+                        }
                 )
             ),
             userDefined: [:]
@@ -147,25 +157,27 @@ struct TemplateLibrary {
     }
 
     func renderSingleAuthor(
-        site: Site,
         author: Author,
         body: String,
         to destination: URL
     ) throws {
-
+        let formatter = DateFormatters().standard
         let context = PageContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(author.slug),
-                title: author.metatags.title,
-                description: author.metatags.description,
-                imageUrl: author.metatags.imageUrl
+                title: author.meta.title,
+                description: author.meta.description,
+                imageUrl: author.meta.imageUrl
             ),
             content: SingleAuthorContext(
-                name: author.metatags.title,
-                description: author.metatags.description,
+                title: author.meta.title,
+                description: author.meta.description,
                 posts: .init(
-                    site.postsBy(authorId: author.id).map { $0.getContext() }
+                    site.postsBy(authorId: author.id)
+                        .map {
+                            $0.getContext(formatter: formatter)
+                        }
                 )
             ),
             userDefined: [:]
@@ -179,7 +191,6 @@ struct TemplateLibrary {
     }
 
     func renderSinglePost(
-        site: Site,
         post: Post,
         body: String,
         to destination: URL
@@ -189,22 +200,22 @@ struct TemplateLibrary {
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(post.slug),
-                title: post.metatags.title,
-                description: post.metatags.description,
-                imageUrl: post.metatags.imageUrl
+                title: post.meta.title,
+                description: post.meta.description,
+                imageUrl: post.meta.imageUrl
             ),
             content: SinglePostContext(
-                title: post.metatags.title,
-                exceprt: post.metatags.description,
+                title: post.meta.title,
+                exceprt: post.meta.description,
                 date: "\(post.publication)",  // TODO: date formatter
                 figure: .init(
                     src: "http://lorempixel.com/light.jpg",
                     darkSrc: "http://lorempixel.com/dark.jpg",
-                    alt: post.metatags.title,
-                    title: post.metatags.title
+                    alt: post.meta.title,
+                    title: post.meta.title
                 ),
                 tags: .init([
-                    .init(permalink: site.permalink("foo"), name: "Foo")
+                    .init(permalink: site.permalink("foo"), title: "Foo")
                 ]),
                 body: body
             ),
@@ -219,23 +230,28 @@ struct TemplateLibrary {
     }
 
     func renderHomePage(
-        site: Site,
         to destination: URL
     ) throws {
-
+        let formatter = DateFormatters().standard
         let page = site.page(id: "home")
 
         let context = PageContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
-                title: page?.metatags.title ?? "Home",
-                description: page?.metatags.description ?? "Home page",
+                title: page?.meta.title ?? "Home",
+                description: page?.meta.description ?? "Home page",
                 imageUrl: nil
             ),
             content: HomeContext(
                 // TODO: sort by & first N
-                posts: .init(site.posts.map { $0.getContext() })
+                posts: .init(
+                    site.posts.map {
+                        $0.getContext(
+                            formatter: formatter
+                        )
+                    }
+                )
             ),
             userDefined: page?.variables ?? [:]
         )
@@ -248,12 +264,12 @@ struct TemplateLibrary {
     }
 
     func renderPostsPage(
-        site: Site,
         posts: [Post],
         pageIndex index: Int,
         pageCount count: Int,
         to destination: URL
     ) throws {
+        let formatter = DateFormatters().standard
         let pageIndex = index + 1
         let context = PageContext(
             site: site.getContext(),
@@ -264,7 +280,11 @@ struct TemplateLibrary {
                 imageUrl: nil
             ),
             content: PostsContext(
-                posts: .init(posts.map { $0.getContext() }),
+                posts: .init(
+                    posts.map {
+                        $0.getContext(formatter: formatter)
+                    }
+                ),
                 pagination: .init(
                     (0..<count)
                         .map { idx in
@@ -290,11 +310,36 @@ struct TemplateLibrary {
     }
 
     func renderRSS(
-        site: Site,
-        posts: [Post],
         to destination: URL
     ) throws {
-        let context = RSSContext(posts: .init(posts.map { $0.getContext() }))
+
+        let now = Date()
+        let formatter = DateFormatters().rss
+
+        let items: [RSSContext.ItemContext] = site.posts.map {
+            .init(
+                permalink: site.permalink(
+                    $0.slug
+                ),
+                title: $0.meta.title,
+                description: $0.meta.description,
+                publicationDate: formatter.string(
+                    from: $0.publication
+                )
+            )
+        }
+
+        let context = RSSContext(
+            title: site.title,
+            description: site.description,
+            baseUrl: site.baseUrl,
+            language: site.language,
+            lastBuildDate: formatter.string(from: now),
+            publicationDate: formatter.string(
+                from: site.posts.first?.publication ?? now
+            ),
+            items: .init(items)
+        )
 
         try render(
             template: "rss",
@@ -304,7 +349,6 @@ struct TemplateLibrary {
     }
 
     func renderSitemap(
-        site: Site,
         to destination: URL
     ) throws {
         let formatter = DateFormatters().sitemap

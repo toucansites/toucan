@@ -1,21 +1,23 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
 <channel>
-    <title>\(config.title)</title>
-    <description>\(config.description)</description>
-    <link>\(config.baseUrl)</link>
-    <language>\(config.language)</language>
-    <lastBuildDate>\(now)</lastBuildDate>
-    <pubDate>\(formatter.string(from: pubDate))</pubDate>
+    <title>{{title}}</title>
+    <description>{{description}}</description>
+    <link>{{baseUrl}}</link>
+    <language>{{language}}</language>
+    <lastBuildDate>{{lastBuildDate}}</lastBuildDate>
+    <pubDate>{{publicationDate}}</pubDate>
     <ttl>250</ttl>
-    <atom:link href="\(config.baseUrl)rss.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="{{baseUrl}}rss.xml" rel="self" type="application/rss+xml"/>
 
+{{#items.elements}}
 <item>
-    <guid isPermaLink="true">\(item.permalink)</guid>
-    <title><![CDATA[ \(item.title) ]]></title>
-    <description><![CDATA[ \(item.description) ]]></description>
-    <link>\(item.permalink)</link>
-    <pubDate>\(formatter.string(from: item.date))</pubDate>
+    <guid isPermaLink="true">{{permalink}}</guid>
+    <title><![CDATA[ {{title}} ]]></title>
+    <description><![CDATA[ {{description}} ]]></description>
+    <link>{{permalink}}</link>
+    <pubDate>{{publicationDate}}</pubDate>
 </item>
+{{/items.elements}}
 
 </channel>
 </rss>

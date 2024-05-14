@@ -50,7 +50,7 @@ site.config.md
 
 - site.baseUrl: 
 - site.language:
-- site.name: 
+- site.title: 
 - site.description: 
 - site.imageUrl: 
 

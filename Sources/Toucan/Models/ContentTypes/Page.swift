@@ -10,7 +10,7 @@ import Foundation
 struct Page: ContentType {
     let id: String
     let slug: String
-    let metatags: Metatags
+    let meta: Meta
     let publication: Date
     let lastModification: Date
     let variables: [String: String]

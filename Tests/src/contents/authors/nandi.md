@@ -1,4 +1,4 @@
 ---
-name: Nandi
+title: Nandi
 image: http://...
 ---

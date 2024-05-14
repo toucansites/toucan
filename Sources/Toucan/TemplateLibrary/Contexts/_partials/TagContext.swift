@@ -7,5 +7,5 @@
 
 struct TagContext {
     let permalink: String
-    let name: String
+    let title: String
 }
