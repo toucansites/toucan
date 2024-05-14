@@ -81,13 +81,9 @@ struct Generator {
             .appendingPathComponent(Toucan.Directories.tags)
 
         for tag in site.tags {
-
-            let tagPageDirUrl =
+            let tagPageUrl =
                 tagsDirUrl
                 .appendingPathComponent(tag.slug)
-
-            let tagPageUrl =
-                tagPageDirUrl
                 .appendingPathComponent(Toucan.Files.index)
 
             let tagBody = htmlRenderer.render(markdown: tag.markdown)
@@ -114,20 +110,17 @@ struct Generator {
 
         for author in site.authors {
 
-            let authorPageDirUrl =
+            let authorPageUrl =
                 authorsDirUrl
                 .appendingPathComponent(author.slug)
-
-            let tagPageUrl =
-                authorPageDirUrl
                 .appendingPathComponent(Toucan.Files.index)
 
-            let tagBody = htmlRenderer.render(markdown: author.markdown)
+            let authorBody = htmlRenderer.render(markdown: author.markdown)
 
             try templates.renderSingleAuthor(
                 author: author,
-                body: tagBody,
-                to: tagPageUrl
+                body: authorBody,
+                to: authorPageUrl
             )
         }
 
