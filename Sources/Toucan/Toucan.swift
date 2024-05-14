@@ -51,9 +51,9 @@ public struct Toucan {
         try copyAssets()
 
         let htmlRenderer = HTMLRenderer()
-        try renderPosts(templates, htmlRenderer: htmlRenderer)
-        try renderTags(templates, htmlRenderer: htmlRenderer)
-        try renderAuthors(templates, htmlRenderer: htmlRenderer)
+        try generatePostPages(templates, htmlRenderer: htmlRenderer)
+        try generateTagPages(templates, htmlRenderer: htmlRenderer)
+        try generateAuthorPages(templates, htmlRenderer: htmlRenderer)
 
         let indexUrl = outputUrl.appendingPathComponent("index.html")
         try templates.renderHomePage(to: indexUrl)
@@ -70,7 +70,7 @@ public struct Toucan {
 
     // MARK: -
 
-    func renderTags(
+    func generateTagPages(
         _ templates: TemplateLibrary,
         htmlRenderer: HTMLRenderer
     ) throws {
@@ -99,10 +99,11 @@ public struct Toucan {
             )
         }
 
-        // TODO: render tags/index.html
+        let tagsUrl = tagsDirUrl.appendingPathComponent("index.html")
+        try templates.renderTagsPage(to: tagsUrl)
     }
 
-    func renderAuthors(
+    func generateAuthorPages(
         _ templates: TemplateLibrary,
         htmlRenderer: HTMLRenderer
     ) throws {
@@ -131,10 +132,11 @@ public struct Toucan {
             )
         }
 
-        // TODO: render authors/index.html
+        let authorsUrl = authorsDirUrl.appendingPathComponent("index.html")
+        try templates.renderAuthorsPage(to: authorsUrl)
     }
 
-    func renderPosts(
+    func generatePostPages(
         _ templates: TemplateLibrary,
         htmlRenderer: HTMLRenderer
     ) throws {
@@ -174,6 +176,16 @@ public struct Toucan {
                     pageIndex: index,
                     pageCount: postPages.count,
                     to: postsUrl
+                )
+                let postPageUrl =
+                    postsDirUrl
+                    .appendingPathComponent("page")
+                    .appendingPathComponent("index.html")
+                try templates.renderPostsPage(
+                    posts: Array(posts),
+                    pageIndex: index,
+                    pageCount: postPages.count,
+                    to: postPageUrl
                 )
             }
 

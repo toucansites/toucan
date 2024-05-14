@@ -45,6 +45,30 @@ extension Post {
     }
 }
 
+extension Author {
+
+    func getContext(
+        site: Site
+    ) -> AuthorContext {
+        .init(
+            permalink: site.permalink("authors/" + slug),
+            title: meta.title
+        )
+    }
+}
+
+extension Tag {
+
+    func getContext(
+        site: Site
+    ) -> TagContext {
+        .init(
+            permalink: site.permalink("tags/" + slug),
+            title: meta.title
+        )
+    }
+}
+
 struct TemplateLibrary {
 
     enum Error: Swift.Error {
@@ -229,6 +253,70 @@ struct TemplateLibrary {
         )
     }
 
+    func renderAuthorsPage(
+        to destination: URL
+    ) throws {
+        let page = site.page(id: "authors")
+
+        let context = PageContext(
+            site: site.getContext(),
+            metadata: .init(
+                permalink: site.permalink(""),
+                title: page?.meta.title ?? "Authors",
+                description: page?.meta.description ?? "Authors page",
+                imageUrl: nil
+            ),
+            content: AuthorsContext(
+                authors: .init(
+                    site.authors.map {
+                        $0.getContext(
+                            site: site
+                        )
+                    }
+                )
+            ),
+            userDefined: page?.frontMatter ?? [:]
+        )
+
+        try render(
+            template: "pages.authors",
+            with: context,
+            to: destination
+        )
+    }
+
+    func renderTagsPage(
+        to destination: URL
+    ) throws {
+        let page = site.page(id: "tags")
+
+        let context = PageContext(
+            site: site.getContext(),
+            metadata: .init(
+                permalink: site.permalink(""),
+                title: page?.meta.title ?? "Tags",
+                description: page?.meta.description ?? "Tags page",
+                imageUrl: nil
+            ),
+            content: TagsContext(
+                tags: .init(
+                    site.tags.map {
+                        $0.getContext(
+                            site: site
+                        )
+                    }
+                )
+            ),
+            userDefined: page?.frontMatter ?? [:]
+        )
+
+        try render(
+            template: "pages.tags",
+            with: context,
+            to: destination
+        )
+    }
+
     func renderHomePage(
         to destination: URL
     ) throws {
@@ -244,13 +332,14 @@ struct TemplateLibrary {
                 imageUrl: nil
             ),
             content: HomeContext(
-                // TODO: sort by & first N
+                // TODO: first N
                 posts: .init(
-                    site.posts.map {
-                        $0.getContext(
-                            formatter: formatter
-                        )
-                    }
+                    site.posts.prefix(2)
+                        .map {
+                            $0.getContext(
+                                formatter: formatter
+                            )
+                        }
                 )
             ),
             userDefined: page?.frontMatter ?? [:]
@@ -278,7 +367,7 @@ struct TemplateLibrary {
                 imageUrl: nil
             ),
             content: HomeContext(
-                // TODO: sort by & first N
+                // TODO: first N
                 posts: .init(
                     site.posts.map {
                         $0.getContext(
