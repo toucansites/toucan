@@ -47,7 +47,7 @@ extension Site {
     }
 
     var systemPageIds: [String] {
-        ["home", "404"]
+        ["home", "404", "authors", "posts", "tags"]
     }
 
     var customPages: [Page] {

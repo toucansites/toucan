@@ -12,6 +12,9 @@ extension String {
 
     func minifyHTML() -> String {
         self
+        //        components(separatedBy: .newlines)
+        //            .map { $0.trimmingCharacters(in: .whitespaces) }
+        //            .joined()
     }
 }
 
@@ -127,7 +130,7 @@ struct TemplateLibrary {
         with object: Any,
         to destination: URL
     ) throws {
-        guard self.ids.contains(template) else {
+        guard ids.contains(template) else {
             throw Error.missingTemplate(template)
         }
         try library.render(

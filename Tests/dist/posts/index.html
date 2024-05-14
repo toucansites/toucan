@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <title>Posts page title - Binary Birds</title>
-    <meta name="description" content="Foooooooo">
+    <title>posts page 1 - Binary Birds</title>
+    <meta name="description" content="posts page 1 description">
     
-    <meta property="og:url" content="http://localhost:3000/posts/">
-    <meta property="og:title" content="Posts page title - Binary Birds">
-    <meta property="og:description" content="Foooooooo">
+    <meta property="og:url" content="http://localhost:3000/posts/page/1/">
+    <meta property="og:title" content="posts page 1 - Binary Birds">
+    <meta property="og:description" content="posts page 1 description">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Posts page title - Binary Birds">
-    <meta name="twitter:description" content="Foooooooo">
+    <meta name="twitter:title" content="posts page 1 - Binary Birds">
+    <meta name="twitter:description" content="posts page 1 description">
     
     <link rel="stylesheet" href="http://localhost:3000/css/style.css">
     <link rel="stylesheet" href="http://localhost:3000/css/syntax.css">
@@ -61,8 +61,55 @@
     
     <main>
 
-<div class="page content-wrapper">
-    
+<div id="posts" class="wrapper">
+    <header>
+        <h1>Posts</h1>
+        <p>description</p>
+        <br>
+        <a href="mailto:binarybirdsofficial@gmail.com">Contact us</a>
+    </header>
+
+    <div class="grid">
+        <div class="post">
+            <a href="" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt="Second post"
+                            title="Second post"
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2024/05/14">2024/05/14</time>
+                    <h2 class="title">Second post</h2>
+                </section>
+            </a>
+        </div>
+        <div class="post">
+            <a href="" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt="Third post"
+                            title="Third post"
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2024/05/14">2024/05/14</time>
+                    <h2 class="title">Third post</h2>
+                </section>
+            </a>
+        </div>
+    </div>
+
+    <div class="pagination">
+            <a href="http://localhost:3000/posts/page/1/" class="current-page">1</a>
+            <a href="http://localhost:3000/posts/page/2/">2</a>
+    </div>
 </div>
 
     </main>
