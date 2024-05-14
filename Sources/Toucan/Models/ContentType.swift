@@ -13,6 +13,6 @@ protocol ContentType {
     var meta: Meta { get }
     var publication: Date { get }
     var lastModification: Date { get }
-    var variables: [String: String] { get }
+    var frontMatter: [String: String] { get }
     var markdown: String { get }
 }

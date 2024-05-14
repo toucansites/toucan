@@ -253,7 +253,7 @@ struct TemplateLibrary {
                     }
                 )
             ),
-            userDefined: page?.variables ?? [:]
+            userDefined: page?.frontMatter ?? [:]
         )
 
         try render(

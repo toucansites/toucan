@@ -13,7 +13,7 @@ struct Post: ContentType {
     let meta: Meta
     let publication: Date
     let lastModification: Date
-    let variables: [String: String]
+    let frontMatter: [String: String]
     let markdown: String
 
     let authorIds: [String]

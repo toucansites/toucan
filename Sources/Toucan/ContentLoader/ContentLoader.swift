@@ -85,7 +85,7 @@ struct ContentLoader {
                 ),
                 publication: creation,
                 lastModification: lastModification,
-                variables: frontMatter,
+                frontMatter: frontMatter,
                 markdown: markdown
             )
         }
@@ -127,7 +127,7 @@ struct ContentLoader {
                 ),
                 publication: creation,
                 lastModification: lastModification,
-                variables: frontMatter,
+                frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter(),
                 authorIds: authorIds,
                 tagIds: tagIds
@@ -158,7 +158,7 @@ struct ContentLoader {
                 ),
                 publication: creation,
                 lastModification: lastModification,
-                variables: frontMatter,
+                frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter()
             )
         }
@@ -187,7 +187,7 @@ struct ContentLoader {
                 ),
                 publication: creation,
                 lastModification: lastModification,
-                variables: frontMatter,
+                frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter()
             )
         }

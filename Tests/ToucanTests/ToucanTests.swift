@@ -28,7 +28,7 @@ final class ToucanTests: XCTestCase {
                     ),
                     publication: Date(),
                     lastModification: Date(),
-                    variables: [:],
+                    frontMatter: [:],
                     markdown: ""
                 )
             ],
@@ -43,7 +43,7 @@ final class ToucanTests: XCTestCase {
                     ),
                     publication: Date(),
                     lastModification: Date(),
-                    variables: [:],
+                    frontMatter: [:],
                     markdown: "",
                     authorIds: [
                         "tiborbodecs"
@@ -64,7 +64,7 @@ final class ToucanTests: XCTestCase {
                     ),
                     publication: Date(),
                     lastModification: Date(),
-                    variables: [:],
+                    frontMatter: [:],
                     markdown: ""
                 )
             ],
@@ -79,7 +79,7 @@ final class ToucanTests: XCTestCase {
                     ),
                     publication: Date(),
                     lastModification: Date(),
-                    variables: [:],
+                    frontMatter: [:],
                     markdown: ""
                 )
             ]
