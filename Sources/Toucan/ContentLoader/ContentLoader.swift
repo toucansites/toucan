@@ -48,11 +48,13 @@ struct ContentLoader {
 
         let fileManager = FileManager.default
         let workUrl = URL(fileURLWithPath: path)
-        let pagesUrl = workUrl.appendingPathComponent("pages")
-        let postsUrl = workUrl.appendingPathComponent("posts")
-        let authorsUrl = workUrl.appendingPathComponent("authors")
-        let tagsUrl = workUrl.appendingPathComponent("tags")
-        let siteUrl = workUrl.appendingPathComponent("site.md")
+        let pagesUrl = workUrl.appendingPathComponent(Toucan.Directories.pages)
+        let postsUrl = workUrl.appendingPathComponent(Toucan.Directories.posts)
+        let authorsUrl = workUrl.appendingPathComponent(
+            Toucan.Directories.authors
+        )
+        let tagsUrl = workUrl.appendingPathComponent(Toucan.Directories.tags)
+        let siteUrl = workUrl.appendingPathComponent(Toucan.Files.site)
 
         let pageFiles = getMarkdownURLs(at: pagesUrl, using: fileManager)
         let postFiles = getMarkdownURLs(at: postsUrl, using: fileManager)
@@ -84,7 +86,7 @@ struct ContentLoader {
                 ),
                 lastModification: lastModification,
                 frontMatter: frontMatter,
-                markdown: markdown
+                markdown: markdown.dropFrontMatter()
             )
         }
 

@@ -4,8 +4,8 @@
     <description>The official site for BB.</description>
     <link>http://localhost:3000/</link>
     <language>en-US</language>
-    <lastBuildDate>Tue, 14 May 2024 12:36:45 +0000</lastBuildDate>
-    <pubDate>Tue, 14 May 2024 12:36:45 +0000</pubDate>
+    <lastBuildDate>Tue, 14 May 2024 13:34:31 +0000</lastBuildDate>
+    <pubDate>Tue, 14 May 2024 13:34:31 +0000</pubDate>
     <ttl>250</ttl>
     <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
 
@@ -14,14 +14,14 @@
     <title><![CDATA[ Second post ]]></title>
     <description><![CDATA[ The second post ]]></description>
     <link>http://localhost:3000/second-post/</link>
-    <pubDate>Tue, 14 May 2024 12:36:45 +0000</pubDate>
+    <pubDate>Tue, 14 May 2024 13:34:31 +0000</pubDate>
 </item>
 <item>
     <guid isPermaLink="true">http://localhost:3000/third-post/</guid>
     <title><![CDATA[ Third post ]]></title>
     <description><![CDATA[ The third post ]]></description>
     <link>http://localhost:3000/third-post/</link>
-    <pubDate>Tue, 14 May 2024 12:36:45 +0000</pubDate>
+    <pubDate>Tue, 14 May 2024 13:34:31 +0000</pubDate>
 </item>
 <item>
     <guid isPermaLink="true">http://localhost:3000/first-post/</guid>

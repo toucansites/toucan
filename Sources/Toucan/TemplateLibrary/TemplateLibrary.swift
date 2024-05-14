@@ -144,6 +144,34 @@ struct TemplateLibrary {
 
     // MARK: -
 
+    func renderSinglePage(
+        page: Page,
+        body: String,
+        to destination: URL
+    ) throws {
+        let context = PageContext(
+            site: site.getContext(),
+            metadata: .init(
+                permalink: site.permalink(page.slug),
+                title: page.meta.title,
+                description: page.meta.description,
+                imageUrl: page.meta.imageUrl
+            ),
+            content: SinglePageContext(
+                title: page.meta.title,
+                description: page.meta.description,
+                body: body
+            ),
+            userDefined: [:]
+        )
+
+        try render(
+            template: "pages.single.page",
+            with: context,
+            to: destination
+        )
+    }
+
     func renderSingleTag(
         tag: Tag,
         body: String,

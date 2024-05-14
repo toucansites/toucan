@@ -21,13 +21,9 @@ final class ContentLoaderTests: XCTestCase {
 
         let baseUrl = URL(fileURLWithPath: path)
         let srcUrl = baseUrl.appendingPathComponent("src")
-        let templatesUrl = srcUrl.appendingPathComponent("templates")
         let contentsUrl = srcUrl.appendingPathComponent("contents")
-        let distUrl = baseUrl.appendingPathComponent("dist")
-
         let loader = ContentLoader(path: contentsUrl.path)
-
-        let site = try loader.load()
+        _ = try loader.load()
 
     }
 

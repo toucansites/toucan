@@ -46,6 +46,18 @@ extension Site {
         pages + posts + authors + tags
     }
 
+    var systemPageIds: [String] {
+        ["home", "404"]
+    }
+
+    var customPages: [Page] {
+        pages.filter { !systemPageIds.contains($0.id) }
+    }
+
+    var systemPages: [Page] {
+        pages.filter { systemPageIds.contains($0.id) }
+    }
+
     var postChunks: ChunksOfCountCollection<[Post]> {
         posts.chunks(ofCount: 2)
     }

@@ -6,268 +6,202 @@
 //
 
 import Foundation
+import FileManagerKit
 
 /// A static site generator.
 public struct Toucan {
 
-    let site: Site
-    //    let contentsUrl: URL
-    let templatesUrl: URL
-    let publicFilesUrl: URL
+    public enum Files {
+        static let index = "index.html"
+        static let notFound = "404.html"
+        static let rss = "rss.xml"
+        static let sitemap = "sitemap.xml"
+        static let site = "site.md"
+    }
+
+    public enum Directories {
+        static let assets: String = "assets"
+        static let authors: String = "authors"
+        static let pages: String = "pages"
+        static let posts: String = "posts"
+        static let postsPage: String = "page"
+        static let tags: String = "tags"
+    }
+
+    let inputUrl: URL
     let outputUrl: URL
+
+    init(
+        inputUrl: URL,
+        outputUrl: URL
+    ) {
+        self.inputUrl = inputUrl
+        self.outputUrl = outputUrl
+    }
+
+    var publicFilesUrl: URL { inputUrl.appendingPathComponent("public") }
+    var templatesUrl: URL { inputUrl.appendingPathComponent("templates") }
+    var contentsUrl: URL { inputUrl.appendingPathComponent("contents") }
+
     let fileManager = FileManager.default
 
     func resetOutputDirectory() throws {
         if fileManager.exists(at: outputUrl) {
-            try fileManager.removeItem(at: outputUrl)
+            try fileManager.delete(at: outputUrl)
         }
         try fileManager.createDirectory(at: outputUrl)
     }
 
+    /// copy all the public files
     func copyPublicFiles() throws {
         for file in fileManager.listDirectory(at: publicFilesUrl) {
-            try fileManager.copyItem(
-                at: publicFilesUrl.appendingPathComponent(file),
+            try fileManager.copy(
+                from: publicFilesUrl.appendingPathComponent(file),
                 to: outputUrl.appendingPathComponent(file)
             )
         }
     }
 
-    func copyAssets() throws {
-        let tagsDirUrl = outputUrl.appendingPathComponent("assets")
-        try fileManager.createDirectory(at: tagsDirUrl)
+    /// prepares all the output directories
+    func prepareDirectories(site: Site) throws {
+        let assetsDirUrl = outputUrl.appendingPathComponent(Directories.assets)
+        try fileManager.createDirectory(at: assetsDirUrl)
 
-        // TODO: copy assets for the contents
-    }
-
-    func generate() throws {
-        // TODO: check reserved slugs
-        let templates = try TemplateLibrary(
-            site: site,
-            templatesUrl: templatesUrl
-        )
-        try resetOutputDirectory()
-        try copyPublicFiles()
-        try copyAssets()
-
-        let htmlRenderer = HTMLRenderer()
-        try generatePostPages(templates, htmlRenderer: htmlRenderer)
-        try generateTagPages(templates, htmlRenderer: htmlRenderer)
-        try generateAuthorPages(templates, htmlRenderer: htmlRenderer)
-
-        let indexUrl = outputUrl.appendingPathComponent("index.html")
-        try templates.renderHomePage(to: indexUrl)
-
-        let notFoundUrl = outputUrl.appendingPathComponent("404.html")
-        try templates.renderNotFoundPage(to: notFoundUrl)
-
-        let rssUrl = outputUrl.appendingPathComponent("rss.xml")
-        try templates.renderRSS(to: rssUrl)
-
-        let sitemapUrl = outputUrl.appendingPathComponent("sitemap.xml")
-        try templates.renderSitemap(to: sitemapUrl)
-    }
-
-    // MARK: -
-
-    func generateTagPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
-    ) throws {
-
-        let tagsDirUrl = outputUrl.appendingPathComponent("tags")
-        try fileManager.createDirectory(at: tagsDirUrl)
-
-        for tag in site.tags {
-
-            let tagPageDirUrl =
-                tagsDirUrl
-                .appendingPathComponent(tag.slug)
-
-            try fileManager.createDirectory(at: tagPageDirUrl)
-
-            let tagPageUrl =
-                tagPageDirUrl
-                .appendingPathComponent("index.html")
-
-            let tagBody = htmlRenderer.render(markdown: tag.markdown)
-
-            try templates.renderSingleTag(
-                tag: tag,
-                body: tagBody,
-                to: tagPageUrl
-            )
+        let assetDirectories = [
+            Directories.authors,
+            Directories.pages,
+            Directories.posts,
+            Directories.tags,
+        ]
+        for dir in assetDirectories {
+            let assetDirUrl = assetsDirUrl.appendingPathComponent(dir)
+            try fileManager.createDirectory(at: assetDirUrl)
         }
 
-        let tagsUrl = tagsDirUrl.appendingPathComponent("index.html")
-        try templates.renderTagsPage(to: tagsUrl)
-    }
-
-    func generateAuthorPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
-    ) throws {
-
-        let authorsDirUrl = outputUrl.appendingPathComponent("authors")
+        let authorsDirUrl =
+            outputUrl
+            .appendingPathComponent(Directories.authors)
         try fileManager.createDirectory(at: authorsDirUrl)
 
         for author in site.authors {
-
-            let authorPageDirUrl =
-                authorsDirUrl
-                .appendingPathComponent(author.slug)
-
-            try fileManager.createDirectory(at: authorPageDirUrl)
-
-            let tagPageUrl =
-                authorPageDirUrl
-                .appendingPathComponent("index.html")
-
-            let tagBody = htmlRenderer.render(markdown: author.markdown)
-
-            try templates.renderSingleAuthor(
-                author: author,
-                body: tagBody,
-                to: tagPageUrl
-            )
+            let authorUrl = authorsDirUrl.appendingPathComponent(author.slug)
+            try fileManager.createDirectory(at: authorUrl)
         }
 
-        let authorsUrl = authorsDirUrl.appendingPathComponent("index.html")
-        try templates.renderAuthorsPage(to: authorsUrl)
-    }
+        for page in site.customPages {
+            let pageUrl = outputUrl.appendingPathComponent(page.slug)
+            try fileManager.createDirectory(at: pageUrl)
+        }
 
-    func generatePostPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
-    ) throws {
-        let postPages = site.postChunks
-
-        let postsDirUrl = outputUrl.appendingPathComponent("posts")
+        let postsDirUrl = outputUrl.appendingPathComponent(Directories.posts)
         try fileManager.createDirectory(at: postsDirUrl)
 
-        for (index, posts) in postPages.enumerated() {
+        for post in site.posts {
+            let postUrl = postsDirUrl.appendingPathComponent(post.slug)
+            try fileManager.createDirectory(at: postUrl)
+        }
+
+        let postsPageDirUrl =
+            postsDirUrl
+            .appendingPathComponent(Directories.postsPage)
+        for (index, _) in site.postChunks.enumerated() {
             let pageIndex = index + 1
+            let pageDirUrl =
+                postsPageDirUrl
+                .appendingPathComponent(String(pageIndex))
+            try fileManager.createDirectory(at: pageDirUrl)
+        }
 
-            let postPageDirUrl =
-                postsDirUrl
-                .appendingPathComponent("page")
-                .appendingPathComponent("\(pageIndex)")
+        let tagsDirUrl = outputUrl.appendingPathComponent(Directories.tags)
+        try fileManager.createDirectory(at: tagsDirUrl)
 
-            try fileManager.createDirectory(at: postPageDirUrl)
+        for tag in site.tags {
+            let tagUrl = tagsDirUrl.appendingPathComponent(tag.slug)
+            try fileManager.createDirectory(at: tagUrl)
+        }
 
-            let postPageUrl =
-                postPageDirUrl
-                .appendingPathComponent("index.html")
+    }
 
-            // TODO: add canonical if index == 0
-            try templates.renderPostsPage(
-                posts: Array(posts),
-                pageIndex: index,
-                pageCount: postPages.count,
-                to: postPageUrl
+    /// copy one asset type using a directory a source identifier and a target slug
+    private func copyAsset(
+        directory: String,
+        id: String,
+        slug: String
+    ) throws {
+        let assetInputUrl =
+            contentsUrl
+            .appendingPathComponent(directory)
+            .appendingPathComponent(id)
+
+        if fileManager.directoryExists(at: assetInputUrl) {
+            let assetOutputUrl =
+                outputUrl
+                .appendingPathComponent(Directories.assets)
+                .appendingPathComponent(directory)
+                .appendingPathComponent(slug)
+
+            try fileManager.copy(
+                from: assetInputUrl,
+                to: assetOutputUrl
             )
-
-            if index == 0 {
-                let postsUrl =
-                    postsDirUrl
-                    .appendingPathComponent("index.html")
-                try templates.renderPostsPage(
-                    posts: Array(posts),
-                    pageIndex: index,
-                    pageCount: postPages.count,
-                    to: postsUrl
-                )
-                let postPageUrl =
-                    postsDirUrl
-                    .appendingPathComponent("page")
-                    .appendingPathComponent("index.html")
-                try templates.renderPostsPage(
-                    posts: Array(posts),
-                    pageIndex: index,
-                    pageCount: postPages.count,
-                    to: postPageUrl
-                )
-            }
-
-            for post in posts {
-                let postDirUrl = outputUrl.appendingPathComponent(post.slug)
-                try fileManager.createDirectory(at: postDirUrl)
-                let postUrl = postDirUrl.appendingPathComponent("index.html")
-                let postBody = htmlRenderer.render(markdown: post.markdown)
-
-                try templates.renderSinglePost(
-                    post: post,
-                    body: postBody,
-                    to: postUrl
-                )
-            }
         }
     }
 
-}
+    /// copy all the assets for the site
+    func copyAssets(site: Site) throws {
 
-//func processContentAssets(
-//        at url: URL,
-//        slug: String,
-//        assetsUrl: URL,
-//        fileManager: FileManager,
-//        needToCopy: Bool
-//    ) throws -> [String] {
-//        var assets: [String] = []
-//        // create assets dir
-//        let assetsDir = assetsUrl.appendingPathComponent(slug)
-//        if needToCopy {
-//            try fileManager.createDirectory(at: assetsDir)
-//        }
-//
-//        // check for image assets
-//        let imagesUrl = url.appendingPathComponent("images")
-//        var imageList: [String] = []
-//        if fileManager.directoryExists(at: imagesUrl) {
-//            imageList = fileManager.listDirectory(at: imagesUrl)
-//        }
-//
-//        // copy image assets
-//        if !imageList.isEmpty {
-//            let assetImagesDir = assetsDir.appendingPathComponent("images")
-//            if needToCopy {
-//                try fileManager.createDirectory(at: assetImagesDir)
-//            }
-//            for image in imageList {
-//                let sourceUrl = imagesUrl.appendingPathComponent(image)
-//                let assetPath = assetImagesDir.appendingPathComponent(image)
-//                if needToCopy {
-//                    try fileManager.copy(from: sourceUrl, to: assetPath)
-//                }
-//                assets.append(image)
-//            }
-//        }
-//
-//        // copy cover + dark version
-//        let coverUrl = url.appendingPathComponent("cover.jpg")
-//        let coverAssetUrl = assetsDir.appendingPathComponent("cover.jpg")
-//        if fileManager.fileExists(at: coverUrl) {
-//            if needToCopy {
-//                try fileManager.copy(from: coverUrl, to: coverAssetUrl)
-//            }
-//            assets.append("cover.jpg")
-//        }
-//        else {
-//            print("[WARNING] Cover image issues in `\(slug)`.")
-//        }
-//
-//        // copy dark cover image if exists
-//        let darkCoverUrl = url.appendingPathComponent("cover~dark.jpg")
-//        let darkCoverAssetUrl = assetsDir.appendingPathComponent(
-//            "cover~dark.jpg"
-//        )
-//        if fileManager.fileExists(at: darkCoverUrl) {
-//            if needToCopy {
-//                try fileManager.copy(from: darkCoverUrl, to: darkCoverAssetUrl)
-//            }
-//            assets.append("cover~dark.jpg")
-//        }
-//        return assets
-//    }
-//
-//}
+        for author in site.authors {
+            try copyAsset(
+                directory: Directories.authors,
+                id: author.id,
+                slug: author.slug
+            )
+        }
+
+        for page in site.pages {
+            try copyAsset(
+                directory: Directories.pages,
+                id: page.id,
+                slug: page.slug
+            )
+        }
+
+        for post in site.posts {
+            try copyAsset(
+                directory: Directories.posts,
+                id: post.id,
+                slug: post.slug
+            )
+        }
+
+        for tag in site.tags {
+            try copyAsset(
+                directory: Directories.tags,
+                id: tag.id,
+                slug: tag.slug
+            )
+        }
+    }
+
+    /// builds the static site
+    func build() throws {
+
+        let contentLoader = ContentLoader(
+            path: contentsUrl.path
+        )
+        let site = try contentLoader.load()
+
+        try resetOutputDirectory()
+
+        try copyPublicFiles()
+        try prepareDirectories(site: site)
+        try copyAssets(site: site)
+
+        let generator = Generator(
+            site: site,
+            templatesUrl: templatesUrl,
+            outputUrl: outputUrl
+        )
+        try generator.generate()
+    }
+}

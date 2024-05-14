@@ -10,7 +10,7 @@ import XCTest
 
 final class SiteGeneratorTests: XCTestCase {
 
-    func testGeneration() throws {
+    func testBuild() throws {
 
         let path =
             "/"
@@ -20,23 +20,14 @@ final class SiteGeneratorTests: XCTestCase {
             .joined(separator: "/")
 
         let baseUrl = URL(fileURLWithPath: path)
-        let srcUrl = baseUrl.appendingPathComponent("src")
-        let templatesUrl = srcUrl.appendingPathComponent("templates")
-        let publicFilesUrl = srcUrl.appendingPathComponent("public")
-        let contentsUrl = srcUrl.appendingPathComponent("contents")
-        let distUrl = baseUrl.appendingPathComponent("dist")
-
-        let loader = ContentLoader(path: contentsUrl.path)
-
-        let site = try loader.load()
+        let inputUrl = baseUrl.appendingPathComponent("src")
+        let outputUrl = baseUrl.appendingPathComponent("dist")
 
         let generator = Toucan(
-            site: site,
-            templatesUrl: templatesUrl,
-            publicFilesUrl: publicFilesUrl,
-            outputUrl: distUrl
+            inputUrl: inputUrl,
+            outputUrl: outputUrl
         )
-        try generator.generate()
+        try generator.build()
     }
 
 }
