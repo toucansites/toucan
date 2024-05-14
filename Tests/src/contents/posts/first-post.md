@@ -2,7 +2,7 @@
 slug: first-post
 title: First post
 description: The first post
-date: 2024/02/26
+publication: 2024/02/26
 tags: swift, uikit
 authors: tiborbodecs, foo
 template: custom-post.html

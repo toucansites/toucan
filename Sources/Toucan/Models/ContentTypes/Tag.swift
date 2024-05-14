@@ -11,7 +11,6 @@ struct Tag: ContentType {
     let id: String
     let slug: String
     let meta: Meta
-    let publication: Date
     let lastModification: Date
     let frontMatter: [String: String]
     let markdown: String

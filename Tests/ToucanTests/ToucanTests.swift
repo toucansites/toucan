@@ -26,7 +26,6 @@ final class ToucanTests: XCTestCase {
                         description: "Lorem ipsum",
                         imageUrl: "about.jpg"
                     ),
-                    publication: Date(),
                     lastModification: Date(),
                     frontMatter: [:],
                     markdown: ""
@@ -41,10 +40,10 @@ final class ToucanTests: XCTestCase {
                         description: "Foo",
                         imageUrl: "foo.jpg"
                     ),
-                    publication: Date(),
                     lastModification: Date(),
                     frontMatter: [:],
                     markdown: "",
+                    publication: Date(),
                     authorIds: [
                         "tiborbodecs"
                     ],
@@ -62,7 +61,6 @@ final class ToucanTests: XCTestCase {
                         description: "about the author",
                         imageUrl: "tiborbodecs.jpg"
                     ),
-                    publication: Date(),
                     lastModification: Date(),
                     frontMatter: [:],
                     markdown: ""
@@ -77,7 +75,6 @@ final class ToucanTests: XCTestCase {
                         description: "Swift tag",
                         imageUrl: "swift.jpg"
                     ),
-                    publication: Date(),
                     lastModification: Date(),
                     frontMatter: [:],
                     markdown: ""

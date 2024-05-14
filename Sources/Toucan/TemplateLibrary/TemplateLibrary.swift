@@ -263,6 +263,40 @@ struct TemplateLibrary {
         )
     }
 
+    func renderNotFoundPage(
+        to destination: URL
+    ) throws {
+        let formatter = DateFormatters().standard
+        let page = site.page(id: "404")
+
+        let context = PageContext(
+            site: site.getContext(),
+            metadata: .init(
+                permalink: site.permalink(""),
+                title: page?.meta.title ?? "Not found",
+                description: page?.meta.description ?? "Page not found",
+                imageUrl: nil
+            ),
+            content: HomeContext(
+                // TODO: sort by & first N
+                posts: .init(
+                    site.posts.map {
+                        $0.getContext(
+                            formatter: formatter
+                        )
+                    }
+                )
+            ),
+            userDefined: page?.frontMatter ?? [:]
+        )
+
+        try render(
+            template: "pages.404",
+            with: context,
+            to: destination
+        )
+    }
+
     func renderPostsPage(
         posts: [Post],
         pageIndex index: Int,

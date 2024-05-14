@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Algorithms
 
 /// A static site generator.
 public struct Toucan {
@@ -58,14 +57,15 @@ public struct Toucan {
 
         let indexUrl = outputUrl.appendingPathComponent("index.html")
         try templates.renderHomePage(to: indexUrl)
-        // TODO: render 404 page
+
+        let notFoundUrl = outputUrl.appendingPathComponent("404.html")
+        try templates.renderNotFoundPage(to: notFoundUrl)
 
         let rssUrl = outputUrl.appendingPathComponent("rss.xml")
         try templates.renderRSS(to: rssUrl)
 
         let sitemapUrl = outputUrl.appendingPathComponent("sitemap.xml")
         try templates.renderSitemap(to: sitemapUrl)
-        // TODO: robots.txt?
     }
 
     // MARK: -
@@ -138,9 +138,7 @@ public struct Toucan {
         _ templates: TemplateLibrary,
         htmlRenderer: HTMLRenderer
     ) throws {
-        let postPages = site.posts
-            .sorted(by: { $0.publication > $1.publication })
-            .chunks(ofCount: 2)
+        let postPages = site.postChunks
 
         let postsDirUrl = outputUrl.appendingPathComponent("posts")
         try fileManager.createDirectory(at: postsDirUrl)

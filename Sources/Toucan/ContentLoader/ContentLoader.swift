@@ -64,7 +64,6 @@ struct ContentLoader {
         /// load pages
         let pages = try pageFiles.map { url in
             let id = String(url.lastPathComponent.dropLast(3))
-            let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
             let markdown = try String(contentsOf: url)
@@ -83,17 +82,16 @@ struct ContentLoader {
                     description: description,
                     imageUrl: imageUrl
                 ),
-                publication: creation,
                 lastModification: lastModification,
                 frontMatter: frontMatter,
                 markdown: markdown
             )
         }
 
+        let formatter = DateFormatters().standard
         /// load posts
         let posts = try postFiles.map { url in
             let id = String(url.lastPathComponent.dropLast(3))
-            let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
             let rawMarkdown = try String(contentsOf: url)
@@ -104,6 +102,7 @@ struct ContentLoader {
             let description = frontMatter["description"] ?? ""
             let imageUrl = frontMatter["imageUrl"]
 
+            let publication = frontMatter["publication"] ?? ""
             let authors = frontMatter["authors"] ?? ""
             let tags = frontMatter["tags"] ?? ""
 
@@ -125,10 +124,11 @@ struct ContentLoader {
                     description: description,
                     imageUrl: imageUrl
                 ),
-                publication: creation,
                 lastModification: lastModification,
                 frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter(),
+                // TODO: proper error / fallback for publication date
+                publication: formatter.date(from: publication) ?? .init(),
                 authorIds: authorIds,
                 tagIds: tagIds
             )
@@ -137,7 +137,6 @@ struct ContentLoader {
         /// load authors
         let authors = try authorFiles.map { url in
             let id = String(url.lastPathComponent.dropLast(3))
-            let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
             let rawMarkdown = try String(contentsOf: url)
@@ -156,7 +155,6 @@ struct ContentLoader {
                     description: description,
                     imageUrl: imageUrl
                 ),
-                publication: creation,
                 lastModification: lastModification,
                 frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter()
@@ -166,7 +164,6 @@ struct ContentLoader {
         /// load tags
         let tags = try tagFiles.map { url in
             let id = String(url.lastPathComponent.dropLast(3))
-            let creation = try fileManager.creationDate(at: url)
             let lastModification = try fileManager.modificationDate(at: url)
 
             let rawMarkdown = try String(contentsOf: url)
@@ -185,7 +182,6 @@ struct ContentLoader {
                     description: description,
                     imageUrl: imageUrl
                 ),
-                publication: creation,
                 lastModification: lastModification,
                 frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter()
