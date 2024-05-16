@@ -2,16 +2,18 @@
 slug: first-post
 title: First post
 description: The first post
+imageUrl: /assets/posts/first-post/cover.jpg
 publication: 2024/02/26
 tags: swift, uikit
-authors: tiborbodecs, foo
-template: custom-post.html
+authors: tiborbodecs
 ---
 
 
 # An h1 header
 
 Paragraphs are separated by a blank line.
+
+![Cover image](/assets/posts/first-post/cover.jpg)
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:

@@ -5,7 +5,8 @@
 //  Created by Tibor Bodecs on 13/05/2024.
 //
 
-struct PostsContext {
+struct SingleAuthorPageContext {
+    let title: String
+    let description: String
     let posts: ArrayContext<PostContext>
-    let pagination: ArrayContext<PaginationContext>
 }

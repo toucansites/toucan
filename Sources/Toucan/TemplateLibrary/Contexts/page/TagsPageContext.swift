@@ -5,6 +5,6 @@
 //  Created by Tibor Bodecs on 13/05/2024.
 //
 
-struct TagsContext {
+struct TagsPageContext {
     let tags: ArrayContext<TagContext>
 }

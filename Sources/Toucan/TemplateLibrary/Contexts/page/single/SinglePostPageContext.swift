@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 10/05/2024.
 //
 
-struct SinglePostContext {
+struct SinglePostPageContext {
     let title: String
     let exceprt: String
     let date: String

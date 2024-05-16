@@ -32,9 +32,11 @@ extension Site {
 extension Post {
 
     func getContext(
+        site: Site,
         formatter: DateFormatter
     ) -> PostContext {
         .init(
+            permalink: site.permalink("posts/" + slug),
             title: meta.title,
             exceprt: meta.description,
             date: formatter.string(from: publication),
@@ -152,7 +154,7 @@ struct TemplateLibrary {
         body: String,
         to destination: URL
     ) throws {
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(page.slug),
@@ -160,7 +162,7 @@ struct TemplateLibrary {
                 description: page.meta.description,
                 imageUrl: page.meta.imageUrl
             ),
-            content: SinglePageContext(
+            content: SingleCustomPageContext(
                 title: page.meta.title,
                 description: page.meta.description,
                 body: body
@@ -181,7 +183,7 @@ struct TemplateLibrary {
         to destination: URL
     ) throws {
         let formatter = DateFormatters().standard
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(tag.slug),
@@ -189,13 +191,14 @@ struct TemplateLibrary {
                 description: tag.meta.description,
                 imageUrl: tag.meta.imageUrl
             ),
-            content: SingleTagContext(
+            content: SingleTagPageContext(
                 title: tag.meta.title,
                 description: tag.meta.description,
                 posts: .init(
                     site.postsBy(tagId: tag.id)
                         .map {
                             $0.getContext(
+                                site: site,
                                 formatter: formatter
                             )
                         }
@@ -217,7 +220,7 @@ struct TemplateLibrary {
         to destination: URL
     ) throws {
         let formatter = DateFormatters().standard
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(author.slug),
@@ -225,13 +228,16 @@ struct TemplateLibrary {
                 description: author.meta.description,
                 imageUrl: author.meta.imageUrl
             ),
-            content: SingleAuthorContext(
+            content: SingleAuthorPageContext(
                 title: author.meta.title,
                 description: author.meta.description,
                 posts: .init(
                     site.postsBy(authorId: author.id)
                         .map {
-                            $0.getContext(formatter: formatter)
+                            $0.getContext(
+                                site: site,
+                                formatter: formatter
+                            )
                         }
                 )
             ),
@@ -251,7 +257,7 @@ struct TemplateLibrary {
         to destination: URL
     ) throws {
 
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(post.slug),
@@ -259,13 +265,13 @@ struct TemplateLibrary {
                 description: post.meta.description,
                 imageUrl: post.meta.imageUrl
             ),
-            content: SinglePostContext(
+            content: SinglePostPageContext(
                 title: post.meta.title,
                 exceprt: post.meta.description,
                 date: "\(post.publication)",  // TODO: date formatter
                 figure: .init(
-                    src: "http://lorempixel.com/light.jpg",
-                    darkSrc: "http://lorempixel.com/dark.jpg",
+                    src: post.meta.imageUrl ?? "",
+                    darkSrc: post.meta.imageUrl ?? "",
                     alt: post.meta.title,
                     title: post.meta.title
                 ),
@@ -289,7 +295,7 @@ struct TemplateLibrary {
     ) throws {
         let page = site.page(id: "authors")
 
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
@@ -297,7 +303,7 @@ struct TemplateLibrary {
                 description: page?.meta.description ?? "Authors page",
                 imageUrl: nil
             ),
-            content: AuthorsContext(
+            content: AuthorsPageContext(
                 authors: .init(
                     site.authors.map {
                         $0.getContext(
@@ -321,7 +327,7 @@ struct TemplateLibrary {
     ) throws {
         let page = site.page(id: "tags")
 
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
@@ -329,7 +335,7 @@ struct TemplateLibrary {
                 description: page?.meta.description ?? "Tags page",
                 imageUrl: nil
             ),
-            content: TagsContext(
+            content: TagsPageContext(
                 tags: .init(
                     site.tags.map {
                         $0.getContext(
@@ -354,7 +360,7 @@ struct TemplateLibrary {
         let formatter = DateFormatters().standard
         let page = site.page(id: "home")
 
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
@@ -362,12 +368,13 @@ struct TemplateLibrary {
                 description: page?.meta.description ?? "Home page",
                 imageUrl: nil
             ),
-            content: HomeContext(
+            content: HomePageContext(
                 // TODO: first N
                 posts: .init(
-                    site.posts.prefix(2)
+                    site.posts//.prefix(2)
                         .map {
                             $0.getContext(
+                                site: site,
                                 formatter: formatter
                             )
                         }
@@ -389,7 +396,7 @@ struct TemplateLibrary {
         let formatter = DateFormatters().standard
         let page = site.page(id: "404")
 
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink(""),
@@ -397,11 +404,12 @@ struct TemplateLibrary {
                 description: page?.meta.description ?? "Page not found",
                 imageUrl: nil
             ),
-            content: HomeContext(
+            content: HomePageContext(
                 // TODO: first N
                 posts: .init(
                     site.posts.map {
                         $0.getContext(
+                            site: site,
                             formatter: formatter
                         )
                     }
@@ -425,7 +433,7 @@ struct TemplateLibrary {
     ) throws {
         let formatter = DateFormatters().standard
         let pageIndex = index + 1
-        let context = PageContext(
+        let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink("posts/page/\(pageIndex)"),
@@ -433,10 +441,13 @@ struct TemplateLibrary {
                 description: "posts page 1 description",
                 imageUrl: nil
             ),
-            content: PostsContext(
+            content: PostsPageContext(
                 posts: .init(
                     posts.map {
-                        $0.getContext(formatter: formatter)
+                        $0.getContext(
+                            site: site,
+                            formatter: formatter
+                        )
                     }
                 ),
                 pagination: .init(

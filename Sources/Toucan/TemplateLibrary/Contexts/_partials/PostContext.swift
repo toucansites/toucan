@@ -6,6 +6,7 @@
 //
 
 struct PostContext {
+    let permalink: String
     let title: String
     let exceprt: String
     let date: String
