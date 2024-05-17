@@ -74,7 +74,7 @@ struct ContentLoader {
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
             let description = frontMatter["description"] ?? ""
-            let imageUrl = frontMatter["imageUrl"]
+            let coverImage = frontMatter["coverImage"]
 
             return Page(
                 id: id,
@@ -82,7 +82,7 @@ struct ContentLoader {
                 meta: .init(
                     title: title,
                     description: description,
-                    imageUrl: imageUrl
+                    coverImage: coverImage
                 ),
                 lastModification: lastModification,
                 frontMatter: frontMatter,
@@ -102,7 +102,7 @@ struct ContentLoader {
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
             let description = frontMatter["description"] ?? ""
-            let imageUrl = frontMatter["imageUrl"]
+            let coverImage = frontMatter["coverImage"]
 
             let publication = frontMatter["publication"] ?? ""
             let authors = frontMatter["authors"] ?? ""
@@ -124,7 +124,7 @@ struct ContentLoader {
                 meta: .init(
                     title: title,
                     description: description,
-                    imageUrl: imageUrl
+                    coverImage: coverImage
                 ),
                 lastModification: lastModification,
                 frontMatter: frontMatter,
@@ -147,7 +147,7 @@ struct ContentLoader {
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
             let description = frontMatter["description"] ?? ""
-            let imageUrl = frontMatter["imageUrl"]
+            let coverImage = frontMatter["coverImage"]
 
             return Author(
                 id: id,
@@ -155,7 +155,7 @@ struct ContentLoader {
                 meta: .init(
                     title: title,
                     description: description,
-                    imageUrl: imageUrl
+                    coverImage: coverImage
                 ),
                 lastModification: lastModification,
                 frontMatter: frontMatter,
@@ -174,7 +174,7 @@ struct ContentLoader {
             let slug = frontMatter["slug"] ?? id
             let title = frontMatter["title"] ?? ""
             let description = frontMatter["description"] ?? ""
-            let imageUrl = frontMatter["imageUrl"]
+            let coverImage = frontMatter["coverImage"]
 
             return Tag(
                 id: id,
@@ -182,7 +182,7 @@ struct ContentLoader {
                 meta: .init(
                     title: title,
                     description: description,
-                    imageUrl: imageUrl
+                    coverImage: coverImage
                 ),
                 lastModification: lastModification,
                 frontMatter: frontMatter,

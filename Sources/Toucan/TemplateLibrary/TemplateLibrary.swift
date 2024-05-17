@@ -35,12 +35,12 @@ extension Post {
     func figureContext(
         assets: Assets
     ) -> FigureContext? {
-        guard let url = assets.url(meta.imageUrl, for: .post) else {
+        guard let url = assets.url(meta.coverImage, for: .post) else {
             return nil
         }
         return .init(
             src: url,
-            darkSrc: assets.url(meta.imageUrl, for: .post, variant: .dark),
+            darkSrc: assets.url(meta.coverImage, for: .post, variant: .dark),
             alt: meta.title,
             title: meta.title
         )
@@ -66,12 +66,12 @@ extension Author {
     func figureContext(
         assets: Assets
     ) -> FigureContext? {
-        guard let url = assets.url(meta.imageUrl, for: .author) else {
+        guard let url = assets.url(meta.coverImage, for: .author) else {
             return nil
         }
         return .init(
             src: url,
-            darkSrc: assets.url(meta.imageUrl, for: .author, variant: .dark),
+            darkSrc: assets.url(meta.coverImage, for: .author, variant: .dark),
             alt: meta.title,
             title: meta.title
         )
@@ -85,7 +85,7 @@ extension Author {
             permalink: site.permalink("authors/" + slug),
             title: meta.title,
             excerpt: meta.description,
-            imageUrl: assets.url(meta.imageUrl, for: .author)
+            imageUrl: assets.url(meta.coverImage, for: .author)
         )
     }
 }
@@ -95,12 +95,12 @@ extension Tag {
     func figureContext(
         assets: Assets
     ) -> FigureContext? {
-        guard let url = assets.url(meta.imageUrl, for: .tag) else {
+        guard let url = assets.url(meta.coverImage, for: .tag) else {
             return nil
         }
         return .init(
             src: url,
-            darkSrc: assets.url(meta.imageUrl, for: .tag, variant: .dark),
+            darkSrc: assets.url(meta.coverImage, for: .tag, variant: .dark),
             alt: meta.title,
             title: meta.title
         )
@@ -114,7 +114,7 @@ extension Tag {
             permalink: site.permalink("tags/" + slug),
             title: meta.title,
             excerpt: meta.description,
-            imageUrl: assets.url(meta.imageUrl, for: .tag)
+            imageUrl: assets.url(meta.coverImage, for: .tag)
         )
     }
 }
@@ -221,7 +221,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(page.slug),
                 title: page.meta.title,
                 description: page.meta.description,
-                imageUrl: assets.url(page.meta.imageUrl, for: .post)
+                imageUrl: assets.url(page.meta.coverImage, for: .post)
             ),
             content: SingleCustomPageContext(
                 title: page.meta.title,
@@ -250,7 +250,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(tag.slug),
                 title: tag.meta.title,
                 description: tag.meta.description,
-                imageUrl: assets.url(tag.meta.imageUrl, for: .tag)
+                imageUrl: assets.url(tag.meta.coverImage, for: .tag)
             ),
             content: SingleTagPageContext(
                 title: tag.meta.title,
@@ -288,7 +288,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(author.slug),
                 title: author.meta.title,
                 description: author.meta.description,
-                imageUrl: assets.url(author.meta.imageUrl, for: .author)
+                imageUrl: assets.url(author.meta.coverImage, for: .author)
             ),
             content: SingleAuthorPageContext(
                 title: author.meta.title,
@@ -326,18 +326,13 @@ struct TemplateLibrary {
                 permalink: site.permalink(post.slug),
                 title: post.meta.title,
                 description: post.meta.description,
-                imageUrl: assets.url(post.meta.imageUrl, for: .post)
+                imageUrl: assets.url(post.meta.coverImage, for: .post)
             ),
             content: SinglePostPageContext(
                 title: post.meta.title,
                 exceprt: post.meta.description,
                 date: formatter.string(from: post.publication),
-                figure: .init(
-                    src: assets.url(post.meta.imageUrl, for: .post) ?? "",
-                    darkSrc: assets.url(post.meta.imageUrl, for: .post, variant: .dark),
-                    alt: post.meta.title,
-                    title: post.meta.title
-                ),
+                figure: post.figureContext(assets: assets),
                 tags: .init(
                     site.tagsBy(ids: post.tagIds)
                         .map {

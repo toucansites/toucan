@@ -2,7 +2,7 @@
 slug: first-post
 title: First post
 description: The first post
-imageUrl: ./first-post/cover.jpg
+coverImage: ./first-post/cover.jpg
 publication: 2024/02/26
 tags: swift, uikit
 authors: tiborbodecs

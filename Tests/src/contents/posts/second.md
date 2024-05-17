@@ -2,7 +2,7 @@
 slug: second-post
 title: Second post
 description: The second post
-imageUrl: ./second/cover.jpg
+coverImage: ./second/cover.jpg
 publication: 2024/02/27
 tags: Swift, Toucan
 authors: nandi, tiborbodecs

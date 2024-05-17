@@ -25,7 +25,7 @@ final class ToucanTests: XCTestCase {
                     meta: .init(
                         title: "About us",
                         description: "Lorem ipsum",
-                        imageUrl: "about.jpg"
+                        coverImage: "./about/about.jpg"
                     ),
                     lastModification: Date(),
                     frontMatter: [:],
@@ -39,7 +39,7 @@ final class ToucanTests: XCTestCase {
                     meta: .init(
                         title: "Foo",
                         description: "Foo",
-                        imageUrl: "foo.jpg"
+                        coverImage: "./foo/foo.jpg"
                     ),
                     lastModification: Date(),
                     frontMatter: [:],
@@ -60,7 +60,7 @@ final class ToucanTests: XCTestCase {
                     meta: .init(
                         title: "Tibor Bödecs",
                         description: "about the author",
-                        imageUrl: "tiborbodecs.jpg"
+                        coverImage: "./tiborbodecs/tiborbodecs.jpg"
                     ),
                     lastModification: Date(),
                     frontMatter: [:],
@@ -74,7 +74,7 @@ final class ToucanTests: XCTestCase {
                     meta: .init(
                         title: "Swift",
                         description: "Swift tag",
-                        imageUrl: "swift.jpg"
+                        coverImage: "./swift/swift.jpg"
                     ),
                     lastModification: Date(),
                     frontMatter: [:],
