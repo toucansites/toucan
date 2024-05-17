@@ -296,8 +296,8 @@ struct TemplateLibrary {
                 exceprt: post.meta.description,
                 date: formatter.string(from: post.publication),
                 figure: .init(
-                    src: post.meta.imageUrl ?? "",
-                    darkSrc: post.meta.imageUrl ?? "",
+                    src: assets.url(post.meta.imageUrl, for: .post) ?? "",
+                    darkSrc: assets.url(post.meta.imageUrl, for: .post, variant: .dark),
                     alt: post.meta.title,
                     title: post.meta.title
                 ),
