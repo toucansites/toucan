@@ -2,7 +2,7 @@
 slug: third-post
 title: Third post
 description: The third post
-date: 2024/02/28
+publication: 2024/02/28
 tags: Swift, Toucan
 ---
 

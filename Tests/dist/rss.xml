@@ -4,24 +4,24 @@
     <description>The official site for BB.</description>
     <link>http://localhost:3000/</link>
     <language>en-US</language>
-    <lastBuildDate>Thu, 16 May 2024 14:40:38 +0000</lastBuildDate>
-    <pubDate>Thu, 16 May 2024 14:40:38 +0000</pubDate>
+    <lastBuildDate>Fri, 17 May 2024 07:42:26 +0000</lastBuildDate>
+    <pubDate>Tue, 27 Feb 2024 23:00:00 +0000</pubDate>
     <ttl>250</ttl>
     <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
 
-<item>
-    <guid isPermaLink="true">http://localhost:3000/second-post/</guid>
-    <title><![CDATA[ Second post ]]></title>
-    <description><![CDATA[ The second post ]]></description>
-    <link>http://localhost:3000/second-post/</link>
-    <pubDate>Thu, 16 May 2024 14:40:38 +0000</pubDate>
-</item>
 <item>
     <guid isPermaLink="true">http://localhost:3000/third-post/</guid>
     <title><![CDATA[ Third post ]]></title>
     <description><![CDATA[ The third post ]]></description>
     <link>http://localhost:3000/third-post/</link>
-    <pubDate>Thu, 16 May 2024 14:40:38 +0000</pubDate>
+    <pubDate>Tue, 27 Feb 2024 23:00:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/second-post/</guid>
+    <title><![CDATA[ Second post ]]></title>
+    <description><![CDATA[ The second post ]]></description>
+    <link>http://localhost:3000/second-post/</link>
+    <pubDate>Mon, 26 Feb 2024 23:00:00 +0000</pubDate>
 </item>
 <item>
     <guid isPermaLink="true">http://localhost:3000/first-post/</guid>

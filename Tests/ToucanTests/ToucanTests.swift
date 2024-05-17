@@ -17,6 +17,7 @@ final class ToucanTests: XCTestCase {
             title: "Binary Birds",
             description: "The official site",
             language: "en_US",
+            pageLimit: 10,
             pages: [
                 .init(
                     id: "about",

@@ -13,6 +13,7 @@ struct Site {
     let title: String
     let description: String
     let language: String?
+    let pageLimit: Int
 
     let pages: [Page]
     let posts: [Post]
@@ -24,6 +25,7 @@ struct Site {
         title: String,
         description: String,
         language: String? = nil,
+        pageLimit: Int? = nil,
         pages: [Page],
         posts: [Post],
         authors: [Author],
@@ -33,6 +35,8 @@ struct Site {
         self.title = title
         self.description = description
         self.language = language
+        self.pageLimit = pageLimit ?? 10
+        
         self.pages = pages.sorted { $0.meta.title > $1.meta.title }
         self.posts = posts.sorted { $0.publication > $1.publication }
         self.authors = authors.sorted { $0.meta.title > $1.meta.title }
@@ -59,7 +63,7 @@ extension Site {
     }
 
     var postChunks: ChunksOfCountCollection<[Post]> {
-        posts.chunks(ofCount: 2)
+        posts.chunks(ofCount: pageLimit)
     }
 
     func permalink(_ value: String) -> String {

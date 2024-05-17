@@ -197,12 +197,14 @@ struct ContentLoader {
         let title = frontMatter["title"] ?? ""
         let description = frontMatter["description"] ?? ""
         let language = frontMatter["language"]
+        let rawPageLimit = frontMatter["pageLimit"] ?? ""
 
         return .init(
             baseUrl: baseUrl,
             title: title,
             description: description,
             language: language,
+            pageLimit: Int(rawPageLimit),
             pages: pages,
             posts: posts,
             authors: authors,
