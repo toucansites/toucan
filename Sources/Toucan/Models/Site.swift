@@ -46,7 +46,7 @@ struct Site {
 
 extension Site {
 
-    var contents: [ContentType] {
+    var contents: [Content] {
         pages + posts + authors + tags
     }
 

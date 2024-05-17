@@ -2,7 +2,7 @@
 slug: second-post
 title: Second post
 description: The second post
-imageUrl: /assets/posts/second-post/cover.jpg
+imageUrl: ./second/cover.jpg
 publication: 2024/02/27
 tags: Swift, Toucan
 authors: nandi, tiborbodecs
@@ -12,6 +12,8 @@ authors: nandi, tiborbodecs
 # An h1 header
 
 Paragraphs are separated by a blank line.
+
+![Cover image](./second/cover.jpg)
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:

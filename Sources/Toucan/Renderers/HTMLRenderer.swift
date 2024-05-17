@@ -10,11 +10,9 @@ import Markdown
 /// A HTML renderer for Markdown documents.
 public struct HTMLRenderer {
 
-    /// Creates a new HTML renderer.
-    public init() {
-
-    }
-
+    /// Public init.
+    public init() {}
+    
     /// Render a Markdown string.
     public func render(
         markdown: String

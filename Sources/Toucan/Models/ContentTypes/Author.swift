@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Author: ContentType {
+struct Author: Content {
     let id: String
     let slug: String
     let meta: Meta

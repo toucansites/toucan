@@ -10,14 +10,17 @@ import Foundation
 struct Generator {
 
     let site: Site
+    let assets: Assets
     let templatesUrl: URL
     let outputUrl: URL
+    
 
     /// generates all the html & xml files
     func generate() throws {
         // TODO: check reserved slugs
         let templates = try TemplateLibrary(
             site: site,
+            assets: assets,
             templatesUrl: templatesUrl
         )
 

@@ -33,6 +33,7 @@ extension Post {
 
     func getContext(
         site: Site,
+        assets: Assets,
         formatter: DateFormatter
     ) -> PostContext {
         .init(
@@ -41,8 +42,8 @@ extension Post {
             exceprt: meta.description,
             date: formatter.string(from: publication),
             figure: .init(
-                src: meta.imageUrl ?? "",
-                darkSrc: nil,
+                src: assets.url(meta.imageUrl, for: .post) ?? "",
+                darkSrc: assets.url(meta.imageUrl, for: .post, variant: .dark),
                 alt: meta.title,
                 title: meta.title
             )
@@ -85,11 +86,13 @@ struct TemplateLibrary {
     }
 
     private let site: Site
+    private let assets: Assets
     private let library: MustacheLibrary
     private let ids: [String]
 
     init(
         site: Site,
+        assets: Assets,
         templatesUrl: URL
     ) throws {
         let ext = "mustache"
@@ -117,9 +120,23 @@ struct TemplateLibrary {
             }
         }
         self.site = site
+        self.assets = assets
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
     }
+    
+    // TODO: use thsi?
+    func postsContexts(formatter: DateFormatter) -> [PostContext] {
+        site.posts.map {
+            $0.getContext(
+                site: site,
+                assets: assets,
+                formatter: formatter
+            )
+        }
+    }
+    
+    
 
     private func render(
         template: String,
@@ -203,6 +220,7 @@ struct TemplateLibrary {
                         .map {
                             $0.getContext(
                                 site: site,
+                                assets: assets,
                                 formatter: formatter
                             )
                         }
@@ -240,6 +258,7 @@ struct TemplateLibrary {
                         .map {
                             $0.getContext(
                                 site: site,
+                                assets: assets,
                                 formatter: formatter
                             )
                         }
@@ -384,6 +403,7 @@ struct TemplateLibrary {
                         .map {
                             $0.getContext(
                                 site: site,
+                                assets: assets,
                                 formatter: formatter
                             )
                         }
@@ -419,6 +439,7 @@ struct TemplateLibrary {
                     site.posts.map {
                         $0.getContext(
                             site: site,
+                            assets: assets,
                             formatter: formatter
                         )
                     }
@@ -455,6 +476,7 @@ struct TemplateLibrary {
                     posts.map {
                         $0.getContext(
                             site: site,
+                            assets: assets,
                             formatter: formatter
                         )
                     }

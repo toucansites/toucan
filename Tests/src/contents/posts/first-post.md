@@ -2,7 +2,7 @@
 slug: first-post
 title: First post
 description: The first post
-imageUrl: /assets/posts/first-post/cover.jpg
+imageUrl: ./first-post/cover.jpg
 publication: 2024/02/26
 tags: swift, uikit
 authors: tiborbodecs
@@ -13,7 +13,7 @@ authors: tiborbodecs
 
 Paragraphs are separated by a blank line.
 
-![Cover image](/assets/posts/first-post/cover.jpg)
+![Cover image](./first-post/set-env-in-xcode.png)
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:

@@ -9,24 +9,24 @@ import Markdown
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
-extension Markup {
+private extension Markup {
 
     var isInsideList: Bool {
         self is ListItemContainer || parent?.isInsideList == true
     }
 }
 
-enum TagType {
+private enum TagType {
     case short
     case standard
 }
 
-struct Attribute {
+private struct Attribute {
     let key: String
     let value: String
 }
 
-enum Content {
+private enum Contents {
     case value(String)
     case children(MarkupChildren)
 }
@@ -41,7 +41,7 @@ struct HTMLVisitor: MarkupVisitor {
         name: String,
         type: TagType = .standard,
         attributes: [Attribute] = [],
-        content: Content
+        content: Contents
     ) -> Result {
         let attributeString =
             attributes
@@ -173,6 +173,12 @@ struct HTMLVisitor: MarkupVisitor {
         guard let source = image.source else {
             return ""
         }
+        // TODO: resolve urls... delegate?
+        
+//        print(source)
+//        
+//        assets.url(source, for: .post)
+//        
         return tag(
             name: "img",
             type: .short,
@@ -297,40 +303,3 @@ struct HTMLVisitor: MarkupVisitor {
 //            }
 //            return html
 //        }
-//
-//
-//
-//        let imageModifier = Modifier(target: .images) { html, markdown in
-//            let input = String(markdown)
-//            guard
-//                let alt = input.slice(from: "![", to: "]"),
-//                let file = input.slice(from: "](", to: ")"),
-//                let name = file.split(separator: ".").first,
-//                let ext = file.split(separator: ".").last,
-//                assets.contains(file)
-//            else {
-//                print("[WARNING] Image link issues `\(input)` in `\(slug)`.")
-//                return html
-//            }
-//
-//            let darkFile = String(name) + "~dark." + String(ext)
-//            let src = baseUrl + "images/assets/" + slug + "/images/" + file
-//            let darkSrc =
-//                baseUrl + "images/assets/" + slug + "/images/" + darkFile
-//
-//            var dark = ""
-//            if assets.contains(darkFile) {
-//                dark =
-//                    #"<source srcset="\#(darkSrc)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
-//            }
-//            return #"""
-//                </section><section class="wrapper">
-//                <figure>
-//                    <picture>
-//                        \#(dark)<img class="post-image" src="\#(src)" alt="\#(alt)">
-//                    </picture>
-//                </figure>
-//                </section><section class="content-wrapper">
-//                """#
-//        }
-//
