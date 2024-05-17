@@ -9,4 +9,5 @@ struct Meta {
     let title: String
     let description: String
     let coverImage: String?
+    let template: String?
 }

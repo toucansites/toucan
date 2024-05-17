@@ -232,7 +232,7 @@ struct TemplateLibrary {
         )
 
         try render(
-            template: "pages.single.page",
+            template: page.meta.template ?? "pages.single.page",
             with: context,
             to: destination
         )
