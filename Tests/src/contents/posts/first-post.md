@@ -13,6 +13,8 @@ authors: tiborbodecs
 
 Paragraphs are separated by a blank line.
 
+[Second](/posts/second-post/) 
+
 ![Cover image](./first-post/set-env-in-xcode.png)
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists

@@ -24,11 +24,12 @@ struct Generator {
             templatesUrl: templatesUrl
         )
 
-        let htmlRenderer = HTMLRenderer()
-        try generatePostPages(templates, htmlRenderer: htmlRenderer)
-        try generateTagPages(templates, htmlRenderer: htmlRenderer)
-        try generateAuthorPages(templates, htmlRenderer: htmlRenderer)
-        try generateCustomPages(templates, htmlRenderer: htmlRenderer)
+        
+        
+        try generatePostPages(templates)
+        try generateTagPages(templates)
+        try generateAuthorPages(templates)
+        try generateCustomPages(templates)
 
         let indexUrl =
             outputUrl
@@ -54,10 +55,15 @@ struct Generator {
     // MARK: -
 
     func generateCustomPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
+        _ templates: TemplateLibrary
     ) throws {
-
+        let htmlRenderer = HTMLRenderer(
+            delegate: ContentTypeRendererDelegate(
+                site: site,
+                assets: assets,
+                contentType: .page
+            )
+        )
         for page in site.customPages {
             let customPageUrl =
                 outputUrl
@@ -75,9 +81,15 @@ struct Generator {
     }
 
     func generateTagPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
+        _ templates: TemplateLibrary
     ) throws {
+        let htmlRenderer = HTMLRenderer(
+            delegate: ContentTypeRendererDelegate(
+                site: site,
+                assets: assets,
+                contentType: .tag
+            )
+        )
 
         let tagsDirUrl =
             outputUrl
@@ -103,10 +115,15 @@ struct Generator {
     }
 
     func generateAuthorPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
+        _ templates: TemplateLibrary
     ) throws {
-
+        let htmlRenderer = HTMLRenderer(
+            delegate: ContentTypeRendererDelegate(
+                site: site,
+                assets: assets,
+                contentType: .author
+            )
+        )
         let authorsDirUrl =
             outputUrl
             .appendingPathComponent(Toucan.Directories.authors)
@@ -134,9 +151,17 @@ struct Generator {
     }
 
     func generatePostPages(
-        _ templates: TemplateLibrary,
-        htmlRenderer: HTMLRenderer
+        _ templates: TemplateLibrary
     ) throws {
+
+        let htmlRenderer = HTMLRenderer(
+            delegate: ContentTypeRendererDelegate(
+                site: site,
+                assets: assets,
+                contentType: .post
+            )
+        )
+        
         let postPages = site.postChunks
 
         let postsDirUrl =

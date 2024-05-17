@@ -31,9 +31,20 @@ private enum Contents {
     case children(MarkupChildren)
 }
 
-struct HTMLVisitor: MarkupVisitor {
 
+
+struct HTMLVisitor: MarkupVisitor {
+    
     typealias Result = String
+    
+    
+    let delegate: HTMLRenderer.Delegate?
+    
+    init(
+        delegate: HTMLRenderer.Delegate? = nil
+    ) {
+        self.delegate = delegate
+    }
 
     // MARK: - private functions
 
@@ -173,12 +184,9 @@ struct HTMLVisitor: MarkupVisitor {
         guard let source = image.source else {
             return ""
         }
-        // TODO: resolve urls... delegate?
-        
-//        print(source)
-//        
-//        assets.url(source, for: .post)
-//        
+        if let result = delegate?.imageOverride(image) {
+            return result
+        }
         return tag(
             name: "img",
             type: .short,
@@ -199,14 +207,23 @@ struct HTMLVisitor: MarkupVisitor {
     }
 
     mutating func visitLink(_ link: Link) -> Result {
-        tag(
+        var attributes: [Attribute] = []
+        
+        if let attr = delegate?.linkAttributes(link.destination) {
+            for (key, value) in attr {
+                attributes.append(.init(key: key, value: value))
+            }
+        }
+        attributes.insert(
+            .init(
+                key: "href",
+                value: link.destination ?? "#"
+            ),
+            at: 0
+        )
+        return tag(
             name: "a",
-            attributes: [
-                .init(
-                    key: "href",
-                    value: link.destination ?? "#"
-                )
-            ],
+            attributes: attributes,
             content: .children(link.children)
         )
     }

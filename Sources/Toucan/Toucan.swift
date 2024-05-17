@@ -241,10 +241,10 @@ struct Assets {
         case light
         case dark
     }
-
+    
     private let site: Site
     private let assets: [String: String]
-        
+    
     init(
         _ site: Site,
         _ assets: [String: String]
@@ -252,7 +252,7 @@ struct Assets {
         self.site = site
         self.assets = assets
     }
-
+    
     func exists(_ id: String) -> Bool {
         assets[id] != nil
     }
@@ -274,19 +274,19 @@ struct Assets {
             case .dark:
                 var items = id.split(separator: ".")
                 items.insert("~dark", at: items.count - 1)
-                key = items
+                key = "." + items
                     .joined(separator: ".")
                     .replacingOccurrences(
-                            of: ".~dark",
-                            with: "~dark"
-                        )
+                        of: ".~dark",
+                        with: "~dark"
+                    )
             }
             
             key = key.replacingOccurrences(
-                    of: "./",
-                    with: "./\(type.rawValue)s/"
-                )
-
+                of: "./",
+                with: "./\(type.rawValue)s/"
+            )
+            
             if let slug = assets[key] {
                 return site.permalink(slug)
             }
@@ -294,38 +294,4 @@ struct Assets {
         }
         return id
     }
-    
-//    let imageModifier = Modifier(target: .images) { html, markdown in
-    //            let input = String(markdown)
-    //            guard
-    //                let alt = input.slice(from: "![", to: "]"),
-    //                let file = input.slice(from: "](", to: ")"),
-    //                let name = file.split(separator: ".").first,
-    //                let ext = file.split(separator: ".").last,
-    //                assets.contains(file)
-    //            else {
-    //                print("[WARNING] Image link issues `\(input)` in `\(slug)`.")
-    //                return html
-    //            }
-    //
-    //            let darkFile = String(name) + "~dark." + String(ext)
-    //            let src = baseUrl + "images/assets/" + slug + "/images/" + file
-    //            let darkSrc =
-    //                baseUrl + "images/assets/" + slug + "/images/" + darkFile
-    //
-    //            var dark = ""
-    //            if assets.contains(darkFile) {
-    //                dark =
-    //                    #"<source srcset="\#(darkSrc)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
-    //            }
-    //            return #"""
-    //                </section><section class="wrapper">
-    //                <figure>
-    //                    <picture>
-    //                        \#(dark)<img class="post-image" src="\#(src)" alt="\#(alt)">
-    //                    </picture>
-    //                </figure>
-    //                </section><section class="content-wrapper">
-    //                """#
-    //        }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import Mustache
+import Markdown
 
 extension String {
 
@@ -54,13 +55,14 @@ extension Post {
 extension Author {
 
     func getContext(
-        site: Site
+        site: Site,
+        assets: Assets
     ) -> AuthorContext {
         .init(
             permalink: site.permalink("authors/" + slug),
             title: meta.title,
             excerpt: meta.description,
-            imageUrl: meta.imageUrl
+            imageUrl: assets.url(meta.imageUrl, for: .author)
         )
     }
 }
@@ -68,13 +70,14 @@ extension Author {
 extension Tag {
 
     func getContext(
-        site: Site
+        site: Site,
+        assets: Assets
     ) -> TagContext {
         .init(
             permalink: site.permalink("tags/" + slug),
             title: meta.title,
             excerpt: meta.description,
-            imageUrl: meta.imageUrl
+            imageUrl: assets.url(meta.imageUrl, for: .tag)
         )
     }
 }
@@ -181,7 +184,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(page.slug),
                 title: page.meta.title,
                 description: page.meta.description,
-                imageUrl: page.meta.imageUrl
+                imageUrl: assets.url(page.meta.imageUrl, for: .post)
             ),
             content: SingleCustomPageContext(
                 title: page.meta.title,
@@ -210,7 +213,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(tag.slug),
                 title: tag.meta.title,
                 description: tag.meta.description,
-                imageUrl: tag.meta.imageUrl
+                imageUrl: assets.url(tag.meta.imageUrl, for: .tag)
             ),
             content: SingleTagPageContext(
                 title: tag.meta.title,
@@ -248,7 +251,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(author.slug),
                 title: author.meta.title,
                 description: author.meta.description,
-                imageUrl: author.meta.imageUrl
+                imageUrl: assets.url(author.meta.imageUrl, for: .author)
             ),
             content: SingleAuthorPageContext(
                 title: author.meta.title,
@@ -286,7 +289,7 @@ struct TemplateLibrary {
                 permalink: site.permalink(post.slug),
                 title: post.meta.title,
                 description: post.meta.description,
-                imageUrl: post.meta.imageUrl
+                imageUrl: assets.url(post.meta.imageUrl, for: .post)
             ),
             content: SinglePostPageContext(
                 title: post.meta.title,
@@ -300,11 +303,21 @@ struct TemplateLibrary {
                 ),
                 tags: .init(
                     site.tagsBy(ids: post.tagIds)
-                        .map { $0.getContext(site: site) }
+                        .map {
+                            $0.getContext(
+                                site: site,
+                                assets: assets
+                            )
+                        }
                 ),
                 authors: .init(
                     site.authorsBy(ids: post.authorIds)
-                        .map { $0.getContext(site: site) }
+                        .map {
+                            $0.getContext(
+                                site: site,
+                                assets: assets
+                            )
+                        }
                 ),
                 body: body
             ),
@@ -335,7 +348,8 @@ struct TemplateLibrary {
                 authors: .init(
                     site.authors.map {
                         $0.getContext(
-                            site: site
+                            site: site,
+                            assets: assets
                         )
                     }
                 )
@@ -367,7 +381,8 @@ struct TemplateLibrary {
                 tags: .init(
                     site.tags.map {
                         $0.getContext(
-                            site: site
+                            site: site,
+                            assets: assets
                         )
                     }
                 )
@@ -566,5 +581,44 @@ struct TemplateLibrary {
             with: context,
             to: destination
         )
+    }
+}
+
+struct ContentTypeRendererDelegate: HTMLRenderer.Delegate {
+    
+    let site: Site
+    let assets: Assets
+    let contentType: ContentType
+    
+    func linkAttributes(_ link: String?) -> [String : String] {
+        var attributes: [String: String] = [:]
+        guard let link, !link.isEmpty else {
+            return attributes
+        }
+        if !link.hasPrefix(site.baseUrl) {
+            attributes["target"] = "_blank"
+        }
+        return attributes
+    }
+    
+    func imageOverride(_ image: Image) -> String? {
+        guard 
+            let source = image.source,
+            source.hasPrefix("."),
+            let url = assets.url(source, for: contentType)
+        else {
+            return nil
+        }
+        var drk = ""
+        if let darkUrl = assets.url(source, for: contentType, variant: .dark) {
+            drk = #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
+        }
+        return #"""
+            <figure>
+               <picture>
+                   \#(drk)<img class="post-image" src="\#(url)" alt="\#(image.plainText)">
+               </picture>
+            </figure>
+        """#
     }
 }

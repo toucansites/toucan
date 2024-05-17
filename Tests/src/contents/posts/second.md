@@ -11,7 +11,7 @@ authors: nandi, tiborbodecs
 
 # An h1 header
 
-Paragraphs are separated by a blank line.
+Paragraphs are [separated](https://apple.com) by a [blank](/posts/first-post/) line.
 
 ![Cover image](./second/cover.jpg)
 
