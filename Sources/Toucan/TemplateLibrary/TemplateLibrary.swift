@@ -57,7 +57,9 @@ extension Author {
     ) -> AuthorContext {
         .init(
             permalink: site.permalink("authors/" + slug),
-            title: meta.title
+            title: meta.title,
+            excerpt: meta.description,
+            imageUrl: meta.imageUrl
         )
     }
 }
@@ -69,7 +71,9 @@ extension Tag {
     ) -> TagContext {
         .init(
             permalink: site.permalink("tags/" + slug),
-            title: meta.title
+            title: meta.title,
+            excerpt: meta.description,
+            imageUrl: meta.imageUrl
         )
     }
 }

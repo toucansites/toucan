@@ -8,4 +8,6 @@
 struct TagContext {
     let permalink: String
     let title: String
+    let excerpt: String
+    let imageUrl: String?
 }
