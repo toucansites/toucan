@@ -11,5 +11,6 @@ struct SinglePostPageContext {
     let date: String
     let figure: FigureContext?
     let tags: ArrayContext<TagContext>
+    let authors: ArrayContext<AuthorContext>
     let body: String
 }

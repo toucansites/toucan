@@ -85,5 +85,13 @@ extension Site {
     func page(id: String) -> Page? {
         pages.filter { $0.id == id }.first
     }
+    
+    func authorsBy(ids: [String]) -> [Author] {
+        authors.filter { ids.contains($0.id) }
+    }
+
+    func tagsBy(ids: [String]) -> [Tag] {
+        tags.filter { ids.contains($0.id) }
+    }
 
 }

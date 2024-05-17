@@ -167,7 +167,7 @@ struct TemplateLibrary {
                 description: page.meta.description,
                 body: body
             ),
-            userDefined: [:]
+            userDefined: page.frontMatter
         )
 
         try render(
@@ -204,7 +204,7 @@ struct TemplateLibrary {
                         }
                 )
             ),
-            userDefined: [:]
+            userDefined: tag.frontMatter
         )
 
         try render(
@@ -241,7 +241,7 @@ struct TemplateLibrary {
                         }
                 )
             ),
-            userDefined: [:]
+            userDefined: author.frontMatter
         )
 
         try render(
@@ -256,7 +256,7 @@ struct TemplateLibrary {
         body: String,
         to destination: URL
     ) throws {
-
+        let formatter = DateFormatters().standard
         let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
@@ -268,19 +268,24 @@ struct TemplateLibrary {
             content: SinglePostPageContext(
                 title: post.meta.title,
                 exceprt: post.meta.description,
-                date: "\(post.publication)",  // TODO: date formatter
+                date: formatter.string(from: post.publication),
                 figure: .init(
                     src: post.meta.imageUrl ?? "",
                     darkSrc: post.meta.imageUrl ?? "",
                     alt: post.meta.title,
                     title: post.meta.title
                 ),
-                tags: .init([
-                    .init(permalink: site.permalink("foo"), title: "Foo")
-                ]),
+                tags: .init(
+                    site.tagsBy(ids: post.tagIds)
+                        .map { $0.getContext(site: site) }
+                ),
+                authors: .init(
+                    site.authorsBy(ids: post.authorIds)
+                        .map { $0.getContext(site: site) }
+                ),
                 body: body
             ),
-            userDefined: [:]
+            userDefined: post.frontMatter
         )
 
         try render(

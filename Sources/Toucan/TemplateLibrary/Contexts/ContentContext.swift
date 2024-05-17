@@ -11,7 +11,7 @@ struct ContentContext<T> {
     let site: SiteContext
     let metadata: MetadataContext
     let content: T
-    let currentYear: String
+    let currentYear: Int
     let userDefined: [String: String]
     
     init(
@@ -25,7 +25,7 @@ struct ContentContext<T> {
         self.site = site
         self.metadata = metadata
         self.content = content
-        self.currentYear = "\(year)"
+        self.currentYear = year
         self.userDefined = userDefined
     }
 }
