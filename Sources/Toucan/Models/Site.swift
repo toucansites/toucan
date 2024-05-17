@@ -36,7 +36,7 @@ struct Site {
         self.description = description
         self.language = language
         self.pageLimit = pageLimit ?? 10
-        
+
         self.pages = pages.sorted { $0.meta.title > $1.meta.title }
         self.posts = posts.sorted { $0.publication > $1.publication }
         self.authors = authors.sorted { $0.meta.title > $1.meta.title }

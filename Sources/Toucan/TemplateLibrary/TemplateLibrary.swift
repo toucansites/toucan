@@ -371,7 +371,7 @@ struct TemplateLibrary {
             content: HomePageContext(
                 // TODO: first N
                 posts: .init(
-                    site.posts//.prefix(2)
+                    site.posts  //.prefix(2)
                         .map {
                             $0.getContext(
                                 site: site,
