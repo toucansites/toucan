@@ -6,7 +6,6 @@
 //
 
 struct SingleTagPageContext {
-    let title: String
-    let description: String
+    let tag: TagContext
     let posts: ArrayContext<PostContext>
 }

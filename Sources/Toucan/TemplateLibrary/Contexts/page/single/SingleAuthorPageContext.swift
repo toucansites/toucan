@@ -6,7 +6,6 @@
 //
 
 struct SingleAuthorPageContext {
-    let title: String
-    let description: String
+    let author: AuthorContext
     let posts: ArrayContext<PostContext>
 }

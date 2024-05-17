@@ -84,8 +84,8 @@ extension Author {
         .init(
             permalink: site.permalink("authors/" + slug),
             title: meta.title,
-            excerpt: meta.description,
-            imageUrl: assets.url(meta.coverImage, for: .author)
+            description: meta.description,
+            figure: figureContext(assets: assets)
         )
     }
 }
@@ -113,8 +113,8 @@ extension Tag {
         .init(
             permalink: site.permalink("tags/" + slug),
             title: meta.title,
-            excerpt: meta.description,
-            imageUrl: assets.url(meta.coverImage, for: .tag)
+            description: meta.description,
+            figure: figureContext(assets: assets)
         )
     }
 }
@@ -253,8 +253,7 @@ struct TemplateLibrary {
                 imageUrl: assets.url(tag.meta.coverImage, for: .tag)
             ),
             content: SingleTagPageContext(
-                title: tag.meta.title,
-                description: tag.meta.description,
+                tag: tag.getContext(site: site, assets: assets),
                 posts: .init(
                     site.postsBy(tagId: tag.id)
                         .map {
@@ -291,8 +290,7 @@ struct TemplateLibrary {
                 imageUrl: assets.url(author.meta.coverImage, for: .author)
             ),
             content: SingleAuthorPageContext(
-                title: author.meta.title,
-                description: author.meta.description,
+                author: author.getContext(site: site, assets: assets),
                 posts: .init(
                     site.postsBy(authorId: author.id)
                         .map {

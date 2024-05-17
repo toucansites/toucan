@@ -4,8 +4,11 @@
 
 <div id="author-page" class="wrapper">
     <header>
-        <h1>{{content.title}}</h1>
-        <p>{{content.description}}</p>
+        <h1>{{content.author.title}}</h1>
+        <p>{{content.author.description}}</p>                
+        {{#content.author}}
+        {{> _partials.figure}}
+        {{/content.author}}
     </header>
 
 {{#content.posts.hasElements}}

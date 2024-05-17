@@ -1,4 +1,5 @@
 ---
 title: Nandi
-image: http://...
+description: About Nandi
+coverImage: ./nandi/nandi.jpeg
 ---

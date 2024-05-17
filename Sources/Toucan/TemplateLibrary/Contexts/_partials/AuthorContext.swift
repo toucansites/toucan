@@ -8,6 +8,6 @@
 struct AuthorContext {
     let permalink: String
     let title: String
-    let excerpt: String
-    let imageUrl: String?
+    let description: String
+    let figure: FigureContext?
 }
