@@ -24,8 +24,6 @@ struct Generator {
             templatesUrl: templatesUrl
         )
 
-        
-        
         try generatePostPages(templates)
         try generateTagPages(templates)
         try generateAuthorPages(templates)

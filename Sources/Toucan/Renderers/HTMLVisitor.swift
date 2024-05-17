@@ -187,13 +187,19 @@ struct HTMLVisitor: MarkupVisitor {
         if let result = delegate?.imageOverride(image) {
             return result
         }
+        var attributes: [Attribute] = [
+            .init(key: "src", value: source),
+            .init(key: "alt", value: image.plainText),
+        ]
+        if let title = image.title {
+            attributes.append(
+                .init(key: "title", value: title)
+            )
+        }
         return tag(
             name: "img",
             type: .short,
-            attributes: [
-                .init(key: "src", value: source),
-                .init(key: "alt", value: image.plainText),
-            ],
+            attributes: attributes,
             content: .value("")
         )
     }

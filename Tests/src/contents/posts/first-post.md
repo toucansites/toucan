@@ -15,7 +15,7 @@ Paragraphs are separated by a blank line.
 
 [Second](/posts/second-post/) 
 
-![Cover image](./first-post/set-env-in-xcode.png)
+![Cover image alt text](./first-post/set-env-in-xcode.png "Cover image title")
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:

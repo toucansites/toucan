@@ -31,6 +31,20 @@ extension Site {
 }
 
 extension Post {
+    
+    func figureContext(
+        assets: Assets
+    ) -> FigureContext? {
+        guard let url = assets.url(meta.imageUrl, for: .post) else {
+            return nil
+        }
+        return .init(
+            src: url,
+            darkSrc: assets.url(meta.imageUrl, for: .post, variant: .dark),
+            alt: meta.title,
+            title: meta.title
+        )
+    }
 
     func getContext(
         site: Site,
@@ -42,18 +56,27 @@ extension Post {
             title: meta.title,
             exceprt: meta.description,
             date: formatter.string(from: publication),
-            figure: .init(
-                src: assets.url(meta.imageUrl, for: .post) ?? "",
-                darkSrc: assets.url(meta.imageUrl, for: .post, variant: .dark),
-                alt: meta.title,
-                title: meta.title
-            )
+            figure: figureContext(assets: assets)
         )
     }
 }
 
 extension Author {
 
+    func figureContext(
+        assets: Assets
+    ) -> FigureContext? {
+        guard let url = assets.url(meta.imageUrl, for: .author) else {
+            return nil
+        }
+        return .init(
+            src: url,
+            darkSrc: assets.url(meta.imageUrl, for: .author, variant: .dark),
+            alt: meta.title,
+            title: meta.title
+        )
+    }
+    
     func getContext(
         site: Site,
         assets: Assets
@@ -69,6 +92,20 @@ extension Author {
 
 extension Tag {
 
+    func figureContext(
+        assets: Assets
+    ) -> FigureContext? {
+        guard let url = assets.url(meta.imageUrl, for: .tag) else {
+            return nil
+        }
+        return .init(
+            src: url,
+            darkSrc: assets.url(meta.imageUrl, for: .tag, variant: .dark),
+            alt: meta.title,
+            title: meta.title
+        )
+    }
+    
     func getContext(
         site: Site,
         assets: Assets
@@ -595,7 +632,11 @@ struct ContentTypeRendererDelegate: HTMLRenderer.Delegate {
         guard let link, !link.isEmpty else {
             return attributes
         }
-        if !link.hasPrefix(site.baseUrl) {
+        if 
+            !link.hasPrefix("."),
+            !link.hasPrefix("/"), 
+            !link.hasPrefix(site.baseUrl)
+        {
             attributes["target"] = "_blank"
         }
         return attributes
@@ -613,10 +654,14 @@ struct ContentTypeRendererDelegate: HTMLRenderer.Delegate {
         if let darkUrl = assets.url(source, for: contentType, variant: .dark) {
             drk = #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
         }
+        var title = ""
+        if let ttl = image.title {
+            title = #" title="\#(ttl)""#
+        }
         return #"""
             <figure>
                <picture>
-                   \#(drk)<img class="post-image" src="\#(url)" alt="\#(image.plainText)">
+                   \#(drk)<img class="post-image" src="\#(url)" alt="\#(image.plainText)"\#(title)>
                </picture>
             </figure>
         """#
