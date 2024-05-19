@@ -1,21 +1,21 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 17/05/2024.
 //
 
 struct Assets {
-    
+
     enum Variant {
         case light
         case dark
     }
-    
+
     // TODO: remove site dependency, return slug only...
     private let site: Site
     private let assets: [String: String]
-    
+
     init(
         _ site: Site,
         _ assets: [String: String]
@@ -23,11 +23,11 @@ struct Assets {
         self.site = site
         self.assets = assets
     }
-    
+
     func exists(_ id: String) -> Bool {
         assets[id] != nil
     }
-    
+
     func url(
         _ id: String?,
         for type: ContentType,
@@ -45,19 +45,21 @@ struct Assets {
             case .dark:
                 var items = id.split(separator: ".")
                 items.insert("~dark", at: items.count - 1)
-                key = "." + items
+                key =
+                    "."
+                    + items
                     .joined(separator: ".")
                     .replacingOccurrences(
                         of: ".~dark",
                         with: "~dark"
                     )
             }
-            
+
             key = key.replacingOccurrences(
                 of: "./",
                 with: "./\(type.rawValue)s/"
             )
-            
+
             if let slug = assets[key] {
                 return site.permalink(slug)
             }

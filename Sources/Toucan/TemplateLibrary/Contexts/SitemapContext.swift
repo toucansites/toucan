@@ -12,5 +12,5 @@ struct SitemapContext {
         let lastModification: String
     }
 
-    let urls: ArrayContext<URL>
+    let urls: [URL]
 }

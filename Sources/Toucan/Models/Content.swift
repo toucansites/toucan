@@ -8,7 +8,7 @@
 import Foundation
 
 protocol Content {
-        
+
     var id: String { get }
     var slug: String { get }
     var meta: Meta { get }

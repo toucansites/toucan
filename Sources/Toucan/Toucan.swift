@@ -144,7 +144,10 @@ public struct Toucan {
             let dirEnum = fileManager.enumerator(atPath: assetInputUrl.path)
             while let file = dirEnum?.nextObject() as? String {
                 let key = "./" + [directory, id, file].joined(separator: "/")
-                let value = "/" + [Directories.assets, directory, slug, file].joined(separator: "/")
+                let value =
+                    "/"
+                    + [Directories.assets, directory, slug, file]
+                    .joined(separator: "/")
                 res[key] = value
             }
 
@@ -166,7 +169,7 @@ public struct Toucan {
         }
         return toProcess
     }
-    
+
     /// copy all the assets for the site
     func copyAssets(site: Site) throws -> [String: String] {
 
@@ -206,7 +209,7 @@ public struct Toucan {
             )
             assets = assets + res
         }
-        
+
         return assets
     }
 
@@ -223,7 +226,7 @@ public struct Toucan {
         try copyPublicFiles()
         try prepareDirectories(site: site)
         let assets = try copyAssets(site: site)
-        
+
         let generator = Generator(
             site: site,
             assets: .init(site, assets),
@@ -233,5 +236,3 @@ public struct Toucan {
         try generator.generate()
     }
 }
-
-

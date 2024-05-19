@@ -20,5 +20,5 @@ struct RSSContext {
     let language: String?
     let lastBuildDate: String
     let publicationDate: String
-    let items: ArrayContext<ItemContext>
+    let items: [ItemContext]
 }

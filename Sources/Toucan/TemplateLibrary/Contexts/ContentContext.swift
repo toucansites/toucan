@@ -13,12 +13,12 @@ struct ContentContext<T> {
     let content: T
     let currentYear: Int
     let userDefined: [String: String]
-    
+
     init(
         site: SiteContext,
         metadata: MetadataContext,
         content: T,
-        userDefined: [String : String]
+        userDefined: [String: String]
     ) {
         let year = Calendar(identifier: .gregorian)
             .component(.year, from: Date())
@@ -30,3 +30,24 @@ struct ContentContext<T> {
     }
 }
 
+/**
+
+ - site: Object
+    - baseUrl: String
+    - title: String
+    - language: String?
+ - metadata: Object
+    - permalink: String
+    - title: String
+    - description: String
+    - imageUrl: String?
+ - currentYear: Int
+ - userDefined: [String: String]
+ - content: T
+
+
+ home:
+    - posts: Array
+            -
+
+ */

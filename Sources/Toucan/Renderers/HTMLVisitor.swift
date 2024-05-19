@@ -31,15 +31,12 @@ private enum Contents {
     case children(MarkupChildren)
 }
 
-
-
 struct HTMLVisitor: MarkupVisitor {
-    
+
     typealias Result = String
-    
-    
+
     let delegate: HTMLRenderer.Delegate?
-    
+
     init(
         delegate: HTMLRenderer.Delegate? = nil
     ) {
@@ -92,9 +89,9 @@ struct HTMLVisitor: MarkupVisitor {
 
     // MARK: - elements
 
-    //    mutating func visit(_ markup: Markup) -> Result {
-    //        fatalError()
-    //    }
+    //        mutating func visit(_ markup: Markup) -> Result {
+    //            fatalError()
+    //        }
 
     mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> Result {
         tag(name: "blockquote", content: .children(blockQuote.children))
@@ -122,7 +119,9 @@ struct HTMLVisitor: MarkupVisitor {
         )
     }
 
-    //    mutating func visitCustomBlock(_ customBlock: CustomBlock) -> Result {
+    //    mutating func visitCustomBlock(
+    //        _ customBlock: CustomBlock
+    //    ) -> Result {
     //        fatalError()
     //    }
 
@@ -130,42 +129,76 @@ struct HTMLVisitor: MarkupVisitor {
     //        fatalError()
     //    }
 
-    mutating func visitHeading(_ heading: Heading) -> Result {
+    mutating func visitHeading(
+        _ heading: Heading
+    ) -> Result {
         tag(
             name: "h\(heading.level)",
             content: .children(heading.children)
         )
     }
 
-    mutating func visitThematicBreak(_ thematicBreak: ThematicBreak) -> Result {
+    mutating func visitThematicBreak(
+        _ thematicBreak: ThematicBreak
+    ) -> Result {
         tag(name: "hr", type: .short, content: .value(""))
     }
 
-    mutating func visitHTMLBlock(_ html: HTMLBlock) -> Result {
+    mutating func visitHTMLBlock(
+        _ html: HTMLBlock
+    ) -> Result {
         html.rawHTML
     }
 
-    mutating func visitListItem(_ listItem: ListItem) -> Result {
+    mutating func visitListItem(
+        _ listItem: ListItem
+    ) -> Result {
         tag(name: "li", content: .children(listItem.children))
     }
 
-    mutating func visitOrderedList(_ orderedList: OrderedList) -> Result {
+    mutating func visitOrderedList(
+        _ orderedList: OrderedList
+    ) -> Result {
         tag(name: "ol", content: .children(orderedList.children))
     }
 
-    mutating func visitUnorderedList(_ unorderedList: UnorderedList) -> Result {
+    mutating func visitUnorderedList(
+        _ unorderedList: UnorderedList
+    ) -> Result {
         tag(name: "ul", content: .children(unorderedList.children))
     }
 
-    mutating func visitParagraph(_ paragraph: Paragraph) -> Result {
+    mutating func visitParagraph(
+        _ paragraph: Paragraph
+    ) -> Result {
         if paragraph.isInsideList {
             return paragraph.plainText
         }
         return tag(name: "p", content: .children(paragraph.children))
     }
 
-    //    mutating func visitBlockDirective(_ blockDirective: BlockDirective) -> Result {
-    //        fatalError()
+    //    mutating func visitBlockDirective(
+    //        _ blockDirective: BlockDirective
+    //    ) -> Result {
+    //        if !blockDirective.argumentText.isEmpty {
+    //            var parseErrors = [DirectiveArgumentText.ParseError]()
+    //            let arguments = blockDirective.argumentText.parseNameValueArguments(parseErrors: &parseErrors)
+    //
+    //            print(parseErrors.isEmpty)
+    //
+    //            for argument in arguments {
+    //                print(argument.name, argument.value)
+    //            }
+    //        }
+    //
+    //        return tag(
+    //            name: "div",
+    //            attributes: [
+    //                .init(key: "class", value: blockDirective.name)
+    //            ],
+    //            content: .children(blockDirective.children)
+    //        )
+    //        ""
     //    }
 
     mutating func visitInlineCode(_ inlineCode: InlineCode) -> Result {
@@ -214,7 +247,7 @@ struct HTMLVisitor: MarkupVisitor {
 
     mutating func visitLink(_ link: Link) -> Result {
         var attributes: [Attribute] = []
-        
+
         if let attr = delegate?.linkAttributes(link.destination) {
             for (key, value) in attr {
                 attributes.append(.init(key: key, value: value))

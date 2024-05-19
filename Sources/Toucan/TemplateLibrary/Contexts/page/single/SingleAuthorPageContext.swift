@@ -7,5 +7,5 @@
 
 struct SingleAuthorPageContext {
     let author: AuthorContext
-    let posts: ArrayContext<PostContext>
+    let posts: [PostContext]
 }

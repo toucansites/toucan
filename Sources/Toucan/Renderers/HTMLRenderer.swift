@@ -20,26 +20,29 @@ extension HTMLRenderer.Delegate {
 
 /// A HTML renderer for Markdown documents.
 public struct HTMLRenderer {
-    
+
     public protocol Delegate {
         func imageOverride(_ image: Image) -> String?
         func linkAttributes(_ link: String?) -> [String: String]
     }
-    
+
     let delegate: Delegate?
 
     /// Public init.
     public init(delegate: Delegate? = nil) {
         self.delegate = delegate
     }
-    
+
     /// Render a Markdown string.
     public func render(
         markdown: String
     ) -> String {
-        let document = Document(parsing: markdown)
+        let document = Document(
+            parsing: markdown,
+            options: .parseBlockDirectives
+        )
         var htmlVisitor = HTMLVisitor(delegate: delegate)
-        
+
         return htmlVisitor.visitDocument(document)
     }
 }

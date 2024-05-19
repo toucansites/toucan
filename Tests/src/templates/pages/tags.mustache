@@ -3,15 +3,22 @@
 {{$main}}
 <div id="tags" class="wrapper">
     <header>
-        <h1>Tags</h1>
-        <p>description</p>
+        <h1>{{metadata.title}}</h1>
+        <p>{{metadata.description}}</p>
     </header>
 
+    {{#empty(content.tags)}}
+    Empty.
+    {{/empty(content.tags)}}
+    {{^empty(content.tags)}}
     <div class="grid">
-    {{#content.tags.elements}}
-        {{> _partials.tag}}
-    {{/content.tags.elements}}
+    <ul>
+    {{#content.tags}}
+        <li>{{> _partials.tag}}</li>
+    {{/content.tags}}
+    </ul>
     </div>
+    {{/empty(content.tags)}}
 </div>
 {{/main}}
 

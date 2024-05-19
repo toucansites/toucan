@@ -3,25 +3,31 @@
 {{$main}}
 <div id="posts" class="wrapper">
     <header>
-        <h1>Posts</h1>
-        <p>description</p>
+        <h1>{{metadata.title}}</h1>
+        <p>{{metadata.description}}</p>
     </header>
 
-{{#content.posts.hasElements}}
+    {{#empty(content.posts)}}
+    Empty.
+    {{/empty(content.posts)}}
+    {{^empty(content.posts)}}
     <div class="grid">
-    {{#content.posts.elements}}
+    {{#content.posts}}
         {{> _partials.post}}
-    {{/content.posts.elements}}
+    {{/content.posts}}
     </div>
-{{/content.posts.hasElements}}
-
-{{#content.pagination.hasElements}}
+    {{/empty(content.posts)}}
+    
+    {{#empty(content.pagination)}}
+    {{/empty(content.pagination)}}
+    {{^empty(content.pagination)}}
     <div class="pagination">
-        {{#content.pagination.elements}}
-            {{> _partials.pagination}}
-        {{/content.pagination.elements}}
+    {{#content.pagination}}
+        {{> _partials.pagination}}
+    {{/content.pagination}}
     </div>
-{{/content.pagination.hasElements}}
+    {{/empty(content.pagination)}}
+
 </div>
 {{/main}}
 

@@ -6,5 +6,5 @@
 //
 
 struct TagsPageContext {
-    let tags: ArrayContext<TagContext>
+    let tags: [TagContext]
 }

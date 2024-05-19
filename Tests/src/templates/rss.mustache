@@ -9,7 +9,10 @@
     <ttl>250</ttl>
     <atom:link href="{{baseUrl}}rss.xml" rel="self" type="application/rss+xml"/>
 
-{{#items.elements}}
+{{#empty(items)}}
+{{/empty(items)}}
+{{^empty(items)}}
+{{#items}}
 <item>
     <guid isPermaLink="true">{{permalink}}</guid>
     <title><![CDATA[ {{title}} ]]></title>
@@ -17,7 +20,8 @@
     <link>{{permalink}}</link>
     <pubDate>{{publicationDate}}</pubDate>
 </item>
-{{/items.elements}}
+{{/items}}
+{{/empty(items)}}
 
 </channel>
 </rss>

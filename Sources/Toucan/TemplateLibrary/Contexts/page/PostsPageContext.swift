@@ -6,6 +6,6 @@
 //
 
 struct PostsPageContext {
-    let posts: ArrayContext<PostContext>
-    let pagination: ArrayContext<PaginationContext>
+    let posts: [PostContext]
+    let pagination: [PaginationContext]
 }

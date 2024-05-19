@@ -13,7 +13,6 @@ struct Generator {
     let assets: Assets
     let templatesUrl: URL
     let outputUrl: URL
-    
 
     /// generates all the html & xml files
     func generate() throws {
@@ -159,7 +158,7 @@ struct Generator {
                 contentType: .post
             )
         )
-        
+
         let postPages = site.postChunks
 
         let postsDirUrl =
@@ -196,16 +195,16 @@ struct Generator {
                     pageCount: postPages.count,
                     to: postsUrl
                 )
-                let postPageUrl =
-                    postsDirUrl
-                    .appendingPathComponent(Toucan.Directories.postsPage)
-                    .appendingPathComponent(Toucan.Files.index)
-                try templates.renderPostsPage(
-                    posts: Array(posts),
-                    pageIndex: index,
-                    pageCount: postPages.count,
-                    to: postPageUrl
-                )
+                //                let postPageUrl =
+                //                    postsDirUrl
+                //                    .appendingPathComponent(Toucan.Directories.postsPage)
+                //                    .appendingPathComponent(Toucan.Files.index)
+                //                try templates.renderPostsPage(
+                //                    posts: Array(posts),
+                //                    pageIndex: index,
+                //                    pageCount: postPages.count,
+                //                    to: postPageUrl
+                //                )
             }
 
             for post in posts {

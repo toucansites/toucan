@@ -31,7 +31,7 @@ extension Site {
 }
 
 extension Post {
-    
+
     func figureContext(
         assets: Assets
     ) -> FigureContext? {
@@ -76,7 +76,7 @@ extension Author {
             title: meta.title
         )
     }
-    
+
     func getContext(
         site: Site,
         assets: Assets
@@ -105,7 +105,7 @@ extension Tag {
             title: meta.title
         )
     }
-    
+
     func getContext(
         site: Site,
         assets: Assets
@@ -164,7 +164,7 @@ struct TemplateLibrary {
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
     }
-    
+
     // TODO: use thsi?
     func postsContexts(formatter: DateFormatter) -> [PostContext] {
         site.posts.map {
@@ -175,8 +175,6 @@ struct TemplateLibrary {
             )
         }
     }
-    
-    
 
     private func render(
         template: String,
@@ -254,22 +252,20 @@ struct TemplateLibrary {
             ),
             content: SingleTagPageContext(
                 tag: tag.getContext(site: site, assets: assets),
-                posts: .init(
-                    site.postsBy(tagId: tag.id)
-                        .map {
-                            $0.getContext(
-                                site: site,
-                                assets: assets,
-                                formatter: formatter
-                            )
-                        }
-                )
+                posts: site.postsBy(tagId: tag.id)
+                    .map {
+                        $0.getContext(
+                            site: site,
+                            assets: assets,
+                            formatter: formatter
+                        )
+                    }
             ),
             userDefined: tag.frontMatter
         )
 
         try render(
-            template: "pages.single.tag",
+            template: tag.meta.template ?? "pages.single.tag",
             with: context,
             to: destination
         )
@@ -291,16 +287,14 @@ struct TemplateLibrary {
             ),
             content: SingleAuthorPageContext(
                 author: author.getContext(site: site, assets: assets),
-                posts: .init(
-                    site.postsBy(authorId: author.id)
-                        .map {
-                            $0.getContext(
-                                site: site,
-                                assets: assets,
-                                formatter: formatter
-                            )
-                        }
-                )
+                posts: site.postsBy(authorId: author.id)
+                    .map {
+                        $0.getContext(
+                            site: site,
+                            assets: assets,
+                            formatter: formatter
+                        )
+                    }
             ),
             userDefined: author.frontMatter
         )
@@ -331,31 +325,28 @@ struct TemplateLibrary {
                 exceprt: post.meta.description,
                 date: formatter.string(from: post.publication),
                 figure: post.figureContext(assets: assets),
-                tags: .init(
-                    site.tagsBy(ids: post.tagIds)
-                        .map {
-                            $0.getContext(
-                                site: site,
-                                assets: assets
-                            )
-                        }
-                ),
-                authors: .init(
-                    site.authorsBy(ids: post.authorIds)
-                        .map {
-                            $0.getContext(
-                                site: site,
-                                assets: assets
-                            )
-                        }
-                ),
+                tags: site.tagsBy(ids: post.tagIds)
+                    .map {
+                        $0.getContext(
+                            site: site,
+                            assets: assets
+                        )
+                    },
+
+                authors: site.authorsBy(ids: post.authorIds)
+                    .map {
+                        $0.getContext(
+                            site: site,
+                            assets: assets
+                        )
+                    },
                 body: body
             ),
             userDefined: post.frontMatter
         )
 
         try render(
-            template: "pages.single.post",
+            template: post.meta.template ?? "pages.single.post",
             with: context,
             to: destination
         )
@@ -369,26 +360,24 @@ struct TemplateLibrary {
         let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
-                permalink: site.permalink(""),
+                permalink: site.permalink(page?.slug ?? "authors"),
                 title: page?.meta.title ?? "Authors",
                 description: page?.meta.description ?? "Authors page",
-                imageUrl: nil
+                imageUrl: assets.url(page?.meta.coverImage, for: .page)
             ),
             content: AuthorsPageContext(
-                authors: .init(
-                    site.authors.map {
-                        $0.getContext(
-                            site: site,
-                            assets: assets
-                        )
-                    }
-                )
+                authors: site.authors.map {
+                    $0.getContext(
+                        site: site,
+                        assets: assets
+                    )
+                }
             ),
             userDefined: page?.frontMatter ?? [:]
         )
 
         try render(
-            template: "pages.authors",
+            template: page?.meta.template ?? "pages.authors",
             with: context,
             to: destination
         )
@@ -402,26 +391,24 @@ struct TemplateLibrary {
         let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
-                permalink: site.permalink(""),
+                permalink: site.permalink(page?.slug ?? "tags"),
                 title: page?.meta.title ?? "Tags",
                 description: page?.meta.description ?? "Tags page",
-                imageUrl: nil
+                imageUrl: assets.url(page?.meta.coverImage, for: .page)
             ),
             content: TagsPageContext(
-                tags: .init(
-                    site.tags.map {
-                        $0.getContext(
-                            site: site,
-                            assets: assets
-                        )
-                    }
-                )
+                tags: site.tags.map {
+                    $0.getContext(
+                        site: site,
+                        assets: assets
+                    )
+                }
             ),
             userDefined: page?.frontMatter ?? [:]
         )
 
         try render(
-            template: "pages.tags",
+            template: page?.meta.template ?? "pages.tags",
             with: context,
             to: destination
         )
@@ -436,29 +423,26 @@ struct TemplateLibrary {
         let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
-                permalink: site.permalink(""),
+                permalink: site.permalink(page?.slug ?? ""),
                 title: page?.meta.title ?? "Home",
                 description: page?.meta.description ?? "Home page",
-                imageUrl: nil
+                imageUrl: assets.url(page?.meta.coverImage, for: .page)
             ),
             content: HomePageContext(
                 // TODO: first N
-                posts: .init(
-                    site.posts  //.prefix(2)
-                        .map {
-                            $0.getContext(
-                                site: site,
-                                assets: assets,
-                                formatter: formatter
-                            )
-                        }
-                )
+                posts: site.posts.map {
+                    $0.getContext(
+                        site: site,
+                        assets: assets,
+                        formatter: formatter
+                    )
+                }
             ),
             userDefined: page?.frontMatter ?? [:]
         )
 
         try render(
-            template: "pages.home",
+            template: page?.meta.template ?? "pages.home",
             with: context,
             to: destination
         )
@@ -473,28 +457,26 @@ struct TemplateLibrary {
         let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
-                permalink: site.permalink(""),
+                permalink: site.permalink(page?.slug ?? "not-found"),
                 title: page?.meta.title ?? "Not found",
                 description: page?.meta.description ?? "Page not found",
-                imageUrl: nil
+                imageUrl: assets.url(page?.meta.coverImage, for: .page)
             ),
             content: HomePageContext(
                 // TODO: first N
-                posts: .init(
-                    site.posts.map {
-                        $0.getContext(
-                            site: site,
-                            assets: assets,
-                            formatter: formatter
-                        )
-                    }
-                )
+                posts: site.posts.map {
+                    $0.getContext(
+                        site: site,
+                        assets: assets,
+                        formatter: formatter
+                    )
+                }
             ),
             userDefined: page?.frontMatter ?? [:]
         )
 
         try render(
-            template: "pages.404",
+            template: page?.meta.template ?? "pages.404",
             with: context,
             to: destination
         )
@@ -506,45 +488,42 @@ struct TemplateLibrary {
         pageCount count: Int,
         to destination: URL
     ) throws {
+        let page = site.page(id: "posts")
+
         let formatter = DateFormatters().standard
         let pageIndex = index + 1
         let context = ContentContext(
             site: site.getContext(),
             metadata: .init(
                 permalink: site.permalink("posts/page/\(pageIndex)"),
-                title: "posts page 1",
-                description: "posts page 1 description",
-                imageUrl: nil
+                title: page?.meta.title ?? "Posts - \(pageIndex)",
+                description: page?.meta.description ?? "Posts - \(pageIndex)",
+                imageUrl: assets.url(page?.meta.coverImage, for: .page)
             ),
             content: PostsPageContext(
-                posts: .init(
-                    posts.map {
-                        $0.getContext(
-                            site: site,
-                            assets: assets,
-                            formatter: formatter
-                        )
-                    }
-                ),
-                pagination: .init(
-                    (0..<count)
-                        .map { idx in
-                            let currentPageIndex = idx + 1
-                            return .init(
-                                name: "\(currentPageIndex)",
-                                url: site.permalink(
-                                    "posts/page/\(currentPageIndex)"
-                                ),
-                                isCurrent: index == idx
-                            )
-                        }
-                )
+                posts: posts.map {
+                    $0.getContext(
+                        site: site,
+                        assets: assets,
+                        formatter: formatter
+                    )
+                },
+                pagination: (0..<count).map { idx in
+                    let currentPageIndex = idx + 1
+                    return .init(
+                        name: "\(currentPageIndex)",
+                        url: site.permalink(
+                            "posts/page/\(currentPageIndex)"
+                        ),
+                        isCurrent: index == idx
+                    )
+                }
             ),
             userDefined: [:]
         )
 
         try render(
-            template: "pages.posts",
+            template: page?.meta.template ?? "pages.posts",
             with: context,
             to: destination
         )
@@ -557,19 +536,6 @@ struct TemplateLibrary {
         let now = Date()
         let formatter = DateFormatters().rss
 
-        let items: [RSSContext.ItemContext] = site.posts.map {
-            .init(
-                permalink: site.permalink(
-                    $0.slug
-                ),
-                title: $0.meta.title,
-                description: $0.meta.description,
-                publicationDate: formatter.string(
-                    from: $0.publication
-                )
-            )
-        }
-
         let context = RSSContext(
             title: site.title,
             description: site.description,
@@ -579,7 +545,18 @@ struct TemplateLibrary {
             publicationDate: formatter.string(
                 from: site.posts.first?.publication ?? now
             ),
-            items: .init(items)
+            items: site.posts.map {
+                .init(
+                    permalink: site.permalink(
+                        $0.slug
+                    ),
+                    title: $0.meta.title,
+                    description: $0.meta.description,
+                    publicationDate: formatter.string(
+                        from: $0.publication
+                    )
+                )
+            }
         )
 
         try render(
@@ -594,16 +571,14 @@ struct TemplateLibrary {
     ) throws {
         let formatter = DateFormatters().sitemap
         let context = SitemapContext(
-            urls: .init(
-                site.contents.map {
-                    SitemapContext.URL(
-                        location: site.permalink($0.slug),
-                        lastModification: formatter.string(
-                            from: $0.lastModification
-                        )
+            urls: site.contents.map {
+                SitemapContext.URL(
+                    location: site.permalink($0.slug),
+                    lastModification: formatter.string(
+                        from: $0.lastModification
                     )
-                }
-            )
+                )
+            }
         )
 
         try render(
@@ -615,28 +590,27 @@ struct TemplateLibrary {
 }
 
 struct ContentTypeRendererDelegate: HTMLRenderer.Delegate {
-    
+
     let site: Site
     let assets: Assets
     let contentType: ContentType
-    
-    func linkAttributes(_ link: String?) -> [String : String] {
+
+    func linkAttributes(_ link: String?) -> [String: String] {
         var attributes: [String: String] = [:]
         guard let link, !link.isEmpty else {
             return attributes
         }
-        if 
-            !link.hasPrefix("."),
-            !link.hasPrefix("/"), 
+        if !link.hasPrefix("."),
+            !link.hasPrefix("/"),
             !link.hasPrefix(site.baseUrl)
         {
             attributes["target"] = "_blank"
         }
         return attributes
     }
-    
+
     func imageOverride(_ image: Image) -> String? {
-        guard 
+        guard
             let source = image.source,
             source.hasPrefix("."),
             let url = assets.url(source, for: contentType)
@@ -645,18 +619,19 @@ struct ContentTypeRendererDelegate: HTMLRenderer.Delegate {
         }
         var drk = ""
         if let darkUrl = assets.url(source, for: contentType, variant: .dark) {
-            drk = #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
+            drk =
+                #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
         }
         var title = ""
         if let ttl = image.title {
             title = #" title="\#(ttl)""#
         }
         return #"""
-            <figure>
-               <picture>
-                   \#(drk)<img class="post-image" src="\#(url)" alt="\#(image.plainText)"\#(title)>
-               </picture>
-            </figure>
-        """#
+                <figure>
+                   <picture>
+                       \#(drk)<img class="post-image" src="\#(url)" alt="\#(image.plainText)"\#(title)>
+                   </picture>
+                </figure>
+            """#
     }
 }

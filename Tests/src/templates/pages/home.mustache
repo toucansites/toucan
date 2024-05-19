@@ -9,16 +9,15 @@
         <a href="{{userDefined.ctaUrl}}">{{userDefined.ctaLabel}}</a>
     </header>
     
-    {{#content.posts.hasElements}}
-    <div class="grid">
-    {{#content.posts.elements}}
-        {{> _partials.post}}
-    {{/content.posts.elements}}
-    </div>
-    {{/content.posts.hasElements}}
-    {{^content.posts.hasElements}}
+    
+    {{#empty(content.posts)}}
     Empty.
-    {{/content.posts.hasElements}}
+    {{/empty(content.posts)}}
+    {{^empty(content.posts)}}
+    {{#content.posts}}
+        {{> _partials.post}}
+    {{/content.posts}}
+    {{/empty(content.posts)}}
 
 </div>
 {{/main}}

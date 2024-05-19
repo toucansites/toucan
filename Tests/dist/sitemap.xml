@@ -1,13 +1,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>http://localhost:3000/posts/</loc>
-        <lastmod>2024-05-13</lastmod>
+        <lastmod>2024-05-18</lastmod>
         <loc>http://localhost:3000/my-page/</loc>
-        <lastmod>2024-05-17</lastmod>
+        <lastmod>2024-05-18</lastmod>
         <loc>http://localhost:3000/home/</loc>
-        <lastmod>2024-05-17</lastmod>
+        <lastmod>2024-05-19</lastmod>
+        <loc>http://localhost:3000/foo/bar/</loc>
+        <lastmod>2024-05-19</lastmod>
         <loc>http://localhost:3000/authors/</loc>
-        <lastmod>2024-05-17</lastmod>
+        <lastmod>2024-05-18</lastmod>
         <loc>http://localhost:3000/404/</loc>
         <lastmod>2024-04-12</lastmod>
         <loc>http://localhost:3000/third-post/</loc>

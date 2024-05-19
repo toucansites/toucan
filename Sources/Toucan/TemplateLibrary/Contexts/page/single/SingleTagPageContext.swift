@@ -7,5 +7,5 @@
 
 struct SingleTagPageContext {
     let tag: TagContext
-    let posts: ArrayContext<PostContext>
+    let posts: [PostContext]
 }

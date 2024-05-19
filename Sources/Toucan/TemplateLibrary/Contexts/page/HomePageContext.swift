@@ -6,5 +6,7 @@
 //
 
 struct HomePageContext {
-    let posts: ArrayContext<PostContext>
+    let posts: [PostContext]
+    // TODO: remove this
+    let featured = ["foo", "bar", "baz"]
 }

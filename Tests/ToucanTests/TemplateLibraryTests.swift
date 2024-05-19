@@ -149,9 +149,9 @@ final class TemplateLibraryTests: XCTestCase {
     //                    alt: "foo",
     //                    title: "lorem foo"
     //                ),
-    //                tags: .init([
+    //                tags: [
     //                    .init(permalink: "https://bb.com/foo", title: "Foo")
-    //                ]),
+    //                ],
     //                body: "<b>lorem ipsum</b> dolor sit amet"
     //            ),
     //            userDefined: [:]

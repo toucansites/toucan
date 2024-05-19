@@ -6,5 +6,5 @@
 //
 
 struct AuthorsPageContext {
-    let authors: ArrayContext<AuthorContext>
+    let authors: [AuthorContext]
 }

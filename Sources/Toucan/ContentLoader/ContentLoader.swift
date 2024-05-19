@@ -65,7 +65,12 @@ struct ContentLoader {
 
         /// load pages
         let pages = try pageFiles.map { url in
-            let id = String(url.lastPathComponent.dropLast(3))
+            let id = String(
+                url
+                    .path
+                    .dropFirst(pagesUrl.path.count + 1)
+                    .dropLast(3)
+            )
             let lastModification = try fileManager.modificationDate(at: url)
 
             let markdown = try String(contentsOf: url)
