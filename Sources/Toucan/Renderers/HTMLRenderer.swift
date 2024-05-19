@@ -21,8 +21,11 @@ extension HTMLRenderer.Delegate {
 /// A HTML renderer for Markdown documents.
 public struct HTMLRenderer {
 
+    /// A delegate for the HTML renderer.
     public protocol Delegate {
+        /// Override an image tag.
         func imageOverride(_ image: Image) -> String?
+        /// Provide attributes for a link.
         func linkAttributes(_ link: String?) -> [String: String]
     }
 

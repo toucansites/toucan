@@ -508,16 +508,17 @@ struct TemplateLibrary {
                         formatter: formatter
                     )
                 },
-                pagination: (0..<count).map { idx in
-                    let currentPageIndex = idx + 1
-                    return .init(
-                        name: "\(currentPageIndex)",
-                        url: site.permalink(
-                            "posts/page/\(currentPageIndex)"
-                        ),
-                        isCurrent: index == idx
-                    )
-                }
+                pagination: (0..<count)
+                    .map { idx in
+                        let currentPageIndex = idx + 1
+                        return .init(
+                            name: "\(currentPageIndex)",
+                            url: site.permalink(
+                                "posts/page/\(currentPageIndex)"
+                            ),
+                            isCurrent: index == idx
+                        )
+                    }
             ),
             userDefined: [:]
         )
