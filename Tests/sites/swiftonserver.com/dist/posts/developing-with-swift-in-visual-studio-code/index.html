@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Developing with Swift in Visual Studio Code - </title>
+    <meta name="description" content="Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension.">
+    
+    <meta property="og:url" content="/posts/developing-with-swift-in-visual-studio-code/">
+    <meta property="og:title" content="Developing with Swift in Visual Studio Code - ">
+    <meta property="og:description" content="Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Developing with Swift in Visual Studio Code - ">
+    <meta name="twitter:description" content="Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2024-01-16 18:30:00">2024-01-16 18:30:00</time>
+            <h1 class="title">Developing with Swift in Visual Studio Code</h1>
+            <p class="excerpt">Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>Swift is a great language for developing applications for Apple platforms, and is easily set up using Xcode.<br>However, Xcode is only available for macOS, and does not support a wide variety of extensions.<br>For this reason, many Server-Side Swift developers prefer to use Visual Studio Code for their development.</p><p>Visual Studio Code is a free and open-source code editor developed by Microsoft for Windows, Linux and macOS.</p><h2>What are Dev Containers?</h2><p>Dev Containers are a way to develop in a containerized environment. Containers are a way to package software in a format that can be run on any platform, such as Linux, macOS or Windows.<br>You can think of them as a lightweight alternative to virtual machines. In most of our tutorials, we’ll provide a dev container for you to use. This allows you to set up all prerequisites for a tutorial in a single step.</p><h3>Prerequisites</h3><p>First, download Visual Studio Code from <a href="https://code.visualstudio.com/download/" target="_blank">https://code.visualstudio.com/download/</a> and install it for your platform.</p><p>Then, once Visual Studio Code is installed, download and install Docker. The easiest way is to use the Docker Desktop installer for your platform: <a href="https://www.docker.com/products/docker-desktop/" target="_blank">https://www.docker.com/products/docker-desktop/</a></p><p>Finally, you’ll need to install the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers" target="_blank">Dev Containers</a> plugin for VSCode. This will allow you to open a project inside a Docker container, if it has a devcontainer bundled with it.</p><p>This tutorial has a <a href="https://github.com/swift-on-server/developing-with-swift-in-visual-studio-code-sample" target="_blank">sample project</a> that you can use to test your setup.</p><h2>Opening a Project</h2><p>Make sure Docker (Desktop) is running, ready, and has sufficient resources allocated. You can do this by opening the Docker Desktop application and going to the “Resources” tab.<br>Swift needs at least 4GB of memory to compile, so make sure you have at least 4GB of memory allocated to Docker.</p><p>Open Visual Studio Code and click on the “Open Folder” button in the welcome screen. Select the folder containing the starter project.<br>In the bottom-right of the window, you’ll see a blue button with the text “Reopen in Container”. Click on it to reopen the project in a Dev Container.</p><p>If you don’t see the button, you can also open the command palette (<code>Ctrl+Shift+P</code> on Windows/Linux, <code>Cmd+Shift+P</code> on macOS) and search for “Reopen in Container”.</p><p><img src="open-in-container.png" alt="Reopen in Container"></p><p><strong>Note:</strong> The image shows the “Update” button instead of the “Reopen in Container” button. This is because I already have the project open in a Dev Container.</p><p>Visual Studio Code will now start downloading or building the Dev Container. This may take a while, as it needs to download the Swift toolchain and other dependencies.</p><p>Once it’s done, you’ll see a new window with the project open. You can now start developing!</p><h3>Running the Code</h3><p>In the left sidebar, you’ll see a “Run and Debug” tab. Click on it to open the Run view. You’ll see a “Run” button with a green arrow. Click on it to run the project.</p><p><strong>Tip:</strong> Press <code>Cmd + Shift + D</code> on macOS or <code>Ctrl + Shift + D</code> on Windows/Linux to open the Run view.</p><p>On the bottom-right of the window, you’ll see a terminal window pop up. This is the terminal inside the Dev Container, and shows the output of the program.<br>You can also find the debugger right next to that terminal window, which has LLDB integration.</p><p>Once the program is done running, you’ll see the output in the terminal window:</p><p><img src="program-output.png" alt="Program Output"></p><p>If it’s not visible for you, open the Output tab on the bottom of the window. You can open it using <code>Cmd + Shift + U</code> on macOS or <code>Ctrl + Shift + U</code> on Windows/Linux.</p><p>The output pane should be a split view, with a Terminal section on the right. If it’s minimized, you’ll see a small arrow on the right side of the window. Click on it to expand the window.</p><p>If you see the above output, congratulations! You’ve successfully set up your development environment for Swift development using Visual Studio Code and Dev Containers.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/async-http-client-by-example/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2024-04-03 18:30:00">2024-04-03 18:30:00</time>
+                    <h2 class="title">AsyncHTTPClient by example</h2>
+                </section>
+                <p>This article offers practical examples to introduce the Swift AsyncHTTPClient library.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

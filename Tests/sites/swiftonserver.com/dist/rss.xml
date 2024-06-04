@@ -1,0 +1,98 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<channel>
+    <title></title>
+    <description></description>
+    <link>/</link>
+    <language></language>
+    <lastBuildDate>Tue, 04 Jun 2024 15:38:45 +0000</lastBuildDate>
+    <pubDate>Wed, 10 Apr 2024 18:30:00 +0000</pubDate>
+    <ttl>250</ttl>
+    <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
+
+<item>
+    <guid isPermaLink="true">/posts/useful-scripts-for-server-side-swift-libraries/</guid>
+    <title><![CDATA[ Useful scripts for server-side Swift libraries ]]></title>
+    <description><![CDATA[ Learn about shell scripts to enforce coding standards and conduct checks for backend Swift projects. ]]></description>
+    <link>/posts/useful-scripts-for-server-side-swift-libraries/</link>
+    <pubDate>Wed, 10 Apr 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/async-http-client-by-example/</guid>
+    <title><![CDATA[ AsyncHTTPClient by example ]]></title>
+    <description><![CDATA[ This article offers practical examples to introduce the Swift AsyncHTTPClient library. ]]></description>
+    <link>/posts/async-http-client-by-example/</link>
+    <pubDate>Wed, 03 Apr 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/structured-concurrency-and-shared-state-in-swift/</guid>
+    <title><![CDATA[ Structured Concurrency and Shared State in Swift ]]></title>
+    <description><![CDATA[ Learn how actors and sendable prevent race conditions in your concurrent code. ]]></description>
+    <link>/posts/structured-concurrency-and-shared-state-in-swift/</link>
+    <pubDate>Mon, 25 Mar 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/getting-started-with-structured-concurrency-in-swift/</guid>
+    <title><![CDATA[ Getting Started with Structured Concurrency in Swift ]]></title>
+    <description><![CDATA[ Learn how to apply structured concurrency in your applications, using task groups and other structured concepts. ]]></description>
+    <link>/posts/getting-started-with-structured-concurrency-in-swift/</link>
+    <pubDate>Tue, 19 Mar 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/using-environment-variables-in-swift/</guid>
+    <title><![CDATA[ Using environment variables in Swift ]]></title>
+    <description><![CDATA[ Explore the importance of environment variables in Swift and how to use them. ]]></description>
+    <link>/posts/using-environment-variables-in-swift/</link>
+    <pubDate>Tue, 12 Mar 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/using-openapi-with-hummingbird/</guid>
+    <title><![CDATA[ Using OpenAPI Generator with Hummingbird ]]></title>
+    <description><![CDATA[ Learn how to use OpenAPI Generator to create Swift APIs with Hummingbird. ]]></description>
+    <link>/posts/using-openapi-with-hummingbird/</link>
+    <pubDate>Tue, 05 Mar 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/whats-new-in-hummingbird-2/</guid>
+    <title><![CDATA[ What&#39;s new in Hummingbird 2? ]]></title>
+    <description><![CDATA[ Discover Hummingbird 2: a Swift-based HTTP server framework, with modern concurrency and customizable request contexts. ]]></description>
+    <link>/posts/whats-new-in-hummingbird-2/</link>
+    <pubDate>Tue, 27 Feb 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/building-swiftnio-clients/</guid>
+    <title><![CDATA[ Building an HTTP client using SwiftNIO ]]></title>
+    <description><![CDATA[ Learn how to build a simple HTTP client using SwiftNIO and structured concurrency. ]]></description>
+    <link>/posts/building-swiftnio-clients/</link>
+    <pubDate>Tue, 20 Feb 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/logging-for-server-side-swift-apps/</guid>
+    <title><![CDATA[ Logging for server-side Swift apps ]]></title>
+    <description><![CDATA[ Discover how to integrate the Logging library into an application, use various log levels, and tailor the unified logging API for backend projects. ]]></description>
+    <link>/posts/logging-for-server-side-swift-apps/</link>
+    <pubDate>Tue, 13 Feb 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/using-swiftnio-channels/</guid>
+    <title><![CDATA[ Using SwiftNIO - Channels ]]></title>
+    <description><![CDATA[ Create a TCP server using SwiftNIO and structured concurrency ]]></description>
+    <link>/posts/using-swiftnio-channels/</link>
+    <pubDate>Thu, 08 Feb 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/using-swiftnio-fundamentals/</guid>
+    <title><![CDATA[ Using SwiftNIO - Fundamentals ]]></title>
+    <description><![CDATA[ Learn the fundamental concepts of SwiftNIO, such as EventLoops and nonblocking I/O ]]></description>
+    <link>/posts/using-swiftnio-fundamentals/</link>
+    <pubDate>Tue, 30 Jan 2024 18:30:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/developing-with-swift-in-visual-studio-code/</guid>
+    <title><![CDATA[ Developing with Swift in Visual Studio Code ]]></title>
+    <description><![CDATA[ Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension. ]]></description>
+    <link>/posts/developing-with-swift-in-visual-studio-code/</link>
+    <pubDate>Tue, 16 Jan 2024 18:30:00 +0000</pubDate>
+</item>
+
+</channel>
+</rss>

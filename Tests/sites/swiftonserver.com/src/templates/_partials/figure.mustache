@@ -1,0 +1,15 @@
+<figure>
+    <picture>
+        {{#figure.darkSrc}}
+        <source
+            srcset="{{.}}"
+            media="(prefers-color-scheme: dark)"
+        >
+        {{/figure.darkSrc}}
+        <img
+            src="{{figure.src}}"
+            alt="{{figure.alt}}"
+            title="{{figure.title}}"
+        >
+    </picture>
+</figure>

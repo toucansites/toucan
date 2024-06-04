@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Using SwiftNIO - Channels - </title>
+    <meta name="description" content="Create a TCP server using SwiftNIO and structured concurrency">
+    
+    <meta property="og:url" content="/posts/using-swiftnio-channels/">
+    <meta property="og:title" content="Using SwiftNIO - Channels - ">
+    <meta property="og:description" content="Create a TCP server using SwiftNIO and structured concurrency">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Using SwiftNIO - Channels - ">
+    <meta name="twitter:description" content="Create a TCP server using SwiftNIO and structured concurrency">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2024-02-08 18:30:00">2024-02-08 18:30:00</time>
+            <h1 class="title">Using SwiftNIO - Channels</h1>
+            <p class="excerpt">Create a TCP server using SwiftNIO and structured concurrency</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h1>SwiftNIO Channels</h1><p>In the <a href="/using-swiftnio-fundamentals">previous tutorial</a>, you’ve learned the fundamentals of SwiftNIO. You’re now familiar with the concept of an <code>EventLoop</code>.</p><p>In this tutorial, you’ll be building a TCP server that echoes back any data that it receives. This is a very common pattern in network applications, and is a great way to get started with SwiftNIO. You’ll learn what <strong>Channels</strong> and <strong>Channel Pipelines</strong> are, and how SwiftNIO uses them to represent network connections. You’ll also learn about <strong>Channel Handlers</strong> and applying this knowledge using structured concurrency.</p><p>In order to start with this tutorial, <a href="https://github.com/swift-on-server/using-swiftnio-channels-sample" target="_blank">Download the Samples</a>. If you’re stuck, you can keep at the Finished product within that repo as well.</p><p>The samples make use of <a href="/developing-with-swift-in-visual-studio-code/">VSCode DevContainers</a> to provide a consistent development environment. If you’re not using VSCode, you can also use the latest Xcode.</p><h2>Channels</h2><p>In the previous aricle, you learned the concepts of an <code>EventLoop</code>, Network I/O and sockets. You now know that a socket is represented by a file descriptor, and that you can read and write data to it.</p><p>The Sockets covered in the previous article are represented as a “Channel” in SwiftNIO. However, a Channel can be anything that is capable of I/O operations. This includes TCP and UDP connections, but can also extend to things such as Unix Domain Sockets, Pipes and even Serial USB connections.</p><p>A Channel is a very important concept in NIO, and is used extensivley throughout any networking application.</p><h3>A Channel’s Anatomy</h3><p>Channel is fundamentally a protocol that any connection can conform to. The protocol defines a variety of properties and functions that are relevant to connections. For example, many connections have a <code>localAddress</code> and <code>remoteAddress</code> property. These properties are used to identify the local and remote peer of a connection. Because Channel does not exclusively represent network connections, these properties are optional.</p><p>Most importantly, a Channel has a <code>ChannelPipeline</code>. The pipeline processes all data that is sent and received by the Channel. You can think of the pipeline as an array of <code>ChannelHandler</code>s. These handlers are called in order, and can modify the data that is sent and received by the Channel.</p><p>Each ChannelHandler is usually responsible for a specific task. For example, the <code>NIOSSLHandler</code> is responsible for encrypting and decrypting data using TLS. For HTTP/1, you have a specific handler that parses HTTP requests. And another handler that serializes HTTP responses.</p><h3>Pipelines</h3><p>A channel can receive data, such as when it’s received from the network or a USB device. When this happens, the data is passed to the <code>ChannelPipeline</code> at the head. This calls the first <a href="https://swiftpackageindex.com/apple/swift-nio/main/documentation/niocore/channelinboundhandler" target="_blank"><code>InboundHandler</code></a> in the pipeline. The flow of data makes its way from front-to-back, ending at the tail, calling only InboundHandlers. Each of these handlers can ‘process’ the data, by transforming the information or even changing the type of data in the pipeline.</p><p>When a channel is asked to send data, the data also goes through the pipeline, but starts at the tail. This calls the last handler in the pipeline, and only calls <a href="https://swiftpackageindex.com/apple/swift-nio/main/documentation/niocore/channeloutboundhandler" target="_blank"><code>OutboundHandler</code>s</a>. Each of these handlers can also process the data, and can also change the type of data in the pipeline.</p><p>The type of data that a pipeline receives at the head when data is read, is specified by the Channel. This means that the first InboundHandler’s must accept the type of data that the <code>Channel</code> emits when reading data off the network. Likewise, whatever the Pipeline ends up writing data to a <code>Channel</code>, the type of data written must match what the <code>Channel</code> can handle. Note that if these types don’t match, SwiftNIO will crash your application at <strong>runtime</strong>.</p><h3>Channel Handlers</h3><p>An InboundHandler specifies two associated types, the <code>InboundIn</code> and <code>InboundOut</code>. The <em>InboundIn</em> type is the input of the handler when reading data. For example, <code>ByteBuffer</code> is used by NIO to represent binary data. The <em>InboundOut</em> specifies any output that this handler <em>outputs</em>. When parsing an HTTP Request using the built-in HTTP/1 parser, the handler accepts <code>ByteBuffer</code> for input and produces an <code>HTTPServerRequestPart</code> when it parses a part of the HTTP request.</p><p>When the handler has processed the data, it can pass the transformed data on to the next handler in the pipeline. If a channel handler does not modify the output, it can simply pass on the data to the next handler. When the handler modifies data, this is done by calling <code>fireChannelRead</code> on the <code>ChannelHandlerContext</code>. This context is provided during the <code>channelRead</code> function call where you receive inbound data.</p><p>The data you emit (InboundOut) must match the expected input type of the next handler in the pipeline. If the types don’t match, SwiftNIO will also crash your application at runtime. This is why it’s important to understand the types that each handler accepts and emits.</p><p>Using code such as <a href="https://github.com/orlandos-nl/omnibus" target="_blank">Omnibus</a>, you can create these pipeline in a type-checked way. This ensures that your pipeline is valid at compile-time, rather than runtime.</p><p>The OutboundHandler works in an identical way to the InboundHandler. The <code>OutboundIn</code> type is the type of data that the handler accepts, and the <code>OutboundOut</code> type is the type of data that the handler emits. Processing data instead happens in the <code>write</code> function, rather than the <code>channelRead</code> function.</p><h2>Creating a TCP Echo Server</h2><p>Now that you understand the basics of Channels and Pipelines, let’s apply our knowledge to create a TCP Echo Server. This server, built using structured concurrency, will accept TCP connections. When it receives a message, itll echo back any data that it receives.</p><h3>Creating a ServerBootstrap</h3><p>In order to create a TCP server, you’ll first need to create a <code>ServerBootstrap</code>. This is a type that’s provided by SwiftNIO, and is used to create a server Channel that emits client channels.</p><p>ServerBootstrap requires an <code>EventLoopGroup</code> to run on. This is a group of EventLoops that the server will use to run on. Each client will be handled by a single specific <code>EventLoop</code>, that is randomly assigned. This helps your server scale to many threads (and cores) without having to worry about thread-safety.</p><pre><code class="language-swift">import NIOCore
+import NIOPosix
+
+// 1. 
+let server = try await ServerBootstrap(group: NIOSingletons.posixEventLoopGroup)
+    .bind( // 2.
+        host: "0.0.0.0", // 3.
+        port: 2048 // 4.
+    ) { channel in
+        // 5.
+        channel.eventLoop.makeCompletedFuture {
+            // Add any handlers for parsing or serializing messages here
+            // We don't need any for this echo example
+
+            // 6.
+            return try NIOAsyncChannel(
+                wrappingChannelSynchronously: channel,
+                configuration: NIOAsyncChannel.Configuration(
+                    inboundType: ByteBuffer.self, // Read the raw bytes from the socket
+                    outboundType: ByteBuffer.self // Write raw bytes to the socket
+                )
+            )
+        }
+    }
+</code></pre><p>The above code can create a TCP server, without any logic to accept or communicate with clients. Let’s go over the code step-by-step:</p><ol><li>Create a bootstrap using a global `EventLoopGroup`. This is a recommended default EventLoopGoup.</li><li>Bind the socket to a specific host and port. This will start listening for incoming connections.</li><li>The host speciifes the IP address that the server will listen on. `0.0.0.0` is a special IP address that means “all IP addresses”, allowing connections from all network interfaces.</li><li>Set the port that the server will listen on. This port is what clients will connect to.</li><li>This closure is called for every client that connects to the server. This allows us to set up the pipeline for each client. In this case we don’t need any configuration. Note that this is one of the few remaining APIs where you can’t use `async`/`await`.</li><li>Wrap the `Channel` in an `NIOAsyncChannel`. This is a type that’s provided by SwiftNIO, and allows interating with Channels in a way that fully embraces structured concurrency.</li></ol><h3>Accepting Clients</h3><p>With this newly created server, this code can start accepting clients.<br>Let’s implement that:</p><pre><code class="language-swift">// 1.
+try await withThrowingDiscardingTaskGroup { group in
+    // 2.
+    try await server.executeThenClose { clients in
+        // 3.
+        for try await client in clients {
+            // 4.
+            group.addTask {
+                // 5.
+                try await handleClient(client)
+            }
+        }
+    }
+}
+</code></pre><p>This code is an implementation of the server bootstrap that was created in the previous snippet. Let’s go over the code step-by-step:</p><ol><li>Create a task group to manage the lifetime of our server</li><li>By calling `executeAndClose`, receive a sequence of incoming clients. Once this sequence ends, the end of the function is reached and the server is closed.</li><li>A for-loop is used to iterate over each new client, allowing us to handle their traffic.</li><li>By adding a task to the task group, this Swift code can handle many clients in parallel</li><li>Call `handleClient` to handle the client. This will be a separate function that will be implemented in a moment.</li></ol><h3>Handling a Client</h3><p>The server is not able to accept client, but can not yet communicate with them. Let’s implement that:</p><pre><code class="language-swift">func handleClient(_ client: NIOAsyncChannel<ByteBuffer, ByteBuffer>) async throws {
+    // 1.
+    try await client.executeThenClose { inboundMessages, outbound in
+        // 2.
+        for try await inboundMessage in inboundMessages {
+            // 3.
+            try await outbound.write(inboundMessage)
+
+            // MARK: A
+        }
+    }
+}
+</code></pre><p>This code receives messages from a client, and echoes it back. It’s functional, efficient and easy to understand. Let’s go over the code step-by-step:</p><ol><li>Call `executeThenClose` on the client. This allows us to receive a sequence of inbound messages, and a handle to write messages back.</li><li>Iterate over each inbound message, using a for-loop.</li><li>Write the inbound message back to the client.</li></ol><p>When the client closes the connection, the sequence of inbound messages will end. This causes the <code>executeThenClose</code> function will return, and the client will be cleaned up.</p><p>You can try connecting yourself by running the following in your terminal. If a connection is successful, you’ll get prompt where you can type a message. When you press enter, the message will be echoed back to you.</p><pre><code class="language-bash">nc localhost 2048
+</code></pre><p>If you want, close the connection from our side as well. I’ve placed a marker where you can close the connection from our side.<br>Because <code>executeThenClose</code> will close the connection when the function ends, simply place a <code>return</code> statement here.</p><h2>Conclusion</h2><p>In this tutorial, you’ve learned the concept of Channels and Pipelines. You’ve also created a simple TCP server using SwiftNIO. All with structured concurrency!</p><p>In the <a href="/building-swiftnio-clients">next tutorial</a>, we’ll cover how to suppport a protocol (HTTP/1) by using Channel Handlers, by building an HTTP client.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/async-http-client-by-example/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2024-04-03 18:30:00">2024-04-03 18:30:00</time>
+                    <h2 class="title">AsyncHTTPClient by example</h2>
+                </section>
+                <p>This article offers practical examples to introduce the Swift AsyncHTTPClient library.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Structured Concurrency and Shared State in Swift - </title>
+    <meta name="description" content="Learn how actors and sendable prevent race conditions in your concurrent code.">
+    
+    <meta property="og:url" content="/posts/structured-concurrency-and-shared-state-in-swift/">
+    <meta property="og:title" content="Structured Concurrency and Shared State in Swift - ">
+    <meta property="og:description" content="Learn how actors and sendable prevent race conditions in your concurrent code.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Structured Concurrency and Shared State in Swift - ">
+    <meta name="twitter:description" content="Learn how actors and sendable prevent race conditions in your concurrent code.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2024-03-25 18:30:00">2024-03-25 18:30:00</time>
+            <h1 class="title">Structured Concurrency and Shared State in Swift</h1>
+            <p class="excerpt">Learn how actors and sendable prevent race conditions in your concurrent code.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h1>Sendable and Shared Mutable State</h1><p>When working with concurrent code, you’ll often need to share state between tasks. Using reference types such as a <code>class</code> allows you to share state between different threads and tasks. This can lead to race conditions where two tasks are trying to access the same state at the same time.</p><p>The Thread Sanitizer in Xcode can help you find race conditions. It’s better to avoid them altogether. You can do so by adopting the <code>Sendable</code> protocol on your types. This protocol is used to mark types that can be safely sent between tasks.</p><p>If the compiler is able to determine that a type is Sendable, the conformance does not require additional work. In other cases, you’ll need to provide the conformance yourself.</p><p>Sendability is a contract, initiated by the type, that the type is safe to be sent between tasks. Structs and enums are automatically Sendable, if all of their properties are Sendable. Since value types are copied when they are sent between tasks, you can safely send a struct or enum between tasks, and you don’t have to worry about race conditions.</p><h3>Classes</h3><p>Classes are not automatically Sendable. Since reference types are explicitly not copied but referenced, you can’t safely send a class between tasks. You can mark a class as Sendable if all of its properties are marked <code>Sendable</code> and a constant (let).</p><p>If you’re working with a class that is not a set of constants, you can still mark it as Sendable by using the <code>@unchecked Sendable</code> conformance. When you use this conformance, you’re telling the compiler that you’re sure that the class is Sendable, and that you’re taking responsibility of isolating the state. In this case, you can adopt your own isolation such as Locks.</p><pre><code class="language-swift">final class SharedState: @unchecked Sendable {
+    private var _state: Int = 0
+    let lock = NSLock()
+    public var state: Int {
+        get {
+            lock.withLock { _state }
+        }
+        set {
+            lock.withLock { _state = newValue }
+        }
+    }
+}
+</code></pre><h3>Actors and Isolation</h3><p>Isolation is a way to ensure that only one task can access a piece of state at a time. This is done by using locks, or by using Swift’s new <code>actor</code> type. When you’re using a lock, you’re responsible for ensuring that the lock is used correctly. This means that you need to lock the state before accessing it, and unlock it after you’re done.</p><p>The easier and new way to share state between tasks is using an <code>actor</code>. An actor is a reference type, like classes, that is automatically Sendable. Unlike classes, actors do not support inheritance.</p><p>Actors achieve Sendable support by only allowing access from the actor’s own <em>isolated</em> context. Reading values and calling methods on an actor is forced by the compiler to happen in that isolated context.</p><p>When accessing an actor’s state or calling its functions, you can prefix your call with <code>async</code>, if you’re not doing so already. The compiler will enforce that only one thread is accessing the actor’s state at a time, and suspend until the actor is available.</p><p>You can define an actor like so:</p><pre><code class="language-swift">actor BankAccount {
+    var balance: Int = 0
+
+    func deposit(_ amount: Int) {
+        balance += amount
+    }
+
+    func withdraw(_ amount: Int) {
+        balance -= amount
+    }
+}
+
+let bankAccount = BankAccount()
+await bankAccount.deposit(100)
+let balance = await bankAccount.balance
+print(balance) // 100
+</code></pre><p>Just like any type, you can make an <code>extension</code> on an actor. Actors can also conform to protocols, assuming that the protocol’s signature can be feasibly implemented with isolation. A common obstacle is that you can’t easily conform to a protocol that has properties or methods that are not isolated.</p><p>An actor’s isolation is inherited by its properties and methods. Actor Isolation is compile-time checked to ensures that only one task can access the actor’s state at a time. This is achieved through the <code>unownedExecutor</code> of an actor. This is a <code>SerialExecutor</code> that the Swift runtime submits tasks to, which provides the isolation in this actor. The SerialExecutor may be a single thread, or multiple. But needs to guarantee that only one task is running on this at a time. Akin to <code>DispatchQueue.main.async { }</code> in GCD.</p><pre><code class="language-swift">bankAccount.unownedExecutor
+</code></pre><p>You can create your own <code>SerialExecutor</code> for use with your actors. SwiftNIO’s EventLoop already has a <code>serialExecutor</code> property that you can use. GCD’s DispatchQueue can be adapted easily as well.</p><p>Since <code>unownedExecutor</code> is not a static member of an actor, an actor’s static properties can <em>not be isolated</em> by the actor.</p><h3>Nonisolated</h3><p>You can use the <code>nonisolated</code> keyword to mark a function as lacking isolation. This allows you to access these functions without the <code>await</code> keyword, and conform to protocols that have non-isolated methods.</p><pre><code class="language-swift">actor BookStore: AsyncSequence {
+    typealias AsyncIterator = AsyncStream<Book>.AsyncIterator
+    typealias Element = Book
+
+    private var page = 1
+    private var hasReachedEnd = false
+    private let stream: AsyncStream<Book>
+    private let continuation: AsyncStream<Book>.Continuation
+
+    init() {
+        (stream, continuation) = AsyncStream<Book>.makeStream(
+            bufferingPolicy: .unbounded
+        )
+    }
+    
+    func produce() async throws {
+        do {
+           while !hasReachedEnd {
+               let books = try await fetchBooks(page: page)
+               hasReachedEnd = books.isEmpty
+               for book in books {
+                   continuation.yield(book)
+               }
+               page += 1
+           }
+           continuation.finish()
+        } catch {
+            continuation.finish(throwing: error)
+        }
+    }
+
+    // AsyncSequence required a nonisolated func here
+    nonisolated func makeAsyncIterator() -> AsyncIterator {
+        stream.makeAsyncIterator()
+    }
+}
+</code></pre><p>Starting with Swift 5.10, <code>nonisolated(unsafe)</code> can be used to opt-out of actor isolation checking for stored properties. This is useful to expose a property or method to the outside world, but you’re sure that it’s safe to do so. In this case, you’re taking responsibility of isolating the state.</p><h3>Async Computed Properties</h3><p>The alternative way to conform to protocols, is for the <em>protocol</em> to be aware of the actor’s isolation. This is done by using <code>async</code> computed properties.</p><pre><code class="language-swift">protocol BankAccount {
+    var balance: Int { get async }
+    func deposit(_ amount: Int) async
+    func withdraw(_ amount: Int) async
+}
+
+actor MyBankAccount: BankAccount {
+    var balance: Int = 0
+
+    func deposit(_ amount: Int) {
+        balance += amount
+    }
+
+    func withdraw(_ amount: Int) {
+        balance -= amount
+    }
+}
+</code></pre><p>Because actor isolation makes these functions and properties <code>async</code>, this actor can now to the defined protocol.</p><p>Actors are a powerful way to share state between tasks. There’s just one catch; Actors are “re-entrant”.</p><p>When an actor is called from within itself, it’s called re-entrant. This is important for many use cases and implementations, but it can lead to an unexpected consequence.</p><h3>Actor Re-Entrancy</h3><p>When isolating state with a lock, Swift guarantees that only one thread can access the state at a time. When a function calls another function on the same thread, you can run into a deadlock. This happens because second function “locks” the state again, but because it’s already locked, it waits indefinitely for the first function to unlock it.</p><p>Recursive locks are a common solution to that problem. In structured concurrency, you’ll want to avoid locks entirely. In addition to the concerns mentioned previously, locks are blocking and can lead to performance bottlenecks even when used correctly.</p><p>When an actor is called from within itself, it’s called re-entrant. Actors will not deadlock, similarly to recursive lock. This is important for many use cases and implementations, but it can lead to an unexpected consequence.</p><p>Because of re-entrancy, multiple tasks can call functions on the same actor at the same time! Actor isolation simply prevents race conditions, but does not provide a ‘queue’ for access.</p><p>Let’s take the image cache example as an actor:</p><pre><code class="language-swift">actor ImageCache {
+    private var cache: [URL: UIImage] = [:]
+
+    func image(for url: URL) -> UIImage? {
+        return cache[url]
+    }
+
+    func setImage(_ image: UIImage, for url: URL) {
+        cache[url] = image
+    }
+
+    func loadImage(for url: URL) async throws {
+        if cache.keys.contains(url) {
+            return
+        }
+        
+        let image = try await fetchImage(at: url)
+        setImage(image, for: url)
+    }
+}
+</code></pre><p>The above function is an implementation of the image cache. It’s a simple actor that allows storing and retrieving images by URL. Since actors are re-entrant, <code>loadImage</code> can be ran multiple times concurrently. This can lead to multiple fetches of the same image, and multiple writes to the cache.</p><p>Your code can still be correct and crash-free, but can be inefficient.</p><pre><code class="language-swift">actor ImageCache {
+    private var cache: [URL: UIImage] = [:]
+    private var loadingURLs: Set<URL> = []
+
+    func image(for url: URL) -> UIImage? {
+        return cache[url]
+    }
+
+    func setImage(_ image: UIImage, for url: URL) {
+        cache[url] = image
+    }
+
+    func loadImage(for url: URL) async throws {
+        if cache.keys.contains(url), !loadingURLs.contains(url) {
+            return
+        }
+        
+        loadingURLs.insert(url)
+        defer { loadingURLs.remove(url) }
+        let image = try await fetchImage(at: url)
+        setImage(image, for: url)
+    }
+}
+</code></pre><p>The above function is an improved implementation of the image cache. By tracking the URLs that are currently being loaded, you can avoid fetching the same image multiple times.</p><p>While actors are re-entrant, we can safely access and modify state in sequence <em>until</em> we hit a suspension point.</p><p>The <code>await</code> keyword is the syntactical equivalent of a <em>possible</em> suspension point. The function doesn’t <em>need</em> to suspend, but one should always assume that it <em>can</em> suspend. This is especially important when working with actors.</p><p>Inbetween suspension points, this function is the only <em>currently</em> running code on the actor. This means that you can safely access and modify state without worry.</p><h3>Capture Groups</h3><p>Now that you know about Sendable and actors, you might be wondering why only <em>some</em> functions are Sendable.</p><p>When passing a callback to a function, it is marked as <code>@escaping</code>. This means Swift knows that the function can be stored. It can be called at any point, and possibly even multiple times! The properties that this function need to exist by the time that the escaping closure function is called.</p><p>When a callback is accessing properties on <code>self</code>, the compiler will emit a retain on <code>self</code>. Because implicitly capturing <code>self</code> can lead to unintentionally prolonged lifetimes, Swift requires you to explicitly access these properties as such:</p><pre><code class="language-swift">final class NeedsImage {
+    var result: Result<Image, Error>?
+
+    func fetch() {
+        fetchImage(at: ...) { fetchedImage in
+            // Note that we have to *explicitly* add `self.`
+            self.result = fetchedImage
+        }
+    }
+}
+</code></pre><p>“Escaping” in this context refers to the function escaping the scope in which it was defined. The values that this function accesses are usually implicitly <em>captured</em>. If they’re a reference type, they emit a retain. Likewise, when this function is no longer stored, it emits a release.</p><p>By explicitly creating a capture group, you’ll only retain the values needed. See the following example:</p><pre><code class="language-swift">let (stream, continuation) = AsyncThrowingStream<UIImage>.makeStream(
+    bufferingPolicy: .unbounded
+)
+
+// Hypothetical function that lists images
+// Calls the callback once for each image found
+findImages { [continuation] image in
+    // Captures `continuation`
+    continuation.yield(image)
+} onCompletion: { [continuation] error in
+    // Captures `continuation`
+    // Called exactly once when done or failed
+    if let error = error {
+        continuation.finish(throwing: error)
+    } else {
+        continuation.finish()
+    }
+}
+
+for try await image in stream {
+    // Show image
+}
+</code></pre><h3>@Sendable Functions</h3><p>When marking functions as <code>@Sendable</code>, you’re telling Swift that the function is safe to be stored and called across actor boundaries and is thread-safe. Swift will enforce that the function is not accessing any state that is not Sendable.</p><p>Callback function arguments can be makred <code>@Sendable</code> as such:</p><pre><code class="language-swift">func fetchImage(at url: URL, completion: @Sendable @escaping (Result<UIImage, Error>) -> Void) {
+    ...
+}
+</code></pre><p>Finally, regular functions can be marked <code>@Sendable</code> as well:</p><pre><code class="language-swift">@Sendable func fetchImage(at url: URL) async throws -> UIImage {
+    ...
+}
+</code></pre><h2>Continuations</h2><p>So far, we’ve been using <code>await</code> to wait for a value to be available. But not all APIs are designed to work with <code>async</code> and <code>await</code>. When using APIs that were designed before concurrency, “continuations” can bridge the gap.</p><p>A continuation is a way to capture the current state of a task, and to resume the task at a later point.<br>Let’s implement a simple continuation that fetches an image:</p><pre><code class="language-swift">@Sendable func fetchImage(at url: URL) async throws -> UIImage {
+    return try await withCheckedThrowingContinuation { continuation in
+        fetchImage(at: url) { result in
+            switch result {
+            case .success(let image):
+                continuation.resume(returning: image)
+            case .failure(let error):
+                continuation.resume(throwing: error)
+            }
+        }
+    }
+}
+</code></pre><p>There are two variations of continuations.</p><p>A <code>CheckedContinuation</code> is a continuation that checks for correct use. Continuations <strong>must</strong> be resumed exactly once. If you don’t resume the continuation or if you resume it more than once, your application will crash. This is a safety feature to prevent worse problems from happening.</p><p>In contrast, an <code>UnsafeContinuation</code> is a continuation that doesn’t check for correct use. If you resume the continuation multiple times, or if you don’t resume it at all, you’ll be sure to run into undefined behaviour - leading to a variety of hard-to-debug problems. However, unsafe continuations can be useful in <em>extremely</em> performance-sensitive code.</p><p>Continuations can be throwing or non-throwing, for example:</p><pre><code class="language-swift">await withCheckedContination { continuation in
+    // Asynchronous work that does not fail
+}
+</code></pre><p>Continuations will suspend the task until they’re resumed. While continuations are great for bridging the gap between async and non-async code, they’re also very useful in other cases when using structured concurrency.</p><p>Let’s go back to the ImageCache example. In that example, the <code>loadImage</code> function fetches an image and stores it in the cache. In this case, it does not return the cached image, making the API very unpractical!</p><p>We can restructure the <code>loadImage</code> function to use a continuation:</p><pre><code class="language-swift">final class ImageCache {
+    private var cache: [URL: UIImage] = [:]
+    private var loadingURLs: Set<URL> = []
+    private var fetchingURLs: [(URL, CheckedContinuation<UIImage, Error>)] = []
+    private func completeFetchingURLs(with result: Result<UIImage, Error>, for url: URL) {
+        for (awaitingURL, continuation) in fetchingURLs where awaitingURL == url {
+            switch result {
+            case .success(let image):
+                continuation.resume(returning: image)
+            case .failure(let error):
+                continuation.resume(throwing: error)
+            }
+        }
+        fetchingURLs.removeAll { $0.0 == url }
+    }
+
+    func loadImage(at url: URL) async throws -> UIImage {
+        if let image = cache[url] {
+            return image
+        }
+
+        if loadingURLs.contains(url) {
+            return try await withCheckedThrowingContinuation { continuation in
+                fetchingURLs.append((url, continuation))
+            }
+        }
+
+        loadingURLs.insert(url)
+        defer { loadingURLs.remove(url) }
+        
+        do {
+            let image = try await fetchImage(at: url)
+            setImage(image, for: url)
+            completeFetchingURLs(with: .success(image), for: url)
+            return image
+        } catch {
+            completeFetchingURLs(with: .failure(error), for: url)
+            throw error
+        }
+    }
+}
+</code></pre><p><strong>Note:</strong> When creating a continuation, you’re starting a new workload that does not (yet) adopt structured concurrency. When this happens, this code is also responsible for ensuring that Task Cancellation is handled propertly. For that, please refer back to <code>withTaskCancellationHandler</code> earlier in this article.</p><h2>Global Actors</h2><p>We’ve seen actors being used to isolate state and to share state between tasks. Global actors are singleton-actors that isolate state outside of their type. This allows global actors to be used to isolate state in a global context, such as static members or static functions.</p><p>The most commonly known and used global actor is the <code>MainActor</code>. This actor is used to isolate state on the main thread, and is commonly used on iOS to ensure that UI updates and relevant state changes are done on the main thread.</p><p>You can use the <code>@MainActor</code> attribute to mark a property as being isolated to the main actor:</p><pre><code class="language-swift">@MainActor var view: UIView
+</code></pre><p>Functions can also apply the <code>MainActor</code> by marking it as shown here:</p><pre><code class="language-swift">// MainActor isolated
+@MainActor func updateUI() {
+    // Update the UI
+    // Accessing `view` is safe, and does not need `await`
+    // Because both share the same actor's isolation
+    view.backgroundColor = .red
+}
+</code></pre><p>When applying a global actor, the values and/or functions are isolated to this actor. This means that any isolated state can only be accessed from within the same actor’s isolation, and you’ll need to <code>await</code> getting the actor’s state from outside of the actor. In addition, state cannot be <em>modified</em> outside of the actor’s isolation.</p><pre><code class="language-swift">// Not a `MainActor` isolated function
+func rerenderUI(every duration: Duration) async throws {
+    // Within this nonisolated function, `view` may not be modified
+    while true {
+        // Can get cancelled
+        try await Task.sleep(for: duration)
+
+        // `updateUI` is MainActor isolated
+        // Since this function is not isolated to @MainActor, we need to `await` the call
+        await updateUI()
+        // `view` is MainActor isolated, so needs to be `await`ed
+        print(await view.backgroundColor)
+    }
+}
+</code></pre><p>When calling an <code>async</code> function from an <em>isolated</em> context such as the <em>MainActor</em>, isolation is <em>not</em> inherited. Swift will use the global concurrent executor to run this function, instead of the executor specified by the (global) actor.</p><p>This frees up the actor to continue processing other tasks, and prevents the actor from being blocked by a long-running task. Freeing up the <code>MainActor</code> is helpful, as it ensures that the UI remains responsive. However, this is also the reason why <em>actor re-entrancy</em> happens!</p><h3>Creating a Global Actor</h3><p>Custom global actors can be created through the <code>@globalActor</code> attribute:</p><pre><code class="language-swift">@globalActor actor SensorActor {
+    static let shared = SensorActor()
+}
+</code></pre><p>With this addition, you can isolate properties, functions <em>and types</em> to the <code>SensorActor</code>:</p><pre><code class="language-swift">struct DeviceRotation {
+    var yaw: Double
+    var pitch: Double
+    var roll: Double
+}
+
+@SensorActor final class PhoneMotionSensor: AsyncSequence {
+    typealias Element = DeviceRotation
+    typealias AsyncIterator = AsyncStream<DeviceRotation>.AsyncIterator
+
+    // Inherts the `SensorActor` isolation
+    var initial: DeviceRotation?
+    private let continuation: AsyncStream<DeviceRotation>.Continuation
+
+    // Opts out of the `SensorActor` isolation
+    nonisolated private let stream: AsyncStream<DeviceRotation>
+
+    init() {
+        (stream, continuation) = AsyncStream<DeviceRotation>.makeStream(
+            bufferingPolicy: .unbounded
+        )
+    }
+
+    // Inherts the `SensorActor` isolation
+    func startObserving() async {
+        let producer = SomeMotionDataProducer()
+        for await rotation in producer {
+            if initial == nil {
+                initial = rotation
+            }
+            continuation.yield(rotation)
+        }
+        continuation.finish()
+    }
+
+    // Opts out of the `SensorActor` isolation
+    nonisolated func makeAsyncIterator() -> AsyncIterator {
+        stream.makeAsyncIterator()
+    }
+}
+</code></pre><h2>Swift 6</h2><p>Starting in Swift 6, Structured Concurrency will be improved further. Even though as of writing, Swift 6 is still in development, we can already see some of the improvements that are coming. This section will be regularly updated to reflect Swift 6’s changes.</p><h3>Task Executors (Swift 6)</h3><p>Starting from Swift 6, you can specify a “task executor” to run tasks on. This is described in <a href="https://github.com/apple/swift-evolution/blob/main/proposals/0417-task-executor-preference.md" target="_blank">SE-0417</a>. This is especially useful for server-side Swift, where code can run within a <a href="/using-swiftnio-fundamentals">SwiftNIO event loop</a>.</p><p>In Server-Side Swift, all I/O is done asynchronously on the EventLoop. By tying business logic to the same EventLoop as the I/O, you can ensure that there is no unnecessary context switching. This can lead to a significant performance improvement.</p><p>You can create a task executor by conforming to the <code>TaskExecutor</code> type. This is a part of Swift 6, and is used to run tasks on a specific executor.</p><pre><code class="language-swift">final class EventLoopExecutor: TaskExecutor, SerialExecutor {
+    @usableFromInline let eventLoop: EventLoop
+
+    init(eventLoop: EventLoop) {
+        self.eventLoop = eventLoop
+    }
+
+    func asUnownedTaskExecutor() -> UnownedTaskExecutor {
+        UnownedTaskExecutor(ordinary: self)
+    }
+
+    @inlinable
+    func enqueue(_ job: consuming ExecutorJob) {
+        let job = UnownedJob(job)
+        eventLoop.execute {
+            job.runSynchronously(on: self.asUnownedTaskExecutor())
+        }
+    }
+
+    @inlinable
+    func asUnownedSerialExecutor() -> UnownedSerialExecutor {
+        UnownedSerialExecutor(complexEquality: self)
+    }
+}
+</code></pre><p>Now, when running a task, you can specify the executor to run the task on when you’re adding it to a task group:</p><pre><code class="language-swift">let executor = EventLoopExecutor(eventLoop: value.eventLoop)
+let unmanaged = Unmanaged.passRetained(executor)
+taskGroup.addTask(executorPreference: executor) {
+    await handle(value: value, logger: logger)
+    unmanaged.release()
+}
+</code></pre><p>As you may notice, the <code>EventLoopExecutor</code> type is <em>manually</em> retained and released. This is becasue the <code>addTask</code> method does not retain the executor. If the EventLoopExecutor type is not retained elsewhere, it will be deallocated before the task is done running, causing a crash.</p><h4>Running Heavy Workloads</h4><p>Previously, we wrote that large workloads should be run outside of structured concurrency. This is necessary, since the <em>standard</em> executor in Swift is designed to run tasks concurrently. In Swift 6, this is executor is the <code>globalConcurrentExecutor</code>, which is hidden in previous versions of Swift.</p><p>However, heavy workload <em>can</em> be run on a custom executor. Using the pattern shown above, or an executor that is could be provided by SwiftNIO in the future, heavy workloads can run on a custom executor that is designed to handle heavy workloads.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/async-http-client-by-example/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2024-04-03 18:30:00">2024-04-03 18:30:00</time>
+                    <h2 class="title">AsyncHTTPClient by example</h2>
+                </section>
+                <p>This article offers practical examples to introduce the Swift AsyncHTTPClient library.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>
