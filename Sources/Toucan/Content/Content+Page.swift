@@ -10,10 +10,10 @@ import struct Foundation.Date
 extension Content {
 
     struct Page: ContentInterface {
-        
+
         static let folder = "pages/custom"
         static let slugPrefix: String? = nil
-        
+
         let id: String
         let slug: String
         let title: String
@@ -23,7 +23,7 @@ extension Content {
         let lastModification: Date
         let frontMatter: [String: Any]
         let markdown: String
-        
+
         var userDefined: [String: Any] {
             frontMatter.filter {
                 ![
@@ -33,7 +33,7 @@ extension Content {
                     "coverImage",
                     "template",
                 ]
-                    .contains($0.key)
+                .contains($0.key)
             }
         }
     }

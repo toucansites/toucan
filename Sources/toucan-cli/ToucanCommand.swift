@@ -1,5 +1,6 @@
 import ArgumentParser
 import Toucan
+import Foundation
 
 @main
 struct ToucanCommand: ParsableCommand {
@@ -10,10 +11,11 @@ struct ToucanCommand: ParsableCommand {
     @Argument(help: "The output directory (default: ./docs).")
     var output: String = "./docs"
 
-    @Option(name: .shortAndLong, help: "The base url to use.")
-    var baseUrl: String? = nil
-
     func run() throws {
-
+        let generator = Toucan(
+            inputUrl: URL(fileURLWithPath: input),
+            outputUrl: URL(fileURLWithPath: output)
+        )
+        try generator.build()
     }
 }

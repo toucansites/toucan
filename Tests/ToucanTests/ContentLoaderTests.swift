@@ -32,9 +32,8 @@ final class ContentLoaderTests: XCTestCase {
 
     }
 
-    
     func testUserDefined() throws {
-        
+
         let path =
             "/"
             + #file
@@ -52,8 +51,8 @@ final class ContentLoaderTests: XCTestCase {
             frontMatterParser: .init()
         )
         let content = try loader.load()
-        
+
         _ = content.blog.author.contents.first?.userDefined
-        
+
     }
 }

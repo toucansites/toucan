@@ -8,7 +8,7 @@
 import Foundation
 
 struct DateFormatters {
-    
+
     static var baseFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US_POSIX")

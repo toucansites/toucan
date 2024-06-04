@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 23/05/2024.
 //
@@ -9,27 +9,27 @@ import Foundation
 import Mustache
 
 extension String {
-    
+
     func minifyHTML() -> Self {
         self
     }
 }
 
 struct MustacheToHTMLRenderer {
-    
+
     enum Error: Swift.Error {
         case missingTemplate(String)
     }
-    
+
     private let library: MustacheLibrary
     private let ids: [String]
-    
+
     init(
         templatesUrl: URL
     ) throws {
         let ext = "mustache"
         var templates: [String: MustacheTemplate] = [:]
-        
+
         if let dirContents = FileManager.default.enumerator(
             at: templatesUrl,
             includingPropertiesForKeys: [.isRegularFileKey],
@@ -54,7 +54,7 @@ struct MustacheToHTMLRenderer {
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
     }
-    
+
     func render(
         template: String,
         with object: Any
@@ -64,7 +64,7 @@ struct MustacheToHTMLRenderer {
         }
         return library.render(object, withTemplate: template)
     }
-    
+
     func render(
         template: String,
         with object: Any,
@@ -77,11 +77,11 @@ struct MustacheToHTMLRenderer {
             object,
             withTemplate: template
         )?
-            .minifyHTML()
-            .write(
-                to: destination,
-                atomically: true,
-                encoding: .utf8
-            )
+        .minifyHTML()
+        .write(
+            to: destination,
+            atomically: true,
+            encoding: .utf8
+        )
     }
 }

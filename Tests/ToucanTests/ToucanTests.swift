@@ -22,7 +22,7 @@ final class ToucanTests: XCTestCase {
 
         let sitesUrl = URL(fileURLWithPath: sitesPath)
         let sites = FileManager.default.listDirectory(at: sitesUrl)
-        
+
         for site in sites {
             let siteUrl = sitesUrl.appendingPathComponent(site)
             let inputUrl = siteUrl.appendingPathComponent("src")

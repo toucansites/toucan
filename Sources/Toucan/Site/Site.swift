@@ -9,16 +9,16 @@ import Foundation
 import Algorithms
 
 struct Site {
-    
+
     enum Error: Swift.Error {
         case missingPage(String)
     }
-    
+
     enum ImageVariant {
         case light
         case dark
     }
-    
+
     struct State {
 
         struct Blog {
@@ -26,12 +26,12 @@ struct Site {
                 let list: AuthorListHTMLPageState
                 let details: [AuthorDetailHTMLPageState]
             }
-            
+
             struct Tag {
                 let list: TagListHTMLPageState
                 let details: [TagDetailHTMLPageState]
             }
-            
+
             struct Post {
                 let pages: [PostListHTMLPageState]
                 let details: [PostDetailHTMLPageState]
@@ -42,7 +42,7 @@ struct Site {
             let tag: Tag
             let author: Author
         }
-        
+
         let home: HomeHTMLPageState
         let notFound: NotFoundHTMLPageState
         let blog: Blog
@@ -50,7 +50,7 @@ struct Site {
         let rss: RSSState
         let sitemap: SitemapState
     }
-    
+
     let content: Content
     let assets: [String: String]
 
@@ -65,10 +65,10 @@ struct Site {
     ) {
         self.content = content
         self.assets = assets
-        
+
         let calendar = Calendar(identifier: .gregorian)
         self.currentYear = calendar.component(.year, from: .init())
-        
+
         self.dateFormatter = DateFormatters.baseFormatter
         self.dateFormatter.dateFormat = content.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
@@ -103,13 +103,13 @@ struct Site {
         )
         return renderer.render(markdown: markdown)
     }
-    
+
     func readingTime(_ value: String) -> Int {
         value.split(separator: " ").count / 238
     }
-    
+
     // MARK: - config
-    
+
     func siteState(
         for config: Content.Config
     ) -> SiteState {
@@ -120,9 +120,9 @@ struct Site {
             language: config.site.language
         )
     }
-    
+
     // MARK: - content states
-    
+
     func authorState(
         for author: Content.Author
     ) -> AuthorState {
@@ -134,10 +134,11 @@ struct Site {
                 for: author.coverImage,
                 folder: Content.Author.folder
             ),
-            numberOfPosts: content.blog.post.contentsBy(authorId: author.id).count
+            numberOfPosts: content.blog.post.contentsBy(authorId: author.id)
+                .count
         )
     }
-    
+
     func tagState(
         for tag: Content.Tag
     ) -> TagState {
@@ -152,7 +153,7 @@ struct Site {
             numberOfPosts: content.blog.post.contentsBy(tagId: tag.id).count
         )
     }
-    
+
     func pageState(
         for page: Content.Page
     ) -> PageState {
@@ -187,21 +188,21 @@ struct Site {
             featured: post.featured
         )
     }
-    
+
     // MARK: - list states
-    
+
     func tagListState() -> [TagState] {
         content.blog.tag.contents
             .sorted { $0.title > $1.title }
             .map { tagState(for: $0) }
     }
-    
+
     func authorListState() -> [AuthorState] {
         content.blog.author.contents
             .sorted { $0.title > $1.title }
             .map { authorState(for: $0) }
     }
-    
+
     func postListState() -> [PostState] {
         content.blog.post.sortedContents.map {
             postState(
@@ -223,29 +224,31 @@ struct Site {
                 )
             }
     }
-    
+
     func postListState(authorId: String) -> [PostState] {
-        content.blog.post.contentsBy(authorId: authorId).map {
-            postState(
-                for: $0,
-                authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                tags: content.blog.tag.contentsBy(ids: $0.tagIds)
-            )
-        }
+        content.blog.post.contentsBy(authorId: authorId)
+            .map {
+                postState(
+                    for: $0,
+                    authors: content.blog.author.contentsBy(ids: $0.authorIds),
+                    tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                )
+            }
     }
-    
+
     func postListState(tagId: String) -> [PostState] {
-        content.blog.post.contentsBy(tagId: tagId).map {
-            postState(
-                for: $0,
-                authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                tags: content.blog.tag.contentsBy(ids: $0.tagIds)
-            )
-        }
+        content.blog.post.contentsBy(tagId: tagId)
+            .map {
+                postState(
+                    for: $0,
+                    authors: content.blog.author.contentsBy(ids: $0.authorIds),
+                    tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                )
+            }
     }
-    
+
     // MARK: - system page states
-    
+
     func home() -> HomeHTMLPageState {
         let homePage = content.home
         return .init(
@@ -270,7 +273,7 @@ struct Site {
             template: homePage.template ?? "pages.home"
         )
     }
-    
+
     func notFound() -> NotFoundHTMLPageState {
         let notFoundPage = content.notFound
         return .init(
@@ -284,14 +287,15 @@ struct Site {
                     folder: Content.Page.folder
                 )
             ),
-            userDefined: content.config.site.userDefined + notFoundPage.userDefined,
+            userDefined: content.config.site.userDefined
+                + notFoundPage.userDefined,
             year: currentYear,
             template: notFoundPage.template ?? "pages.404"
         )
     }
-    
+
     // MARK: - blog
-    
+
     func blogPage() -> BlogHTMLPageState {
         let blogPage = content.blog.home
         return .init(
@@ -315,9 +319,7 @@ struct Site {
             template: blogPage.template ?? "pages.blog.home"
         )
     }
-    
-    
-    
+
     func authorList() -> AuthorListHTMLPageState {
         let authorsPage = content.blog.author.home
         return .init(
@@ -333,12 +335,13 @@ struct Site {
                     folder: Content.Page.folder
                 )
             ),
-            userDefined: content.config.site.userDefined + authorsPage.userDefined,
+            userDefined: content.config.site.userDefined
+                + authorsPage.userDefined,
             year: currentYear,
             template: authorsPage.template ?? "pages.blog.authors"
         )
     }
-    
+
     func tagList() -> TagListHTMLPageState {
         let tagsPage = content.blog.tag.home
         return .init(
@@ -359,13 +362,12 @@ struct Site {
             template: tagsPage.template ?? "pages.blog.tags"
         )
     }
-    
-    
+
     func postListPages() -> [PostListHTMLPageState] {
         let postsPage = content.blog.post.home
         let pageLimit = content.config.blog.posts.page.limit
         let pages = content.blog.post.sortedContents.chunks(ofCount: pageLimit)
-        
+
         func replace(
             _ number: Int,
             _ value: String
@@ -403,26 +405,34 @@ struct Site {
                         posts: posts.map {
                             postState(
                                 for: $0,
-                                authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                                tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                                authors: content.blog.author.contentsBy(
+                                    ids: $0.authorIds
+                                ),
+                                tags: content.blog.tag.contentsBy(
+                                    ids: $0.tagIds
+                                )
                             )
                         },
-                        pagination: (1...pages.count).map {
-                            .init(
-                                number: $0,
-                                total: pages.count,
-                                slug: replace($0, postsPage.slug),
-                                permalink: permalink(replace($0, postsPage.slug)),
-                                isCurrent: pageNumber == $0
-                            )
-                        }
+                        pagination: (1...pages.count)
+                            .map {
+                                .init(
+                                    number: $0,
+                                    total: pages.count,
+                                    slug: replace($0, postsPage.slug),
+                                    permalink: permalink(
+                                        replace($0, postsPage.slug)
+                                    ),
+                                    isCurrent: pageNumber == $0
+                                )
+                            }
                     ),
                     content: render(
                         markdown: postsPage.markdown,
                         folder: Content.Page.folder
                     )
                 ),
-                userDefined: content.config.site.userDefined + postsPage.userDefined,
+                userDefined: content.config.site.userDefined
+                    + postsPage.userDefined,
                 year: currentYear,
                 template: postsPage.template ?? "pages.blog.posts"
             )
@@ -432,11 +442,9 @@ struct Site {
 
         return result
     }
-    
-
 
     // MARK: - detail page states
-    
+
     func authorDetails() -> [AuthorDetailHTMLPageState] {
         content.blog.author.contents.map {
             .init(
@@ -459,7 +467,7 @@ struct Site {
             )
         }
     }
-    
+
     func tagDetails() -> [TagDetailHTMLPageState] {
         content.blog.tag.contents.map {
             .init(
@@ -482,42 +490,46 @@ struct Site {
             )
         }
     }
-    
+
     func nextPost(for id: String) -> PostState? {
         let posts = content.blog.post.sortedContents
-        
+
         if let index = posts.firstIndex(where: { $0.id == id }) {
             if index > 0 {
                 let post = posts[index - 1]
                 return postState(
                     for: post,
-                    authors: content.blog.author.contentsBy(ids: post.authorIds),
+                    authors: content.blog.author.contentsBy(
+                        ids: post.authorIds
+                    ),
                     tags: content.blog.tag.contentsBy(ids: post.tagIds)
                 )
             }
         }
         return nil
     }
-    
+
     func prevPost(for id: String) -> PostState? {
         let posts = content.blog.post.sortedContents
-        
+
         if let index = posts.firstIndex(where: { $0.id == id }) {
             if index < posts.count - 1 {
                 let post = posts[index + 1]
                 return postState(
                     for: post,
-                    authors: content.blog.author.contentsBy(ids: post.authorIds),
+                    authors: content.blog.author.contentsBy(
+                        ids: post.authorIds
+                    ),
                     tags: content.blog.tag.contentsBy(ids: post.tagIds)
                 )
             }
         }
         return nil
     }
-    
+
     func relatedPosts(for id: String) -> [PostState] {
         var result: [PostState] = []
-        
+
         let posts = content.blog.post.sortedContents
         if let index = posts.firstIndex(where: { $0.id == id }) {
             let post = posts[index]
@@ -528,10 +540,10 @@ struct Site {
         }
         return Array(result.shuffled().prefix(5))
     }
-    
+
     func moreByPosts(for id: String) -> [PostState] {
         var result: [PostState] = []
-        
+
         let posts = content.blog.post.sortedContents
         if let index = posts.firstIndex(where: { $0.id == id }) {
             let post = posts[index]
@@ -542,7 +554,7 @@ struct Site {
         }
         return Array(result.shuffled().prefix(5))
     }
-    
+
     func postDetails() -> [PostDetailHTMLPageState] {
         content.blog.post.contents.map {
             .init(
@@ -553,7 +565,9 @@ struct Site {
                     context: .init(
                         post: postState(
                             for: $0,
-                            authors: content.blog.author.contentsBy(ids: $0.authorIds),
+                            authors: content.blog.author.contentsBy(
+                                ids: $0.authorIds
+                            ),
                             tags: content.blog.tag.contentsBy(ids: $0.tagIds)
                         ),
                         related: relatedPosts(for: $0.id),
@@ -572,7 +586,7 @@ struct Site {
             )
         }
     }
-    
+
     func pages() -> [PageDetailHTMLPageState] {
         content.custom.pages.map {
             .init(
@@ -600,9 +614,9 @@ struct Site {
             )
         }
     }
-    
+
     // MARK: - rss
-    
+
     func rss() -> RSSState {
         let items: [RSSState.ItemState] = content.blog.post.sortedContents.map {
             .init(
@@ -622,16 +636,17 @@ struct Site {
             lastBuildDate: rssDateFormatter.string(
                 from: .init()
             ),
-            publicationDate: 
-                items.first?.publicationDate ?? rssDateFormatter.string(
+            publicationDate:
+                items.first?.publicationDate
+                ?? rssDateFormatter.string(
                     from: .init()
                 ),
             items: items
         )
     }
-    
+
     // MARK: - sitemap
-    
+
     func sitemap() -> SitemapState {
         .init(
             urls: content.siteContents.map {
@@ -644,9 +659,9 @@ struct Site {
             }
         )
     }
-    
+
     // MARK: - build entire site state
-    
+
     func buildState() -> State {
         .init(
             home: home(),
@@ -671,18 +686,20 @@ struct Site {
             sitemap: sitemap()
         )
     }
-    
+
     // MARK: - helpers
-    
+
     func permalink(_ value: String) -> String {
         let components = value.split(separator: "/").map(String.init)
         if components.isEmpty {
             return content.config.site.baseUrl
         }
         if components.last?.split(separator: ".").count ?? 0 > 1 {
-            return content.config.site.baseUrl + components.joined(separator: "/")
+            return content.config.site.baseUrl
+                + components.joined(separator: "/")
         }
-        return content.config.site.baseUrl + components.joined(separator: "/") + "/"
+        return content.config.site.baseUrl + components.joined(separator: "/")
+            + "/"
     }
 
     // MARK: - asset helpers
@@ -690,7 +707,7 @@ struct Site {
     func assetExists(_ id: String) -> Bool {
         assets[id] != nil
     }
-    
+
     func assetUrl(
         for path: String?,
         folder: String,
@@ -730,17 +747,19 @@ struct Site {
         }
         return path
     }
-    
+
     func figureState(
         for path: String?,
         folder: String,
         alt: String? = nil,
         title: String? = nil
     ) -> FigureState? {
-        guard let url = assetUrl(
-            for: path,
-            folder: folder
-        ) else {
+        guard
+            let url = assetUrl(
+                for: path,
+                folder: folder
+            )
+        else {
             return nil
         }
         return .init(

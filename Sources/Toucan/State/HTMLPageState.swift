@@ -1,12 +1,12 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 21/05/2024.
 //
 
 struct HTMLPageState<T> {
-    
+
     struct CurrentPageState<C> {
         let slug: String
         let metadata: MetadataState
@@ -20,7 +20,6 @@ struct HTMLPageState<T> {
     let year: Int
     let template: String
 }
-
 
 typealias AuthorListHTMLPageState = HTMLPageState<AuthorListState>
 typealias AuthorDetailHTMLPageState = HTMLPageState<AuthorDetailState>

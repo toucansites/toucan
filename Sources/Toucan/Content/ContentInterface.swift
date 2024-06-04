@@ -8,10 +8,10 @@
 import struct Foundation.Date
 
 protocol ContentInterface {
-    
+
     static var folder: String { get }
     static var slugPrefix: String? { get }
-    
+
     var id: String { get }
     var slug: String { get }
     var title: String { get }
@@ -25,9 +25,8 @@ protocol ContentInterface {
     var userDefined: [String: Any] { get }
 }
 
-
 extension ContentInterface {
-        
+
     var template: String? {
         guard
             let template = frontMatter["template"] as? String,

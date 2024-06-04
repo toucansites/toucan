@@ -9,10 +9,10 @@ import struct Foundation.Date
 
 extension Content {
     struct Tag: ContentInterface {
-        
+
         static let folder = "blog/tags"
         static let slugPrefix: String? = "tags"
-        
+
         let id: String
         let slug: String
         let title: String
@@ -22,7 +22,7 @@ extension Content {
         let lastModification: Date
         let frontMatter: [String: Any]
         let markdown: String
-        
+
         var userDefined: [String: Any] {
             frontMatter.filter {
                 ![
@@ -32,7 +32,7 @@ extension Content {
                     "coverImage",
                     "template",
                 ]
-                    .contains($0.key)
+                .contains($0.key)
             }
         }
     }

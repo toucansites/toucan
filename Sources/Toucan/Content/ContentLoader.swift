@@ -8,7 +8,6 @@
 import Foundation
 import FileManagerKit
 
-
 struct ContentLoader {
 
     let contentsUrl: URL
@@ -31,7 +30,7 @@ struct ContentLoader {
         }
         return toProcess
     }
-    
+
     private func safeSlug(
         _ value: String,
         prefix: String?
@@ -40,33 +39,37 @@ struct ContentLoader {
             return ""
         }
         guard let prefix, !prefix.isEmpty else {
-            return value
+            return
+                value
                 .split(separator: "/")
                 .joined(separator: "/")
         }
-        return (
-            prefix.split(separator: "/") + 
-            value.split(separator: "/")
-        ).joined(separator: "/")
+        return (prefix.split(separator: "/") + value.split(separator: "/"))
+            .joined(separator: "/")
     }
-    
+
     // MARK: - load
 
     func load() throws -> Content {
 
-        let pagesUrl = contentsUrl
+        let pagesUrl =
+            contentsUrl
             .appendingPathComponent(Content.Page.folder)
 
-        let postsUrl = contentsUrl
+        let postsUrl =
+            contentsUrl
             .appendingPathComponent(Content.Post.folder)
-        
-        let authorsUrl = contentsUrl
+
+        let authorsUrl =
+            contentsUrl
             .appendingPathComponent(Content.Author.folder)
-        
-        let tagsUrl = contentsUrl
+
+        let tagsUrl =
+            contentsUrl
             .appendingPathComponent(Content.Tag.folder)
-        
-        let configUrl = contentsUrl
+
+        let configUrl =
+            contentsUrl
             .appendingPathComponent(Toucan.Files.config)
 
         let pageFiles = getMarkdownURLs(at: pagesUrl)
@@ -110,10 +113,11 @@ struct ContentLoader {
                 url: url
             )
         }
-        
-        let blogBaseUrl = contentsUrl
+
+        let blogBaseUrl =
+            contentsUrl
             .appendingPathComponent("blog")
-        
+
         let blogHomePage = try loadPage(
             at: blogBaseUrl.appendingPathComponent("home.md"),
             with: "blog",
@@ -123,26 +127,30 @@ struct ContentLoader {
         let authorsPage = try loadPage(
             config: config,
             baseUrl: blogBaseUrl,
-            url: blogBaseUrl
+            url:
+                blogBaseUrl
                 .appendingPathComponent("authors.md")
         )
-        
+
         let postsPage = try loadPage(
             config: config,
             baseUrl: blogBaseUrl,
-            url: blogBaseUrl
+            url:
+                blogBaseUrl
                 .appendingPathComponent("posts.md")
         )
-        
+
         let tagsPage = try loadPage(
             config: config,
             baseUrl: blogBaseUrl,
-            url: blogBaseUrl
+            url:
+                blogBaseUrl
                 .appendingPathComponent("tags.md")
         )
-        
+
         let homePage = try loadPage(
-            at: contentsUrl
+            at:
+                contentsUrl
                 .appendingPathComponent("pages")
                 .appendingPathComponent("home.md"),
             with: "home",
@@ -150,7 +158,8 @@ struct ContentLoader {
         )
 
         let notFoundPage = try loadPage(
-            at: contentsUrl
+            at:
+                contentsUrl
                 .appendingPathComponent("pages")
                 .appendingPathComponent("404.md"),
             with: "404",
@@ -179,7 +188,7 @@ struct ContentLoader {
             custom: .init(pages: pages)
         )
     }
-    
+
     // MARK: - config loader
 
     func loadConfig(
@@ -190,16 +199,16 @@ struct ContentLoader {
 
         let site = frontMatter["site"] as? [String: Any] ?? [:]
         let userDefined = site.filter {
-                ![
-                    "baseUrl",
-                    "title",
-                    "description",
-                    "language",
-                    "dateFormat",
-                ]
-                .contains($0.key)
-            }
-    
+            ![
+                "baseUrl",
+                "title",
+                "description",
+                "language",
+                "dateFormat",
+            ]
+            .contains($0.key)
+        }
+
         var siteBaseUrl = site["baseUrl"] as? String ?? ""
         if !siteBaseUrl.hasSuffix("/") {
             siteBaseUrl += "/"
@@ -207,28 +216,32 @@ struct ContentLoader {
         let siteTitle = site["title"] as? String ?? ""
         let siteDescription = site["description"] as? String ?? ""
         let siteLanguage = site["language"] as? String
-        let siteDateFormat = site["dateFormat"] as? String ?? "yyyy-MM-dd HH:mm:ss"
-        
+        let siteDateFormat =
+            site["dateFormat"] as? String ?? "yyyy-MM-dd HH:mm:ss"
+
         let blog = frontMatter["blog"] as? [String: Any] ?? [:]
         let blogSlug = blog["slug"] as? String ?? ""
-        
+
         let posts = blog["posts"] as? [String: Any] ?? [:]
-        let postsSlug = posts["slug"] as? String ?? Content.Post.slugPrefix ?? ""
-        
+        let postsSlug =
+            posts["slug"] as? String ?? Content.Post.slugPrefix ?? ""
+
         let postsPage = posts["page"] as? [String: Any] ?? [:]
         let postsPageSlug = postsPage["slug"] as? String ?? "pages"
 
         let postsPageLimit = postsPage["limit"] as? Int ?? 10
-        
+
         let tags = blog["tags"] as? [String: Any] ?? [:]
         let tagsSlug = tags["slug"] as? String ?? Content.Tag.slugPrefix ?? ""
-        
+
         let authors = blog["authors"] as? [String: Any] ?? [:]
-        let authorsSlug = authors["slug"] as? String ?? Content.Author.slugPrefix ?? ""
-        
+        let authorsSlug =
+            authors["slug"] as? String ?? Content.Author.slugPrefix ?? ""
+
         let pages = frontMatter["pages"] as? [String: Any] ?? [:]
-        let pagesSlug = pages["slug"] as? String ?? Content.Page.slugPrefix ?? ""
-        
+        let pagesSlug =
+            pages["slug"] as? String ?? Content.Page.slugPrefix ?? ""
+
         return .init(
             site: .init(
                 baseUrl: siteBaseUrl,
@@ -259,9 +272,9 @@ struct ContentLoader {
             )
         )
     }
-    
+
     // MARK: - content type loader
-    
+
     func loadAuthor(
         config: Content.Config,
         url: URL
@@ -278,7 +291,6 @@ struct ContentLoader {
         let coverImage = frontMatter["coverImage"] as? String
         let template = frontMatter["template"] as? String
 
-        
         return .init(
             id: id,
             slug: safeSlug(slug, prefix: config.blog.authors.slug),
@@ -291,23 +303,23 @@ struct ContentLoader {
             markdown: rawMarkdown.dropFrontMatter()
         )
     }
-    
+
     func loadTag(
         config: Content.Config,
         url: URL
     ) throws -> Content.Tag {
         let id = String(url.lastPathComponent.dropLast(3))
         let lastModification = try fileManager.modificationDate(at: url)
-        
+
         let rawMarkdown = try String(contentsOf: url)
         let frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
-        
+
         let slug = frontMatter["slug"] as? String ?? id
         let title = frontMatter["title"] as? String ?? ""
         let description = frontMatter["description"] as? String ?? ""
         let coverImage = frontMatter["coverImage"] as? String
         let template = frontMatter["template"] as? String
-        
+
         return .init(
             id: id,
             slug: safeSlug(slug, prefix: config.blog.tags.slug),
@@ -320,7 +332,7 @@ struct ContentLoader {
             markdown: rawMarkdown.dropFrontMatter()
         )
     }
-    
+
     func loadPost(
         config: Content.Config,
         url: URL,
@@ -342,7 +354,7 @@ struct ContentLoader {
         let authors = frontMatter["authors"] as? [String] ?? []
         let tags = frontMatter["tags"] as? [String] ?? []
         let featured = frontMatter["featured"] as? Bool ?? false
-        
+
         guard let date = formatter.date(from: publication) else {
             fatalError("Invalid publication date for `\(id)`.")
         }
@@ -363,8 +375,7 @@ struct ContentLoader {
             featured: featured
         )
     }
-    
-    
+
     func loadPage(
         config: Content.Config,
         baseUrl: URL,
@@ -383,15 +394,15 @@ struct ContentLoader {
             using: config
         )
     }
-    
-    
-    /// 
+
+    ///
     /// Load a page using an identifier and a url
     ///
     /// - Parameters:
     ///   - url: The url of the source markdown document
     ///   - id: The identifier of the page
     ///   - config: The site configuration
+    /// - Throws: Error if the modification date or the front matter could not be fetched.
     /// - Returns: Returns a page content type
     ///
     func loadPage(

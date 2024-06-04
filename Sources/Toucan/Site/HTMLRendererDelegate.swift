@@ -1,15 +1,14 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 23/05/2024.
 //
 
 import Markdown
 
-
 struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
-    
+
     let site: Site
     let folder: String
 
@@ -19,14 +18,14 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
             return attributes
         }
         if !link.hasPrefix("."),
-           !link.hasPrefix("/"),
-           !link.hasPrefix(site.content.config.site.baseUrl)
+            !link.hasPrefix("/"),
+            !link.hasPrefix(site.content.config.site.baseUrl)
         {
             attributes["target"] = "_blank"
         }
         return attributes
     }
-    
+
     func imageOverride(_ image: Image) -> String? {
         guard
             let source = image.source,
@@ -36,8 +35,13 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
             return nil
         }
         var drk = ""
-        if let darkUrl = site.assetUrl(for: source, folder: folder, variant: .dark) {
-            drk = #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
+        if let darkUrl = site.assetUrl(
+            for: source,
+            folder: folder,
+            variant: .dark
+        ) {
+            drk =
+                #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
         }
         var title = ""
         if let ttl = image.title {

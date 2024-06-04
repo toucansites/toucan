@@ -26,7 +26,11 @@ public struct Toucan {
     let inputUrl: URL
     let outputUrl: URL
 
-    init(
+    /// Initialize a new instance.
+    /// - Parameters:
+    ///   - inputUrl: The input URL
+    ///   - outputUrl: The output URL
+    public init(
         inputUrl: URL,
         outputUrl: URL
     ) {
@@ -90,9 +94,9 @@ public struct Toucan {
                     .joined(separator: "/")
                 res[key] = value
             }
-            
+
             try fileManager.createParentFolderIfNeeded(for: assetOutputUrl)
-            
+
             try fileManager.copy(
                 from: assetInputUrl,
                 to: assetOutputUrl
@@ -121,29 +125,29 @@ public struct Toucan {
     }
 
     /// builds the static site
-    func build() throws {
+    public func build() throws {
         let contentLoader = ContentLoader(
             contentsUrl: contentsUrl,
             fileManager: .default,
             frontMatterParser: .init()
         )
         let content = try contentLoader.load()
-        
+
         try resetOutputDirectory()
         try copyPublicFiles()
         try prepareDirectories()
         let assets = try copyContentAssets(content: content)
-        
+
         let site = Site(
             content: content,
             assets: assets
         )
 
-//        for (k, v) in assets {
-//            print(k)
-//            print(v)
-//            print("-------------------------------")
-//        }
+        //        for (k, v) in assets {
+        //            print(k)
+        //            print(v)
+        //            print("-------------------------------")
+        //        }
 
         let generator = SiteGenerator(
             site: site,
@@ -154,4 +158,3 @@ public struct Toucan {
         try generator.generate()
     }
 }
-

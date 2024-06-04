@@ -10,10 +10,10 @@ import struct Foundation.Date
 extension Content {
 
     struct Post: ContentInterface {
-        
+
         static let folder = "blog/posts"
         static let slugPrefix: String? = "posts"
-        
+
         let id: String
         let slug: String
         let title: String
@@ -23,12 +23,12 @@ extension Content {
         let lastModification: Date
         let frontMatter: [String: Any]
         let markdown: String
-        
+
         let publication: Date
         let authorIds: [String]
         let tagIds: [String]
         let featured: Bool
-        
+
         var userDefined: [String: Any] {
             frontMatter.filter {
                 ![

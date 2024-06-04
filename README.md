@@ -18,18 +18,6 @@ Toucan is a static site generator written in Swift.
 - optional blog content (posts, authors, tags) when loading content
 - collections?
 
-+ site userDefined support
-+ prevoius post
-+ next post
-+ related posts
-+ more by this author posts
-+ page list for home context
-+ post read time in minutes
-+ featured posts
-+ custom date format settings for standard formatter (config)
-+ site state add description
-
-
 ## Directory structure
 
 https://docs.hummingbird.codes/2.0/documentation/hummingbird/transforms/
