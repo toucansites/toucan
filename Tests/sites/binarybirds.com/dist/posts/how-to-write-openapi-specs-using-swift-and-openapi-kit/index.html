@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>How to write OpenAPI specs using Swift and OpenAPIKit? - Scientific Titans Blog</title>
+    <meta name="description" content="In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.">
+    
+    <meta property="og:url" content="http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/">
+    <meta property="og:title" content="How to write OpenAPI specs using Swift and OpenAPIKit? - Scientific Titans Blog">
+    <meta property="og:description" content="In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.">
+    <meta property="og:image" content="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to write OpenAPI specs using Swift and OpenAPIKit? - Scientific Titans Blog">
+    <meta name="twitter:description" content="In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.">
+    <meta name="twitter:image" content="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg">
+    
+    <link rel="stylesheet" href="http://localhost:3000/css/styles.css">
+    <link rel="stylesheet" href="http://localhost:3000/css/syntax.css">
+
+    <link rel="shortcut icon" href="http://localhost:3000/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="http://localhost:3000/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="http://localhost:3000/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="http://localhost:3000/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://localhost:3000/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="http://localhost:3000/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://localhost:3000/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="http://localhost:3000/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="http://localhost:3000/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="http://localhost:3000/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:3000/images/icons/apple-touch-icon-180x180.png">
+    
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <link rel="shortcut icon" href="http://localhost:3000/images/icons/favicon.ico" type="image/x-icon">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+        
+    <link rel="stylesheet" href="http://localhost:3000/css/styles.css">
+    <link rel="stylesheet" href="http://localhost:3000/css/syntax.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+        <div class="navbarHeader">
+          <div class="navbarContainer">
+            <div class="navbarLogo">
+              <a class="navbarLogoLink" href="/">
+                <picture>
+                  <source
+                    srcset="http://localhost:3000/icons/logo-dark.png"
+                    media="(prefers-color-scheme: dark)"
+                  />
+                  <img
+                    class="navbarLogoImage"
+                    alt="BinaryBirds logo"
+                    loading="lazy"
+                    width="32"
+                    height="32"
+                    decoding="async"
+                    style="color: transparent"
+                    src="http://localhost:3000/icons/logo.png"
+                  />
+                </picture>
+                Binary Birds
+              </a>
+            </div>
+            <nav class="navbarNavigation">
+              <label for="showMenu" class="showMenu">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none" viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  height="24"
+                  width="24"
+                  class="hamburgerIcon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
+                </svg>
+              </label>
+              <input type="checkbox" id="showMenu" role="button" />
+              <ul id="menu">
+                <li><a href="/development">Development</a></li>
+                <li>
+                  <a href="/consulting">Consulting</a>
+                </li>
+                <li><a href="/blog/">Blog</a></li>
+                <li>
+                  <a href="mailto:binarybirdsoffical@gmail.com" class="navbarContact">
+                    <svg
+                      stroke="currentColor"
+                      fill="none"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      height="24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="envelopeIcon"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                      ></path></svg
+                    >Contact Us
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+                <h1 class="title">How to write OpenAPI specs using Swift and OpenAPIKit?</h1>
+                <p class="excerpt">In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.</p>
+            <div class="data">
+                        <a class="authorBadge" href="http://localhost:3000/authors/tibor-bodecs/">
+                            <div class="midi">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </a>
+                    <div class="times">
+                        <time datetime="July 6, 2023 16:15">July 6, 2023 16:15</time>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>                        
+                        <p class="readingTime">9 min read</p>
+                    </div>
+            </div>
+            </section>
+        
+                <figure>
+                    <picture>
+                        <img
+                            src="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg"
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+            </header>
+
+        <section id="contents" class="content-wrapper">
+    
+    <h2>Getting started</h2><p>Have you ever written an OpenAPI spec using YAML / JSON files? Well, I have created several documents and I had some problems with those formats. My main issue is that I constantly want to separate components, and I always end up using standalone files for those. This sounds fine, but if you decompose everything, including parameters, responses and other stuff it can cause some issues when you host your documentation online. The <a href="https://github.com/swagger-api/swagger-ui" target="_blank">SwaggerUI</a> library renders the documentation extremely slow when it has to pull the specification from multiple source files. One possible solution is to combine your spec into a large <code>swagger.json</code> file, there are some tools for this purpose, but lately I’ve discovered an alternative… using Swift & the <a href="https://github.com/mattpolzin/OpenAPIKit" target="_blank">OpenAPIKit</a> library. 📦</p><hr><p>This tutorial is a practical walkthrough, but you can also download the <a href="https://github.com/binarybirds/swagger-petstore" target="_blank">sample repository from GitHub</a> right away.</p><hr><p>Let’s get started with a new Swift package, you can setup the project using the following <code>Package.swift</code> file:</p><pre><code class="language-swift">// swift-tools-version: 5.8
+import PackageDescription
+
+let package = Package(
+    name: "swagger-petstore",
+    platforms: [
+        .macOS(.v10_15),
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/mattpolzin/OpenAPIKit",
+            from: "3.0.0-alpha.8"
+        ),
+        .package(
+            url: "https://github.com/jpsim/Yams",
+            from: "5.0.6"
+        ),
+    ],
+    targets: [
+        .executableTarget(
+            name: "SwaggerPetstore",
+            dependencies: [
+                .product(name: "OpenAPIKit30", package: "OpenAPIKit"),
+                .product(name: "Yams", package: "Yams"),
+            ]
+        )
+    ]
+)
+</code></pre><p>We just need a simple executable target that will serve as a generator, to build our swagger files. Anyway, working with OpenAPIKit is not that hard, but for me it’s a bit more easy to reference components by using the following extensions. Feel free to place them inside a <code>OpenAPI+Extensions.swift</code> file somewhere inside your project.</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+import OpenAPIKitCore
+
+extension OpenAPI.Content {
+
+    static func ref(_ name: String) -> Self {
+        .init(schemaReference: .internal(.component(name: name)))
+    }
+}
+
+extension JSONSchema {
+
+    static func ref(_ name: String) -> JSONSchema {
+        .reference(.component(named: name))
+    }
+}
+
+extension Either<JSONReference<OpenAPI.Parameter>, OpenAPI.Parameter> {
+
+    static func ref(_ name: String) -> Self {
+        Self.reference(.component(named: name))
+    }
+}
+
+extension Either<JSONReference<OpenAPI.Response>, OpenAPI.Response> {
+
+    static func ref(_ name: String) -> Self {
+        Self.reference(.component(named: name))
+    }
+}
+</code></pre><p>The next thing that we’re going to create is the <code>Server</code> namespace, this will contain some generic stuff that can be applied to the entire API.</p><pre><code class="language-swift">import Foundation
+
+enum Server {}
+</code></pre><p>We’re going to use UUID values as primary identifiers, so it seems like a good idea to add a <code>Field</code> extension with a static <code>uuid</code> function for this purpose. We’re also going to use image URLs so, let’s define one more field inside the <code>Server+Fields.swift</code> extension. 🤔</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Server {
+
+    enum Fields {
+
+        static func uuid(
+            required: Bool = true,
+            description: String = "Unique identifier"
+        ) -> JSONSchema {
+            .string(
+                format: .extended(.uuid),
+                required: required,
+                description: description,
+                example: "4DB59768-CDFA-4608-BA60-4673A3CB015E"
+            )
+        }
+
+        static func url(
+            required: Bool = true,
+            description: String = "URL"
+        ) -> JSONSchema {
+            .string(
+                format: .extended(.uri),
+                required: required,
+                description: description,
+                example: "https://placekitten.com/512/512"
+            )
+        }
+    }
+}
+</code></pre><p>We’re going to use the fields inside the JSON objects, but we can also come up with a <code>Server+Parameters.swift</code> namespace to define generic path and query parameters that we can reuse inside the operations.</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Server {
+
+    enum Parameters {
+
+        static var page: OpenAPI.Parameter {
+            let name = "page"
+            return .init(
+                name: name,
+                context: .query,
+                schema: .integer(
+                    title: name,
+                    minimum: (1, exclusive: false),
+                    defaultValue: 1,
+                    example: 1
+                ),
+                description: "Page offset of the list"
+            )
+        }
+
+        static var size: OpenAPI.Parameter {
+            let name = "size"
+            return .init(
+                name: name,
+                context: .query,
+                schema: .integer(
+                    title: name,
+                    minimum: (1, exclusive: false),
+                    defaultValue: 50,
+                    example: 50
+                ),
+                description: "Number of items per page"
+            )
+        }
+
+        static var search: OpenAPI.Parameter {
+            let name = "search"
+            return .init(
+                name: name,
+                context: .query,
+                schema: .string(
+                    example: ""
+                ),
+                description: "Search with some value"
+            )
+        }
+
+        static var order: OpenAPI.Parameter {
+            .init(
+                name: "order",
+                context: .query,
+                schema: .string(
+                    allowedValues: "asc", "desc",
+                    defaultValue: "asc",
+                    example: "asc"
+                ),
+                description: "Order the results ascending or descending (asc, desc)"
+            )
+        }
+    }
+}
+</code></pre><p>Same thing goes for the security schemes, in this case we just simply define a <code>bearerAuth</code> reference to a component, which we’re going to implement inside the OpenAPI doc. 📄</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Server {
+
+    enum Security {
+
+        static let bearerAuth: [OpenAPI.SecurityRequirement] = [
+            [
+                .component(named: "bearerAuth"): []
+            ]
+        ]
+    }
+}
+
+</code></pre><p>The very last thing seems like a bit complex, but it’s just a generic error message and a list object that can contain other JSON elements. This is how you can generate the OpenAPI definition for that using static Swift helper functions:</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Server {
+
+    enum Components {
+
+        static var error: JSONSchema {
+            .object(
+                properties: [
+                    "message": .string(
+                        required: true,
+                        description: "The user facing error message.",
+                        example: "Something went wrong with the request."
+                    ),
+                    "details": .array(
+                        items: .object(
+                            properties: [
+                                "key": .string(
+                                    required: true,
+                                    description: "The error key",
+                                    example: "field"
+                                ),
+                                "message": .string(
+                                    required: true,
+                                    description: "The user facing error message",
+                                    example: "Something is wrong with the field."
+                                ),
+                            ]
+                        )
+                    ),
+                ]
+            )
+        }
+
+        static func page() -> JSONSchema {
+            .object(
+                properties: [
+                    "size": .integer(
+                        required: true,
+                        maximum: (1000, exclusive: false),
+                        minimum: (10, exclusive: false),
+                        defaultValue: 50,
+                        example: 25
+                    ),
+                    "current": .integer(
+                        required: true,
+                        minimum: (0, exclusive: false),
+                        defaultValue: 0,
+                        example: 12
+                    ),
+                    "total": .integer(
+                        required: true,
+                        minimum: (0, exclusive: false),
+                        defaultValue: 0,
+                        example: 42
+                    ),
+                ]
+            )
+        }
+
+        static func list(
+            reference: String,
+            orderKeys: [String]? = nil
+        ) -> JSONSchema {
+            .object(
+                properties: [
+                    "items": .array(
+                        items: .reference(.component(named: reference))
+                    ),
+                    "metadata": .object(
+                        properties: [
+                            "page": Self.page(),
+                            "items": .object(
+                                properties: [
+                                    "total": .integer(
+                                        required: true,
+                                        minimum: (0, exclusive: false),
+                                        defaultValue: 0,
+                                        example: 69
+                                    )
+                                ]
+                            ),
+                            "sort": .object(
+                                properties: [
+                                    "by": .string(
+                                        required: false,
+                                        description: "Sort the list by ascending or descending order",
+                                        allowedValues: "asc", "desc",
+                                        defaultValue: "asc"
+                                    ),
+                                    "order": .string(
+                                        required: false,
+                                        description: "Field key to order the list",
+                                        allowedValues: orderKeys as? [AnyCodable]
+                                    ),
+                                ]
+                            ),
+                            "search": .string(
+                                required: false,
+                                description: "Search term"
+                            ),
+                        ]
+                    ),
+                ]
+            )
+        }
+    }
+}
+
+</code></pre><p>Now that we’re ready with the basic building blocks, let’s start creating some actual endpoints. I’m going to show you how to create a complete REST API for a category object type and based on this you should be able to apply the very same pattern to other REST objects. 🔄</p><p>Again, we start with a namespace, by using a Swift enum:</p><pre><code class="language-swift">import Foundation
+
+enum Category {}
+
+</code></pre><p>Next, we define some helpers for the fields of the category object. Note that we don’t have to create a helper for the <code>id</code> field, because we already have that one in the <code>Server.Fields</code> namespace. Apart from the unique identifier, a category will only have a <code>name</code> field.</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Category {
+
+    enum Fields {
+
+        static func name(required: Bool = true) -> JSONSchema {
+            .string(
+                required: required,
+                description: "Name of the category",
+                example: "Cat"
+            )
+        }
+    }
+}
+
+</code></pre><p>By using the previously defined helpers, we can simply come up with the component structure for the Category model. I always like to separate the DTOs (Date Transfer Object) for every REST call, so in our case:</p><ul><li>reference - for references in other objects</li><li>list - `GET /models/`</li><li>detail - `GET /models/{id}`</li><li>create - `POST /models/`</li><li>update - `PUT /models/{id}`</li><li>patch - `PATCH /models/{id}`</li></ul><p>This might looks like an overkill, but on the long term it’s worth to separate these contexts (or maybe not, who knows… 😅).</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Category {
+
+    enum Components {
+
+        static var reference: JSONSchema {
+            .object(
+                properties: [
+                    "id": Server.Fields.uuid(),
+                    "name": Fields.name(),
+                ]
+            )
+        }
+
+        static var list: JSONSchema {
+            .object(
+                properties: [
+                    "id": Server.Fields.uuid(),
+                    "name": Fields.name(),
+                ]
+            )
+        }
+
+        static var detail: JSONSchema {
+            .object(
+                properties: [
+                    "id": Server.Fields.uuid(),
+                    "name": Fields.name(),
+                ]
+            )
+        }
+
+        static var create: JSONSchema {
+            .object(
+                properties: [
+                    "name": Fields.name()
+                ]
+            )
+        }
+
+        static var update: JSONSchema {
+            .object(
+                properties: [
+                    "name": Fields.name()
+                ]
+            )
+        }
+
+        static var patch: JSONSchema {
+            .object(
+                properties: [
+                    "name": Fields.name(required: false)
+                ]
+            )
+        }
+    }
+
+}
+</code></pre><p>Before we deal with the REST operations, we still have to define some parameters. We’re going to create a <code>categoryId</code> path parameter for category id references, and a sort parameter for the list operation, this way we can specify the allowed sort keys (<code>name</code> only in this case).</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Category {
+
+    enum Parameters {
+
+        static var id: OpenAPI.Parameter {
+            .init(
+                name: "categoryId",
+                context: .path,
+                schema: Server.Fields.uuid()
+            )
+        }
+
+        static var sort: OpenAPI.Parameter {
+            return .init(
+                name: "sort",
+                context: .query,
+                schema: .string(
+                    allowedValues: "name",
+                    defaultValue: "name",
+                    example: "name"
+                ),
+                description: "Sort with the given value"
+            )
+        }
+    }
+}
+</code></pre><p>Building the operations for the REST endpoints is pretty straightforward if you are already familiar with the <a href="https://swagger.io/specification/" target="_blank">OpenAPI specification</a>. We’re not going to explain that in this tutorial, but here’s the complete example, to serve as a pattern for you.</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+
+extension Category {
+
+    enum Operations {
+
+        static var list: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Find categories",
+                description: "List categories",
+                operationId: "listCategories",
+                parameters: [
+                    .ref("page"),
+                    .ref("size"),
+                    .ref("search"),
+                    .ref("categorySort"),
+                    .ref("order"),
+                ],
+                responses: [
+                    200: .response(
+                        description: "List of categories",
+                        content: [
+                            .json: .init(
+                                schema: Server.Components.list(
+                                    reference: "CategoryList"
+                                )
+                            )
+                        ]
+                    ),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+
+        static var create: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Create a category",
+                description: "Creates a new category object",
+                operationId: "createCategory",
+                requestBody: .init(content: [
+                    .json: .ref("CategoryCreate")
+                ]),
+                responses: [
+                    200: .response(
+                        description: "The details of a category object",
+                        content: [
+                            .json: .ref("CategoryDetail")
+                        ]
+                    ),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+
+        static var bulkDelete: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Bulk delete categories",
+                description: "Removes multiple categories objects at once",
+                operationId: "deleteCategories",
+                requestBody: .init(content: [
+                    .json: .init(
+                        schema: .array(
+                            items: Server.Fields.uuid()
+                        )
+                    )
+                ]),
+                responses: [
+                    204: .ref("204"),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+
+        // MARK: - currency id
+
+        static var detail: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Category details",
+                description: "Get the details of a category object",
+                operationId: "getCategory",
+                parameters: [
+                    .ref("categoryId")
+                ],
+                responses: [
+                    200: .response(
+                        description: "The details of a category object",
+                        content: [
+                            .json: .ref("CategoryDetail")
+                        ]
+                    ),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                    404: .ref("404"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+
+        static var update: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Update a category object",
+                description: "Updates an entire category object",
+                operationId: "updateCategory",
+                parameters: [
+                    .ref("categoryId")
+                ],
+                requestBody: .init(content: [
+                    .json: .ref("CategoryUpdate")
+                ]),
+                responses: [
+                    200: .response(
+                        description:
+                            "The details of the patched category object",
+                        content: [
+                            .json: .ref("CategoryDetail")
+                        ]
+                    ),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+
+        static var patch: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Patch a category object",
+                description: "Patch the properties of a given category object",
+                operationId: "patchCategory",
+                parameters: [
+                    .ref("categoryId")
+                ],
+                requestBody: .init(content: [
+                    .json: .ref("CategoryPatch")
+                ]),
+                responses: [
+                    200: .response(
+                        description:
+                            "The details of the patched category object",
+                        content: [
+                            .json: .ref("CategoryDetail")
+                        ]
+                    ),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                    404: .ref("404"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+
+        static var delete: OpenAPI.Operation {
+            .init(
+                tags: ["Categories"],
+                summary: "Delete a category object",
+                description:
+                    "Removes a category object using the unique identifier",
+                operationId: "deleteCategory",
+                parameters: [
+                    .ref("categoryId")
+                ],
+                responses: [
+                    204: .ref("204"),
+                    400: .ref("400"),
+                    401: .ref("401"),
+                    403: .ref("403"),
+                    404: .ref("404"),
+                ],
+                security: Server.Security.bearerAuth
+            )
+        }
+    }
+}
+
+</code></pre><p>As you can see there are some <code>.ref()</code> calls inside the code and we still have to create the entire document specification including the reference points defined as components. We’re going to do this now by creating an extension over the <code>OpenAPI.Document</code> type. 🥳</p><pre><code class="language-swift">import OpenAPIKit30
+
+extension OpenAPI.Document {
+
+    static var definition: OpenAPI.Document {
+        .init(
+            info: .init(
+                title: "Swagger Petstore - written in Swift",
+                description:
+                    "This is a sample Pet Store Server based on the OpenAPI 3.0 specification generated using Swift & OpenAPIKit.",
+                contact: .init(
+                    name: "Binary Birds",
+                    url: .init(string: "https://binarybirds.com")!,
+                    email: "info@binarybirds.com"
+                ),
+                version: "1.0.0"
+            ),
+            servers: [
+                .init(
+                    url: .init(string: "http://127.0.0.1:8080")!,
+                    description: "dev"
+                ),
+                .init(
+                    url: .init(string: "http://127.0.0.1:8081")!,
+                    description: "live"
+                ),
+            ],
+            paths: [
+                "/categories": .init(
+                    get: Category.Operations.list,
+                    post: Category.Operations.create,
+                    delete: Category.Operations.bulkDelete
+                ),
+                "/categories/{categoryId}": .init(
+                    get: Category.Operations.detail,
+                    put: Category.Operations.update,
+                    delete: Category.Operations.delete,
+                    patch: Category.Operations.patch
+                ),
+            ],
+            components: .init(
+                schemas: [
+                    "ErrorResponse": Server.Components.error,
+
+                    "CategoryReference": Category.Components.reference,
+                    "CategoryList": Category.Components.list,
+                    "CategoryDetail": Category.Components.detail,
+                    "CategoryCreate": Category.Components.create,
+                    "CategoryUpdate": Category.Components.update,
+                    "CategoryPatch": Category.Components.patch,
+
+                ],
+                responses: [
+                    "204": .init(description: "No content"),
+                    "400": .init(
+                        description: "Bad request",
+                        content: [
+                            .json: .init(
+                                schema: .reference(
+                                    .component(named: "ErrorResponse")
+                                )
+                            )
+                        ]
+                    ),
+                    "401": .init(
+                        description: "Unauthorized",
+                        content: [
+                            .json: .init(
+                                schema: .reference(
+                                    .component(named: "ErrorResponse")
+                                )
+                            )
+                        ]
+                    ),
+                    "403": .init(
+                        description: "Forbidden",
+                        content: [
+                            .json: .init(
+                                schema: .reference(
+                                    .component(named: "ErrorResponse")
+                                )
+                            )
+                        ]
+                    ),
+                    "404": .init(
+                        description: "Not found",
+                        content: [
+                            .json: .init(
+                                schema: .reference(
+                                    .component(named: "ErrorResponse")
+                                )
+                            )
+                        ]
+                    ),
+                ],
+                parameters: [
+                    "categoryId": Category.Parameters.id,
+                    "categorySort": Category.Parameters.sort,
+
+                    "page": Server.Parameters.page,
+                    "size": Server.Parameters.size,
+                    "search": Server.Parameters.search,
+                    "order": Server.Parameters.order,
+                ],
+                examples: [:],
+                requestBodies: [:],
+                headers: [:],
+                securitySchemes: [
+                    "bearerAuth": .init(
+                        type: .http(
+                            scheme: "bearer",
+                            bearerFormat: "token"
+                        ),
+                        description: "Authorization header using a Bearer token"
+                    )
+                ]
+            ),
+            tags: [
+                .init(
+                    name: "Categories",
+                    description: "Pet categories, such as cat, dog, etc."
+                ),
+            ]
+        )
+    }
+}
+
+</code></pre><p>Finally in the <code>main.swift</code> file we’re going to generate both the YAML and the JSON output.</p><pre><code class="language-swift">import Foundation
+import OpenAPIKit30
+import Yams
+
+let basePath =
+    "/"
+    + #file
+    .split(separator: "/")
+    .dropLast(3)
+    .joined(separator: "/")
+    .appending("/dist")
+
+if !FileManager.default.fileExists(atPath: basePath) {
+    try FileManager.default.createDirectory(
+        atPath: basePath,
+        withIntermediateDirectories: true
+    )
+}
+
+let doc = OpenAPI.Document.definition
+let yamlEncoder = YAMLEncoder()
+let yamlData = try yamlEncoder.encode(doc)
+let yamlPath = "\(basePath)/swagger.yaml"
+try yamlData.write(
+    to: URL(fileURLWithPath: yamlPath),
+    atomically: true,
+    encoding: .utf8
+)
+
+let jsonEncoder = JSONEncoder()
+jsonEncoder.outputFormatting = [
+    .prettyPrinted,
+    .withoutEscapingSlashes,
+]
+let jsonData = try jsonEncoder.encode(doc)
+let jsonPath = "\(basePath)/swagger.json"
+try jsonData.write(
+    to: URL(fileURLWithPath: jsonPath),
+    options: .atomic
+)
+
+</code></pre><p>Of course we have a working template repository that you can <a href="https://github.com/binarybirds/swagger-petstore" target="_blank">download for free</a>. This repository contains some more common patterns, including N to many relations and some other useful stuff, that you might encounter when you try to build an API specification for your backend service. 😊</p>
+        
+                <div class="meta">
+                    <a class="tagLink" href="http://localhost:3000/tags/swift/">
+                        <figure>
+                            <picture>
+                                <img
+                                    src="http://localhost:3000/assets/tags/swift/swift.webp"
+                                    alt=""
+                                    title=""
+                                >
+                            </picture>
+                        </figure>
+                        Swift (4)
+                    </a>
+                    <a class="tagLink" href="http://localhost:3000/tags/open-api/">
+                        <figure>
+                            <picture>
+                                <img
+                                    src="http://localhost:3000/assets/tags/open-api/OpenAPI.webp"
+                                    alt=""
+                                    title=""
+                                >
+                            </picture>
+                        </figure>
+                        OpenAPI (1)
+                    </a>
+                </div>
+    </section>
+</article>
+    
+    <div class="content-wrapper">
+
+                <h2 class="morePostsTitle">Previous post</h2>
+                        <a class="relatedPosts" href="http://localhost:3000/posts/beginners-guide-to-swift-macros/">
+                            <div class="relatedCover"><figure>
+                    <picture>
+                        <img
+                            src="http://localhost:3000/assets/posts/beginners-guide-to-swift-macros/cover.jpg"
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                </div>
+                            <div class="relatedContent">
+                                <h3 class="relatedTitle">Beginner&#39;s guide to Swift macros</h3>
+                                <p>Learn how to create and publish your very first macro using SPM and the brand new Macro APIs introduced in Swift 5.9.</p>
+                            <div class="relatedAuthors">
+                                <div class="authorBadge">
+                                    <div class="mini">
+                                    <figure>
+                                        <picture>
+                                            <img
+                                                src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                                alt=""
+                                                title=""
+                                            >
+                                        </picture>
+                                    </figure>
+                                    </div>
+                                    <div>Tibor Bödecs</div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                </svg>  
+                                <time class="RelatedDate" datetime="June 7, 2023 14:57">June 7, 2023 14:57</time>
+                            </div>
+                            </div>
+                        </a>        
+    </div>
+    
+    <div class="content-wrapper ">
+    <h2 class="morePostsTitle">Related posts</h2>
+                <a class="relatedPosts" href="http://localhost:3000/posts/push-notifications-with-swift-server-side/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/push-notifications-with-swift-server-side/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Sending push notifications using server side Swift in 2023</h3>
+                        <p>Learn how to send push notifications with Swift on the server side using the Google FCM API and the APN Swift library.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/gabor-lengyel/gabor-lengyel.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Gábor Lengyel</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="May 18, 2023 17:36">May 18, 2023 17:36</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">How to write OpenAPI specs using Swift and OpenAPIKit?</h3>
+                        <p>In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="July 6, 2023 16:15">July 6, 2023 16:15</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Static site geneneration with the power of Swift and Toucan</h3>
+                        <p>Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="April 24, 2023 18:32">April 24, 2023 18:32</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">How to write OpenAPI specs using Swift and OpenAPIKit?</h3>
+                        <p>In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="July 6, 2023 16:15">July 6, 2023 16:15</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/beginners-guide-to-swift-macros/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/beginners-guide-to-swift-macros/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Beginner&#39;s guide to Swift macros</h3>
+                        <p>Learn how to create and publish your very first macro using SPM and the brand new Macro APIs introduced in Swift 5.9.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="June 7, 2023 14:57">June 7, 2023 14:57</time>
+                    </div>
+                    </div>
+                </a>    </div>
+    <div class="content-wrapper ">
+    <h2 class="morePostsTitle">More posts by the author(s)</h2>
+                <a class="relatedPosts" href="http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Static site geneneration with the power of Swift and Toucan</h3>
+                        <p>Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="April 24, 2023 18:32">April 24, 2023 18:32</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/beginners-guide-to-swift-macros/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/beginners-guide-to-swift-macros/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Beginner&#39;s guide to Swift macros</h3>
+                        <p>Learn how to create and publish your very first macro using SPM and the brand new Macro APIs introduced in Swift 5.9.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="June 7, 2023 14:57">June 7, 2023 14:57</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">How to write OpenAPI specs using Swift and OpenAPIKit?</h3>
+                        <p>In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="July 6, 2023 16:15">July 6, 2023 16:15</time>
+                    </div>
+                    </div>
+                </a>    </div>
+
+    </main>
+
+          <footer class="footer">
+            <div class="footerContainer">
+              <div class="footerLogoContainer">
+                <div class="footerLogo">
+                  <picture>
+                    <img
+                      alt="BinaryBirds logo"
+                      loading="lazy"
+                      width="64"
+                      height="64"
+                      decoding="async"
+                      style="color: transparent"
+                      src="http://localhost:3000/icons/logo-dark.png"
+                    />
+                  </picture>
+                  <h2 class="footerTitle">Binary Birds</h2>
+                </div>
+                <p>
+                  Server-side swift solutions from experts. </br> Secure, efficient,
+                  scalable solutions.
+                </p>
+              </div>
+              <div class="footerLinks">
+                <div class="footerSocialMedia">
+                  <a href="https://github.com/BinaryBirds" target="_blank" rel="noopener noreferrer"><i id="footerGitHub" class="devicon-github-original"></i></a>
+                  <a href="https://theswiftdev.com" target="_blank" rel="noopener noreferrer">
+                    <img
+                      id="footerTSD"
+                      src="http://localhost:3000/icons/tsdicon.png"
+                      alt="The Swift Dev"
+                      width="36"
+                      height="36"
+                    />
+                  </a>
+                  <a href="https://feathercms.com" target="_blank" rel="noopener noreferrer">
+                    <img
+                      id="footerFeather"
+                      src="http://localhost:3000/icons/featherIcon.png"
+                      alt="Feather CMS"
+                      width="36"
+                      height="36"
+                    />
+                  </a>
+                </div>
+                <a href="mailto:binarybirdsoffical@gmail.com">
+                  <svg 
+                  id="envelopeIcon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  height="24"
+                  width="24"
+                  stroke="currentColor"
+                  >
+                    <path 
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+                     />
+                  </svg>
+                  binarybirdsoffical@gmail.com              
+                </a>
+              </div>
+            </div>
+            <div class="footerNav">
+              <nav class="footerNavigation">
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/development">Development</a></li>
+                  <li>
+                    <a href="/consulting">Consulting</a>
+                  </li>
+                  <li><a href="/blog">Blog</a></li>
+                </ul>
+              </nav>
+              <span id="copyright"></span>
+            </div>
+          </footer>
+</body>
+  <script src="http://localhost:3000/js/favicon.js"></script>
+  <script src="http://localhost:3000/js/copyright.js"></script>
+</html>

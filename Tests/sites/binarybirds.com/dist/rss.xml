@@ -1,0 +1,42 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<channel>
+    <title>Scientific Titans Blog</title>
+    <description>This is a demo blog using completely fake content.</description>
+    <link>http://localhost:3000/</link>
+    <language>en-US</language>
+    <lastBuildDate>Tue, 04 Jun 2024 14:50:12 +0000</lastBuildDate>
+    <pubDate>Thu, 06 Jul 2023 16:15:54 +0000</pubDate>
+    <ttl>250</ttl>
+    <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/</guid>
+    <title><![CDATA[ How to write OpenAPI specs using Swift and OpenAPIKit? ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit. ]]></description>
+    <link>http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/</link>
+    <pubDate>Thu, 06 Jul 2023 16:15:54 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/beginners-guide-to-swift-macros/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to Swift macros ]]></title>
+    <description><![CDATA[ Learn how to create and publish your very first macro using SPM and the brand new Macro APIs introduced in Swift 5.9. ]]></description>
+    <link>http://localhost:3000/posts/beginners-guide-to-swift-macros/</link>
+    <pubDate>Wed, 07 Jun 2023 14:57:12 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/push-notifications-with-swift-server-side/</guid>
+    <title><![CDATA[ Sending push notifications using server side Swift in 2023 ]]></title>
+    <description><![CDATA[ Learn how to send push notifications with Swift on the server side using the Google FCM API and the APN Swift library. ]]></description>
+    <link>http://localhost:3000/posts/push-notifications-with-swift-server-side/</link>
+    <pubDate>Thu, 18 May 2023 17:36:12 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/</guid>
+    <title><![CDATA[ Static site geneneration with the power of Swift and Toucan ]]></title>
+    <description><![CDATA[ Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it. ]]></description>
+    <link>http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/</link>
+    <pubDate>Mon, 24 Apr 2023 18:32:25 +0000</pubDate>
+</item>
+
+</channel>
+</rss>

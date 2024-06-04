@@ -1,82 +1,49 @@
-// swift-tools-version:5.9
+// swift-tools-version:5.10
 import PackageDescription
 
 let package = Package(
     name: "toucan",
     platforms: [
-        .macOS(.v12),
+        .macOS(.v13),
+        .iOS(.v16),
+        .tvOS(.v16),
+        .watchOS(.v9),
+        .visionOS(.v1),
     ],
     products: [
-        .executable(name: "toucan", targets: ["ToucanCli"]),
-        .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
+        .executable(name: "toucan-cli", targets: ["toucan-cli"]),
+        .library(name: "Toucan", targets: ["Toucan"]),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/hummingbird-project/hummingbird",
-            from: "1.12.0"
-        ),
-        .package(
-            url: "https://github.com/apple/swift-argument-parser",
-            from: "1.3.0"
-        ),
-        .package(
-            url: "https://github.com/JohnSundell/Ink",
-            from: "0.6.0"
-        ),
-        .package(
-            url: "https://github.com/JohnSundell/Splash",
-            from: "0.16.0"
-        ),
-        .package(
-            url: "https://github.com/BinaryBirds/file-manager-kit",
-            from: "0.1.0"
-        ),
-        .package(
-            url: "https://github.com/eonil/FSEvents",
-            branch: "master"
-        ),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
+        .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
+        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
+        .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.1"),
+        .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
     ],
     targets: [
-        .target(name: "ToucanSDK", dependencies: [
-            .product(
-                name: "FileManagerKit",
-                package: "file-manager-kit"
-            ),
-            .product(
-                name: "Ink",
-                package: "ink"
-            ),
-            .product(
-                name: "Splash",
-                package: "splash"
-            ),
-        ]),
-
-        .executableTarget(name: "ToucanCli",
+        .target(
+            name: "Toucan",
             dependencies: [
-                .product(
-                    name: "ArgumentParser",
-                    package: "swift-argument-parser"
-                ),
-                .product(
-                    name: "Hummingbird",
-                    package: "hummingbird"
-                ),
-                .product(
-                    name: "HummingbirdFoundation",
-                    package: "hummingbird"
-                ),
-                .product(
-                    name: "EonilFSEvents",
-                    package: "FSEvents"
-                ),
-                .target(name: "ToucanSDK"),
+                .product(name: "Algorithms", package: "swift-algorithms"),
+                .product(name: "Markdown", package: "swift-markdown"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .product(name: "Mustache", package: "swift-mustache"),
+                .product(name: "Yams", package: "yams"),
             ]
         ),
-        
-        .testTarget(name: "ToucanSDKTests",
+        .executableTarget(
+            name: "toucan-cli",
             dependencies: [
-                .target(name: "ToucanSDK"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .target(name: "Toucan"),
+            ]
+        ),
+        .testTarget(
+            name: "ToucanTests",
+            dependencies: [
+                .target(name: "Toucan"),
             ]
         )
     ]

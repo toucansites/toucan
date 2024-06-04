@@ -1,0 +1,27 @@
+{{<index}}
+
+{{$main}}
+<div id="authors">
+    <section class="innerSection sectionPrimary">
+        <header class="authorsTitle content-wrapper">
+            <h1>{{page.metadata.title}}</h1>
+            <p>{{page.metadata.description}}</p>
+        </header>
+    </section>
+    {{#empty(page.context.authors)}}
+    Empty.
+    {{/empty(page.context.authors)}}
+    {{^empty(page.context.authors)}}
+    <section class="innerSection sectionSecondary">
+        <div class="authorsContainer wrapper">
+            {{#page.context.authors}}
+                {{> _partials.author}}
+            {{/page.context.authors}}
+        </div>
+    </section>
+    {{/empty(page.context.authors)}}
+    
+</div>
+{{/main}}
+
+{{/index}}

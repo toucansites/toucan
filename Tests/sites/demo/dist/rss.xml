@@ -1,0 +1,189 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<channel>
+    <title>Scientific Titans Blog</title>
+    <description>This is a demo blog using completely fake content.</description>
+    <link>http://localhost:3000/</link>
+    <language>en-US</language>
+    <lastBuildDate>Tue, 04 Jun 2024 14:50:11 +0000</lastBuildDate>
+    <pubDate>Sat, 29 Aug 1953 12:01:01 +0000</pubDate>
+    <ttl>250</ttl>
+    <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/turing-and-fermi-shaping-modern-science/</guid>
+    <title><![CDATA[ Turing and Fermi: Shaping Modern Science ]]></title>
+    <description><![CDATA[ Collaborative impacts of Turing and Fermi on modern scientific fields. ]]></description>
+    <link>http://localhost:3000/posts/turing-and-fermi-shaping-modern-science/</link>
+    <pubDate>Sat, 29 Aug 1953 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/curie-and-turing-innovations-in-science/</guid>
+    <title><![CDATA[ Curie and Turing: Innovations in Science ]]></title>
+    <description><![CDATA[ Exploring the innovative contributions of Marie Curie and Alan Turing. ]]></description>
+    <link>http://localhost:3000/posts/curie-and-turing-innovations-in-science/</link>
+    <pubDate>Sat, 08 Nov 1952 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/turings-algorithms-revolutionizing-technology/</guid>
+    <title><![CDATA[ Turing&#39;s Algorithms: Revolutionizing Technology ]]></title>
+    <description><![CDATA[ The impact of Alan Turing&#39;s algorithms on the evolution of technology. ]]></description>
+    <link>http://localhost:3000/posts/turings-algorithms-revolutionizing-technology/</link>
+    <pubDate>Fri, 05 Jan 1951 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/turings-legacy-in-modern-computing/</guid>
+    <title><![CDATA[ Turing&#39;s Legacy in Modern Computing ]]></title>
+    <description><![CDATA[ Explore Alan Turing&#39;s pioneering work that laid the foundation for modern computing. ]]></description>
+    <link>http://localhost:3000/posts/turings-legacy-in-modern-computing/</link>
+    <pubDate>Wed, 07 Jun 1950 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/tesla-and-turing-visionaries-of-the-future/</guid>
+    <title><![CDATA[ Tesla and Turing: Visionaries of the Future ]]></title>
+    <description><![CDATA[ Exploring how Tesla and Turing&#39;s visions have shaped our present and future. ]]></description>
+    <link>http://localhost:3000/posts/tesla-and-turing-visionaries-of-the-future/</link>
+    <pubDate>Mon, 22 Mar 1948 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/turing-and-einstein-bridging-computing-and-physics/</guid>
+    <title><![CDATA[ Turing and Einstein: Bridging Computing and Physics ]]></title>
+    <description><![CDATA[ How Turing and Einstein&#39;s work intersects in modern scientific applications. ]]></description>
+    <link>http://localhost:3000/posts/turing-and-einstein-bridging-computing-and-physics/</link>
+    <pubDate>Wed, 11 Sep 1946 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/fermis-work-on-the-atomic-bomb/</guid>
+    <title><![CDATA[ Fermi&#39;s Work on the Atomic Bomb ]]></title>
+    <description><![CDATA[ Enrico Fermi&#39;s crucial role in the development of the atomic bomb during WWII. ]]></description>
+    <link>http://localhost:3000/posts/fermis-work-on-the-atomic-bomb/</link>
+    <pubDate>Mon, 16 Jul 1945 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/turings-influence-on-modern-cryptography/</guid>
+    <title><![CDATA[ Turing&#39;s Influence on Modern Cryptography ]]></title>
+    <description><![CDATA[ How Alan Turing&#39;s work has influenced the field of cryptography today. ]]></description>
+    <link>http://localhost:3000/posts/turings-influence-on-modern-cryptography/</link>
+    <pubDate>Sun, 19 Dec 1943 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/fermis-advances-in-nuclear-energy/</guid>
+    <title><![CDATA[ Fermi&#39;s Advances in Nuclear Energy ]]></title>
+    <description><![CDATA[ Enrico Fermi&#39;s critical role in the development of nuclear energy and its uses. ]]></description>
+    <link>http://localhost:3000/posts/fermis-advances-in-nuclear-energy/</link>
+    <pubDate>Wed, 02 Dec 1942 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/tesla-and-fermi-innovators-in-energy/</guid>
+    <title><![CDATA[ Tesla and Fermi: Innovators in Energy ]]></title>
+    <description><![CDATA[ Collaboration between Nikola Tesla and Enrico Fermi in energy advancements. ]]></description>
+    <link>http://localhost:3000/posts/tesla-and-fermi-innovators-in-energy/</link>
+    <pubDate>Wed, 28 Feb 1940 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/curie-and-fermi-pioneers-of-nuclear-science/</guid>
+    <title><![CDATA[ Curie and Fermi: Pioneers of Nuclear Science ]]></title>
+    <description><![CDATA[ Collaboration between Marie Curie and Enrico Fermi in advancing nuclear science. ]]></description>
+    <link>http://localhost:3000/posts/curie-and-fermi-pioneers-of-nuclear-science/</link>
+    <pubDate>Fri, 22 Apr 1938 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/fermis-statistical-models-in-physics/</guid>
+    <title><![CDATA[ Fermi&#39;s Statistical Models in Physics ]]></title>
+    <description><![CDATA[ The significance of Enrico Fermi&#39;s statistical models in the field of physics. ]]></description>
+    <link>http://localhost:3000/posts/fermis-statistical-models-in-physics/</link>
+    <pubDate>Sat, 09 May 1936 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/fermi-and-einstein-a-dialogue-on-physics/</guid>
+    <title><![CDATA[ Fermi and Einstein: A Dialogue on Physics ]]></title>
+    <description><![CDATA[ Insights from discussions between Fermi and Einstein on the future of physics. ]]></description>
+    <link>http://localhost:3000/posts/fermi-and-einstein-a-dialogue-on-physics/</link>
+    <pubDate>Thu, 21 Jun 1934 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/einstein-and-curie-discoveries-in-physics-and-chemistry/</guid>
+    <title><![CDATA[ Einstein and Curie: Discoveries in Physics and Chemistry ]]></title>
+    <description><![CDATA[ Joint contributions of Einstein and Curie to physics and chemistry. ]]></description>
+    <link>http://localhost:3000/posts/einstein-and-curie-discoveries-in-physics-and-chemistry/</link>
+    <pubDate>Sun, 11 Oct 1925 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/teslas-vision-for-wireless-energy/</guid>
+    <title><![CDATA[ Tesla&#39;s Vision for Wireless Energy ]]></title>
+    <description><![CDATA[ Nikola Tesla&#39;s ambitious vision for a world powered by wireless energy. ]]></description>
+    <link>http://localhost:3000/posts/teslas-vision-for-wireless-energy/</link>
+    <pubDate>Wed, 10 Sep 1919 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/einsteins-theory-of-relativity/</guid>
+    <title><![CDATA[ Einstein&#39;s Theory of Relativity ]]></title>
+    <description><![CDATA[ Understanding the profound implications of Albert Einstein&#39;s theory of relativity. ]]></description>
+    <link>http://localhost:3000/posts/einsteins-theory-of-relativity/</link>
+    <pubDate>Thu, 25 Nov 1915 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/marie-curie-and-the-advancement-of-x-rays/</guid>
+    <title><![CDATA[ Marie Curie and the Advancement of X-rays ]]></title>
+    <description><![CDATA[ Curie&#39;s role in advancing the use and understanding of X-rays in medicine. ]]></description>
+    <link>http://localhost:3000/posts/marie-curie-and-the-advancement-of-x-rays/</link>
+    <pubDate>Mon, 18 May 1914 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/curies-nobel-winning-discoveries/</guid>
+    <title><![CDATA[ Curie&#39;s Nobel-Winning Discoveries ]]></title>
+    <description><![CDATA[ An overview of Marie Curie&#39;s Nobel Prize-winning discoveries in science. ]]></description>
+    <link>http://localhost:3000/posts/curies-nobel-winning-discoveries/</link>
+    <pubDate>Tue, 07 Nov 1911 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/teslas-impact-on-engineering-innovations/</guid>
+    <title><![CDATA[ Tesla&#39;s Impact on Engineering Innovations ]]></title>
+    <description><![CDATA[ An exploration of Tesla&#39;s engineering feats that reshaped modern technology. ]]></description>
+    <link>http://localhost:3000/posts/teslas-impact-on-engineering-innovations/</link>
+    <pubDate>Tue, 14 Jul 1908 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/einsteins-brownian-motion-study/</guid>
+    <title><![CDATA[ Einstein&#39;s Brownian Motion Study ]]></title>
+    <description><![CDATA[ The impact of Einstein&#39;s study on Brownian motion on statistical mechanics. ]]></description>
+    <link>http://localhost:3000/posts/einsteins-brownian-motion-study/</link>
+    <pubDate>Thu, 30 Jan 1908 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/einsteins-light-quantum-hypothesis/</guid>
+    <title><![CDATA[ Einstein&#39;s Light Quantum Hypothesis ]]></title>
+    <description><![CDATA[ The significance of Einstein&#39;s hypothesis on light quanta in modern physics. ]]></description>
+    <link>http://localhost:3000/posts/einsteins-light-quantum-hypothesis/</link>
+    <pubDate>Mon, 18 Dec 1905 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/marie-curies-contributions-to-chemistry/</guid>
+    <title><![CDATA[ Marie Curie&#39;s Contributions to Chemistry ]]></title>
+    <description><![CDATA[ A look at Marie Curie&#39;s groundbreaking research in radioactivity and its impact. ]]></description>
+    <link>http://localhost:3000/posts/marie-curies-contributions-to-chemistry/</link>
+    <pubDate>Thu, 10 Dec 1903 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/marie-curie-and-the-birth-of-radioactivity-research/</guid>
+    <title><![CDATA[ Marie Curie and the Birth of Radioactivity Research ]]></title>
+    <description><![CDATA[ The pioneering experiments of Marie Curie in the field of radioactivity. ]]></description>
+    <link>http://localhost:3000/posts/marie-curie-and-the-birth-of-radioactivity-research/</link>
+    <pubDate>Sat, 15 Mar 1902 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/tesla-and-innovation-in-electrical-engineering/</guid>
+    <title><![CDATA[ Tesla and Innovation in Electrical Engineering ]]></title>
+    <description><![CDATA[ The pivotal innovations Tesla introduced in electrical engineering. ]]></description>
+    <link>http://localhost:3000/posts/tesla-and-innovation-in-electrical-engineering/</link>
+    <pubDate>Fri, 23 Apr 1897 12:01:01 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">http://localhost:3000/posts/nikola-tesla-the-father-of-modern-electricity/</guid>
+    <title><![CDATA[ Nikola Tesla: The Father of Modern Electricity ]]></title>
+    <description><![CDATA[ Discover Nikola Tesla&#39;s innovations that transformed the world of electricity. ]]></description>
+    <link>http://localhost:3000/posts/nikola-tesla-the-father-of-modern-electricity/</link>
+    <pubDate>Tue, 16 May 1893 12:01:01 +0000</pubDate>
+</item>
+
+</channel>
+</rss>

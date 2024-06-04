@@ -2,3 +2,6 @@
 .swiftpm
 .build
 .vscode
+/dist
+/src
+/docs

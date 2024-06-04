@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Static site geneneration with the power of Swift and Toucan - Scientific Titans Blog</title>
+    <meta name="description" content="Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.">
+    
+    <meta property="og:url" content="http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/">
+    <meta property="og:title" content="Static site geneneration with the power of Swift and Toucan - Scientific Titans Blog">
+    <meta property="og:description" content="Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.">
+    <meta property="og:image" content="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Static site geneneration with the power of Swift and Toucan - Scientific Titans Blog">
+    <meta name="twitter:description" content="Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.">
+    <meta name="twitter:image" content="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg">
+    
+    <link rel="stylesheet" href="http://localhost:3000/css/styles.css">
+    <link rel="stylesheet" href="http://localhost:3000/css/syntax.css">
+
+    <link rel="shortcut icon" href="http://localhost:3000/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="http://localhost:3000/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="http://localhost:3000/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="http://localhost:3000/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://localhost:3000/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="http://localhost:3000/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://localhost:3000/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="http://localhost:3000/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="http://localhost:3000/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="http://localhost:3000/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:3000/images/icons/apple-touch-icon-180x180.png">
+    
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <link rel="shortcut icon" href="http://localhost:3000/images/icons/favicon.ico" type="image/x-icon">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+        
+    <link rel="stylesheet" href="http://localhost:3000/css/styles.css">
+    <link rel="stylesheet" href="http://localhost:3000/css/syntax.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/http.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+        <div class="navbarHeader">
+          <div class="navbarContainer">
+            <div class="navbarLogo">
+              <a class="navbarLogoLink" href="/">
+                <picture>
+                  <source
+                    srcset="http://localhost:3000/icons/logo-dark.png"
+                    media="(prefers-color-scheme: dark)"
+                  />
+                  <img
+                    class="navbarLogoImage"
+                    alt="BinaryBirds logo"
+                    loading="lazy"
+                    width="32"
+                    height="32"
+                    decoding="async"
+                    style="color: transparent"
+                    src="http://localhost:3000/icons/logo.png"
+                  />
+                </picture>
+                Binary Birds
+              </a>
+            </div>
+            <nav class="navbarNavigation">
+              <label for="showMenu" class="showMenu">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none" viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  height="24"
+                  width="24"
+                  class="hamburgerIcon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
+                </svg>
+              </label>
+              <input type="checkbox" id="showMenu" role="button" />
+              <ul id="menu">
+                <li><a href="/development">Development</a></li>
+                <li>
+                  <a href="/consulting">Consulting</a>
+                </li>
+                <li><a href="/blog/">Blog</a></li>
+                <li>
+                  <a href="mailto:binarybirdsoffical@gmail.com" class="navbarContact">
+                    <svg
+                      stroke="currentColor"
+                      fill="none"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      height="24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="envelopeIcon"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                      ></path></svg
+                    >Contact Us
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+                <h1 class="title">Static site geneneration with the power of Swift and Toucan</h1>
+                <p class="excerpt">Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.</p>
+            <div class="data">
+                        <a class="authorBadge" href="http://localhost:3000/authors/tibor-bodecs/">
+                            <div class="midi">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </a>
+                    <div class="times">
+                        <time datetime="April 24, 2023 18:32">April 24, 2023 18:32</time>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>                        
+                        <p class="readingTime">3 min read</p>
+                    </div>
+            </div>
+            </section>
+        
+                <figure>
+                    <picture>
+                        <img
+                            src="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg"
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+            </header>
+
+        <section id="contents" class="content-wrapper">
+    
+    <h2>Installation</h2><p>Toucan is available on <a href="https://github.com/binarybirds/toucan" target="_blank">GitHub</a> as an open source Swift package. Feel free to clone the repository and run <code>make install</code> to make the <code>toucan</code> command available.</p><pre><code>git clone https://github.com/BinaryBirds/Toucan.git
+cd Toucan
+make install
+</code></pre><h2>Usage</h2><p>Toucan has 3 subcommands:</p><ul><li>generate</li><li>watch</li><li>serve</li></ul><p>You should be able to generate a new website by using the <code>generate</code> command. You just need a project template that is compatible with the static site generator. We’re going to release an official template project for this purpose later on, but for now feel free to grab the source code of <a href="https://github.com/binarybirds/site" target="_blank">this website</a> and use that as a starter project.</p><pre><code>toucan generate ./src ./docs
+</code></pre><p>By using the <code>watch</code> command you should be able to watch for file changes and auto-generate the static site, based on your source folder.</p><pre><code>toucan watch ./src ./docs
+</code></pre><p>The <code>serve</code> command will launch a basic web server, that you can use to preview your static site.</p><pre><code>toucan serve ./docs
+</code></pre><h2>Project structure</h2><p>The <code>src</code> directory is where your content and template files should be located. There are three key directories that toucan will use to generate your website.</p><ul><li>`contents` - Your content using Markdown</li><li>`public` - Public files</li><li>`templates` - Template files</li></ul><h3>Contents</h3><p>The contents folder is organized the following way:</p><ul><li>`posts` - Place your blog posts under this folder</li><li>`pages` - Place your page contents this folder</li><li>`404.md` - The content configuration for the not found page</li><li>`home.md` - The content configuration for the home page</li><li>`index.md` - The content configuration for the entire site</li></ul><p>Toucan will try to recursively discover all the <code>content.md</code> files under the posts and pages directory, and process everything based on those. You can also add cover image support by placing a <code>cover.jpg</code> file next to them.</p><p>You can easily embed images, just create an <code>images</code> folder next to your <code>content.md</code> file and you can reference those images without path prefixes, this also support dark mode variants, if you suffix the images with <code>~dark</code>.</p><h3>Public files</h3><p>Everything what is located inside the public folder will be copied recursively during site generation process. This means you can reference these files when building your templates or writing your content. Feel free to use this folder for your CSS and public image assets.</p><h3>Templates</h3><p>The templates folder should contain the following files:</p><ul><li>`index.html` - Tha index template file</li><li>`404.html` - The not found template</li><li>`home.html` - The home template file</li><li>`home-posts.html` - Post template for the home page</li><li>`page.html` - Template file for individual pages</li><li>`post.html` - Template file for posts</li></ul><p>Templates are plain old HTML files, feel free to modify them as you wish, you can use a few built-in variables to make them a bit more dynamic. Variables are in between <code>{}</code> characters.</p><ul><li>`baseUrl` - Returns the base URL of the site</li><li>`title` - The title of the page</li><li>`description` - The description of the page</li><li>`image` - The cover image of the page</li><li>`slug` - The slug of the page</li><li>`permalink` - The permalink of the page</li><li>`contents` - Used to embed other contents</li><li>`date` - The date of the post</li><li>`tags` - The tag list for the post</li></ul><h2>Markdown</h2><p>You can write your content as <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown</a> text and toucan will generate HTML files out of it. Markdown files can have an additional metadata section, this is where you can specify the following attributes:</p><ul><li>`slug` - Slug of your content</li><li>`title`: Title of your content</li><li>`description` - Description of your content</li><li>`date` - Date of your post (e.g. 2023/04/24)</li><li>`tags` - Tags for your post, separated by a coma</li></ul><p>The <code>index.md</code> file is a special content file, this is where you can set up the following things:</p><ul><li>`baseUrl` - Base URL of your site (e.g. `./`, `/`, `https://mywebsite.com`)</li><li>`language` - Language of your site (e.g. en-US)</li><li>`title` - title of your site</li><li>`description` - Description of your site</li></ul><p>The <code>404.md</code> file is useful if you want to deploy your site using GitHub pages with a <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site" target="_blank">custom 404 page</a>.</p><h2>Summary</h2><p>Toucan is a brand new project and we know it’s far from perfect, but if you are looking for a simple solution to host static sites using <a href="https://pages.github.com" target="_blank">GitHub pages</a> and you’d like to focus more on your content and less on the infrastructure it can be an ideal choice. Feel free to <a href="https://github.com/BinaryBirds/Toucan/discussions/1" target="_blank">contact us</a> if you want to know more about it or submit an issue, maybe even a PR on GitHub. 😉</p>
+        
+                <div class="meta">
+                    <a class="tagLink" href="http://localhost:3000/tags/swift/">
+                        <figure>
+                            <picture>
+                                <img
+                                    src="http://localhost:3000/assets/tags/swift/swift.webp"
+                                    alt=""
+                                    title=""
+                                >
+                            </picture>
+                        </figure>
+                        Swift (4)
+                    </a>
+                    <a class="tagLink" href="http://localhost:3000/tags/toucan/">
+                        <figure>
+                            <picture>
+                                <img
+                                    src="http://localhost:3000/assets/tags/toucan/toucan.webp"
+                                    alt=""
+                                    title=""
+                                >
+                            </picture>
+                        </figure>
+                        Toucan (1)
+                    </a>
+                </div>
+    </section>
+</article>
+    
+    <div class="content-wrapper">
+                <h2 class="morePostsTitle">Next post</h2>
+                        <a class="relatedPosts" href="http://localhost:3000/posts/push-notifications-with-swift-server-side/">
+                            <div class="relatedCover"><figure>
+                    <picture>
+                        <img
+                            src="http://localhost:3000/assets/posts/push-notifications-with-swift-server-side/cover.jpg"
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                </div>
+                            <div class="relatedContent">
+                                <h3 class="relatedTitle">Sending push notifications using server side Swift in 2023</h3>
+                                <p>Learn how to send push notifications with Swift on the server side using the Google FCM API and the APN Swift library.</p>
+                            <div class="relatedAuthors">
+                                <div class="authorBadge">
+                                    <div class="mini">
+                                    <figure>
+                                        <picture>
+                                            <img
+                                                src="http://localhost:3000/assets/authors/gabor-lengyel/gabor-lengyel.jpeg"
+                                                alt=""
+                                                title=""
+                                            >
+                                        </picture>
+                                    </figure>
+                                    </div>
+                                    <div>Gábor Lengyel</div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                </svg>  
+                                <time class="RelatedDate" datetime="May 18, 2023 17:36">May 18, 2023 17:36</time>
+                            </div>
+                            </div>
+                        </a>
+        
+    </div>
+    
+    <div class="content-wrapper ">
+    <h2 class="morePostsTitle">Related posts</h2>
+                <a class="relatedPosts" href="http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Static site geneneration with the power of Swift and Toucan</h3>
+                        <p>Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="April 24, 2023 18:32">April 24, 2023 18:32</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Static site geneneration with the power of Swift and Toucan</h3>
+                        <p>Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="April 24, 2023 18:32">April 24, 2023 18:32</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/push-notifications-with-swift-server-side/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/push-notifications-with-swift-server-side/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Sending push notifications using server side Swift in 2023</h3>
+                        <p>Learn how to send push notifications with Swift on the server side using the Google FCM API and the APN Swift library.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/gabor-lengyel/gabor-lengyel.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Gábor Lengyel</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="May 18, 2023 17:36">May 18, 2023 17:36</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/beginners-guide-to-swift-macros/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/beginners-guide-to-swift-macros/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Beginner&#39;s guide to Swift macros</h3>
+                        <p>Learn how to create and publish your very first macro using SPM and the brand new Macro APIs introduced in Swift 5.9.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="June 7, 2023 14:57">June 7, 2023 14:57</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">How to write OpenAPI specs using Swift and OpenAPIKit?</h3>
+                        <p>In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="July 6, 2023 16:15">July 6, 2023 16:15</time>
+                    </div>
+                    </div>
+                </a>    </div>
+    <div class="content-wrapper ">
+    <h2 class="morePostsTitle">More posts by the author(s)</h2>
+                <a class="relatedPosts" href="http://localhost:3000/posts/beginners-guide-to-swift-macros/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/beginners-guide-to-swift-macros/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Beginner&#39;s guide to Swift macros</h3>
+                        <p>Learn how to create and publish your very first macro using SPM and the brand new Macro APIs introduced in Swift 5.9.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="June 7, 2023 14:57">June 7, 2023 14:57</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">How to write OpenAPI specs using Swift and OpenAPIKit?</h3>
+                        <p>In this tutorial I&#39;ll show you how to build OpenAPI 3.0+ specifications efficiently using Swift &amp; OpenAPIKit.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="July 6, 2023 16:15">July 6, 2023 16:15</time>
+                    </div>
+                    </div>
+                </a>                <a class="relatedPosts" href="http://localhost:3000/posts/static-site-generation-with-the-power-of-swift-and-toucan/">
+                    <div class="relatedCover"><figure>
+            <picture>
+                <img
+                    src="http://localhost:3000/assets/posts/static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg"
+                    alt=""
+                    title=""
+                >
+            </picture>
+        </figure>
+        </div>
+                    <div class="relatedContent">
+                        <h3 class="relatedTitle">Static site geneneration with the power of Swift and Toucan</h3>
+                        <p>Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.</p>
+                    <div class="relatedAuthors">
+                        <div class="authorBadge">
+                            <div class="mini">
+                            <figure>
+                                <picture>
+                                    <img
+                                        src="http://localhost:3000/assets/authors/tibor-bodecs/tibor-bodecs.jpeg"
+                                        alt=""
+                                        title=""
+                                    >
+                                </picture>
+                            </figure>
+                            </div>
+                            <div>Tibor Bödecs</div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                        </svg>  
+                        <time class="RelatedDate" datetime="April 24, 2023 18:32">April 24, 2023 18:32</time>
+                    </div>
+                    </div>
+                </a>    </div>
+
+    </main>
+
+          <footer class="footer">
+            <div class="footerContainer">
+              <div class="footerLogoContainer">
+                <div class="footerLogo">
+                  <picture>
+                    <img
+                      alt="BinaryBirds logo"
+                      loading="lazy"
+                      width="64"
+                      height="64"
+                      decoding="async"
+                      style="color: transparent"
+                      src="http://localhost:3000/icons/logo-dark.png"
+                    />
+                  </picture>
+                  <h2 class="footerTitle">Binary Birds</h2>
+                </div>
+                <p>
+                  Server-side swift solutions from experts. </br> Secure, efficient,
+                  scalable solutions.
+                </p>
+              </div>
+              <div class="footerLinks">
+                <div class="footerSocialMedia">
+                  <a href="https://github.com/BinaryBirds" target="_blank" rel="noopener noreferrer"><i id="footerGitHub" class="devicon-github-original"></i></a>
+                  <a href="https://theswiftdev.com" target="_blank" rel="noopener noreferrer">
+                    <img
+                      id="footerTSD"
+                      src="http://localhost:3000/icons/tsdicon.png"
+                      alt="The Swift Dev"
+                      width="36"
+                      height="36"
+                    />
+                  </a>
+                  <a href="https://feathercms.com" target="_blank" rel="noopener noreferrer">
+                    <img
+                      id="footerFeather"
+                      src="http://localhost:3000/icons/featherIcon.png"
+                      alt="Feather CMS"
+                      width="36"
+                      height="36"
+                    />
+                  </a>
+                </div>
+                <a href="mailto:binarybirdsoffical@gmail.com">
+                  <svg 
+                  id="envelopeIcon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  height="24"
+                  width="24"
+                  stroke="currentColor"
+                  >
+                    <path 
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+                     />
+                  </svg>
+                  binarybirdsoffical@gmail.com              
+                </a>
+              </div>
+            </div>
+            <div class="footerNav">
+              <nav class="footerNavigation">
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/development">Development</a></li>
+                  <li>
+                    <a href="/consulting">Consulting</a>
+                  </li>
+                  <li><a href="/blog">Blog</a></li>
+                </ul>
+              </nav>
+              <span id="copyright"></span>
+            </div>
+          </footer>
+</body>
+  <script src="http://localhost:3000/js/favicon.js"></script>
+  <script src="http://localhost:3000/js/copyright.js"></script>
+</html>
