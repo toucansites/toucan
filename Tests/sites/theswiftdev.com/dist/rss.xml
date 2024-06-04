@@ -1,0 +1,994 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+<channel>
+    <title></title>
+    <description></description>
+    <link>/</link>
+    <language></language>
+    <lastBuildDate>Tue, 04 Jun 2024 15:26:54 +0000</lastBuildDate>
+    <pubDate>Wed, 22 Mar 2023 16:20:00 +0000</pubDate>
+    <ttl>250</ttl>
+    <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
+
+<item>
+    <guid isPermaLink="true">/posts/encoding-and-decoding-data-using-the-hummingbird-framework/</guid>
+    <title><![CDATA[ Encoding and decoding data using the Hummingbird framework ]]></title>
+    <description><![CDATA[ URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this. ]]></description>
+    <link>/posts/encoding-and-decoding-data-using-the-hummingbird-framework/</link>
+    <pubDate>Wed, 22 Mar 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/hummingbird-routing-and-requests/</guid>
+    <title><![CDATA[ Hummingbird routing and requests ]]></title>
+    <description><![CDATA[ Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework. ]]></description>
+    <link>/posts/hummingbird-routing-and-requests/</link>
+    <pubDate>Fri, 17 Mar 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-server-side-swift-using-the-hummingbird-framework/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to server-side Swift using the Hummingbird framework ]]></title>
+    <description><![CDATA[ Learn about Swift on the server by creating a simple application using the brand new HTTP server library called: Hummingbird. ]]></description>
+    <link>/posts/beginners-guide-to-server-side-swift-using-the-hummingbird-framework/</link>
+    <pubDate>Wed, 08 Mar 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/running-and-testing-async-vapor-commands/</guid>
+    <title><![CDATA[ Running and testing async Vapor commands ]]></title>
+    <description><![CDATA[ In this article I&#39;ll show you how to build asynchronous Vapor commands and how to test them using ConsoleKit. ]]></description>
+    <link>/posts/running-and-testing-async-vapor-commands/</link>
+    <pubDate>Thu, 23 Feb 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/running-tasks-in-parallel/</guid>
+    <title><![CDATA[ Running tasks in parallel ]]></title>
+    <description><![CDATA[ Learn how to run tasks in parallel using the old-school tools and frameworks plus the new structured concurrency API in Swift. ]]></description>
+    <link>/posts/running-tasks-in-parallel/</link>
+    <pubDate>Thu, 09 Feb 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-abstract-vapor-service-factory-design-pattern/</guid>
+    <title><![CDATA[ The abstract Vapor service factory design pattern ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;m going to show you how you can create an abstract driver-based component for the Vapor framework. ]]></description>
+    <link>/posts/the-abstract-vapor-service-factory-design-pattern/</link>
+    <pubDate>Wed, 01 Feb 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swiftnio-tutorial-the-echo-server/</guid>
+    <title><![CDATA[ SwiftNIO tutorial - The echo server ]]></title>
+    <description><![CDATA[ This is a beginner&#39;s guide to learn the basics of the SwiftNIO network app framework by building a basic TCP echo server. ]]></description>
+    <link>/posts/swiftnio-tutorial-the-echo-server/</link>
+    <pubDate>Thu, 26 Jan 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/easy-multipart-file-upload-for-swift/</guid>
+    <title><![CDATA[ Easy multipart file upload for Swift ]]></title>
+    <description><![CDATA[ Let me show you how to create HTTP requests using multipart (form data) body without a third party library. Simple solution. ]]></description>
+    <link>/posts/easy-multipart-file-upload-for-swift/</link>
+    <pubDate>Tue, 17 Jan 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/utilizing-makefiles-for-swift-projects/</guid>
+    <title><![CDATA[ Utilizing Makefiles for Swift projects ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;ll show you how to use Makefiles for server-side Swift projects to help running utility tasks in a more simple way. ]]></description>
+    <link>/posts/utilizing-makefiles-for-swift-projects/</link>
+    <pubDate>Tue, 10 Jan 2023 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/lenses-and-prisms-in-swift/</guid>
+    <title><![CDATA[ Lenses and prisms in Swift ]]></title>
+    <description><![CDATA[ Beginner&#39;s guide about optics in Swift. Learn how to use lenses and prisms to manipulate objects using a functional approach. ]]></description>
+    <link>/posts/lenses-and-prisms-in-swift/</link>
+    <pubDate>Fri, 12 Aug 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-modern-generic-programming-in-swift/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to modern generic programming in Swift ]]></title>
+    <description><![CDATA[ Learn the very basics about protocols, existentials, opaque types and how they are related to generic programming in Swift. ]]></description>
+    <link>/posts/beginners-guide-to-modern-generic-programming-in-swift/</link>
+    <pubDate>Tue, 28 Jun 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/introduction-to-spm-artifact-bundles/</guid>
+    <title><![CDATA[ Introduction to SPM artifact bundles ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;m going to show you how to use the new binary target related artifact bundle using the Swift package manager. ]]></description>
+    <link>/posts/introduction-to-spm-artifact-bundles/</link>
+    <pubDate>Tue, 24 May 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-swift-package-manager-command-plugins/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to Swift package manager command plugins ]]></title>
+    <description><![CDATA[ Learn how to create command plugins for the Swift Package Manager to execute custom actions using SPM and other tools. ]]></description>
+    <link>/posts/beginners-guide-to-swift-package-manager-command-plugins/</link>
+    <pubDate>Mon, 16 May 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-visitor-design-pattern/</guid>
+    <title><![CDATA[ Swift visitor design pattern ]]></title>
+    <description><![CDATA[ The visitor design pattern in Swift allows us to add new features to an existing group of objects without altering the original code. ]]></description>
+    <link>/posts/swift-visitor-design-pattern/</link>
+    <pubDate>Wed, 06 Apr 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/working-with-diffable-data-sources-and-table-views-using-uikit/</guid>
+    <title><![CDATA[ Working with diffable data sources and table views using UIKit ]]></title>
+    <description><![CDATA[ In this tutorial we&#39;re going to build a screen to allow single and multiple selections using diffable data source and a table view. ]]></description>
+    <link>/posts/working-with-diffable-data-sources-and-table-views-using-uikit/</link>
+    <pubDate>Thu, 24 Mar 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/async-http-api-clients-in-swift/</guid>
+    <title><![CDATA[ Async HTTP API clients in Swift ]]></title>
+    <description><![CDATA[ Learn how to communicate with API endpoints using the brand new SwiftHttp library, including async / await support. ]]></description>
+    <link>/posts/async-http-api-clients-in-swift/</link>
+    <pubDate>Fri, 18 Mar 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-swift-arrays/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to Swift arrays ]]></title>
+    <description><![CDATA[ Learn how to manipulate arrays in Swift like a pro. This tutorial covers lots of useful array related methods, tips and tricks. ]]></description>
+    <link>/posts/beginners-guide-to-swift-arrays/</link>
+    <pubDate>Thu, 10 Mar 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-repository-pattern-for-vapor-4/</guid>
+    <title><![CDATA[ The repository pattern for Vapor 4 ]]></title>
+    <description><![CDATA[ In this article I&#39;m going to talk about the repository design pattern and give you a few Fluent ORM tips for your Vapor 4 app. ]]></description>
+    <link>/posts/the-repository-pattern-for-vapor-4/</link>
+    <pubDate>Thu, 03 Mar 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-use-a-swift-library-in-c/</guid>
+    <title><![CDATA[ How to use a Swift library in C ]]></title>
+    <description><![CDATA[ In this tutorial, we&#39;re going to build a C app by importing a Swift library and talk a bit about the Swift / C Interoperability in general. ]]></description>
+    <link>/posts/how-to-use-a-swift-library-in-c/</link>
+    <pubDate>Wed, 23 Feb 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uikit-loadview-vs-viewdidload/</guid>
+    <title><![CDATA[ UIKit - loadView vs viewDidLoad ]]></title>
+    <description><![CDATA[ When to use these methods? Common questions and answers about the iOS view hierarchy including memory management. ]]></description>
+    <link>/posts/uikit-loadview-vs-viewdidload/</link>
+    <pubDate>Wed, 09 Feb 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/10-little-uikit-tips-you-should-know/</guid>
+    <title><![CDATA[ 10 little UIKit tips you should know ]]></title>
+    <description><![CDATA[ In this article I&#39;ve gathered my top 10 favorite modern UIKit tips that I&#39;d definitely want to know before I start my next project. ]]></description>
+    <link>/posts/10-little-uikit-tips-you-should-know/</link>
+    <pubDate>Thu, 03 Feb 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/progressive-web-apps-on-ios/</guid>
+    <title><![CDATA[ Progressive Web Apps on iOS ]]></title>
+    <description><![CDATA[ This is a beginner&#39;s guide about creating PWAs for iOS including custom icons, splash screens, safe area and dark mode support. ]]></description>
+    <link>/posts/progressive-web-apps-on-ios/</link>
+    <pubDate>Thu, 27 Jan 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-create-a-swift-package-collection/</guid>
+    <title><![CDATA[ How to create a Swift package collection? ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;m going to show you how to create your own package collection from your favorite Swift libraries. ]]></description>
+    <link>/posts/how-to-create-a-swift-package-collection/</link>
+    <pubDate>Thu, 20 Jan 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-write-html-in-swift/</guid>
+    <title><![CDATA[ How to write HTML in Swift? ]]></title>
+    <description><![CDATA[ This tutorial is all about rendering HTML docs using a brand new DSL library called SwiftHtml and the Vapor web framework. ]]></description>
+    <link>/posts/how-to-write-html-in-swift/</link>
+    <pubDate>Wed, 12 Jan 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-future-of-server-side-swift/</guid>
+    <title><![CDATA[ The future of server side Swift ]]></title>
+    <description><![CDATA[ What&#39;s going to happen with Swift on the Server in 2022? Distributed actors, Vapor 5, some predictions and wishes. ]]></description>
+    <link>/posts/the-future-of-server-side-swift/</link>
+    <pubDate>Wed, 05 Jan 2022 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/building-a-global-storage-for-vapor/</guid>
+    <title><![CDATA[ Building a global storage for Vapor ]]></title>
+    <description><![CDATA[ This tutorial is about a shared global storage that you can implement using a common design pattern in Vapor 4. ]]></description>
+    <link>/posts/building-a-global-storage-for-vapor/</link>
+    <pubDate>Thu, 16 Dec 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/building-tree-data-structures-in-swift/</guid>
+    <title><![CDATA[ Building tree data structures in Swift ]]></title>
+    <description><![CDATA[ This tutorial is about showing the pros and cons of various Swift tree data structures using structs, enums and classes. ]]></description>
+    <link>/posts/building-tree-data-structures-in-swift/</link>
+    <pubDate>Tue, 23 Nov 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/practical-guide-to-binary-operations-using-the-uint8-type-in-swift/</guid>
+    <title><![CDATA[ Practical guide to binary operations using the UInt8 type in Swift ]]></title>
+    <description><![CDATA[ Introduction to the basics of signed number representation and some practical binary operation examples in Swift using UInt8. ]]></description>
+    <link>/posts/practical-guide-to-binary-operations-using-the-uint8-type-in-swift/</link>
+    <pubDate>Thu, 16 Sep 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/all-about-the-bool-type-in-swift/</guid>
+    <title><![CDATA[ All about the Bool type in Swift ]]></title>
+    <description><![CDATA[ Learn everything about logical types and the Boolean algebra using the Swift programming language and some basic math. ]]></description>
+    <link>/posts/all-about-the-bool-type-in-swift/</link>
+    <pubDate>Fri, 10 Sep 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-build-better-command-line-apps-and-tools-using-swift/</guid>
+    <title><![CDATA[ How to build better command line apps and tools using Swift? ]]></title>
+    <description><![CDATA[ These tips will help you to create amazing CLI tools, utility apps, server side projects or terminal scripts using the Swift language. ]]></description>
+    <link>/posts/how-to-build-better-command-line-apps-and-tools-using-swift/</link>
+    <pubDate>Thu, 05 Aug 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-structured-concurrency-tutorial/</guid>
+    <title><![CDATA[ Swift structured concurrency tutorial ]]></title>
+    <description><![CDATA[ Learn how to work with the Task object to perform asynchronous operations in a safe way using the new concurrency APIs in Swift. ]]></description>
+    <link>/posts/swift-structured-concurrency-tutorial/</link>
+    <pubDate>Wed, 30 Jun 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-actors-tutorial-a-beginners-guide-to-thread-safe-concurrency/</guid>
+    <title><![CDATA[ Swift actors tutorial - a beginner&#39;s guide to thread safe concurrency ]]></title>
+    <description><![CDATA[ Learn how to use the brand new actor model to protect your application from unwanted data-races and memory issues. ]]></description>
+    <link>/posts/swift-actors-tutorial-a-beginners-guide-to-thread-safe-concurrency/</link>
+    <pubDate>Thu, 17 Jun 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-the-asyncawait-concurrency-api-in-vapor-fluent/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to the async/await concurrency API in Vapor &amp; Fluent ]]></title>
+    <description><![CDATA[ Learn how to convert your existing EventLoopFuture based Vapor server app using the new async/await Swift feature. ]]></description>
+    <link>/posts/beginners-guide-to-the-asyncawait-concurrency-api-in-vapor-fluent/</link>
+    <pubDate>Thu, 03 Jun 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/introduction-to-asyncawait-in-swift/</guid>
+    <title><![CDATA[ Introduction to async/await in Swift ]]></title>
+    <description><![CDATA[ Beginners guide to the new async/await API&#39;s in Swift 5.5. Interacting with sync code, structured concurrency, async let. ]]></description>
+    <link>/posts/introduction-to-asyncawait-in-swift/</link>
+    <pubDate>Tue, 25 May 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/dynamic-libraries-and-code-replacements-in-swift/</guid>
+    <title><![CDATA[ Dynamic libraries and code replacements in Swift ]]></title>
+    <description><![CDATA[ How to load a dynamic library and use native method swizzling in Swift? This article is all about the magic behind SwiftUI previews. ]]></description>
+    <link>/posts/dynamic-libraries-and-code-replacements-in-swift/</link>
+    <pubDate>Thu, 20 May 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/declarative-unit-tests-for-vapor/</guid>
+    <title><![CDATA[ Declarative unit tests for Vapor ]]></title>
+    <description><![CDATA[ Learn how to test your server side Swift backend app in a declarative style using a lightweight library called Spec. ]]></description>
+    <link>/posts/declarative-unit-tests-for-vapor/</link>
+    <pubDate>Tue, 04 May 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-design-type-safe-restful-apis-using-swift-and-vapor/</guid>
+    <title><![CDATA[ How to design type safe RESTful APIs using Swift &amp; Vapor? ]]></title>
+    <description><![CDATA[ Learn to make proper data transfer objects for CRUD operations and integrate them both into the client and server side API layer. ]]></description>
+    <link>/posts/how-to-design-type-safe-restful-apis-using-swift-and-vapor/</link>
+    <pubDate>Thu, 29 Apr 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/unsafe-memory-pointers-in-swift/</guid>
+    <title><![CDATA[ Unsafe memory pointers in Swift ]]></title>
+    <description><![CDATA[ Learn how to use raw pointer references, interact with unsafe pointers and manually manage memory addresses in Swift. ]]></description>
+    <link>/posts/unsafe-memory-pointers-in-swift/</link>
+    <pubDate>Thu, 18 Mar 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/memory-layout-in-swift/</guid>
+    <title><![CDATA[ Memory layout in Swift ]]></title>
+    <description><![CDATA[ Start learning about how Swift manages, stores and references various data types and objects using a memory safe approach. ]]></description>
+    <link>/posts/memory-layout-in-swift/</link>
+    <pubDate>Mon, 08 Mar 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-use-c-libraries-in-swift/</guid>
+    <title><![CDATA[ How to use C libraries in Swift? ]]></title>
+    <description><![CDATA[ Learn how to use system libraries and call C code from Swift. Interoperability between the Swift language and C for beginners. ]]></description>
+    <link>/posts/how-to-use-c-libraries-in-swift/</link>
+    <pubDate>Fri, 05 Mar 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/building-static-and-dynamic-swift-libraries-using-the-swift-compiler/</guid>
+    <title><![CDATA[ Building static and dynamic Swift libraries using the Swift compiler ]]></title>
+    <description><![CDATA[ This tutorial is all about emitting various Swift binaries without the Swift package manager, but only using the Swift compiler. ]]></description>
+    <link>/posts/building-static-and-dynamic-swift-libraries-using-the-swift-compiler/</link>
+    <pubDate>Tue, 16 Feb 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-swift-compiler-for-beginners/</guid>
+    <title><![CDATA[ The Swift compiler for beginners ]]></title>
+    <description><![CDATA[ Learn how to build executable files using the swiftc command, meet the build pipeline, compilers and linkers under the hood. ]]></description>
+    <link>/posts/the-swift-compiler-for-beginners/</link>
+    <pubDate>Wed, 10 Feb 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/custom-working-directory-in-xcode/</guid>
+    <title><![CDATA[ Custom working directory in Xcode ]]></title>
+    <description><![CDATA[ Learn how to set a custom working directory in Xcode to solve one of the most common beginner issue when using Vapor. ]]></description>
+    <link>/posts/custom-working-directory-in-xcode/</link>
+    <pubDate>Thu, 07 Jan 2021 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/file-upload-api-server-in-vapor-4/</guid>
+    <title><![CDATA[ File upload API server in Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to build a very simple file upload API server using Vapor 4 and URLSession upload task on the client side. ]]></description>
+    <link>/posts/file-upload-api-server-in-vapor-4/</link>
+    <pubDate>Wed, 30 Dec 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/ajax-calls-using-vapor-4/</guid>
+    <title><![CDATA[ AJAX calls using Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to implement Asynchronous JavaScript and XML (AJAX) calls using Leaf templates and Vapor 4 as a server. ]]></description>
+    <link>/posts/ajax-calls-using-vapor-4/</link>
+    <pubDate>Fri, 18 Dec 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/file-upload-using-vapor-4/</guid>
+    <title><![CDATA[ File upload using Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to implement a basic HTML file upload form using the Leaf template engine and Vapor, all written in Swift of course. ]]></description>
+    <link>/posts/file-upload-using-vapor-4/</link>
+    <pubDate>Thu, 10 Dec 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/event-driven-generic-hooks-for-swift/</guid>
+    <title><![CDATA[ Event-driven generic hooks for Swift ]]></title>
+    <description><![CDATA[ In this article I am going to show you how to implement a basic event processing system for your modular Swift application. ]]></description>
+    <link>/posts/event-driven-generic-hooks-for-swift/</link>
+    <pubDate>Fri, 27 Nov 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/getting-started-with-swiftio/</guid>
+    <title><![CDATA[ Getting started with SwiftIO ]]></title>
+    <description><![CDATA[ SwiftIO is an electronic circuit board that runs Swift on the bare metal. It can control sensors, displays, lights, motors and more. ]]></description>
+    <link>/posts/getting-started-with-swiftio/</link>
+    <pubDate>Thu, 12 Nov 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-build-macos-apps-using-only-the-swift-package-manager/</guid>
+    <title><![CDATA[ How to build macOS apps using only the Swift Package Manager? ]]></title>
+    <description><![CDATA[ In this article we&#39;re going to create a macOS application without ever touching an Xcode project file, but only working with SPM. ]]></description>
+    <link>/posts/how-to-build-macos-apps-using-only-the-swift-package-manager/</link>
+    <pubDate>Mon, 26 Oct 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/logging-for-beginners-in-swift/</guid>
+    <title><![CDATA[ Logging for beginners in Swift ]]></title>
+    <description><![CDATA[ Learn how to print variables to the debug console using different functions such as print, dump, NSLog and the unified os.log API. ]]></description>
+    <link>/posts/logging-for-beginners-in-swift/</link>
+    <pubDate>Wed, 30 Sep 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-define-strings-use-escaping-sequences-and-interpolations/</guid>
+    <title><![CDATA[ How to define strings, use escaping sequences and interpolations? ]]></title>
+    <description><![CDATA[ As a beginner it can be hard to understand String interpolation and escaping sequences, in this tutorial I&#39;ll teach you the basics. ]]></description>
+    <link>/posts/how-to-define-strings-use-escaping-sequences-and-interpolations/</link>
+    <pubDate>Wed, 16 Sep 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-on-the-server-in-2020/</guid>
+    <title><![CDATA[ Swift on the Server in 2020 ]]></title>
+    <description><![CDATA[ Why choose Swift as a backend language in 2020? What are the available frameworks to build your server? Let me guide you. ]]></description>
+    <link>/posts/swift-on-the-server-in-2020/</link>
+    <pubDate>Fri, 28 Aug 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/10-short-advices-that-will-make-you-a-better-vapor-developer-right-away/</guid>
+    <title><![CDATA[ 10 short advices that will make you a better Vapor developer right away ]]></title>
+    <description><![CDATA[ As a beginner server side Swift developer you&#39;ll face many obstackles. I&#39;ll show you how to avoid the most common ones. ]]></description>
+    <link>/posts/10-short-advices-that-will-make-you-a-better-vapor-developer-right-away/</link>
+    <pubDate>Wed, 15 Jul 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-store-keys-in-env-files/</guid>
+    <title><![CDATA[ How to store keys in env files? ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;ll show you how to save and load secret keys as base64 encoded strings using dotenv files in Vapor 4. ]]></description>
+    <link>/posts/how-to-store-keys-in-env-files/</link>
+    <pubDate>Tue, 30 Jun 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/table-joins-in-fluent-4/</guid>
+    <title><![CDATA[ Table joins in Fluent 4 ]]></title>
+    <description><![CDATA[ In this quick tutorial I&#39;m going to show you how to join and query database models using the Fluent ORM framework in Vapor 4. ]]></description>
+    <link>/posts/table-joins-in-fluent-4/</link>
+    <pubDate>Thu, 11 Jun 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/websockets-for-beginners-using-vapor-4-and-vanilla-javascript/</guid>
+    <title><![CDATA[ Websockets for beginners using Vapor 4 and Vanilla JavaScript ]]></title>
+    <description><![CDATA[ Learn how to create a websocket server using Swift &amp; Vapor. Multiplayer game development using JavaScript in the browser. ]]></description>
+    <link>/posts/websockets-for-beginners-using-vapor-4-and-vanilla-javascript/</link>
+    <pubDate>Thu, 28 May 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/building-and-loading-dynamic-libraries-at-runtime-in-swift/</guid>
+    <title><![CDATA[ Building and loading dynamic libraries at runtime in Swift ]]></title>
+    <description><![CDATA[ Learn how to create a plugin system using dynamic libraries and the power of Swift, aka. modular frameworks on the server-side. ]]></description>
+    <link>/posts/building-and-loading-dynamic-libraries-at-runtime-in-swift/</link>
+    <pubDate>Wed, 20 May 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/whats-new-in-swift-5-3/</guid>
+    <title><![CDATA[ What&#39;s new in Swift 5.3? ]]></title>
+    <description><![CDATA[ Swift 5.3 is going to be an exciting new release. This post is a showcase of the latest Swift programming language features. ]]></description>
+    <link>/posts/whats-new-in-swift-5-3/</link>
+    <pubDate>Thu, 14 May 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/sign-in-with-apple-using-vapor-4/</guid>
+    <title><![CDATA[ Sign in with Apple using Vapor 4 ]]></title>
+    <description><![CDATA[ A complete tutorial for beginners about how to implement the Sign in with Apple authentication service for your website. ]]></description>
+    <link>/posts/sign-in-with-apple-using-vapor-4/</link>
+    <pubDate>Thu, 30 Apr 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-swift-package-manifest-file/</guid>
+    <title><![CDATA[ The Swift package manifest file ]]></title>
+    <description><![CDATA[ This article is a complete Swift Package Manager cheatsheet for the package manifest file, using the latest Swift 5.2 tools version. ]]></description>
+    <link>/posts/the-swift-package-manifest-file/</link>
+    <pubDate>Fri, 24 Apr 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/server-side-swift-projects-inside-docker-using-vapor-4/</guid>
+    <title><![CDATA[ Server side Swift projects inside Docker using Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to setup Vapor 4 projects inside a Docker container. Are you completely new to Docker? This article is just for you. ]]></description>
+    <link>/posts/server-side-swift-projects-inside-docker-using-vapor-4/</link>
+    <pubDate>Sun, 19 Apr 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/modules-and-hooks-in-swift/</guid>
+    <title><![CDATA[ Modules and hooks in Swift ]]></title>
+    <description><![CDATA[ Learn how to extend your application with new functionalities using a loosely coupled modular plugin system written in Swift. ]]></description>
+    <link>/posts/modules-and-hooks-in-swift/</link>
+    <pubDate>Thu, 16 Apr 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/all-about-authentication-in-vapor-4/</guid>
+    <title><![CDATA[ All about authentication in Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to implement a user login mechanism with various auth methods using sessions, JWTs, written in Swift only. ]]></description>
+    <link>/posts/all-about-authentication-in-vapor-4/</link>
+    <pubDate>Tue, 07 Apr 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/a-generic-crud-solution-for-vapor-4/</guid>
+    <title><![CDATA[ A generic CRUD solution for Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to build a controller component that can serve models as JSON objects through a RESTful API written in Swift. ]]></description>
+    <link>/posts/a-generic-crud-solution-for-vapor-4/</link>
+    <pubDate>Wed, 01 Apr 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-anatomy-of-vapor-commands/</guid>
+    <title><![CDATA[ The anatomy of Vapor commands ]]></title>
+    <description><![CDATA[ Learn how to build and run your existing Vapor apps using various command line arguments, flags and environments. ]]></description>
+    <link>/posts/the-anatomy-of-vapor-commands/</link>
+    <pubDate>Wed, 25 Mar 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-use-middlewares-in-vapor-4/</guid>
+    <title><![CDATA[ How to use middlewares in Vapor 4? ]]></title>
+    <description><![CDATA[ Learn how to create middlewares for a Vapor based server side Swift application to handle common routing functionalities. ]]></description>
+    <link>/posts/how-to-use-middlewares-in-vapor-4/</link>
+    <pubDate>Tue, 17 Mar 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-write-swift-scripts-using-the-new-command-api-in-vapor-4/</guid>
+    <title><![CDATA[ How to write Swift scripts using the new Command API in Vapor 4? ]]></title>
+    <description><![CDATA[ Shell scripts are essentials on the server side. Learn how to build Swift scripts for your backend apps using property wrappers. ]]></description>
+    <link>/posts/how-to-write-swift-scripts-using-the-new-command-api-in-vapor-4/</link>
+    <pubDate>Tue, 03 Mar 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/get-started-with-the-fluent-orm-framework-in-vapor-4/</guid>
+    <title><![CDATA[ Get started with the Fluent ORM framework in Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to use the Fluent ORM framework. Migrations, schemas, relations powered by PostgreSQL, written in Swift. ]]></description>
+    <link>/posts/get-started-with-the-fluent-orm-framework-in-vapor-4/</link>
+    <pubDate>Thu, 27 Feb 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-set-up-pgsql-for-fluent-4/</guid>
+    <title><![CDATA[ How to set up pgSQL for Fluent 4? ]]></title>
+    <description><![CDATA[ This is a tutorial for beginners about using PostgreSQL. I&#39;ll show you how to automatically backup and restore the database. ]]></description>
+    <link>/posts/how-to-set-up-pgsql-for-fluent-4/</link>
+    <pubDate>Tue, 25 Feb 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-create-your-first-website-using-vapor-4-and-leaf/</guid>
+    <title><![CDATA[ How to create your first website using Vapor 4 and Leaf? ]]></title>
+    <description><![CDATA[ Let&#39;s build a web page in Swift. Learn how to use the brand new template engine of the most popular server side Swift framework. ]]></description>
+    <link>/posts/how-to-create-your-first-website-using-vapor-4-and-leaf/</link>
+    <pubDate>Thu, 13 Feb 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-download-files-with-urlsession-using-combine-publishers-and-subscribers/</guid>
+    <title><![CDATA[ How to download files with URLSession using Combine Publishers and Subscribers? ]]></title>
+    <description><![CDATA[ Learn how to load a remote image into an UIImageView asynchronously using URLSessionDownloadTask and the Combine framework in Swift. ]]></description>
+    <link>/posts/how-to-download-files-with-urlsession-using-combine-publishers-and-subscribers/</link>
+    <pubDate>Tue, 28 Jan 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-server-side-swift-using-vapor-4/</guid>
+    <title><![CDATA[ Beginner&#39;s guide to Server side Swift using Vapor 4 ]]></title>
+    <description><![CDATA[ Learn how to build and host your very first backend application using Vapor 4 and the brief history of server side Swift. ]]></description>
+    <link>/posts/beginners-guide-to-server-side-swift-using-vapor-4/</link>
+    <pubDate>Mon, 13 Jan 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/what-are-the-best-practices-to-learn-ios-swift-in-2020/</guid>
+    <title><![CDATA[ What are the best practices to learn iOS / Swift in 2020? ]]></title>
+    <description><![CDATA[ Are you learning iOS development? Looking for Swift best practices? This is the right place to start your journey as a mobile application developer. ]]></description>
+    <link>/posts/what-are-the-best-practices-to-learn-ios-swift-in-2020/</link>
+    <pubDate>Mon, 06 Jan 2020 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/custom-views-input-forms-and-mistakes/</guid>
+    <title><![CDATA[ Custom views, input forms and mistakes ]]></title>
+    <description><![CDATA[ Just a little advice about creating custom view programmatically and the truth about why form building with collection views sucks. ]]></description>
+    <link>/posts/custom-views-input-forms-and-mistakes/</link>
+    <pubDate>Mon, 21 Oct 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/a-simple-http2-server-using-vapor-4/</guid>
+    <title><![CDATA[ A simple HTTP/2 server using Vapor 4 ]]></title>
+    <description><![CDATA[ Get started with server-side Swift using the Vapor 4 framework. Learn how to build a really simple HTTP/2 backend server. ]]></description>
+    <link>/posts/a-simple-http2-server-using-vapor-4/</link>
+    <pubDate>Tue, 08 Oct 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-write-services-for-viper/</guid>
+    <title><![CDATA[ How to write services for VIPER? ]]></title>
+    <description><![CDATA[ Not everything is a VIPER module. In this article I&#39;ll show you how do I separate the service layer from the modules, using Swift. ]]></description>
+    <link>/posts/how-to-write-services-for-viper/</link>
+    <pubDate>Wed, 25 Sep 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-build-swiftui-apps-using-viper/</guid>
+    <title><![CDATA[ How to build SwiftUI apps using VIPER? ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;ll show you how to combine SwiftUI with the VIPER architecture in a real world iOS application example. ]]></description>
+    <link>/posts/how-to-build-swiftui-apps-using-viper/</link>
+    <pubDate>Wed, 18 Sep 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/picking-and-playing-videos-in-swift/</guid>
+    <title><![CDATA[ Picking and playing videos in Swift ]]></title>
+    <description><![CDATA[ Learn how to record or select a video file using a video picker controller and the AVPlayer class, written entirely in Swift 5. ]]></description>
+    <link>/posts/picking-and-playing-videos-in-swift/</link>
+    <pubDate>Wed, 28 Aug 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/whats-new-in-vapor-4/</guid>
+    <title><![CDATA[ What&#39;s new in Vapor 4? ]]></title>
+    <description><![CDATA[ Vapor is the most popular server side Swift web application framework. This time we&#39;ll cover what&#39;s new in Vapor 4. ]]></description>
+    <link>/posts/whats-new-in-vapor-4/</link>
+    <pubDate>Mon, 26 Aug 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-init-patterns/</guid>
+    <title><![CDATA[ Swift init patterns ]]></title>
+    <description><![CDATA[ The ultimate guide how to init your Swift data types, with the help of designated, convenience, failable intitializers and more. ]]></description>
+    <link>/posts/swift-init-patterns/</link>
+    <pubDate>Sun, 25 Aug 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/urlsession-and-the-combine-framework/</guid>
+    <title><![CDATA[ URLSession and the Combine framework ]]></title>
+    <description><![CDATA[ Learn how to make HTTP requests and parse the response using the brand new Combine framework with foundation networking. ]]></description>
+    <link>/posts/urlsession-and-the-combine-framework/</link>
+    <pubDate>Thu, 15 Aug 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/promises-in-swift-for-beginners/</guid>
+    <title><![CDATA[ Promises in Swift for beginners ]]></title>
+    <description><![CDATA[ Everything you ever wanted to know about futures and promises. The beginner&#39;s guide about asynchronous programming in Swift. ]]></description>
+    <link>/posts/promises-in-swift-for-beginners/</link>
+    <pubDate>Tue, 28 May 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/building-input-forms-for-ios-apps/</guid>
+    <title><![CDATA[ Building input forms for iOS apps ]]></title>
+    <description><![CDATA[ Learn how to build complex forms with my updated collection view view-model framework without the struggle using Swift. ]]></description>
+    <link>/posts/building-input-forms-for-ios-apps/</link>
+    <pubDate>Thu, 23 May 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uniquely-identifying-views/</guid>
+    <title><![CDATA[ Uniquely identifying views ]]></title>
+    <description><![CDATA[ Learn how to use string based UIView identifiers instead of tags. If you are tired of tagging views, check out these alternative solutions. ]]></description>
+    <link>/posts/uniquely-identifying-views/</link>
+    <pubDate>Tue, 02 Apr 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/mastering-the-viper-architecture/</guid>
+    <title><![CDATA[ Mastering the VIPER architecture ]]></title>
+    <description><![CDATA[ Learn how to master the VIPER architectural design pattern, with some protocol oriented programming techniques using Swift. ]]></description>
+    <link>/posts/mastering-the-viper-architecture/</link>
+    <pubDate>Tue, 19 Mar 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/viper-best-practices-for-ios-developers/</guid>
+    <title><![CDATA[ VIPER best practices for iOS developers ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;m going to show you a complete guide about how to build a VIPER based iOS application, written entirely in Swift. ]]></description>
+    <link>/posts/viper-best-practices-for-ios-developers/</link>
+    <pubDate>Mon, 11 Mar 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/styling-by-subclassing/</guid>
+    <title><![CDATA[ Styling by subclassing ]]></title>
+    <description><![CDATA[ Learn how to design and build reusable user interface elements by using custom view subclasses from the UIKit framework in Swift. ]]></description>
+    <link>/posts/styling-by-subclassing/</link>
+    <pubDate>Tue, 19 Feb 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/beginners-guide-to-functional-swift/</guid>
+    <title><![CDATA[ Beginners guide to functional Swift ]]></title>
+    <description><![CDATA[ The one and only tutorial that you&#39;ll ever need to learn higher order functions like: map, flatMap, compactMap, reduce, filter and more. ]]></description>
+    <link>/posts/beginners-guide-to-functional-swift/</link>
+    <pubDate>Tue, 05 Feb 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/picking-images-with-uiimagepickercontroller-in-swift-5/</guid>
+    <title><![CDATA[ Picking images with UIImagePickerController in Swift 5 ]]></title>
+    <description><![CDATA[ Learn how to get an image from the photo library or directly from the camera by using the UIImagePickerController class in Swift 5. ]]></description>
+    <link>/posts/picking-images-with-uiimagepickercontroller-in-swift-5/</link>
+    <pubDate>Wed, 30 Jan 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-use-the-result-type-to-handle-errors-in-swift/</guid>
+    <title><![CDATA[ How to use the result type to handle errors in Swift 5? ]]></title>
+    <description><![CDATA[ From this tutorial you can learn how to utilize the do-try-catch syntax with the brand new result type to handle errors in Swift. ]]></description>
+    <link>/posts/how-to-use-the-result-type-to-handle-errors-in-swift/</link>
+    <pubDate>Mon, 28 Jan 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/all-about-the-swift-package-manager-and-the-swift-toolchain/</guid>
+    <title><![CDATA[ All about the Swift Package Manager and the Swift toolchain ]]></title>
+    <description><![CDATA[ Learn everything about the SPM architecture. I&#39;ll also teach you how to integrate your binary executable into the Swift toolchain. ]]></description>
+    <link>/posts/all-about-the-swift-package-manager-and-the-swift-toolchain/</link>
+    <pubDate>Mon, 14 Jan 2019 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/lazy-initialization-in-swift/</guid>
+    <title><![CDATA[ Lazy initialization in Swift ]]></title>
+    <description><![CDATA[ Learn how to use lazy properties in Swift to improve performance, avoid optionals or just to make the init process more clean. ]]></description>
+    <link>/posts/lazy-initialization-in-swift/</link>
+    <pubDate>Mon, 17 Dec 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-object-pool-design-pattern/</guid>
+    <title><![CDATA[ Swift object pool design pattern ]]></title>
+    <description><![CDATA[ In this quick tutorial I&#39;ll explain &amp; show you how to implement the object pool design pattern using the Swift programming language. ]]></description>
+    <link>/posts/swift-object-pool-design-pattern/</link>
+    <pubDate>Sun, 09 Dec 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uitableview-tutorial-in-swift/</guid>
+    <title><![CDATA[ UITableView tutorial in Swift ]]></title>
+    <description><![CDATA[ This guide is made for beginners to learn the foundations of the UITableView class programmatically with auto layout in Swift. ]]></description>
+    <link>/posts/uitableview-tutorial-in-swift/</link>
+    <pubDate>Sat, 01 Dec 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-5-and-abi-stability/</guid>
+    <title><![CDATA[ Swift 5 and ABI stability ]]></title>
+    <description><![CDATA[ Apple&#39;s Swift 5 language version will be a huge milestone for the developer community, let&#39;s see what are the possible benefits of it. ]]></description>
+    <link>/posts/swift-5-and-abi-stability/</link>
+    <pubDate>Fri, 16 Nov 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/custom-uiview-subclass-from-a-xib-file/</guid>
+    <title><![CDATA[ Custom UIView subclass from a xib file ]]></title>
+    <description><![CDATA[ Do you want to learn how to load a xib file to create a custom view object? Well, this UIKit tutorial is just for you written in Swift. ]]></description>
+    <link>/posts/custom-uiview-subclass-from-a-xib-file/</link>
+    <pubDate>Tue, 16 Oct 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-facade-design-pattern/</guid>
+    <title><![CDATA[ Swift facade design pattern ]]></title>
+    <description><![CDATA[ The facade design pattern is a simplified interface over a complex subsystem. Let me show you a real quick example using Swift. ]]></description>
+    <link>/posts/swift-facade-design-pattern/</link>
+    <pubDate>Tue, 25 Sep 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/iterator-design-pattern-in-swift/</guid>
+    <title><![CDATA[ Iterator design pattern in Swift ]]></title>
+    <description><![CDATA[ Learn the iterator design pattern by using some custom sequences, conforming to the IteratorProtocol from the Swift standard library. ]]></description>
+    <link>/posts/iterator-design-pattern-in-swift/</link>
+    <pubDate>Sun, 19 Aug 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/generating-random-numbers-in-swift/</guid>
+    <title><![CDATA[ Generating random numbers in Swift ]]></title>
+    <description><![CDATA[ Learn everything what you&#39;ll ever need to generate random values in Swift using the latest methods and covering some old techniques. ]]></description>
+    <link>/posts/generating-random-numbers-in-swift/</link>
+    <pubDate>Tue, 07 Aug 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-adapter-design-pattern/</guid>
+    <title><![CDATA[ Swift adapter design pattern ]]></title>
+    <description><![CDATA[ Turn an incompatible object into a target interface or class by using a real world example and the adapter design pattern in Swift. ]]></description>
+    <link>/posts/swift-adapter-design-pattern/</link>
+    <pubDate>Sun, 29 Jul 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-dependency-injection-design-pattern/</guid>
+    <title><![CDATA[ Swift dependency injection design pattern ]]></title>
+    <description><![CDATA[ Want to learn the Dependency Injection pattern using Swift? This tutorial will show you how to write loosely coupled code using DI. ]]></description>
+    <link>/posts/swift-dependency-injection-design-pattern/</link>
+    <pubDate>Tue, 17 Jul 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/ultimate-grand-central-dispatch-tutorial-in-swift/</guid>
+    <title><![CDATA[ Ultimate Grand Central Dispatch tutorial in Swift ]]></title>
+    <description><![CDATA[ Learn the principles of multi-threading with the GCD framework in Swift. Queues, tasks, groups everything you&#39;ll ever need I promise. ]]></description>
+    <link>/posts/ultimate-grand-central-dispatch-tutorial-in-swift/</link>
+    <pubDate>Tue, 10 Jul 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-delegate-design-pattern/</guid>
+    <title><![CDATA[ Swift delegate design pattern ]]></title>
+    <description><![CDATA[ The delegate design pattern is a relatively easy way to communicate between two objects through a common interface, protocol in Swift. ]]></description>
+    <link>/posts/swift-delegate-design-pattern/</link>
+    <pubDate>Wed, 27 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uicollectionview-data-source-and-delegates-programmatically/</guid>
+    <title><![CDATA[ UICollectionView data source and delegates programmatically ]]></title>
+    <description><![CDATA[ In this quick UIKit tutorial I&#39;ll show you how to create a simple UICollectionView without Interface Builder, but only using Swift. ]]></description>
+    <link>/posts/uicollectionview-data-source-and-delegates-programmatically/</link>
+    <pubDate>Tue, 26 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/mastering-ios-auto-layout-anchors-programmatically-from-swift/</guid>
+    <title><![CDATA[ Mastering iOS auto layout anchors programmatically from Swift ]]></title>
+    <description><![CDATA[ Looking for best practices of using layout anchors? Let&#39;s learn how to use the iOS autolayout system in the proper way using Swift. ]]></description>
+    <link>/posts/mastering-ios-auto-layout-anchors-programmatically-from-swift/</link>
+    <pubDate>Thu, 14 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-command-design-pattern/</guid>
+    <title><![CDATA[ Swift command design pattern ]]></title>
+    <description><![CDATA[ This time I&#39;m going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift. ]]></description>
+    <link>/posts/swift-command-design-pattern/</link>
+    <pubDate>Wed, 13 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-prototype-design-pattern/</guid>
+    <title><![CDATA[ Swift prototype design pattern ]]></title>
+    <description><![CDATA[ The prototype design pattern is used to create clones of a base object, so let&#39;s see some practical examples written in Swift. ]]></description>
+    <link>/posts/swift-prototype-design-pattern/</link>
+    <pubDate>Fri, 08 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/comparing-factory-design-patterns/</guid>
+    <title><![CDATA[ Comparing factory design patterns ]]></title>
+    <description><![CDATA[ Learn what&#39;s the difference between static factory, simple factory, factory method and abstract factory using the Swift language. ]]></description>
+    <link>/posts/comparing-factory-design-patterns/</link>
+    <pubDate>Tue, 05 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-abstract-factory-design-pattern/</guid>
+    <title><![CDATA[ Swift abstract factory design pattern ]]></title>
+    <description><![CDATA[ Let&#39;s combine factory method with simple factory voilá: here is the abstract factory design pattern written in Swift language! ]]></description>
+    <link>/posts/swift-abstract-factory-design-pattern/</link>
+    <pubDate>Sun, 03 Jun 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-factory-method-design-pattern/</guid>
+    <title><![CDATA[ Swift factory method design pattern ]]></title>
+    <description><![CDATA[ The factory method design pattern is a dedicated non-static method for hiding the creation logic of an object. Let&#39;s make it in Swift! ]]></description>
+    <link>/posts/swift-factory-method-design-pattern/</link>
+    <pubDate>Thu, 31 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-simple-factory-design-pattern/</guid>
+    <title><![CDATA[ Swift simple factory design pattern ]]></title>
+    <description><![CDATA[ This time let&#39;s talk about the simple factory design pattern to encapsulate object creation in a really simple way using Swift. ]]></description>
+    <link>/posts/swift-simple-factory-design-pattern/</link>
+    <pubDate>Tue, 29 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-static-factory-design-pattern/</guid>
+    <title><![CDATA[ Swift static factory design pattern ]]></title>
+    <description><![CDATA[ In this article I&#39;ll teach you about the static factory design pattern and show some use cases using the Swift programming language. ]]></description>
+    <link>/posts/swift-static-factory-design-pattern/</link>
+    <pubDate>Mon, 28 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-builder-design-pattern/</guid>
+    <title><![CDATA[ Swift builder design pattern ]]></title>
+    <description><![CDATA[ Learn how to implement the builder pattern in Swift to hide the complexity of creating objects with lots of individual properties. ]]></description>
+    <link>/posts/swift-builder-design-pattern/</link>
+    <pubDate>Thu, 24 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-singleton-design-pattern/</guid>
+    <title><![CDATA[ Swift singleton design pattern ]]></title>
+    <description><![CDATA[ Singleton is the most criticized design pattern of all time. Learn the proper way of using Swift singleton classes inside iOS projects. ]]></description>
+    <link>/posts/swift-singleton-design-pattern/</link>
+    <pubDate>Tue, 22 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-use-icloud-drive-documents/</guid>
+    <title><![CDATA[ How to use iCloud drive documents? ]]></title>
+    <description><![CDATA[ Learn how to sync files and data through a shared iCloud drive folder using the latest version of Swift programming language. ]]></description>
+    <link>/posts/how-to-use-icloud-drive-documents/</link>
+    <pubDate>Thu, 17 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uicolor-best-practices-in-swift/</guid>
+    <title><![CDATA[ UIColor best practices in Swift ]]></title>
+    <description><![CDATA[ Learn what are color models, how to convert hex values to UIColor and back, generate random colors, where to find beautiful palettes. ]]></description>
+    <link>/posts/uicolor-best-practices-in-swift/</link>
+    <pubDate>Thu, 03 May 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/ios-custom-transition-tutorial-in-swift/</guid>
+    <title><![CDATA[ iOS custom transition tutorial in Swift ]]></title>
+    <description><![CDATA[ In this tutorial, you&#39;ll learn how to replace the push, pop and modal animations with custom transitions &amp; percent driven interactions. ]]></description>
+    <link>/posts/ios-custom-transition-tutorial-in-swift/</link>
+    <pubDate>Thu, 26 Apr 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/ultimate-uicollectionview-guide-with-ios-examples-written-in-swift/</guid>
+    <title><![CDATA[ Ultimate UICollectionView guide with iOS examples written in Swift ]]></title>
+    <description><![CDATA[ Learn how to use UICollectionView, with highly reusable UIKit components and some MVVM pattern without the going nuts with index path calculations. ]]></description>
+    <link>/posts/ultimate-uicollectionview-guide-with-ios-examples-written-in-swift/</link>
+    <pubDate>Tue, 17 Apr 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-ultimate-viper-architecture-tutorial/</guid>
+    <title><![CDATA[ The ultimate VIPER architecture tutorial ]]></title>
+    <description><![CDATA[ Learn how to write scalable iOS code using the VIPER architecture with some MVVM and MVC tricks and coordinators in mind. ]]></description>
+    <link>/posts/the-ultimate-viper-architecture-tutorial/</link>
+    <pubDate>Mon, 12 Mar 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/networking-examples-for-appleos/</guid>
+    <title><![CDATA[ Networking examples for appleOS ]]></title>
+    <description><![CDATA[ Learn how to use Bonjour, with UDP/TCP sockets, streams and how to communicate through CoreBluetooth or the watch APIs. ]]></description>
+    <link>/posts/networking-examples-for-appleos/</link>
+    <pubDate>Tue, 27 Feb 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-parse-json-in-swift-using-codable-protocol/</guid>
+    <title><![CDATA[ How to parse JSON in Swift using Codable protocol? ]]></title>
+    <description><![CDATA[ In this Swift tutorial, I&#39;d like to give you an example about getting and parsing JSON data using URLSession and Codable protocol. ]]></description>
+    <link>/posts/how-to-parse-json-in-swift-using-codable-protocol/</link>
+    <pubDate>Mon, 29 Jan 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/deep-dive-into-swift-frameworks/</guid>
+    <title><![CDATA[ Deep dive into Swift frameworks ]]></title>
+    <description><![CDATA[ Learn everything about Swift modules, libraries, packages, closed source frameworks, command line tools and more. ]]></description>
+    <link>/posts/deep-dive-into-swift-frameworks/</link>
+    <pubDate>Thu, 25 Jan 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uicollectionview-cells-with-circular-images-plus-rotation-support/</guid>
+    <title><![CDATA[ UICollectionView cells with circular images plus rotation support ]]></title>
+    <description><![CDATA[ Learn how to make rounded corners for UIImageView items wrapped inside collection view cells, with rotation support. ]]></description>
+    <link>/posts/uicollectionview-cells-with-circular-images-plus-rotation-support/</link>
+    <pubDate>Wed, 24 Jan 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/self-sizing-cells-with-rotation-support/</guid>
+    <title><![CDATA[ Self sizing cells with rotation support ]]></title>
+    <description><![CDATA[ How to make self sizing cells in Swift both for table &amp; collection views supporting orientation changes and dynamic font types. ]]></description>
+    <link>/posts/self-sizing-cells-with-rotation-support/</link>
+    <pubDate>Tue, 23 Jan 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-call-c-code-from-swift/</guid>
+    <title><![CDATA[ How to call C code from Swift ]]></title>
+    <description><![CDATA[ Interacting with C libraries from the Swift language is really amazing, from this post can learn the most of C interoperability. ]]></description>
+    <link>/posts/how-to-call-c-code-from-swift/</link>
+    <pubDate>Mon, 15 Jan 2018 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-package-manager-tutorial/</guid>
+    <title><![CDATA[ Swift Package Manager tutorial ]]></title>
+    <description><![CDATA[ Learn how to use the Swift Package Manager to handle external dependencies, create your library or app on macOS and Linux. ]]></description>
+    <link>/posts/swift-package-manager-tutorial/</link>
+    <pubDate>Sun, 19 Nov 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/ios-auto-layout-tutorial-programmatically/</guid>
+    <title><![CDATA[ iOS Auto Layout tutorial programmatically ]]></title>
+    <description><![CDATA[ In this great iOS Auto Layout tutorial I&#39;ll teach you how to support rotation, use constraints, work with layers, animate corner radius. ]]></description>
+    <link>/posts/ios-auto-layout-tutorial-programmatically/</link>
+    <pubDate>Tue, 31 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-launch-a-macos-app-at-login/</guid>
+    <title><![CDATA[ How to launch a macOS app at login? ]]></title>
+    <description><![CDATA[ In this tutorial I&#39;ll show you how to launch a completely sandboxed macOS application on system startup written in Swift. ]]></description>
+    <link>/posts/how-to-launch-a-macos-app-at-login/</link>
+    <pubDate>Fri, 27 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-make-a-swift-framework/</guid>
+    <title><![CDATA[ How to make a Swift framework? ]]></title>
+    <description><![CDATA[ Creating a Swift framework shouldn&#39;t be hard. This tutorial will help you making a universal framework for complex projects. ]]></description>
+    <link>/posts/how-to-make-a-swift-framework/</link>
+    <pubDate>Mon, 23 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/swift-enum-all-values/</guid>
+    <title><![CDATA[ Swift enum all values ]]></title>
+    <description><![CDATA[ In this quick tutorial I&#39;ll show you how to get all the possible values for a Swift enum type with a generic solution written in Swift. ]]></description>
+    <link>/posts/swift-enum-all-values/</link>
+    <pubDate>Wed, 11 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/how-to-create-reusable-views-for-modern-collection-views/</guid>
+    <title><![CDATA[ How to create reusable views for modern collection views? ]]></title>
+    <description><![CDATA[ A quick intro to modern collection views using compositional layout, diffable data source and reusable view components. ]]></description>
+    <link>/posts/how-to-create-reusable-views-for-modern-collection-views/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/uikit-init-patterns/</guid>
+    <title><![CDATA[ UIKit init patterns ]]></title>
+    <description><![CDATA[ Learn about the initialization process of the two well known classes in UIKit. Say hello to UIViewcontroller, and UIView init patterns. ]]></description>
+    <link>/posts/uikit-init-patterns/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/top-20-ios-libraries-of-2019/</guid>
+    <title><![CDATA[ Top 20 iOS libraries written in Swift ]]></title>
+    <description><![CDATA[ I gathered the best open source Swift frameworks on github that will help you to speed up mobile application development in 2019. ]]></description>
+    <link>/posts/top-20-ios-libraries-of-2019/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/the-ultimate-combine-framework-tutorial-in-swift/</guid>
+    <title><![CDATA[ The ultimate Combine framework tutorial in Swift ]]></title>
+    <description><![CDATA[ Get started with the brand new declarative Combine framework in practice using Swift. I&#39;ll teach you all the goodies from zero to hero. ]]></description>
+    <link>/posts/the-ultimate-combine-framework-tutorial-in-swift/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/asynchronous-validation-for-vapor/</guid>
+    <title><![CDATA[ Asynchronous validation for Vapor ]]></title>
+    <description><![CDATA[ Learn how to validate input data using an async technique. Unified request validation API for your server side Swift app. ]]></description>
+    <link>/posts/asynchronous-validation-for-vapor/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/result-builders-in-swift/</guid>
+    <title><![CDATA[ Result builders in Swift ]]></title>
+    <description><![CDATA[ If you want to make a result builder in Swift, this article will help you to deal with the most common cases when creating a DSL. ]]></description>
+    <link>/posts/result-builders-in-swift/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/everything-about-public-and-private-swift-attributes/</guid>
+    <title><![CDATA[ Everything about public and private Swift attributes ]]></title>
+    <description><![CDATA[ Have you ever heard about Swift language attributes? In this article I&#39;m trying to gather all the @ annotations and their meanings. ]]></description>
+    <link>/posts/everything-about-public-and-private-swift-attributes/</link>
+    <pubDate>Tue, 10 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/awesome-native-xcode-extensions/</guid>
+    <title><![CDATA[ Awesome native Xcode extensions ]]></title>
+    <description><![CDATA[ This is the biggest and the best collection of the currently available natively created source editor extensions for Xcode. ]]></description>
+    <link>/posts/awesome-native-xcode-extensions/</link>
+    <pubDate>Wed, 04 Oct 2017 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/conventions-for-xcode/</guid>
+    <title><![CDATA[ Conventions for Xcode ]]></title>
+    <description><![CDATA[ Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this. ]]></description>
+    <link>/posts/conventions-for-xcode/</link>
+    <pubDate>Wed, 06 Jul 2016 16:20:00 +0000</pubDate>
+</item>
+<item>
+    <guid isPermaLink="true">/posts/clockkit-complications-cheat-sheet/</guid>
+    <title><![CDATA[ ClockKit complications cheatsheet ]]></title>
+    <description><![CDATA[ ClockKit families and templates, there are so many of them. It&#39;s a little bit time consuming if you are looking for the right one. ]]></description>
+    <link>/posts/clockkit-complications-cheat-sheet/</link>
+    <pubDate>Thu, 28 Apr 2016 16:20:00 +0000</pubDate>
+</item>
+
+</channel>
+</rss>

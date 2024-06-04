@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Swift init patterns - </title>
+    <meta name="description" content="The ultimate guide how to init your Swift data types, with the help of designated, convenience, failable intitializers and more.">
+    
+    <meta property="og:url" content="/posts/swift-init-patterns/">
+    <meta property="og:title" content="Swift init patterns - ">
+    <meta property="og:description" content="The ultimate guide how to init your Swift data types, with the help of designated, convenience, failable intitializers and more.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift init patterns - ">
+    <meta name="twitter:description" content="The ultimate guide how to init your Swift data types, with the help of designated, convenience, failable intitializers and more.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2019-08-25 16:20:00">2019-08-25 16:20:00</time>
+            <h1 class="title">Swift init patterns</h1>
+            <p class="excerpt">The ultimate guide how to init your Swift data types, with the help of designated, convenience, failable intitializers and more.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>What is initialization?</h2><blockquote><p><a href="https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Initialization.html#//apple_ref/doc/uid/TP40014097-CH18-ID203" target="_blank">Initialization</a> is the process of preparing an instance of a class, structure, or enumeration for use.</p></blockquote><p>This process is handled through <a href="https://www.iphonelife.com/blog/31369/swift-101-demystifying-swifts-initializers" target="_blank">initializers</a>, an initializer is just a special kind of function, usually the init keyword is reserved for them - so you don’t have to use the func keyword - and usually you don’t return any value from an initializer.</p><h2>Initializing properties</h2><p>Classes and structures must set all of their stored properties to an appropriate initial value by the time an instance of that class or structure is created.<br>First imagine a really simple struct, that has only two properties.</p><pre><code class="language-swift">struct Point {
+    let x: Int
+    let y: Int
+}
+</code></pre><p>Now, the rule above says that we have to init all the properties, so let’s make that by creating our very first init method.</p><pre><code class="language-swift">struct Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+</code></pre><p>It’s just like every other Swift function. Now we’re able to create our first point.</p><pre><code class="language-swift">let p1 = Point(x: 1, y: 1)
+</code></pre><p>Note that you don’t have to initialize implicitly unwrapped optional properties, and optional properties, if they are variables and not constants.</p><p>The same logic applies for classes, you can try it by changing the struct keyword to class. However structs are value types, classes are reference types and this difference will provide us some unique capabilities for both types.</p><h2>Memberwise initializer (ONLY for structs)</h2><p>The nice thing about structs is that the compiler will generate a memberwise init for free if you don’t provide your own init method. However there are a quite a few catches. The generated method will contain all the properties (optionals too) except constants with default values, and it will have an internal access type, so it’s not going to be visible from another modules.</p><blockquote><p>The default memberwise initializer for a structure type is considered private if any of the structure’s stored properties are private. Likewise, if any of the structure’s stored properties are file private, the initializer is file private. Otherwise, the initializer has an access level of internal.</p></blockquote><pre><code class="language-swift">struct Point {
+    let x: Int
+    let y: Int
+    var key: Int!
+    let label: String? = "zero"
+}
+let p1 = Point(x: 0, y: 0, key: 0) // provided by the memberwise init
+</code></pre><h2>Failable initializer</h2><p>Sometimes things can go wrong, and you don’t want to create bad or invalid objects, for example you’d like filter out the origo from the list of valid points.</p><pre><code class="language-swift">struct Point {
+    let x: Int
+    let y: Int
+
+    init?(x: Int, y: Int) { // ? marks that this could fail
+        if x == 0 && y == 0 {
+            return nil
+        }
+        self.x = x
+        self.y = y
+    }
+}
+let p1 = Point(x: 0, y: 0) // nil
+let p2 = Point(x: 1, y: 1) // valid point
+</code></pre><p>Enumerations that deliver from a RawRepresentable protocol can be initialized through rawValues, that’s also a failable init pattern:</p><pre><code class="language-swift">enum Color: String {
+    case red
+    case blue
+    case yellow
+}
+
+let c1 = Color(rawValue: "orange") // nil, no such case
+let c2 = Color(rawValue: "red") // .red
+</code></pre><p>You can also use init! instead of init?, that’ll create an implicitly unwrapped optinal type of the instance. Note that classes can also have failable initializers.</p><h2>Initializing pure Swift classes</h2><p>You know classes are native types in the Swift programming language. You don’t even have to import the Foundation framework in order to create a brand new class. Here is the exact same Point object represented by a pure Swift class:</p><pre><code class="language-swift">class Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+let p1 = Point(x: 1, y: 1)
+</code></pre><p>This time we had to provide the init method by ourselves, because classes don’t have memberwise initializers. They are reference types, and inheritance logic, so it’d be more complex to generate memberwise init methods for them.</p><h2>Default initializer</h2><p>For Swift classes you will only get an internal default initializer for free if you provide default values for all the stored properties, even for optional ones. In practice it looks something like this:</p><pre><code class="language-swift">class Point {
+    let x: Int = 1
+    let y: Int = 1
+}
+let p1 = Point()
+</code></pre><p>Or if we follow the previous example:</p><pre><code class="language-swift">class Point {
+    let x: Int = 0
+    let y: Int = 0
+    var key: Int!
+    let label: String? = "zero"
+}
+let p1 = Point()
+</code></pre><p>This feels so wrong. Why would a point have a key and a label property? It’d be nice to have a child object which could have the extra properties. It’s time to refactor this code with some class inheritance.</p><h2>Designated initializer</h2><blockquote><p>Designated initializers are the primary initializers for a class.</p></blockquote><p>In other words, it’s not marked with the convenience keyword. A class can also have mutliple designated initializers. So let’s continue with our Point class, which is going to be the superclass of our NamedPoint class.</p><pre><code class="language-swift">class Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) { // this is the designated initializer
+        self.x = x
+        self.y = y
+    }
+}
+
+class NamedPoint: Point {
+
+    let label: String?
+
+    init(x: Int, y: Int, label: String?) { // designated
+        self.label = label
+
+        super.init(x: x, y: y)
+    }
+
+    init(point: Point, label: String?) { // also designated
+        self.label = label
+        super.init(x: point.x, y: point.y) // delegating up
+    }
+}
+
+let p1 = NamedPoint(x: 1, y: 1, label: "first")
+let p2 = NamedPoint(point: Point(x: 1, y: 1), label: "second")
+</code></pre><p>A <a href="http://www.codingexplorer.com/designated-initializers-convenience-initializers-swift/" target="_blank">designated initializer</a> must always call a designated initializer from its immediate superclass, so you have to delegate up the chain. But first we had to initialize all of our properties, by the first rule of initialization. So this means that the Swift language has a two-phase initialization process.</p><h2>Two-Phase Initialization</h2><ol><li>Every stored property is assigned an intial value by the class that introduced it.</li><li>Each class is given the opportunity to customize it’s stored properies.</li></ol><p>So by these rules, first we had to init the label property, then delegate up and only after then we gave the opportunity to do other things.</p><h2>Convenience initializer</h2><p>They are initializers used to make initialization a bit easier.</p><p>So for example in our previous case if we could have an initializers for points where x and y are equal numbers. That’d be pretty handy in some cases.</p><pre><code class="language-swift">class Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+    convenience init(z: Int) {
+        self.init(x: z, y: z) // we're calling the designated init
+    }
+}
+let p1 = Point(z: 1)
+</code></pre><p>A convenience initializer must call another initializer from the same class and ultimately call a designated initializer. Stucts can also have “convenience” initializer like init methods, but you don’t have to write out the keyword, actually those init methods are slightly differnet, you can just call out from one to another, that’s why it looks like the same.</p><pre><code class="language-swift">struct Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+
+    init(z: Int) {
+        self.init(x: z, y: z)
+    }
+}
+
+var p1 = Point(z: 1)
+</code></pre><h2>Required initializer</h2><p>If you mark an initializer required in your class, all the direct - you have to mark as required in every level - subclasses of that class have to implement it too.</p><pre><code class="language-swift">class Point {
+    let x: Int
+    let y: Int
+
+    required init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+
+class NamedPoint: Point {
+    let label: String?
+
+    required init(x: Int, y: Int) {
+        self.label = nil
+
+        super.init(x: x, y: y)
+    }
+}
+
+let p1 = NamedPoint(x: 1, y: 1)
+</code></pre><h2>Override initializer</h2><p>In Swift initializers are not inherited for subclasses by default. If you want to provide the same initializer for a subclass that the parent class already has, you have to use the override keyword.</p><pre><code class="language-swift">class Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+
+class NamedPoint: Point {
+    let label: String?
+
+    override init(x: Int, y: Int) {
+        self.label = nil
+
+        super.init(x: x, y: y)
+    }
+}
+
+let p1 = NamedPoint(x: 1, y: 1)
+</code></pre><p>There are two rules of init inheritance, here is the first…</p><blockquote><p>If your subclass doesn’t define any designated initializers, it automatically inherits all of its superclass designated initializers.</p></blockquote><p>…and the second:</p><blockquote><p>If your subclass provides an implementation of all of its superclass designated initializers—either by inheriting them as per rule 1, or by providing a custom implementation as part of its definition—then it automatically inherits all of the superclass convenience initializers.</p></blockquote><h2>Deinitialization</h2><blockquote><p>A deinitializer is called immediately before a class instance is deallocated.</p></blockquote><p>So if you want to do some manual cleanup when your class is being terminated, this is the method that you are looking for. You don’t have to deal with memory management in most of the cases, because ARC will do it for you.</p><pre><code class="language-swift">class Point {
+    let x: Int
+    let y: Int
+
+    init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+
+    deinit {
+        print("Point is clenaed up.")
+    }
+}
+
+var p1: Point? = Point(x: 1, y: 1)
+p1 = nil //deinit is being called
+</code></pre>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

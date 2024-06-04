@@ -1,0 +1,67 @@
+{{<index}}
+{{$main}}
+
+{{#page.context.post}}
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="{{date}}">{{date}}</time>
+            <h1 class="title">{{title}}</h1>
+            <p class="excerpt">{{excerpt}}</p>
+            {{#empty(tags)}}
+            {{/empty(tags)}}
+            {{^empty(tags)}}
+            <div class="meta">
+            {{#tags}}
+                {{> _partials.tag}}
+            {{/tags}}
+            </div>
+            {{/empty(tags)}}
+        </section>
+        
+        {{#figure}}
+        {{> _partials.figure}}
+        {{/figure}}
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    {{& page.content}}
+        
+    </section>
+    
+    <h2>Next</h2>
+    {{#page.context.next}}
+        {{> _partials.post}}
+    {{/page.context.next}}
+    
+    <h2>Prev</h2>
+    {{#page.context.prev}}
+        {{> _partials.post}}
+    {{/page.context.prev}}
+    
+    <h2>Related</h2>
+    {{#empty(page.context.related)}}
+    Empty.
+    {{/empty(page.context.related)}}
+    {{^empty(page.context.related)}}
+    {{#page.context.related}}
+        {{> _partials.post}}
+    {{/page.context.related}}
+    {{/empty(page.context.related)}}
+    
+    <h2>More by author(s)</h2>
+    {{#empty(page.context.moreByAuthor)}}
+    Empty.
+    {{/empty(page.context.moreByAuthor)}}
+    {{^empty(page.context.moreByAuthor)}}
+    {{#page.context.moreByAuthor}}
+        {{> _partials.post}}
+    {{/page.context.moreByAuthor}}
+    {{/empty(page.context.moreByAuthor)}}
+
+</article>
+{{/page.context.post}}
+
+{{/main}}
+{{/index}}

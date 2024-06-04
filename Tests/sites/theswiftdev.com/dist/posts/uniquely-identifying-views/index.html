@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Uniquely identifying views - </title>
+    <meta name="description" content="Learn how to use string based UIView identifiers instead of tags. If you are tired of tagging views, check out these alternative solutions.">
+    
+    <meta property="og:url" content="/posts/uniquely-identifying-views/">
+    <meta property="og:title" content="Uniquely identifying views - ">
+    <meta property="og:description" content="Learn how to use string based UIView identifiers instead of tags. If you are tired of tagging views, check out these alternative solutions.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Uniquely identifying views - ">
+    <meta name="twitter:description" content="Learn how to use string based UIView identifiers instead of tags. If you are tired of tagging views, check out these alternative solutions.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2019-04-02 16:20:00">2019-04-02 16:20:00</time>
+            <h1 class="title">Uniquely identifying views</h1>
+            <p class="excerpt">Learn how to use string based UIView identifiers instead of tags. If you are tired of tagging views, check out these alternative solutions.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>First approach: accessibility to the rescue!</h2><p>Long story short, I was quite tired of tagging views with stupid number values, so I looked for a better alternative solution to fix my problem. As it turned out, there is a property called <code>accessibilityIdentifier</code> that can do the job.</p><pre><code class="language-swift">extension UIView {
+
+    var id: String? {
+        get {
+            return self.accessibilityIdentifier
+        }
+        set {
+            self.accessibilityIdentifier = newValue
+        }
+    }
+
+    func view(withId id: String) -> UIView? {
+        if self.id == id {
+            return self
+        }
+        for view in self.subviews {
+            if let view = view.view(withId: id) {
+                return view
+            }
+        }
+        return nil
+    }
+}
+</code></pre><p>I made a simple extension around the UIView class, so now I can use a proper string value to uniquely identify any view object in the view hierarchy. It’s quite a nice solution, now I can name my views in a really nice way. As a gratis storing the name under the accessibilityIdentifier will benefit your UI tests. 😉</p><h2>Second approach: using enums</h2><p>The main idea is to have an Int based enum for every view identifier, so basically you can use the tag property to store the enum’s rawValue. It’s still not so nice as the one above, but it’s way more safe than relying on pure integers. 😬</p><pre><code class="language-swift">enum ViewIdentifier: Int {
+    case submitButton
+}
+
+extension UIView {
+
+    var identifier: ViewIdentifier? {
+        set {
+            if let value = newValue {
+                self.tag = value.rawValue
+            }
+        }
+        get {
+            return ViewIdentifier(rawValue: self.tag)
+        }
+    }
+
+    func view(withId id: ViewIdentifier) -> UIView? {
+        return self.viewWithTag(id.rawValue)
+    }
+}
+</code></pre><p>Honestly I just came up with the second approach right after I copy & pasted the first snippet to this article, but what the heck, maybe someone else will like it. 😂</p><p>If you have a better solution for this problem, feel free to share it with me.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>The Swift package manifest file - </title>
+    <meta name="description" content="This article is a complete Swift Package Manager cheatsheet for the package manifest file, using the latest Swift 5.2 tools version.">
+    
+    <meta property="og:url" content="/posts/the-swift-package-manifest-file/">
+    <meta property="og:title" content="The Swift package manifest file - ">
+    <meta property="og:description" content="This article is a complete Swift Package Manager cheatsheet for the package manifest file, using the latest Swift 5.2 tools version.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Swift package manifest file - ">
+    <meta name="twitter:description" content="This article is a complete Swift Package Manager cheatsheet for the package manifest file, using the latest Swift 5.2 tools version.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-04-24 16:20:00">2020-04-24 16:20:00</time>
+            <h1 class="title">The Swift package manifest file</h1>
+            <p class="excerpt">This article is a complete Swift Package Manager cheatsheet for the package manifest file, using the latest Swift 5.2 tools version.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <blockquote><p>NOTE: If you want to learn <a href="https://theswiftdev.com/swift-package-manager-tutorial/" target="_blank">how to use the Swift Package Manager</a> you should read my other article, because that is more like an introduction for those who have never worked with SPM yet.</p></blockquote><h2>Package types</h2><p>There are multiple package types that you can create with the <code>swift package init</code> command. You can specify the <code>--type</code> flag with the following values: empty, library, executable, system-module, manifest. You can also define a custom package name through the <code>--name</code> flag.</p><ul><li>The empty package will create the default file structure without the sample code files.</li><li>The library type will create a reusable library product template.</li><li>The executable type will create a Swift application with an executable product definition in the package and a `main.swift` file as a starting point.</li><li>The system-module type will create a wrapper around a system provided package, such as libxml, we’ll talk about this later on.</li><li>The manifest type will only create a `Package.swift` file without anything else.</li></ul><h2>The Package manifest file</h2><p>Every single SPM project has this special file inside of it called <code>Package.swift</code>. I already wrote a post about <a href="https://theswiftdev.com/all-about-the-swift-package-manager-and-the-swift-toolchain/" target="_blank">how the package manager and the Swift toolchain works</a> behind the scenes, this time we’re going to focus only on the manifest file itself. Let’s get started. 📦</p><p>Every single Package.swift file begins with a special comment line where you have to define the version of the used Swift tools. The latest version is quite different from the older ones.</p><pre><code class="language-swift">// swift-tools-version:5.2
+</code></pre><p>Next you have to import the PackageDescription framework in order to define your Swift package. This framework contains the package manifest structure as Swift objects.</p><pre><code class="language-swift">import PackageDescription
+</code></pre><p>That’s it now you are ready to describe the package itself. Oh by the way you can change the version of the used tools, you can read more about this in the Package Manager <a href="https://github.com/apple/swift-package-manager/blob/master/Documentation/Usage.md" target="_blank">usage</a> docs.</p><h2>Package</h2><p>A package is just a bunch of Swift (or other) files. The manifest file is the description of what and how to build from those sources. Every single package should have a name, but this is not enough to actually generate something from it. You can only have exactly one package definition inside the file. This is the shortest and most useless one that you can create. 🙈</p><pre><code class="language-swift">let package = Package(name: "myPackage")
+</code></pre><p>The package name is going to be used when you are importing packages as dependencies, so name your pacages carefully. If you choose a reserved name by a system framework there can be issues with linking. If there’s a conflict you have to use static linking instead of dynamic. If you generate a project via the <code>swift package generate-xcodeproj</code> command that project will try to link everything dynamically, but if you open the <code>Package.swift</code> file using Xcode 11, the dependencies will be linked statically if this was not set explicitly in the product definition section.</p><h2>Platform</h2><p>A platform is basically an operating system with a given version that you can support.</p><pre><code class="language-swift">let package = Package(
+    name: "myPackage",
+    platforms: [
+        .iOS(.v13),         //.v8 - .v13
+        .macOS(.v10_15),    //.v10_10 - .v10_15
+        .tvOS(.v13),        //.v9 - .v13
+        .watchOS(.v6),      //.v2 - .v6
+    ]
+)
+</code></pre><p>When you add a platform you are putting a constraint on it via the required version. Every single dependency should match the requirement of the main package platforms. Long story short if you need to add support for Apple platforms, you should specify a platform flag with a supported version, otherwise SPM will use the oldest deployment target based on the installed SDK, except for macOS, that’s going to be v10_10. Every package has Linux support by default, you can’t add such restrictions yet, but maybe this will change in the near future, also Windows is coming.</p><h2>Product</h2><p>A package can have one or more final products (build artifacts). Currently there are two types of build products: executables and libraries. The executable is a binary that can be executed, for example this can be a command line application. A library is something that others can use, it is basically the public API product representation on your targets.</p><pre><code class="language-swift">// swift-tools-version:5.2
+import PackageDescription
+
+let package = Package(name: "myPackage", products: [
+    .library(name: "myPackageLib", targets: ["myPackageLib"]),
+    .library(name: "myPackageStaticLib", type: .static, targets: ["myPackageLib"]),
+    .library(name: "myPackageDynLib", type: .dynamic, targets: ["myPackageLib"]),
+    .executable(name: "myPackageCli", targets: ["myPackage"])
+], targets: [
+    .target(name: "myPackageLib"),
+    .target(name: "myPackageCli"),
+])
+</code></pre><p>If the library type is unspecified, the Package Manager will automatically choose it based on the client’s preference. As I mentioned this earlier generated Xcode projects prefer dynamic linking, but if you simply open the manifest file the app will be statically linked.</p><h2>Dependency</h2><p>Packages can rely on other packages. You can define your dependencies by specifying a local path or a repository URL with a given version tag. Adding a dependency into this section is not enough to use it in your targets. You also have to add the product provided by the package at the target level.</p><pre><code class="language-swift">let package = Package(
+    name: "myPackage",
+    dependencies: [
+        .package(path: "/local/path/to/myOtherPackage"),
+        .package(url: "<git-repository-url>", from: "1.0.0"),
+        .package(url: "<git-repository-url>", .branch("dev")),
+        .package(url: "<git-repository-url>", .exact("1.3.2")),
+        .package(url: "<git-repository-url>", .revision("<hash>")),
+        .package(url: "<git-repository-url>", .upToNextMajor(from: "1.0.0")),
+        .package(url: "<git-repository-url>", .upToNextMinor(from: "1.0.0")),
+        .package(url: "<git-repository-url>", "1.0.0"..<"1.3.0"),
+    ]
+)
+</code></pre><p>The URL can be a GitHub URL, fortunately you can add private repositories as well by using an ssh key based authentication. Just use the <code>git@github.com:BinaryBirds/viper-kit.git</code> URL format, instead of the HTTP based, if you want to add private packages. 🤫</p><h2>Target</h2><p>A target is something that you can build, in other words it’s a build target that can result in a library or an executable. You should have at least one target in your project file otherwise you can’t build anything. A target should always have a name, every other settings is optional.</p><h2>Settings</h2><p>There are many settings that you can use to configure your <a href="https://developer.apple.com/documentation/swift_packages/target" target="_blank">target</a>. Targets can depend on other targets or products defined in external packages. A target can have a custom location, you can specify this by setting the path attribute. Also you can exclude source files from the target or explicitly define the sources you want to use. Targets can have their own public headers path and you can provide build settings both for the C, C++ and the Swift language, and compiler flags.</p><pre><code class="language-swift">.target(name: "myPackage",
+        dependencies: [
+            .target(name: "other"),
+            .product(name: "package", package: "package-kit")
+        ],
+        path: "./Sources/myPackage",
+        exclude: ["foo.swift"],
+        sources: ["main.swift"],
+        publicHeadersPath: "./Sources/myPackage/headers",
+        cSettings: [
+            .define("DEBUG"),
+            .define("DEBUG", .when(platforms: [.iOS, .macOS, .tvOS, .watchOS], configuration: .debug)),
+            .define("DEBUG", to: "yes-please", .when(platforms: [.iOS], configuration: .debug)),
+            .headerSearchPath(""),
+            .headerSearchPath("", .when(platforms: [.android, .linux, .windows], configuration: .release)),
+            .unsafeFlags(["-D EXAMPLE"]),
+            .unsafeFlags(["-D EXAMPLE"], .when(platforms: [.iOS], configuration: .debug)),
+        ],
+        cxxSettings: [
+            // same as cSettings
+        ],
+        swiftSettings: [
+            .define("DEBUG"),
+            .define("DEBUG", .when(platforms: [.iOS, .macOS, .tvOS, .watchOS], configuration: .debug)),
+            .unsafeFlags(["-D EXAMPLE"]),
+            .unsafeFlags(["-D EXAMPLE"], .when(platforms: [.iOS], configuration: .debug)),
+        ],
+        linkerSettings: [
+            .linkedFramework("framework"),
+            .linkedLibrary("framework", .when(platforms: [.iOS], configuration: .debug)),
+            .linkedLibrary("library"),
+            .linkedLibrary("library", .when(platforms: [.macOS], configuration: .release)),
+            .unsafeFlags(["-L example"]),
+            .unsafeFlags(["-L example"], .when(platforms: [.linux], configuration: .release)),
+        ]),
+</code></pre><p>As you can see you can define preprocessor macros for every single language. You can use the safe cases for basic stuff, but there is an unsafeFlags case for the reckless ones. The nice thing is that you can support a platform condition filter including build configuration to every single settings as the last param.</p><p>Available platforms are:</p><ul><li>`.iOS`</li><li>`.macOS`</li><li>`.watchOS`</li><li>`.tvOS`</li><li>`.android`</li><li>`.linux`</li><li>`.windows `</li></ul><p>The build configuration can be <code>.debug</code> or <code>.release</code></p><h2>Test targets</h2><p>Test targets are used to define test suites. They can be used to <a href="https://theswiftdev.com/the-ultimate-guide-to-unit-and-ui-testing-for-beginners-in-swift/" target="_blank">unit test</a> other targets using the <a href="https://github.com/apple/swift-corelibs-xctest" target="_blank">XCTest</a> framework. They look like exactly the same as regular targets.</p><pre><code class="language-swift">.testTarget(name: String,
+    dependencies: [Target.Dependency],
+    path: String?,
+    exclude: [String],
+    sources: [String]?,
+    cSettings: [CSetting]?,
+    cxxSettings: [CXXSetting]?,
+    swiftSettings: [SwiftSetting]?,
+    linkerSettings: [LinkerSetting]?)
+</code></pre><p>I think the only difference between a target and a test target is that you can run a test target using the <code>swift test</code> command, but from a structural point of view, they are basically the same.</p><h2>Package configs and system libraries</h2><p>You can wrap an existing system library using Swift, the beauty of this is that you can use packages written in C, CPP or other languages. I’ll show you a quick example through the amazing <a href="https://github.com/tid-kijyun/Kanna" target="_blank">Kanna(鉋) - XML/HTML parser repository</a>. I’m using this tool a lot, thanks for making it <a href="https://github.com/tid-kijyun" target="_blank">Atsushi Kiwaki</a>. 🙏</p><pre><code class="language-swift">// https://github.com/tid-kijyun/Kanna/tree/master/Modules
+#if swift(>=5.2) && !os(Linux)
+let pkgConfig: String? = nil
+#else
+let pkgConfig = "libxml-2.0"
+#endif
+
+#if swift(>=5.2)
+let providers: [SystemPackageProvider] = [
+    .apt(["libxml2-dev"])
+]
+#else
+let providers: [SystemPackageProvider] = [
+    .apt(["libxml2-dev"]),
+    .brew(["libxml2"])
+]
+#endif
+
+let package = Package(name: "Kanna",
+pkgConfig: "",
+providers: [
+  .apt(["libsqlite-dev"]),
+  .brew(["sqlite3"])
+],
+products: [
+  .library(name: "Kanna", targets: ["Kanna"])
+],
+targets: [
+.target(name: "myPackage"),
+.systemLibrary(name: "libxml2",
+               path: "Modules",
+               pkgConfig: pkgConfig,
+               providers: providers)
+])
+</code></pre><p>There is a module definition file at the Modules directory. You’ll need a <code>module.modulemap</code> file to export a given library, you can read more about <a href="https://clang.llvm.org/docs/Modules.html" target="_blank">Modules</a> on the LLVM website.</p><pre><code>module libxml2 [system] {
+    link "xml2"
+    umbrella header "libxml2-kanna.h"
+    export *
+    module * { export * }
+}
+</code></pre><p>You can define your own umbrella header and tell the system what to import.</p><pre><code>#import <libxml2/libxml/HTMLtree.h>
+#import <libxml2/libxml/xpath.h>
+#import <libxml2/libxml/xpathInternals.h>
+</code></pre><p>I barely use system libraries, but this is a good reference point. Anyways, if you need to wrap a system library I assume that you’ll have the required knowledge to make it happen. 😅</p><h2>Language settings</h2><p>You can also specify the list of Swift verisons that the package is compatible with. If you are creating a package that contains C or C++ code you can tell the compiler to use a specific language standard during the build process.</p><pre><code class="language-swift">//supported Swift versions
+swiftLanguageVersions: [.v4, .v4_2, .v5, .version("5.1")],
+
+//.c89, .c90, .iso9899_1990, .iso9899_199409, .gnu89, .gnu90, .c99, .iso9899_1999, .gnu99, .c11, .iso9899_2011, .gnu11
+cLanguageStandard: .c11,
+
+//.cxx98, .cxx03, .gnucxx98, .gnucxx03, .cxx11, .gnucxx11, .cxx14, .gnucxx14, .cxx1z, .gnucxx1z
+cxxLanguageStandard: .gnucxx11)
+</code></pre><p>You can see all the currently available options in the comments. I don’t know how many of you use these directives, but personally I never had to work with them. I’m not writing too much code from the C language family nowadays, but it’s still good that SPM has this option built-in. 👍</p><h2>Summary</h2><p>The Swift Package Manager is not the perfect tool just yet, but it’s on a good track to become the de facto standard by slowly replacing CocoaPods and Carthage. There are still some missing features that are essentials for most of the developers. Don’t worry, SPM will improve a lot in the near future. For example the binary dependency and resource support is coming alongside Swift 5.3. You can track the <a href="https://apple.github.io/swift-evolution/#?search=package" target="_blank">package evolution process</a> on the official Swift Evolution dashboard.</p><p>You can read more about the <a href="https://swift.org/package-manager/" target="_blank">Package Manager</a> on the official Swift website, but it’s quite obsolate. The <a href="https://developer.apple.com/documentation/swift_packages" target="_blank">documentation</a> on Apple’s website is also very old, but still useful. There is a good read me file on GitHub about the <a href="https://github.com/apple/swift-package-manager/blob/master/Documentation/Usage.md" target="_blank">usage of the Swift Package Manager</a>, but nothing is updated frequently. 😢</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

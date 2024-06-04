@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Async HTTP API clients in Swift - </title>
+    <meta name="description" content="Learn how to communicate with API endpoints using the brand new SwiftHttp library, including async / await support.">
+    
+    <meta property="og:url" content="/posts/async-http-api-clients-in-swift/">
+    <meta property="og:title" content="Async HTTP API clients in Swift - ">
+    <meta property="og:description" content="Learn how to communicate with API endpoints using the brand new SwiftHttp library, including async / await support.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Async HTTP API clients in Swift - ">
+    <meta name="twitter:description" content="Learn how to communicate with API endpoints using the brand new SwiftHttp library, including async / await support.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2022-03-18 16:20:00">2022-03-18 16:20:00</time>
+            <h1 class="title">Async HTTP API clients in Swift</h1>
+            <p class="excerpt">Learn how to communicate with API endpoints using the brand new SwiftHttp library, including async / await support.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Introducing SwiftHttp</h2><p>An awesome <a href="https://github.com/binarybirds/swift-http/" target="_blank">Swift HTTP library</a> to rapidly create communication layers with API endpoints. The library tries to separate the client request logic from the request building and response handling. That’s the main reason why it has a HttpClient protocol which can be used to perform data, download and upload tasks. You can implement your own HttpClient, but SwiftHttp comes with a built-in UrlSessionHttpClient based on <a href="https://developer.apple.com/documentation/foundation/urlsession" target="_blank">Foundation networking</a>.</p><p>So the client is responsible for executing the requests, but we still have to describe the request itself somehow. This is where the HttpRawRequest object comes into play. You can easily create a base HttpUrl and perform a request using the HttpRawRequest object. When working with a raw request you can specify additional header fields and a raw body data object too. 💪</p><pre><code class="language-swift">let url = HttpUrl(scheme: "https",
+                  host: "jsonplaceholder.typicode.com",
+                  port: 80,
+                  path: ["todos"],
+                  resource: nil,
+                  query: [:],
+                  fragment: nil)
+
+let req = HttpRawRequest(url: url, method: .get, headers: [:], body: nil)
+
+/// execute the request using the client
+let client = UrlSessionHttpClient(session: .shared, log: true)
+let response = try await client.dataTask(req)
+
+/// use the response data
+let todos = try JSONDecoder().decode([Todo].self, from: response.data)
+// response.statusCode == .ok
+// response.headers -> response headers as a dictionary
+</code></pre><p>The HTTP client can perform network calls using <a href="https://theswiftdev.com/introduction-to-asyncawait-in-swift/" target="_blank">the new async / await Swift concurrency API</a>. It is possible to cancel a network request by wrapping it into a <a href="https://theswiftdev.com/swift-structured-concurrency-tutorial/" target="_blank">structured concurrency Task</a>.</p><pre><code class="language-swift">let task = Task {
+    let api = TodoApi()
+    _ = try await api.list()
+}
+
+DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10)) {
+    task.cancel()
+}
+
+do {
+    let _ = try await task.value
+}
+catch {
+    if (error as? URLError)?.code == .cancelled {
+        print("cancelled")
+    }
+}
+</code></pre><p>This is a neat tick, you can also check the reason inside the catch block, if it is an URLError with a .cancelled code then the request was cancelled, otherwise it must be some sort of network error.</p><p>So this is how you can use the client to perform or cancel a network task, but usually you don’t want to work with raw data, but encodable and decodable objects. When you work with such objects, you might want to validate the response headers and send additional headers to inform the server about the type of the body data. Just think about the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type" target="_blank">Content-Type</a> / <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept" target="_blank">Accept</a> header fields. 🤔</p><p>So we might want to send additional headers alongside the request, plus it’d be nice to validate the status code and response headers before we try to parse the data. This seems like a flow of common operations, first we encode the data, set the additional header fields, and when the response arrives we validate the status code and the header fields, finally we try to decode the data object. This is a typical use case and SwiftHttp calls this workflow as a pipeline.</p><p>There are 4 types of built-in HTTP pipelines:</p><ul><li>Raw - Send a raw data request, return a raw data response</li><li>Encodable - Send an encodable object, return a raw data response</li><li>Decodable - Send a raw data request, return a decodable object</li><li>Codable - Send an encodable object, return a decodable object</li></ul><p>We can use a HttpRawPipeline and execute our request using a client as an executor.</p><pre><code class="language-swift">let baseUrl = HttpUrl(host: "jsonplaceholder.typicode.com")
+let client = UrlSessionHttpClient(session: .shared, log: true)
+
+let pipeline = HttpRawPipeline(url: baseUrl.path("todos"), method: .get)
+
+let response = try await pipeline.execute(client.dataTask)
+let todos = try JSONDecoder().decode([Todo].self, from: response.data)
+print(response.statusCode)
+print(todos.count)
+</code></pre><p>In this case we were using the dataTask function, but if you expect the response to be a huge file, you might want to consider using a downloadTask, or if you’re uploading a large amount of data when sending the request, you should choose the uploadTask function. 💡</p><p>So in this case we had to manually decode the Todo object from the raw HTTP response data, but we can use the decodable pipeline to make things even more simple.</p><pre><code class="language-swift">let baseUrl = HttpUrl(host: "jsonplaceholder.typicode.com")
+let client = UrlSessionHttpClient(session: .shared, log: true)
+
+
+let pipeline = HttpDecodablePipeline<[Todo]>(url: baseUrl.path("todos"),
+                                             method: .get,
+                                             decoder: .json(JSONDecoder(), validators: [
+                                                HttpStatusCodeValidator(.ok),
+                                                HttpHeaderValidator(.key(.contentType)) {
+                                                    $0.contains("application/json")
+                                                },
+                                             ]))
+
+let todos = try await pipeline.execute(client.dataTask)
+print(todos.count)
+</code></pre><p>As you can see, in this case the instead of returning the response, the pipeline can perform additional validation and the decoding using the provided decoder and validators. You can create your own validators, there is a HttpResponseValidator protocol for this purpose.</p><p>The encodable pipeline works like the same, you can specify the encoder, you can provide the encodable object and you’ll get back a HttpResponse instance.</p><pre><code class="language-swift">let client = UrlSessionHttpClient(session: .shared, log: true)
+        
+let todo = Todo(id: 1, title: "lorem ipsum", completed: false)
+
+let pipeline = HttpEncodablePipeline(url: baseUrl.path("todos"),
+                                     method: .post,
+                                     body: todo,
+                                     encoder: .json())
+
+let response = try await pipeline.execute(client.dataTask)
+
+print(response.statusCode == .created)
+</code></pre><p>The codable pipeline is a combination of the encodable and decodable pipeline. 🙃</p><pre><code class="language-swift">let baseUrl = HttpUrl(host: "jsonplaceholder.typicode.com")
+let client = UrlSessionHttpClient(session: .shared, log: true)
+
+let todo = Todo(id: 1, title: "lorem ipsum", completed: false)
+
+let pipeline = HttpCodablePipeline<Todo, Todo>(url: baseUrl.path("todos", String(1)),
+                                               method: .put,
+                                               body: todo,
+                                               encoder: .json(),
+                                               decoder: .json())
+
+let todo = try await pipeline.execute(client.dataTask)
+print(todo.title)
+</code></pre><p>As you can see this is quite a common pattern, and when we’re communicating with a REST API, we’re going to perform more or less the exact same network calls for every single endpoint. SwiftHttp has a pipeline collection protocol that you can use to perform requests without the need of explicitly setting up these pipelines. Here’s an example:</p><pre><code class="language-swift">import SwiftHttp
+
+struct Todo: Codable {
+    let id: Int
+    let title: String
+    let completed: Bool
+}
+
+struct TodoApi: HttpCodablePipelineCollection {
+
+    let client: HttpClient = UrlSessionHttpClient(log: true)
+    let apiBaseUrl = HttpUrl(host: "jsonplaceholder.typicode.com")
+
+    
+    func list() async throws -> [Todo] {
+        try await decodableRequest(executor: client.dataTask,
+                                   url: apiBaseUrl.path("todos"),
+                                   method: .get)
+    }    
+}
+
+let todos = try await api.list()
+</code></pre><p>When using a HttpCodablePipelineCollection you can perform an encodable, decodable or codable request using an executor object. This will reduce the boilerplate code needed to perform a request and everything is going to be type safe thanks to the generic protocol oriented networking layer. You can setup as many pipeline collections as you need, it is possible to use a shared client or you can create a dedicated client for each.</p><p>By the way, if something goes wrong with the request, or one of the validators fail, you can always check for the errors using a do-try-catch block. 😅</p><pre><code class="language-swift">do {
+    _ = try await api.list()
+}
+catch HttpError.invalidStatusCode(let res) {
+    // decode custom error message, if the status code was invalid
+    let decoder = HttpResponseDecoder<CustomError>(decoder: JSONDecoder())
+    do {
+        let error = try decoder.decode(res.data)
+        print(res.statusCode, error)
+    }
+    catch {
+        print(error.localizedDescription)
+    }
+}
+catch {
+    print(error.localizedDescription)
+}
+</code></pre><p>That’s how SwiftHttp works in a nutshell, of course you can setup custom encoders and decoders, but that’s another topic. If you are interested in the project, feel free to give it a star on <a href="https://github.com/BinaryBirds/swift-http" target="_blank">GitHub</a>. We’re going to use it in the future quite a lot both on the client and server side. ⭐️⭐️⭐️</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

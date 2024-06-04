@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Swift facade design pattern - </title>
+    <meta name="description" content="The facade design pattern is a simplified interface over a complex subsystem. Let me show you a real quick example using Swift.">
+    
+    <meta property="og:url" content="/posts/swift-facade-design-pattern/">
+    <meta property="og:title" content="Swift facade design pattern - ">
+    <meta property="og:description" content="The facade design pattern is a simplified interface over a complex subsystem. Let me show you a real quick example using Swift.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift facade design pattern - ">
+    <meta name="twitter:description" content="The facade design pattern is a simplified interface over a complex subsystem. Let me show you a real quick example using Swift.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2018-09-25 16:20:00">2018-09-25 16:20:00</time>
+            <h1 class="title">Swift facade design pattern</h1>
+            <p class="excerpt">The facade design pattern is a simplified interface over a complex subsystem. Let me show you a real quick example using Swift.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>What is a facade?</h2><p>The name of the <a href="https://medium.com/swiftworld/swift-world-design-patterns-facade-579ef4b3319f" target="_blank">facade</a> pattern comes from real life building <a href="https://en.wikipedia.org/wiki/Facade" target="_blank">architecture</a>.</p><blockquote><p>one exterior side of a building, usually the front</p></blockquote><p>In software development this definition can be translated to something like everything that’s outside, hiding all the internal parts. So the main purpose of a <a href="https://medium.com/ios-development-tips-and-tricks/design-patterns-with-swift-facade-pattern-f3afc65a1e19" target="_blank">facade</a> is to provide a beautiful API over some more complex ugly ones. 😅</p><p>Usually the facade design pattern comes handy if you have two or more separate subsystems that needs to work together in order to accomplish some kind of tasks. It can hide the underlying complexity, plus if anything changes inside the hidden methods, the interface of the facade can still remain the same. 👍</p><h2>A real-life facade pattern example</h2><p>I promised a quick demo, so let’s imagine an application with a toggle button that turns on or off a specific settings. If the user taps it, we change the underlying settings value in the default storage, plus we also want to play a sound as an extra feedback for the given input. That’s three different things grouped together. 🎶</p><pre><code class="language-swift">func toggleSettings() {
+    // change underlying settings value
+    let settingsKey = "my-settings"
+
+    let originalValue = UserDefaults.standard.bool(forKey: settingsKey)
+    let newValue = !originalValue
+
+    UserDefaults.standard.set(newValue, forKey: settingsKey)
+    UserDefaults.standard.synchronize()
+
+    // positive feedback sound
+    AudioServicesPlaySystemSound(1054);
+
+    // update UI
+    self.switchButton.setOn(newValue, animated: true)
+}
+</code></pre><p>Congratulations, we’ve just created the most simple facade! If this code seems familiar to you, that means you already have utilized facades in your past.</p><p>Of course things can be more complicated, for example if you have a web service and you need to upload some data and an attachment file, you can also write a facade to hide the underlying complexity of the subsystems.</p><p>Facades are really easy to create, sometimes you won’t even notice that you are using one, but they can be extremely helpful to hide, decouple or simplify things. If you want to <a href="https://www.appcoda.com/design-pattern-structural/" target="_blank">learn more about them</a>, please check the linked <a href="https://rubygarage.org/blog/swift-design-patterns" target="_blank">articles</a>. 😉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>How to build better command line apps and tools using Swift? - </title>
+    <meta name="description" content="These tips will help you to create amazing CLI tools, utility apps, server side projects or terminal scripts using the Swift language.">
+    
+    <meta property="og:url" content="/posts/how-to-build-better-command-line-apps-and-tools-using-swift/">
+    <meta property="og:title" content="How to build better command line apps and tools using Swift? - ">
+    <meta property="og:description" content="These tips will help you to create amazing CLI tools, utility apps, server side projects or terminal scripts using the Swift language.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to build better command line apps and tools using Swift? - ">
+    <meta name="twitter:description" content="These tips will help you to create amazing CLI tools, utility apps, server side projects or terminal scripts using the Swift language.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2021-08-05 16:20:00">2021-08-05 16:20:00</time>
+            <h1 class="title">How to build better command line apps and tools using Swift?</h1>
+            <p class="excerpt">These tips will help you to create amazing CLI tools, utility apps, server side projects or terminal scripts using the Swift language.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Running Swift files as scripts</h2><p>It is possible to run a Swift file straight from the command line if you add a <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank">hashbang</a> to the beginning of the file. This way you don’t have to manually compile the code using the <code>swiftc</code> command. You can simply give the file the executable permission flag and the system will call the Swift <a href="https://swift.org/lldb/" target="_blank">REPL</a> under the hood, so our app can be evaluated automatically. 🔨</p><pre><code class="language-swift">#!/usr/bin/env swift
+
+print("Hello, world!")
+</code></pre><p>For example this <code>main.swift</code> file above can be marked as an executable file, and we can simply call it via the <code>./main.swift</code> command later on (you just have to use <a href="https://en.wikipedia.org/wiki/Chmod" target="_blank">chmod</a> only one time).</p><pre><code class="language-sh">chmod +x main.swift 
+./main.swift  
+# Hello, world!
+</code></pre><p>The beauty of this method is that you can rapidly test your Swift command line snippets. You can even place the finished Swift scripts under the <code>/usr/local/bin/</code> directory without the swift file extension to make them available “globally” for your operating system user. 💪</p><h2>Using command line arguments in Swift</h2><p>The <a href="https://developer.apple.com/documentation/swift/commandline" target="_blank">CommandLine</a> enum makes it very easy to fetch the arguments passed to our Swift application or script. You can access every argument using the arguments variable as an array of Strings, but it is also possible to get the raw data using the <code>argc</code> and <code>unsafeArgv</code> properties.</p><pre><code class="language-swift">#!/usr/bin/env swift
+
+/// the very first element is the current script
+let script = CommandLine.arguments[0]
+print("Script:", script)
+
+/// you can get the input arguments by dropping the first element
+let inputArgs = CommandLine.arguments.dropFirst()
+print("Number of arguments:", inputArgs.count)
+
+print("Arguments:")
+for arg in inputArgs {
+    print("-", arg)
+}
+</code></pre><p>You should note that the first argument is always the path of the current script, so if you are only looking for the input arguments you can use the <code>dropFirst()</code> method to return a subset of the input strings. Usually each argument is separated by a space character.</p><pre><code class="language-sh">./main.swift hello world
+# Script: main.swift
+# Number of arguments: 2
+# Arguments:
+# - hello
+# - world
+</code></pre><p>In Xcode you can add custom arguments under the Edit Scheme… menu item when you click on the current scheme, look for the Arguments tab and use the Arguments Passed On Launch section.</p><p>Process info and environment in Swift<br>Just like we can access command line arguments, it is possible to examine the current process including some hardware information and environment variables.</p><pre><code class="language-swift">#!/usr/bin/env swift
+import Foundation
+
+let info = ProcessInfo.processInfo
+
+print("Process info")
+print("Process identifier:", info.processIdentifier)
+print("System uptime:", info.systemUptime)
+print("Globally unique process id string:", info.globallyUniqueString)
+print("Process name:", info.processName)
+
+print("Software info")
+print("Host name:", info.hostName)
+print("OS major version:", info.operatingSystemVersion.majorVersion)
+print("OS version string", info.operatingSystemVersionString)
+
+print("Hardware info")
+print("Active processor count:", info.activeProcessorCount)
+print("Physical memory (bytes)", info.physicalMemory)
+
+/// same as CommandLine.arguments
+print("Arguments")
+print(ProcessInfo.processInfo.arguments)
+
+print("Environment")
+/// print available environment variables
+print(info.environment)
+</code></pre><p>The environment variables property is a Dictionary where both the keys and the values are available as strings, so you might have to parse them if you are looking for different value types. You can set up environment custom variables in Xcode just like arguments, or you can pass them via the command line before you execute the Swift script using the <a href="https://man7.org/linux/man-pages/man1/export.1p.html" target="_blank">export</a> command.</p><h2>Standard input and output in Swift</h2><p>You can use the print function to write text to the standard output, but you should note that the <a href="https://developer.apple.com/documentation/swift/1541053-print" target="_blank">print</a> function has a variadic items definition, so you can pass around multiple arguments and a custom separator & terminator parameter to display more advanced outputs.</p><p>There is also a standard error stream, which is part of the <a href="https://en.wikipedia.org/wiki/Standard_streams" target="_blank">standard streams</a> of course, but what’s interesting about it is that you can also write to this channel through the <code>FileHandle.standardError</code> property there is quite an elegant solution on a <a href="https://stackoverflow.com/questions/24041554/how-can-i-output-to-stderr-with-swift" target="_blank">Stack Overflow</a> thread originally created by <a href="https://x.com/cocoaphony?lang=en" target="_blank">Rob Napier</a>, I’m going to include that one here as well. 🙏</p><p>Another great feature of the print function is the to parameter, which can accept a custom <code>TextOutputStream</code> so you can wrap the <code>stderr</code> stream in a custom object or you can also create custom output handlers and separate your print statements e.g. by context if you need.</p><pre><code class="language-swift">#!/usr/bin/env swift
+import Foundation
+
+/// print using custom separator & terminator
+print("This", "is", "fun", separator: "-", terminator: "!")
+
+/// write to the standard output
+"This goes to the standard error output"
+    .data(using: .utf8)
+    .map(FileHandle.standardError.write)
+
+/// print to the standard output using a custom stream
+final class StandardErrorOutputStream: TextOutputStream {
+    func write(_ string: String) {
+        FileHandle.standardError.write(Data(string.utf8))
+    }
+}
+
+var outputStream = StandardErrorOutputStream()
+print("This is also an error", to: &outputStream)
+
+
+/// clears the console (@NOTE: won't work in Xcode)
+func clear() {
+    print("\u{1B}[2J")
+    print("\u{1B}[\(1);\(0)H", terminator: "")
+}
+
+print("foooooooooooooooooooooo")
+clear()
+print("Hello, world!")
+
+
+/// print colorful text using ANSI escape codes
+print("\u{1b}[31;1m\u{1b}[40;1m\("Hello, world!")\u{1b}[m")
+print("\u{1b}[32;1m\("Hello, world!")\u{1b}[m")
+
+/// reading lines from the standard input
+print("Please enter your input:")
+guard let input = readLine(strippingNewline: true) else {
+    fatalError("Missing input")
+}
+print(input)
+</code></pre><p>The second half of the snippet is full of <a href="https://en.wikipedia.org/wiki/ANSI_escape_code" target="_blank">ANSI escape codes</a> which I like quite a lot, because it can make our terminal output quite beautiful. The only problem is that they don’t work in Xcode at all (come-on Apple, please support this…). You can clear the console or change the background / foreground color of the output by using these codes.</p><p>There are quite a lot of libraries on <a href="https://www.google.com/search?client=safari&rls=en&q=swift+ansi+escape+github&ie=UTF-8&oe=UTF-8" target="_blank">GitHub</a> that you can use to print colorful output, for example <a href="https://github.com/mtynior/ColorizeSwift" target="_blank">ColorizeSwift</a>, <a href="https://github.com/pakLebah/ANSITerminal" target="_blank">ANSITerminal</a>, <a href="https://github.com/flintprocessor/ANSIEscapeCode" target="_blank">ANSIEscapeCode</a> and many more cool ones.</p><p>The very last thing that I’d like to show you is the <a href="https://developer.apple.com/documentation/swift/1641199-readline" target="_blank">readLine</a> function, which you can use to read a line from the standard input. This comes handy if you need to get user input from the command line.</p><h2>Use an argument parser library</h2><p>If you are looking for a type-safe argument parser written in Swift, you should definitely take a look at the <a href="https://github.com/apple/swift-argument-parser" target="_blank">Swift Argument Parser</a> library. It is created and maintained by Apple, so it’s kind of an official solution for this particular issue, but IMHO it lacks some advanced features.</p><p>This is the main reason why I prefer <a href="https://theswiftdev.com/how-to-write-swift-scripts-using-the-new-command-api-in-vapor-4/" target="_blank">the Vapor command API</a> built on top of the <a href="https://github.com/vapor/console-kit" target="_blank">ConsoleKit</a> library. Both libraries can parse arguments, options and flags, but ConsoleKit is also capable of displaying progress indicators, it features multiple command groups, secure input, auto-completion, multiple log levels and many more.</p><pre><code class="language-swift">/// HelloCommand.swift
+import Foundation
+import ConsoleKit
+
+final class HelloCommand: Command {
+        
+    struct Signature: CommandSignature {
+
+        @Argument(name: "name", help: "The name to say hello")
+        var name: String
+
+        @Option(name: "greeting", short: "g", help: "Greeting used")
+        var greeting: String?
+
+        @Flag(name: "capitalize", short: "c", help: "Capitalizes the name")
+        var capitalize: Bool
+    }
+
+    static var name = "hello"
+    let help = "This command will say hello to a given name."
+
+    func run(using context: CommandContext, signature: Signature) throws {
+        let greeting = signature.greeting ?? "Hello"
+        var name = signature.name
+        if signature.capitalize {
+            name = name.capitalized
+        }
+        print("\(greeting) \(name)!")
+        
+        /// progress bar
+        let bar = context.console.progressBar(title: "Hello")
+        bar.start()
+        /// perform some work...
+        // bar.fail()
+        bar.succeed()
+        
+        /// input
+        let foo = context.console.ask("What?")
+        print(foo)
+        
+        /// secure input
+        let baz = context.console.ask("Secure what?", isSecure: true)
+        print(baz)
+        
+        /// choice
+        let c = context.console.choose("Make a choice", from: ["foo", "bar", "baz"])
+        print(c)
+
+        /// @Tip: look for more options under the context.console property.
+    }
+}
+
+/// main.swift
+import Foundation
+import ConsoleKit
+
+let console: Console = Terminal()
+var input = CommandInput(arguments: CommandLine.arguments)
+var context = CommandContext(console: console, input: input)
+
+var commands = Commands(enableAutocomplete: true)
+commands.use(HelloCommand(), as: HelloCommand.name, isDefault: false)
+
+do {
+    let group = commands.group(help: "Using ConsoleKit without Vapor.")
+    try console.run(group, input: input)
+}
+catch {
+    console.error("\(error)")
+    exit(1)
+}
+</code></pre><p>You can use both solution through the <a href="https://theswiftdev.com/swift-package-manager-tutorial/" target="_blank">Swift Package Manager</a>, the setup process is quite easy, you’ll find more tutorials about the Swift Argument Parser and I think that it is harder to find proper docs for ConsoleKit, so yeah… anyway, they’re great libraries you won’t regret using them. 😉</p><h2>Take advantage of the Swift Package Manager</h2><p>The <a href="https://swift.org/package-manager/" target="_blank">Swift Package Manager</a> is one of the best thing about the Swift programming language. I really love it and I use it almost every day. The fact that <a href="https://theswiftdev.com/the-swift-package-manifest-file/" target="_blank">the package manifest file</a> is defined using Swift itself makes it easy to use & understand.</p><pre><code class="language-swift">// swift-tools-version:5.5
+import PackageDescription
+
+let package = Package(
+    name: "myProject",
+    platforms: [
+        .macOS(.v10_15)
+    ],
+    dependencies: [
+        .package(url: "https://github.com/vapor/console-kit", from: "4.1.0"),
+    ],
+    targets: [
+        .executableTarget(name: "myProject",dependencies: [
+            .product(name: "ConsoleKit", package: "console-kit"),
+        ]),
+        .testTarget(name: "myProjectTests", dependencies: ["myProject"]),
+    ]
+)
+</code></pre><p>The package manager evolved quite a lot during the past few months, if you take a look at the <a href="https://apple.github.io/swift-evolution/#?search=package" target="_blank">Swift Evolution dashboard</a> you can track these changes, the most recent update was the introduction of custom, user-defined <a href="https://swift.org/blog/package-collections/" target="_blank">Package Collections</a>, but if you are looking for packages you can always take a look at the <a href="https://swiftpackageindex.com/" target="_blank">Swift Package Index website</a>. 👍</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

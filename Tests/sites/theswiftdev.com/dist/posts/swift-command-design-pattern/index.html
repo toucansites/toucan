@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Swift command design pattern - </title>
+    <meta name="description" content="This time I&#39;m going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift.">
+    
+    <meta property="og:url" content="/posts/swift-command-design-pattern/">
+    <meta property="og:title" content="Swift command design pattern - ">
+    <meta property="og:description" content="This time I&#39;m going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift command design pattern - ">
+    <meta name="twitter:description" content="This time I&#39;m going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2018-06-13 16:20:00">2018-06-13 16:20:00</time>
+            <h1 class="title">Swift command design pattern</h1>
+            <p class="excerpt">This time I&#39;m going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>The <a href="https://en.wikipedia.org/wiki/Command_pattern" target="_blank">command pattern</a> can be handy if you’d like to provide a common interface for different actions that will be executed later in time. Usually it’s an object that encapsulates all the information needed to run the underlying action properly.</p><p><a href="https://medium.com/@NilStack/swift-world-design-patterns-command-cc9c56544bf0" target="_blank">Commands</a> are often used to handle user interface actions, create undo managers, or manage transactions. Let’s see a <a href="https://medium.com/design-patterns-in-swift/design-patterns-in-swift-command-pattern-b95a1f4bbc45" target="_blank">command pattern</a> implementation in Swift by creating a command line argument handler with emojis. 💾</p><pre><code class="language-swift">#!/usr/bin/env swift
+
+import Foundation
+
+protocol Command {
+    func execute()
+}
+
+class HelpCommand: Command {
+
+    func execute() {
+        Help().info()
+    }
+}
+
+class Help {
+
+    func info() {
+        print("""
+
+             🤖 Commander 🤖
+                  v1.0
+
+        Available commands:
+
+            👉 help      This command
+            👉 ls        List documents
+
+        Bye! 👋
+
+        """)
+    }
+}
+
+class ListCommand: Command {
+
+    func execute() {
+        List().homeDirectoryContents()
+    }
+}
+
+class List {
+
+    func homeDirectoryContents() {
+        let fileManager = FileManager.default
+        guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Could not open documents directory")
+            exit(-1)
+        }
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            print("\n\t📁 Listing documents directory:\n")
+            print(fileURLs.map { "\t\t💾 " + $0.lastPathComponent }.joined(separator: "\n\n") + "\n" )
+        }
+        catch {
+            print(error.localizedDescription)
+            exit(-1)
+        }
+
+    }
+}
+
+class App {
+
+    var commands: [String:Command] = [:]
+
+    init() {
+        self.commands["help"] = HelpCommand()
+        self.commands["ls"] = ListCommand()
+    }
+
+    func run() {
+        let arguments = CommandLine.arguments[1...]
+
+        guard let key = arguments.first, self.commands[key] != nil else {
+            print("Usage: ./command.swift [\(self.commands.keys.joined(separator: "|"))]")
+            exit(-1)
+        }
+
+        self.commands[key]!.execute()
+    }
+}
+
+App().run()
+</code></pre><p>If you save this file, can run it by simply typing <code>./file-name.swift</code> from a terminal window. The Swift compiler will take care of the rest.</p><p>Real world use cases for the <a href="https://tech.okcupid.com/command-patterns-and-uicollectionview/" target="_blank">command design</a> pattern:</p><pre><code>+ various button actions
++ collection / table view selection actions
++ navigating between controllers
++ history management / undo manager
++ transactional behavior
++ progress management
++ wizards
+</code></pre><p>As you can see this pattern can be applied in multiple areas. Apple even made a specific class for this purpose called <a href="https://developer.apple.com/documentation/foundation/nsinvocation" target="_blank">NSInvocation</a>, but unfortunately it’s not available in Swift, due to it’s dynamic behavior. That’s not a big deal, you can always make your own protocol & implementation, in most cases you just need one extra class that wraps the underlying command logic. 😛</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Swift factory method design pattern - </title>
+    <meta name="description" content="The factory method design pattern is a dedicated non-static method for hiding the creation logic of an object. Let&#39;s make it in Swift!">
+    
+    <meta property="og:url" content="/posts/swift-factory-method-design-pattern/">
+    <meta property="og:title" content="Swift factory method design pattern - ">
+    <meta property="og:description" content="The factory method design pattern is a dedicated non-static method for hiding the creation logic of an object. Let&#39;s make it in Swift!">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift factory method design pattern - ">
+    <meta name="twitter:description" content="The factory method design pattern is a dedicated non-static method for hiding the creation logic of an object. Let&#39;s make it in Swift!">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2018-05-31 16:20:00">2018-05-31 16:20:00</time>
+            <h1 class="title">Swift factory method design pattern</h1>
+            <p class="excerpt">The factory method design pattern is a dedicated non-static method for hiding the creation logic of an object. Let&#39;s make it in Swift!</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Factory method is just a non-static method</h2><p>Let’s face it, this pattern is just a method usually backed by simple protocols & classes. Start with a really simple example: imagine a class that can create a base URL for your service endpoint. Let’s call it service factory. 😅</p><pre><code class="language-swift">class ServiceFactory {
+    func createProductionUrl() -> URL {
+        return URL(string: "https://localhost/")!
+    }
+}
+let factory = ServiceFactory()
+factory.createProductionUrl()
+</code></pre><p>You might think, that hey, this is not even close to a <a href="https://medium.com/jeremy-codes/factory-method-in-swift-d5222dd6e61d" target="_blank">factory method</a> pattern, but wait for it… let’s make things a little bit complicated by creating a protocol for the service class and a protocol for returning the URL as well. Now we can implement our base production URL protocol as a separate class and return that specific instance from a production service factory class. Just check the code you’ll get it:</p><pre><code class="language-swift">protocol ServiceFactory {
+    func create() -> Service
+}
+
+protocol Service {
+    var url: URL { get }
+}
+
+class ProductionService: Service {
+    var url: URL { return URL(string: "https://localhost/")! }
+}
+
+class ProductionServiceFactory: ServiceFactory {
+    func create() -> Service {
+        return ProductionService()
+    }
+}
+
+let factory = ProductionServiceFactory()
+let request = factory.create()
+</code></pre><p>Why did we separated all the logic into two classes and protocols? Please believe me decoupling is a good thing. From now on you could easily write a mocked service with a dummy URL to play around with. Obviously that’d need a matching factory class.</p><p>Those mock instances would also implement the service protocols so you could add new types in a relatively painless way without changing the original codebase. The <a href="https://medium.com/@NilStack/swift-world-design-patterns-factory-method-2be4bb3c73cc" target="_blank">factory method</a> solves one specific problem of a simple factory pattern. If the list - inside the switch-case - becomes too long, maintaining new objects will be hell with just one factory. <a href="https://stackoverflow.com/questions/69849/factory-pattern-when-to-use-factory-methods" target="_blank">Factory method</a> solves this by introducing multiple factory objects.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

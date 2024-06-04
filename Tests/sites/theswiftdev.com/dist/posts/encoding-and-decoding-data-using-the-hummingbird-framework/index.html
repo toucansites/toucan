@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Encoding and decoding data using the Hummingbird framework - </title>
+    <meta name="description" content="URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.">
+    
+    <meta property="og:url" content="/posts/encoding-and-decoding-data-using-the-hummingbird-framework/">
+    <meta property="og:title" content="Encoding and decoding data using the Hummingbird framework - ">
+    <meta property="og:description" content="URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Encoding and decoding data using the Hummingbird framework - ">
+    <meta name="twitter:description" content="URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2023-03-22 16:20:00">2023-03-22 16:20:00</time>
+            <h1 class="title">Encoding and decoding data using the Hummingbird framework</h1>
+            <p class="excerpt">URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>HTTP is all about sending and receiving data over the network. Originally it was only utilized to transfer HTML documents, but nowadays we use HTTP to transfer CSS, JavaScript, JSON and many other data types. According to the standards, the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type" target="_blank">Content-Type</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length" target="_blank">Content-Length</a> headers can be used to have a better understanding about the data inside the body of the HTTP request.</p><p>Modern web servers can automatically send back these headers based on the object you return in a request handler function. This is the case with Hummingbird, it has built-in <a href="httpshttps://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/encoding-and-decoding" target="_blank">encoding and decoding</a> support, which makes the data transformation process really simple.</p><p>For example if we setup the following route handler and call the hello endpoint using cURL with the -i flag, the output will contain a bit more information about the response. ℹ️</p><pre><code class="language-swift">router.get("hello") { _ in "hello" }
+        
+//
+// curl -i http://localhost:8080/hello
+//
+// HTTP/1.1 200 OK
+// content-type: text/plain; charset=utf-8
+// Date: Mon, 20 Mar 2023 14:45:41 GMT
+// connection: keep-alive
+// content-length: 5
+// server: Hummingbird
+//
+// hello
+//
+</code></pre><p>There are some basic headers in the response, the content-type header contains the type of the body, which is currently a plain text with an UTF-8 encoded string, since we’ve returned a String type using our Swift code. The content-length is 5, because the character count of hello is 5.</p><p>There are some other headers, but ignore those, the interesting part for us is the content-type header, and how it is injected into the response. Every Hummingbird application has an encoder and a decoder property. The default values for these are NullEncoder and NullDecoder. The encoders can magically add the proper content type header to the response and encode some object into a HTTP response data. Not everything is response encodable and decodable by default, but you can encode String objects in Hummingbird by default. 👍</p><h2>Encoding and decoding JSON objects</h2><p>Many of the server-side Swift systems are used to create JSON-based RESTful API backends for mobile frontends. Hummingbird can help you with this, since it has built-in encoding and decoding support for JSON objects through the Codable protocol.</p><p>First you have to import the HummingbirdFoundation library, since it is a standalone helper tool built around the Foundation framework, and that package contains the Codable type extensions. Next you have to setup the encoder and decoder using a JSONEncoder and JSONDecoder instance. After this, you can easily transform incoming HTTP body objects into Swift data structures and return with them as well. Let me show you a quick example. ⤵️</p><pre><code class="language-swift">import Hummingbird
+import HummingbirdFoundation
+
+struct Foo: Codable {
+    let bar: String
+    let baz: Int
+}
+
+extension Foo: HBResponseCodable {}
+
+
+extension HBApplication {
+
+    func configure(_ args: AppArguments) throws {
+        
+        decoder = JSONDecoder()
+        encoder = JSONEncoder()
+        
+        router.post("foo") { req async throws -> Foo in
+            guard let foo = try? req.decode(as: Foo.self) else {
+                throw HBHTTPError(.badRequest, message: "Invalid request body.")
+            }
+            return foo
+        }
+    }
+
+    //
+    // curl -i -X POST http://localhost:8080/foo \
+    //     -H "Content-Type: application/json" \
+    //     -H "Accept: application/json" \
+    //     --data-raw '{"bar": "bar", "baz": 42}'
+    //
+    // HTTP/1.1 200 OK
+    // content-type: application/json; charset=utf-8
+    // Date: Mon, 20 Mar 2023 15:15:06 GMT
+    // connection: keep-alive
+    // content-length: 22
+    // server: Hummingbird
+    //
+    // {"bar":"bar","baz":42}
+    //
+}
+</code></pre><p>As you can see the type of the returned content is now properly set to application/json and the length is also provided by default. We were also able to decode the Foo object from the request body and automatically encode the object after we returned with it.</p><p><a href="https://www.kitura.dev/docs/routing/codable-routing" target="_blank">Codable routing</a> works like magic and nowadays it’s a pretty standard approach if it comes to server-side Swift frameworks. Fun fact: this approach was originally ‘invented’ for Swift by the developers of the <a href="https://www.kitura.dev/" target="_blank">Kitura framework</a>. Thank you. 🙏</p><p>The HBResponseCodable and the HBResponseEncodable protocols are the basic building blocks and the <a href="https://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/hbrequestdecoder/" target="_blank">HBRequestDecoder</a> and the <a href="https://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/hbresponseencoder/" target="_blank">HBResponseEncoder</a> are responsible for this magic. They make it possible to decode a Decodable object from a <a href="https://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/hbrequest" target="_blank">HBRequest</a> and encode things into a <a href="https://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/hbresponse" target="_blank">HBResponse</a> object and also provide additional headers. If you would like to know more, I highly recommend to take a look at the <a href="https://github.com/hummingbird-project/hummingbird/blob/main/Sources/HummingbirdFoundation/Codable/JSON/JSONCoding.swift" target="_blank">JSONCoding.swift</a> file inside the framework. 😉</p><h2>Encoding and decoding HTML forms</h2><p>I don’t want to get too much into the details of building forms using HTML code, by the way there is a better way using <a href="https://github.com/BinaryBirds/swift-html" target="_blank">SwiftHtml</a>, but I’d like to focus more on the underlying data transfer mechanism and the <a href="https://www.w3schools.com/tags/att_form_enctype.asp" target="_blank">enctype attribute</a>. There are 3 possible, but only two useful values of the encoding type:</p><ul><li>application/x-www-form-urlencoded</li><li>multipart/form-data</li></ul><p>URL encoding and decoding is supported out of the box when using HummingbirdFoundation, this is a simple wrapper around the <a href="https://www.w3schools.com/tags/ref_urlencode.ASP" target="_blank">URL encoding</a> mechanism to easily support data transformation.</p><pre><code class="language-swift">decoder = URLEncodedFormDecoder()
+encoder = URLEncodedFormEncoder()
+
+//
+// curl -i -X POST http://localhost:8080/foo \
+//     -H "Content-Type: application/x-www-form-urlencoded" \
+//     -H "Accept: application/x-www-form-urlencoded" \
+//     --data-raw 'bar=bar&baz=42'
+//
+// HTTP/1.1 200 OK
+// content-type: application/x-www-form-urlencoded
+// Date: Mon, 20 Mar 2023 15:54:54 GMT
+// connection: keep-alive
+// content-length: 14
+// server: Hummingbird
+//
+// bar=bar&baz=42
+//
+</code></pre><p>So that’s one way to process a URL encoded form, the other version is based on the multipart approach, which has no built-in support in Hummingbird, but you can use the <a href="https://github.com/vapor/multipart-kit" target="_blank">multipart-kit</a> library from the Vapor framework to process such forms. You can find a working example <a href="https://github.com/hummingbird-project/hummingbird-examples/tree/main/multipart-form" target="_blank">here</a>. I also have an article about <a href="https://theswiftdev.com/easy-multipart-file-upload-for-swift/" target="_blank">how to upload files using multipart form data</a> requests. So there are plenty of resources out there, that’s why I won’t include an example in this article. 😅</p><h2>Header based encoding and decoding</h2><p>First we have to implement a custom request decoder and a response encoder. In the decoder, we’re going to check the Content-Type header for a given request and decode the HTTP body based on that. The encoder will do the exact same thing, but the response body output is going to depend on the Accept header field. Here’s how you can implement it:</p><pre><code class="language-swift">struct AppDecoder: HBRequestDecoder {
+    
+    func decode<T>(
+        _ type: T.Type,
+        from req: HBRequest
+    ) throws -> T where T: Decodable {
+        switch req.headers["content-type"].first {
+        case "application/json", "application/json; charset=utf-8":
+            return try JSONDecoder().decode(type, from: req)
+        case "application/x-www-form-urlencoded":
+            return try URLEncodedFormDecoder().decode(type, from: req)
+        default:
+            throw HBHTTPError(.badRequest)
+        }
+    }
+}
+
+struct AppEncoder: HBResponseEncoder {
+
+    func encode<T>(
+        _ value: T,
+        from req: HBRequest
+    ) throws -> HBResponse where T: Encodable {
+        switch req.headers["accept"].first {
+        case "application/json":
+            return try JSONEncoder().encode(value, from: req)
+        case "application/x-www-form-urlencoded":
+            return try URLEncodedFormEncoder().encode(value, from: req)
+        default:
+            throw HBHTTPError(.badRequest)
+        }
+    }
+}
+</code></pre><p>Now if you change the configuration and use the AppEncoder & AppDecoder you should be able to respond based on the Accept header and process the input based on the Content-Type header.</p><pre><code class="language-swift">import Hummingbird
+import HummingbirdFoundation
+
+struct Foo: Codable {
+    let bar: String
+    let baz: Int
+}
+
+extension Foo: HBResponseEncodable {}
+extension Foo: HBResponseCodable {}
+
+extension HBApplication {
+
+    func configure(_ args: AppArguments) throws {
+        
+        decoder = AppDecoder()
+        encoder = AppEncoder()
+        
+        router.post("foo") { req async throws -> Foo in
+            guard let foo = try? req.decode(as: Foo.self) else {
+                throw HBHTTPError(.badRequest, message: "Invalid request body.")
+            }
+            return foo
+        }
+    }
+}
+</code></pre><p>Feel free to play around with some cURL snippets… 👾</p><pre><code class="language-sh"># should return JSON encoded data
+curl -i -X POST http://localhost:8080/foo \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -H "Accept: application/json" \
+    --data-raw 'bar=bar&baz=42'
+
+# should return URL encoded data
+curl -i -X POST http://localhost:8080/foo \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/x-www-form-urlencoded" \
+    --data-raw '{"bar": "bar", "baz": 42}'
+
+# should return with a 400 status code
+curl -i -X POST http://localhost:8080/foo \
+    -H "Content-Type: application/json" \
+    -H "Accept: multipart/form-data" \
+    --data-raw '{"bar": "bar", "baz": 42}'
+</code></pre><p>So, based on this article you should be able to implement support to even more content types by simply extending the app encoder and decoder. Of course you might have to import some additional package dependencies, but that’s fine.</p><h2>Raw requests and responses</h2><p>One more little thing, before I end this article: you can access the raw request body data and send back a raw response using the HBResponse object like this:</p><pre><code class="language-swift">router.post("foo") { req async throws -> HBResponse in
+    // get raw request body
+    if let buffer = req.body.buffer {
+        let rawInputData = buffer.getData(
+            at: 0,
+            length: buffer.readableBytes
+        )
+        print(rawInputData)
+    }
+    
+    // streaming input body chunk-by-chunk
+    if let sequence = req.body.stream?.sequence {
+        for try await chunk in sequence {
+            print(chunk)
+        }
+    }
+    
+    guard let data = "hello".data(using: .utf8) else {
+        throw HBHTTPError(.internalServerError)
+    }
+    
+    return .init(
+        status: .ok,
+        headers: .init(),
+        body: .byteBuffer(.init(data: data))
+    )
+}
+</code></pre><p>For smaller requests, you can use the req.body.buffer property and turn it into a Data type if needed. Hummingbird has great support for the new Swift Concurreny API, so you can use the sequence on the body stream if you need chunked reads. Now only one question left:</p><h2>What types should I support?</h2><p>The answer is simple: it depends. Like really. Nowadays I started to ditch multipart encoding and I prefer to communicate with my API using REST (JSON) and upload files as raw HTTP body. I never really had to support URL encoding, because if you submit HTML forms, you’ll eventually face the need of file upload and that won’t work with URL encoded forms, but only with multipart.</p><p>In conclusion I’d say that the good news is that we have plenty of opportunities and if you want to provide support for most of these types you don’t have to reinvent the wheel at all. The multipart-kit library is built into Vapor 4, but that’s one of the reasons I started to like Hummingbird a bit more, because I can only include what I really need. Anyway, competition is a good thing to have in this case, because hopefully both frameworks will evolve for good… 🙃</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

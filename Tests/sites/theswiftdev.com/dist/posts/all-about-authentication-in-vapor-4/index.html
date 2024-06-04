@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>All about authentication in Vapor 4 - </title>
+    <meta name="description" content="Learn how to implement a user login mechanism with various auth methods using sessions, JWTs, written in Swift only.">
+    
+    <meta property="og:url" content="/posts/all-about-authentication-in-vapor-4/">
+    <meta property="og:title" content="All about authentication in Vapor 4 - ">
+    <meta property="og:description" content="Learn how to implement a user login mechanism with various auth methods using sessions, JWTs, written in Swift only.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="All about authentication in Vapor 4 - ">
+    <meta name="twitter:description" content="Learn how to implement a user login mechanism with various auth methods using sessions, JWTs, written in Swift only.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-04-07 16:20:00">2020-04-07 16:20:00</time>
+            <h1 class="title">All about authentication in Vapor 4</h1>
+            <p class="excerpt">Learn how to implement a user login mechanism with various auth methods using sessions, JWTs, written in Swift only.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Authentication, authorization, sessions, tokens what the f*** is this all about???</h2><p>The official Vapor docs about <a href="http://docs.vapor.codes/4.0/authentication/" target="_blank">authentication</a> are pretty good, but for a beginner it can be a little hard to understand, since it covers a lot. In this article I’ll try to explain everything as simple as possible from a different perspective. First let’s define some basic terms.</p><h3>Authentication</h3><blockquote><p>Authentication is the act of verifying a user’s identity.</p></blockquote><p>In other words, authentication is the process of transforming a unique key (identifier) to actual user data. This can be a cookie with a session identifier stored in a browser, or another one kept by the API client, but based on this id the backend can retrieve the associated user object.</p><p>The end user signs in using a login form on a website (or an API endpoint), sends the usual credentials (email, password) to the backend. If those credentials were valid, then the server will return a (randomly generated) identifier to the client. We usually call this identifier, session or token, based on some other principles I’ll cover later on. ⬇️</p><p>Next time the client wants to make a request it just needs to send the locally stored id, instead of the sensitive email, password combination. The server just needs to validate the id somehow, if it’s valid then the user is authenticated, we can use it to fetch more details about the user.</p><h3>Authorization</h3><blockquote><p>The act of verifying a previously authenticated user’s permissions to perform certain tasks.</p></blockquote><p>How do we know if the authenticated user has access to some endpoint on the server? Is it just a regular visitor, or an admin user? The method of figuring out user roles, permissions, access level is called authorization. It ensures that the authorized user can only access specific resources. 🔒</p><p>Consider the following scenario: there are two types of user roles: editors and visitors. An editor can create a new article, but a visitor can only view them (these are the permissions associated to the roles). <code>EditorUser</code> is in the group of editors, but <code>VisitorUser</code> only has the visitor role. We can figure out the authority (access level) for each user by checking the roles & permissions.</p><blockquote><p>NOTE: Session ID <s>(authentication)</s>> User <s>(authorization)</s>> Roles & Permissions</p></blockquote><p>Vapor only gives you some help to authenticate the user using various methods. Authorization is usually part of your app’s business logic, this means that you have to figure out the details for your own needs, but this is just fine, don’t worry too much about it just yet. 😬</p><h3>Sessions</h3><blockquote><p>If there is a record on the server side with an identifier, then it is a session.</p></blockquote><p>For the sake of simplicity, let’s say that a session is something that you can look up on the server inside some kind of storage. This session is linked to exactly one user account so when you receive a session identifier you can look up the corresponding user through the relation.</p><p>The session identifier is exchanged to the client after a successful email + password based login request. The client stores session id somewhere for further usage. The storage can be anything, but browsers mainly use cookies or the local storage. Applications can store session identifiers in the keychain, but I’ve seen some really bad practices using a plain-text file. 🙉</p><h3>Tokens</h3><p>Tokens (JWTs) on the other hand have no server side records. A token can be given to the client by the authentication API after a successful login request. The key difference between a token and a session is that a token is cryptographically signed. Thanks to asymmetric keys, the signature can be verified by the application server without knowing the private key that was used to sign the token. A token usually self-contains some other info about the user, expiration date, etc. This additional “metadata” can also be verified by the server, this gives us an extra layer of security.</p><p>Nowadays <a href="https://jwt.io/" target="_blank">JSON Web Token</a> is the golden standard if it comes to tokens. JWT is getting more and more popular, implementations are available for almost every programming language with a wide variety of signing algorithms. There is a really amazing <a href="https://blog.angular-university.io/angular-jwt/" target="_blank">guide to JSON Web Tokens</a>, you should definitely read it if you want to know more about this technology. 📖</p><p>Enough theory, time to write some code using Swift on the server.</p><h2>Implementing auth methods in Vapor</h2><p>As I mentioned this in the beginning of the article authentication is simply turning a request into actual user data. Vapor has built-in protocols to help us during the process. There is quite an abstraction layer here, which means that you don’t have to dig yourself into HTTP headers or incoming body parameters, but you can work with higher level functions to verify identify.</p><p>Let me show you all the auth protocols from Vapor 4 and how you can use them in practice. Remember: authentication in Vapor is about turning requests into models using the input.</p><h3>Authentication using a Model</h3><p>Each and every authentication protocol requires a model that is going to be retrieved during the authentication process. In this example I’ll work with a <code>UserModel</code> entity, here’s mine:</p><pre><code class="language-swift">import Vapor
+import Fluent
+
+final class UserModel: Model {
+        
+    static let schema = "users"
+
+    struct FieldKeys {
+        static var email: FieldKey { "email" }
+        static var password: FieldKey { "password" }
+    }
+    
+    // MARK: - fields
+    
+    @ID() var id: UUID?
+    @Field(key: FieldKeys.email) var email: String
+    @Field(key: FieldKeys.password) var password: String
+    
+    init() { }
+    
+    init(id: UserModel.IDValue? = nil,
+         email: String,
+         password: String)
+    {
+        self.id = id
+        self.email = email
+        self.password = password
+    }
+}
+</code></pre><p>If you don’t understand the code above, please read my <a href="https://theswiftdev.com/a-tutorial-for-beginners-about-the-fluent-postgresql-driver-in-vapor-4/" target="_blank">comprehensive tutorial about Fluent</a>, for now I’ll skip the migration part, so you have to write that on your own to make things work. ⚠️</p><p>Now that we have a model, it’s time to convert an incoming request to an authenticated model using an authenticator object. Let’s begin with the most simple one:</p><h3>RequestAuthenticator</h3><p>This comes handy if you have a custom authentication logic and you need the entire request object. Implementing the protocol is relatively straightforward. Imagine that some dumb-ass manager wants to authenticate users using the <a href="https://en.wikipedia.org/wiki/Fragment_identifier" target="_blank">fragment identifier</a> from the URL.</p><p>Not the smartest way of creating a safe authentication layer, but let’s make him happy with a nice solution. Again, if you can guess the user identifier and you pass it as a fragment, you’re signed in. (e.g. <code>http://localhost:8080/sign-in#</code>). If a user exists in the database with the provided UUID then we’ll authenticate it (yes without providing a password 🤦‍♂️), otherwise we’ll respond with an error code.</p><pre><code class="language-swift">import Vapor
+import Fluent
+
+extension UserModel: Authenticatable {}
+
+struct UserModelFragmentAuthenticator: RequestAuthenticator {
+    typealias User = UserModel
+
+    func authenticate(request: Request) -> EventLoopFuture<Void> {
+        User.find(UUID(uuidString: request.url.fragment ?? ""), on: request.db)
+        .map {
+            if let user = $0 {
+                request.auth.login(user)
+            }
+        }
+    }
+}
+</code></pre><p>Firstly, we create a <code>typealias</code> for the associated User type as our <code>UserModel</code>. It is a generic protocol, that’s why you need the <code>typealias</code>.</p><blockquote><p>Inside the authenticator implementation you should look up the given user based on the incoming data, and if everything is valid you can simply call the <code>req.auth.login([user])</code> method, this will authenticate the user. You should return a <code>Void</code> future from these authenticator protocol methods, but please don’t throw user related errors or use failed futures in this case. You should only supposed to forward database related errors or similar. If the authenticator can’t log in the user, just don’t call the login method, it’s that simple.</p></blockquote><p>The second and final step is to write our authentication logic, in the auth method. You’ll get the request as an input, and you have to return a future with the authenticated user or <code>nil</code> if the authentication was unsuccesful. Pretty easy, fragment is available through the request, and you can look up the entity using Fluent. That’s it, we’re ready. 😅</p><blockquote><p>WARN: The fragment URL part is never going to be available on the server side at all. 💡</p></blockquote><p>How do we use this authenticator? Well the Authenticator protocol itself extends the <a href="https://theswiftdev.com/how-to-use-middlewares-in-vapor-4/" target="_blank">Middleware</a> protocol, so we can register it right away as a group member. You can use a middleware to alter incoming requests before the next request handler will be called. This definition fits perfectly for the authenticators so it makes sense that they are defined as middlewares.</p><p>We’ll need one more (guard) middleware that’s coming from the <code>Authenticatable</code> protocol to respond with an error to unauthenticated requests.</p><pre><code class="language-swift">func routes(_ app: Application) throws {
+    
+    app.grouped(UserModelFragmentAuthenticator(),
+                UserModel.guardMiddleware())
+    .get("sign-in") { req in
+        "I'm authenticated"
+    }
+}
+</code></pre><p>Now if you navigate to the <code>http://localhost:8080/sign-in#</code> URL, with a valid UUID of an existing user from the db, the page should display “I’m authenticated”, otherwise you’ll get an HTTP error. The magic happens in the background. I’ll explain the flow one more time.</p><p>The “sign-in” route has two middlewares. The first one is the authenticator which will try to turn the request into a model using the implemented authentication method. If the authentication was succesful it’ll store the user object inside a generic <code>request.auth</code> property.</p><p>The second middleware literally guards the route from unauthenticated requests. It checks the request.auth variable, if it contains an authenticated user object or not. If it finds a previously authenticated user it’ll continue with the next handler, otherwise it’ll throw an error. Vapor can automatically turn thrown errors into HTTP status codes, that’s why you’ll get a 401.</p><blockquote><p>WARN: The names of the HTTP standard response codes are a little big misleading. You should respond with 401 (unauthorized) for unsuccesful authentication requests, and 403 (forbidden) responses for unauthorized requests. Strange, huh? 😳</p></blockquote><p>You don’t necessary need this second middleware, but I’d recommend using it. You can manually check the existence of an authenticated object using try <code>req.auth.require(UserModel.self)</code> inside the request handler. A guard middleware is available on every <code>Authenticatable</code> object, essentially it is doing the same thing as I mentioned above, but in a more generic, reusable way.</p><p>Finally the request handler will only be called if the user is already authenticated, otherwise it’ll never be executed. This is how you can protect routes from unauthenticated requests.</p><h3>BasicAuthenticator</h3><p>A <code>BasicAuthenticator</code> is just an extension over the <code>RequestAuthenticator</code> protocol. During a <a href="https://en.wikipedia.org/wiki/Basic_access_authentication" target="_blank">basic authentication</a> the credentials are arriving base64 encoded inside the Authorization HTTP header. The format is <code>Authorization: Basic email:password</code> where the email:password or username:password credentials are only base64 encoed. Vapor helps you with the decoding process, that’s what the protocol adds over the top of the request authentication layer, so you can write a basic authenticator like this:</p><pre><code class="language-swift">struct UserModelBasicAuthenticator: BasicAuthenticator {
+
+    typealias User = UserModel
+    
+    func authenticate(basic: BasicAuthorization, for request: Request) -> EventLoopFuture<Void> {
+        User.query(on: request.db)
+            .filter(\.$email == basic.username)
+            .first()
+            .map {
+                do {
+                    if let user = $0, try Bcrypt.verify(basic.password, created: user.password) {
+                        request.auth.login(user)
+                    }
+                }
+                catch {
+                    // do nothing...
+                }
+        }
+    }
+}
+</code></pre><p>Usage is pretty much the same, you just swap the authenticator or you can combine this one with the previous one to support multiple authentication methods for a single route. 😉</p><h4>Basic auth using the ModelAuthenticatable protocol</h4><p>You don’t always need to implement your own custom BasicAuthenticator. You can conform to the ModelAuthenticatable protocol. This way you can just write a password verifier and the underlying generic protocol implementation will take care of the rest.</p><pre><code class="language-swift">extension UserModel: ModelAuthenticatable {
+    static let usernameKey = \UserModel.$email
+    static let passwordHashKey = \UserModel.$password
+
+    func verify(password: String) throws -> Bool {
+        try Bcrypt.verify(password, created: self.password)
+    }
+}
+
+// usage
+UserModel.authenticator()
+</code></pre><p>This is pretty much the same as writing the <code>UserModelBasicAuthenticator</code>, the only difference is that this time I don’t have to implement the entire authentication logic, but I can simply provide the keypath for the username and password hash, and I just write the verification method. 👍</p><h3>BearerAuthenticator</h3><p>The bearer authentication is just a schema where you can send tokens inside the Authorization HTTP header field after the Bearer keyword. Nowadays this is the recommended way of sending <a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank">JWTs to the backend</a>. In this case Vapor helps you by fetching the value of the token.</p><pre><code class="language-swift">struct UserModelBearerAuthenticator: BearerAuthenticator {
+    
+    typealias User = UserModel
+    
+    func authenticate(bearer: BearerAuthorization, for request: Request) -> EventLoopFuture<Void> {
+        // perform auth using the bearer.token value here...
+    }
+}
+</code></pre><h4>Custom Bearer auth using the ModelAuthenticatable protocol</h4><p>I lied a little bit in the beginning, regarding sessions and tokens. We developers can call something that’s stored in a backend database as a token. Also we’re using the Authorization HTTP header field to authenticate users. The joke must be true, if it comes to naming things we are the worst. 😅</p><p>Back to the topic, storing a token in the database is more like an extended session, but fine, let’s just go with the token name this time. This <code>ModelUserToken</code> allows you to create a custom token in the database and use it to authenticate users through an <code>Authorization Bearer</code> header.</p><p>Let’s make a new Fluent model with an associated user to see how this works in practice.</p><pre><code class="language-swift">final class UserTokenModel: Model {
+   
+   static let schema = "tokens"
+   
+   struct FieldKeys {
+       static var value: FieldKey { "value" }
+       static var userId: FieldKey { "user_id" }
+   }
+   
+   // MARK: - fields
+   
+   @ID() var id: UUID?
+   @Field(key: FieldKeys.value) var value: String
+   @Parent(key: FieldKeys.userId) var user: UserModel
+
+   init() { }
+   
+   init(id: UserTokenModel.IDValue? = nil,
+        value: String,
+        userId: UserModel.IDValue)
+   {
+       self.id = id
+       self.value = value
+       self.$user.id = userId
+   }
+}
+</code></pre><p>Now all what’s left to do is to extend the protocol by providing the required keyPaths. This protocol allows you to perform extra checks on a given token, such as expiration date. The good news is that the protocol gives you a <code>BearerAuthenticator</code> middleware as a “gratis”.</p><pre><code class="language-swift">extension UserTokenModel: ModelAuthenticatable {
+   static let valueKey = \UserTokenModel.$value
+   static let userKey = \UserTokenModel.$user
+   
+   var isValid: Bool {
+       true // you can check expiration or anything else...
+   }
+}
+
+// a middleware that confroms to the BearerAuthenticator protocol
+UserTokenModel.authenticator()
+</code></pre><p>How do you give a token to the end user? Well, you can open up an endpoint with a basic auth protection, generate a token, save it to the database and finally return it back as a response. All of this is nicely written in the <a href="http://docs.vapor.codes/4.0/authentication/" target="_blank">official authentication docs</a> on the Vapor website. If you read that I belive that you’ll understand the whole purpose of these protocols. 💧</p><h3>CredentialsAuthenticator</h3><p>This authenticator can decode a specific <code>Content</code> from the HTTP body, so you can use the type-safe content fields right ahead. For example this comes handy when you have a login form on your website and you would like to submit the credentails through it. Regular HTML forms can send values encoded as <code>multipart/form-data</code> using the body, Vapor can decode every field on the other side. Another example is when you are sending the email, password credentials as a JSON object through a post body. <code>curl -X POST "URL" -d '{"email": "", "password": ""}'</code></p><pre><code class="language-swift">struct UserModelCredentialsAuthenticator: CredentialsAuthenticator {
+    
+    struct Input: Content {
+        let email: String
+        let password: String
+    }
+
+    typealias Credentials = Input
+
+    func authenticate(credentials: Credentials, for req: Request) -> EventLoopFuture<Void> {
+        UserModel.query(on: req.db)
+            .filter(\.$email == credentials.email)
+            .first()
+            .map {
+                do {
+                    if let user = $0, try Bcrypt.verify(credentials.password, created: user.password) {
+                        req.auth.login(user)
+                    }
+                }
+                catch {
+                    // do nothing...
+                }
+            }
+    }
+}
+</code></pre><p>So as you can see most of these authenticator protocols are just helpers to transform HTTP data into Swift code. Nothing to worry about, you just have to know the right one for you needs.</p><p>So shouldn’t we put the pieces together already? Yes, but if you want to know more about auth you should check the source of the <a href="https://github.com/vapor/vapor/blob/master/Tests/VaporTests/AuthenticationTests.swift" target="_blank">AuthenticationTests.swift</a> file in the Vapor package. Now let me show you how to implement a session auth for your website.</p><h2>Session based authentication</h2><p>By default sessions will be kept around until you restart the server (or it crashes). We can change this by <a href="https://github.com/vapor/fluent/blob/master/Sources/Fluent/Fluent%2BSessions.swift" target="_blank">persisting sessions</a> to an external storage, such as a Fluent database or a redis storage. In this example I’m going to show you how to setup sessions inside a postgresql database.</p><pre><code class="language-swift">import Vapor
+import Fluent
+import FluentPostgresDriver
+
+extension Application {
+    static let databaseUrl = URL(string: Environment.get("DB_URL")!)!
+}
+
+public func configure(_ app: Application) throws {
+
+    try app.databases.use(.postgres(url: Application.databaseUrl), as: .psql)
+    
+    // setup persistent sessions
+    app.sessions.use(.fluent)
+    app.migrations.add(SessionRecord.migration)
+}
+</code></pre><p>Setting up persistent sessions using Fluent as a storage driver is just two lines of code. ❤️</p><pre><code class="language-swift">extension UserModel: SessionAuthenticatable {
+    typealias SessionID = UUID
+
+    var sessionID: SessionID { self.id! }
+}
+
+struct UserModelSessionAuthenticator: SessionAuthenticator {
+
+    typealias User = UserModel
+    
+    func authenticate(sessionID: User.SessionID, for req: Request) -> EventLoopFuture<Void> {
+        User.find(sessionID, on: req.db).map { user  in
+            if let user = user {
+                req.auth.login(user)
+            }
+        }
+    }
+}
+</code></pre><p>As a next step you have to extend the UserModel with the unique session details, so the system can look up users based on the session id. Lastly you have to connect the routes.</p><pre><code class="language-swift">import Vapor
+import Fluent
+
+func routes(_ app: Application) throws {
+
+    let session = app.routes.grouped([
+        SessionsMiddleware(session: app.sessions.driver),
+        UserModelSessionAuthenticator(),
+        UserModelCredentialsAuthenticator(),
+    ])
+
+    session.get { req -> Response in
+        guard let user = req.auth.get(UserModel.self) else {
+            return req.redirect(to: "/sign-in")
+        }
+
+        let body = """
+        <b>\(user.email)</b> is logged in <a href="/logout">Logout</a>
+        """
+
+        return .init(status: .ok,
+              version: req.version,
+              headers: HTTPHeaders.init([("Content-Type", "text/html; charset=UTF-8")]),
+              body: .init(string: body))
+    }
+    
+    session.get("sign-in") { req -> Response in
+        let body = """
+        <form action="/sign-in" method="post">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="">
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" value="">
+            
+            <input type="submit" value="Submit">
+        </form>
+        """
+
+        return .init(status: .ok,
+              version: req.version,
+              headers: HTTPHeaders.init([("Content-Type", "text/html; charset=UTF-8")]),
+              body: .init(string: body))
+    }
+
+    session.post("sign-in") { req -> Response in
+        guard let user = req.auth.get(UserModel.self) else {
+            throw Abort(.unauthorized)
+        }
+        req.session.authenticate(user)
+        return req.redirect(to: "/")
+    }
+    
+    session.get("logout") { req -> Response in
+        req.auth.logout(UserModel.self)
+        req.session.unauthenticate(UserModel.self)
+        return req.redirect(to: "/")
+    }
+
+}
+</code></pre><p>First we setup the session routes by adding the sessions middleware using the database storage driver. Next we create an endpoint where we can display the profile if the user is authenticated, otherwise we redirect to the sign-in screen. The get sign in screen renders a basic HTML form (you can also use the Leaf templating engine for a better looking view) and the post sign-in route handles the authentication process. The <code>req.session.authenticate</code> method will store the current user info in the session storage. The logout route will remove the current user from the auth store, plus we’d also like to remove the associated user link from the session storage. That’s it. 😎</p><h2>JWT based authentication</h2><p>Vapor 4 comes with great JWT support as an external Swift package:</p><pre><code class="language-swift">// swift-tools-version:5.2
+import PackageDescription
+
+let package = Package(
+    //...
+    dependencies: [
+        //...
+        .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0-rc.1"),
+    ],
+    targets: [
+        .target(name: "App", dependencies: [
+            .product(name: "JWT", package: "jwt"),
+            //...
+        ]),
+        //...
+    ]
+)
+</code></pre><p>In order to use sign and verify JWTs you’ll need a key-pair. The lib can generate one for you on the fly, but that’s not going to work so well, because each time you restart the application a new public and private key will be used in the core of the JWT signer. It’s better to have one sitting somewhere on the disk, you can generate one (<a href="https://community.auth0.com/t/jwt-signing-algorithms-rs256-vs-hs256/7720" target="_blank">RS256</a>) by running:</p><pre><code class="language-sh">ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key
+openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub
+</code></pre><p>I usually put thes generated files into my working directory. Since the algorithm (RS256) I’m using to sign the token is asymmetric I’ll create 2 signers with different identifiers. A private signer is used to sign JWTs, a public one is used to verify the signature of the incoming JWTs.</p><pre><code class="language-swift">import Vapor
+import JWT
+
+extension String {
+    var bytes: [UInt8] { .init(self.utf8) }
+}
+
+extension JWKIdentifier {
+    static let `public` = JWKIdentifier(string: "public")
+    static let `private` = JWKIdentifier(string: "private")
+}
+
+public func configure(_ app: Application) throws {
+    
+    //...
+
+    let privateKey = try String(contentsOfFile: app.directory.workingDirectory + "jwtRS256.key")
+    let privateSigner = try JWTSigner.rs256(key: .private(pem: privateKey.bytes))
+    
+    let publicKey = try String(contentsOfFile: app.directory.workingDirectory + "jwtRS256.key.pub")
+    let publicSigner = try JWTSigner.rs256(key: .public(pem: publicKey.bytes))
+     
+    app.jwt.signers.use(privateSigner, kid: .private)
+    app.jwt.signers.use(publicSigner, kid: .public, isDefault: true)
+}
+</code></pre><p>Verifying and signing a token is just a one-liner. You can use some of the authenticators from above to pass around a token to the request handler, somewhat the same way as we did it in the sessions example. However you’ll need to define a custom <code>JWTPayload</code> object that contains all the fields used in the token. This payload protocol should implement a verify method that can help you with the verification process. Here’s a really simple example how to sign and return a JWTPayload:</p><pre><code class="language-swift">import Vapor
+import JWT
+
+struct Example: JWTPayload {
+    var test: String
+
+    func verify(using signer: JWTSigner) throws {}
+}
+
+func routes(_ app: Application) throws {
+    let jwt = app.grouped("jwt")
+
+    jwt.get { req in
+        // sign the payload using the private key
+        try req.jwt.sign(Example(test: "Hello world!"), kid: .private)
+
+        // verify a token using the public key
+        //try request.jwt.verify(token, as: Example.self)
+    }
+}
+</code></pre><p>A payload contains small pieces of information (<a href="https://www.iana.org/assignments/jwt/jwt.xhtml" target="_blank">claims</a>). Each of them can be verified through the previously mentioned verify method. The good thing is that the JWT package comes with lots of handy claim types (including validators), feel free to pick the ones you need from the package (<code>JWTKit/Sources/Claims</code> directory). Since there are no official docs yet, you should check the source in this case, but don’t be afraid claims are very easy to understand. 🤐</p><pre><code class="language-swift">struct TestPayload: JWTPayload, Equatable {
+    var sub: SubjectClaim // a subject claim
+    var name: String
+    var admin: Bool
+    var exp: ExpirationClaim // an expiration claim
+
+    func verify(using signer: JWTSigner) throws {
+        try self.exp.verifyNotExpired()
+    }
+}
+let payload = TestPayload(sub: "vapor",
+                          name: "Foo",
+                          admin: false,
+                          exp: .init(value: .init(timeIntervalSince1970: 2_000_000_000)))
+
+let signed = try app.jwt.signers.get(kid: .private)!.sign(payload)
+
+// Verification tests:
+//print(try! app.jwt.signers.get()!.verify(signed.bytes, as: TestPayload.self) == payload)
+//print(try! app.jwt.signers.get(kid: .private)!.verify(signed.bytes, as: TestPayload.self) == payload)
+</code></pre><p>Tokens can be verified using both the public & the private keys. The public key can be shared with anyone, but you should NEVER give away the private key. There is an best practice to share keys with other parties called: <a href="https://auth0.com/docs/tokens/concepts/jwks" target="_blank">JWKS</a>. Vapor comes with JWKS support, so you can load keys from a remote URLs using this method. This time I won’t get into the details, but I promise that I’m going to make a post about how to use JWKS endpoints later on (Sign in with Apple tutorial). 🔑</p><p>Based on this article now you should be able to write your own authentication layer that can utilize a JWT token as a key. A possible authenticator implementation could look like this:</p><pre><code class="language-swift">extension UserModel: Authenticatable {}
+
+struct JWTUserModelBearerAuthenticator: BearerAuthenticator {
+    typealias User = UserModel
+    
+    func authenticate(bearer: BearerAuthorization, for request: Request) -> EventLoopFuture<User?> {
+        do {
+            let jwt = try request.jwt.verify(bearer.token, as: JWTAuth.self)
+            return User.find(UUID(uuidString: jwt.userId), on: request.db)
+        }
+        catch {
+            return request.eventLoop.makeSucceededFuture(nil)
+        }
+    }
+}
+</code></pre><p>The other thing that you’ll need is an endpoint that can exchange a JWT for the login credentials. You can use some other authenticators to support multiple authentication methods, such as basic or credentials. Don’t forget to guard the protected routes using the correct middleware. 🤔</p><h2>Conclusion</h2><p>Authentication is a really heavy topic, but fortunately Vapor helps a lot with the underlying tools. As you can see I tried to cover a lot in this artilce, but still I could write more about JWKS, OAuth, etc.</p><p>I really hope that you’ll find this article useful to understand the basic concepts. The methods described here are not bulletproof, the purpose here is not to demonstrate a secure layer, but to educate people about how the authentication layer works in Vapor 4. Keep this in mind. 🙏</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

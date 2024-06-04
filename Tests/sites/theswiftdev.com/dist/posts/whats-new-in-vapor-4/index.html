@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>What&#39;s new in Vapor 4? - </title>
+    <meta name="description" content="Vapor is the most popular server side Swift web application framework. This time we&#39;ll cover what&#39;s new in Vapor 4.">
+    
+    <meta property="og:url" content="/posts/whats-new-in-vapor-4/">
+    <meta property="og:title" content="What&#39;s new in Vapor 4? - ">
+    <meta property="og:description" content="Vapor is the most popular server side Swift web application framework. This time we&#39;ll cover what&#39;s new in Vapor 4.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="What&#39;s new in Vapor 4? - ">
+    <meta name="twitter:description" content="Vapor is the most popular server side Swift web application framework. This time we&#39;ll cover what&#39;s new in Vapor 4.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2019-08-26 16:20:00">2019-08-26 16:20:00</time>
+            <h1 class="title">What&#39;s new in Vapor 4?</h1>
+            <p class="excerpt">Vapor is the most popular server side Swift web application framework. This time we&#39;ll cover what&#39;s new in Vapor 4.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Swift 5.1</h2><p>Vapor 3 was built on top of some great new features of Swift 4.1, that’s why it was only released shortly (2 months) after the new programming language arrived. This is the exact same situation with Vapor 4. <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0258-property-wrappers.md" target="_blank">Property wrappers</a> are heavily used in the latest version of the Vapor framework, this feature is only going to be finalized in Swift 5.1 during the fall, which means that we can expect <a href="https://medium.com/@codevapor/vapor-4-alpha-1-releases-begin-94a4bc79dd9a" target="_blank">Vapor 4 shortly after</a>. 🍁</p><h2>SwiftNIO v2 and HTTP2 support</h2><p>A HUGE step forward and a long awaited feature, because HTTP2 is amazing. Multiplexed streams, server push, header compression, binary data format instead of the good old textual one over a secure layer by default. These are just a few important changes that the new protocol brings to the table. The basic implementation is already there in Vapor 4 alpha 2, I tried to setup my own HTTP2 server, but I faced a constant crash, as soon as I can make it work, I’ll write a tutorial about it. 🤞</p><h2>Fluent is amazing in Vapor 4!</h2><p>Controllers now have an associated database object, this means you can query directly on this database, instead of the incoming request object. Note that the Future alias is now gone, it’s simply EventLoopFuture from SwiftNIO.</p><pre><code class="language-swift">// Vapor 3
+
+import Vapor
+
+/// Controls basic CRUD operations on `Todo`s.
+final class TodoController {
+    /// Returns a list of all `Todo`s.
+    func index(_ req: Request) throws -> Future<[Todo]> {
+        return Todo.query(on: req).all()
+    }
+
+    /// Saves a decoded `Todo` to the database.
+    func create(_ req: Request) throws -> Future<Todo> {
+        return try req.content.decode(Todo.self).flatMap { todo in
+            return todo.save(on: req)
+        }
+    }
+
+    /// Deletes a parameterized `Todo`.
+    func delete(_ req: Request) throws -> Future<HTTPStatus> {
+        return try req.parameters.next(Todo.self).flatMap { todo in
+            return todo.delete(on: req)
+        }.transform(to: .ok)
+    }
+}
+
+// Vapor 4
+
+import Fluent
+import Vapor
+
+final class TodoController {
+    let db: Database
+
+    init(db: Database) {
+        self.db = db
+    }
+
+    func index(req: Request) throws -> EventLoopFuture<[Todo]> {
+        return Todo.query(on: self.db).all()
+    }
+
+    func create(req: Request) throws -> EventLoopFuture<Todo> {
+        let todo = try req.content.decode(Todo.self)
+        return todo.save(on: self.db).map { todo }
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        return Todo.find(req.parameters.get("todoID"), on: self.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { $0.delete(on: self.db) }
+            .transform(to: .ok)
+    }
+}
+</code></pre><p>Fluent has dynamic models, also the entire database layer is more sophisticated. You can define your own keys, schemas and many more which I personally love it, because it reminds me of my really old PHP based web framework. It’s really amazing that you don’t have to deal the underlying database provider anymore. It’s just Fluent so it really doesn’t matter if it’s pgsql or sqlite under the hood. ❤️</p><pre><code class="language-swift">// Vapor 3
+
+import FluentSQLite
+import Vapor
+
+/// A single entry of a Todo list.
+final class Todo: SQLiteModel {
+    /// The unique identifier for this `Todo`.
+    var id: Int?
+
+    /// A title describing what this `Todo` entails.
+    var title: String
+
+    /// Creates a new `Todo`.
+    init(id: Int? = nil, title: String) {
+        self.id = id
+        self.title = title
+    }
+}
+
+/// Allows `Todo` to be used as a dynamic migration.
+extension Todo: Migration { }
+
+/// Allows `Todo` to be encoded to and decoded from HTTP messages.
+extension Todo: Content { }
+
+/// Allows `Todo` to be used as a dynamic parameter in route definitions.
+extension Todo: Parameter { }
+
+// Vapor 4
+
+import Fluent
+import Vapor
+
+final class Todo: Model, Content {
+    static let schema = "todos"
+
+    @ID(key: "id")
+    var id: Int?
+
+    @Field(key: "title")
+    var title: String
+
+    init() { }
+
+    init(id: Int? = nil, title: String) {
+        self.id = id
+        self.title = title
+    }
+}
+</code></pre><p>There is a brand new migration layer with a ridiculously easy to learn API. 👍</p><pre><code class="language-swift">import Fluent
+
+struct CreateTodo: Migration {
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        return database.schema("todos")
+            .field("id", .int, .identifier(auto: true))
+            .field("title", .string, .required)
+            .create()
+    }
+
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        return database.schema("todos").delete()
+    }
+}
+</code></pre><h2>SwiftLog</h2><p>A <a href="https://github.com/apple/swift-log" target="_blank">native logger library</a> made by Apple is now the default logger in Vapor 4.</p><p>The entire logging system is bootstrapped during the boot process which I like quite a lot, because in the past I had some issues with the logger configuration in Vapor 3. 🤔</p><pre><code class="language-swift">import Vapor
+
+func boot(_ app: Application) throws {
+    try LoggingSystem.bootstrap(from: &app.environment)
+    try app.boot()
+}
+</code></pre><h2>“Syntactic sugar”</h2><p>Some little changes were introduced in the latest version of the framework.</p><p>For example the input parameter names in the config and the routes file are just one letter long (you don’t need to type that much). I personally don’t like this, because we have auto-complete. I know, it’s just a template and I can change it, but still… 🤐</p><p>Another small change is that the entire application launch / configuration process is way more simple than it was before, plus from now on you can shut down your app server gracefully. Overall it feels like all the API’s in Vapor were polished just the right amount, I really like the changes so far. 😉</p><h2>… and many many more!</h2><p><a href="https://x.com/tanner0101" target="_blank">Tanner Nelson</a> posted quite a list on <a href="https://discord.gg/BnXmVGA" target="_blank">Vapor’s discord server</a> (it’s such an amazing community, you should join too). I’m going to shamelessly rip that off to show you most of the things that are going to be included in Vapor 4. Here is the list:</p><h3>Vapor</h3><ul><li>services on controllers</li><li>synchronous content decoding</li><li>upload / download streaming</li><li>backpressure</li><li>http/2</li><li>extensible route builder (for openapi)</li><li>apple logging</li><li>improved session syntax</li><li>dotenv support</li><li>validation included</li><li>authentication included</li><li>XCTVapor testing module</li><li>swift server http client</li><li>simplified websocket endpoints</li><li>graceful shutdown</li><li>nio 2</li></ul><h3>ConsoleKit</h3><ul><li>type safe signatures</li></ul><h3>RoutingKit</h3><ul><li>performance improvements</li><li>performance testing bot</li></ul><h3>Fluent</h3><ul><li>dynamic models</li><li>simplified driver requirements</li><li>eager loading: join + subquery</li><li>partial selects</li><li>dirty updates</li></ul><h3>LeafKit</h3><ul><li>improved body syntax</li><li>separate lexer + parser</li></ul><h3>Toolbox</h3><ul><li>dynamic project init</li></ul><h2>How to set up a Vapor 4 project (on macOS)?</h2><p>If you want to play around with Vapor 4, you can do it right now. You just have to install <a href="https://developer.apple.com/develop/" target="_blank">Xcode 11</a>, the <a href="https://docs.vapor.codes/3.0/getting-started/toolbox/" target="_blank">Vapor toolbox</a> and run the following command from Terminal:</p><pre><code>#optional: select Xcode 11
+sudo xcode-select --switch /Applications/Xcode-beta.app/Contents/Developer
+
+#create a brand new Vapor 4 project
+vapor new myproject --branch=4
+cd myproject
+vapor update -y
+</code></pre><p>Personally I really love these new changes in Vapor, especially the HTTP2 support and the new Fluent abstraction. Vapor 3 was quite a big hit, I believe that this trend will continue with Vapor 4, because it’s going to be a really nice refinement update. 💧</p><p>I can’t wait to see some new benchmarks, because of the underlying changes in vapor, plus all the optimizations in Swift 5.1 will have such a nice impact on the overall performance. Vapor 3 was already crazy fast, but <a href="https://forums.swift.org/t/whats-new-in-vapor-4/31832" target="_blank">Vapor 4 will be on fire</a>! 🔥</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

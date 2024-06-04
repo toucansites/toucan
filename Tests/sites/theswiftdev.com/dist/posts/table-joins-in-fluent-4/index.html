@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Table joins in Fluent 4 - </title>
+    <meta name="description" content="In this quick tutorial I&#39;m going to show you how to join and query database models using the Fluent ORM framework in Vapor 4.">
+    
+    <meta property="og:url" content="/posts/table-joins-in-fluent-4/">
+    <meta property="og:title" content="Table joins in Fluent 4 - ">
+    <meta property="og:description" content="In this quick tutorial I&#39;m going to show you how to join and query database models using the Fluent ORM framework in Vapor 4.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Table joins in Fluent 4 - ">
+    <meta name="twitter:description" content="In this quick tutorial I&#39;m going to show you how to join and query database models using the Fluent ORM framework in Vapor 4.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-06-11 16:20:00">2020-06-11 16:20:00</time>
+            <h1 class="title">Table joins in Fluent 4</h1>
+            <p class="excerpt">In this quick tutorial I&#39;m going to show you how to join and query database models using the Fluent ORM framework in Vapor 4.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Database models</h2><p>Fluent is a <a href="https://theswiftdev.com/get-started-with-the-fluent-orm-framework-in-vapor-4/" target="_blank">Swift ORM framework</a> written for Vapor. You can use models to represent rows in a table, migrations to create the structure for the tables and you can define relations between the models using Swift property wrappers. That’s quite a simple way of representing parent, child or sibling connections. You can “eager load” models through these predefined relation properties, which is great, but sometimes you don’t want to have static types for the relationships.</p><p>I’m working on a modular CMS and I can’t have hardcoded relationship properties inside the models. Why? Well, I want to be able to load modules at runtime, so if module <code>A</code> depends from module <code>B</code> through a relation property then I can’t compile module <code>A</code> independently. That’s why I dropped most of the cross-module relations, nevertheless I have to write joined queries. 😅</p><h3>Customer model</h3><p>In this example we are going to model a simple Customer-Order-Product relation. Our customer model will have a basic identifier and a name. Consider the following:</p><pre><code class="language-swift">final class CustomerModel: Model, Content {
+    static let schema = "customers"
+    
+    @ID(key: .id) var id: UUID?
+    @Field(key: "name") var name: String
+
+    init() { }
+
+    init(id: UUID? = nil, name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+</code></pre><p>Nothing special, just a basic Fluent model.</p><h3>Order model</h3><p>Customers will have a one-to-many relationship to the orders. This means that a customer can have multiple orders, but an order will always have exactly one associated customer.</p><pre><code class="language-swift">final class OrderModel: Model, Content {
+    static let schema = "orders"
+    
+    @ID(key: .id) var id: UUID?
+    @Field(key: "date") var date: Date
+    @Field(key: "customer_id") var customerId: UUID
+
+    init() { }
+
+    init(id: UUID? = nil, date: Date, customerId: UUID) {
+        self.id = id
+        self.date = date
+        self.customerId = customerId
+    }
+}
+</code></pre><p>We could take advantage of the <code>@Parent</code> and <code>@Child</code> property wrappers, but this time we are going to store a customerId reference as a UUID type. Later on we are going to put a foreign key constraint on this relation to ensure that referenced objects are valid identifiers.</p><h3>Product model</h3><p>The product model, just like the customer model, is totally independent from anything else. 📦</p><pre><code class="language-swift">final class ProductModel: Model, Content {
+    static let schema = "products"
+    
+    @ID(key: .id) var id: UUID?
+    @Field(key: "name") var name: String
+
+    init() { }
+
+    init(id: UUID? = nil, name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+</code></pre><p>We can create a property with a <code>@Sibling</code> wrapper to express the relationship between the orders and the products, or use joins to query the required data. It really doesn’t matter which way we go, we still need a cross table to store the related product and order identifiers.</p><h3>OrderProductModel</h3><p>We can describe a many-to-many relation between two tables using a third table.</p><pre><code class="language-swift">final class OrderProductModel: Model, Content {
+    static let schema = "order_products"
+    
+    @ID(key: .id) var id: UUID?
+    @Field(key: "order_id") var orderId: UUID
+    @Field(key: "product_id") var productId: UUID
+    @Field(key: "quantity") var quantity: Int
+
+    init() { }
+
+    init(id: UUID? = nil, orderId: UUID, productId: UUID, quantity: Int) {
+        self.id = id
+        self.orderId = orderId
+        self.productId = productId
+        self.quantity = quantity
+    }
+}
+</code></pre><p>As you can see we can store extra info on the cross table, in our case we are going to associate quantities to the products on this relation right next to the product identifier.</p><h3>Migrations</h3><p>Fortunately, Fluent gives us a simple way to create the schema for the database tables.</p><pre><code class="language-swift">struct InitialMigration: Migration {
+
+    func prepare(on db: Database) -> EventLoopFuture<Void> {
+        db.eventLoop.flatten([
+            db.schema(CustomerModel.schema)
+                .id()
+                .field("name", .string, .required)
+                .create(),
+            db.schema(OrderModel.schema)
+                .id()
+                .field("date", .date, .required)
+                .field("customer_id", .uuid, .required)
+                .foreignKey("customer_id", references: CustomerModel.schema, .id, onDelete: .cascade)
+                .create(),
+            db.schema(ProductModel.schema)
+                .id()
+                .field("name", .string, .required)
+                .create(),
+            db.schema(OrderProductModel.schema)
+                .id()
+                .field("order_id", .uuid, .required)
+                .foreignKey("order_id", references: OrderModel.schema, .id, onDelete: .cascade)
+                .field("product_id", .uuid, .required)
+                .foreignKey("product_id", references: ProductModel.schema, .id, onDelete: .cascade)
+                .field("quantity", .int, .required)
+                .unique(on: "order_id", "product_id")
+                .create(),
+        ])
+    }
+
+    func revert(on db: Database) -> EventLoopFuture<Void> {
+        db.eventLoop.flatten([
+            db.schema(OrderProductModel.schema).delete(),
+            db.schema(CustomerModel.schema).delete(),
+            db.schema(OrderModel.schema).delete(),
+            db.schema(ProductModel.schema).delete(),
+        ])
+    }
+}
+</code></pre><p>If you want to avoid invalid data in the tables, you should always use the foreign key and unique constraints. A foreign key can be used to check if the referenced identifier exists in the related table and the unique constraint will make sure that only one row can exists from a given field.</p><h2>Joining database tables using Fluent 4</h2><p>We have to run the <code>InitialMigration</code> script before we start using the database. This can be done by passing a command argument to the backend application or we can achieve the same thing by calling the <code>autoMigrate()</code> method on the application instance.</p><blockquote><p>NOTE: For the sake of simplicity I’m going to use the wait method instead of async Futures & Promises, this is fine for demo purposes, but in a real-world server application you should never block the current event loop with the wait method.</p></blockquote><p>This is one possible setup of our dummy database using an SQLite storage, but of course you can use PostgreSQL, MySQL or even MariaDB through the available Fluent SQL drivers. 🚙</p><pre><code class="language-swift">public func configure(_ app: Application) throws {
+
+    app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
+
+    app.migrations.add(InitialMigration())
+
+    try app.autoMigrate().wait()
+
+    let customers = [
+        CustomerModel(name: "Bender"),
+        CustomerModel(name: "Fry"),
+        CustomerModel(name: "Leela"),
+        CustomerModel(name: "Hermes"),
+        CustomerModel(name: "Zoidberg"),
+    ]
+    try customers.create(on: app.db).wait()
+    
+    let products = [
+        ProductModel(name: "Hamburger"),
+        ProductModel(name: "Fish"),
+        ProductModel(name: "Pizza"),
+        ProductModel(name: "Beer"),
+    ]
+    try products.create(on: app.db).wait()
+
+    // Bender + pizza & beer
+    let order = OrderModel(date: Date(), customerId: customers[0].id!)
+    try order.create(on: app.db).wait()
+
+    let beerProduct = OrderProductModel(orderId: order.id!, productId: products[3].id!, quantity: 6)
+    try beerProduct.create(on: app.db).wait()
+    let pizzaProduct = OrderProductModel(orderId: order.id!, productId: products[2].id!, quantity: 1)
+    try pizzaProduct.create(on: app.db).wait()
+}
+</code></pre><p>We have created 5 customers (Bender, Fry, Leela, Hermes, Zoidberg), 4 products (Hamburger, Fish, Pizza, Beer) and one new order for Bender containing 2 products (6 beers and 1 pizza). 🤖</p><h3>Inner join using one-to-many relations</h3><p>Now the question is: how can we get the customer data based on the order?</p><pre><code class="language-swift">let orders = try OrderModel
+    .query(on: app.db)
+    .join(CustomerModel.self, on: \OrderModel.$customerId == \CustomerModel.$id, method: .inner)
+    .all()
+    .wait()
+
+for order in orders {
+    let customer = try order.joined(CustomerModel.self)
+    print(customer.name)
+    print(order.date)
+}
+</code></pre><p>The answer is pretty simple. We can use an inner join to fetch the customer model through the <code>order.customerId</code> and <code>customer.id</code> relation. When we iterate through the models we can ask for the related model using the joined method.</p><h3>Joins and many to many relations</h3><p>Having a customer is great, but how can I fetch the associated products for the order? We can start the query with the <code>OrderProductModel</code> and use a join using the <code>ProductModel</code> plus we can filter by the order id using the current order.</p><pre><code class="language-swift">for order in orders {
+    //...
+
+    let orderProducts = try OrderProductModel
+        .query(on: app.db)
+        .join(ProductModel.self, on: \OrderProductModel.$productId == \ProductModel.$id, method: .inner)
+        .filter(\.$orderId == order.id!)
+        .all()
+        .wait()
+
+    for orderProduct in orderProducts {
+        let product = try orderProduct.joined(ProductModel.self)
+        print(product.name)
+        print(orderProduct.quantity)
+    }
+}
+</code></pre><p>We can request the joined model the same way as we did it for the customer. Again, the very first parameter is the model representation of the joined table, next you define the relation between the tables using the referenced identifiers. As a last parameter you can specify the type of the join.</p><h3>Inner join vs left join</h3><p>There is a great SQL tutorial about joins on <a href="https://www.w3schools.com/sql/sql_join.asp" target="_blank">w3schools.com</a>, I highly recommend reading it. The main difference between an inner join and a left join is that an inner join only returns those records that have matching identifiers in both tables, but a left join will return all the records from the base (left) table even if there are no matches in the joined (right) table.</p><p>There are many different types of SQL joins, but inner and left join are the most common ones. If you want to know more about the other types you should read the linked article. 👍</p><h2>Summary</h2><p>Table joins are really handy, but you have to be careful with them. You should always use proper foreign key and unique constraints. Also consider using indexes on some rows when you work with joins, because it can improve the performance of your queries. Speed can be an important factor, so never load more data from the database than you actually need.</p><p>There is an issue on <a href="https://github.com/vapor/fluent-kit/issues/11" target="_blank">GitHub</a> about the Fluent 4 API, and <a href="https://github.com/vapor/fluent-kit/issues/274" target="_blank">another one</a> about querying specific fields using the <code>.field</code> method. Long story short, joins can be great and we need better docs. 🙉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

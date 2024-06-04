@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Lazy initialization in Swift - </title>
+    <meta name="description" content="Learn how to use lazy properties in Swift to improve performance, avoid optionals or just to make the init process more clean.">
+    
+    <meta property="og:url" content="/posts/lazy-initialization-in-swift/">
+    <meta property="og:title" content="Lazy initialization in Swift - ">
+    <meta property="og:description" content="Learn how to use lazy properties in Swift to improve performance, avoid optionals or just to make the init process more clean.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lazy initialization in Swift - ">
+    <meta name="twitter:description" content="Learn how to use lazy properties in Swift to improve performance, avoid optionals or just to make the init process more clean.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2018-12-17 16:20:00">2018-12-17 16:20:00</time>
+            <h1 class="title">Lazy initialization in Swift</h1>
+            <p class="excerpt">Learn how to use lazy properties in Swift to improve performance, avoid optionals or just to make the init process more clean.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>According to <a href="https://en.wikipedia.org/wiki/Lazy_initialization" target="_blank">Wikipedia</a>:</p><blockquote><p>In computer programming, lazy initialization is the tactic of delaying the creation of an object, the calculation of a value, or some other expensive process until the first time it is needed.</p></blockquote><p>That little quote pretty much sums up everything, however because we’re working with the Swift programming language, we have a thing called <a href="https://developer.apple.com/documentation/swift/optional" target="_blank">optionals</a>. If you don’t know what are those, please read <a href="https://hackernoon.com/swift-optionals-explained-simply-e109a4297298" target="_blank">the linked articles</a> first, and come back afterwards. 🤐</p><h2>The ultimate guide of being lazy</h2><p>When a <a href="https://docs.swift.org/swift-book/LanguageGuide/Properties.html" target="_blank">property</a> is only needed at some point in time, you can prefix it with the lazy keyword so it’ll be “excluded” from the initialization process and it’s default value will be assigned on-demand. This can be useful for types that are expensive to create, or needs more time to be created. Here is a quick tale of a lazy princess. 👸💤</p><pre><code class="language-swift">class SleepingBeauty {
+
+    init() {
+        print("zzz...sleeping...")
+        sleep(2)
+        print("sleeping beauty is ready!")
+    }
+}
+
+class Castle {
+
+    var princess = SleepingBeauty()
+
+    init() {
+        print("castle is ready!")
+    }
+}
+
+print("a new castle...")
+let castle = Castle()
+</code></pre><p>The output of this code snippet is something like below, but as you can see the princess is sleeping for a very long time, she is also “blocking” the castle. 🏰</p><pre><code>a new castle...
+zzz...sleeping...
+sleeping beauty is ready!
+castle is ready!
+</code></pre><p>Now, we can speed things up by adding the lazy keword, so our hero will have time to slay the dragon and our princess can sleep in her bed until she’s needed… 🐉 🗡 🤴</p><pre><code class="language-swift">class SleepingBeauty {
+
+    init() {
+        print("zzz...sleeping...")
+        sleep(2)
+        print("sleeping beauty is ready!")
+    }
+}
+
+class Castle {
+
+    lazy var princess = SleepingBeauty()
+
+    init() {
+        print("castle is ready!")
+    }
+}
+
+print("a new castle...")
+let castle = Castle()
+castle.princess
+</code></pre><p>Much better! Now the castle is instantly ready for the battle, so the prince can wake up his loved one and… they lived happily ever after. End of story. 👸 ❤️ 🤴</p><pre><code>a new castle...
+castle is ready!
+zzz...sleeping...
+sleeping beauty is ready!
+</code></pre><p>I hope you enjoyed the fairy tale, but let’s do some real coding! 🤓</p><h2>Avoiding optionals with lazyness</h2><p>As you’ve seen in the previous example lazy properties can be used to improve the performance of your Swift code. Also you can eliminate optionals in your objects. This can be useful if you’re dealing with <code>UIView</code> derived classes. For example if you need a <code>UILabel</code> for your view hierarchy you usually have to declare that property as optional or as an implicitly unwrapped optional stored property. Let’s remake this example by using lazy & eliminating the need of the evil optional requirement. 😈</p><pre><code class="language-swift">class ViewController: UIViewController {
+
+    lazy var label: UILabel = UILabel(frame: .zero)
+
+    override func loadView() {
+        super.loadView()
+
+        self.view.addSubview(self.label)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.label.textColor = .black
+        self.label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+    }
+}
+</code></pre><p>It isn’t so bad, however I still prefer to declare my views as implicitly unwrapped optionals. Maybe I’ll change my mind later on, but old habits die hard… 💀</p><h2>Using a lazy closure</h2><p>You can use a <a href="https://www.bobthedeveloper.io/blog/swift-lazy-initialization-with-closures" target="_blank">lazy closure</a> to wrap some of your code inside it. The main advantage of being lazy - over stored properties - is that your block will be executed ONLY if a read operation happens on that variable. You can also populate the value of a <a href="https://useyourloaf.com/blog/swift-lazy-property-initialization/" target="_blank">lazy property</a> with a regular stored proeprty. Let’s see this in practice.</p><pre><code class="language-swift">class ViewController: UIViewController {
+
+    lazy var label: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        return label
+    }()
+}
+</code></pre><p>This one is a nice practice if you’d like to declutter your init method. You can put all the object customization logic inside a closure. The closure executes itself on read (self-executing closure), so when you call <code>self.label</code> your block will be executed and voilá: your view will be ready to use.</p><blockquote><p>You can’t use self in stored properties, but you are allowed to do so with lazy blocks. Be careful: you should always use <code>[unowned self]</code>, if you don’t want to create reference cycles and memory leaks. ♻️</p></blockquote><h2>Lazy initialization using factories</h2><p>I already have a couple of articles about <a href="https://theswiftdev.com/2018/06/06/comparing-factory-design-patterns/" target="_blank">factories in Swift</a>, so now i just want to show you how to use a factory method & a static factory combined with a lazy property.</p><h3>Factory method</h3><p>If you don’t like self-executing closures, you can move out your code into a <a href="https://theswiftdev.com/2018/05/31/swift-factory-method-design-pattern/" target="_blank">factory method</a> and use that one with your <a href="https://medium.com/@abhimuralidharan/lazy-var-in-ios-swift-96c75cb8a13a" target="_blank">lazy variable</a>. It’s simple like this:</p><pre><code class="language-swift">class ViewController: UIViewController {
+
+    lazy var label: UILabel = self.createCustomLabel()
+
+    private func createCustomLabel() -> UILabel {
+        print("called")
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        return label
+    }
+}
+</code></pre><p>Now the factory method works like a private initializer for your lazy property. Let’s bring this one step further, so we can improve reusability a little bit…</p><h3>Static factory</h3><p>Outsourcing your lazy initializer code into a <a href="https://theswiftdev.com/2018/05/29/swift-static-factory-design-pattern/" target="_blank">static factory</a> can be a good practice if you’d like to reuse that code in multiple parts of your application. For example this is a good fit for initializing custom views. Also creating a custom view is not really a view controller task, so the responsibilities in this example are more separated.</p><pre><code class="language-swift">class ViewController: UIViewController {
+
+    lazy var label: UILabel = UILabel.createCustomLabel()
+}
+
+extension UILabel {
+
+    static func createCustomLabel() -> UILabel {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        return label
+    }
+}
+</code></pre><p>As a gratis you can enjoy the advantages of static factory properties / methods, like caching or returning specific subtypes. Pretty neat! 👍</p><h2>Conclusion</h2><p>Lazy variables are a really convenient way to optimize your code, however they can only used on structs and classes. You can’t use them as computed properties, this means they won’t return the closure block every time you are trying to access them.</p><p>Another important thing is that lazy properties are <strong>NOT thread safe</strong>, so you have to be careful with them. Plus you don’t always want to eliminate implicitly unwrapped optional values, sometimes it’s just way better to simply crash! 🐛</p><blockquote><p>Don’t be lazy!</p></blockquote><p>…but feel free to use lazy properties whenever you can! 😉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Building tree data structures in Swift - </title>
+    <meta name="description" content="This tutorial is about showing the pros and cons of various Swift tree data structures using structs, enums and classes.">
+    
+    <meta property="og:url" content="/posts/building-tree-data-structures-in-swift/">
+    <meta property="og:title" content="Building tree data structures in Swift - ">
+    <meta property="og:description" content="This tutorial is about showing the pros and cons of various Swift tree data structures using structs, enums and classes.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Building tree data structures in Swift - ">
+    <meta name="twitter:description" content="This tutorial is about showing the pros and cons of various Swift tree data structures using structs, enums and classes.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2021-11-23 16:20:00">2021-11-23 16:20:00</time>
+            <h1 class="title">Building tree data structures in Swift</h1>
+            <p class="excerpt">This tutorial is about showing the pros and cons of various Swift tree data structures using structs, enums and classes.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>What is a tree?</h2><p>A <a href="https://en.wikipedia.org/wiki/Tree_(data_structure)" target="_blank">tree</a> is an abstract data structure that can be used to represent hierarchies. A tree usually contains nodes with associated data values. Each node can have child nodes and these nodes are linked together via a parent-child relationship.</p><p>The name tree comes from the real-world, both digital and the physical trees have branches, there is usually one node that has many children, and those can also have subsequent child nodes. 🌳</p><p>Each node in the tree can have an associated data value and a reference to the child nodes.</p><p>The root object is where the tree begins, it’s the trunk of the tree. A branch node is just some part of the tree that has another branches and we call nodes without further branches as leaves.</p><p>Of course there are various types of tree structures, maybe the most common one is the <a href="https://en.wikipedia.org/wiki/Binary_tree" target="_blank">binary tree</a>. Walking through the items in a tree is called traversal, there are multiple ways to step through the tree, in-order, pre-order, post-order and level-order. More about this later on. 😅</p><h2>Data trees using structs in Swift</h2><p>After the quick intro, I’d like to show you how to build a generic <a href="https://www.hackingwithswift.com/plus/data-structures/trees" target="_blank">tree object using structs</a> in Swift. We’re going to create a simple struct that can hold any value type, by using a generic placeholder. We’re also going to store the child objects in an array that uses the exact same node type. First we’re going to start with a simple Node object that can store a String value.</p><pre><code class="language-swift">struct Node {
+    var value: String
+    var children: [Node]
+}
+
+var child = Node(value: "child", children: [])
+var parent = Node(value: "parent", children: [child])
+
+print(parent) 
+// Node(value: "parent", children: [Node(value: "child", children: [])])
+</code></pre><p>Let’s alter this code by introducing a generic variable instead of using a String type. This way we’re going to be able to reuse the same Node struct to store all kinds of values of the same type. We’re also going to introduce a new init method to make the Node creation process just a bit more simple.</p><pre><code class="language-swift">struct Node<Value> {
+    var value: Value
+    var children: [Node]
+    
+    init(_ value: Value, children: [Node] = []) {
+        self.value = value
+        self.children = children
+    }
+}
+
+var child = Node(2)
+var parent = Node(1, children: [child])
+
+print(parent)
+// Node<Int>(value: 1, children: [Node<Int>(value: 2, children: [])])
+</code></pre><p>As you can see the underlying type is an Int, Swift is smart enough to figure this out, but you can also explicitly write Node(2) or of course any other type that you’d like to use.</p><p>One thing that you have to note when using structs is that these objects are value types, so if you want to modify a tree you’ll need a mutating function and you have to be careful when defining nodes, you might want to store them as variables instead of constants if you need to alter them later on. The order of your code also matters in this case, let me show you an example. 🤔</p><pre><code class="language-swift">struct Node<Value> {
+    var value: Value
+    var children: [Node]
+    
+    init(_ value: Value, children: [Node] = []) {
+        self.value = value
+        self.children = children
+    }
+    
+    mutating func add(_ child: Node) {
+        children.append(child)
+    }
+}
+
+var a = Node("a")
+var b = Node("b")
+var c = Node("c")
+
+a.add(b)
+
+print(a)
+// Node<String>(value: "a", children: [Node<String>(value: "b", children: [])])
+
+b.add(c) // this won't affect a at all
+
+print(a)
+// Node<String>(value: "a", children: [Node<String>(value: "b", children: [])])
+
+print(b)
+// Node<String>(value: "b", children: [Node<String>(value: "c", children: [])])
+</code></pre><p>We’ve tried to add a child node to the b object, but since the copy of b is already added to the a object, it won’t affect a at all. You have to be careful when working with structs, since you’re going to pass around copies instead of references. This is usually a great advantage, but sometimes it won’t give you the expected behavior.</p><p>One more thing to note about structs is that you are not allowed to use them as recursive values, so for example if we’d like to build a linked list using a struct, we won’t be able to set the next item.</p><pre><code class="language-swift">struct Node {
+    let value: String
+    // ERROR: Value type `Node` cannot have a stored property that recursively contains it.
+    let next: Node?
+}
+</code></pre><p>The explanation of this issue is well-written <a href="https://stackoverflow.com/questions/38785551/swift-struct-type-recursive-value" target="_blank">here</a>, it’s all about the required space when allocating the object. Please try to figure out the reasons on your own, before you click on the link. 🤔</p><h2>How to create a tree using a Swift class?</h2><p>Most <a href="https://www.raywenderlich.com/1053-swift-algorithm-club-swift-tree-data-structure" target="_blank">common examples</a> of tree structures are using classes as a base type. This solves the recursion issue, but since we’re working with reference types, we have to be extremely careful with memory management. For example if we want to place a reference to the parent object, we have to declare it as a weak variable.</p><pre><code class="language-swift">class Node<Value> {
+    var value: Value
+    var children: [Node]
+    weak var parent: Node?
+
+    init(_ value: Value, children: [Node] = []) {
+        self.value = value
+        self.children = children
+
+        for child in self.children {
+            child.parent = self
+        }
+    }
+
+    func add(child: Node) {
+        child.parent = self
+        children.append(child)
+    }
+}
+
+let a = Node("a")
+let b = Node("b")
+
+a.add(child: b)
+
+let c = Node("c", children: [Node("d"), Node("e")])
+a.add(child: c)
+
+print(a) // tree now contains a, b, c, d, e
+</code></pre><p>This time when we alter a node in the tree, the original tree will be updated as well. Since we’re now working with a reference type instead of a value type, we can safely build a linked list or binary tree by using the exact same type inside our class.</p><pre><code class="language-swift">class Node<Value> {
+    var value: Value
+    // the compiler is just fine with these types below...
+    var left: Node?
+    var right: Node?
+    
+    init(
+        _ value: Value, 
+        left: Node? = nil,
+        right: Node? = nil
+    ) {
+        self.value = value
+        self.left = left
+        self.right = right
+    }
+}
+
+
+let right = Node(3)
+let left = Node(2)
+let tree = Node(1, left: left, right: right)
+print(tree) // 1, left: 2, right: 3
+</code></pre><p>Of course you can still use protocols and structs if you prefer value types over reference types, for example you can come up with a Node protocol and then two separate implementation to represent a branch and a leaf. This is how a protocol oriented approach can look like.</p><pre><code class="language-swift">protocol Node {
+    var value: Int { get }
+}
+
+struct Branch: Node {
+    var value: Int
+    var left: Node
+    var right: Node
+}
+
+struct Leaf: Node {
+    var value: Int
+}
+
+
+let tree = Branch(
+    value: 1, 
+    left: Leaf(value: 2), 
+    right: Leaf(value: 3)
+)
+print(tree)
+</code></pre><p>I like <a href="https://stackoverflow.com/questions/49399089/binary-tree-with-struct-in-swift" target="_blank">this solution</a> quite a lot, but of course the actual choice is yours and it should always depend on your current use case. Don’t be afraid of classes, polymorphism might saves you quite a lot of time, but of course there are cases when structs are simply a better way to do things. 🤓</p><h2>Implementing trees using Swift enums</h2><p>One last thing I’d like to show you in this article is how to implement a tree using the powerful enum type in Swift. Just like the recursion issue with structs, enums are also problematic, but fortunately there is a workaround, so we can use enums that references itself by applying the <a href="https://www.hackingwithswift.com/example-code/language/what-are-indirect-enums" target="_blank">indirect keyword</a>.</p><pre><code class="language-swift">enum Node<Value> {
+    case root(value: Value)
+    indirect case leaf(parent: Node, value: Value)
+
+    var value: Value {
+        switch self {
+        case .root(let value):
+            return value
+        case .leaf(_, let value):
+            return value
+        }
+    }
+}
+let root = Node.root(value: 1)
+let leaf1 = Node.leaf(parent: root, value: 2)
+let leaf2 = Node.leaf(parent: leaf1, value: 3)
+</code></pre><p>An indirect enum case can reference the enum itself, so it’ll allo us to create cases with the exact same type. This way we’re going to be able to store a parent node or alternatively a left or right node if we’re talking about a <a href="https://medium.com/@mrlauriegray/swift-3-enums-and-binary-search-trees-104f5e8d47e9" target="_blank">binary tree</a>. Enums are freaking powerful in Swift.</p><pre><code class="language-swift">enum Node<Value> {
+    case empty
+    indirect case node(Value, left: Node, right: Node)
+}
+
+let a = Node.node(1, left: .empty, right: .empty)
+let b = Node.node(2, left: a, right: .empty)
+print(b)
+</code></pre><p>These are just a few examples how you can build various tree data structures in Swift. Of course there is a lot more to the story, but for now I just wanted to show you what are the pros and cons of each approach. You should always choose the option that you like the best, there is no silver bullet, but only options. I hope you enjoyed this little post. ☺️</p><p>If you want to know more about trees, you should read the linked articles, since they are really well-written and it helped me a lot to understand more about these data structures. <a href="https://blog.devgenius.io/data-structure-in-swift-tree-192612915d33" target="_blank">Traversing a tree</a> is also quite an interesting topic, you can learn a lot by implementing various traversal methods. 👋</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

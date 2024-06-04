@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="302px" height="343px" viewBox="0 0 302 343" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Group@2x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="18.0186808%" cy="-7.83602885%" fx="18.0186808%" fy="-7.83602885%" r="93.1011986%" gradientTransform="translate(0.180187,-0.078360),scale(1.000000,0.902718),rotate(74.068212),translate(-0.180187,0.078360)" id="radialGradient-1">
+            <stop stop-color="#474D53" offset="0%"></stop>
+            <stop stop-color="#2A2F34" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="22.8338798%" y1="32.6381423%" x2="86.8748582%" y2="94.8243942%" id="linearGradient-2">
+            <stop stop-color="#3D4248" stop-opacity="0.1" offset="0%"></stop>
+            <stop stop-color="#DE2451" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="tib01" transform="translate(-222.000000, -104.000000)">
+            <g id="Group" transform="translate(394.313503, 269.047933) rotate(14.000000) translate(-394.313503, -269.047933) translate(251.813503, 120.047933)">
+                <polygon id="Triangle-Copy-2" fill="#DE2451" points="238.197921 2.08353931 284.40138 297.025839 0 286.996374"></polygon>
+                <polygon id="Triangle-Copy" fill="#2A2F34" points="238.598769 0 256.244137 257.379478 0 286.996374"></polygon>
+                <path d="M46.9972303,3 L256.244137,257.241436 L0,286.858333 L46.9972303,3 Z M73.9305872,107.481316 L56.9698974,239.433873 L170.870105,225.755494 L73.9305872,107.481316 Z" id="Combined-Shape" fill="url(#radialGradient-1)"></path>
+                <polygon id="Combined-Shape-Copy" fill="url(#linearGradient-2)" points="46.7432611 3 256.979425 259.213987 203.27924 264.924932 37.3861709 62.4980689"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

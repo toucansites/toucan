@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>How to make a Swift framework? - </title>
+    <meta name="description" content="Creating a Swift framework shouldn&#39;t be hard. This tutorial will help you making a universal framework for complex projects.">
+    
+    <meta property="og:url" content="/posts/how-to-make-a-swift-framework/">
+    <meta property="og:title" content="How to make a Swift framework? - ">
+    <meta property="og:description" content="Creating a Swift framework shouldn&#39;t be hard. This tutorial will help you making a universal framework for complex projects.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to make a Swift framework? - ">
+    <meta name="twitter:description" content="Creating a Swift framework shouldn&#39;t be hard. This tutorial will help you making a universal framework for complex projects.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2017-10-23 16:20:00">2017-10-23 16:20:00</time>
+            <h1 class="title">How to make a Swift framework?</h1>
+            <p class="excerpt">Creating a Swift framework shouldn&#39;t be hard. This tutorial will help you making a universal framework for complex projects.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>What is a framework?</h2><p>A <a href="https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WhatAreFrameworks.html" target="_blank">framework</a> is a hierarchical directory that encapsulates shared resources, such as a dynamic shared library, nib files, image files, localized strings, header files, and reference documentation in a single package.</p><blockquote><p>So in a nutshell, a framework is a highly reusable component for your apps.</p></blockquote><h2>How to make it?</h2><p>There is an article about <a href="https://theswiftdev.com/2016/07/06/conventions-for-xcode/" target="_blank">Xcode conventions</a> which will help you organize your projects, you should check that first, if you haven’t before.</p><h3>Traditional way</h3><p>There is a traditional way to <a href="https://www.raywenderlich.com/126365/ios-frameworks-tutorial" target="_blank">make a framework</a> in Xcode. I’m going to create a <a href="http://ilya.puchka.me/xcode-cross-platform-frameworks/" target="_blank">shared framework</a> for all the apple platforms (iOS, macOS, tvOS, watchOS), which is going to be capable of logging things to the standard console.</p><p>Let’s make the project:</p><ul><li>Create a new project using one of the framework targets</li><li>Follow the instructions fill & name all the fields</li><li>Add all the other platform framework targets</li><li>Rename all targets according to the platform names</li></ul><p>Now in Finder:</p><ul><li>Create a Sources folder and move all the Swift and header files there</li><li>Create an Assets folder with platforms subfolders</li><li>Move all the Info.plist files into the correct platfrom subdirectory</li><li>Create a Tests folder and move test files there</li></ul><p>Back to Xcode:</p><ul><li>Remove every group and add the new Folders from Finder</li><li>Check that every target has the correct files (framework & tests)</li><li>Inside the header file, replace UIKit depencency with Foundation</li></ul><p>The goal is to achieve a structure somewhat like this:</p><p><img src="xcode-project-framework-setup.png" alt="Xcode project framework setup"></p><p>Project settings:</p><ul><li>Select the correct plist files for the targets</li><li>Set your bundle identifiers (use my conventions)</li><li>Setup platform versions (advice: support 1 older version too)</li><li>Setup the plist files for the tests from the build settings pane</li><li>Set the product name (Console) in your framework build settings</li><li>Check your build phases and add the public header file.</li></ul><p>Scheme settings:</p><ul><li>Go to the scheme settings and setup shared schemes for the frameworks</li><li>Gather coverage data if you need it</li><li>Write your framework you can use Swift “macros” to detect platforms</li></ul><blockquote><p>NOTE: There is a flag in Xcode to allow app extension API only, if you are embedding your framework inside an application extension it should be enabled!</p></blockquote><p>Congratulations, now you have your brand new Swift framework made in the traditional way. Let’s continue with a neat trick.</p><h2>Universal cross platform framework</h2><p>It is possible to create a multiplatform single scheme Xcode project with cross platform support for every platform, but it’s not recommended because it’s a hack. However multiple open source libraries do the same way, so why shouldn’t we.</p><ul><li>Delete all the targets, schemes, except macOS!!!</li><li>Rename the remaining target, scheme (we don’t need platform names)</li><li>Use the project configuration file, set the xcconfig on the project</li><li>Delete Info.plist files, use one for the framework and one for the tests</li><li>Rename bundle identifier (we don’t need platform names there too)</li></ul><blockquote><p>WARN: States can be mixed up if you are building for multiple platforms, however this is a nice clean way to support every platforms, without duplications.</p></blockquote><h2>How to use a Swift framework?</h2><p>Embedding your framework is the most straightforward thing to do. You can simply drag the framework project to another Xcode project, the only thing left to do is to the embedded the framework into the application. You can go to the embedded binaries section inside the general project info tab and add the framework as a dependency.</p><h3>Swift Package Manager</h3><p>With <a href="https://theswiftdev.com/2017/11/09/swift-package-manager-tutorial/" target="_blank">SPM</a>, you have to make a Package.swift file first, then you’ll be able to build your targets with the swift build command. Now that Xcode supports the Swift Package Manager, it’s really easy to integrate third party frameworks by using it.</p><p>You can download the final framework examples from <a href="https://github.com/theswiftdev/tutorials" target="_blank">GitHub</a>.</p><p>Make sure that you don’t miss out my <a href="https://theswiftdev.com/2018/01/25/deep-dive-into-swift-frameworks/" target="_blank">deep dive into swift frameworks</a> post.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

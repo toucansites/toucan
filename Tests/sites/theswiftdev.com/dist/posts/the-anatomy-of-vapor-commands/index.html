@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>The anatomy of Vapor commands - </title>
+    <meta name="description" content="Learn how to build and run your existing Vapor apps using various command line arguments, flags and environments.">
+    
+    <meta property="og:url" content="/posts/the-anatomy-of-vapor-commands/">
+    <meta property="og:title" content="The anatomy of Vapor commands - ">
+    <meta property="og:description" content="Learn how to build and run your existing Vapor apps using various command line arguments, flags and environments.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The anatomy of Vapor commands - ">
+    <meta name="twitter:description" content="Learn how to build and run your existing Vapor apps using various command line arguments, flags and environments.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-03-25 16:20:00">2020-03-25 16:20:00</time>
+            <h1 class="title">The anatomy of Vapor commands</h1>
+            <p class="excerpt">Learn how to build and run your existing Vapor apps using various command line arguments, flags and environments.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>The Vapor toolbox</h2><p>The very first thing I want to show you (again) is the <a href="https://docs.vapor.codes/3.0/getting-started/toolbox/" target="_blank">Vapor toolbox</a> command line application. It’s a nice little convenient tool for initializing new Vapor applications from scratch. You can use it to build, run, update, test and even deploy (to Heroku) your project.</p><pre><code class="language-sh"># create & run a new project
+vapor new myProject
+cd myProject
+vapor build
+vapor run
+</code></pre><p>Personally I’m not using it too much, except when I create a new project. I’d love to generate additional “boilerplate” code for controllers, models using the toolbox, but unfortunately this feature is not implemented yet. The <a href="https://loopback.io/getting-started.html" target="_blank">loopback-cli</a> is a great example tho… 🙏</p><p>You can run <code>vapor --help</code> to see all the available commands.</p><h2>Serve</h2><p>Every server needs to listen for incoming requests on some port. The serve command starts the Vapor application and fires up the HTTP server. You can specify the hostname and the port using some additional flags. The bind flag combines the hostname and port flags into one, they both have short and long versions, feel free to pick your favorite command format. 😉</p><pre><code class="language-sh"># by default Vapor runs the serve command
+swift run Run
+
+# the serve command starts the server
+swift run Run serve
+swift run Run serve --hostname "localhost" --port 8080
+swift run Run serve -h "localhost" -p 8080
+swift run Run serve --bind "localhost:8080"
+swift run Run serve -b "localhost:8080"
+</code></pre><p>You should know that this is the default command, so if you simply run your app without any arguments, the serve command will be executed behind the scenes. 💀</p><h2>Migrate</h2><p>When you <a href="https://theswiftdev.com/a-tutorial-for-beginners-about-the-fluent-postgresql-driver-in-vapor-4/" target="_blank">work with databases using Fluent</a>, you need a schema first. You can only populate the database with actual data after the main structure exists. This process is called migration. You’ll also have to migrate your database if you change something in your Fluent code (for example you introduce a new field for a model). You can perform a migration by running:</p><pre><code class="language-sh"># run Fluent migrations
+swift run Run migrate
+
+# run migrations without the confirmation
+swift run Run migrate --auto-migrate
+
+# revert last migration
+swift run Run migrate --revert
+</code></pre><p>The cli will show you what needs to be done in order to keep your DB up-to-date. You can double check everything one more time before you proceed, or you can skip the entire confirmation dialog by using the <code>--auto-migrate</code> option. Be extremely careful with auto migrations! ⚠️</p><h2>Log levels</h2><p>You might have noticed that there are a bunch of Vapor messages in your console. Well, the good news is that you can filter them by log level. There are two ways of doing this. The first option is to provide a <code>log</code> flag with one of the following values:</p><ul><li>trace</li><li>debug</li><li>info</li><li>notice</li><li>warning</li><li>error</li><li>critical</li></ul><blockquote><p>WARN: The <code>--log</code> flag has no short variant, don’t try to use <code>-l</code>.</p></blockquote><p>If you want to trace, debug and info logs, you can run the app like this:</p><pre><code class="language-sh"># set log level
+swift run Run --log notice
+</code></pre><p>The second option is to set a <code>LOG_LEVEL</code> variable before you run the app.</p><pre><code class="language-sh"># set log level using a variable
+LOG_LEVEL=notice swift run Run
+
+# set log level using an exported environmental variable
+export LOG_LEVEL=notice
+swift run Run
+# unset log level
+unset LOG_LEVEL
+</code></pre><p>The exported variable will be around until you close the terminal window or you remove it.</p><h2>Environment</h2><p>Every Vapor application can run in development or production mode. The default mode is development, but you can explicitly set this using the command line:</p><pre><code class="language-sh"># .env.development
+DB_URL="postgres://myuser:mypass@localhost:5432/mydb"
+
+# run in development mode using the .env.development file
+swift run Run --env development
+swift run Run -e dev
+
+# .env
+DB_URL="postgres://realuser:realpass@localhost:5432/realdb"
+
+# run in production mode using the .env file
+swift run Run --env production
+swift run Run -e prod
+</code></pre><blockquote><p>NOTE: It is possible to store environmental variables in a dot env file. The <code>.env.development</code> file will be loeaded in development mode and the <code>.env</code> file in production mode. You can also use the <code>.env.testing</code> file for the test environment.</p></blockquote><p>You can also override environmental variables with a local variable, like the way we defined the <code>LOG_LEVEL</code> before. So let’s say if you have a DB_URL in your production <code>.env</code> file, but you still want to use the dev database, you can run Vapor like this:</p><pre><code class="language-sh">DB_URL="postgres://myuser:mypass@localhost:5432/mydb" swift run Run --env production
+</code></pre><p>Environment variables are super cool, you should play around with them to get familiar.</p><h2>Routes</h2><p>This is very handy command to quickly display all the connected endpoints that your app has.</p><pre><code># prints all the routes information
+swift run Run routes
+
+# +-----+----+
+# | GET    | /              |
+# +-----+----+
+# | GET    | /hello/        |
+# +-----+----+
+# | GET    | /todos         |
+# +-----+----+
+# | POST   | /todos         |
+# +-----+----+
+# | DELETE | /todos/:todoID |
+# +-----+----+
+</code></pre><p>If you need more info about how routing works in Vapor 4, you should check the <a href="https://docs.vapor.codes/4.0/routing/#viewing-routes" target="_blank">official docs</a>.</p><h2>Boot</h2><p>Honestly: I’ve never used the boot command before, but it’s there. 🤷‍♂️</p><pre><code class="language-sh"># boots the app providers & exists
+swift run Run boot
+</code></pre><p>Can somebody tell me a use case for this?</p><h2>Custom commands</h2><p>It is possible to write your custom commands <a href="https://theswiftdev.com/how-to-write-swift-scripts-using-the-new-command-api-in-vapor-4/" target="_blank">using the brand new Command API</a> in Vapor 4. If you are interested in writing Swift scripts, you should continue reading the linked article. 📚</p><p>There are lots of other Swift compiler flags (e.g. <code>-Xswiftc -g</code> to make <code>Backtrace.print()</code> work) that you can use during the build process. If you are interested in those please let me know and maybe I’ll make an article about it in the not so distant future.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

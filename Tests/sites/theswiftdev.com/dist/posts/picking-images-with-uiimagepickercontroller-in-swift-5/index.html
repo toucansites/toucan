@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Picking images with UIImagePickerController in Swift 5 - </title>
+    <meta name="description" content="Learn how to get an image from the photo library or directly from the camera by using the UIImagePickerController class in Swift 5.">
+    
+    <meta property="og:url" content="/posts/picking-images-with-uiimagepickercontroller-in-swift-5/">
+    <meta property="og:title" content="Picking images with UIImagePickerController in Swift 5 - ">
+    <meta property="og:description" content="Learn how to get an image from the photo library or directly from the camera by using the UIImagePickerController class in Swift 5.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Picking images with UIImagePickerController in Swift 5 - ">
+    <meta name="twitter:description" content="Learn how to get an image from the photo library or directly from the camera by using the UIImagePickerController class in Swift 5.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2019-01-30 16:20:00">2019-01-30 16:20:00</time>
+            <h1 class="title">Picking images with UIImagePickerController in Swift 5</h1>
+            <p class="excerpt">Learn how to get an image from the photo library or directly from the camera by using the UIImagePickerController class in Swift 5.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <blockquote><p>Are you looking for a video picker as well? 🍿 Check out my another post about <a href="https://theswiftdev.com/2019/08/28/picking-and-playing-videos-in-swift/" target="_blank">picking & playing video files in iOS</a>.</p></blockquote><h2>A reusable image picker class for iOS</h2><p>So in this <a href="http://blogs.innovationm.com/image-picker-controller-tutorial-ios/" target="_blank">tutorial</a> we’re going to create a reusable class built on top of UIKit in order to make image selection more pleasant for your apps, everything written in Swift 5.</p><blockquote><p>This article was inspired by my previous attempt to solve the image picking issue in a <a href="https://medium.com/@ilkerbltc/protocol-oriented-approach-to-get-image-or-video-via-uiimagepickercontroller-on-ios-e3909090815d" target="_blank">protocol oriented way</a>, but that article is nowadays a little bit obsolated, plus I wouldn’t use that technique anymore.</p></blockquote><p>People always learn from the past, so instead of using a protocol oriented approach, this time I’ll simply go with an ImagePicker class. No singletons, no extra library, just a small helper class that can be instantiated in the appropriate place, to do it’s job. 🌄</p><blockquote><p>NOTE: I’m only going to focus on picking edited images, if you’d like to use live photos or movies, you can always customize the ImagePicker class, or create an abstract one and implement subclasses for each media type. I’d do so too. 😅</p></blockquote><p>So let’s dive in, here is my basic implementation, but you can download a complete example project with video picking as well from The.Swift.Dev. tutorials repository on <a href="https://github.com/theswiftdev/tutorials" target="_blank">GitHub</a>.</p><h2>Privacy first!</h2><p>Nowadays privacy matters a lot, so you have to add two important keys to your applications <code>Info.plist</code> file, otherwise you’ll end up with a horrible crash! ⚠️</p><p>Since you’d like to get some private data, you have to provide an explanation message for the user (and for Apple) why the app is requesting camera & photo library access. The <code>NSCameraUsageDescription</code> is for camera and <code>NSPhotoLibraryUsageDescription</code> key is for photo library access. Both values should be a straightforward string that’ll explain the user why you need his/her nude pictures. Privacy is important! 🔒</p><pre><code class="language-plist"><key>NSCameraUsageDescription</key>
+<string>This app wants to take pictures.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app wants to use your photos.</string>
+</code></pre><p>Obviously if you’d like to use photos directly taken from the camera, but you don’t want to access the photo library, you just have to add the proper key. That’s it now we’re ready to do some actual coding. ⌨️</p><h2>The anatomy of UIImagePickerController</h2><p>The anatomy of a UIPickerController is quite simple. Basically it’s a regular view controller, you just have to set a few extra properties to make it work.</p><pre><code class="language-swift">let pickerController = UIImagePickerController()
+pickerController.delegate = self
+pickerController.allowsEditing = true
+pickerController.mediaTypes = ["public.image", "public.movie"]
+pickerController.sourceType = .camera
+</code></pre><p>Allows editing is a flag that indicates if the resizing & cropping interface should be presented after selecting & taking a picture, if true you should use the .editedImage instead of the .originalImage key - inside the picker delegate - to get the proper image from the image info dictionary.</p><p>There are basically two kinds of media types available: images and movies. You can get the available media type strings for each source type by calling a class method on the picker:</p><pre><code class="language-swift">UIImagePickerController.availableMediaTypes(
+    for: .camera
+)
+</code></pre><p>There are 3 available source types: .camera, which is the camera, and there are two other options to get pictures from the photo library. The <code>.photoLibrary</code> enum case will give you full access, but you can limit the selection scope only for the camera roll if you choose .savedPhotosAlbum.</p><p>The delegate should implement both the <code>UIImagePickerControllerDelegate</code> and the <code>UINavigationControllerDelegate</code> protocols, however usually my navigation controller delegate is just an empty implementation. If you need extra navigation related logic, you might need to create a few methods there as well.</p><p>Awww, let’s just put everything together…</p><pre><code class="language-swift">import UIKit
+
+public protocol ImagePickerDelegate: class {
+    func didSelect(image: UIImage?)
+}
+
+open class ImagePicker: NSObject {
+
+    private let pickerController: UIImagePickerController
+    private weak var presentationController: UIViewController?
+    private weak var delegate: ImagePickerDelegate?
+
+    public init(presentationController: UIViewController, delegate: ImagePickerDelegate) {
+        self.pickerController = UIImagePickerController()
+
+        super.init()
+
+        self.presentationController = presentationController
+        self.delegate = delegate
+
+        self.pickerController.delegate = self
+        self.pickerController.allowsEditing = true
+        self.pickerController.mediaTypes = ["public.image"]
+    }
+
+    private func action(for type: UIImagePickerController.SourceType, title: String) -> UIAlertAction? {
+        guard UIImagePickerController.isSourceTypeAvailable(type) else {
+            return nil
+        }
+
+        return UIAlertAction(title: title, style: .default) { [unowned self] _ in
+            self.pickerController.sourceType = type
+            self.presentationController?.present(self.pickerController, animated: true)
+        }
+    }
+
+    public func present(from sourceView: UIView) {
+
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if let action = self.action(for: .camera, title: "Take photo") {
+            alertController.addAction(action)
+        }
+        if let action = self.action(for: .savedPhotosAlbum, title: "Camera roll") {
+            alertController.addAction(action)
+        }
+        if let action = self.action(for: .photoLibrary, title: "Photo library") {
+            alertController.addAction(action)
+        }
+
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alertController.popoverPresentationController?.sourceView = sourceView
+            alertController.popoverPresentationController?.sourceRect = sourceView.bounds
+            alertController.popoverPresentationController?.permittedArrowDirections = [.down, .up]
+        }
+
+        self.presentationController?.present(alertController, animated: true)
+    }
+
+    private func pickerController(_ controller: UIImagePickerController, didSelect image: UIImage?) {
+        controller.dismiss(animated: true, completion: nil)
+
+        self.delegate?.didSelect(image: image)
+    }
+}
+
+extension ImagePicker: UIImagePickerControllerDelegate {
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.pickerController(picker, didSelect: nil)
+    }
+
+    public func imagePickerController(_ picker: UIImagePickerController,
+                                      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        guard let image = info[.editedImage] as? UIImage else {
+            return self.pickerController(picker, didSelect: nil)
+        }
+        self.pickerController(picker, didSelect: image)
+    }
+}
+
+extension ImagePicker: UINavigationControllerDelegate {
+
+}
+</code></pre><p>If you don’t need to select from a source type, things are pretty straightforward, you can simply present your picker view controller, handle everything in the delegate and you are done. However, if you need to choose from an input source, that involves a little bit more logic, especially on iPads. 📱</p><p>I’m using a <code>UIAlertController</code> in order to compose a source type selection dialog. I’m trying to add 3 actions (based on the picking source type), but only if the source type is available on that given device (e.g. <code>.camera</code> is not available in the simulator). You can check availability through: UIImagePickerController.isSourceTypeAvailable(type).</p><blockquote><p>NOTE: Alert controllers needs a few extra things on iPads, that’s why I’m setting up the <code>popoverPresentationController</code> properties in the present method. It’s usually enough to set the sourceView and the sourceRect properties, but you can also customize arrow directions. ⬅️➡️⬆️⬇️</p></blockquote><p>It’s always your task to check if the device is an iPad & set the proper source view & rect if it’s needed, otherwise your app will crash on iPads. Another thing is that you have to dismiss the UIPickerViewController after the picker did it’s job! ⚠️</p><h2>Time to say cheese! 🧀</h2><blockquote><p>How to use the image picker class?</p></blockquote><p>Well, now you are ready to take some pictures. I’ve made a simple view controller to show you a real quick example. You only need a <code>UIImageView</code> and a <code>UIButton</code>.</p><p>Now this is the code for the sample view controller. Nothing magical, I just pass the controller as a presentationController for the <code>ImagePicker</code> so it’ll be able to present the <code>UIImagePickerController</code> on top of that. I separated the delegate from the presentation controller, because sometimes it comes handy. 🤷‍♂️</p><pre><code class="language-swift">class ViewController: UIViewController {
+
+    @IBOutlet var imageView: UIImageView!
+
+    var imagePicker: ImagePicker!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self)
+    }
+
+    @IBAction func showImagePicker(_ sender: UIButton) {
+        self.imagePicker.present(from: sender)
+    }
+}
+
+extension ViewController: ImagePickerDelegate {
+
+    func didSelect(image: UIImage?) {
+        self.imageView.image = image
+    }
+}
+</code></pre><p>The <code>ImagePickerDelegate</code> delegate in this case is the most simple one I can imagine. It just gives the picked image so you’re ready to use it. However in <a href="https://stackoverflow.com/questions/44465904/photopicker-discovery-error-error-domain-pluginkit-code-13" target="_blank">some cases</a> you might need a few additional info from the image picker.</p><p>If you want to take this approach one step further, you can create an abstract class or a protocol that defines the basic functionality and based on that you can implement various media picker controllers to fit your needs.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

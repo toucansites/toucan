@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Building input forms for iOS apps - </title>
+    <meta name="description" content="Learn how to build complex forms with my updated collection view view-model framework without the struggle using Swift.">
+    
+    <meta property="og:url" content="/posts/building-input-forms-for-ios-apps/">
+    <meta property="og:title" content="Building input forms for iOS apps - ">
+    <meta property="og:description" content="Learn how to build complex forms with my updated collection view view-model framework without the struggle using Swift.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Building input forms for iOS apps - ">
+    <meta name="twitter:description" content="Learn how to build complex forms with my updated collection view view-model framework without the struggle using Swift.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2019-05-23 16:20:00">2019-05-23 16:20:00</time>
+            <h1 class="title">Building input forms for iOS apps</h1>
+            <p class="excerpt">Learn how to build complex forms with my updated collection view view-model framework without the struggle using Swift.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <blockquote><p>WARN: This method is not working, since cells in the form are going to be reused and this leads to some inconsistency… please <a href="https://theswiftdev.com/2019/10/21/custom-views-input-forms-and-mistakes/" target="_blank">read my other post</a>. 🤷‍♂️</p></blockquote><h2>CollectionView and input forms</h2><p>My <a href="https://github.com/corekit/collectionview" target="_blank">CollectionView</a> framework just got a HUGE update. There are lots of new changes, but one of the biggest improvement is the way I deal with view models. In the past, you had to use long function names in your view model including the generic view & model class names. If you have ever read my <a href="https://theswiftdev.com/2018/04/17/ultimate-uicollectionview-guide-with-ios-examples-written-in-swift/" target="_blank">ultimate UICollectionView guide</a> you should know what I’m talking about. Good news: I have a way better solution now! 😉</p><p>This update not just cleans up my code a lot, but it allows me to add custom view model handlers, so I can interact with input fields, toggles, etc. in a ridiculously easy way. Another huge improvement is that I started to use view identifiers. It was accidental discovery, I only wanted to look for <a href="https://theswiftdev.com/2019/04/02/uniquely-identifying-views/" target="_blank">an alternative solution for identifying views by tags</a>, then I had this brilliant idea: why not look up cells by ids as well?</p><p>As a result I’m now able to create forms by using the framework. I still believe that collection views are the ultimate building blocks for most of the applications. Yeah, you can still say that there is no silver bullet, but I’m just fine if this solution can cover 90% of the my use-cases. After all, most of the apps are just visualizing JSON data in a nice, or not-so-nice way. 🤷‍♂️ #sarcasm</p><h2>Reusable form components</h2><p>Let’s build a form by using the brand new <a href="https://github.com/corekit/collectionview" target="_blank">framework</a>. First of all, you’ll need to integrate it by using a package manager. I really hope that in a few weeks we can use <a href="https://theswiftdev.com/2017/11/09/swift-package-manager-tutorial/" target="_blank">Swift Package Manager</a>, until than you you should go with CocoaPods or carthage.</p><pre><code># cocoapods
+source 'https://github.com/CoreKit/CocoaPods.git'
+pod 'CollectionView', '~> 2.0.0'
+
+# carthage
+github "CoreKit/CollectionView" "2.0.0"
+</code></pre><p>Now let’s create a reusable cell for our input fields. Feel free to use a xib file as usual, the only difference in the implementation is going to be that I remove the target listener in the reset method. We’ll add one later on in the view-model. 🎯</p><pre><code class="language-swift">import Foundation
+import CollectionView
+
+class InputCell: Cell {
+
+    @IBOutlet weak var textField: UITextField!
+
+    override func reset() {
+        super.reset()
+
+        self.textField.removeTarget(nil, action: nil, for: .editingChanged)
+    }
+}
+</code></pre><p>I’m also going to create a simple entity for displaying a placeholder if the form field is empty and storing the actual value of the input field, let’s call this InputEntity.</p><pre><code class="language-swift">import Foundation
+
+struct InputEntity {
+    var placeholder: String
+    var value: String?
+}
+</code></pre><p>Now the hardest part: making a connection between the view and the model.</p><pre><code class="language-swift">import Foundation
+import CollectionView
+
+class InputViewModel: ViewModel<InputCell, InputEntity> {
+
+    var editingChangeHandler: ViewModelHandler?
+
+    override var height: CGFloat {
+        return 60
+    }
+
+    override func updateView() {
+        self.view?.textField.placeholder = self.model.placeholder
+        self.view?.textField.text = self.model.value
+
+        self.view?.textField.addTarget(self,
+                                       action: #selector(self.editingChanged(_:)),
+                                       for: .editingChanged)
+        self.view?.textField.addTarget(self,
+                                       action: #selector(self.editingDidEnd(_:)),
+                                       for: .editingDidEnd)
+    }
+
+    func onEditingChange(_ handler: @escaping ViewModelHandler) -> Self {
+        self.editingChangeHandler = handler
+        return self
+    }
+
+    @objc func editingChanged(_ textField: UITextField) {
+        self.model.value = textField.text
+        self.editingChangeHandler?(self)
+    }
+
+    @objc func editingDidEnd(_ textField: UITextField) {
+        print("nothing-to-do-here-now...")
+    }
+}
+</code></pre><p>It’s quite a complex view model, but it can do a lot as well. The first thing that you should understand is the ViewModelHandler which is basically a generic alias that you can utilize in the view models. It gives you the ability to pass around the type-safe view-model for the callbacks. You’ll see that later on.</p><p>The second major change is the updateView method, which is used to update the view based on the data coming from the model. I’m also adding my target listeners to my view, so I can handle user input directly inside the view-model class.</p><p>The onEditingChange method is the “public” api of the view-model. I use the on prefix now for adding handlers, and listeners to my view-models. It basically calls the stored block if a change event happens. You can add as many event handler blocks as you want. I really hope that you’ll get the hang of this approach.</p><p>One more thing: returning the the height of the cell is a one-liner now! 🎊</p><p>Composing forms and more<br>The plan is for now to have an input form with two input fields. One for the email address, the other is going to be used for the password. The trick is going to be that this time I won’t show you the entire code, but you have to figure out the rest.</p><p>However I’ll show you everything that you’ll ever need to know in order to make your own forms, even some complex ones. Don’t worry, it’s just a few lines of code.</p><pre><code class="language-swift">import UIKit
+import CollectionView
+
+class ViewController: CollectionViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let grid = Grid(columns: 1, margin: UIEdgeInsets(all: 16), padding: .zero)
+        self.collectionView.source = .init(grid: grid, [
+            [
+                InputViewModel(id: "email-input", .init(placeholder: "Email", value: nil))
+                .onEditingChange { viewModel in
+                    guard let passwordViewModel = viewModel.by(id: "password-input") as? InputViewModel else {
+                        return
+                    }
+                    passwordViewModel.model.value = viewModel.model.value ?? ""
+                    passwordViewModel.updateView()
+                },
+                InputViewModel(id: "password-input", .init(placeholder: "Password", value: nil)),
+            ],
+        ])
+        self.collectionView.reloadData()
+    }
+}
+</code></pre><p>If you’ve ever worked with my collection view framework, you should know that I always use a grid system, because I don’t really like to calculate numbers.</p><p>The source is a set of view-models, grouped by sections. The only interesting part here is that sources can now be initialized with an array of sections and view-models.</p><p>If you initialize a view-model with and identifier, later on you can query that one by the id. This is exactly whats happening inside the editing change handler block. Every view-model has the ability to return some other view-model by the id. View-models are type-safe by default, the viewModel passed inside the block too, thanks to the generic ViewModelHandler alias.</p><p>So in this little example, if you type something into the first input field, the exact same text will appear in the second text field. You can get all the view models by id when you need them. For example if you have to submit this form, you can grab the email and password fields by using the same approach.</p><h2>Building a login form</h2><p>I challenge you to build a login form on your own by using my framework. I guarantee yout that it shouldn’t take more than 30mins of work. I’ll show you the final view controller that I would use, so this might gives you some help.</p><p>If you want to spice up things a little bit, you can even add a checkbox for accepting the privacy policy. The main idea here is that you should create reusable components for every single item in your form. So for example a ToggleView with a corresponding view-model would be a good approach (also works for buttons). 🤫</p><p>Here is the final hint, you only have to make your own view-models and views…</p><pre><code class="language-swift">import UIKit
+import CollectionView
+
+class ViewController: CollectionViewController {
+
+    enum Ids: String {
+        case email = "email-input"
+        case password = "password-input"
+        case privacyPolicy = "privacy-policy-checkbox"
+        case submit = "submit-button"
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let grid = Grid(columns: 1, margin: UIEdgeInsets(all: 16), padding: .zero)
+        self.collectionView.source = .init(grid: grid, [
+            [
+                InputViewModel(id: Ids.email.rawValue, .init(placeholder: "Email", value: nil))
+                .onEditingEnd { viewModel in
+                    guard let passwordViewModel = viewModel.by(id: Ids.password.rawValue) as? InputViewModel else {
+                        return
+                    }
+                    passwordViewModel.view?.textField.becomeFirstResponder()
+                },
+                InputViewModel(id: Ids.password.rawValue, .init(placeholder: "Password", value: nil, secure: true))
+                .onEditingEnd { viewModel in
+                    viewModel.view?.textField.endEditing(true)
+                },
+            ],
+            [
+                ToggleViewModel(id: Ids.privacyPolicy.rawValue, .init(label: "Privacy policy", value: false))
+                .onValueChange { viewModel in
+                    guard let submitViewModel = viewModel.by(id: Ids.submit.rawValue) as? ButtonViewModel else {
+                        return
+                    }
+                    var model = submitViewModel.model
+                    model.enabled = viewModel.model.value
+                    submitViewModel.model = model
+                    submitViewModel.updateView()
+                },
+            ],
+            [
+                ButtonViewModel(id: Ids.submit.rawValue, .init(title: "Submit", enabled: false))
+                .onSubmit { viewModel in
+                    guard
+                        let emailViewModel = viewModel.by(id: Ids.email.rawValue) as? InputViewModel,
+                        let passwordViewModel = viewModel.by(id: Ids.password.rawValue) as? InputViewModel
+                    else {
+                        return
+                    }
+                    /* ... */
+                },
+            ],
+        ])
+        self.collectionView.reloadData()
+    }
+}
+</code></pre><p>That’s it for now, an almost complete login form, with just a few lines of code. Of course there is an underlying framework, but if you check the <a href="https://github.com/corekit/collectionview" target="_blank">source code</a>, you’ll actually see that it contains nothing that would be considered as black magic. 💫</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

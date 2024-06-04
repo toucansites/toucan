@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Swift singleton design pattern - </title>
+    <meta name="description" content="Singleton is the most criticized design pattern of all time. Learn the proper way of using Swift singleton classes inside iOS projects.">
+    
+    <meta property="og:url" content="/posts/swift-singleton-design-pattern/">
+    <meta property="og:title" content="Swift singleton design pattern - ">
+    <meta property="og:description" content="Singleton is the most criticized design pattern of all time. Learn the proper way of using Swift singleton classes inside iOS projects.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift singleton design pattern - ">
+    <meta name="twitter:description" content="Singleton is the most criticized design pattern of all time. Learn the proper way of using Swift singleton classes inside iOS projects.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2018-05-22 16:20:00">2018-05-22 16:20:00</time>
+            <h1 class="title">Swift singleton design pattern</h1>
+            <p class="excerpt">Singleton is the most criticized design pattern of all time. Learn the proper way of using Swift singleton classes inside iOS projects.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>Everyone is <a href="https://www.swiftbysundell.com/posts/avoiding-singletons-in-swift" target="_blank">bullying</a> on the poor singleton pattern, most of the people call it anti-pattern. But what exactly is a singleton class and why is it so bad?</p><h2>What is a singleton?</h2><p>It’s a very popular and commonly adopted pattern because of simplicity. A singleton class can only have exactly one instance through the entire application lifecycle. That single instance is only accessible through a static property and the initialized object is usally shared globally. It’s like a global variable. 🌏</p><h3>Global variables and states</h3><p>Singletons have bad reputation because they share global mutable states. The global keyword is always feared even in the circle of experienced developers. Global states & variables are the hotbed of side effects. Global variables can be accessed from anywhere of your program so your classes that use them will become stateful, unsecure, tight coupled and hard to debug. It’s not a good practice to share states alongside objects through this way for obvious reasons. 🤮</p><h3>Side effects</h3><p>You should scope and isolate your variables as much as you can and minimize the statefullness of your code. This will eliminate side effects, make your code more secure to use. Consider the following example:</p><pre><code class="language-swift">var global = 0
+
+// method is written by someone else
+func square(_ x: Int) -> Int {
+    global = x
+    return x * x
+}
+
+global = 1;
+var result = square(5)
+result += global //we assume that global is 1
+print(result) //wtf 30 it should be 26
+</code></pre><p>The square method is written by someone else, who wanted to store the input in the same global variable for some reason. Now when you call that function you won’t be avare of this, until you look at his code. Imagine this kind of issues inside of a project with lots of oop classes written by multiple code authors… good luck with the army of BUGS! 🐛🐛🐛</p><h3>The secret life of a singleton object</h3><p>Singletons are created once and live forever, they work almost exactly like global variables and that’s why you have to be extremely careful with them. You should only manage those states with singletons that lasts for the complete lifecycle of the app. For example user-specific sessions are usually bad practices and you should rethink your design. Also Swift is not thread safe by default, so if you are working with singletons you have to be prepared for multi-threading issues as well. But if they are so problematic, shouldn’t we simply <a href="https://www.objc.io/issues/13-architecture/singletons/" target="_blank">avoid</a> them entirely? The answer is no. 🚫</p><h2>When to use a singleton class?</h2><p>For example UIApplication is most likely a singleton because there should be only one application instance, and it should live until you shut it down. That makes just the perfect example for a singleton. Another use case can be a Logger class. It’s safe to use a singleton because your application won’t behave any different if a logger is turned on or not. Noone else will own or manage the logger and you’ll only pass information into the logger, so states can’t be messed up. Conclusion: a console or a logger class is quite an acceptable scenario for the usage of the singleton pattern. 👏</p><pre><code class="language-swift">Console.default.notice("Hello I'm a singleton!")
+</code></pre><p>There are a lots of “singletonish” (not everything is a true singleton object) use cases in Apple frameworks, here is a short list, so you can have a little inspiration:</p><pre><code>+ HTTPCookieStorage.shared
++ URLCredentialStorage.shared
++ URLSessionConfiguration.default
++ URLSession.shared
++ FileManager.default
++ Bundle.main
++ UserDefaults.standard
++ NotificationCenter.default
++ UIScreen.main
++ UIDevice.current
++ UIApplication.shared
++ MPMusicPlayerController.systemMusicPlayer
++ GKLocalPlayer.localPlayer()
++ SKPaymentQueue.default()
++ WCSession.default
++ CKContainer.default()
++ etc.
+</code></pre><p>I’ve seen lots of manager classes implemented as singletons, such as network, location or core data managers, but those objects usually shouldn’t be singletons, simply because it can be more than one of them. 💩</p><p>Singleton pattern can be very useful, but it should be used with caution</p><p>If you want to turn something into a singleton, ask yourself these questions:</p><p>Will anything else own, manage or be responsible for it?<br>Is there going to be exactly one instance?</p><ul><li>Will it be a global state variable?</li><li>Should I really use a globally shared object?</li><li>Should live through the whole app lifecycle?</li><li>Is there any alternatives for it?</li></ul><p>If the answers is clearly a yes for everything above, then you can “safely” use a singleton or a global variable to store your data. 🎉🎉🎉</p><h2>How to create a singleton in Swift?</h2><p>It’s really easy to make a singleton object in Swift, but please always think twice and consider alternatives before you apply this design pattern.</p><pre><code class="language-swift">class Singleton {
+
+    static let shared = Singleton()
+
+    private init() {
+        // don't forget to make this private
+    }
+}
+let singleton = Singleton.shared
+</code></pre><p>Nowadays I’m always creating one specific singleton object, that’s called App. This way I can hook up every application related global state properties into that one singleton. The naming convention also helps me to reevaluate what goes into it. 💡</p><h2>How to eliminate singletons?</h2><p>If there is other way you should go with that in ~90% of the cases. The most common alternative solution for singletons is dependency injection. First you should abstract the singleton methods into a protocol, then you can use the singleton as the default implementation if it’s still needed. Now you can inject the singleton or a <a href="https://www.jessesquires.com/blog/refactoring-singletons-in-swift/" target="_blank">refactored object</a> into the right place. This way your code can be <a href="https://www.swiftbysundell.com/posts/testing-swift-code-that-uses-system-singletons-in-3-easy-steps" target="_blank">tested</a> with mocked objects of the protocol, even ignoring the singleton itself. 😎</p><pre><code class="language-swift">typealias DataCompletionBlock = (Data?) -> Void
+
+// 1. abstract away the required functions
+protocol Session {
+    func make(request: URLRequest, completionHandler: @escaping DataCompletionBlock)
+}
+
+// 2. make your "singleton" conform to the protocol
+extension URLSession: Session {
+
+    func make(request: URLRequest, completionHandler: @escaping DataCompletionBlock) {
+        let task = self.dataTask(with: request) { data, _, _ in
+            completionHandler(data)
+        }
+        task.resume()
+    }
+}
+
+class ApiService {
+
+    var session: Session
+
+    // 3. using dependency injection with the "singleton" object
+    init(session: Session = URLSession.shared) {
+        self.session = session
+    }
+
+    func load(_ request: URLRequest, completionHandler: @escaping DataCompletionBlock) {
+        self.session.make(request: request, completionHandler: completionHandler)
+    }
+}
+
+// 4. create mock object
+
+class MockedSession: Session {
+
+    func make(request: URLRequest, completionHandler: @escaping DataCompletionBlock) {
+        completionHandler("Mocked data response".data(using: .utf8))
+    }
+}
+
+// 5. write your tests
+func test() {
+    let api = ApiService(session: MockedSession())
+    let request = URLRequest(url: URL(string: "https://localhost/")!)
+    api.load(request) { data in
+        print(String(data: data!, encoding: .utf8)!)
+    }
+}
+test()
+</code></pre><p>As you can see the singleton pattern is very easy to implement, but it’s really hard to make a decision about it’s application forms. I’m not saying that it’s an anti-pattern, because it’s clearly not, but take care if you are planning to deal with singletons. 😉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

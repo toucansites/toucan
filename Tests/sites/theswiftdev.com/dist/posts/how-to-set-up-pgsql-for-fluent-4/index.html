@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>How to set up pgSQL for Fluent 4? - </title>
+    <meta name="description" content="This is a tutorial for beginners about using PostgreSQL. I&#39;ll show you how to automatically backup and restore the database.">
+    
+    <meta property="og:url" content="/posts/how-to-set-up-pgsql-for-fluent-4/">
+    <meta property="og:title" content="How to set up pgSQL for Fluent 4? - ">
+    <meta property="og:description" content="This is a tutorial for beginners about using PostgreSQL. I&#39;ll show you how to automatically backup and restore the database.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to set up pgSQL for Fluent 4? - ">
+    <meta name="twitter:description" content="This is a tutorial for beginners about using PostgreSQL. I&#39;ll show you how to automatically backup and restore the database.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-02-25 16:20:00">2020-02-25 16:20:00</time>
+            <h1 class="title">How to set up pgSQL for Fluent 4?</h1>
+            <p class="excerpt">This is a tutorial for beginners about using PostgreSQL. I&#39;ll show you how to automatically backup and restore the database.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <blockquote><p>NOTE: If you are already familiar with PostgreSQL, but you don’t know much about how to use databases in Vapor, you should <a href="https://theswiftdev.com/a-tutorial-for-beginners-about-the-fluent-postgresql-driver-in-vapor-4/" target="_blank">read my other tutorial about Fluent for beginners</a>.</p></blockquote><h2>A quick intro to PostgreSQL</h2><p><a href="https://www.postgresql.org/" target="_blank">PostgreSQL</a> is an open source database, it’s available for macOS, <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04" target="_blank">Linux</a> and some other operating systems. You can install it by using the de-facto package manager on every platform. 📦</p><pre><code class="language-sh"># Linux
+sudo apt-get install postgresql postgresql-contrib
+sudo service postgresql start
+# check service status
+sudo service --status-all
+sudo service postgresql status
+
+# macOS
+brew install postgresql
+brew services start postgresql
+# check service status
+brew services list
+</code></pre><p>You’ll also need to set a proper password for the <code>postgres</code> user, which is the admin user by default with godlike permissions. You can change the root password, you just have to log in as a root & alter the postgres user record with the new pass. 🔑</p><pre><code class="language-sh"># Linux
+sudo -u postgres psql postgres
+# macOS
+psql -U postgres
+
+# psql (12.1)
+# Type "help" for help.
+#
+# postgres=#
+
+# ALTER ROLE
+alter user postgres with password 'mypassword';
+
+# exit
+\q
+</code></pre><p>From now on you’ll be able to access pgSQL as root on both platforms like this:</p><pre><code class="language-sh">psql -h localhost -U postgres
+</code></pre><p>It is recommended to use a dedicated user for every single database that you create instead of working with a shared root user. Let me show you how to create a new DB with an associated user.</p><pre><code class="language-sh"># List of databases
+\l
+# Show current database
+select current_database();
+# Create new database
+create database mydb;
+# Change database
+\c mydb
+# Create user
+create user myuser with encrypted password 'mypassword';
+# Grant privileges for user on the database
+grant all privileges on database mydb to myuser;
+# Quit from psql console
+\q
+</code></pre><p>That’s it, you can manage your database by using the newly created <code>myuser</code> account.</p><pre><code class="language-sh"># Log in back to psql console with myuser using mydb
+psql -h localhost -U myuser mydb
+# List all tables
+\dt
+# Describe table structure (will be useful later on)
+\d+ <table>
+</code></pre><p>You can learn more about SQL commands using this <a href="https://www.postgresqltutorial.com/" target="_blank">pgSQL tutorial</a> site.</p><blockquote><p>WARN: The command below can completely wipe your database, be extremely careful!</p></blockquote><p>Now you are ready to play around with Fluent, but before we start I’d like to show you some more tips & tricks. During development, things can go wrong and you might need a fresh start for your DB. Here’s how to drop & reinitiate everything. 😱</p><pre><code class="language-sh"># Reset database
+\c mydb
+drop schema public cascade;
+create schema public;
+grant all on schema public to postgres;
+grant all on schema public to myuser;
+grant all on schema public to public;
+</code></pre><p>The snippet above will delete the <a href="https://www.postgresqltutorial.com/postgresql-schema/" target="_blank">public schema</a>, next it’ll recreate it and add all the necessary permissions for the required users. It’s pretty straightforward but still dangerous. ⚠️</p><blockquote><p>NOTE : You can execute SQL scripts straight from the terminal by using the following command: <code>psql -h localhost -U myuser mydb -c "select * from mytable;"</code></p></blockquote><p>You can wipe everything from the command line using this “one-liner”:</p><pre><code class="language-sh"># Run psql command from the command line
+psql -h localhost -U postgres mydb\
+    -c "drop schema public cascade; \
+    create schema public; \
+    grant all on schema public to postgres; \
+    grant all on schema public to myuser; \
+    grant all on schema public to public;"
+</code></pre><p>I prefer to have daily backups from all my databases, this little shell script can do the job.</p><pre><code class="language-sh">#!/bin/bash
+
+# Backup database
+BACKUP_DIR=/Users/tib/backups
+FILE_SUFFIX=_pg_backup.sql
+OUTPUT_FILE=${BACKUP_DIR}/`date +"%Y_%m_%d__%H_%M"`${FILE_SUFFIX}
+PGPASSWORD="mypass" pg_dump -U myuser -h localhost mydb -F p -f ${OUTPUT_FILE}
+gzip $OUTPUT_FILE
+
+# Remove old backups
+DAYS_TO_KEEP=30
+find $BACKUP_DIR -maxdepth 1 -mtime +$DAYS_TO_KEEP -name "*${FILE_SUFFIX}.gz" -exec rm -rf '{}' ';'
+</code></pre><p>You can easily <a href="https://stackoverflow.com/questions/2732474/restore-a-postgres-backup-file-using-the-command-line" target="_blank">restore</a> a database from a backup by entering the following lines to the terminal:</p><pre><code class="language-sh"># Restore database
+gunzip -k file.gz
+psql -U myuser -d mydb -1 -f mybackup.sql
+</code></pre><p>Sometimes after I restarted my mac it happened to me that the PostgreSQL stopped working. I had to run the snippet below to fix the issue. The first line stops the service, the second initialize a new database, and the third will start the service again. Alternatively, you can start the database again with the <code>brew services start postgresql</code> command.</p><pre><code>pg_ctl -D /usr/local/var/postgres stop -s -m fast
+initdb /usr/local/var/postgres
+pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+</code></pre><p>I’m not a DevOps guru, feel free to tweet me if you know why this happened to me. 😅</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Beginner&#39;s guide to Swift arrays - </title>
+    <meta name="description" content="Learn how to manipulate arrays in Swift like a pro. This tutorial covers lots of useful array related methods, tips and tricks.">
+    
+    <meta property="og:url" content="/posts/beginners-guide-to-swift-arrays/">
+    <meta property="og:title" content="Beginner&#39;s guide to Swift arrays - ">
+    <meta property="og:description" content="Learn how to manipulate arrays in Swift like a pro. This tutorial covers lots of useful array related methods, tips and tricks.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Beginner&#39;s guide to Swift arrays - ">
+    <meta name="twitter:description" content="Learn how to manipulate arrays in Swift like a pro. This tutorial covers lots of useful array related methods, tips and tricks.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2022-03-10 16:20:00">2022-03-10 16:20:00</time>
+            <h1 class="title">Beginner&#39;s guide to Swift arrays</h1>
+            <p class="excerpt">Learn how to manipulate arrays in Swift like a pro. This tutorial covers lots of useful array related methods, tips and tricks.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>An <a href="https://developer.apple.com/documentation/swift/array" target="_blank">array</a> can hold multiple elements of a given type. We can use them to store numbers, strings, classes, but in general elements can be anything. With the Any type you can actually express this and you can put anything into this random access collection. There are quite many ways to create an array in Swift. You can explicitly write the Array word, or use the [] shorthand format. 🤔</p><pre><code class="language-swift">// array of integers
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// array of strings
+let strings = ["a", "b", "c"]
+// array of any items
+let anything: [Any] = [1, "a", 3.14]
+
+// array init
+let empty = Array<Int>()
+let a: Array<Int> = Array()
+let b: [Int] = [Int]()
+let d = [Int](repeating: 1, count: 3)
+let e = Array<String>(repeating: "a", count: 3)
+</code></pre><p>The <code>Array</code> struct is a generic <code>Element</code> type, but fortunately the Swift compiler is smart enough to figure out the element type, so we don’t have to explicitly write it every time. The Array type implements both the <a href="https://developer.apple.com/documentation/swift/sequence" target="_blank">Sequence</a> and the <a href="https://developer.apple.com/documentation/swift/collection" target="_blank">Collection</a> protocols, this is nice because the standard library comes with many powerful functions as protocol extensions on these interfaces.</p><pre><code class="language-swift">let array = [1, 2, 3, 4]
+
+// check if an array is empty
+print(array.isEmpty) // false
+
+// count the elements of the array
+print(array.count) // 4
+
+// check if contains an element
+print(array.contains(2)) // true
+
+// get the element at the zero index
+print(array[0]) // 1
+
+// elements between the 1st and 2nd index
+print(array[1...2]) // [2, 3]
+
+// first 2 elements
+print(array.prefix(2)) // [1, 2]
+
+// last 2 elements
+print(array.suffix(2)) // [3, 4]
+</code></pre><p>Above are some basic functions that you can use to get values from an array. You have to be careful when working with indexes, if you provide an index that is out of range your app will crash (e.g. anything smaller than <code>0</code> or greater than <code>4</code> for the sample code). 💥</p><p>Working with <a href="https://docs.swift.org/swift-book/LanguageGuide/CollectionTypes.html" target="_blank">collection types</a> can be hard if it comes to index values, but there are some cool helper methods available. When you work with an array it’s very likely that you won’t use these methods that much, but they are derived from a lower layer and it’s nice to have them.</p><pre><code class="language-swift">let array = [1, 2, 3, 4]
+
+// start index of the array
+print(array.startIndex) // 0
+
+// end index of the array
+print(array.endIndex) // 4
+
+// range of index values
+print(array.indices) // 0..<4
+
+// start index + count
+print(array.startIndex.advanced(by: array.count)) // 4
+
+// first index of the value 3
+print(array.firstIndex(of: 3) ?? "n/a") // 2
+
+// first index for the value greater than 3
+print(array.firstIndex { $0 > 3 } ?? "n/a") // 3
+
+// the value at the start index + 1
+print(array[array.startIndex.advanced(by: 1)]) // 2
+
+// returns the index after a given index
+print(array.index(after: 2))
+
+// returns the index before a given index
+print(array.index(before: 2))
+
+// returns an index from an start index with an offset, limited by an end index
+print(array.index(array.startIndex, offsetBy: 2, limitedBy: array.endIndex) ?? "n/a")
+</code></pre><p>We can also manipulate the elements of a given array by using the following methods. Please note that these methods won’t alter the original array, in other words they are non-mutating methods.</p><pre><code class="language-swift">let array = [1, 5, 2, 3, 2, 4]
+
+// drop the first 2 elements
+print(array.dropLast(2)) // [1, 5, 2, 3]
+
+// drop the last 2 elements
+print(array.dropFirst(2)) // [2, 3, 2, 4]
+
+// reverse the elements in the array
+print(Array(array.reversed())) // [4, 2, 3, 2, 5, 1]
+
+// get the unique elements from the array using a set
+print(Array(Set(array))) // [2, 1, 3, 4, 5]
+
+// split the array into an array of arrays using a needle
+print(array.split(separator: 2)) // [[1, 5], [3], [4]]
+
+// iterate through the elements of the array using index values
+for index in array.indices {
+    print(array[index]) // 1 2 3 4
+}
+
+// iterate through the elements of the array
+for element in array {
+    print(element) // 1 2 3 4
+}
+
+/// iterate through the index and element values using an enumerated tuple
+for (index, element) in array.enumerated() {
+    print(index, "-", element) // 0 - 1, 1 - 2, 2 - 3, 3 - 4
+}
+</code></pre><p>There are mutating methods that you can use to alter the original array. In order to call a mutating method on an array you have to create it as a variable (var), instead of a constant (let).</p><pre><code class="language-swift">var array = [4, 2, 0]
+
+// set element at index with a value
+array[2] = 3
+print(array) // [4, 2, 3]
+
+// add new elements to the array
+array += [4]
+print(array) // [4, 2, 3, 4]
+
+// replace elements at range with a new collection
+array.replaceSubrange(0...1, with: [1, 2])
+print(array) // [1, 2, 3, 4]
+
+// removes the last element and returns it
+let element = array.popLast() // 4
+print(array) // [1, 2, 3]
+
+// add a new element to the end of the array
+array.append(4)
+print(array) // [1, 2, 3, 4]
+
+// insert an element to a given index (shift others)
+array.insert(5, at: 1)
+print(array) // [1, 5, 2, 3, 4]
+
+// remove elements matching the criteria
+array.removeAll { $0 > 3 }
+print(array) // [1, 2, 3]
+
+// swap elements at the given indexes
+array.swapAt(0, 2)
+print(array) // [3, 2, 1]
+
+// removes the first element
+array.removeFirst()
+print(array) // [2, 1]
+
+// removes the last element
+array.removeLast()
+print(array) // [2]
+
+// add the contents of a sequence
+array.append(contentsOf: [1, 2, 3])
+print(array) // [2, 1, 2, 3]
+
+// remove element at index
+array.remove(at: 0)
+print(array) // [1, 2, 3]
+</code></pre><p>One last thing I’d like to show you are the <a href="https://theswiftdev.com/beginners-guide-to-functional-swift/" target="_blank">functional methods</a> that you can use to transform or manipulate the elements of a given array. Personally I use these functions on a daily basis, they are <a href="https://useyourloaf.com/blog/swift-guide-to-map-filter-reduce/" target="_blank">extremely useful</a> I highly recommend to learn more about them, especially <a href="https://developer.apple.com/documentation/swift/array/3017522-map" target="_blank">map</a> & <a href="https://developer.apple.com/documentation/swift/array/2298686-reduce" target="_blank">reduce</a>. 💪</p><pre><code class="language-swift">let array = [1, 5, 2, 3, 2, 4]
+
+// sort the elements using an ascending order
+print(array.sorted(by: <)) // [1, 2, 2, 3, 4, 5]
+
+// sort the elements using a descending order
+print(array.sorted { $0 > $1 }) // [5, 4, 3, 2, 2, 1]
+
+// get the first element that matches the criteria
+print(array.first { $0 == 3 } ?? "n/a") // 3
+
+// filter the array, only return elements greater than 3
+print(array.filter { $0 > 3 }) // [5, 4]
+
+// transform every element, double their values
+print(array.map { $0 * 2 }) // [2, 10, 4, 6, 4, 8]
+
+// map the elements to strings and join them using a separator
+print(array.map(String.init).joined(separator: ", ")) // 1, 5, 2, 3, 2, 4
+
+// check if all the elements are greater than 1
+print(array.allSatisfy { $0 > 1 }) // false
+
+// sum the values of all the elements
+print(array.reduce(0, +)) // 17
+
+// check if there is an element matching the criteria (some)
+print(array.reduce(false) { $0 || $1 > 3 }) // true
+
+// check if all the elements are matching the criteria (every / allSatisfy)
+print(array.reduce(true) { $0 && $1 > 1 }) // false
+</code></pre><p>As you can see arrays are quite capable data structures in Swift. With the power of functional methods we can do amazing things with them, I hope this little cheat-sheet will help you to understand them a bit better. 😉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

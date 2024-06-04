@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Memory layout in Swift - </title>
+    <meta name="description" content="Start learning about how Swift manages, stores and references various data types and objects using a memory safe approach.">
+    
+    <meta property="og:url" content="/posts/memory-layout-in-swift/">
+    <meta property="og:title" content="Memory layout in Swift - ">
+    <meta property="og:description" content="Start learning about how Swift manages, stores and references various data types and objects using a memory safe approach.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Memory layout in Swift - ">
+    <meta name="twitter:description" content="Start learning about how Swift manages, stores and references various data types and objects using a memory safe approach.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2021-03-08 16:20:00">2021-03-08 16:20:00</time>
+            <h1 class="title">Memory layout in Swift</h1>
+            <p class="excerpt">Start learning about how Swift manages, stores and references various data types and objects using a memory safe approach.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Memory layout of value types in Swift</h2><p>Memory is just a bunch of <code>1</code>s and <code>0</code>s, simply called <a href="https://en.wikipedia.org/wiki/Bit" target="_blank">bits</a> (binary digits). If we group the flow of bits into groups of 8, we can call this new unit <a href="https://en.wikipedia.org/wiki/Byte" target="_blank">byte</a> (eight bit is a byte, e.g. binary 10010110 is hex 96). We can also visualize these bytes in a <a href="https://en.wikipedia.org/wiki/Hexadecimal" target="_blank">hexadecimal</a> form (e.g. 96 A6 6D 74 B2 4C 4A 15 etc). Now if we put these hexa representations into groups of 8, we’ll get a new unit called <a href="https://en.wikipedia.org/wiki/Word_(computer_architecture)" target="_blank">word</a>.</p><p>This 64bit memory (a word represents 64bit) layout is the basic foundation of our modern <a href="https://en.wikipedia.org/wiki/64-bit_computing" target="_blank">x64</a> CPU architecture. Each word is associated with a virtual memory address which is also represented by a (<a href="https://superuser.com/questions/1188364/what-is-the-size-of-an-address-of-a-variable-in-memory-on-a-64-bit-processor-in" target="_blank">usually 64bit</a>) hexadecimal number. Before the <a href="https://en.wikipedia.org/wiki/X86-64" target="_blank">x86-64</a> era the <a href="https://en.wikipedia.org/wiki/X32_ABI" target="_blank">x32 ABI</a> used 32bit long <a href="https://en.wikipedia.org/wiki/Byte_addressing" target="_blank">addresses</a>, with a maximum memory limitation of 4GiB. Fortunately we use x64 nowadays. 💪</p><p>So how do we store our data types in this <a href="https://en.wikipedia.org/wiki/Virtual_memory" target="_blank">virtual memory</a> address space? Well, long story short, we allocate just the right amount of space for each data type and write the hex representation of our values into the memory. It’s magic, provided by the operating system and it just works.</p><p>We could also start talking about <a href="https://en.wikipedia.org/wiki/Memory_segmentation" target="_blank">memory segmentation</a>, paging, and other low level stuff, but honestly speaking I really don’t know how those things work just yet. As I’m digging deeper and deeper into <a href="https://en.wikipedia.org/wiki/Low-level_programming_language" target="_blank">low level stuff</a> like this I’m learning a lot about how computers work under the hood.</p><p>One important thing is that I already know and I want to share with you. It is all about <a href="https://cs.stackexchange.com/questions/45083/cpu-reading-cycles" target="_blank">memory access</a> on various architectures. For example if a CPU’s bus width is 32bit that means the CPU can only read 32bit words from the memory under 1 read cycle. Now if we simply write every object to the memory without proper data separation that can cause some trouble.</p><pre><code>┌──────────────────────────┬──────┬───────────────────────────┐
+│           ...            │  4b  │            ...            │
+├──────────────────────────┴───┬──┴───────────────────────────┤
+│            32 bytes          │            32 bytes          │
+└──────────────────────────────┴──────────────────────────────┘
+</code></pre><p>As you can see if our memory data is misaligned, the first 32bit read cycle can only read the very first part of our 4bit data object. It’ll take 2 read cycles to get back our data from the given memory space. This is very inefficient and also dangerous, that’s why most of the systems won’t allow you unaligned access and the program will simply crash. So how does our <a href="https://stevenpcurtis.medium.com/memorylayout-in-swift-c4e70bb32e3f" target="_blank">memory layout</a> looks like in Swift? Let’s take a quick look at our data types using the built-in <a href="https://swiftdoc.org/v3.1/type/memorylayout/" target="_blank">MemoryLayout</a> enum type.</p><pre><code class="language-swift">print(MemoryLayout<Bool>.size)      // 1
+print(MemoryLayout<Bool>.stride)    // 1
+print(MemoryLayout<Bool>.alignment) // 1
+
+
+print(MemoryLayout<Int>.size)       // 8
+print(MemoryLayout<Int>.stride)     // 8
+print(MemoryLayout<Int>.alignment)  // 8
+</code></pre><p>As you can see Swift stores a Bool value using 1 byte and (on 64bit systems) Int will be stored using 8 bytes. So, what the heck is the difference between <a href="https://swiftunboxed.com/internals/size-stride-alignment/" target="_blank">size, stride and alignment</a>?</p><p>The alignment will tell you how much memory is needed (multiple of the alignment value) to save things perfectly aligned on a memory buffer. Size is the number of bytes required to actually store that type. Stride will tell you about the distance between two elements on the buffer. Don’t worry if you don’t understand a word about these informal definitions, it’ll all make sense just in a moment.</p><pre><code class="language-swift">struct Example {
+    let foo: Int  // 8
+    let bar: Bool // 1
+}
+
+print(MemoryLayout<Example>.size)      // 9
+print(MemoryLayout<Example>.stride)    // 16
+print(MemoryLayout<Example>.alignment) // 8
+</code></pre><p>When constructing new data types, a struct in our case (classes work different), we can calculate the memory layout properties, based on the memory layout attributes of the participating variables.</p><pre><code>┌─────────────────────────────────────┬─────────────────────────────────────┐
+│         16 bytes stride (8x2)       │         16 bytes stride (8x2)       │
+├──────────────────┬──────┬───────────┼──────────────────┬──────┬───────────┤
+│       8 bytes    │  1b  │  7 bytes  │      8 bytes     │  1b  │  7 bytes  │
+├──────────────────┴──────┼───────────┼──────────────────┴──────┼───────────┤
+│   9 bytes size (8+1)    │  padding  │   9 bytes size (8+1)    │  padding  │
+└─────────────────────────┴───────────┴─────────────────────────┴───────────┘
+</code></pre><p>In Swift, simple types have the same alignment value size as their size. If you store standard Swift data types on a contiguous memory buffer there’s no padding needed, so every stride will be equal with the alignment for those types.</p><p>When working with compound types, such as the Example struct is, the <a href="https://stackoverflow.com/questions/47610995/alignment-vs-stride-in-swift" target="_blank">memory alignment</a> value for that type will be selected using the maximum value (8) of the properties alignments. Size will be the sum of the properties (8 + 1) and stride can be calculated by rounding up the size to the next the next multiple of the alignment. Is this true in every case? Well, not exactly…</p><pre><code class="language-swift">struct Example {
+    let bar: Bool // 1
+    let foo: Int  // 8
+}
+
+print(MemoryLayout<Example>.size)      // 16
+print(MemoryLayout<Example>.stride)    // 16
+print(MemoryLayout<Example>.alignment) // 8
+</code></pre><p>What the heck happened here? Why did the size increase? Size is tricky, because if the padding comes in between the stored variables, then it’ll increase the overall size of our type. You can’t start with 1 byte then put 8 more bytes next to it, because you’d misalign the integer type, so you need 1 byte, then 7 bytes of padding and finally the 8 bypes to store the integer value.</p><pre><code>┌─────────────────────────────────────┬─────────────────────────────────────┐
+│        16 bytes stride (8x2)        │        16 bytes stride (8x2)        │
+├──────────────────┬───────────┬──────┼──────────────────┬───────────┬──────┤
+│     8 bytes      │  7 bytes  │  1b  │     8 bytes      │  7 bytes  │  1b  │
+└──────────────────┼───────────┼──────┴──────────────────┼───────────┼──────┘
+                   │  padding  │                         │  padding  │       
+┌──────────────────┴───────────┴──────┬──────────────────┴───────────┴──────┐
+│       16 bytes size (1+7+8)         │       16 bytes size (1+7+8)         │
+└─────────────────────────────────────┴─────────────────────────────────────┘
+</code></pre><p>This is the main reason why the second example struct has a slightly increased size value. Feel free to create other types and practice by drawing the memory layout for them, you can always check if you were correct or not by printing the memory layout at runtime using Swift. 💡</p><blockquote><p>NOTE: This whole problem is real nicely explained on the <a href="https://swiftunboxed.com/internals/size-stride-alignment/" target="_blank">[swift unboxed]</a> blog. I would also like to recommend <a href="https://stevenpcurtis.medium.com/memorylayout-in-swift-c4e70bb32e3f" target="_blank">this article by Steven Curtis</a> and there is one more great post about <a href="https://medium.com/swlh/unsafe-swift-a-road-to-memory-15e7d7e701f9" target="_blank">Unsafe Swift: A road to memory</a>. These writings helped me a lot to understand memory layout in Swift. 🙏</p></blockquote><h2>Reference types and memory layout in Swift</h2><p>I mentioned earlier that classes behave quite different that’s because they are reference types. Let me change the Example type to a class and see what happens with the memory layout.</p><pre><code class="language-swift">class Example {
+    let bar: Bool = true // 1
+    let foo: Int = 0 // 8
+}
+
+print(MemoryLayout<Example>.size)      // 8
+print(MemoryLayout<Example>.stride)    // 8
+print(MemoryLayout<Example>.alignment) // 8
+</code></pre><p>What, why? We were talking about memory reserved in the <a href="https://stackoverflow.com/questions/27441456/swift-stack-and-heap-understanding" target="_blank">stack</a>, until now. The stack memory is reserved for static memory allocation and there’s an other thing called heap for dynamic memory allocation. We could simply say, that value types (struct, Int, Bool, Float, etc.) live in the stack and reference types (classes) are allocated in the heap, which is not 100% true. Swift is smart enough to perform additional memory optimizations, but for the sake of “simplicity” let’s just stop here.</p><p>You might ask the question: <a href="https://stackoverflow.com/questions/7123936/why-is-there-a-stack-and-a-heap" target="_blank">why is there a stack and a heap</a>? The answer is that they are quite different. The stack can be faster, because memory allocation happens using push / pop operations, but you can only add or remove items to / from it. The stack size is also limited, have you ever seen a stack overflow error? The heap allows random memory allocations and you have to make sure that you also deallocate what you’ve reserved. The other downside is that the allocation process has some overhead, but there is no size limitation, except the physical amount of RAM. The <a href="https://www.guru99.com/stack-vs-heap.html" target="_blank">stack and the heap</a> is quite different, but they are both extremely useful memory storage. 👍</p><p>Back to the topic, how did we get 8 for every value (size, stride, alignment) here? We can calculate the real <a href="https://stackoverflow.com/questions/40312123/get-the-size-in-bytes-of-an-object-on-the-heap" target="_blank">size (in bytes) of an object on the heap</a> by using the <code>class_getInstanceSize</code> method. A class always has a 16 bytes of metadata (just print the size of an empty class using the get instance size method) plus the calculated size for the instance variables.</p><pre><code class="language-swift">class Empty {}
+print(class_getInstanceSize(Empty.self)) // 16
+
+class Example {
+    let bar: Bool = true // 1 + 7 padding
+    let foo: Int = 0     // 8
+}
+print(class_getInstanceSize(Example.self)) // 32 (16 + 16)
+</code></pre><p>The memory layout of a class is always 8 byte, but the actual size that it’ll take from the heap depends on the instance variable types. The other 16 byte comes from the <a href="https://stackoverflow.com/questions/10998984/isa-pointer-in-objective-c" target="_blank">“is a” pointer</a> and the reference count. If you know about the Objective-C runtime a bit then this can sound familiar, but if not, then don’t worry too much about ISA pointers for now. We’ll talk about them next time. 😅</p><p>Swift uses <a href="https://docs.swift.org/swift-book/LanguageGuide/AutomaticReferenceCounting.html" target="_blank">Automatic Reference Counting</a> (ARC) to track and manage your app’s memory usage. In most of the cases you don’t have to worry about manual memory management, thanks to ARC. You just have to make sure that you don’t create strong reference cycles between class instances. Fortunately those cases can be resolved easily with <a href="https://docs.swift.org/swift-book/LanguageGuide/AutomaticReferenceCounting.html#ID52" target="_blank">weak or unowned references</a>. 🔄</p><pre><code class="language-swift">class Author {
+    let name: String
+
+    /// weak reference is required to break the cycle.
+    weak var post: Post?
+
+    init(name: String) { self.name = name }
+    deinit { print("Author deinit") }
+}
+
+class Post {
+    let title: String
+    
+    /// this can be a strong reference
+    var author: Author?
+
+    init(title: String) { self.title = title }
+    deinit { print("Post deinit") }
+}
+
+
+var author: Author? = Author(name: "John Doe")
+var post: Post? = Post(title: "Lorem ipsum dolor sit amet")
+
+post?.author = author
+author?.post = post
+
+post = nil
+author = nil
+
+/// Post deinit
+/// Author deinit
+</code></pre><p>As you can see in the example above if we don’t use a weak reference then objects will reference each other strongly, this creates a reference cycle and they won’t be deallocated (deinit won’t be called at all) even if you set individual pointers to nil. This is a very basic example, but the real question is when do I have to use weak, unowned or strong? 🤔</p><p>I don’t like to say “it depends”, so instead, I’d like to point you into the right direction. If you take a closer look at the official documentation about <a href="https://docs.swift.org/swift-book/LanguageGuide/Closures.html" target="_blank">Closures</a>, you’ll see what captures values:</p><ul><li>Global functions are closures that have a name and don’t capture any values.</li><li>Nested functions are closures that have a name and can capture values from their enclosing function.</li><li>Closure expressions are unnamed closures written in a lightweight syntax that can capture values from their surrounding context.</li></ul><p>As you can see <a href="https://stackoverflow.com/questions/28951324/why-is-the-weak-self-reference-in-the-uiview-animation-closure-causing-a-compila/48420485" target="_blank">global (static functions) don’t increment reference counters</a>. Nested functions on the other hand will capture values, same thing applies to closure expressions and unnamed closures, but it’s a bit more complicated. I’d like to recommend the following two articles to understand more about closures and capturing values:</p><ul><li>You don’t (always) need [weak self]</li><li>Weak, strong, unowned, oh my!</li></ul><p>Long story short, retain cycles suck, but in most of the cases you can avoid them just by using just the right keyword. Under the hood, ARC does a great job, except a few edge cases when you have to break the cycle. Swift is a <a href="https://docs.swift.org/swift-book/LanguageGuide/MemorySafety.html" target="_blank">memory-safe</a> programming language by design. The language ensures that every object will be initialized before you could use them, and objects living in the memory that aren’t referenced anymore will be deallocated automatically. Array indices are also checked for out-of-bounds errors. This gives us an extra layer of safety, except if you write unsafe Swift code… 🤓</p><p>Anyway, in a nutshell, this is how the memory layout looks like in the Swift programming language.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

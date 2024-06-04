@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>How to use a Swift library in C - </title>
+    <meta name="description" content="In this tutorial, we&#39;re going to build a C app by importing a Swift library and talk a bit about the Swift / C Interoperability in general.">
+    
+    <meta property="og:url" content="/posts/how-to-use-a-swift-library-in-c/">
+    <meta property="og:title" content="How to use a Swift library in C - ">
+    <meta property="og:description" content="In this tutorial, we&#39;re going to build a C app by importing a Swift library and talk a bit about the Swift / C Interoperability in general.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to use a Swift library in C - ">
+    <meta name="twitter:description" content="In this tutorial, we&#39;re going to build a C app by importing a Swift library and talk a bit about the Swift / C Interoperability in general.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2022-02-23 16:20:00">2022-02-23 16:20:00</time>
+            <h1 class="title">How to use a Swift library in C</h1>
+            <p class="excerpt">In this tutorial, we&#39;re going to build a C app by importing a Swift library and talk a bit about the Swift / C Interoperability in general.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>How to build a C compatible Swift library?</h2><p>In order to create a Swift library that’s going to work with C, we have to play around with <a href="https://theswiftdev.com/unsafe-memory-pointers-in-swift/" target="_blank">unsafe memory pointers</a> to create a <a href="https://developer.apple.com/documentation/swift/swift_standard_library/c_interoperability" target="_blank">C compatible interface</a>. Fortunately I was able to find a nice example, which served me as a good starting point, on <a href="https://forums.swift.org/t/creating-a-c-accessible-shared-library-in-swift/45329/3" target="_blank">the Swift forums</a> created by <a href="https://x.com/Lukasaoz" target="_blank">Cory Benfield</a>, so that’s what we’re going to use in this case. Thanks you. 🙏</p><pre><code class="language-swift">final class MyType {
+    var count: Int = 69
+}
+
+@_cdecl("mytype_create")
+public func mytype_create() -> OpaquePointer {
+    let type = MyType()
+    let retained = Unmanaged.passRetained(type).toOpaque()
+    return OpaquePointer(retained)
+}
+
+@_cdecl("mytype_get_count")
+public func mytype_get_count(_ type: OpaquePointer) -> CInt {
+    let type = Unmanaged<MyType>.fromOpaque(UnsafeRawPointer(type)).takeUnretainedValue()
+    return CInt(type.count)
+}
+
+@_cdecl("mytype_destroy")
+public func mytype_destroy(_ type: OpaquePointer) {
+    _ = Unmanaged<MyType>.fromOpaque(UnsafeRawPointer(type)).takeRetainedValue()
+}
+</code></pre><p>The good news is that we don’t necessary have to create a separate header file for our interfaces, but the Swift compiler can generate it for us if we provide the <code>-emit-objc-header</code> flag.</p><p>I have an article about <a href="https://theswiftdev.com/the-swift-compiler-for-beginners/" target="_blank">the swiftc command for beginners</a> and I also wrote some things about <a href="https://theswiftdev.com/building-static-and-dynamic-swift-libraries-using-the-swift-compiler/" target="_blank">the Swift compiler</a>, where I talk about the available flags. This time we’re going to use the <code>-module-name</code> option to specify our module name, we’re going to generate the required files using the <code>-emit-dependencies</code> flag, parse the source files as a library (<code>-parse-as-library</code>), since we’d like to generate a Swift library provide the necessary target and version information and emit a header file.</p><pre><code class="language-sh"># macOS
+swiftc \
+        -module-name mytype \
+        -emit-dependencies \
+        -parse-as-library \
+        -c mytype.swift \
+        -target arm64-apple-macosx12.0 \
+        -swift-version 5 \
+        -emit-objc-header \
+        -emit-objc-header-path mytype.h
+
+# Linux (without the target option)
+swiftc \
+    -module-name mytype \
+    -emit-dependencies \
+    -parse-as-library \
+    -c mytype.swift \
+    -swift-version 5 \
+    -emit-objc-header \
+    -emit-objc-header-path mytype.h
+</code></pre><p>This should generate a <code>mytype.h</code> and a <code>mytype.o</code> file plus some additional Swift module related output files. We’re going to use these files to <a href="https://blog.spencerkohan.com/building-swift-without-a-build-system/" target="_blank">build</a> our final executable, but there are a few more additional things I’d like to mention.</p><p>Under Linux the header file won’t work. It contains a line #include Foundation/Foundation.h and of course there is no such header file for Linux. It is possible to install the <a href="http://www.gnustep.org/" target="_blank">GNUstep package</a> (e.g. via yum: <code>sudo yum install gnustep-base gnustep-base-devel gcc-objc</code>, but for me the <a href="https://clang.llvm.org/" target="_blank">clang</a> command still complained about the location of the <code>objc.h</code> file. Anyway, I just removed the include Foundation statement from the header file and I was good to go. 😅</p><p>The second thing I’d like to mention is that if you want to export a class for Swift, that’s going to be a bit harder, because classes won’t be included in the generated header file. You have two options in this case. The first one is to turn them into Objective-C classes, but this will lead to problems when using Linux, anyway, this is how you can do it:</p><pre><code class="language-swift">import Foundation
+
+@objc public final class MyType: NSObject {
+    public var count: Int = 69
+}
+</code></pre><p>I prefer the second option, when you don’t change the Swift file, but you create a separate header file and define your object type as a struct with a custom type (<code>mytype_struct.h</code>).</p><pre><code class="language-c">typedef struct mytype mytype_t;
+</code></pre><p>We’re going to need this type (with the corresponding header file), because the <code>mytype_create</code> function returns a pointer that we can use to call the other <code>mytype_get_count</code> method. 🤔</p><p>Compiling C sources using Swift libraries<br>So how do we use these exposed Swift objects in C? In the C programming language you just have to import the headers and then voilá you can use everything defined in those headers.</p><pre><code class="language-c">#include <stdio.h>
+#include "mytype.h"
+
+int main() {
+    mytype_t *item = mytype_create();
+
+    int i = mytype_get_count(item);
+ 
+    printf("Hello, World! %d\n", i);
+
+    return 0;
+}
+</code></pre><p>We can use clang to compile the main.c file into an object file using the necessary header files.</p><pre><code class="language-sh"># macOS
+clang -x objective-c -include mytype.h -include mytype_struct.h -c main.c
+
+# Linux
+clang -include mytype.h -include mytype_struct.h -c main.c
+</code></pre><p>This command will build a main.o file, which we can use to create the final executable. 💪</p><h2>Linking the final executable</h2><p>This was the hardest part to figure out, but I was able to link the two object files together after a few hours of struggling with the <a href="https://theswiftdev.com/deep-dive-into-swift-frameworks/" target="_blank">ld command and other framework tools</a> I decided to give it up and let swiftc take care of the job, since it can build and link both C and Swift-based executables.</p><p>We’re going to need a list of the object files that we’re going to link together.</p><pre><code class="language-sh">ls *.o > LinkFileList
+</code></pre><p>Then we can call <code>swiftc</code> to do the job for us. I suppose it’ll invoke the <code>ld</code> command under the hood, but I’m not a linker expert, so if you know more about this, feel free to reach out and <a href="https://x.com/tiborbodecs" target="_blank">provide me more info</a> about the process. I have to read <a href="https://www.amazon.com/Linkers-Kaufmann-Software-Engineering-Programming/dp/1558604960" target="_blank">this book</a> for sure. 📚</p><pre><code class="language-sh"># macOS
+swiftc \
+        -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk \
+        -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks \
+        -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib \
+        -L /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib \
+        -L /Users/tib/swiftfromc/ \
+        -module-name Example \
+        -emit-executable \
+        -Xlinker -rpath \
+        -Xlinker @loader_path @/Users/tib/swiftfromc/LinkFileList \
+        -Xlinker -rpath \
+        -Xlinker /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
+        -Xlinker -rpath \
+        -Xlinker /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/macosx \
+        -target arm64-apple-macosx12.1 \
+        -Xlinker -add_ast_path \
+        -Xlinker /Users/tib/swiftfromc/mytype.swiftmodule \
+        -L /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib
+
+# Linux
+swiftc \
+    -L /home/ec2-user/swiftfromc \
+    -module-name Example \
+    -emit-executable \
+    -Xlinker -rpath \
+    -Xlinker @loader_path @/home/ec2-user/swiftfromc/LinkFileList
+</code></pre><p>The command above will produce the final linked executable file that you can run by using the <code>./Example</code> snippet and hopefully you’ll see the “Hello, World! 69” message. 🙈</p><p>If you want to know more about the <a href="https://blog.krzyzanowskim.com/2018/12/05/rpath-what/" target="_blank">rpath linker flag</a>, I highly recommend reading the article by <a href="https://x.com/krzyzanowskim" target="_blank">Marcin Krzyzanowski</a>. If you want to read more about Swift / Objective-C interoperability and using the swiftc command, you should check out <a href="https://rderik.com/blog/understanding-objective-c-and-swift-interoperability/" target="_blank">this article</a> by <a href="https://x.com/rderik" target="_blank">RDerik</a>. Finally if you want to call C code from Swift and go the other way, you should take a look at <a href="https://theswiftdev.com/how-to-call-c-code-from-swift/" target="_blank">my other blog post</a>.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

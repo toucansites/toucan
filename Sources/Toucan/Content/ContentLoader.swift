@@ -356,7 +356,7 @@ struct ContentLoader {
         let featured = frontMatter["featured"] as? Bool ?? false
 
         guard let date = formatter.date(from: publication) else {
-            fatalError("Invalid publication date for `\(id)`.")
+            fatalError("Invalid publication date for `\(slug)`.")
         }
 
         return .init(

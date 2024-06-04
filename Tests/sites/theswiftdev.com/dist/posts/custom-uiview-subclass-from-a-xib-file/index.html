@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Custom UIView subclass from a xib file - </title>
+    <meta name="description" content="Do you want to learn how to load a xib file to create a custom view object? Well, this UIKit tutorial is just for you written in Swift.">
+    
+    <meta property="og:url" content="/posts/custom-uiview-subclass-from-a-xib-file/">
+    <meta property="og:title" content="Custom UIView subclass from a xib file - ">
+    <meta property="og:description" content="Do you want to learn how to load a xib file to create a custom view object? Well, this UIKit tutorial is just for you written in Swift.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Custom UIView subclass from a xib file - ">
+    <meta name="twitter:description" content="Do you want to learn how to load a xib file to create a custom view object? Well, this UIKit tutorial is just for you written in Swift.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2018-10-16 16:20:00">2018-10-16 16:20:00</time>
+            <h1 class="title">Custom UIView subclass from a xib file</h1>
+            <p class="excerpt">Do you want to learn how to load a xib file to create a custom view object? Well, this UIKit tutorial is just for you written in Swift.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>I already have a comprehensive guide about <a href="https://theswiftdev.com/uikit-init-patterns/" target="_blank">initializing views and controllers</a>, but that one lacks a very special case: creating a custom view using interface builder. 🤷‍♂️</p><h2>Loading xib files</h2><p>Using the contents of a <a href="http://eppz.eu/blog/uiview-from-xib/" target="_blank">xib</a> file is a pretty damn easy task to do. You can use the following two methods to load the contents (aka. the view hierarchy) of the file.</p><pre><code class="language-swift">let view = UINib(
+    nibName: "CustomView", 
+    bundle: .main
+).instantiate(
+    withOwner: nil, 
+    options: nil
+).first as! UIView
+
+// does the same as above
+// let view = Bundle.main.loadNibNamed(
+//    "CustomView", 
+//    owner: nil, 
+//    options: nil
+// )!.first as! UIView 
+
+view.frame = self.view.bounds
+self.view.addSubview(view)
+</code></pre><p>The snippet above will simply instantiate a view object from the <a href="https://medium.com/@brianclouser/swift-3-creating-a-custom-view-from-a-xib-ecdfe5b3a960" target="_blank">xib file</a>. You can have multiple root objects in the view hierarchy, but this time let’s just pick the first one and use that. I assume that in 99% of the cases this is what you’ll need in order to get your custom designed views. Also you can extend the UIView object with any of the solutions above to create a <a href="https://theiconic.tech/instantiating-from-xib-using-swift-generics-632a2b3d8109" target="_blank">generic</a> view loader. More on that later… 😊</p><p>This method is pretty simple and cheap, however there is one little drawback. You can’t get named pointers (outlets) for the views, but only for the root object. If you are putting design elements into your screen, that’s fine, but if you need to display dynamic data, you might want to reach out for the underlying views as well. 😃</p><h2>Custom views with outlets & actions</h2><p>So the proper way to load custom views from xib files goes something like this:</p><p>Inside your custom view object, you instantiate the xib file exactly the same way as I told you right up here. 👆 The only difference is that you don’t need to use the object array returned by the methods, but you have to connect your view objects through the interface builder, using the File’s Owner as a reference point, plus a custom container view outlet, that’ll contain everything you need. 🤨</p><pre><code class="language-swift">// note: view object is from my previous tutorial, with autoresizing masks disabled
+class CustomView: View {
+
+    // this is going to be our container object
+    @IBOutlet weak var containerView: UIView!
+
+    // other usual outlets
+    @IBOutlet weak var textLabel: UILabel!
+
+    override func initialize() {
+        super.initialize()
+
+        // first: load the view hierarchy to get proper outlets
+        let name = String(describing: type(of: self))
+        let nib = UINib(nibName: name, bundle: .main)
+        nib.instantiate(withOwner: self, options: nil)
+
+        // next: append the container to our view
+        self.addSubview(self.containerView)
+        self.containerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.containerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        ])
+    }
+}
+</code></pre><p>So the initialize method here is just loading the nib file with the owner of self. After the loading process finished, your outlet pointers are going to be filled with proper values from the xib file. There is one last thing that we need to do. Even the views from the xib file are “programmatically” connected to our <a href="https://medium.com/swift2go/swift-custom-uiview-with-xib-file-211bb8bbd6eb" target="_blank">custom view</a> object, but visually they aren’t. So we have to add our container view into the view hierarchy. 🤐</p><p><img src="ib.png" alt="IB"></p><p>If you want to use your custom view object, you just have to create a new instance from it - inside a view controller - and finally feel free to add it as a subview!</p><p>One word about bounds, frames aka. springs and struts: fucking UGLY! That’s two words. They are considered as a bad practice, so please use <a href="https://theswiftdev.com/2017/10/31/ios-auto-layout-tutorial-programmatically/" target="_blank">auto layout</a>, I have a nice <a href="https://theswiftdev.com/2018/06/14/mastering-ios-auto-layout-anchors-programmatically-from-swift/" target="_blank">tutorial about anchors</a>, they are amazing and learning them takes about 15 minutes. 😅</p><pre><code class="language-swift">class ViewController: UIViewController {
+
+    weak var customView: CustomView!
+
+    override func loadView() {
+        super.loadView()
+
+        let customView = CustomView()
+        self.view.addSubview(customView)
+        NSLayoutConstraint.activate([
+            customView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            customView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            customView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            customView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        ])
+        self.customView = customView
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.customView.textLabel.text = "Lorem ipsum"
+    }
+}
+</code></pre><p>That’s it, now you have a completely working custom UIView object that loads a xib file in order to use it’s contents. Wasn’t so bad, right? 🤪</p><p>One more extra thing. If you don’t like to handle views programmatically or you simply don’t want to mess around with the <code>loadView</code> method, just remove it entirely. Next put the <code>@IBOutlet</code> keyword right before your custom view class variable. Open your storyboard using IB, then drag & drop a new UIView element to your controller and connect the custom view outlet. It should work like magic. 💫</p><p><img src="storyboard.png" alt="Storyboard"></p><p>I promised outlets and actions in the heading of this section, so let’s talk a little bit about IBActions. They work exactly the same as you’d expect them with controllers. You can simply hook-up a button to your custom view and delegate the action to the custom view class. If you want to forward touches or specific actions to a controller, you should use the <a href="https://theswiftdev.com/2018/06/27/swift-delegate-design-pattern/" target="_blank">delegate pattern</a> or go with a simple block. 😎</p><h2>Ownership and container views</h2><p>It is possible to leave out all the xib loading mechanism from the view instance. We can create a set of extensions in order to have a nice view loader with a custom view class from a xib file. This way you don’t need a container view anymore, also the owner of the file can be left out from the game, it’s more or less the same method as reusable cells for tables and collections created by Apple. 🍎</p><p>You should know that going this way you can’t use your default UIView init methods programmatically anymore, because the xib file will take care of the init process. Also if you are trying to use this kind of custom views from a storyboard or xib file, you won’t be able to use your outlets, because the correspondig xib of the view class won’t be loaded. Otherwise if you are trying to load it manyally you’ll run into an infinite loop and eventually your app will crash like hell. 😈</p><pre><code class="language-swift">import UIKit
+
+extension UINib {
+    func instantiate() -> Any? {
+        return self.instantiate(withOwner: nil, options: nil).first
+    }
+}
+
+extension UIView {
+
+    static var nib: UINib {
+        return UINib(nibName: String(describing: self), bundle: nil)
+    }
+
+    static func instantiate(autolayout: Bool = true) -> Self {
+        // generic helper function
+        func instantiateUsingNib<T: UIView>(autolayout: Bool) -> T {
+            let view = self.nib.instantiate() as! T
+            view.translatesAutoresizingMaskIntoConstraints = !autolayout
+            return view
+        }
+        return instantiateUsingNib(autolayout: autolayout)
+    }
+}
+
+class CustomView: UIView {
+
+    @IBOutlet weak var textLabel: UILabel!
+}
+
+// usage (inside a view controller for example)
+// let view = CustomView.instantiate()
+</code></pre><p>Just like with table or collection view cells this time you have to set your custom view class on the view object, instead of the File’s Owner. You have to connect your outlets and basically you’re done with everything. 🤞</p><p><img src="ownership.jpg" alt="ownership"></p><p>From now on you should ALWAYS use the instantiate method on your custom view object. The good news is that the function is generic, returns the proper instance type and it’s highly reusable. Oh, btw. I already mentioned the bad news… 🤪</p><p>There is also one more technique by overriding <a href="https://stackoverflow.com/questions/9282365/load-view-from-an-external-xib-file-in-storyboard/40343124#40343124" target="_blank">awakeAfter</a>, but I would not rely on that solution anymore. In most of the cases you can simply set the File’s Owner to your custom view, and go with a container, that’s a safe bet. If you have special needs you might need the second approach, but please be careful with that. 😉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

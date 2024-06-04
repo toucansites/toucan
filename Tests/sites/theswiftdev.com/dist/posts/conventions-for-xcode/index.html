@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Conventions for Xcode - </title>
+    <meta name="description" content="Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this.">
+    
+    <meta property="og:url" content="/posts/conventions-for-xcode/">
+    <meta property="og:title" content="Conventions for Xcode - ">
+    <meta property="og:description" content="Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Conventions for Xcode - ">
+    <meta name="twitter:description" content="Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2016-07-06 16:20:00">2016-07-06 16:20:00</time>
+            <h1 class="title">Conventions for Xcode</h1>
+            <p class="excerpt">Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <p>Apple has so much frameworks and APIs that I don’t even know many of them. We are also living in the age of <a href="https://developer.apple.com/app-extensions/" target="_blank">application extensions</a>. If you are trying to create a brand new <a href="https://developer.apple.com/library/archive/featuredarticles/XcodeConcepts/Concept-Targets.html" target="_blank">target in Xcode</a>, you might end up scratching your head. 🤔</p><p><img src="xcode-targets.jpg" alt="Xcode targets"></p><p>This is great for both for developers and end-users, but after creating a few targets and platforms (your project grows and) you might ask the question:</p><blockquote><p>How should I organise my codebase?</p></blockquote><p>Don’t worry too much about it, I might have the right answer for you! 😉</p><h2>The problem with complex projects</h2><p>You can create apps in Xcode for all the major operating systems: iOS, macOS, tvOS, watchOS. In the latest version of Xcode you can also add more than 20 extension just for iOS, plus there are lots of app extensions available for macOS as well. Imagine a complex application with multiple extensions & targets. This situation can lead to <strong>inconsistent bundle identifiers</strong> and more <strong>ad-hoc naming solutions</strong>. Oh, by the way watchOS applications are just a special extensions for iOS targets and don’t forget about your tests, those are individual targets as well! ⚠️</p><p>As far as I can see, if you are trying to support multiple platforms you are going to have a lot of targets inside your Xcode project, additionally every new target will contain some kind of source files and assets. Should I mention schemes too? 😂</p><p>Even Apple removed it’s Lister sample code, that demonstrated one of a hellish Xcode project with 14 targets, 11 schemes, but the overall project contained only 71 Swift source files. That’s not too much code, but you can see the issue here, right?</p><p>It’s time to learn how to organise your project! 💡</p><h2>Xcode project organization</h2><p>So my basic idea is to have a reasonable naming conceptand folder structure inside the project. This involves targets, schemes, bundle identifiers, location of source files and assets on the disk. Let’s start with a simple example that contains multiple targets to have a better understanding. 🤓</p><blockquote><p>NOTE: If you are using the Swift Package Manager eg. for Swift backends, SPM will generate your Xcode project files for you, so you shoudn’t care too much about conventions and namings at all. 🤷‍♂️</p></blockquote><h3>Project name</h3><p>Are you creating a new application? Feel free to name your project as you want. 😉</p><p>Are you going to make a framework? Extend your project name with the <strong>Kit</strong> suffix. People usually prefer to use the <strong>ProjectKit</strong> style for libraries so that’s the correct way to go. If you have a killer name, use that instead of the kit style! 😛</p><h3>Available platforms</h3><p>Always use the following platform names:</p><ul><li>iOS</li><li>macOS</li><li>watchOS</li><li>tvOS</li></ul><h3>Target naming convention</h3><p>Name your targets like:</p><pre><code>[platform] [template name]
+</code></pre><p>Don’t include project name in the targets (that would be just a duplicate)<br>Use the extension names from the new target window (eg. Today Extension)<br>Use “Application” template name for the main application targets<br>Use “Framework” as template name for framework targets<br>Order your targets in a logical way (see the example)</p><h3>Scheme names</h3><p>Simply use target names for schemes too (prefix with project name if required).</p><pre><code>[project] - [platform] [template name]
+</code></pre><p>You can prefix schemes with your project name if you want, but the generic rule is here to use the exact same name as your target. I also like to separate framework schemes visually from the schems that contain application logic, that’s why I always move them to the top of the list. However a better approach is to separate frameworks into a standalone git repository & connect them through a package manager. 📦</p><h3>Bundle identifiers</h3><p>This one is hard because of code signing. You can go with something like this:</p><pre><code>[reverse domain].[project].[platform].[template name]
+</code></pre><p>Here are the rules:</p><ul><li>Start with your reverse domain name (com.example)</li><li>After the domain, insert your project name</li><li>Include platform names, except for iOS, I don’t append that one.</li><li>Use the template name as a suffix (like .todayextension)</li><li>Don’t add application as a template name</li><li>Use .watchkitapp, .watchkitextension for legacy watchOS targets</li><li>Don’t use more than 4 dots (see example below)!</li></ul><blockquote><p>NOTE: If you are going to use <code>com.example.project.ios.today.extension</code> that’s not going to work, because it contains more than 4 dots. So you should simply go with <code>com.example.project.ios.todayextension</code> and names like that. 😢</p></blockquote><p>Anyway, just always try to sign your app and submit to the store. Good luck. 🍀</p><h2>Project folders</h2><p>The thing is that I <strong>always create physical folders on the disk</strong>. If you make a group in Xcode, well by default that’s not going to be an actual folder and all your source files and assets will be located under the project’s main directory.</p><p>I know it’s a personal preference but I don’t like to call a giant “wasteland” of files as a project. I’ve seen many chaotic projects without proper file organization. 🤐</p><p>No matter what, but I always follow this basic pattern:</p><ul><li>Create folders for the targets</li><li>Create a Sources folder for the Swift source files</li><li>Create an Assets folder for everything else (images, etc).</li></ul><p>Under the Sources I always make more subfolders for individual VIPER modules, or simply for controllers, models, objects, etc.</p><h2>Example use case</h2><p>Here is a quick example project in Xcode that uses my conventions.</p><p><img src="xcode-naming-conventions.jpg" alt="Xcode naming conventions"></p><p>As you can see I followed the pattern from above. Let’s assume that my project name is TheSwiftDev. Here is a quick overview of the full setup:</p><h3>Target & scheme names (with bundle identifiers):</h3><ul><li>iOS Application (com.tiborbodecs.theswiftdev)</li><li>iOS Application Unit Tests (n/a)</li><li>iOS Application UI Tests (n/a)</li><li>iOS Today Extension (com.tiborbodecs.theswiftdev.todayextension)</li><li>watchOS Application (com.tiborbodecs.theswiftdev.watchos)</li><li>watchOS Application Extension (com.tiborbodecs.theswiftdev.watchos.extension)</li><li>tvOS Application (com.tiborbodecs.theswiftdev.macos)</li><li>macOS Application (com.tiborbodecs.theswiftdev.tvos)</li></ul><blockquote><p>NOTE: If you rename your iOS target with a WatchKit companion app, be careful!!! You also have to change the <code>WKCompanionAppBundleIdentifier</code> property inside your watch application target’s <code>Info.plist</code> file by hand. ⚠️</p></blockquote><p>This method might looks like an overkill at first sight, but trust me it’s worth to follow these conventions. As your app grows, eventually you will face the same issues as I mentioned in the beginning. It’s better to have a plan for the future.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

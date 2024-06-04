@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Building static and dynamic Swift libraries using the Swift compiler - </title>
+    <meta name="description" content="This tutorial is all about emitting various Swift binaries without the Swift package manager, but only using the Swift compiler.">
+    
+    <meta property="og:url" content="/posts/building-static-and-dynamic-swift-libraries-using-the-swift-compiler/">
+    <meta property="og:title" content="Building static and dynamic Swift libraries using the Swift compiler - ">
+    <meta property="og:description" content="This tutorial is all about emitting various Swift binaries without the Swift package manager, but only using the Swift compiler.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Building static and dynamic Swift libraries using the Swift compiler - ">
+    <meta name="twitter:description" content="This tutorial is all about emitting various Swift binaries without the Swift package manager, but only using the Swift compiler.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2021-02-16 16:20:00">2021-02-16 16:20:00</time>
+            <h1 class="title">Building static and dynamic Swift libraries using the Swift compiler</h1>
+            <p class="excerpt">This tutorial is all about emitting various Swift binaries without the Swift package manager, but only using the Swift compiler.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>What the heck is a library?</h2><p>A <a href="https://en.wikipedia.org/wiki/Library_(computing)" target="_blank">library</a> is a collection of Swift components that other applications can use.</p><p>Imagine that you are creating a simple application to pluralize a string. It works great, you finish the app and you start working on your next one. In your next application, you face the exact same issue, you have to print countable items (e.g 2 bananas). What would you do? 🤔</p><p>The first thing that can cross your mind is to copy all the source code from the first application into the second one. Well, this could work of course, but what happens if you discover a bug in the pluralization component? Now you have to fix the issue at two places, since you’ve just duplicated the entire stuff. There must be a better way… 🧠</p><p>Fortunately computer programmers faced the exact same issue, so they invented shared libraries. A shared library is a special kind of binary component that you can use in your main application. This way you can outsource Swift code into a separate file (or bunch of files), throw in some access control to allow other apps to use public methods and call functions from your library and here we go, we just shared our common code between our applications.</p><p>Oh wait, there is a bug in the lib, how can I fix it? Well, this is where things get a bit complicated, but don’t worry too much, I’ll try to explain how it works. So, last time, you know, when we talked <a href="https://theswiftdev.com/the-swift-compiler-for-beginners/" target="_blank">about the Swift compiler and linker</a>, I mentioned, that they can resolve dependencies in your program. When you use a library you can choose between two approaches.</p><ul><li>static linking</li><li>dynamic linking</li></ul><p>Static linking means that the source code inside the library will be literally copy-pasted into your application binary. Dynamic linking on the other hand means that your library dependencies will be resolved at runtime. By the way, you have to decide this upfront, since you have to build either a static or a dynamic library. Huhh? Ok, let me try this again… 🙃</p><p>The static library approach is more simple. You can easily build a static library using the compiler (you’ll see how to make one later on), then you can import this library inside your application source (import MyLibrary). Now when you compile the main app, you have to tell the compiler the location of your static (binary) library, and the publicly accessible objects (headers or module map) that are available to use. This way when your app is composed the symbols from the lib (classes, methods, etc) can be copied to the main executable file). When you run the app, required objects will be there already inside the binary file, so you can run it as it is.</p><p>The main difference between a static and a dynamic library is that you don’t copy every required symbol to the executable application binary when you use a dylib file, but some of the “undefined” symbols will be resolved at runtime. First you have to build your library as a dynamic dependency using the Swift compiler, this will produce a dynamic (binary) library file and a module map (header files). When you make the final version of your app, the system will put references of the dynamic library to your executable instead of copying the contents of the dylib file. If you want to run your application you have to make sure that the referenced dynamic library is available to use. The operating system will try to load the generated dylib file so the application resolves the symbols based on the reference pointers. 👈</p><h2>Should I choose dynamic or static linking?</h2><p>Well, it depends on the environment. For example the Swift Package Manager prefers to use static linking, but Xcode will try to build SPM packages as dynamic dependencies. You can also explicitly tell SPM to build a static or dynamic library, but in most of the cases you should stick with the automatic value, so the system can build the right module dependency for you.</p><pre><code class="language-swift">// swift-tools-version:5.3
+import PackageDescription
+
+let package = Package(
+    name: "MyLibrary",
+    products: [
+        /// type: automatic, based on the environment
+        .library(name: "MyLibrary", targets: ["MyLibrary"]),
+        //.library(name: "MyLibrary", type: .dynamic, targets: ["MyLibrary"]),
+        //.library(name: "MyLibrary", type: .static, targets: ["MyLibrary"]),
+    ],
+    targets: [
+        .target(name: "MyLibrary", dependencies: []),
+    ]
+)
+</code></pre><p>By the way if you are confused enough, I have an article for beginners <a href="https://theswiftdev.com/deep-dive-into-swift-frameworks/" target="_blank">about Swift packages</a>, modules, frameworks and the tools that makes this whole dependency management possible. You should definitely take a look, it’s a some sort of a deep dive into FAT frameworks, but the first part of the article is full of useful definitions and introductions to various commands.</p><p>Back to the original question: static vs dynamic? Do you remember the bug in the library that we have to fix? If you use a static library you have to rebuild all the apps that are depending on it (they must be linked with the fixed library of course) in order to make the issue disappear. 🐛</p><p>Since a dynamic library is loaded at runtime and the symbols are not embedded into the application binary, you can simply build a new dylib file and replace the old one to fix the bug. This way all the apps that are referencing to this dependency will have the fix for free. There is no need to recompile everyting, except the faulty code in the framework itself. 💪</p><p>It is also worth to mention that the final app size is smaller when you use a dylib.</p><p>Ok, but why should I ever use static linking if dylibz are so cool? The truth is that sometimes you want to encapsulate everything into a single binary, instead of installing lots of other dylib files into the system. Also what happens if something deletes a dylib that your app would require to work flawlessly? That’d suck for sure, especially if it is a mission-critical script on a server… 😳</p><p>Hopefully, I over-explained things, so we can start building our very first static library.</p><h2>Compiling a static Swift library</h2><p>Do you still have that little Point struct from the previous tutorial? Let’s build a static library from that file, but before we do so, we have to explicitly mark it as public, plus we need a public init method in order to be able to create a Point struct from our application. You know, in Swift, <a href="https://docs.swift.org/swift-book/LanguageGuide/AccessControl.html" target="_blank">access control</a> allows us, programmers, to hide specific parts of a library from other developers.</p><pre><code class="language-swift">public struct Point {
+    public let x: Int
+    public let y: Int
+
+    public init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
+}
+</code></pre><p>Now we’re ready to build our static library based on this single point.swift source file. As I mentioned this before, we need a binary file and a module map file that contains the publicly accessible interface for the lib. You can use the -emit-library flat to tell the Swift compiler that we need a binary library file plus using the -emit-module parameter will produce a Swift module info file with all the API and docs needed for other modules. By default the compiler would emit a dylib (on macOS at least), so we have to use the -static flat to explicitly generate a static dependency. 🔨</p><pre><code class="language-sh">swiftc point.swift -emit-module -emit-library -static
+</code></pre><p>The command above should produce 4 new files:</p><ul><li>libpoint.a - The binary static library itself</li><li>point.swiftdoc - Documentation for the module (binary format)</li><li>point.swiftmodule - Info about the module, “Swift header file”</li><li>point.swiftsourceinfo - Source information file</li></ul><p>Move these files inside a lib folder, so it’ll be more easy to work with them. That’s really it, we’ve just created a working static library, but how can we use it to link them against our main application? 🤔</p><p>First of all, we have to import our newly created module inside the <code>main.swift</code> file if we want to use the objects (in our case the Point struct) from it. By the way you can add a custom module name to your library if you use the <code>-module-name [name]</code> argument with the previous <code>swiftc</code> command.</p><pre><code class="language-swift">import point
+
+let p = Point(x: 4, y: 20)
+
+print("Hello library!", p.x, p.y)
+</code></pre><p>So, all of our library files are located in a lib folder, and our default module name is point (based on our single input file). We can use the swiftc command again, to compile the main file, this time we use the -L flag to add a library search path, so the compiler can locate our binary libpoint.a file. We also have to set a search path for imports, the -I property will help us, this way the public API (headers) of the module will be available in our source file. The very last thing that we have to append to the end of the command is the -l[name] flag, this specifies the library name we would like to link against. Be careful, there is no space in between the -l and the name value! ⚠️</p><pre><code class="language-sh">swiftc main.swift -L ./lib/ -I ./lib/ -lpoint
+
+# run the app
+./main
+# Hello library! 4 20
+</code></pre><p>Voilá, we’ve just separated a file from the main application by using a static dependency. 👏</p><h2>Compiling a dynamic Swift library</h2><p>In theory, we can use the same code and build a dynamic library from the <code>point.swift</code> file and compile our main.swift file using that shared framework. We just drop the <code>-static</code> flag first.</p><pre><code>swiftc point.swift -emit-module -emit-library
+</code></pre><p>This time the output is slightly different. We’ve got a <code>libpoint.dylib</code> binary instead of the libpoint.a, but all the other files look identical. Extension my vary per operating system:</p><ul><li>macOS - static: `.a`, dynamic: `.dylib`</li><li>Linux - static: `.so`, dynamic: `.dylib`</li><li>Windows - static: `.lib`, dynamic: `.dll`</li></ul><p>So we have our dylib file, but the real question is: can we build the main.swift file with it?</p><pre><code class="language-sh">swiftc main.swift -L ./lib/ -I ./lib/ -lpoint
+
+# run the app
+./main
+# Hello library! 4 20
+</code></pre><p>Now rename the libpoint.dylib file into libpoint.foo and run the main app again.</p><pre><code class="language-sh">./main
+
+# dyld: Library not loaded: libpoint.dylib
+#   Referenced from: /Users/tib/./main
+#   Reason: image not found
+# zsh: abort      ./main
+</code></pre><p>Whoops, seems like we have a problem. Don’t worry, this is the expected output, since we renamed the dynamic library and the application can’t find it. When the loader tries to get the referenced symbols from the file it looks up dynamic libraries at a few different places.</p><ul><li>The directory you specified through the `-L` flag (`./lib/`).</li><li>The directory where your executable file is (`./`)</li><li>The `/usr/lib/` or the `/usr/local/lib/` directories</li></ul><p>Since the <code>/usr/lib/</code> directory is protected by the famous <a href="https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection" target="_blank">SIP</a> “guard”, you should ship your dylib files next to your executable binary, or alternatively you can install them under the <code>/usr/local/lib/</code> folder. Unfortunately, this lookup strategy can lead to all sort of issues, I really don’t want to get into the details this time, but it can lead to compatibility and security issues. 🤫</p><p>The good news is that now if you change something in the dylib, and you simply rebuild & replace the file then you run the ./main again (without recompiling), the altered dynamic library will be used. Just try to put a print statement into the init method of the Point struct…</p><h2>Summary</h2><p>Honestly, I’d rather go with a static library in most of the cases because using a static library will guarantee that your application has every necessary dependency embedded into the binary file.</p><p>Of course dynamic libraries are great if you are the author of a commonly used framework, such the Swift standard library, Foundation or UIKit. These modules are shipped as shared libraries, because they are huge and almost every single app imports them. Just think about it, if we’d link these three frameworks statically that’d add a lot to the size of our apps, plus it’d be way harder to fix system-wide bugs. This is the reason why these packages are shipped as shared libz, plus Apple can gives us a promise that these components will always be available as part of the operating system. 😅</p><p>Anyways, there are some tools that you can use to alter library loader paths, I’ll tell you more about this next time. It’s going to be a more advanced topic including different languages. I’m going to show you how to build a library using C and how to call it using Swift, without SPM. 🤓</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

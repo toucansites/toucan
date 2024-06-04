@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Running and testing async Vapor commands - </title>
+    <meta name="description" content="In this article I&#39;ll show you how to build asynchronous Vapor commands and how to test them using ConsoleKit.">
+    
+    <meta property="og:url" content="/posts/running-and-testing-async-vapor-commands/">
+    <meta property="og:title" content="Running and testing async Vapor commands - ">
+    <meta property="og:description" content="In this article I&#39;ll show you how to build asynchronous Vapor commands and how to test them using ConsoleKit.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Running and testing async Vapor commands - ">
+    <meta name="twitter:description" content="In this article I&#39;ll show you how to build asynchronous Vapor commands and how to test them using ConsoleKit.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2023-02-23 16:20:00">2023-02-23 16:20:00</time>
+            <h1 class="title">Running and testing async Vapor commands</h1>
+            <p class="excerpt">In this article I&#39;ll show you how to build asynchronous Vapor commands and how to test them using ConsoleKit.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>How to run async commands in Vapor?</h2><p>The async / await feature is relatively new in Swift and some framework authors haven’t converted everything to take advantage of these new keywords. Currently, this is the situation with the <a href="https://docs.vapor.codes/advanced/commands/?h=commands" target="_blank">Command API</a> in Vapor 4. You can already define async commands, but there’s no way to register them using the Vapor framework. Fortunately, there is a relatively straightforward workaround that you can use if you want to execute commands using an asynchronous context. 🔀</p><p>First we’re going to define a helper protocol and create an asyncRun function. We are going to extend the original Command protocol and provide a default implementation for the run method.</p><pre><code class="language-swift">import Vapor
+
+public protocol AsyncCommand: Command {
+    
+    func asyncRun(
+        using context: CommandContext,
+        signature: Signature
+    ) async throws
+}
+
+public extension AsyncCommand {
+
+    func run(
+        using context: CommandContext,
+        signature: Signature
+    ) throws {
+        let promise = context
+            .application
+            .eventLoopGroup
+            .next()
+            .makePromise(of: Void.self)
+        
+        promise.completeWithTask {
+            try await asyncRun(
+                using: context,
+                signature: signature
+            )
+        }
+        try promise.futureResult.wait()
+    }
+}
+</code></pre><p>This way you should be able to create a new async command and you should implement the asyncRun method if you want to call some asynchronous Swift code.</p><pre><code class="language-swift">import Vapor
+
+final class MyAsyncCommand: AsyncCommand {
+    
+    static let name = "async"
+    
+    let help = "This command run asynchronously."
+
+    struct Signature: CommandSignature {}
+
+    func asyncRun(
+        using context: CommandContext,
+        signature: Signature
+    ) async throws {
+        context.console.info("This is async.")
+    }
+}
+</code></pre><p>It is possible to register the command using the configure method, you can try this out by running the swift run Run async snippet if you are using the standard Vapor template. 💧</p><pre><code class="language-swift">import Vapor
+
+public func configure(
+    _ app: Application
+) throws {
+
+    app.commands.use(
+        MyAsyncCommand(),
+        as: MyAsyncCommand.name
+    )
+
+    try routes(app)
+}
+</code></pre><p>As you can see it’s a <a href="https://docs.vapor.codes/basics/async/?h=async#working-with-old-and-new-apis" target="_blank">pretty neat trick</a>, it’s also mentioned on <a href="https://github.com/vapor/console-kit/issues/171" target="_blank">GitHub</a>, but hopefully we don’t need this workaround for too long and proper async command support will arrive in Vapor 4.x.</p><h2>Unit testing Vapor commands</h2><p>This topic has literally zero documentation, so I thought it would be nice to tell you a bit about how to unit test <a href="https://theswiftdev.com/how-to-write-swift-scripts-using-the-new-command-api-in-vapor-4/" target="_blank">scripts created via ConsoleKit</a>. First of all we need a TestConsole that we can use to collect the output of our commands. This is a shameless ripoff from <a href="https://github.com/vapor/console-kit/blob/main/Tests/ConsoleKitTests/Utilities.swift#L97" target="_blank">ConsoleKit</a>. 😅</p><pre><code class="language-swift">import Vapor
+
+final class TestConsole: Console {
+
+    var testInputQueue: [String]
+    var testOutputQueue: [String]
+    var userInfo: [AnyHashable : Any]
+
+    init() {
+        self.testInputQueue = []
+        self.testOutputQueue = []
+        self.userInfo = [:]
+    }
+
+    func input(isSecure: Bool) -> String {
+        testInputQueue.popLast() ?? ""
+    }
+
+    func output(_ text: ConsoleText, newLine: Bool) {
+        let line = text.description + (newLine ? "\n" : "")
+        testOutputQueue.insert(line, at: 0)
+    }
+
+    func report(error: String, newLine: Bool) {
+        //
+    }
+
+    func clear(_ type: ConsoleClear) {
+        //
+    }
+
+    var size: (width: Int, height: Int) {
+        (0, 0)
+    }
+}
+</code></pre><p>Now inside the test suite, you should create a new application instance using the test environment and configure it for testing purposes. Then you should initiate the command that you’d like to test and run it using the test console. You just have to create a new context and a proper input with the necessary arguments and the <code>console.run</code> function will take care of everything else.</p><pre><code class="language-swift">@testable import App
+import XCTVapor
+
+final class AppTests: XCTestCase {
+    
+    func testCommand() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        try configure(app)
+        
+        let command = MyAsyncCommand()
+        let arguments = ["async"]
+        
+        let console = TestConsole()
+        let input = CommandInput(arguments: arguments)
+        var context = CommandContext(
+            console: console,
+            input: input
+        )
+        context.application = app
+        
+        try console.run(command, with: context)
+
+        let output = console
+            .testOutputQueue
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        
+        let expectation = [
+            "This is async."
+        ]
+        XCTAssertEqual(output, expectation)
+    }
+}
+</code></pre><p>The nice thing about this solution is that the ConsoleKit framework will automatically parse the arguments, options and the flags. You can provide these as standalone array elements using the input arguments array (e.g. <code>["arg1", "--option1", "value1", "--flag1"]</code>).</p><p>It is possible to test command groups, you just have to add the specific command name as the first argument that you’d like to run from the group and you can simply check the output through the test console if you are looking for the actual command results. 💪</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

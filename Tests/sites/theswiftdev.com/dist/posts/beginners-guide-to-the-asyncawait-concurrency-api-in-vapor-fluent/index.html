@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Beginner&#39;s guide to the async/await concurrency API in Vapor &amp; Fluent - </title>
+    <meta name="description" content="Learn how to convert your existing EventLoopFuture based Vapor server app using the new async/await Swift feature.">
+    
+    <meta property="og:url" content="/posts/beginners-guide-to-the-asyncawait-concurrency-api-in-vapor-fluent/">
+    <meta property="og:title" content="Beginner&#39;s guide to the async/await concurrency API in Vapor &amp; Fluent - ">
+    <meta property="og:description" content="Learn how to convert your existing EventLoopFuture based Vapor server app using the new async/await Swift feature.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Beginner&#39;s guide to the async/await concurrency API in Vapor &amp; Fluent - ">
+    <meta name="twitter:description" content="Learn how to convert your existing EventLoopFuture based Vapor server app using the new async/await Swift feature.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2021-06-03 16:20:00">2021-06-03 16:20:00</time>
+            <h1 class="title">Beginner&#39;s guide to the async/await concurrency API in Vapor &amp; Fluent</h1>
+            <p class="excerpt">Learn how to convert your existing EventLoopFuture based Vapor server app using the new async/await Swift feature.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Is async/await going to improve Vapor?</h2><p>So you might wonder why do we even need to add async/await support to our codebase? Well, let me show you a dirty example from a generic controller inside the <a href="https://github.com/feathercms/feather/" target="_blank">Feather CMS</a> project.</p><pre><code class="language-swift">func update(req: Request) throws -> EventLoopFuture<Response> {
+    accessUpdate(req: req).flatMap { hasAccess in
+        guard hasAccess else {
+            return req.eventLoop.future(error: Abort(.forbidden))
+        }
+        let updateFormController = UpdateForm()
+        return updateFormController.load(req: req)
+            .flatMap { updateFormController.process(req: req) }
+            .flatMap { updateFormController.validate(req: req) }
+            .throwingFlatMap { isValid in
+                guard isValid else {
+                    return renderUpdate(req: req, context: updateFormController).encodeResponse(for: req)
+                }
+                return findBy(try identifier(req), on: req.db)
+                    .flatMap { model in
+                        updateFormController.context.model = model as? UpdateForm.Model
+                        return updateFormController.write(req: req).map { model }
+                    }
+                    .flatMap { beforeUpdate(req: req, model: $0) }
+                    .flatMap { model in model.update(on: req.db).map { model } }
+                    .flatMap { model in updateFormController.save(req: req).map { model } }
+                    .flatMap { afterUpdate(req: req, model: $0) }
+                    .map { req.redirect(to: req.url.path) }
+            }
+    }
+}
+</code></pre><p>What do you think? Is this code readable, easy to follow or does it look like a good foundation of a <a href="https://en.wikipedia.org/wiki/Pyramid_of_doom_(programming)" target="_blank">historical monumental building</a>? Well, I’d say it’s hard to reason about this piece of Swift code. 😅</p><p>I’m not here to scare you, but I suppose that you’ve seen similar (hopefully more simple or better) EventLoopFuture-based code if you’ve worked with Vapor. <a href="https://theswiftdev.com/promises-in-swift-for-beginners/" target="_blank">Futures and promises</a> are just fine, they’ve helped us a lot to deal with asynchronous code, but unfortunately they come with maps, flatMaps and other block related solutions that will eventually lead to quite a lot of trouble.</p><p>Completion handlers (callbacks) have many problems:</p><ul><li>Pyramid of doom</li><li>Memory management</li><li>Error handling</li><li>Conditional block execution</li></ul><p>We can say it’s easy to make mistakes if it comes to completion handlers, that’s why we have a shiny new feature in Swift 5.5 called <a href="https://github.com/apple/swift-evolution/blob/main/proposals/0296-async-await.md" target="_blank">async/await</a> and it aims to solve these problems I mentioned before. If you are looking for an <a href="https://theswiftdev.com/introduction-to-asyncawait-in-swift/" target="_blank">introduction to async/await</a> in Swift you should read my other tutorial first, to learn the basics of this new concept.</p><p>So Vapor is full of EventLoopFutures, these objects are coming from the <a href="https://github.com/apple/swift-nio" target="_blank">SwiftNIO</a> framework, they are the core building blocks of all the async APIs in both frameworks. By introducing the async/await support we can eliminate quite a lot of unnecessary code (especially completion blocks), this way our codebase will be more easy to follow and maintain. 🥲</p><p>Most of the Vapor developers were waiting for this to happen for quite a long time, because everyone felt that EventLoopFutures (ELFs) are just freakin’ hard to work with. If you search a bit you’ll find quite a lot of complains about them, also the 4th major version of Vapor dropped the old shorthand typealiases and <a href="https://docs.vapor.codes/4.0/upgrading/#nio" target="_blank">exposed NIO’s async API directly</a>. I think this was a good decision, but still the framework god many complaints about this. 👎</p><p>Vapor will greatly benefit from adapting to the new async/await feature. Let me show you how to convert an existing ELF-based Vapor project and take advantage of the new concurrency features.</p><h2>How to convert a Vapor project to async/await?</h2><p>We’re going to use our previous Todo project as a base template. It has a type-safe RESTful API, so it’s happens to be just the perfect candidate for our async/await migration process. ✅</p><p>The new async/await API for Vapor & Fluent are only available yet as a feature branch, so we have to alter our Package.swift manifest file if we’d like to use these new features.</p><pre><code class="language-swift">// swift-tools-version:5.3
+import PackageDescription
+
+let package = Package(
+    name: "myProject",
+    platforms: [
+       .macOS(.v10_15)
+    ],
+    dependencies: [
+        .package(url: "https://github.com/vapor/vapor", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/fluent", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/fluent-kit", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/fluent-sqlite-driver", from: "4.0.0"),
+    ],
+    targets: [
+        .target(
+            name: "App",
+            dependencies: [
+                .product(name: "Fluent", package: "fluent"),
+                .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+                .product(name: "Vapor", package: "vapor"),
+            ]
+        ),
+        .target(name: "Run", dependencies: [.target(name: "App")]),
+    ]
+)
+</code></pre><p>We’re going to convert the following TodoController object, because it has quite a lot of ELF related functions that can take advantage of the new Swift concurrency features.</p><pre><code class="language-swift">import Vapor
+import Fluent
+import TodoApi
+
+struct TodoController {
+
+    private func getTodoIdParam(_ req: Request) throws -> UUID {
+        guard let rawId = req.parameters.get(TodoModel.idParamKey), let id = UUID(rawId) else {
+            throw Abort(.badRequest, reason: "Invalid parameter `\(TodoModel.idParamKey)`")
+        }
+        return id
+    }
+
+    private func findTodoByIdParam(_ req: Request) throws -> EventLoopFuture<TodoModel> {
+        TodoModel
+            .find(try getTodoIdParam(req), on: req.db)
+            .unwrap(or: Abort(.notFound))
+    }
+
+    // MARK: - endpoints
+    
+    func list(req: Request) throws -> EventLoopFuture<Page<TodoListObject>> {
+        TodoModel.query(on: req.db).paginate(for: req).map { $0.map { $0.mapList() } }
+    }
+    
+    func get(req: Request) throws -> EventLoopFuture<TodoGetObject> {
+        try findTodoByIdParam(req).map { $0.mapGet() }
+    }
+
+    func create(req: Request) throws -> EventLoopFuture<TodoGetObject> {
+        let input = try req.content.decode(TodoCreateObject.self)
+        let todo = TodoModel()
+        todo.create(input)
+        return todo.create(on: req.db).map { todo.mapGet() }
+    }
+    
+    func update(req: Request) throws -> EventLoopFuture<TodoGetObject> {
+        let input = try req.content.decode(TodoUpdateObject.self)
+
+        return try findTodoByIdParam(req)
+            .flatMap { todo in
+                todo.update(input)
+                return todo.update(on: req.db).map { todo.mapGet() }
+            }
+    }
+    
+    func patch(req: Request) throws -> EventLoopFuture<TodoGetObject> {
+        let input = try req.content.decode(TodoPatchObject.self)
+
+        return try findTodoByIdParam(req)
+            .flatMap { todo in
+                todo.patch(input)
+                return todo.update(on: req.db).map { todo.mapGet() }
+            }
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        try findTodoByIdParam(req)
+            .flatMap { $0.delete(on: req.db) }
+            .map { .ok }
+    }
+}
+</code></pre><p>The very first method that we’re going to convert is the <code>findTodoByIdParam</code>. Fortunately this version of FluentKit comes with a set of async functions to query and modify database models.</p><p>We just have to remove the <code>EventLoopFuture</code> type and write async before the throws keyword, this will indicate that our function is going to be executed asynchronously.</p><blockquote><p>NOTE: It is worth to mention that you can only call an async function from async functions. If you want to call an async function from a sync function you’ll have to use a special (deatch) method. You can call however sync functions inside async methods without any trouble. 🔀</p></blockquote><p>We can use the new async find method to fetch the TodoModel based on the UUID parameter. When you call an async function you have to await for the result. This will let you use the return type just like it it was a sync call, so there is no need for completion blocks anymore and we can simply guard the optional model result and throw a notFound error if needed. Async functions can throw as well, so you might have to write try await when you call them, note that the order of the keywords is fixed, so try always comes before await, and the signature is always async throws.</p><pre><code class="language-swift">func findTodoByIdParam(_ req: Request) async throws -> TodoModel {
+    guard let model = try await TodoModel.find(try getTodoIdParam(req), on: req.db) else {
+        throw Abort(.notFound)
+    }
+    return model
+}
+</code></pre><p>Compared to the previous method I think this one changed just a little, but it’s a bit cleaner since we were able to use a regular guard statement instead of the “strange” unwrap thingy. Now we can start to convert the REST functions, first let me show you the async version of the list handler.</p><pre><code class="language-swift">func list(req: Request) async throws -> [TodoListObject] {
+    try await TodoModel.query(on: req.db).all().map { $0.mapList() }
+}
+</code></pre><p>Same pattern, we’ve replaced the EventLoopFuture generic type with the async function signature and we can return the TodoListObject array just as it is. In the function body we were able to take advantage of the async all() method and map the returned array of TodoModels using a regular Swift map instead of the mapEach function from the SwiftNIO framework. This is also a minor change, but it’s always better to used standard Swift functions, because they tend to be more efficient and future proof, sorry NIO authors, you did a great job too. 😅🚀</p><pre><code class="language-swift">func get(req: Request) throws -> EventLoopFuture<TodoGetObject> {
+    try findTodoByIdParam(req).map { $0.mapGet() }
+}
+</code></pre><p>The get function is relatively straightforward, we call our findTodoByIdParam method by awaiting for the result and use a regular map to convert our TodoModel item into a TodoGetObject.</p><p>In case you haven’t read my previous article (go and read it please), we’re always converting the TodoModel into a regular Codable Swift object so we can share these API objects as a library (iOS client & server side) without additional dependencies. We’ll use such DTOs for the create, update & patch operations too, let me show you the async version of the create function next. 📦</p><pre><code class="language-swift">func create(req: Request) async throws -> TodoGetObject {
+    let input = try req.content.decode(TodoCreateObject.self)
+    let todo = TodoModel()
+    todo.create(input)
+    try await todo.create(on: req.db)
+    return todo.mapGet()
+}
+</code></pre><p>This time the code looks more sequential, just like you’d expect when writing synchronous code, but we’re actually using async code here. The change in the update function is even more notable.</p><pre><code class="language-swift">func update(req: Request) async throws -> TodoGetObject {
+    let input = try req.content.decode(TodoUpdateObject.self)
+    let todo = try await findTodoByIdParam(req)
+    todo.update(input)
+    try await todo.update(on: req.db)
+    return todo.mapGet()
+}
+</code></pre><p>Instead of utilizing a flatMap and a map on the futures, we can simply await for both of the async function calls, there is no need for completion blocks at all, and the entire function is more clean and it makes more sense even if you just take a quick look at it. 😎</p><pre><code class="language-swift">func patch(req: Request) async throws -> TodoGetObject {
+    let input = try req.content.decode(TodoPatchObject.self)
+    let todo = try await findTodoByIdParam(req)
+    todo.patch(input)
+    try await todo.update(on: req.db)
+    return todo.mapGet()
+}
+</code></pre><p>The patch function looks just like the update, but as a reference let me insert the original snippet for the patch function here real quick. Please tell me, what do you think of both versions… 🤔</p><pre><code class="language-swift">func patch(req: Request) throws -> EventLoopFuture {
+    let input = try req.content.decode(TodoPatchObject.self)
+
+    return try findTodoByIdParam(req)
+        .flatMap { todo in
+            todo.patch(input)
+            return todo.update(on: req.db).map { todo.mapGet() }
+        }
+}
+</code></pre><p>Yeah, I thought so. Code should be self-explanatory, the second one is harder to read, you have to examine it line-by-line, even take a look at the completion handlers to understand what does this function actually does. By using the new concurrency API the patch handler function is just trivial.</p><pre><code class="language-swift">
+func delete(req: Request) async throws -> HTTPStatus {
+    let todo = try await findTodoByIdParam(req)
+    try await todo.delete(on: req.db)
+    return .ok
+}
+</code></pre><p>Finally the delete operation is a no-brainer, and the good news is that Vapor is also updated to support async/await route handlers, this means that we don’t have to alter anything else inside our Todo project, except this controller of course, we can now build and run the project and everything should work just fine. This is a great advantage and I love how smooth is the transition.</p><p>So what do you think? Is this new Swift concurrency solution something that you could live with on a long term? I strongly believe that async/await is going to be utilized way more on the server side. iOS (especially SwiftUI) projects can take more advantage of the Combine framework, but I’m sure that we’ll see some new async/await features there as well. 😉</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Swift actors tutorial - a beginner&#39;s guide to thread safe concurrency - </title>
+    <meta name="description" content="Learn how to use the brand new actor model to protect your application from unwanted data-races and memory issues.">
+    
+    <meta property="og:url" content="/posts/swift-actors-tutorial-a-beginners-guide-to-thread-safe-concurrency/">
+    <meta property="og:title" content="Swift actors tutorial - a beginner&#39;s guide to thread safe concurrency - ">
+    <meta property="og:description" content="Learn how to use the brand new actor model to protect your application from unwanted data-races and memory issues.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swift actors tutorial - a beginner&#39;s guide to thread safe concurrency - ">
+    <meta name="twitter:description" content="Learn how to use the brand new actor model to protect your application from unwanted data-races and memory issues.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2021-06-17 16:20:00">2021-06-17 16:20:00</time>
+            <h1 class="title">Swift actors tutorial - a beginner&#39;s guide to thread safe concurrency</h1>
+            <p class="excerpt">Learn how to use the brand new actor model to protect your application from unwanted data-races and memory issues.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Thread safety & data races</h2><p>Before we dive in to Swift actors, let’s have a simplified recap of computer theory first.</p><p>An instance of a computer program is called <a href="https://en.wikipedia.org/wiki/Process_(computing)" target="_blank">process</a>. A process contains smaller instructions that are going to be executed at some point in time. These instruction tasks can be performed one after another in a serial order or concurrently. The operating system is using <a href="https://en.wikipedia.org/wiki/Multithreading_(computer_architecture)" target="_blank">multiple threads</a> to execute tasks in parallel, also schedules the order of execution with the help of a <a href="https://en.wikipedia.org/wiki/Scheduling_(computing)" target="_blank">scheduler</a>. 🕣</p><p>After a task is being completed on a given <a href="https://en.wikipedia.org/wiki/Thread_(computing)" target="_blank">thread</a>, the CPU can to move forward with the execution flow. If the new task is associated with a different thread, the CPU has to perform a <a href="https://en.wikipedia.org/wiki/Context_switch" target="_blank">context switch</a>. This is quite an expensive operation, because the state of the old thread need to be saved, the new one should be restored before we can perform our actual task.</p><p>During this context switching a bunch of other oprations can happen on different threads. Since modern CPU architectures have multiple cores, they can handle multiple threads at the same time. Problems can happen if the same resource is being modified at the same time on multiple threads. Let me show you a quick example that produces an unsafe output. 🙉</p><pre><code class="language-swift">var unsafeNumber: Int = 0
+DispatchQueue.concurrentPerform(iterations: 100) { i in
+    print(Thread.current)
+    unsafeNumber = i
+}
+
+print(unsafeNumber)
+</code></pre><p>If you run the code above multiple times, it’s possible to have a different output each time. This is because the concurrentPerform method runs the block on different threads, some threads have higher priorities than others so the execution order is not guaranteed. You can see this for yourself, by printing the current thread in each block. Some of the number changes happen on the main thread, but others happen on a background thread. 🧵</p><p>The main thread is a special one, all the user interface related updates should happen on this one. If you are trying to update a view from a background thread in an iOS application you’ll could get an warning / error or even a crash. If you are blocking the main thread with a long running application your entire UI can become unresponsive, that’s why it is good to have multiple threads, so you can move your computation-heavy operations into background threads.</p><p>It’s a very common approach to work with multiple threads, but this can lead to unwanted data races, data corruption or crashes due to memory issues. Unfortunately most of the Swift data types are not thread safe by default, so if you want to achieve thread-safety you usually had to work with serial queues or locks to guarantee the <a href="https://en.wikipedia.org/wiki/Mutual_exclusion" target="_blank">mutual exclusivity</a> of a given variable.</p><pre><code class="language-swift">var threads: [Int: String] = [:]
+DispatchQueue.concurrentPerform(iterations: 100) { i in
+    threads[i] = "\(Thread.current)"
+}
+print(threads)
+</code></pre><p>The snippet above will crash for sure, since we’re trying to modify the same dictionary from multiple threads. This is called a data-race. You can detect these kind of issues by enabling the Thread Sanitizer under the Scheme > Run > Diagnostics tab in Xcode. 🔨</p><p>Now that we know what’s a data race, let’s fix that by using a regular <a href="https://theswiftdev.com/ultimate-grand-central-dispatch-tutorial-in-swift/" target="_blank">Grand Central Dispatch</a> based approach. We’re going to create a new serial dispatch queue to prevent concurrent writes, this will syncronize all the write operations, but of course it has a hidden cost of switching the context each and every time we update the dictionary.</p><pre><code class="language-swift">var threads: [Int: String] = [:]
+let lockQueue = DispatchQueue(label: "my.serial.lock.queue")
+DispatchQueue.concurrentPerform(iterations: 100) { i in
+    lockQueue.sync {
+        threads[i] = "\(Thread.current)"
+    }
+}
+print(threads)
+</code></pre><p>This synchronization technique is a quite popular solution, we could create a generic class that hides the internal private storage and the lock queue, so we can have a nice public interface that you can use safely without dealing with the internal protection mechanism. For the sake of simplicity we’re not going to introduce generics this time, but I’m going to show you a simple AtomicStorage implementation that uses a serial queue as a lock system. 🔒</p><pre><code class="language-swift">import Foundation
+import Dispatch
+
+class AtomicStorage {
+
+    private let lockQueue = DispatchQueue(label: "my.serial.lock.queue")
+    private var storage: [Int: String]
+    
+    init() {
+        self.storage = [:]
+    }
+        
+    func get(_ key: Int) -> String? {
+        lockQueue.sync {
+            storage[key]
+        }
+    }
+    
+    func set(_ key: Int, value: String) {
+        lockQueue.sync {
+            storage[key] = value
+        }
+    }
+
+    var allValues: [Int: String] {
+        lockQueue.sync {
+            storage
+        }
+    }
+}
+
+let storage = AtomicStorage()
+DispatchQueue.concurrentPerform(iterations: 100) { i in
+    storage.set(i, value: "\(Thread.current)")
+}
+print(storage.allValues)
+</code></pre><p>Since both read and write operations are sync, this code can be quite slow since the entire queue has to wait for both the read and write operations. Let’s fix this real quick by changing the serial queue to a concurrent one, and marking the write function with a barrier flag. This way users can read much faster (concurrently), but writes will be still synchronized through these barrier points.</p><pre><code class="language-swift">import Foundation
+import Dispatch
+
+class AtomicStorage {
+
+    private let lockQueue = DispatchQueue(label: "my.concurrent.lock.queue", attributes: .concurrent)
+    private var storage: [Int: String]
+    
+    init() {
+        self.storage = [:]
+    }
+        
+    func get(_ key: Int) -> String? {
+        lockQueue.sync {
+            storage[key]
+        }
+    }
+    
+    func set(_ key: Int, value: String) {
+        lockQueue.async(flags: .barrier) { [unowned self] in
+            storage[key] = value
+        }
+    }
+
+    var allValues: [Int: String] {
+        lockQueue.sync {
+            storage
+        }
+    }
+}
+
+let storage = AtomicStorage()
+DispatchQueue.concurrentPerform(iterations: 100) { i in
+    storage.set(i, value: "\(Thread.current)")
+}
+print(storage.allValues)
+</code></pre><p>Of course we could speed up the mechanism with dispatch barriers, alternatively we could use an <code>os_unfair_lock</code>, <code>NSLock</code> or a dispatch semaphore to create similar thread-safe atomic objects.</p><p>One important takeaway is that even if we are trying to select the best available option by using sync we’ll always block the calling thread too. This means that nothing else can run on the thread that calls synchronized functions from this class until the internal closure completes. Since we’re synchronously waiting for the thread to return we can’t utilize the CPU for other work. ⏳</p><p>We can say that there are quite a lot of problems with this approach:</p><ul><li>Context switches are expensive operations</li><li>Spawning multiple threads can lead to thread explosions</li><li>You can (accidentally) block threads and prevent further code execution</li><li>You can create a deadlock if multiple tasks are waiting for each other</li><li>Dealing with (completion) blocks and memory references are error prone</li><li>It’s really easy to forget to call the proper synchronization block</li></ul><p>That’s quite a lot of code just to provide thread-safe atomic access to a property. Despite the fact that we’re using a concurrent queue with barriers (locks have problems too), the CPU needs to switch context every time we’re calling these functions from a different thread. Due to the synchronous nature we are blocking threads, so this code is not the most efficient.</p><p>Fortunately Swift 5.5 offers a safe, modern and overall much better alternative. 🥳</p><h2>Introducing Swift actors</h2><p>Now let’s refactor this code using the <a href="https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md" target="_blank">new Actor type</a> introduced in Swift 5.5. Actors can protect internal state through data isolation ensuring that only a single thread will have access to the underlying data structure at a given time. Long story short, everything inside an actor will be thread-safe by default. First I’ll show you the code, then we’ll talk about it. 😅</p><pre><code class="language-swift">import Foundation
+
+actor AtomicStorage {
+
+    private var storage: [Int: String]
+    
+    init() {
+        self.storage = [:]
+    }
+        
+    func get(_ key: Int) -> String? {
+        storage[key]
+    }
+    
+    func set(_ key: Int, value: String) {
+        storage[key] = value
+    }
+
+    var allValues: [Int: String] {
+        storage
+    }
+}
+
+Task {
+    let storage = AtomicStorage()
+    await withTaskGroup(of: Void.self) { group in
+        for i in 0..<100 {
+            group.async {
+                await storage.set(i, value: "\(Thread.current)")
+            }
+        }
+    }
+    print(await storage.allValues)
+}
+</code></pre><p>First of all, actors are reference types, just like classes. They can have methods, properties, they can implement protocols, but they don’t support inheritance.</p><blockquote><p>NOTE: Since actors are closely related to the newly introduced <a href="https://theswiftdev.com/introduction-to-asyncawait-in-swift/" target="_blank">async/await concurrency APIs</a> in Swift you should be familiar with that concept too if you want to understand how they work.</p></blockquote><p>The very first big difference is that we don’t need to provide a lock mechanism anymore in order to provide read or write access to our private storage property. This means that we can safely access actor properties within the actor using a synchronous way. Members are isolated by default, so there is a guarantee (by the compiler) that we can only access them using the same context.</p><p>What’s going on with the new Task API and all the await keywords? 🤔</p><p>Well, the Dispatch.concurrentPerform call is part of a parallelism API and Swift 5.5 introduced concurrency instead of parallelism, we have to move away from regular queues and use <a href="https://github.com/apple/swift-evolution/blob/main/proposals/0304-structured-concurrency.md" target="_blank">structured concurrency</a> to perform tasks in parallel. Also the concurrentPerform function is not an asynchronous operation, it’ll block the caller thread until all the work is done within the block.</p><p>Working with async/await means that the CPU can work on a different task when awaits for a given operation. Every await call is a potential <a href="https://github.com/apple/swift-evolution/blob/main/proposals/0296-async-await.md#suspension-points" target="_blank">suspension point</a>, where the function can give up the thread and the CPU can perform other tasks until the awaited function resumes & returns with the necessary value. The <a href="https://developer.apple.com/videos/play/wwdc2021/10254/" target="_blank">new Swift concurrency APIs</a> are built on top a cooperative thread pool, where each CPU core has just the right amount of threads and the suspension & continuation happens “virtually” with the help of the language runtime. This is far more efficient than actual context switching, and also means that when you interact with async functions and await for a function the CPU can work on other tasks instead of blocking the thread on the call side.</p><p>So back to the example code, since actors have to protect their internal states, they only allows us to access members asynchronously when you reference from async functions or outside the actor. This is very similar to the case when we had to use the lockQueue.sync to protect our read / write functions, but instead of giving the ability to the system to perform other tasks on the thread, we’ve entirely blocked it with the sync call. Now with await we can give up the thread and allow others to perform operations using it and when the time comes the function can resume.</p><p>Inside the task group we can perform our tasks asynchronously, but since we’re accessing the actor function (from an async context / outside the actor) we have to use the await keyword before the set call, even if the function is not marked with the async keyword.</p><p>The system knows that we’re referencing the actor’s property using a different context and we have to perform this operation always isolated to eliminate data races. By converting the function to an async call we give the system a chance to perform the operation on the actor’s executor. Later on we’ll be able to define <a href="https://forums.swift.org/t/support-custom-executors-in-swift-concurrency/44425" target="_blank">custom executors</a> for our actors, but this feature is not available yet.</p><p>Currently there is a global executor implementation (associated with each actor) that enqueues the tasks and runs them one-by-one, if a task is not running (no contention) it’ll be scheduled for execution (based on the priority) otherwise (if the task is already running / under contention) the system will just pick-up the message without blocking.</p><p>The funny thing is that this does not necessary means that the exact same thread… 😅</p><pre><code class="language-swift">import Foundation
+
+extension Thread {
+    var number: String {
+        "\(value(forKeyPath: "private.seqNum")!)"
+    }
+}
+
+actor AtomicStorage {
+
+    private var storage: [Int: String]
+    
+    init() {
+        print("init actor thread: \(Thread.current.number)")
+        self.storage = [:]
+    }
+        
+    func get(_ key: Int) -> String? {
+        storage[key]
+    }
+    
+    func set(_ key: Int, value: String) {
+        storage[key] = value + ", actor thread: \(Thread.current.number)"
+    }
+
+    var allValues: [Int: String] {
+        print("allValues actor thread: \(Thread.current.number)")
+        return storage
+    }
+}
+
+
+Task {
+    let storage = AtomicStorage()
+    await withTaskGroup(of: Void.self) { group in
+        for i in 0..<100 {
+            group.async {
+                await storage.set(i, value: "caller thread: \(Thread.current.number)")
+            }
+        }
+    }    
+    for (k, v) in await storage.allValues {
+        print(k, v)
+    }
+}
+</code></pre><p>Multi-threading is hard, anyway same thing applies to the storage.allValues statement. Since we’re accessing this member from outside the actor, we have to await until the “synchronization happens”, but with the await keyword we can give up the current thread, wait until the actor returns back the underlying storage object using the associated thread, and voilá we can continue just where we left off work. Of course you can create async functions inside actors, when you call these methods you’ll always have to use await, no matter if you are calling them from the actor or outside.</p><p>There is still a lot to cover, but I don’t want to bloat this article with more advanced details. I know I’m just scratching the surface and we could talk about non-isolated functions, actor reentrancy, global actors and many more. I’ll definitely create more articles about actors in Swift and cover these topics in the near future, I promise. Swift 5.5 is going to be a great release. 👍</p><p>Hopefully this tutorial will help you to start working with actors in Swift. I’m still learning a lot about the new concurrency APIs and nothing is written in stone yet, the core team is still changing names and APIs, there are some proposals on the <a href="https://apple.github.io/swift-evolution/" target="_blank">Swift evolution dashboard</a> that still needs to be reviewed, but I think the Swift team did an amazing job. Thanks everyone. 🙏</p><p>Honestly actors feels like magic and I already love them. 😍</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

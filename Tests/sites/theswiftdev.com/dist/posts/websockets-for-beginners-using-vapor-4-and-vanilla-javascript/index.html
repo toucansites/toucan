@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Websockets for beginners using Vapor 4 and Vanilla JavaScript - </title>
+    <meta name="description" content="Learn how to create a websocket server using Swift &amp; Vapor. Multiplayer game development using JavaScript in the browser.">
+    
+    <meta property="og:url" content="/posts/websockets-for-beginners-using-vapor-4-and-vanilla-javascript/">
+    <meta property="og:title" content="Websockets for beginners using Vapor 4 and Vanilla JavaScript - ">
+    <meta property="og:description" content="Learn how to create a websocket server using Swift &amp; Vapor. Multiplayer game development using JavaScript in the browser.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Websockets for beginners using Vapor 4 and Vanilla JavaScript - ">
+    <meta name="twitter:description" content="Learn how to create a websocket server using Swift &amp; Vapor. Multiplayer game development using JavaScript in the browser.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-05-28 16:20:00">2020-05-28 16:20:00</time>
+            <h1 class="title">Websockets for beginners using Vapor 4 and Vanilla JavaScript</h1>
+            <p class="excerpt">Learn how to create a websocket server using Swift &amp; Vapor. Multiplayer game development using JavaScript in the browser.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>What the heck is a websocket?</h2><p>The HTTP protocol is a fundamental building block of the internet, you can use a browser to request a website using a request-response based communication model. The web browser submits a HTTP request to the server, then the server responds with a response. The response contains status information, content related headers and the message body. In most cases after you receive some kind of response the connection will be closed. End of story.</p><p>The communication model described above can be ideal for most of the websites, but what happens when you would like to constantly transmit data over the network? Just think about real-time web applications or games, they need a constant data flow between the server and the client. Initiating a connection is quite an expensive task, you could keep the connection alive with some hacky tricks, but fortunately there is a better approach. 🍀</p><p>The <a href="https://en.wikipedia.org/wiki/WebSocket" target="_blank">Websocket</a> communication model allows us to continuously send and receive messages in both direction (full-duplex) over a single TCP connection. A socket can be used to communicate between two different processes on different machines using standard file descriptors. This way we can have a dedicated channel to a given server through a socket and use that channel any time to deliver or receive messages instead of using requests & responses.</p><p>Websockets can be used to notify the client if something happens on the server, this comes handy in many cases. If you want to build a communication heavy application such as a messenger or a multiplayer game you should definitely consider using this kind of technology.</p><h2>Websockets in Vapor 4</h2><p>Vapor 4 comes with built-in websockets support without additional dependencies. The underlying SwiftNIO framework provides the functionality, so we can hook up a websocket service into our backend app with just a few lines of Swift code. You can check the <a href="http://docs.vapor.codes/4.0/websockets/" target="_blank">official documentation</a> for the available websocket API methods, it is pretty straightforward. 💧</p><p>In this tutorial we are going to build a massively multiplayer online <a href="https://en.wikipedia.org/wiki/Tag_(game)" target="_blank">tag game</a> using websockets. Start a new project using the <code>vapor new myProject</code> command, we don’t need a database driver this time. Delete the <code>routes.swift</code> file and the <code>Controllers</code> folder. Feel free to clean up the configuration method, we don’t need to have anything there just yet.</p><p>The very first thing that we want to achieve is an identification system for the websocket clients. We have to uniquely identify each client so we can send messages back to them. You should create a <code>Websocket</code> folder and add a new <code>WebsocketClient.swift</code> file inside of it.</p><pre><code class="language-swift">import Vapor
+
+open class WebSocketClient {
+    open var id: UUID
+    open var socket: WebSocket
+
+    public init(id: UUID, socket: WebSocket) {
+        self.id = id
+        self.socket = socket
+    }
+}
+</code></pre><p>We are going to store all the connected websocket clients and associate every single one with a unique identifier. The unique identifier will come from the client, but of course in a real world server you might want to ensure the uniqueness on the server side by using some kind of generator.</p><p>The next step is to provide a storage for all the connected clients. We are going to build a new <code>WebsocketClients</code> class for this purpose. This will allow us to add, remove or quickly find a given client based on the unique identifier. 🔍</p><pre><code class="language-swift">import Vapor
+
+open class WebsocketClients {
+    var eventLoop: EventLoop
+    var storage: [UUID: WebSocketClient]
+    
+    var active: [WebSocketClient] {
+        self.storage.values.filter { !$0.socket.isClosed }
+    }
+
+    init(eventLoop: EventLoop, clients: [UUID: WebSocketClient] = [:]) {
+        self.eventLoop = eventLoop
+        self.storage = clients
+    }
+    
+    func add(_ client: WebSocketClient) {
+        self.storage[client.id] = client
+    }
+
+    func remove(_ client: WebSocketClient) {
+        self.storage[client.id] = nil
+    }
+    
+    func find(_ uuid: UUID) -> WebSocketClient? {
+        self.storage[uuid]
+    }
+
+    deinit {
+        let futures = self.storage.values.map { $0.socket.close() }
+        try! self.eventLoop.flatten(futures).wait()
+    }
+}
+</code></pre><p>We are using the <code>EventLoop</code> object to close every socket connection when we don’t need them anymore. Closing a socket is an async operation that’s why we have to flatten the futures and wait before all of them are closed.</p><p>Clients can send any kind of data (<code>ByteBuffer</code>) or text to the server, but it would be real nice to work with JSON objects, plus if they could provide the associated unique identifier right next to the incoming message that would have other benefits.</p><p>To make this happen we will create a generic <code>WebsocketMessage</code> object. There is a <a href="https://github.com/BastianInuk/DrinkServer/blob/master/Sources/App/Controllers/MachineController.swift" target="_blank">hacky solution</a> to decode incoming messages from JSON data. <a href="https://x.com/BastianInuk/" target="_blank">Bastian Inuk</a> showed me this one, but I believe it is pretty simple & works like a charm. Thanks for letting me borrow your idea. 😉</p><pre><code class="language-swift">import Vapor
+
+struct WebsocketMessage<T: Codable>: Codable {
+    let client: UUID
+    let data: T
+}
+
+extension ByteBuffer {
+    func decodeWebsocketMessage<T: Codable>(_ type: T.Type) -> WebsocketMessage<T>? {
+        try? JSONDecoder().decode(WebsocketMessage<T>.self, from: self)
+    }
+}
+</code></pre><p>That’s about the helpers, now we should figure out what kind of messages do we need, right?</p><p>First of all, we’d like to store a client after a successful connection event happens. We are going to use a <code>Connect</code> message for this purpose. The client will send a simple connect boolean flag, right after the connection was established so the server can save the client.</p><pre><code class="language-swift">import Foundation
+
+struct Connect: Codable {
+    let connect: Bool
+}
+</code></pre><p>We are building a game, so we need players as clients, let’s subclass the <code>WebSocketClient</code> class, so we can store additional properties on it later on.</p><pre><code class="language-swift">import Vapor
+
+final class PlayerClient: WebSocketClient {
+    
+    public init(id: UUID, socket: WebSocket, status: Status) {
+        super.init(id: id, socket: socket)
+    }
+}
+</code></pre><p>Now we have to make a <code>GameSystem</code> object that will be responsible for storing clients with associated identifiers and decoding & handling incoming websocket messages.</p><pre><code class="language-swift">import Vapor
+
+class GameSystem {
+    var clients: WebsocketClients
+
+    init(eventLoop: EventLoop) {
+        self.clients = WebsocketClients(eventLoop: eventLoop)
+    }
+
+    func connect(_ ws: WebSocket) {
+        ws.onBinary { [unowned self] ws, buffer in
+            if let msg = buffer.decodeWebsocketMessage(Connect.self) {
+                let player = PlayerClient(id: msg.client, socket: ws)
+                self.clients.add(player)
+            }
+        }
+    }
+}
+</code></pre><p>We can hook up the <code>GameSystem</code> class inside the config method to a websocket channel using the built-in <code>.webSocket</code> method, that’s part of the Vapor 4 framework by default.</p><pre><code class="language-swift">import Vapor
+
+public func configure(_ app: Application) throws {
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    
+    let gameSystem = GameSystem(eventLoop: app.eventLoopGroup.next())
+
+    app.webSocket("channel") { req, ws in
+        gameSystem.connect(ws)
+    }
+    
+    app.get { req in
+        req.view.render("index.html")
+    }
+}
+</code></pre><p>We are also going to render a new view called <code>index.html</code>, the plaintext renderer is the default in Vapor so we don’t have to set up Leaf if we want to display with basic HTML files.</p><pre><code class="language-html"><html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sockets</title>
+</head>
+
+<body>
+    <div style="float: left; margin-right: 16px;">
+        <canvas id="canvas" width="640" height="480" style="width: 640px; height: 480px; border: 1px dashed #000;"></canvas>
+        <div>
+            <a href="javascript:WebSocketStart()">Start</a>
+            <a href="javascript:WebSocketStop()">Stop</a>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+</code></pre><p>We can save the snippet from above under the <code>Resources/Views/index.html</code> file. The canvas will be used to render our 2d game, plus will need some additional JavaScript magic to start and stop the websocket connection using the control buttons. ⭐️</p><h2>A websocket client using JavaScript</h2><p>Create a new <code>Public/js/main.js</code> file with the following contents, I’ll explain everything below.</p><pre><code class="language-js">function blobToJson(blob) {
+    return new Promise((resolve, reject) => {
+        let fr = new FileReader();
+        fr.onload = () => {
+            resolve(JSON.parse(fr.result));
+        };
+        fr.readAsText(blob);
+    });
+}
+
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+}
+
+WebSocket.prototype.sendJsonBlob = function(data) {
+    const string = JSON.stringify({ client: uuid, data: data })
+    const blob = new Blob([string], {type: "application/json"});
+    this.send(blob)
+};
+
+const uuid = uuidv4()
+let ws = undefined
+
+function WebSocketStart() {
+    ws = new WebSocket("wss://" + window.location.host + "/channel")
+    ws.onopen = () => {
+        console.log("Socket is opened.");
+        ws.sendJsonBlob({ connect: true })
+    }
+
+    ws.onmessage = (event) => {
+        blobToJson(event.data).then((obj) => {
+            console.log("Message received.");
+        })
+    };
+
+    ws.onclose = () => {
+        console.log("Socket is closed.");
+    };
+}
+
+function WebSocketStop() {
+    if ( ws !== undefined ) {
+        ws.close()
+    }
+}
+</code></pre><p>We need some helper methods to convert JSON to <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob" target="_blank">blob</a> and vica versa. The <code>blobToJson</code> function is an asynchronous method that returns a new <code>Promise</code> with the parsed JSON value of the original binary data. In JavaScript can use the <code>.then</code> method to chain promises. 🔗</p><p>The <code>uuidv4</code> method is a unique identifier generator, it’s far from perfect, but we can use it to create a somewhat unique client identifier. We will call this in a few lines below.</p><p>In JavaScript you can extend a built-in functions, just like we extend structs, classes or protocols in Swift. We are extending the <code>WebSocket</code> object with a helper method to send JSON messages with the client UUID encoded as blob data (<code>sendJsonBlob</code>).</p><p>When the <code>main.js</code> file is loaded all the top level code gets executed. The <code>uuid </code>constant will be available for later use with a unique value, plus we construct a new <code>ws</code> variable to store the opened websocket connection locally. If you take a quick look at the HTML file you can see that there are two <code>onClick</code> listeners on the links, the <code>WebSocketStart</code> and <code>WebSocketStop</code> methods will be called when you click those buttons. ✅</p><p>Inside the start method we are initiating a new WebSocket connection using a URL string, we can use the <code>window.location.host</code> property to get the domain with the port. The schema should be <code>wss</code> for secure (HTTPS) connections, but you can also use the <code>ws</code> for insecure (HTTP) ones.</p><p>There are three event listeners that you can subscribe to. They work like delegates in the iOS world, once the connection is established the <code>onopen</code> handler will be called. In the callback function we send the connect message as a blob value using our previously defined helper method on the WebSocket object.</p><p>If there is an incoming message (<code>onmessage</code>) we can simply log it using the <code>console.log</code> method, if you bring up the inspector panel in a browser there is a Console tab where you will be able to see these kind of logs. If the connection is closed (<code>onclose</code>) we do the same. When the user clicks the stop button we can use the close method to manually terminate the websocket connection.</p><p>Now you can try to build & run what we have so far, but don’t expect more than raw logs. 😅</p><h2>Building a websocket game</h2><p>We will build a 2d catcher game, all the players are going to be represented as little colorful circles. A white dot will mark your own player and the catcher is going to be tagged with a black circle. Players need positions, colors and we have to send the movement controls from the client to the server side. The client will take care of the rendering, so we need to push the position of every connected player through the websocket channel. We will use a fixed size canvas for the sake of simplicity, but I’ll show you how to add support for HiDPI displays. 🎮</p><p>Let’s start by updating the server, so we can store everything inside the <code>PlayerClient</code>.</p><pre><code class="language-swift">import Vapor
+
+final class PlayerClient: WebSocketClient {
+
+    struct Status: Codable {
+        var id: UUID!
+        var position: Point
+        var color: String
+        var catcher: Bool = false
+        var speed = 4
+    }
+    
+    var status: Status
+    var upPressed: Bool = false
+    var downPressed: Bool = false
+    var leftPressed: Bool = false
+    var rightPressed: Bool = false
+    
+    
+    public init(id: UUID, socket: WebSocket, status: Status) {
+        self.status = status
+        self.status.id = id
+
+        super.init(id: id, socket: socket)
+    }
+
+    func update(_ input: Input) {
+        switch input.key {
+        case .up:
+            self.upPressed = input.isPressed
+        case .down:
+            self.downPressed = input.isPressed
+        case .left:
+            self.leftPressed = input.isPressed
+        case .right:
+            self.rightPressed = input.isPressed
+        }
+    }
+
+    func updateStatus() {
+        if self.upPressed {
+            self.status.position.y = max(0, self.status.position.y - self.status.speed)
+        }
+        if self.downPressed {
+            self.status.position.y = min(480, self.status.position.y + self.status.speed)
+        }
+        if self.leftPressed {
+            self.status.position.x = max(0, self.status.position.x - self.status.speed)
+        }
+        if self.rightPressed {
+            self.status.position.x = min(640, self.status.position.x + self.status.speed)
+        }
+    }
+}
+</code></pre><p>We are going to share the status of each player in every x millisecond with the clients, so they can re-render the canvas based on the fresh data. We also need a new Input struct, so clients can send key change events to the server and we can update players based on that.</p><pre><code class="language-swift">import Foundation
+
+struct Input: Codable {
+
+    enum Key: String, Codable {
+        case up
+        case down
+        case left
+        case right
+    }
+
+    let key: Key
+    let isPressed: Bool
+}
+</code></pre><p>Position values are stored as points with x and y coordinates, we can build a struct for this purpose with an additional function to calculate the distance between two players. If they get too close to each other, we can pass the tag to the catched player. 🎯</p><pre><code class="language-swift">import Foundation
+
+struct Point: Codable {
+    var x: Int = 0
+    var y: Int = 0
+    
+    func distance(_ to: Point) -> Float {
+        let xDist = Float(self.x - to.x)
+        let yDist = Float(self.y - to.y)
+        return sqrt(xDist * xDist + yDist * yDist)
+    }
+}
+</code></pre><p>Now the tricky part. The game system should be able to notify all the clients in every x milliseconds to provide a smooth 60fps experience. We can use the Dispatch framework to schedule a timer for this purpose. The other thing is that we want to avoid “tagbacks”, so after one player catched another we are going to put a 2 second timeout, this way users will have some time to run away.</p><pre><code class="language-swift">import Vapor
+import Dispatch
+
+class GameSystem {
+    var clients: WebsocketClients
+
+    var timer: DispatchSourceTimer
+    var timeout: DispatchTime?
+        
+    init(eventLoop: EventLoop) {
+        self.clients = WebsocketClients(eventLoop: eventLoop)
+
+        self.timer = DispatchSource.makeTimerSource()
+        self.timer.setEventHandler { [unowned self] in
+            self.notify()
+        }
+        self.timer.schedule(deadline: .now() + .milliseconds(20), repeating: .milliseconds(20))
+        self.timer.activate()
+    }
+
+    func randomRGBAColor() -> String {
+        let range = (0..<255)
+        let r = range.randomElement()!
+        let g = range.randomElement()!
+        let b = range.randomElement()!
+        return "rgba(\(r), \(g), \(b), 1)"
+    }
+
+    func connect(_ ws: WebSocket) {
+        ws.onBinary { [unowned self] ws, buffer in
+            if let msg = buffer.decodeWebsocketMessage(Connect.self) {
+                let catcher = self.clients.storage.values
+                    .compactMap { $0 as? PlayerClient }
+                    .filter { $0.status.catcher }
+                    .isEmpty
+
+                let player = PlayerClient(id: msg.client,
+                                          socket: ws,
+                                          status: .init(position: .init(x: 0, y: 0),
+                                                        color: self.randomRGBAColor(),
+                                                        catcher: catcher))
+                self.clients.add(player)
+            }
+
+            if
+                let msg = buffer.decodeWebsocketMessage(Input.self),
+                let player = self.clients.find(msg.client) as? PlayerClient
+            {
+                player.update(msg.data)
+            }
+        }
+    }
+
+    func notify() {
+        if let timeout = self.timeout {
+            let future = timeout + .seconds(2)
+            if future < DispatchTime.now() {
+                self.timeout = nil
+            }
+        }
+
+        let players = self.clients.active.compactMap { $0 as? PlayerClient }
+        guard !players.isEmpty else {
+            return
+        }
+
+        let gameUpdate = players.map { player -> PlayerClient.Status in
+            player.updateStatus()
+            
+            players.forEach { otherPlayer in
+                guard
+                    self.timeout == nil,
+                    otherPlayer.id != player.id,
+                    (player.status.catcher || otherPlayer.status.catcher),
+                    otherPlayer.status.position.distance(player.status.position) < 18
+                else {
+                    return
+                }
+                self.timeout = DispatchTime.now()
+                otherPlayer.status.catcher = !otherPlayer.status.catcher
+                player.status.catcher = !player.status.catcher
+            }
+            return player.status
+        }
+        let data = try! JSONEncoder().encode(gameUpdate)
+        players.forEach { player in
+            player.socket.send([UInt8](data))
+        }
+    }
+    
+    deinit {
+        self.timer.setEventHandler {}
+        self.timer.cancel()
+    }
+}
+</code></pre><p>Inside the notify method we’re using the built-in <code>.send</code> method on the WebSocket object to send binary data to the clients. In a chat application we would not require the whole timer logic, but we could simply notify everyone inside the onBinary block after a new incoming chat message.</p><p>The server is now ready to use, but we still have to alter the WebSocketStart method on the client side to detect key presses and releases and to render the incoming data on the canvas element.</p><pre><code class="language-js">function WebSocketStart() {
+
+    function getScaled2DContext(canvas) {
+        const ctx = canvas.getContext('2d')
+        const devicePixelRatio = window.devicePixelRatio || 1
+        const backingStorePixelRatio = [
+            ctx.webkitBackingStorePixelRatio,
+            ctx.mozBackingStorePixelRatio,
+            ctx.msBackingStorePixelRatio,
+            ctx.oBackingStorePixelRatio,
+            ctx.backingStorePixelRatio,
+            1
+        ].reduce((a, b) => a || b)
+
+        const pixelRatio = devicePixelRatio / backingStorePixelRatio
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * pixelRatio;
+        canvas.height = rect.height * pixelRatio;
+        ctx.scale(pixelRatio, pixelRatio);
+        return ctx;
+    }
+
+    function drawOnCanvas(ctx, x, y, color, isCatcher, isLocalPlayer) {
+        ctx.beginPath();
+        ctx.arc(x, y, 9, 0, 2 * Math.PI, false);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        if ( isCatcher ) {
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, 2 * Math.PI, false);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+        }
+
+        if ( isLocalPlayer ) {
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2 * Math.PI, false);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
+    }
+
+
+    const canvas = document.getElementById('canvas')
+    const ctx = getScaled2DContext(canvas);
+
+    ws = new WebSocket("wss://" + window.location.host + "/channel")
+    ws.onopen = () => {
+        console.log("Socket is opened.");
+        ws.sendJsonBlob({ connect: true })
+    }
+
+    ws.onmessage = (event) => {
+        blobToJson(event.data).then((obj) => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            for (var i in obj) {
+                var p = obj[i]
+                const isLocalPlayer = p.id.toLowerCase() == uuid
+                drawOnCanvas(ctx, p.position.x, p.position.y, p.color, p.catcher, isLocalPlayer)
+            }
+        })
+    };
+
+    ws.onclose = () => {
+        console.log("Socket is closed.");
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+    };
+
+    document.onkeydown = () => {
+        switch (event.keyCode) {
+            case 38: ws.sendJsonBlob({ key: 'up', isPressed: true }); break;
+            case 40: ws.sendJsonBlob({ key: 'down', isPressed: true }); break;
+            case 37: ws.sendJsonBlob({ key: 'left', isPressed: true }); break;
+            case 39: ws.sendJsonBlob({ key: 'right', isPressed: true }); break;
+        }
+    }
+
+    document.onkeyup = () => {
+        switch (event.keyCode) {
+            case 38: ws.sendJsonBlob({ key: 'up', isPressed: false }); break;
+            case 40: ws.sendJsonBlob({ key: 'down', isPressed: false }); break;
+            case 37: ws.sendJsonBlob({ key: 'left', isPressed: false }); break;
+            case 39: ws.sendJsonBlob({ key: 'right', isPressed: false }); break;
+        }
+    }
+}
+</code></pre><p>The <code>getScaled2DContext</code> method will scale the canvas based on the pixel ratio, so we can draw smooth circles both on retina and standard displays. The <code>drawOnCanvas</code> method draws a player using the context at a given point. You can also draw the player with a tag and the white marker if the unique player id matches the local client identifier.</p><p>Before we connect to the socket we create a new reference using the canvas element and create a draw context. When a new message arrives we can decode it and draw the players based on the incoming status data. We clear the canvas before the render and after the connection is closed.</p><p>The last thing we have to do is to send the key press and release events to the server. We can add two listeners using the <code>document</code> variable, key codes are stored as integers, but we can map them and send right the JSON message as a blob value for the arrow keys.</p><h2>Closing thoughts</h2><p>As you can see it is relatively easy to add websocket support to an existing Vapor 4 application. Most of the time you will have to think about the architecture and the message structure instead of the Swift code. On by the way if you are setting up the backend behind an <a href="https://www.nginx.com/blog/websocket-nginx/" target="_blank">nginx proxy</a> you might have to add the <code>Upgrade</code> and <code>Connection</code> headers to the location section.</p><pre><code>server {
+    location @proxy {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+        http2_push_preload on;
+    }
+}
+</code></pre><p>This tutorial was mostly about building a proof of concept websocket game, this was the first time I’ve worked with websockets using Vapor 4, but I had a lot of fun while I made this little demo. In a real-time multiplayer game you have to think about a more intelligent lag handler, you can search for the interpolation, extrapolation or lockstep keywords, but IMHO this is a good starting point.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

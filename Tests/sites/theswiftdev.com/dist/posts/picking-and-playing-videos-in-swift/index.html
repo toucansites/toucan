@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Picking and playing videos in Swift - </title>
+    <meta name="description" content="Learn how to record or select a video file using a video picker controller and the AVPlayer class, written entirely in Swift 5.">
+    
+    <meta property="og:url" content="/posts/picking-and-playing-videos-in-swift/">
+    <meta property="og:title" content="Picking and playing videos in Swift - ">
+    <meta property="og:description" content="Learn how to record or select a video file using a video picker controller and the AVPlayer class, written entirely in Swift 5.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Picking and playing videos in Swift - ">
+    <meta name="twitter:description" content="Learn how to record or select a video file using a video picker controller and the AVPlayer class, written entirely in Swift 5.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2019-08-28 16:20:00">2019-08-28 16:20:00</time>
+            <h1 class="title">Picking and playing videos in Swift</h1>
+            <p class="excerpt">Learn how to record or select a video file using a video picker controller and the AVPlayer class, written entirely in Swift 5.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Let’s pick some videos!</h2><p>If you remember my previous <a href="https://theswiftdev.com/2019/01/30/picking-images-with-uiimagepickercontroller-in-swift-5/" target="_blank">tutorial about image picking in iOS</a>, then you know that I already made quite a reusable picker class built on top of UIKit. If you don’t know how the <code>UIImagePickerController</code> class works, please read that tutorial first because it gives you a great overview about the basics.</p><p>First of all you’ll need to add some keys into your <code>Info.plist</code> file, because you’d like to access some personal data. You know: privacy is very important. 🤫</p><pre><code class="language-plist"><key>NSCameraUsageDescription</key>
+<string>This app wants to take pictures & videos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app wants to use your picture & video library.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>This app wants to record sound.</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>This app wants to save pictures & videos to your library.</string>
+</code></pre><p>Since we’re not going to capture silent videos we also have to add the Privacy - Microphone Usage Description field. Ready, set, action! 🎬</p><p>I’m not going to lie to you, but I was a little bit lazy this time, so our <code>VideoPicker</code> class will be 90% the same as our <code>ImagePicker</code> class was. You can make an abstract class, whatever, I’ll show you the final code, then we can talk about the differences. 😅</p><pre><code class="language-swift">import UIKit
+
+public protocol VideoPickerDelegate: class {
+    func didSelect(url: URL?)
+}
+
+open class VideoPicker: NSObject {
+
+    private let pickerController: UIImagePickerController
+    private weak var presentationController: UIViewController?
+    private weak var delegate: VideoPickerDelegate?
+
+    public init(presentationController: UIViewController, delegate: VideoPickerDelegate) {
+        self.pickerController = UIImagePickerController()
+
+        super.init()
+
+        self.presentationController = presentationController
+        self.delegate = delegate
+
+        self.pickerController.delegate = self
+        self.pickerController.allowsEditing = true
+        self.pickerController.mediaTypes = ["public.movie"]
+        self.pickerController.videoQuality = .typeHigh
+    }
+
+    private func action(for type: UIImagePickerController.SourceType, title: String) -> UIAlertAction? {
+        guard UIImagePickerController.isSourceTypeAvailable(type) else {
+            return nil
+        }
+
+        return UIAlertAction(title: title, style: .default) { [unowned self] _ in
+            self.pickerController.sourceType = type
+            self.presentationController?.present(self.pickerController, animated: true)
+        }
+    }
+
+    public func present(from sourceView: UIView) {
+
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if let action = self.action(for: .camera, title: "Take video") {
+            alertController.addAction(action)
+        }
+        if let action = self.action(for: .savedPhotosAlbum, title: "Camera roll") {
+            alertController.addAction(action)
+        }
+        if let action = self.action(for: .photoLibrary, title: "Video library") {
+            alertController.addAction(action)
+        }
+
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alertController.popoverPresentationController?.sourceView = sourceView
+            alertController.popoverPresentationController?.sourceRect = sourceView.bounds
+            alertController.popoverPresentationController?.permittedArrowDirections = [.down, .up]
+        }
+
+        self.presentationController?.present(alertController, animated: true)
+    }
+
+    private func pickerController(_ controller: UIImagePickerController, didSelect url: URL?) {
+        controller.dismiss(animated: true, completion: nil)
+
+        self.delegate?.didSelect(url: url)
+    }
+}
+
+extension VideoPicker: UIImagePickerControllerDelegate {
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.pickerController(picker, didSelect: nil)
+    }
+
+    public func imagePickerController(_ picker: UIImagePickerController,
+                                      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+
+        guard let url = info[.mediaURL] as? URL else {
+            return self.pickerController(picker, didSelect: nil)
+        }
+
+//        //uncomment this if you want to save the video file to the media library
+//        if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.path) {
+//            UISaveVideoAtPathToSavedPhotosAlbum(url.path, self, nil, nil)
+//        }
+        self.pickerController(picker, didSelect: url)
+    }
+}
+
+extension VideoPicker: UINavigationControllerDelegate {
+
+}
+</code></pre><p>There are just a few small that changes. The first one is the mediaTypes property, you can use the “public.movie” value this time. Also you should set the videoQuality property on the pickerController, because 4k is always better than 320. 🤪</p><p>The delegate is the last thing that changed a little bit. After the picker finish the job you can get the <code>.mediaURL</code> property, which is a URL to get your media file (a.k.a. the captured / selected video file). If a new file was recorded you can also save it to the media library, that’s just two lines of extra code.</p><p>Congrats, <a href="https://github.com/awojnowski/SwiftVideoPlayer" target="_blank">play-back</a> time! 📹</p><h2>Playing video files using AVPlayer & UIView</h2><p>Isn’t it great when a webpage has some nicely themed video in the background of the header? Well, you can have the exact same thing in iOS by using AVFoundation, UIKit and some low-level layer magic. Don’t worry it’s not that difficult. 😬</p><p>You can use a regular <code>UIView</code> subclass, then replace its default layer with an <code>AVPlayerLayer</code>. This will allow you to play videos directly in the view. Also an <code>AVPlayer</code> is just a simple controller object that can manage the playback and timing of a media file.</p><p>The hardest part was checking the status changes of the media file. For example when I first tried to record a new video the payback of the player view constantly <a href="https://stackoverflow.com/questions/19291636/avplayer-stops-playing-and-doesnt-resume-again" target="_blank">stopped</a> after a second. I had to <a href="https://stackoverflow.com/questions/40781738/how-to-detect-avplayer-actually-started-to-play-in-swift" target="_blank">search for answers</a>, because I’m not an <a href="https://developer.apple.com/av-foundation/" target="_blank">AVFoundation</a> expert at all, but it turned out that you should watch for the rate property, because the system is trying to buffer the video and that can cause some problems.</p><p>Anyway I was able to put together a fairly nice <code>VideoView</code> with some nice additional features like constantly looping the video or choosing between the fill / fit aspect content modes. I’m not telling you that this is a 100% bulletproof solution, but it’s a good starting point, plus it’s more than enough in some cases. 👻</p><pre><code class="language-swift">import UIKit
+import AVFoundation
+
+open class VideoView: UIView {
+
+    public enum Repeat {
+        case once
+        case loop
+    }
+
+    override open class var layerClass: AnyClass {
+        return AVPlayerLayer.self
+    }
+
+    private var playerLayer: AVPlayerLayer {
+        return self.layer as! AVPlayerLayer
+    }
+
+    public var player: AVPlayer? {
+        get {
+            self.playerLayer.player
+        }
+        set {
+            self.playerLayer.player = newValue
+        }
+    }
+
+
+    open override var contentMode: UIView.ContentMode {
+        didSet {
+            switch self.contentMode {
+            case .scaleAspectFit:
+                self.playerLayer.videoGravity = .resizeAspect
+            case .scaleAspectFill:
+                self.playerLayer.videoGravity = .resizeAspectFill
+            default:
+                self.playerLayer.videoGravity = .resize
+            }
+        }
+    }
+
+    public var `repeat`: Repeat = .once
+
+    public var url: URL? {
+        didSet {
+            guard let url = self.url else {
+                self.teardown()
+                return
+            }
+            self.setup(url: url)
+        }
+    }
+
+    @available(*, unavailable)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        self.initialize()
+    }
+
+    @available(*, unavailable)
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+
+        self.initialize()
+    }
+
+    public init() {
+        super.init(frame: .zero)
+
+        self.translatesAutoresizingMaskIntoConstraints = false
+
+        self.initialize()
+    }
+
+    open func initialize() {
+
+    }
+
+    deinit {
+        self.teardown()
+    }
+
+
+    private func setup(url: URL) {
+
+        self.player = AVPlayer(playerItem: AVPlayerItem(url: url))
+
+        self.player?.currentItem?.addObserver(self,
+                                              forKeyPath: "status",
+                                              options: [.old, .new],
+                                              context: nil)
+
+        self.player?.addObserver(self, forKeyPath: "rate", options: [.old, .new], context: nil)
+
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.itemDidPlayToEndTime(_:)),
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: self.player?.currentItem)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.itemFailedToPlayToEndTime(_:)),
+                                               name: .AVPlayerItemFailedToPlayToEndTime,
+                                               object: self.player?.currentItem)
+    }
+
+    private func teardown() {
+        self.player?.pause()
+
+        self.player?.currentItem?.removeObserver(self, forKeyPath: "status")
+
+        self.player?.removeObserver(self, forKeyPath: "rate")
+
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .AVPlayerItemDidPlayToEndTime,
+                                                  object: self.player?.currentItem)
+
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .AVPlayerItemFailedToPlayToEndTime,
+                                                  object: self.player?.currentItem)
+
+        self.player = nil
+    }
+
+
+
+    @objc func itemDidPlayToEndTime(_ notification: NSNotification) {
+        guard self.repeat == .loop else {
+            return
+        }
+        self.player?.seek(to: .zero)
+        self.player?.play()
+    }
+
+    @objc func itemFailedToPlayToEndTime(_ notification: NSNotification) {
+        self.teardown()
+    }
+
+
+    open override func observeValue(forKeyPath keyPath: String?,
+                                          of object: Any?,
+                                          change: [NSKeyValueChangeKey : Any]?,
+                                          context: UnsafeMutableRawPointer?) {
+        if keyPath == "status", let status = self.player?.currentItem?.status, status == .failed {
+            self.teardown()
+        }
+
+        if
+            keyPath == "rate",
+            let player = self.player,
+            player.rate == 0,
+            let item = player.currentItem,
+            !item.isPlaybackBufferEmpty,
+            CMTimeGetSeconds(item.duration) != CMTimeGetSeconds(player.currentTime())
+        {
+            self.player?.play()
+        }
+    }
+}
+</code></pre><p>I made a sample project for you and honestly my view controller is simple as f.ck. It demonstrates both the image picking and the video capturing capabilities. Feel free to download it from The.Swift.Dev tutorials repository, it’s called <a href="https://github.com/theswiftdev/tutorials" target="_blank">Pickers</a>.</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

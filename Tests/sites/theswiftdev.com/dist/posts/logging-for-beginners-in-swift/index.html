@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Logging for beginners in Swift - </title>
+    <meta name="description" content="Learn how to print variables to the debug console using different functions such as print, dump, NSLog and the unified os.log API.">
+    
+    <meta property="og:url" content="/posts/logging-for-beginners-in-swift/">
+    <meta property="og:title" content="Logging for beginners in Swift - ">
+    <meta property="og:description" content="Learn how to print variables to the debug console using different functions such as print, dump, NSLog and the unified os.log API.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Logging for beginners in Swift - ">
+    <meta name="twitter:description" content="Learn how to print variables to the debug console using different functions such as print, dump, NSLog and the unified os.log API.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2020-09-30 16:20:00">2020-09-30 16:20:00</time>
+            <h1 class="title">Logging for beginners in Swift</h1>
+            <p class="excerpt">Learn how to print variables to the debug console using different functions such as print, dump, NSLog and the unified os.log API.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Basic output in Swift using print</h2><p>The very first method I’d like to show you is the <a href="https://developer.apple.com/documentation/swift/1541053-print" target="_blank">print function</a>. It can write the textual representation of the given items to the standard output. In other words we can simply say that it can print text to the screen. Most of the <a href="https://en.wikipedia.org/wiki/%22Hello,_World!%22_program" target="_blank">hello word programs</a> utilize this method to display the famous “Hello world!” message. In Swift, print is quite a powerful method, since you can pass around multiple items for printing out plus you can specify a separator string and a terminator parameter. 🤔</p><pre><code class="language-swift">print("Hello World!")
+// output: Hello World!\n
+</code></pre><p>The snippet above will display the <code>Hello World!</code> text followed by a newline character (<code>\n</code>), this is because the default terminator is always a newline. You can override this behavior by providing your own terminator string.</p><pre><code class="language-swift">print("Hello World!", terminator: "")
+// output: Hello World!
+</code></pre><p>If you run this example using Xcode you should see that the “Program ended with exit code: 0” text will appear in a newline in the first case, but in the second scenario it’ll be printed out right after the “Hello World!” sentence. If you run the program using a Terminal application, a <code>%</code> character be present instead of the new line in the second case. 💡</p><p>What about printing out multiple variables? It is possible to give multiple items to the print function, they can be literally anything, print can handle strings, integers and all kinds of other variables. Print under the hood will convert the variable into a proper string representation, so you don’t have to mess around with type casting all the time, but simply print out anything.</p><pre><code class="language-swift">print(1, 2, 3, 4, 5)
+// output: 1 2 3 4 5\n
+
+print(1, "two", 3.14, true)
+// output: 1 two 3.14 true\n
+</code></pre><p>You can also customize the separator character through an argument. So if you need a coma character (followed by a space) in between the elements, you can write something like this:</p><pre><code class="language-swift">print("a", "b", "c", separator: ", ")
+// output: a, b, c\n
+</code></pre><p>Well, in <a href="https://theswiftdev.com/how-to-define-strings-use-escaping-sequences-and-interpolations/" target="_blank">my previous article</a> you have seen how to construct various strings using literals and interpolation, you can use all those variables to print out stuff to the console.</p><pre><code class="language-swift">print("""
+            __
+           / _)
+    .-^^^-/ /
+ __/       /
+<__.|_|-|_|
+""")
+</code></pre><p>For example, here’s a cute multi-line ascii art dinosaur. 🦕</p><h2>Debugging and print</h2><p>Sometimes it would be cool to know just a little bit of extra info about the printed variable, this is when <code>debugPrint</code> can help you. The main difference between <a href="https://stackoverflow.com/questions/41826683/print-vs-debugprint-in-swift" target="_blank">print and debugPrint</a> is that while print simply converts everything to string, debug print will give you a brief debug info about the given items. The debugPrint method will print out numbers just like print does, it’ll add double quotes around strings, and it’ll print some extra info about most of the other “complex” types.</p><pre><code class="language-swift">print(1) // 1
+debugPrint(1) // 1
+
+print("foo") // foo
+debugPrint("foo") // "foo"
+
+print(1...5) // 1...5
+debugPrint(1...5) // ClosedRange(1...5)
+</code></pre><p>Honestly I’ve almost never used this method, and I always preferred print if I had to print out something to the console, but it’s always good to know that there is such an option available built-in to the standard library, however there is a method that can give you way more info… 🧐</p><h2>Debugging using dump</h2><p>The <a href="https://developer.apple.com/documentation/swift/1539127-dump" target="_blank">dump method</a> can print out the given object’s content using its mirror to the standard output. Long story short, this function will show you a more detailed view about the property. For scalar values the dump method will produce almost the same output as debug-print, except the dump line always starts with a dash character, but for more complex types it’ll output the underlying structure of the object. Don’t worry, you don’t need to understand the output of this method, just remember that it can show you helpful info during debugging. 🐞</p><pre><code class="language-swift">dump(1)
+dump(3.14)
+dump("foo")
+dump(1...5)
+/*
+ - 1
+ - 3.14
+ - "foo"
+ ▿ ClosedRange(1...5)
+   - lowerBound: 1
+   - upperBound: 5
+ */
+</code></pre><p>The <code>ClosedRange</code> struct is a built-in type with a <code>lowerBound</code> and an <code>upperBound</code> property. While the print function only returned the defined range (1…5), the debugPrint method also revealed the type of the object, dump takes this one step further by showing us the exact lower and upper bound properties of the value. This can be extremely helpful when you have a complex type with lots of underlying properties that you want to quickly inspect for some reason. 🔍</p><blockquote><p>NOTE: By the way, <a href="https://en.wikipedia.org/wiki/Debugging" target="_blank">debugging</a> is the act of finding (and resolving) bugs. Bugs are problems in your program code that prevent normal operation. Developers can use <a href="https://en.wikipedia.org/wiki/Debugger" target="_blank">debugger tools</a> to run and inspect code step by step, line by line or per instruction, but most of them are simply putting print statements into the code to see the current state or result of a given function. 🤷‍♂️</p></blockquote><p>Dump has a few more function arguments that you can configure:</p><pre><code class="language-swift">dump("test", name: "my-variable", indent: 4, maxDepth: 5, maxItems: 5)
+// output:     - my-variable: "test"
+</code></pre><p>You can give a name to each dumped variable, add some extra indentation before the dash character, specify the maximum depth for descendents and the maximum number of elements for which to write the full contents. Feel free to play with these parameters for a while. 😉</p><p>As you can see dump is quite a powerful method, but still there are other functions for logging purposes, let me show you one that is coming from the Objective-C times.</p><h2>NSLog - the legacy logger function</h2><p>If you have ever worked with Objective-C you should be familiar with the NS prefixes. The <a href="https://developer.apple.com/documentation/foundation/1395275-nslog" target="_blank">NSLog</a> function can log an error message to the Apple System Log facility console. It’s not part of the <a href="https://developer.apple.com/documentation/swift/swift_standard_library" target="_blank">Swift standard library</a>, but you have to import the <a href="https://developer.apple.com/documentation/foundation" target="_blank">Foundation framework</a> in order to use NSLog.</p><pre><code class="language-swift">import Foundation
+
+NSLog("I'm a dinosaur.")
+
+// output: [date][time][program-name][process-id][thread-id][message]
+</code></pre><p>You should know that NSLog will print the current date & time first, then it’ll display the name of the running program with the process and thread identifiers and only then it’ll print your message.</p><p>Just to be clear, NSLog is coming from the Objective-C era, it is not a recommended logging solution anymore. It is also very slow and that can cause some issues if you need precisely timed outputs. That’s why I <a href="https://stackoverflow.com/questions/25951195/swift-print-vs-println-vs-nslog" target="_blank">do NOT recommend using NSLog</a> at all, but you also have to know that until a few years ago there was no better built-in alternative for it, I’m not judging, just saying… 😅</p><h2>Unified Logging and Activity Tracing</h2><p>If you want to send log messages on an Apple device to the <a href="https://developer.apple.com/documentation/os/logging" target="_blank">unified logging system</a>, you can use the <a href="https://developer.apple.com/documentation/oslog" target="_blank">OSLog framework</a>. This new tool was introduced at <a href="https://developer.apple.com/videos/play/wwdc2016/721/" target="_blank">WWDC 2016</a> and recently got some nice API refinements & updates. You should definitely check the <a href="https://www.avanderlee.com/workflow/oslog-unified-logging/" target="_blank">OSLog and Unified Logging recommended by Apple</a> article if you want to learn more about this topic it’s a great write up.</p><p>My only concern about this logging API is that it is not that universal. It works great on Apple platforms, but since Swift is an universal language if you want to add Linux or even Windows support, this solution won’t work for you…</p><h2>SwiftLog - A Logging API package for Swift</h2><p>This <a href="https://github.com/apple/swift-log" target="_blank">open source package</a> can be easily integrated into your Swift projects via the <a href="https://theswiftdev.com/swift-package-manager-tutorial/" target="_blank">Swift Package Manager</a>. You just have to set it up as a dependency in the <code>Package.swift</code> manifest file or you can hook it using Xcode under the File > Swift Packages menu as an SPM dependency.</p><pre><code class="language-swift">// swift-tools-version:5.3
+import PackageDescription
+
+let package = Package(
+    name: "myProject",
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.0"),
+    ],
+    targets: [
+        .target(name: "myProject", dependencies: [
+            .product(name: "Logging", package: "swift-log")
+        ])
+    ]
+)
+</code></pre><p>The usage is really straightforward. First you have to import the Logging framework, then you create a logger and you use that logger instance to print out various log messages.</p><pre><code class="language-swift">import Logging
+
+let logger = Logger(label: "app-identifier")
+
+logger.info("Hello World!")
+</code></pre><p>The following log levels are supported:</p><ul><li>trace</li><li>debug</li><li>info</li><li>notice</li><li>warning</li><li>error</li><li>critical</li></ul><p>You can also attach additional logging metadata to the logger, you should check the <a href="https://github.com/apple/swift-log" target="_blank">readme</a> for more info about this option. SwiftLog is used in many real-world projects, such as <a href="https://theswiftdev.com/beginners-guide-to-server-side-swift-using-vapor-4/" target="_blank">Vapor 4</a> (a server side Swift framework), this also means that it works great on Linux operating systems. 🐧</p><h2>Conclusion</h2><p>If it comes to logging, there are several good options to choose from. It only depends on your needs which one is the best, but in general we can say that it is time to leave behind NSLog, and time to use the new OSLog framework. If you are using Swift on non-Apple platform you should consider using the SwiftLog library, which is also provided by Apple.</p><p>Alternatively if you are just scratching the surface and you don’t need that many options or log levels you can simply stick with print and dump statements. It’s perfectly fine to debug using these simple techniques in the beginning. Mastering something takes time and debuggers can be quite frightening at first sight. Use print as much as you need, but always try to improve your tools & knowledge over time, I hope this article gives you a better view of the available logging tools. 🤓</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>

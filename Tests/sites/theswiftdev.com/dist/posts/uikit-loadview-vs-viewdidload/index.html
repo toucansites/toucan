@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>UIKit - loadView vs viewDidLoad - </title>
+    <meta name="description" content="When to use these methods? Common questions and answers about the iOS view hierarchy including memory management.">
+    
+    <meta property="og:url" content="/posts/uikit-loadview-vs-viewdidload/">
+    <meta property="og:title" content="UIKit - loadView vs viewDidLoad - ">
+    <meta property="og:description" content="When to use these methods? Common questions and answers about the iOS view hierarchy including memory management.">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="UIKit - loadView vs viewDidLoad - ">
+    <meta name="twitter:description" content="When to use these methods? Common questions and answers about the iOS view hierarchy including memory management.">
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <link rel="shortcut icon" href="/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/icons/icon-320.png" type="image/png">
+    
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon-180x180.png">
+
+</head>
+
+<body>
+    <header id="navigation">
+        <a id="site-logo" href="">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+        </a>
+    
+        <nav id="primary-menu">
+            <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+            <label for="primary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </label>
+            <div class="menu-items">
+                <a href="/">Home</a>
+                <a href="/blog/">Blog</a>
+                <a href="/posts/pages/1/">Posts</a>
+                <a href="/authors/">Authors</a>
+                <a href="/tags/">Tags</a>
+                <a href="/my-page/">My page</a>
+            </div>
+        </nav>
+    
+        <nav id="secondary-menu">
+            <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+            <label for="secondary-menu-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+            </label>
+            <div class="menu-items right">
+                <a href="#">My account</a>
+                <a href="/">Logout</a>
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+
+<article>
+    <header>
+        <section id="post-header" class="content-wrapper">
+            <time datetime="2022-02-09 16:20:00">2022-02-09 16:20:00</time>
+            <h1 class="title">UIKit - loadView vs viewDidLoad</h1>
+            <p class="excerpt">When to use these methods? Common questions and answers about the iOS view hierarchy including memory management.</p>
+        </section>
+        
+    </header>
+
+    <section id="contents" class="content-wrapper">
+    
+    <h2>Weak, unowned or strong subviews?</h2><p>I’ve got quite a lot of emails and tweets about this topic, so I decided to write about it, because it is really hard to find a proper answer for this question on the internet. There are some <a href="https://cocoacasts.com/should-outlets-be-weak-or-strong" target="_blank">great posts</a> and <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/LoadingResources/CocoaNibs/CocoaNibs.html#//apple_ref/doc/uid/10000051i-CH4-SW6" target="_blank">programming guides</a>, some <a href="https://medium.com/macoclock/swift-iboutlet-weak-strong-optional-wrapped-confused-12d371930be2" target="_blank">some articles</a> are a bit older, still many people are asking <a href="https://forums.raywenderlich.com/t/weak-vs-strong-iboutlets/114950/6" target="_blank">the weak vs strong IBOutlet</a> question even on the <a href="https://developer.apple.com/forums/thread/96763" target="_blank">official forums</a>, but noone really explains the reasons, even on the forums they only recommend this <a href="https://developer.apple.com/videos/play/wwdc2015/407/" target="_blank">WWDC</a> session video. So what’s going on here? 🤔</p><p>I did a little research on the topic and the very first thing that we should state is this: Apple <a href="https://blog.katastros.com/a?ID=00200-af0e7928-e076-471c-9828-40789445d58d" target="_blank">removed the viewDidUnload</a> method in iOS6 and from that version the iOS <a href="https://developer.apple.com/documentation/uikit/uiviewcontroller" target="_blank">view controller</a> lifecycle changed a bit. If you don’t know much about the <a href="https://stackoverflow.com/questions/5562938/looking-to-understand-the-ios-uiviewcontroller-lifecycle" target="_blank">lifecycle</a> methods (<a href="http://szulctomasz.com/programming-blog/2015/08/uiviewcontrollers-view-loading-process-demystified/" target="_blank">demystified</a>), you should read <a href="https://ali-akhtar.medium.com/ui-part-1-uiviewcontroller-lifecycle-f323d68cd9f9" target="_blank">this article</a>. This was quite a big change and Apple also touched their internal view management. Before iOS6 it was a common practice to define weak subviews. Because they had a strong reference to it and they were not releasing it unless you removed it from the view hierarchy.</p><p>This was about 10 years ago. Now why are we still afraid of strong subviews? The number one reason was the <a href="https://developer.apple.com/documentation/uikit/uiview/1622616-addsubview" target="_blank">addSubview</a> method. The documentation states that it’ll create a strong reference, which automatically triggered my brain and I defined my views as weak pointers, since they’re going have a strong reference to their parents. Seems reasonable, right? 🧠</p><h3>Weak subviews</h3><p>Well, the problem is that if you want to define a weak variable we have to use an optional, but I don’t like the idea of using an optional variable since the view is going to be always there, it’s part of the view hierarchy at some point in, it’s not going anywhere. It’s only going to be “destroyed” when my view controller is deallocated. Should I declare it as an implicitly unwrapped optional?!? Maybe.</p><pre><code class="language-swift">import UIKit
+
+class ViewController: UIViewController {
+
+    weak var foo: UILabel! // this can be problematic
+    weak var bar: UILabel? // this is safe, but meh...
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // this will crash your app.
+        foo.removeFromSuperview()
+        foo.text = "crash"
+    }
+}
+</code></pre><p>Actually you can go wrong with unwrapped weak pointers, because if you remove your view from the view hiearchy at some point in time before the view controller deallocation then your weak pointer will be nil. In this case there won’t be any more strong references and your view will be deallocated right away, so if it’s an implicitly unwrapped optional, then we have a trouble. Your app will crash if you try to access the property, because it’s going to have a nil value.</p><p>So yes you can use implicitly unwrapped optional variables to store subviews, but only if you are sure that you are not going to remove it from the hiearchy. This also means that you don’t trust Apple’s view management system, which is fine, there can be bugs, but honestly this is quite a crucial feature and it has been around for a decade by now. 🙃</p><p>The other alternative is to use a regular weak optional variable, but in that case you’ll always have to check if it’s nil or not, which is going to be a pain in the ass, but at least you’re going to be safe for sure. Personal opinion: it won’t worth the effort at all and I never stored views like this.</p><h3>Strong subviews</h3><p>My recommendation is to trust Apple and define your subviews as strong properties. Okay, this can also be problematic if you have other strong references to the same stuff, but in general if the view controller has the only reference to that given subview you should be totally fine.</p><p>Since it’s a strong property you also have to initialize the view, but that’s not a big deal. You can always initialize a view with a .zero frame and that’s it. Alternatively you can create a <a href="https://theswiftdev.com/styling-by-subclassing/" target="_blank">subclass</a> with a regular <code>init()</code> method, that’s even better, becuase you are going to <a href="https://theswiftdev.com/mastering-ios-auto-layout-anchors-programmatically-from-swift/" target="_blank">use auto layout</a> for sure and this way can set the <code>translatesAutoresizingMaskIntoConstraints</code> property in one go.</p><pre><code class="language-swift">import UIKit
+
+class Label: UILabel {
+    
+    init() {
+        super.init(frame: .zero)
+
+        self.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("deinit Label")
+    }
+}
+
+class ViewController: UIViewController {
+
+    // strong view pointers for the win! 😅
+    var foo: Label = .init()
+    var bar: UILabel = .init(frame: .zero)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    }
+    
+    deinit {
+        print("deinit ViewController")
+    }
+    
+}
+</code></pre><p>By implementing a custom deinit method or even better, by <a href="https://sarunw.com/posts/easy-way-to-detect-retain-cycle-in-view-controller/" target="_blank">creating a symbolic breakpoint</a> you can easily detect retain cycles and fix memory issues. I made some tests and I can confirm you don’t have to be afraid of strong views, both the viewcontroller and the view is going to be deallocated if it’s needed. 👻</p><h3>Unowned subviews</h3><p>Unowned and weak are <a href="https://stackoverflow.com/questions/26707223/swift-how-to-define-a-uiview-delegate-with-unownedunsafe-reference" target="_blank">more or less equivalent</a>, I’d say that you won’t need to define views as unowned references, because they can be problematic if it comes to initialization. It’s usually better to have a weak reference and check for nil values, but of course there can be some cases where you might need an unowned subview reference.</p><h2>Using loadView and viewDidLoad</h2><p>The <a href="https://developer.apple.com/documentation/uikit/uiviewcontroller/1621454-loadview" target="_blank">loadView</a> method can be used to create your own views manually. You should never call this method directly, but it’s save to override it. The other thing that you should not is that if you are using this method to override the root view, then you shouldn’t call super.loadView().</p><pre><code class="language-swift">import UIKit
+
+class ViewController: UIViewController {
+    
+    override func loadView() {
+        view = UIView(frame: .zero)
+
+        // super.loadView() // no need for this
+            
+    }
+}
+</code></pre><p>In every other case when you just want to add views to the view hierarchy, it’s completely fine to call the super method. I’m usually implementing this method to setup views and constraints.</p><pre><code class="language-swift">import UIKit 
+
+class ViewController: UIViewController {
+
+    var foo: Label = .init()
+    
+    override func loadView() {
+        super.loadView()
+        
+        view.addSubview(foo)
+        
+        NSLayoutConstraint.activate([
+            view.centerXAnchor.constraint(equalTo: foo.centerXAnchor),
+            view.leadingAnchor.constraint(equalTo: foo.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: foo.trailingAnchor),
+            foo.heightAnchor.constraint(equalToConstant: 44),
+        ])
+    }
+}
+</code></pre><p>This way I can be sure that every single view is ready by the time the <a href="https://developer.apple.com/documentation/uikit/uiviewcontroller/1621495-viewdidload" target="_blank">viewDidLoad</a> method is called. It is possible to configure views inside the loadView method too, but I prefer to keep the hierarchy setup there and I place everything else inside the viewDidLoad function. I mean controller related stuff only, like setting up navigation bar buttons and things like this.</p><p>As I mentioned this in my <a href="https://theswiftdev.com/10-little-uikit-tips-you-should-know/" target="_blank">previous article</a>, I prefer to use subclasses to configure my views, I also move layout constraints there (as a function that returns them based on some parameters) to keep the view controller clean. Inside the viewDidLoad method I can perform additional user interface related actions, but that’s it I don’t use it for adding or styling views anymore.</p><h2>Conclusion</h2><p>Based on my current knowledge, here is what I recommend for modern UIKit developers:</p><ul><li>Define your subviews as `strong` properties</li><li>Always check for leaks, implement `deinit`, use breakpoints or instruments</li><li>Use `weak` / `unowned` references if you have to break retain cycles</li><li>Add views to the hierarchy in the `loadView` method</li><li>Use subclasses for styling views, make them reusable</li><li>Define layout constraint getters on the view subclass, activate them inside `loadView`</li><li>Perform remaining UI related operations in the `viewDidLoad` function</li></ul><p>That’s it. I’m not saying this is the perfect approach, but for me it’s definitely the way to go forward with UIKit. I know for sure that many people are still working with the framework and it is here to stay for a long time. I hope these tips will help you to understand UIKit just a little bit better. ☺️</p>
+        
+    </section>
+    
+    <h2>Next</h2>
+    
+    <h2>Prev</h2>
+        <div class="post card">
+            <a href="/posts/hummingbird-routing-and-requests/" target="">
+                <figure>
+                    <picture>
+                        <img
+                            src=""
+                            alt=""
+                            title=""
+                        >
+                    </picture>
+                </figure>
+                <section>
+                    <time datetime="2023-03-17 16:20:00">2023-03-17 16:20:00</time>
+                    <h2 class="title">Hummingbird routing and requests</h2>
+                </section>
+                <p>Beginner&#39;s guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.</p>
+            </a>
+        
+            
+            
+        
+        </div>
+    
+    <h2>Related</h2>
+    Empty.
+    
+    <h2>More by author(s)</h2>
+    Empty.
+
+</article>
+
+    </main>
+
+    <footer id="page-footer">
+        <section class="content-wrapper">
+            <figure>
+                <picture>
+                    <source
+                        srcset="/images/logos/logo~dark.png"
+                        media="(prefers-color-scheme: dark)"
+                    >
+                    <img
+                        id="logo-image"
+                        src="/images/logos/logo.png"
+                        alt="Logo of "
+                        title=""
+                    >
+                </picture>
+            </figure>
+    
+            <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
+            
+            <p>
+                <a href="https://binarybirds.com/">Home</a> ·
+                <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
+                <a href="https://github.com/binarybirds/">GitHub</a> ·
+                <a href="https://x.com/tiborbodecs">Twitter</a> ·
+                <a href="/rss.xml" target="_blank">RSS</a> ·
+                <a href="/sitemap.xml" target="_blank">Sitemap</a>
+            </p>
+    
+            <p class="small"> &copy; 2022 - 2024.</p>
+        </section>
+    </footer>
+</body>
+</html>
