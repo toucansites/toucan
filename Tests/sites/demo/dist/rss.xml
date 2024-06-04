@@ -4,7 +4,7 @@
     <description>This is a demo blog using completely fake content.</description>
     <link>http://localhost:3000/</link>
     <language>en-US</language>
-    <lastBuildDate>Tue, 04 Jun 2024 15:26:51 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 04 Jun 2024 15:32:55 +0000</lastBuildDate>
     <pubDate>Sat, 29 Aug 1953 12:01:01 +0000</pubDate>
     <ttl>250</ttl>
     <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>

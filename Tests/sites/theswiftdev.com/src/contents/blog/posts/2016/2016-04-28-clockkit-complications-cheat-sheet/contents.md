@@ -2,9 +2,15 @@
 slug: clockkit-complications-cheat-sheet
 title: ClockKit complications cheatsheet
 description: ClockKit families and templates, there are so many of them. It's a little bit time consuming if you are looking for the right one.
+coverImage: ./images/clockkit-cheatsheet.jpg
 publication: 2016-04-28 16:20:00
-tags: watchOS
+tags:
+  - watch-os
+authors:
+  - tibor-bodecs
 ---
+
+
 
 The official ClockKit documentation on Apple's site is well written, but it lacks a generic overview of all the existing complications. I've created a little cheatsheet for you to simplify the searching process for the right complication style.
 
