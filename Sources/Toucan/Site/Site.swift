@@ -533,9 +533,16 @@ struct Site {
         let posts = content.blog.post.sortedContents
         if let index = posts.firstIndex(where: { $0.id == id }) {
             let post = posts[index]
-            // TODO: filter out current (input) post id
             for tagId in post.tagIds {
-                result += postListState(tagId: tagId)
+                result += content.blog.post.contentsBy(tagId: tagId)
+                    .filter { $0.id != id }
+                    .map {
+                        postState(
+                            for: $0,
+                            authors: content.blog.author.contentsBy(ids: $0.authorIds),
+                            tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                        )
+                    }
             }
         }
         return Array(result.shuffled().prefix(5))
@@ -547,9 +554,16 @@ struct Site {
         let posts = content.blog.post.sortedContents
         if let index = posts.firstIndex(where: { $0.id == id }) {
             let post = posts[index]
-            // TODO: filter out current (input) post id
             for authorId in post.authorIds {
-                result += postListState(authorId: authorId)
+                result += content.blog.post.contentsBy(authorId: authorId)
+                    .filter { $0.id != id }
+                    .map {
+                        postState(
+                            for: $0,
+                            authors: content.blog.author.contentsBy(ids: $0.authorIds),
+                            tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                        )
+                    }
             }
         }
         return Array(result.shuffled().prefix(5))
