@@ -17,12 +17,26 @@
             {{/tags}}
             </div>
             {{/empty(tags)}}
+            {{#authors}}
+                {{#figure}}
+                {{> _partials.authorFigure}}
+                {{/figure}}
+            <p>
+                <span class="author">Written by: <a href="{{userDefined.authorLink}}" target="_blank">{{title}}</a> @ 
+                <span class="author"><a href="{{userDefined.companyLink}}" target="_blank">{{userDefined.company}}</a></span><br>
+                <span class="reading-time">Reading time: {{readingTime}} min read</span><br>
+            </p>
+            {{/authors}}
         </section>
         
         {{#figure}}
         {{> _partials.figure}}
         {{/figure}}
     </header>
+
+    <section class="content-wrapper">
+        <hr>
+    </section>
 
     <section id="contents" class="content-wrapper">
     

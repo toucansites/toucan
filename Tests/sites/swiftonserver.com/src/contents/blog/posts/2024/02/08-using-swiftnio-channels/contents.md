@@ -3,8 +3,12 @@ slug: using-swiftnio-channels
 title: Using SwiftNIO - Channels
 description: Create a TCP server using SwiftNIO and structured concurrency
 publication: 2024-02-08 18:30:00
-tags: Swift, SwiftNIO, Networking
-author: Joannis Orlandos
+tags:
+  - swift
+  - SwiftNIO
+  - Networking
+authors:
+  - joannis-orlandos
 authorLink: https://x.com/JoannisOrlandos
 authorGithub: joannis
 authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
@@ -14,8 +18,6 @@ company: Unbeatable Software B.V.
 companyLink: https://unbeatable.software/
 duration: 30 minutes
 ---
-
-# SwiftNIO Channels
 
 In the [previous tutorial](/using-swiftnio-fundamentals), you've learned the fundamentals of SwiftNIO. You're now familiar with the concept of an `EventLoop`.
 
@@ -75,7 +77,7 @@ ServerBootstrap requires an `EventLoopGroup` to run on. This is a group of Event
 import NIOCore
 import NIOPosix
 
-// 1. 
+// 1.
 let server = try await ServerBootstrap(group: NIOSingletons.posixEventLoopGroup)
     .bind( // 2.
         host: "0.0.0.0", // 3.

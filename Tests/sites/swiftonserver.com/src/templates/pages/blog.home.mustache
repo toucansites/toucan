@@ -2,10 +2,15 @@
 
 {{$main}}
     
-<div id="blog" class="wrapper">
+<div id="blog" class="content-wrapper">
     <header>
         <h1>{{page.metadata.title}}</h1>
         <p>{{page.metadata.description}}</p>
+        <div class="authors"> 
+        {{#page.context.authors}}
+            <p class="author"><a href="{{userDefined.authorLink}}" target="_blank">{{title}}</a></p>
+        {{/page.context.authors}}
+        </div>
     </header>
     
     
