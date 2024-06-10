@@ -596,7 +596,6 @@ article section p a:visited {
 
 .footerNav {
   display: flex;
-  box-sizing: border-box;
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -605,7 +604,7 @@ article section p a:visited {
   color: var(--secondary-color-600);
   width: 100%;
   max-width: 1280px;
-  padding: 24px 20px;
+  padding: 24px 0;
   margin: 32px auto 0;
   border-top: 1px solid var(--secondary-color-600);
 }

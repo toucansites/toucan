@@ -10,15 +10,13 @@ authors:
   - tibor-bodecs
 ---
 
-
-
 The official ClockKit documentation on Apple's site is well written, but it lacks a generic overview of all the existing complications. I've created a little cheatsheet for you to simplify the searching process for the right complication style.
 
 This cheatsheet supports watchOS 5. In order to get the template name you just have to add up the names in the proper order. Usually left to right, top to bottom. Don't worry you'll get it. 😅
 
 Swift sample code is below the cheatsheet, please scroll! 👇
 
-![ClockKit cheatsheet](clockkit-cheatsheet.jpg)
+![ClockKit cheatsheet](./images/clockkit-cheatsheet.jpg)
 
 Feel free to right click and download the cheatsheet image.
 
@@ -122,7 +120,7 @@ class ComplicationDataSource: NSObject, CLKComplicationDataSource {
             break;
         }
         let entry = CLKComplicationTimelineEntry(
-            date: date, 
+            date: date,
             complicationTemplate: template
         )
         handler(entry)
@@ -131,4 +129,3 @@ class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 ```
 
 That's it for now. Time is over. ⏰
-

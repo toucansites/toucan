@@ -3,6 +3,7 @@ slug: encoding-and-decoding-data-using-the-hummingbird-framework
 title: Encoding and decoding data using the Hummingbird framework
 description: URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.
 publication: 2023-03-22 16:20:00
+coverImage: ./2023/03/22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
 tags: Swift, Hummingbird
 ---
 
@@ -14,7 +15,7 @@ For example if we setup the following route handler and call the hello endpoint 
 
 ```swift
 router.get("hello") { _ in "hello" }
-        
+
 //
 // curl -i http://localhost:8080/hello
 //
@@ -54,10 +55,10 @@ extension Foo: HBResponseCodable {}
 extension HBApplication {
 
     func configure(_ args: AppArguments) throws {
-        
+
         decoder = JSONDecoder()
         encoder = JSONEncoder()
-        
+
         router.post("foo") { req async throws -> Foo in
             guard let foo = try? req.decode(as: Foo.self) else {
                 throw HBHTTPError(.badRequest, message: "Invalid request body.")
@@ -128,7 +129,7 @@ First we have to implement a custom request decoder and a response encoder. In t
 
 ```swift
 struct AppDecoder: HBRequestDecoder {
-    
+
     func decode<T>(
         _ type: T.Type,
         from req: HBRequest
@@ -179,10 +180,10 @@ extension Foo: HBResponseCodable {}
 extension HBApplication {
 
     func configure(_ args: AppArguments) throws {
-        
+
         decoder = AppDecoder()
         encoder = AppEncoder()
-        
+
         router.post("foo") { req async throws -> Foo in
             guard let foo = try? req.decode(as: Foo.self) else {
                 throw HBHTTPError(.badRequest, message: "Invalid request body.")
@@ -231,18 +232,18 @@ router.post("foo") { req async throws -> HBResponse in
         )
         print(rawInputData)
     }
-    
+
     // streaming input body chunk-by-chunk
     if let sequence = req.body.stream?.sequence {
         for try await chunk in sequence {
             print(chunk)
         }
     }
-    
+
     guard let data = "hello".data(using: .utf8) else {
         throw HBHTTPError(.internalServerError)
     }
-    
+
     return .init(
         status: .ok,
         headers: .init(),

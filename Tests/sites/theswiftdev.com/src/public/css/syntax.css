@@ -1,62 +1,213 @@
+code {
+  font-size: 16px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #383a42;
+  background: #fafafa;
+}
+
 pre code {
-    color: #0B4F79;
+  font-size: 16px;
+  border: none;
+  padding: 0;
 }
-pre code .keyword {
-    color: #9B2393;
+
+pre {
+  border: 1px solid #ddd;
+  overflow: auto;
+  padding: 20px;
+  border-radius: 18px;
 }
-pre code .type {
-    color: #3900A0;
+
+code {
+  font-family: 'Fira Code', monospace;
 }
-pre code .call {
-    color: #326D74;
+
+pre,
+.hljs {
+  color: #383a42;
+  background: #fafafa;
 }
-pre code .property {
-    color: #6C36A9;
+
+.hljs-comment,
+.hljs-quote {
+  color: #a0a1a7;
+  font-style: italic;
 }
-pre code .number {
-    color: #1C00CF;
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #a626a4;
 }
-pre code .string {
-    color: #C41A16;
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+  color: #e45649;
 }
-pre code .comment {
-    color: #5D6C79;
+
+.hljs-literal {
+  color: #0184bb;
 }
-pre code .dotAccess {
-    color: #0F68A0;
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string {
+  color: #50a14f;
 }
-pre code .preprocessing {
-    color: #643820;
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #986801;
 }
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #4078f2;
+}
+
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #c18401;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}
+
 @media (prefers-color-scheme: dark) {
-    pre code {
-        color: #ccc;
-    }
-    pre code .keyword {
-        color: #e73289;
-    }
-    pre code .type {
-        color: #4fb1cb;
-    }
-    pre code .call {
-        color: #A167E6;
-    }
-    pre code .property {
-        color: #67B7A4;
-    }
-    pre code .number {
-        color: #D0BF69;
-    }
-    pre code .string {
-        color: #FC6A5D;
-    }
-    pre code .comment {
-        color: #7f8c99;
-    }
-    pre code .dotAccess {
-        color: #41A1C0;
-    }
-    pre code .preprocessing {
-        color: #FD8F3F;
-    }
+  code {
+    color: #abb2bf;
+    background: #282c34;
+    border-color: #333;
+  }
+
+  pre {
+    border: 1px solid #333;
+  }
+
+  pre,
+  .hljs {
+    color: #abb2bf;
+    background: #282c34;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: #5c6370;
+    font-style: italic;
+  }
+
+  .hljs-doctag,
+  .hljs-keyword,
+  .hljs-formula {
+    color: #c678dd;
+  }
+
+  .hljs-section,
+  .hljs-name,
+  .hljs-selector-tag,
+  .hljs-deletion,
+  .hljs-subst {
+    color: #e06c75;
+  }
+
+  .hljs-literal {
+    color: #56b6c2;
+  }
+
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-meta .hljs-string {
+    color: #98c379;
+  }
+
+  .hljs-attr,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-type,
+  .hljs-selector-class,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo,
+  .hljs-number {
+    color: #d19a66;
+  }
+
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-link,
+  .hljs-meta,
+  .hljs-selector-id,
+  .hljs-title {
+    color: #61aeee;
+  }
+
+  .hljs-built_in,
+  .hljs-title.class_,
+  .hljs-class .hljs-title {
+    color: #e6c07b;
+  }
 }
+
+/*
+  
+  Atom One Light by Daniel Gamage
+  Original One Light Syntax theme from https://github.com/atom/one-light-syntax
+  
+  base:    #fafafa
+  mono-1:  #383a42
+  mono-2:  #686b77
+  mono-3:  #a0a1a7
+  hue-1:   #0184bb
+  hue-2:   #4078f2
+  hue-3:   #a626a4
+  hue-4:   #50a14f
+  hue-5:   #e45649
+  hue-5-2: #c91243
+  hue-6:   #986801
+  hue-6-2: #c18401
+  
+  Atom One Dark by Daniel Gamage
+  Original One Dark Syntax theme from https://github.com/atom/one-dark-syntax
+  
+  base:    #282c34
+  mono-1:  #abb2bf
+  mono-2:  #818896
+  mono-3:  #5c6370
+  hue-1:   #56b6c2
+  hue-2:   #61aeee
+  hue-3:   #c678dd
+  hue-4:   #98c379
+  hue-5:   #e06c75
+  hue-5-2: #be5046
+  hue-6:   #d19a66
+  hue-6-2: #e6c07b
+  
+  */
