@@ -43,18 +43,39 @@
     {{& page.content}}
         
     </section>
+
+    <section id="about-author" class="content-wrapper">
+        {{#authors}}
+            {{#figure}}
+            {{> _partials.authorFigure}}
+            {{/figure}}
+            <h4>About {{title}}</h4>
+            <p class="author-about">{{& author.content}}</p>
+
+        <a href="{{userDefined.ctaLink}}" target="_blank" class="author-cta">{{userDefined.cta}}</a>
+        {{/authors}}
+    </section>
+</article>
+
+    <div class="content-wrapper">
+            {{^page.context.next}}
+            {{/page.context.next}}
+            {{#page.context.next}}
+                <h2 class="morePostsTitle">Next post</h2>
+                {{> _partials.post}}
+            {{/page.context.next}}
+
+            {{^page.context.prev}}
+            {{/page.context.prev}}
+            {{#page.context.prev}}
+                <h2 class="morePostsTitle">Previous post</h2>
+                {{> _partials.post}}
+            {{/page.context.prev}}
+        
+    </div>
     
-    <h2>Next</h2>
-    {{#page.context.next}}
-        {{> _partials.post}}
-    {{/page.context.next}}
-    
-    <h2>Prev</h2>
-    {{#page.context.prev}}
-        {{> _partials.post}}
-    {{/page.context.prev}}
-    
-    <h2>Related</h2>
+    <div class="content-wrapper ">
+    <h2 class="morePostsTitle">Related posts</h2>
     {{#empty(page.context.related)}}
     Empty.
     {{/empty(page.context.related)}}
@@ -63,8 +84,9 @@
         {{> _partials.post}}
     {{/page.context.related}}
     {{/empty(page.context.related)}}
-    
-    <h2>More by author(s)</h2>
+    </div>
+    <div class="content-wrapper ">
+    <h2 class="morePostsTitle">More posts by the author(s)</h2>
     {{#empty(page.context.moreByAuthor)}}
     Empty.
     {{/empty(page.context.moreByAuthor)}}
@@ -73,8 +95,7 @@
         {{> _partials.post}}
     {{/page.context.moreByAuthor}}
     {{/empty(page.context.moreByAuthor)}}
-
-</article>
+    </div>
 {{/page.context.post}}
 
 {{/main}}
