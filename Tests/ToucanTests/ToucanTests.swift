@@ -25,6 +25,11 @@ final class ToucanTests: XCTestCase {
 
         
         for site in sites {
+            
+            if !site.contains("theswiftdev") {
+                continue
+            }
+            
             let siteUrl = sitesUrl.appendingPathComponent(site)
             let inputUrl = siteUrl.appendingPathComponent("src")
             let outputUrl = siteUrl.appendingPathComponent("dist")

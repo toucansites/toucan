@@ -3,13 +3,13 @@ slug: encoding-and-decoding-data-using-the-hummingbird-framework
 title: Encoding and decoding data using the Hummingbird framework
 description: URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.
 publication: 2023-03-22 16:20:00
-coverImage: ./2023/03/22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
+coverImage: ./22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
 tags: Swift, Hummingbird
 ---
 
 HTTP is all about sending and receiving data over the network. Originally it was only utilized to transfer HTML documents, but nowadays we use HTTP to transfer CSS, JavaScript, JSON and many other data types. According to the standards, the [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) and [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) headers can be used to have a better understanding about the data inside the body of the HTTP request.
 
-Modern web servers can automatically send back these headers based on the object you return in a request handler function. This is the case with Hummingbird, it has built-in [encoding and decoding](httpshttps://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/encoding-and-decoding) support, which makes the data transformation process really simple.
+Modern web servers can automatically send back these headers based on the object you return in a request handler function. This is the case with Hummingbird, it has built-in [encoding and decoding](https://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/encoding-and-decoding) support, which makes the data transformation process really simple.
 
 For example if we setup the following route handler and call the hello endpoint using cURL with the -i flag, the output will contain a bit more information about the response. ℹ️
 

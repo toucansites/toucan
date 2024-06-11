@@ -78,6 +78,9 @@ public struct Toucan {
             contentsUrl
             .appendingPathComponent(directory)
             .appendingPathComponent(id)
+        
+        print("---------------------")
+        print(assetInputUrl.path)
 
         if fileManager.directoryExists(at: assetInputUrl) {
             let assetOutputUrl =

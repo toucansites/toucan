@@ -108,8 +108,12 @@ struct ContentLoader {
 //        }
 
         let posts = try postFiles.map { url in
-            try loadPost(
+            let path = url.path.dropFirst(postsUrl.path.count + 1).dropLast(".md".count)
+            
+            print(path)
+            return try loadPost(
                 config: config,
+                id: String(path),
                 url: url,
                 formatter: formatter
             )
@@ -350,10 +354,10 @@ struct ContentLoader {
 
     func loadPost(
         config: Content.Config,
+        id: String,
         url: URL,
         formatter: DateFormatter
     ) throws -> Content.Post {
-        let id = String(url.lastPathComponent.dropLast(3))
         let lastModification = try fileManager.modificationDate(at: url)
 
         let rawMarkdown = try String(contentsOf: url)
