@@ -125,13 +125,13 @@ public struct Toucan {
     }
 
     /// builds the static site
-    public func build() throws {
+    public func build() async throws {
         let contentLoader = ContentLoader(
             contentsUrl: contentsUrl,
             fileManager: .default,
             frontMatterParser: .init()
         )
-        let content = try contentLoader.load()
+        let content = try await contentLoader.load()
 
         try resetOutputDirectory()
         try copyPublicFiles()

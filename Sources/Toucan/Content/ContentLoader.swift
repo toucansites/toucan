@@ -50,7 +50,7 @@ struct ContentLoader {
 
     // MARK: - load
 
-    func load() throws -> Content {
+    func load() async throws -> Content {
 
         let pagesUrl =
             contentsUrl
@@ -84,13 +84,28 @@ struct ContentLoader {
         )
 
         /// load pages
-        let pages = try pageFiles.map { url in
-            try loadPage(
-                config: config,
-                baseUrl: pagesUrl,
-                url: url
-            )
+        ///
+        let pages = try await withThrowingTaskGroup(of: Content.Page.self) { group in
+            for url in pageFiles {
+                group.addTask {
+                    return try loadPage(
+                        config: config,
+                        baseUrl: pagesUrl,
+                        url: url
+                    )
+                }
+            }
+            var pages: [Content.Page] = []
+            
+            for try await res in group {
+                pages.append(res)
+            }
+            return pages
         }
+        
+//        let pages = try pageFiles.map { url in
+//            
+//        }
 
         let posts = try postFiles.map { url in
             try loadPost(
@@ -349,15 +364,16 @@ struct ContentLoader {
         let description = frontMatter["description"] as? String ?? ""
         let coverImage = frontMatter["coverImage"] as? String
         let template = frontMatter["template"] as? String
-
+        
         let publication = frontMatter["publication"] as? String ?? ""
         let authors = frontMatter["authors"] as? [String] ?? []
         let tags = frontMatter["tags"] as? [String] ?? []
         let featured = frontMatter["featured"] as? Bool ?? false
 
-        guard let date = formatter.date(from: publication) else {
-            fatalError("Invalid publication date for `\(slug)`.")
-        }
+        let date = formatter.date(from: publication) ?? Date()
+        
+        // TODO: use logger
+        print("Invalid publication date for `\(slug)`.")
 
         return .init(
             id: id,

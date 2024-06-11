@@ -1,0 +1,22 @@
+<div class="post card">
+    <a href="{{permalink}}" target="">
+        {{> _partials.figure}}
+        <section>
+            <time datetime="{{date}}">{{date}}</time>
+            <h2 class="title">{{title}}</h2>
+        </section>
+        <p>{{excerpt}}</p>
+    </a>
+
+    
+    {{#authors}}
+        <div class="mini">
+        {{> _partials.figure}}
+        </div>
+    {{/authors}}
+    
+    {{#tags}}
+        {{title}}{{^last()}}, {{/last()}}
+    {{/tags}}
+
+</div>

@@ -10,7 +10,7 @@ import XCTest
 
 final class ContentLoaderTests: XCTestCase {
 
-    func testLoad() throws {
+    func testLoad() async throws {
 
         let path =
             "/"
@@ -28,11 +28,11 @@ final class ContentLoaderTests: XCTestCase {
             fileManager: .default,
             frontMatterParser: .init()
         )
-        _ = try loader.load()
+        _ = try await loader.load()
 
     }
 
-    func testUserDefined() throws {
+    func testUserDefined() async throws {
 
         let path =
             "/"
@@ -50,7 +50,7 @@ final class ContentLoaderTests: XCTestCase {
             fileManager: .default,
             frontMatterParser: .init()
         )
-        let content = try loader.load()
+        let content = try await loader.load()
 
         _ = content.blog.author.contents.first?.userDefined
 

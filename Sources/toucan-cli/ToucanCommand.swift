@@ -3,7 +3,7 @@ import Toucan
 import Foundation
 
 @main
-struct ToucanCommand: ParsableCommand {
+struct ToucanCommand: AsyncParsableCommand {
 
     @Argument(help: "The input directory (default: ./src).")
     var input: String = "./src"
@@ -11,11 +11,11 @@ struct ToucanCommand: ParsableCommand {
     @Argument(help: "The output directory (default: ./docs).")
     var output: String = "./docs"
 
-    func run() throws {
+    func run() async throws {
         let generator = Toucan(
             inputUrl: URL(fileURLWithPath: input),
             outputUrl: URL(fileURLWithPath: output)
         )
-        try generator.build()
+        try await generator.build()
     }
 }
