@@ -3,16 +3,11 @@ slug: async-http-client-by-example
 title: AsyncHTTPClient by example
 description: This article offers practical examples to introduce the Swift AsyncHTTPClient library.
 publication: 2024-04-03 18:30:00
-tags: Swift, HTTP
-author: Tibor Bödecs
-authorLink: https://x.com/tiborbodecs
-authorGithub: tib
-authorAbout: Tibor, also known as <a href="https://theswiftdev.com">"The Swift Dev"</a>, is the co-founder of <a href="https://binarybirds.com/">Binary Birds Kft.</a> Tibor provides Server-Side Swift development and consulting.
-cta: Contact us
-ctaLink: mailto:info@binarybirds.com
-company: Binary Birds Kft.
-companyLink: https://binarybirds.com/
-duration: 10 minutes
+tags:
+ - swift
+ - http
+authors:
+ - tibor-bodecs
 ---
 
 Swift [AsyncHTTPClient](https://github.com/swift-server/async-http-client) is an HTTP client library built on top of SwiftNIO. It provides a solid solution for efficiently managing HTTP requests by leveraging the Swift Concurrency model, thus simplifying networking tasks for developers.
