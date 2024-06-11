@@ -10,4 +10,5 @@ struct PageState {
     let title: String
     let description: String
     let figure: FigureState?
+    let userDefined: [String: Any]
 }

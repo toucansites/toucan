@@ -134,8 +134,12 @@ struct Site {
                 for: author.coverImage,
                 folder: Content.Author.folder
             ),
-            numberOfPosts: content.blog.post.contentsBy(authorId: author.id)
-                .count
+            numberOfPosts: content.blog.post.contentsBy(authorId: author.id).count,
+            userDefined: author.userDefined,
+            markdown: render(
+                        markdown: author.markdown,
+                        folder: Content.Author.folder
+                    )
         )
     }
 
@@ -150,7 +154,8 @@ struct Site {
                 for: tag.coverImage,
                 folder: Content.Tag.folder
             ),
-            numberOfPosts: content.blog.post.contentsBy(tagId: tag.id).count
+            numberOfPosts: content.blog.post.contentsBy(tagId: tag.id).count,
+            userDefined: tag.userDefined
         )
     }
 
@@ -164,7 +169,8 @@ struct Site {
             figure: figureState(
                 for: page.coverImage,
                 folder: Content.Page.folder
-            )
+            ),
+            userDefined: page.userDefined
         )
     }
 
@@ -185,7 +191,8 @@ struct Site {
             tags: tags.map { tagState(for: $0) },
             authors: authors.map { authorState(for: $0) },
             readingTime: readingTime(post.markdown),
-            featured: post.featured
+            featured: post.featured,
+            userDefined: post.userDefined
         )
     }
 
@@ -615,7 +622,8 @@ struct Site {
                         figure: figureState(
                             for: $0.coverImage,
                             folder: Content.Page.folder
-                        )
+                        ),
+                        userDefined: $0.userDefined
                     ),
                     content: render(
                         markdown: $0.markdown,

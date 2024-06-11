@@ -11,4 +11,6 @@ struct TagState {
     let description: String
     let figure: FigureState?
     let numberOfPosts: Int
+    let userDefined: [String: Any]
+
 }

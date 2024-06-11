@@ -16,4 +16,6 @@ struct PostState {
     let authors: [AuthorState]
     let readingTime: Int
     let featured: Bool
+    let userDefined: [String: Any]
+
 }

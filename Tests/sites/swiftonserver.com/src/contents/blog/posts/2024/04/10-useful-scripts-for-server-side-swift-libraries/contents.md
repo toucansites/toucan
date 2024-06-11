@@ -3,16 +3,12 @@ slug: useful-scripts-for-server-side-swift-libraries
 title: Useful scripts for server-side Swift libraries
 description: Learn about shell scripts to enforce coding standards and conduct checks for backend Swift projects.
 publication: 2024-04-10 18:30:00
-tags: Swift, Shell, Scripts
-author: Tibor Bödecs
-authorLink: https://x.com/tiborbodecs
-authorGithub: tib
-authorAbout: Tibor, also known as <a href="https://theswiftdev.com">"The Swift Dev"</a>, is the co-founder of <a href="https://binarybirds.com/">Binary Birds Kft.</a> Tibor provides Server-Side Swift development and consulting.
-cta: Contact us
-ctaLink: mailto:info@binarybirds.com
-company: Binary Birds Kft.
-companyLink: https://binarybirds.com/
-duration: 10 minutes
+tags: 
+ - swift
+ - shell
+ - scripts
+authors:
+ - tibor-bodecs
 ---
 
 Several open-source server-side Swift projects include a scripts directory. These scripts are employed to conduct checks on the source code, utilizing a Swift code formatter / linter or similar tools. Even among the most popular repositories, the scripts unfortunately exhibit a noticeable level of inconsistency:

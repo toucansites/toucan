@@ -11,4 +11,6 @@ struct AuthorState {
     let description: String
     let figure: FigureState?
     let numberOfPosts: Int
+    let userDefined: [String: Any]
+    let markdown: String
 }
