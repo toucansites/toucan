@@ -13,13 +13,13 @@ struct Content {
             let home: Page
             let contents: [Content.Author]
 
-            func contentsBy(ids: [String]) -> [Content.Author] {
+            func contentsBy(slugs: [String]) -> [Content.Author] {
                 contents.filter {
-                    ids.map {
+                    slugs.map {
                         $0.lowercased()
                     }
                     .contains(
-                        $0.id.lowercased()
+                        $0.slug.lowercased()
                     )
                 }
             }
@@ -29,13 +29,13 @@ struct Content {
             let home: Page
             let contents: [Content.Tag]
 
-            func contentsBy(ids: [String]) -> [Content.Tag] {
+            func contentsBy(slugs: [String]) -> [Content.Tag] {
                 contents.filter {
-                    ids.map {
+                    slugs.map {
                         $0.lowercased()
                     }
                     .contains(
-                        $0.id.lowercased()
+                        $0.slug.lowercased()
                     )
                 }
             }
@@ -49,25 +49,26 @@ struct Content {
                 contents.sorted { $0.publication > $1.publication }
             }
 
-            func contentsBy(tagId: String) -> [Content.Post] {
+            func contentsBy(tagSlug: String) -> [Content.Post] {
                 sortedContents.filter {
-                    $0.tagIds
+                    $0.tagSlugs
                         .map {
                             $0.lowercased()
                         }
                         .contains(
-                            tagId.lowercased()
+                            tagSlug.lowercased()
                         )
                 }
             }
-            func contentsBy(authorId: String) -> [Content.Post] {
+
+            func contentsBy(authorSlug: String) -> [Content.Post] {
                 sortedContents.filter {
-                    $0.authorIds
+                    $0.authorSlugs
                         .map {
                             $0.lowercased()
                         }
                         .contains(
-                            authorId.lowercased()
+                            authorSlug.lowercased()
                         )
                 }
             }

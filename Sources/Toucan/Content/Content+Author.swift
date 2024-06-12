@@ -14,7 +14,6 @@ extension Content {
         static let folder = "blog/authors"
         static let slugPrefix: String? = "authors"
 
-        let id: String
         let slug: String
         let title: String
         let description: String

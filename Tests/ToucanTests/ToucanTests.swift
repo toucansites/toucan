@@ -39,7 +39,7 @@ final class ToucanTests: XCTestCase {
                 outputUrl: outputUrl
             )
             
-            try! await generator.build()
+            try await generator.build()
         }
     }
 }

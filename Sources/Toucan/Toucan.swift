@@ -116,9 +116,12 @@ public struct Toucan {
         var assets: [String: String] = [:]
 
         for content in content.siteContents {
+            if content.slug.isEmpty {
+                continue
+            }
             let res = try copyAssets(
                 directory: type(of: content).folder,
-                id: content.id,
+                id: content.slug, // TODO: fix this
                 slug: content.slug
             )
             assets = assets + res

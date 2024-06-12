@@ -83,31 +83,32 @@ struct ContentLoader {
             url: configUrl
         )
 
-        /// load pages
-        ///
-        let pages = try await withThrowingTaskGroup(of: Content.Page.self) { group in
-            for url in pageFiles {
-                group.addTask {
-                    return try loadPage(
-                        config: config,
-                        baseUrl: pagesUrl,
-                        url: url
-                    )
-                }
-            }
-            var pages: [Content.Page] = []
-            
-            for try await res in group {
-                pages.append(res)
-            }
-            return pages
+        let pages = try await pageFiles.map { url in
+            try loadPage(
+                config: config,
+                baseUrl: pagesUrl,
+                url: url
+            )
         }
-        
-//        let pages = try pageFiles.map { url in
+//        let pages = try await withThrowingTaskGroup(of: Content.Page.self) { group in
+//            for url in pageFiles {
+//                group.addTask {
+//                    return try loadPage(
+//                        config: config,
+//                        baseUrl: pagesUrl,
+//                        url: url
+//                    )
+//                }
+//            }
+//            var pages: [Content.Page] = []
 //            
+//            for try await res in group {
+//                pages.append(res)
+//            }
+//            return pages
 //        }
 
-        let posts = try postFiles.map { url in
+        let posts = try await postFiles.map { url in
             let path = url.path.dropFirst(postsUrl.path.count + 1).dropLast(".md".count)
             
             print(path)
@@ -119,14 +120,14 @@ struct ContentLoader {
             )
         }
 
-        let authors = try authorFiles.map { url in
+        let authors = try await authorFiles.map { url in
             try loadAuthor(
                 config: config,
                 url: url
             )
         }
 
-        let tags = try tagFiles.map { url in
+        let tags = try await tagFiles.map { url in
             try loadTag(
                 config: config,
                 url: url
@@ -311,7 +312,6 @@ struct ContentLoader {
         let template = frontMatter["template"] as? String
 
         return .init(
-            id: id,
             slug: safeSlug(slug, prefix: config.blog.authors.slug),
             title: title,
             description: description,
@@ -340,7 +340,6 @@ struct ContentLoader {
         let template = frontMatter["template"] as? String
 
         return .init(
-            id: id,
             slug: safeSlug(slug, prefix: config.blog.tags.slug),
             title: title,
             description: description,
@@ -380,7 +379,6 @@ struct ContentLoader {
         print("Invalid publication date for `\(slug)`.")
 
         return .init(
-            id: id,
             slug: safeSlug(slug, prefix: config.blog.posts.slug),
             title: title,
             description: description,
@@ -390,8 +388,8 @@ struct ContentLoader {
             frontMatter: frontMatter,
             markdown: rawMarkdown.dropFrontMatter(),
             publication: date,
-            authorIds: authors,
-            tagIds: tags,
+            authorSlugs: authors,
+            tagSlugs: tags,
             featured: featured
         )
     }
@@ -442,7 +440,6 @@ struct ContentLoader {
         let template = frontMatter["template"] as? String
 
         return .init(
-            id: id,
             slug: safeSlug(slug, prefix: config.pages.slug),
             title: title,
             description: description,

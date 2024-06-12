@@ -134,7 +134,7 @@ struct Site {
                 for: author.coverImage,
                 folder: Content.Author.folder
             ),
-            numberOfPosts: content.blog.post.contentsBy(authorId: author.id).count,
+            numberOfPosts: content.blog.post.contentsBy(authorSlug: author.slug).count,
             userDefined: author.userDefined,
             markdown: render(
                         markdown: author.markdown,
@@ -156,7 +156,7 @@ struct Site {
                 for: tag.coverImage,
                 folder: Content.Tag.folder
             ),
-            numberOfPosts: content.blog.post.contentsBy(tagId: tag.id).count,
+            numberOfPosts: content.blog.post.contentsBy(tagSlug: tag.slug).count,
             userDefined: tag.userDefined
         )
     }
@@ -216,8 +216,8 @@ struct Site {
         content.blog.post.sortedContents.map {
             postState(
                 for: $0,
-                authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                authors: content.blog.author.contentsBy(slugs: $0.authorSlugs),
+                tags: content.blog.tag.contentsBy(slugs: $0.tagSlugs)
             )
         }
     }
@@ -228,30 +228,30 @@ struct Site {
             .map {
                 postState(
                     for: $0,
-                    authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                    tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                    authors: content.blog.author.contentsBy(slugs: $0.authorSlugs),
+                    tags: content.blog.tag.contentsBy(slugs: $0.tagSlugs)
                 )
             }
     }
 
-    func postListState(authorId: String) -> [PostState] {
-        content.blog.post.contentsBy(authorId: authorId)
+    func postListState(authorSlug: String) -> [PostState] {
+        content.blog.post.contentsBy(authorSlug: authorSlug)
             .map {
                 postState(
                     for: $0,
-                    authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                    tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                    authors: content.blog.author.contentsBy(slugs: $0.authorSlugs),
+                    tags: content.blog.tag.contentsBy(slugs: $0.tagSlugs)
                 )
             }
     }
 
-    func postListState(tagId: String) -> [PostState] {
-        content.blog.post.contentsBy(tagId: tagId)
+    func postListState(tagSlug: String) -> [PostState] {
+        content.blog.post.contentsBy(tagSlug: tagSlug)
             .map {
                 postState(
                     for: $0,
-                    authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                    tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                    authors: content.blog.author.contentsBy(slugs: $0.authorSlugs),
+                    tags: content.blog.tag.contentsBy(slugs: $0.tagSlugs)
                 )
             }
     }
@@ -415,10 +415,10 @@ struct Site {
                             postState(
                                 for: $0,
                                 authors: content.blog.author.contentsBy(
-                                    ids: $0.authorIds
+                                    slugs: $0.authorSlugs
                                 ),
                                 tags: content.blog.tag.contentsBy(
-                                    ids: $0.tagIds
+                                    slugs: $0.tagSlugs
                                 )
                             )
                         },
@@ -463,7 +463,7 @@ struct Site {
                     metadata: metadata(for: $0),
                     context: .init(
                         author: authorState(for: $0),
-                        posts: postListState(authorId: $0.id)
+                        posts: postListState(authorSlug: $0.slug)
                     ),
                     content: render(
                         markdown: $0.markdown,
@@ -486,7 +486,7 @@ struct Site {
                     metadata: metadata(for: $0),
                     context: .init(
                         tag: tagState(for: $0),
-                        posts: postListState(tagId: $0.id)
+                        posts: postListState(tagSlug: $0.slug)
                     ),
                     content: render(
                         markdown: $0.markdown,
@@ -500,56 +500,64 @@ struct Site {
         }
     }
 
-    func nextPost(for id: String) -> PostState? {
+    func nextPost(for slug: String) -> PostState? {
         let posts = content.blog.post.sortedContents
 
-        if let index = posts.firstIndex(where: { $0.id == id }) {
+        if let index = posts.firstIndex(where: { $0.slug == slug }) {
             if index > 0 {
                 let post = posts[index - 1]
                 return postState(
                     for: post,
                     authors: content.blog.author.contentsBy(
-                        ids: post.authorIds
+                        slugs: post.authorSlugs
                     ),
-                    tags: content.blog.tag.contentsBy(ids: post.tagIds)
+                    tags: content.blog.tag.contentsBy(
+                        slugs: post.tagSlugs
+                    )
                 )
             }
         }
         return nil
     }
 
-    func prevPost(for id: String) -> PostState? {
+    func prevPost(for slug: String) -> PostState? {
         let posts = content.blog.post.sortedContents
 
-        if let index = posts.firstIndex(where: { $0.id == id }) {
+        if let index = posts.firstIndex(where: { $0.slug == slug }) {
             if index < posts.count - 1 {
                 let post = posts[index + 1]
                 return postState(
                     for: post,
                     authors: content.blog.author.contentsBy(
-                        ids: post.authorIds
+                        slugs: post.authorSlugs
                     ),
-                    tags: content.blog.tag.contentsBy(ids: post.tagIds)
+                    tags: content.blog.tag.contentsBy(
+                        slugs: post.tagSlugs
+                    )
                 )
             }
         }
         return nil
     }
 
-    func relatedPosts(for id: String) -> [PostState] {
+    func relatedPosts(for slug: String) -> [PostState] {
         var result: [PostState] = []
 
         let posts = content.blog.post.sortedContents
-        if let index = posts.firstIndex(where: { $0.id == id }) {
+        if let index = posts.firstIndex(where: { $0.slug == slug }) {
             let post = posts[index]
-            for tagId in post.tagIds {
-                result += content.blog.post.contentsBy(tagId: tagId)
-                    .filter { $0.id != id }
+            for tagSlug in post.tagSlugs {
+                result += content.blog.post.contentsBy(tagSlug: tagSlug)
+                    .filter { $0.slug != slug }
                     .map {
                         postState(
                             for: $0,
-                            authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                            tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                            authors: content.blog.author.contentsBy(
+                                slugs: $0.authorSlugs
+                            ),
+                            tags: content.blog.tag.contentsBy(
+                                slugs: $0.tagSlugs
+                            )
                         )
                     }
             }
@@ -557,20 +565,24 @@ struct Site {
         return Array(result.shuffled().prefix(5))
     }
 
-    func moreByPosts(for id: String) -> [PostState] {
+    func moreByPosts(for slug: String) -> [PostState] {
         var result: [PostState] = []
 
         let posts = content.blog.post.sortedContents
-        if let index = posts.firstIndex(where: { $0.id == id }) {
+        if let index = posts.firstIndex(where: { $0.slug == slug }) {
             let post = posts[index]
-            for authorId in post.authorIds {
-                result += content.blog.post.contentsBy(authorId: authorId)
-                    .filter { $0.id != id }
+            for authorSlug in post.authorSlugs {
+                result += content.blog.post.contentsBy(authorSlug: authorSlug)
+                    .filter { $0.slug != slug }
                     .map {
                         postState(
                             for: $0,
-                            authors: content.blog.author.contentsBy(ids: $0.authorIds),
-                            tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                            authors: content.blog.author.contentsBy(
+                                slugs: $0.authorSlugs
+                            ),
+                            tags: content.blog.tag.contentsBy(
+                                slugs: $0.tagSlugs
+                            )
                         )
                     }
             }
@@ -589,14 +601,16 @@ struct Site {
                         post: postState(
                             for: $0,
                             authors: content.blog.author.contentsBy(
-                                ids: $0.authorIds
+                                slugs: $0.authorSlugs
                             ),
-                            tags: content.blog.tag.contentsBy(ids: $0.tagIds)
+                            tags: content.blog.tag.contentsBy(
+                                slugs: $0.tagSlugs
+                            )
                         ),
-                        related: relatedPosts(for: $0.id),
-                        moreByAuthor: moreByPosts(for: $0.id),
-                        next: nextPost(for: $0.id),
-                        prev: prevPost(for: $0.id)
+                        related: relatedPosts(for: $0.slug),
+                        moreByAuthor: moreByPosts(for: $0.slug),
+                        next: nextPost(for: $0.slug),
+                        prev: prevPost(for: $0.slug)
                     ),
                     content: render(
                         markdown: $0.markdown,

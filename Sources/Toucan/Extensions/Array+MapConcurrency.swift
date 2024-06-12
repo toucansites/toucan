@@ -1,19 +1,21 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 10/06/2024.
 //
 
+import Foundation
 
-extension Sequence {
-    
-    func parallelMapped<T>(
-        concurrency: Int,
+extension Array {
+
+    func map<T>(
+        concurrency: Int = ProcessInfo.processInfo.processorCount,
         _ t: @escaping @Sendable (Element) async throws -> T
-    ) async throws -> any Sequence<T> {
+    ) async throws -> [T] {
         try await withThrowingTaskGroup(of: T.self) { group in
             var result: [T] = []
+            result.reserveCapacity(count)
 
             var iterator = makeIterator()
             var i = 0

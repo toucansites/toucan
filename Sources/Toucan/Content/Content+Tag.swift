@@ -13,7 +13,6 @@ extension Content {
         static let folder = "blog/tags"
         static let slugPrefix: String? = "tags"
 
-        let id: String
         let slug: String
         let title: String
         let description: String

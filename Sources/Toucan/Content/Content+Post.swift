@@ -14,7 +14,6 @@ extension Content {
         static let folder = "blog/posts"
         static let slugPrefix: String? = "posts"
 
-        let id: String
         let slug: String
         let title: String
         let description: String
@@ -25,8 +24,8 @@ extension Content {
         let markdown: String
 
         let publication: Date
-        let authorIds: [String]
-        let tagIds: [String]
+        let authorSlugs: [String]
+        let tagSlugs: [String]
         let featured: Bool
 
         var userDefined: [String: Any] {

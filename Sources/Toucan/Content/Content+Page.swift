@@ -14,7 +14,6 @@ extension Content {
         static let folder = "pages/custom"
         static let slugPrefix: String? = nil
 
-        let id: String
         let slug: String
         let title: String
         let description: String

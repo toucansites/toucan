@@ -12,7 +12,6 @@ protocol ContentInterface {
     static var folder: String { get }
     static var slugPrefix: String? { get }
 
-    var id: String { get }
     var slug: String { get }
     var title: String { get }
     var description: String { get }
