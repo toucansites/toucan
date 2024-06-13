@@ -3,16 +3,11 @@ slug: getting-started-with-structured-concurrency-in-swift
 title: Getting Started with Structured Concurrency in Swift
 description: Learn how to apply structured concurrency in your applications, using task groups and other structured concepts.
 publication: 2024-03-19 18:30:00
-tags: Swift, Structured Concurrency
-author: Joannis Orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 30 minutes
+tags:
+  - swift
+  - structured-concurrency
+authors:
+  - joannis-orlandos
 ---
 
 # Structured Concurrency in Swift
@@ -82,7 +77,7 @@ final class ImageCache {
         lock.lock()
         defer { lock.unlock() }
         // This is covered by the lock
-        if cache.keys.contains(url) { 
+        if cache.keys.contains(url) {
             return
         }
         fetchImage(at: url) { image in
@@ -204,7 +199,7 @@ This is a powerful feature, as it allows you to easily reason about _streams_ of
 
 If you're familiar with the Combine framework, this might sound similar to a `Publisher`. AsyncSequences have many of the same features as Combine's Publishers. Especially with [swift-async-algorithms](https://github.com/apple/swift-async-algorithms), AsyncSequence receive many of the same perks that a Publisher has.
 
-AsyncSequences are part of the standard library, and are designed similarly to the existing `Sequence` protocol. You can create an `AsyncIterator` from them.  The iterator has a `mutating func next() async throws -> Element?`.
+AsyncSequences are part of the standard library, and are designed similarly to the existing `Sequence` protocol. You can create an `AsyncIterator` from them. The iterator has a `mutating func next() async throws -> Element?`.
 
 This allows you to write a longer control flow that expect multiple results, such as the head and body of an HTTP request. You can use a `for-await-in` loop to iterate over the sequence of results, or manually iterate over the sequence using the `next()` method.
 
@@ -214,7 +209,7 @@ Now, a common request; "How can I await the delivery of these books concurrently
 
 A task is a concurrent unit of work. In concurrency, many tasks can run in parallel.
 
-The _easiest_ way to create a task is using the **unstructured** `Task` type. It's used to run a piece of code concurrently in the background, similar to `DispatchQueue.global().async {}`. In addition, you can manage it's lifecycle by `cancel()`ing it. Finally, you can also `await` its `value` for it to finish. 
+The _easiest_ way to create a task is using the **unstructured** `Task` type. It's used to run a piece of code concurrently in the background, similar to `DispatchQueue.global().async {}`. In addition, you can manage it's lifecycle by `cancel()`ing it. Finally, you can also `await` its `value` for it to finish.
 
 ```swift
 func buyBooks() {
@@ -317,7 +312,7 @@ When finding yourself in a situation where you need to delay a task, you can use
 try await Task.sleep(for: .seconds(10))
 ```
 
-An extra feature of `Task.sleep` is that it can be cancelled. If the task is 
+An extra feature of `Task.sleep` is that it can be cancelled. If the task is
 cancelled while it's sleeping, the sleep will be interrupted and throw a `CancellationError`.
 
 ### Cancellation Handlers

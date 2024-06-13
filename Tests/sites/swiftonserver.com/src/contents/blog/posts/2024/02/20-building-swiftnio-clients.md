@@ -3,16 +3,12 @@ slug: building-swiftnio-clients
 title: Building an HTTP client using SwiftNIO
 description: Learn how to build a simple HTTP client using SwiftNIO and structured concurrency.
 publication: 2024-02-20 18:30:00
-tags: Swift, SwiftNIO, Networking
-author: Joannis Orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 30 minutes
+tags:
+  - swift
+  - swiftNIO
+  - networking
+authors:
+  - joannis-orlandos
 ---
 
 # Building a SwiftNIO HTTP client
@@ -138,7 +134,7 @@ Let's break it down:
 2. In order to use structured concurrency, it's necessary to wrap the `Channel` in an `NIOAsyncChannel`. The inbound and outbound types must be `Sendable`, and need to be configured to match the pipeline's input and output. This is based on the handlers added in the bootstrap's `channelInitializer`.
 3. The `NIOAsyncChannel` is configured to receive `HTTPClientResponsePart` objects. This is the type that the HTTP client will receive from the server.
 4. The `NIOAsyncChannel` is configured to send `SendableHTTPClientRequestPart` objects. This is the type that the HTTP client will send to the server.
-5. The `get()` method is called to *await* for the result of the `EventLoopFuture`.
+5. The `get()` method is called to _await_ for the result of the `EventLoopFuture`.
 
 ### Sending a Request
 
@@ -158,14 +154,14 @@ return try await clientChannel.executeThenClose { inbound, outbound in
 
 This is a structured concurrency block that sends the request:
 
-1.   The `executeThenClose` method is used to obtain a read and write half of the channel. This function returns the result of it's trailing closure.
-2.   The writer called `outbound` is used to send the request's part - the head and 'end'. This is also where the request's body would be sent.
+1.  The `executeThenClose` method is used to obtain a read and write half of the channel. This function returns the result of it's trailing closure.
+2.  The writer called `outbound` is used to send the request's part - the head and 'end'. This is also where the request's body would be sent.
 
 Below that, receive and process the response parts as such:
 
 ```swift
 var partialResponse = HTTPPartialResponse.none
-    
+
 // 12
 for try await part in inbound {
     // 13
@@ -174,7 +170,7 @@ for try await part in inbound {
         guard case .none = partialResponse else {
             throw HTTPClientError.malformedResponse
         }
-        
+
         let buffer = clientChannel.channel.allocator.buffer(capacity: 0)
         partialResponse = .receiving(head, buffer)
     case .body(let buffer):
@@ -197,7 +193,7 @@ for try await part in inbound {
 throw HTTPClientError.unexpectedEndOfStream
 ```
 
-This sets up a state variable to keep track of the response parts received. It then 
+This sets up a state variable to keep track of the response parts received. It then
 processes the response parts as they come in:
 
 12. A `for` loop is used to iterate over the response parts. This is a structured concurrency block that will continue to run until the channel is closed by the remote, an error is thrown, or a `return` statement ends the function.

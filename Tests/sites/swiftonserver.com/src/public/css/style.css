@@ -305,6 +305,7 @@ a.button:hover {
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
+  margin-right: 5px;
 }
 #post-header {
   margin-bottom: 2rem;
@@ -319,14 +320,21 @@ a.button:hover {
   text-align: center;
   margin-bottom: 4rem;
 }
-#blog .post,
-#posts .post {
+
+.post {
   overflow: hidden;
   margin-bottom: 3rem;
 }
 #posts h2,
-#posts p {
+#posts p,
+.post h2,
+.post p {
   margin-top: 0;
+}
+
+.morePostsTitle {
+  color: #585858;
+  font-size: 18px;
 }
 
 #about-author {

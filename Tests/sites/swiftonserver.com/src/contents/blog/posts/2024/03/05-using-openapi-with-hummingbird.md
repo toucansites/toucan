@@ -3,16 +3,12 @@ slug: using-openapi-with-hummingbird
 title: Using OpenAPI Generator with Hummingbird
 description: Learn how to use OpenAPI Generator to create Swift APIs with Hummingbird.
 publication: 2024-03-05 18:30:00
-tags: Hummingbird, OpenAPI, Documentation
-author: Joannis Orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 20 minutes
+tags:
+  - hummingbird
+  - openAPI
+  - documentation
+authors:
+  - joannis-orlandos
 ---
 
 # Using OpenAPI Generator with Hummingbird
@@ -80,7 +76,7 @@ In order to complete the setup, add the following to your Package manifest:
 2. Add the `OpenAPIGenerator` plugin to your OpenAPI module. The plugin will generate the Swift code from your OpenAPI specification.
 3. Add the `MyOpenAPI` target as a dependency to your application target. By importing this module, you can use the generated code in your application.
 
-OpenAPI generator is setup with a Swift Package Manager (SPM) plugin. The generated code will _not_ be added to your source code, or even be visible in file browser. 
+OpenAPI generator is setup with a Swift Package Manager (SPM) plugin. The generated code will _not_ be added to your source code, or even be visible in file browser.
 
 When building the **Finished** project, you can find the generated code in the `.build/plugins` directory:
 
@@ -213,7 +209,7 @@ import OpenAPIRuntime
 
         // 3
         try api.registerHandlers(on: router)
-        
+
         // 4
         let app = Application(
             router: router,

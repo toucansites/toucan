@@ -3,17 +3,12 @@ slug: logging-for-server-side-swift-apps
 title: Logging for server-side Swift apps
 description: Discover how to integrate the Logging library into an application, use various log levels, and tailor the unified logging API for backend projects.
 publication: 2024-02-13 18:30:00
-tags: Swift, Logging, Observability
-author: Tibor Bödecs
-authorLink: https://x.com/tiborbodecs
-authorGithub: tib
-authorAbout: Tibor, also known as <a href="https://theswiftdev.com">"The Swift Dev"</a>, is the co-founder of <a href="https://binarybirds.com/">Binary Birds Kft.</a> Tibor provides Server-Side Swift development and consulting.
-cta: Contact us
-ctaLink: mailto:info@binarybirds.com
-company: Binary Birds Kft.
-companyLink: https://binarybirds.com/
-duration: 20 minutes
-sample: https://github.com/swift-on-server/logging-for-server-side-swift-apps-sample
+tags:
+  - swift
+  - logging
+  - observability
+authors:
+  - tibor-bodecs
 ---
 
 # Logging for server-side Swift apps
@@ -63,7 +58,7 @@ This article offers a [sample project](https://github.com/swift-on-server/loggin
 
 In this tutorial, we are going to create a basic library and an executable target. These simulate a virtual meeting room including participants and their ability to join and leave the room. We're going to use the `MyLibrary` target, which will take advantage of the logging framework.
 
-Inside the `MyApp` target , we'll add more log messages as well. The starter sample project has no logs at all, but relies on the `print` function to display the desired output. We're going to improve the project to provide debug messages for developers through the Logging API. 
+Inside the `MyApp` target , we'll add more log messages as well. The starter sample project has no logs at all, but relies on the `print` function to display the desired output. We're going to improve the project to provide debug messages for developers through the Logging API.
 
 ### The basics
 
@@ -78,8 +73,8 @@ Through extra metadata, developers can get even more details about the circumsta
 The following snippet demonstrates how to use a basic `Logger` instance:
 
 ```swift
-// 1. 
-import Logging 
+// 1.
+import Logging
 
 // 2.
 var logger: Logger = .init(label: "my-app")
@@ -114,8 +109,8 @@ The default Logger output contains these sections:
 
 - The date of the log generation event.
 - The log level.
-- The custom label of the logger instance. 
-- All the provided metadata key-value pairs combined together. 
+- The custom label of the logger instance.
+- All the provided metadata key-value pairs combined together.
 - The name of the application, which triggered the log message.
 
 The output format of the logger can be customized and it is also possible to write logs into files.
@@ -138,12 +133,11 @@ Application developers can take advantage of the `info` and `notice` levels to d
 
 The `warning`, `error` and `critical` levels shouldn't be overused. Those are also intended to be used inside apps, but sometimes frameworks also use them to let other developers know about problematic use-cases. (e.g.: bad configuration)
 
-
 ### Log Metadata
 
 Additional information can be attached to log messages, called Metadata. Metadata can include contextual information such as identifiers, keys, names, and any other relevant information.
 
-Providing extra metadata for the log messages can be helpful for debugging, monitoring, and analyzing the behavior of an application. 
+Providing extra metadata for the log messages can be helpful for debugging, monitoring, and analyzing the behavior of an application.
 
 The Swift Logging library, has built-in metadata support. All the log message functions feature a metadata parameter. A Logger instance can also have associated metadata objects through subscripts. It's also possible to create a custom metadata provider during bootstrapping.
 
@@ -192,9 +186,7 @@ Request.$id.withValue("my-req") {
 4. Log a notice (`hi`), featuring additional metadata (`hello:world`).
 5. Set the task local value and log an info message (`bye`) with more metadata (`abc:123`).
 
-
 The snippet's output is going to be something like this:
-
 
 ```swift
 2024-02-09T19:26:43+0100 notice task-logger : foo=bar hello=world [MyApp] hi
@@ -218,10 +210,10 @@ import Foundation
 import Logging
 
 public struct Meeting {
-    
+
     // 1.
     public init(
-        id: UUID,    
+        id: UUID,
         logger: Logger = .init(label: "meeting-logger")
     ) {
         self.id = id
@@ -230,7 +222,7 @@ public struct Meeting {
         self.logger = logger
         // 2.
         self.logger[metadataKey: "meeting.id"] = "\(id)"
-        
+
         // 3.
         self.logger.trace("meeting room is ready")
     }
@@ -241,11 +233,11 @@ public struct Meeting {
 2. Set the current meeting identifier as a metadata value for the `meeting.id` key.
 3. Log a trace message to inform others about the status of the meeting room.
 
-A default logger instance as an init parameter helps to avoid interface changes. 
+A default logger instance as an init parameter helps to avoid interface changes.
 
 The default log level is always set to _info_, meaning _trace_ and _debug_ log messages won't be visible by default.
 
-Integrating swift-log won't significantly affect the performance of the project. 
+Integrating swift-log won't significantly affect the performance of the project.
 
 Library consumers can override the logger and provide a custom instance during the instantiation process:
 
@@ -256,7 +248,7 @@ import Foundation
 
 @main
 struct MyApp {
-    
+
     static func main() async throws {
         var libLogger = Logger(label: "my-library")
         libLogger.logLevel = .trace
@@ -274,28 +266,28 @@ struct MyApp {
 }
 ```
 
-This is an extremely powerful debugging feature, since users can filter the console output based on the log levels. 
+This is an extremely powerful debugging feature, since users can filter the console output based on the log levels.
 
 ```
 2024-01-24T11:31:19+0100 trace my-library : meeting.id=B6176BC5-39A0-4141-B50B-B86141CCE4C8 [MyLibrary] meeting room is ready
 ```
 
-The next step is to add some useful debug & trace information message to the `add`, `remove`, `start` and `end` functions. 
+The next step is to add some useful debug & trace information message to the `add`, `remove`, `start` and `end` functions.
 
 ```swift
 public mutating func add(_ participant: Participant) {
-    // 1. 
+    // 1.
     logger.debug(
         "trying to add participant",
         metadata: participant.loggerMetadata
     )
-    
+
     if isInProgress {
         greet(participant)
         // 2.
         logger.trace("meeting is in progress")
     }
-    
+
     if participants.contains(participant) {
         // 3.
         logger.trace(
@@ -341,7 +333,7 @@ public mutating func remove(_ participant: Participant) {
     }
 
     participants.remove(participant)
-    
+
     logger.debug("participant removed", metadata: [
         "participants": "\(participants.count)"
     ])
@@ -355,7 +347,7 @@ The start function will look very similar:
 ```swift
 public mutating func start() throws {
     logger.debug("trying to start the meeting")
-    
+
     if isInProgress {
         logger.trace("already in progress")
         return
@@ -383,7 +375,7 @@ We should also update the end function using the same technique:
 ```swift
 public mutating func end() {
     logger.debug("trying to end the meeting")
-    
+
     guard isInProgress else {
         logger.trace("meeting is not in progress yet")
         return
@@ -404,9 +396,9 @@ public mutating func end() {
 
 The debug log level is used to get a brief overview of the internal behavior of the library functions. In addition, the trace log level's purpose is to enable tracking of the entire workflow, by providing more detailed information.
 
-Try to run the application using different log levels. 
+Try to run the application using different log levels.
 
-Set the log level to `.debug`, using the `libLogger.logLevel` property inside the `MyApp.swift` file to hide trace messages. 
+Set the log level to `.debug`, using the `libLogger.logLevel` property inside the `MyApp.swift` file to hide trace messages.
 
 ### Logging in executables
 
@@ -421,7 +413,7 @@ import Foundation
 
 @main
 struct MyApp {
-    
+
     static func main() {
 
         // 1.
@@ -430,37 +422,37 @@ struct MyApp {
 
         var libLogger = Logger(label: "my-library")
         libLogger.logLevel = .info
-        
+
         // 2.
         appLogger.info("Start a meeting")
         let bob = Participant(name: "Bob")
         let john = Participant(name: "John")
         let kate = Participant(name: "Kate")
         let mike = Participant(name: "Mike")
-        
+
         // 3.
         appLogger.notice("Preparing the meeting")
         var meeting = Meeting(
             id: .init(),
             logger: libLogger
         )
-        
+
         appLogger.notice("Add the participants, except Mike...")
-        
+
         meeting.add(bob)
         meeting.add(john)
         meeting.add(kate)
-        
+
         // 4.
         appLogger.warning("Trying to remove Mike from the list, but he is not on the list.")
         meeting.remove(mike)
-        
+
         appLogger.info("Start the meeting")
 
         if !meeting.hasEnoughParticipants {
             appLogger.warning("the meeting has not enough participants just yet")
         }
-        
+
         do {
             try meeting.start()
         }
@@ -468,16 +460,16 @@ struct MyApp {
             // 5.
             appLogger.error("\(error)")
         }
-        
+
         appLogger.notice("Add Mike to the list")
         meeting.add(mike)
-        
+
         appLogger.notice("Remove Bob to the list")
         meeting.remove(bob)
-        
+
         appLogger.info("End the meeting")
         meeting.end()
-        
+
         appLogger.info("Meeting finished")
     }
 }
@@ -489,7 +481,7 @@ struct MyApp {
 4. Warnings can be used to inform users about potential issues or errors.
 5. Error log messages can indicate that something has gone wrong.
 
-Try to set different log levels for each Logger instance and run the application. 
+Try to set different log levels for each Logger instance and run the application.
 
 ### Environment-based logs
 
@@ -557,7 +549,7 @@ import Foundation
 
 @main
 struct MyApp {
-    
+
     static func main() {
         // setenv("MY_APP_LOG_LEVEL", "trace", 1)
         let appLogger = Logger.subsystem("my-app", .trace)
@@ -596,13 +588,12 @@ swift run MyApp
 
 Provide the environmental variables using a single command before the `swift run MyApp` action.
 
-The `export` command can be used to export variables, making them available in the environment of subsequently executed commands. 
+The `export` command can be used to export variables, making them available in the environment of subsequently executed commands.
 
 ## Summary
 
-That's how you can integrate the Swift Logging library into a framework or application. 
+That's how you can integrate the Swift Logging library into a framework or application.
 
 You've learned a lot about logging in this article, including log levels, metadata and custom logging subsystems via environment variables.
 
 If you want to learn a bit more about other logging and debugging solutions, you can also [read this article](https://theswiftdev.com/logging-for-beginners-in-swift/), which contains some useful snippets & examples.
-

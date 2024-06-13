@@ -58,16 +58,18 @@
 </article>
 
     <div class="content-wrapper">
+
             {{^page.context.next}}
             {{/page.context.next}}
             {{#page.context.next}}
+            <hr>
                 <h2 class="morePostsTitle">Next post</h2>
                 {{> _partials.post}}
             {{/page.context.next}}
-
             {{^page.context.prev}}
             {{/page.context.prev}}
             {{#page.context.prev}}
+            <hr>
                 <h2 class="morePostsTitle">Previous post</h2>
                 {{> _partials.post}}
             {{/page.context.prev}}
@@ -75,6 +77,8 @@
     </div>
     
     <div class="content-wrapper ">
+            <hr>
+
     <h2 class="morePostsTitle">Related posts</h2>
     {{#empty(page.context.related)}}
     Empty.
@@ -86,6 +90,8 @@
     {{/empty(page.context.related)}}
     </div>
     <div class="content-wrapper ">
+            <hr>
+
     <h2 class="morePostsTitle">More posts by the author(s)</h2>
     {{#empty(page.context.moreByAuthor)}}
     Empty.

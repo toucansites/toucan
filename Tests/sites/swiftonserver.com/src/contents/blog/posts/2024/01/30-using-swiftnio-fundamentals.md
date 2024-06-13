@@ -3,16 +3,12 @@ slug: using-swiftnio-fundamentals
 title: Using SwiftNIO - Fundamentals
 description: Learn the fundamental concepts of SwiftNIO, such as EventLoops and nonblocking I/O
 publication: 2024-01-30 18:30:00
-tags: Swift, SwiftNIO, Networking
-author: Joannis Orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 20 minutes
+tags:
+  - swift
+  - swiftNIO
+  - networking
+authors:
+  - joannis-orlandos
 ---
 
 # SwiftNIO Fundamentals
@@ -38,11 +34,11 @@ That's because an EventLoop is very literally what it says on the tin. It's a (w
 
 Before we dive into the specifics of events further, let's cover how networking, and specifically networking I/O, works on your computer.
 
-I/O, or Input/Output, refers to the ability to *read* and *write* information.
+I/O, or Input/Output, refers to the ability to _read_ and _write_ information.
 
 In a traditional Unix (POSIX) system, such as Linux or macOS, your standard library provides a few very important functions. These are `open`, `read`, `write` and `close`.
 
-The *open* function allows you to open a file, such as a `note.txt` on your desktop. The result of this function is an integer called the "file descriptor". When reading information from this file, rather than referencing the path to `note.txt`, you'll reference this file descriptor instead. Likewise, when we're done reading or writing a file, we can `close` it as well, passing the file descriptor as a handle.
+The _open_ function allows you to open a file, such as a `note.txt` on your desktop. The result of this function is an integer called the "file descriptor". When reading information from this file, rather than referencing the path to `note.txt`, you'll reference this file descriptor instead. Likewise, when we're done reading or writing a file, we can `close` it as well, passing the file descriptor as a handle.
 
 When reading a file from the disk, reading a file starts at the first byte/character in the file. Assuming no additional interference, when reading 1KB of data, the 'offset' in the file will advance by the same amount. While you can change this offset through various APIs, the next time you ask for 1KB of data, you'll read the information starting where you left off at the previous function call.
 

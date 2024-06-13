@@ -3,16 +3,11 @@ slug: developing-with-swift-in-visual-studio-code
 title: Developing with Swift in Visual Studio Code
 description: Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension.
 publication: 2024-01-16 18:30:00
-tags: Swift, VSCode
-author: Joannis Orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis, a seasoned member of the Swift Server WorkGroup (SSWG), and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 10 minutes
+tags:
+  - swift
+  - VSCode
+authors:
+  - joannis-orlandos
 ---
 
 Swift is a great language for developing applications for Apple platforms, and is easily set up using Xcode.

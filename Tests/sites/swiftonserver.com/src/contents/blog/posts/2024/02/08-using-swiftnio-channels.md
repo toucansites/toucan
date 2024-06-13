@@ -5,18 +5,10 @@ description: Create a TCP server using SwiftNIO and structured concurrency
 publication: 2024-02-08 18:30:00
 tags:
   - swift
-  - SwiftNIO
-  - Networking
+  - swiftNIO
+  - networking
 authors:
   - joannis-orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 30 minutes
 ---
 
 In the [previous tutorial](/using-swiftnio-fundamentals), you've learned the fundamentals of SwiftNIO. You're now familiar with the concept of an `EventLoop`.

@@ -3,16 +3,11 @@ slug: structured-concurrency-and-shared-state-in-swift
 title: Structured Concurrency and Shared State in Swift
 description: Learn how actors and sendable prevent race conditions in your concurrent code.
 publication: 2024-03-25 18:30:00
-tags: Swift, Structured Concurrency
-author: Joannis Orlandos
-authorLink: https://x.com/JoannisOrlandos
-authorGithub: joannis
-authorAbout: Joannis is a seasoned member of the Swift Server WorkGroup, and the co-founder of Unbeatable Software B.V. If you're looking to elevate your team's capabilities or need expert guidance on Swift backend development, consider hiring him.
-cta: Get in touch with Joannis
-ctaLink: https://unbeatable.software/mentoring-and-training
-company: Unbeatable Software B.V.
-companyLink: https://unbeatable.software/
-duration: 30 minutes
+tags:
+  - swift
+  - structured-concurrency
+authors:
+  - joannis-orlandos
 ---
 
 # Sendable and Shared Mutable State
@@ -108,7 +103,7 @@ actor BookStore: AsyncSequence {
             bufferingPolicy: .unbounded
         )
     }
-    
+
     func produce() async throws {
         do {
            while !hasReachedEnd {
@@ -192,7 +187,7 @@ actor ImageCache {
         if cache.keys.contains(url) {
             return
         }
-        
+
         let image = try await fetchImage(at: url)
         setImage(image, for: url)
     }
@@ -220,7 +215,7 @@ actor ImageCache {
         if cache.keys.contains(url), !loadingURLs.contains(url) {
             return
         }
-        
+
         loadingURLs.insert(url)
         defer { loadingURLs.remove(url) }
         let image = try await fetchImage(at: url)
@@ -379,7 +374,7 @@ final class ImageCache {
 
         loadingURLs.insert(url)
         defer { loadingURLs.remove(url) }
-        
+
         do {
             let image = try await fetchImage(at: url)
             setImage(image, for: url)
