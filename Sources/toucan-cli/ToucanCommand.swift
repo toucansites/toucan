@@ -12,10 +12,10 @@ struct ToucanCommand: AsyncParsableCommand {
     var output: String = "./docs"
 
     func run() async throws {
-        let generator = Toucan(
-            inputUrl: URL(fileURLWithPath: input),
-            outputUrl: URL(fileURLWithPath: output)
-        )
-        try await generator.build()
+//        let generator = Toucan(
+//            inputUrl: URL(fileURLWithPath: input),
+//            outputUrl: URL(fileURLWithPath: output)
+//        )
+//        try await generator.build()
     }
 }
