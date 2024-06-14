@@ -47,7 +47,7 @@ struct SiteSourceTestSuite {
     @Test(
         arguments: [
             "demo",
-//            "theswiftdev.com",
+            "theswiftdev.com",
         ]
     )
     func loadContents(
