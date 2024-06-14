@@ -5,9 +5,10 @@
 //  Created by Tibor Bodecs on 21/05/2024.
 //
 
-struct SiteState {
-    let baseUrl: String
+struct PageState {
+    let permalink: String
     let title: String
     let description: String
-    let language: String?
+    let figure: Site.State.Figure??
+    let userDefined: [String: Any]
 }

@@ -7,5 +7,5 @@
 
 struct PostListState {
     let posts: [PostState]
-    let pagination: [PaginationState]
+    let pagination: [Site.State.Pagination]
 }

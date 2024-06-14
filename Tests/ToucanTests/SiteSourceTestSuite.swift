@@ -63,11 +63,11 @@ struct SiteSourceTestSuite {
             fileManager: .default,
             frontMatterParser: .init()
         )
-        let configuration = try configLoader.load()
+        let config = try configLoader.load()
         
         let contentsLoader = Source.ContentsLoader(
             contentsUrl: contentsUrl,
-            configuration: configuration,
+            config: config,
             fileManager: .default,
             frontMatterParser: .init()
         )

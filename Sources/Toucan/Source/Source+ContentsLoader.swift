@@ -25,7 +25,7 @@ extension Source {
         /// The URL of the contents directory.
         let contentsUrl: URL
         /// The configuration for loading contents.
-        let configuration: Config
+        let config: Config
         /// The file manager used for file operations.
         let fileManager: FileManager
         /// The front matter parser used for parsing markdown files.
@@ -92,7 +92,7 @@ extension Source {
         func loadMainHomePageContent(
         ) throws(ContentsLoader.Error) -> Source.Content {
             let homePageUrl = markdownUrl(
-                using: configuration.pages.main.home.path
+                using: config.pages.main.home.path
             )
             // TODO: exception
             guard let home = try loadContent(at: homePageUrl, slugPrefix: nil) else {
@@ -104,7 +104,7 @@ extension Source {
         func loadMainNotFoundPageContent(
         ) throws(ContentsLoader.Error) -> Source.Content {
             let notFoundPageUrl = markdownUrl(
-                using: configuration.pages.main.notFound.path
+                using: config.pages.main.notFound.path
             )
             // TODO: exception
             guard let notFound = try loadContent(at: notFoundPageUrl, slugPrefix: nil) else {
@@ -127,7 +127,7 @@ extension Source {
         ) throws(ContentsLoader.Error) -> Source.Content? {
             try loadContent(
                 at: markdownUrl(
-                    using: configuration.pages.blog.home.path
+                    using: config.pages.blog.home.path
                 ),
                 slugPrefix: slugPrefix
             )
@@ -152,13 +152,13 @@ extension Source {
         ) throws(ContentsLoader.Error) -> Source.Contents.Blog {
             .init(
                 authors: try loadContents(
-                    using: configuration.contents.blog.authors
+                    using: config.contents.blog.authors
                 ),
                 tags: try loadContents(
-                    using: configuration.contents.blog.tags
+                    using: config.contents.blog.tags
                 ),
                 posts: try loadContents(
-                    using: configuration.contents.blog.posts
+                    using: config.contents.blog.posts
                 )
             )
         }
@@ -167,10 +167,10 @@ extension Source {
         ) throws(ContentsLoader.Error) -> Source.Contents.Docs {
             .init(
                 categories: try loadContents(
-                    using: configuration.contents.docs.categories
+                    using: config.contents.docs.categories
                 ),
                 guides: try loadContents(
-                    using: configuration.contents.docs.guides
+                    using: config.contents.docs.guides
                 )
             )
         }
@@ -182,31 +182,31 @@ extension Source {
             let mainNotFoundPage = try loadMainNotFoundPageContent()
             
             let blogHomePage = try loadContent(
-                using: configuration.pages.blog.home.path,
+                using: config.pages.blog.home.path,
                 slugPrefix: nil
             )
             let blogAuthorsPage = try loadContent(
-                using: configuration.pages.blog.authors.path,
+                using: config.pages.blog.authors.path,
                 slugPrefix: nil
             )
             let blogTagsPage = try loadContent(
-                using: configuration.pages.blog.tags.path,
+                using: config.pages.blog.tags.path,
                 slugPrefix: nil
             )
             let blogPostsPage = try loadContent(
-                using: configuration.pages.blog.posts.path,
+                using: config.pages.blog.posts.path,
                 slugPrefix: nil
             )
             let docsHomePage = try loadContent(
-                using: configuration.pages.docs.home.path,
+                using: config.pages.docs.home.path,
                 slugPrefix: nil
             )
             let docsCategoriesPage = try loadContent(
-                using: configuration.pages.docs.categories.path,
+                using: config.pages.docs.categories.path,
                 slugPrefix: nil
             )
             let docsGuidesPage = try loadContent(
-                using: configuration.pages.docs.guides.path,
+                using: config.pages.docs.guides.path,
                 slugPrefix: nil
             )
 
@@ -227,7 +227,7 @@ extension Source {
                     guides: docsGuidesPage
                 ),
                 custom: try loadContents(
-                    using: configuration.contents.pages.custom
+                    using: config.contents.pages.custom
                 )
             )
         }

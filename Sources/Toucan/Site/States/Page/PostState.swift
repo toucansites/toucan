@@ -10,7 +10,7 @@ struct PostState {
     let title: String
     let excerpt: String
     let date: String
-    let figure: FigureState?
+    let figure: Site.State.Figure??
 
     let tags: [TagState]
     let authors: [AuthorState]

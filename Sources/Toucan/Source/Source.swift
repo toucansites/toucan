@@ -11,8 +11,13 @@ struct Source {
 
     let config: Config
     let contents: Contents
+    let assets: Assets   
+}
+
+extension Source {
 
     struct Loader {
+
         let url: URL
 
         /// load the configuration & the contents of the site source
@@ -31,15 +36,24 @@ struct Source {
 
             let contentsLoader = ContentsLoader(
                 contentsUrl: url.appendingPathComponent("contents"),
-                configuration: config,
+                config: config,
                 fileManager: fileManager,
                 frontMatterParser: frontMatterParser
             )
             let contents = try contentsLoader.load()
+            
+            let assetsLoader = AssetsLoader(
+                config: config,
+                contents: contents,
+                fileManager: fileManager
+            )
+            
+            let assets = try assetsLoader.load()
 
             return .init(
                 config: config,
-                contents: contents
+                contents: contents,
+                assets: assets
             )
         }
     }

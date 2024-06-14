@@ -14,13 +14,8 @@ struct Site {
         case missingPage(String)
     }
 
-    enum ImageVariant {
-        case light
-        case dark
-    }
-
-    let content: Source.Contents
-    let assets: [String: String]
+    let source: Source
+    let destinationUrl: URL
 
     let currentYear: Int
     let dateFormatter: DateFormatter
@@ -28,17 +23,17 @@ struct Site {
     let sitemapDateFormatter: DateFormatter
 
     init(
-        content: Source.Contents,
-        assets: [String: String]
+        source: Source,
+        destinationUrl: URL
     ) {
-        self.content = content
-        self.assets = assets
+        self.source = source
+        self.destinationUrl = destinationUrl
 
         let calendar = Calendar(identifier: .gregorian)
         self.currentYear = calendar.component(.year, from: .init())
 
         self.dateFormatter = DateFormatters.baseFormatter
-//        self.dateFormatter.dateFormat = content.config.site.dateFormat
+        self.dateFormatter.dateFormat = source.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
         self.sitemapDateFormatter = DateFormatters.sitemap
     }
@@ -620,140 +615,123 @@ struct Site {
 //            )
 //        }
 //    }
-//
-//    // MARK: - rss
-//
-//    func rss() -> RSSState {
-//        let items: [RSSState.ItemState] = content.blog.post.sortedContents.map {
-//            .init(
-//                permalink: permalink($0.slug),
-//                title: $0.title,
-//                description: $0.description,
-//                publicationDate: rssDateFormatter.string(
-//                    from: $0.publication
-//                )
-//            )
-//        }
-//        return .init(
-//            title: content.config.site.title,
-//            description: content.config.site.description,
-//            baseUrl: content.config.site.baseUrl,
-//            language: content.config.site.language,
-//            lastBuildDate: rssDateFormatter.string(
-//                from: .init()
-//            ),
-//            publicationDate:
-//                items.first?.publicationDate
-//                ?? rssDateFormatter.string(
-//                    from: .init()
-//                ),
-//            items: items
-//        )
-//    }
-//
-//    // MARK: - sitemap
-//
-//    func sitemap() -> SitemapState {
-//        .init(
-//            urls: content.siteContents.map {
-//                .init(
-//                    location: permalink($0.slug),
-//                    lastModification: sitemapDateFormatter.string(
-//                        from: $0.lastModification
-//                    )
-//                )
-//            }
-//        )
-//    }
+
+    // MARK: - rss
+
+
+    func rss() -> State.Renderable<State.RSS> {
+        let items: [State.RSS.Item] = source.contents.blog.posts.map {
+            .init(
+                permalink: permalink($0.slug),
+                title: $0.title,
+                description: $0.description,
+                publicationDate: rssDateFormatter.string(
+                    from: .init()
+                )
+            )
+        }
+        
+        let publicationDate = items.first?.publicationDate ??
+            rssDateFormatter.string(from: .init())
+
+        let context = State.RSS(
+            title: source.config.site.title,
+            description: source.config.site.description,
+            baseUrl: source.config.site.baseUrl,
+            language: source.config.site.language,
+            lastBuildDate: rssDateFormatter.string(from: .init()),
+            publicationDate: publicationDate,
+            items: items
+        )
+
+        return .init(
+            template: "rss",
+            context: context,
+            destination: destinationUrl.appendingPathComponent(
+                "rss.xml"
+            )
+        )
+    }
+
+    // MARK: - sitemap
+
+    func sitemap() -> State.Renderable<State.Sitemap> {
+        let context = State.Sitemap(
+            urls: source.contents.all().map { content in
+                .init(
+                    location: permalink(content.slug),
+                    lastModification: sitemapDateFormatter.string(
+                        from: content.lastModification
+                    )
+                )
+            }
+        )
+        return .init(
+            template: "sitemap",
+            context: context,
+            destination: destinationUrl.appendingPathComponent(
+                "sitemap.xml"
+            )
+        )
+    }
 //
 //    // MARK: - build entire site state
 //
-//    func buildState() -> State {
+    func buildState() -> State {
+        fatalError()
 //        .init(
-//            home: home(),
-//            notFound: notFound(),
-//            blog: .init(
-//                home: blogPage(),
-//                post: .init(
-//                    pages: postListPages(),
-//                    details: postDetails()
+//            main: .init(
+//                home: .init(
+//                    template: "",
+//                    context: .init(
+//                        site: .init(
+//                            baseUrl: "",
+//                            title: "",
+//                            description: "",
+//                            language: nil
+//                        ),
+//                        page: .init(
+//                            metadata: .init(
+//                                slug: "",
+//                                permalink: "",
+//                                title: "",
+//                                description: "",
+//                                imageUrl: nil
+//                            ),
+//                            context: .init(featured: [], posts: [], authors: [], tags: [], pages: []),
+//                            content: ""
+//                        ),
+//                        userDefined: [:],
+//                        year: 2024
+//                    ),
+//                    destination: .init(fileURLWithPath: "")
 //                ),
-//                tag: .init(
-//                    list: tagList(),
-//                    details: tagDetails()
-//                ),
-//                author: .init(
-//                    list: authorList(),
-//                    details: authorDetails()
-//                )
+//                notFound: .init(template: <#T##String#>, context: <#T##State.HTML<Void>#>, destination: <#T##URL#>),
+//                rss: <#T##State.Renderable<State.RSS>#>,
+//                sitemap: <#T##State.Renderable<State.Sitemap>#>
 //            ),
-//            pages: pages(),
-//            rss: rss(),
-//            sitemap: sitemap()
+//            blog: <#T##State.Blog#>,
+//            docs: <#T##State.Docs#>,
+//            pages: []
 //        )
-//    }
+    }
 //
 //    // MARK: - helpers
-//
-//    func permalink(_ value: String) -> String {
-//        let components = value.split(separator: "/").map(String.init)
-//        if components.isEmpty {
-//            return content.config.site.baseUrl
-//        }
-//        if components.last?.split(separator: ".").count ?? 0 > 1 {
-//            return content.config.site.baseUrl
-//                + components.joined(separator: "/")
-//        }
-//        return content.config.site.baseUrl + components.joined(separator: "/")
-//            + "/"
-//    }
-//
-//    // MARK: - asset helpers
-//
-//    func assetExists(_ id: String) -> Bool {
-//        assets[id] != nil
-//    }
-//
-//    func assetUrl(
-//        for path: String?,
-//        folder: String,
-//        variant: ImageVariant = .light
-//    ) -> String? {
-//        guard let path, !path.isEmpty else {
-//            return nil
-//        }
-//        if path.hasPrefix("./") {
-//            // TODO: handle this better...
-//            var key: String
-//            switch variant {
-//            case .light:
-//                key = path
-//            case .dark:
-//                var items = path.split(separator: ".")
-//                items.insert("~dark", at: items.count - 1)
-//                key =
-//                    "."
-//                    + items
-//                    .joined(separator: ".")
-//                    .replacingOccurrences(
-//                        of: ".~dark",
-//                        with: "~dark"
-//                    )
-//            }
-//
-//            key = key.replacingOccurrences(
-//                of: "./",
-//                with: "./\(folder)/"
-//            )
-//
-//            if let slug = assets[key] {
-//                return permalink(slug)
-//            }
-//            return nil
-//        }
-//        return path
-//    }
-//
+
+    var baseUrl: String { source.config.site.baseUrl }
+
+    func permalink(_ value: String) -> String {
+        let components = value.split(separator: "/").map(String.init)
+        if components.isEmpty {
+            return baseUrl
+        }
+        if components.last?.split(separator: ".").count ?? 0 > 1 {
+            return baseUrl + components.joined(separator: "/")
+        }
+        return baseUrl + components.joined(separator: "/") + "/"
+    }
+
+
 //    func figureState(
 //        for path: String?,
 //        folder: String,
