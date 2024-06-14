@@ -35,7 +35,7 @@ struct Source {
                 fileManager: fileManager,
                 frontMatterParser: frontMatterParser
             )
-            let contents = try await contentsLoader.load()
+            let contents = try contentsLoader.load()
 
             return .init(
                 config: config,

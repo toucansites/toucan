@@ -43,6 +43,40 @@ struct SiteSourceTestSuite {
         )
         _ = try configLoader.load()
     }
+    
+    @Test(
+        arguments: [
+            "demo",
+//            "theswiftdev.com",
+        ]
+    )
+    func loadContents(
+        _ site: String
+    ) async throws {
+        let baseUrl = URL(fileURLWithPath: sitesPath)
+        let siteUrl = baseUrl.appendingPathComponent(site)
+        let srcUrl = siteUrl.appendingPathComponent("src")
+        let contentsUrl = srcUrl.appendingPathComponent("contents")
+        let configFileUrl = contentsUrl.appendingPathComponent("config.yaml")
+        let configLoader = Source.ConfigLoader(
+            configFileUrl: configFileUrl,
+            fileManager: .default,
+            frontMatterParser: .init()
+        )
+        let configuration = try configLoader.load()
+        
+        let contentsLoader = Source.ContentsLoader(
+            contentsUrl: contentsUrl,
+            configuration: configuration,
+            fileManager: .default,
+            frontMatterParser: .init()
+        )
+        
+        let contents = try await contentsLoader.load()
+        
+        print(contents)
+    }
+    
     //
     //    @Test
     //    func userDefined() async throws {
