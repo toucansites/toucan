@@ -98,7 +98,7 @@ extension Source {
             guard let home = try loadContent(at: homePageUrl, slugPrefix: nil) else {
                 fatalError("Couldn't load not home page.")
             }
-            return home
+            return home.updated(slug: "")
         }
         
         func loadMainNotFoundPageContent(
@@ -110,7 +110,7 @@ extension Source {
             guard let notFound = try loadContent(at: notFoundPageUrl, slugPrefix: nil) else {
                 fatalError("Couldn't load not found page.")
             }
-            return notFound
+            return notFound.updated(slug: "404")
         }
         
         func markdownUrl(
@@ -244,6 +244,6 @@ extension Source {
                 pages: try loadPagesContents()
             )
         }
-
+        
     }
 }

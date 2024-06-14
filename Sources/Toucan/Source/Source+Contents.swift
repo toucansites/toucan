@@ -56,3 +56,36 @@ extension Source {
         let pages: Pages
     }
 }
+
+extension Source.Contents {
+    
+    func all() -> [Source.Content] {
+        var contents: [Source.Content?] = []
+        
+        contents += [pages.main.home]
+        contents += [pages.main.notFound]
+        contents += [pages.blog.home]
+        contents += [pages.blog.authors]
+        contents += [pages.blog.tags]
+        contents += [pages.blog.posts]
+        contents += [pages.docs.home]
+        contents += [pages.docs.categories]
+        contents += [pages.docs.guides]
+        contents += pages.custom
+        contents += blog.authors
+        contents += blog.tags
+        contents += blog.posts
+        contents += docs.categories
+        contents += docs.guides
+
+        return contents.compactMap { $0 }
+    }
+    
+    func validateSlugs() throws {
+        let slugs = all().map(\.slug)
+        let uniqueSlugs = Set(slugs)
+        guard slugs.count == uniqueSlugs.count else {
+            fatalError("invalid slugs")
+        }
+    }
+}

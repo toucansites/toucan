@@ -72,9 +72,11 @@ struct SiteSourceTestSuite {
             frontMatterParser: .init()
         )
         
-        let contents = try await contentsLoader.load()
-        
-        print(contents)
+        let contents = try contentsLoader.load()
+        for content in contents.all() {
+            print(content.slug)
+        }
+        try contents.validateSlugs()
     }
     
     //
