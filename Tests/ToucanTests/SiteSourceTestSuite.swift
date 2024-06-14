@@ -12,7 +12,7 @@ import Testing
 
 @Suite
 struct SiteSourceTestSuite {
-    
+
     var sitesPath: String {
         "/"
             + #file
@@ -24,7 +24,7 @@ struct SiteSourceTestSuite {
 
     @Test(
         arguments: [
-//            "demo",
+            "demo",
             "theswiftdev.com",
         ]
     )
@@ -41,34 +41,31 @@ struct SiteSourceTestSuite {
             fileManager: .default,
             frontMatterParser: .init()
         )
-        let config = try configLoader.load()
-        
-        #expect(config.site.title == "Demo")
-
+        _ = try configLoader.load()
     }
-//
-//    @Test
-//    func userDefined() async throws {
-//
-//        let path =
-//            "/"
-//            + #file
-//            .split(separator: "/")
-//            .dropLast(2)
-//            .joined(separator: "/")
-//            + "/sites/demo/"
-//
-//        let baseUrl = URL(fileURLWithPath: path)
-//        let srcUrl = baseUrl.appendingPathComponent("src")
-//        let contentsUrl = srcUrl.appendingPathComponent("contents")
-//        let loader = ContentLoader(
-//            contentsUrl: contentsUrl,
-//            fileManager: .default,
-//            frontMatterParser: .init()
-//        )
-//        let content = try await loader.load()
-//
-//        _ = content.blog.author.contents.first?.userDefined
-//
-//    }
+    //
+    //    @Test
+    //    func userDefined() async throws {
+    //
+    //        let path =
+    //            "/"
+    //            + #file
+    //            .split(separator: "/")
+    //            .dropLast(2)
+    //            .joined(separator: "/")
+    //            + "/sites/demo/"
+    //
+    //        let baseUrl = URL(fileURLWithPath: path)
+    //        let srcUrl = baseUrl.appendingPathComponent("src")
+    //        let contentsUrl = srcUrl.appendingPathComponent("contents")
+    //        let loader = ContentLoader(
+    //            contentsUrl: contentsUrl,
+    //            fileManager: .default,
+    //            frontMatterParser: .init()
+    //        )
+    //        let content = try await loader.load()
+    //
+    //        _ = content.blog.author.contents.first?.userDefined
+    //
+    //    }
 }

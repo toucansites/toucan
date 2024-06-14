@@ -19,7 +19,7 @@ contents:
             folder: "blog/tags"
             slugPrefix: "tags"
         posts:
-            folder: "blog/authors"
+            folder: "blog/posts"
             slugPrefix: ""
     docs:
         categories:

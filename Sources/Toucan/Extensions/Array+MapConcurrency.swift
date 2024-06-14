@@ -30,7 +30,7 @@ extension Array where Element: Sendable {
                 }
                 i += 1
             }
-            
+
             for try await res in group {
                 result.append(res)
             }

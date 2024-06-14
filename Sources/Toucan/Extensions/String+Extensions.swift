@@ -2,6 +2,13 @@ import Foundation
 
 extension String {
 
+    /// Converts an empty string to `nil`, otherwise returns the string itself.
+    ///
+    /// - Returns: An optional `String` that is `nil` if the string is empty, otherwise the original string.
+    var emptyToNil: String? {
+        return isEmpty ? nil : self
+    }
+
     /// Generates a safe slug for the string, optionally with a given prefix.
     ///
     /// This method transforms the string into a "slug" format, handling special cases and
@@ -46,7 +53,7 @@ extension String {
         return (prefix.split(separator: "/") + split(separator: "/"))
             .joined(separator: "/")
     }
-    
+
     /// Removes the front matter from a string if it starts with a "---" delimiter.
     ///
     /// This method checks if the string starts with the "---" delimiter. If it does, it splits the string
@@ -107,7 +114,7 @@ extension String {
         }
         return String(self[fromIndex..<toIndex])
     }
-    
+
     /// Checks if the string contains a "yyyy-mm-dd-" date prefix.
     ///
     /// This method checks if the string starts with a date in the "yyyy-mm-dd-" format.
@@ -142,7 +149,7 @@ extension String {
         let year = dateComponents[0]
         let month = dateComponents[1]
         let day = dateComponents[2]
-        
+
         /// check all the component lenghts
         guard
             year.count == 4,

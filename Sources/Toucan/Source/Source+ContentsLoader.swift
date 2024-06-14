@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 13/06/2024.
 //
@@ -9,16 +9,16 @@ import Foundation
 import FileManagerKit
 
 extension Source {
-    
+
     struct ContentsLoader {
-        
+
         let contentsUrl: URL
         let configuration: Config
         let fileManager: FileManager
         let frontMatterParser: FrontMatterParser
-        
+
         // MARK: - private
-        
+
         private func getMarkdownURLs(
             at url: URL
         ) -> [URL] {
@@ -33,10 +33,10 @@ extension Source {
             }
             return toProcess
         }
-        
+
         func load() async throws -> Contents {
             fatalError()
         }
-        
+
     }
 }

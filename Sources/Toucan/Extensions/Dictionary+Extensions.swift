@@ -1,8 +1,70 @@
 import Foundation
 
+/// An extension for `Dictionary` that provides a method to merge two dictionaries.
+///
+/// This extension defines the `+` operator for dictionaries, allowing two dictionaries to be merged.
+/// If both dictionaries contain the same key, the value from the right-hand side dictionary will be used.
 extension Dictionary {
 
+    /// Merges two dictionaries, with values from the right-hand side dictionary taking precedence in case of conflicts.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left-hand side dictionary.
+    ///   - rhs: The right-hand side dictionary.
+    /// - Returns: A new dictionary containing the merged key-value pairs.
     static func + (lhs: Self, rhs: Self) -> Self {
         lhs.merging(rhs) { (_, new) in new }
+    }
+}
+/// An extension for `Dictionary` where the keys are `String` and the values are `Any`, providing utility methods to fetch values with specific types and key paths.
+extension Dictionary where Key == String, Value == Any {
+
+    /// Retrieves the value associated with the given key path and casts it to the specified type.
+    ///
+    /// - Parameters:
+    ///   - keyPath: The key path string, where keys are separated by dots.
+    ///   - type: The type to cast the value to.
+    /// - Returns: The value cast to the specified type, or `nil` if the key path is invalid or the value cannot be cast.
+    func value<T>(_ keyPath: String, as type: T.Type) -> T? {
+        let keys = keyPath.split(separator: ".").map { String($0) }
+
+        guard !keys.isEmpty else {
+            return nil
+        }
+        var currentDict: [String: Any] = self
+
+        for key in keys.dropLast() {
+            if let dict = currentDict[key] as? [String: Any] {
+                currentDict = dict
+            }
+            else {
+                return nil
+            }
+        }
+        return currentDict[keys.last!] as? T
+    }
+
+    /// Retrieves the dictionary associated with the given key path.
+    ///
+    /// - Parameter keyPath: The key path string, where keys are separated by dots.
+    /// - Returns: The dictionary at the specified key path, or an empty dictionary if the key path is invalid.
+    func dict(_ keyPath: String) -> [String: Any] {
+        value(keyPath, as: [String: Any].self) ?? [:]
+    }
+
+    /// Retrieves the string associated with the given key path.
+    ///
+    /// - Parameter keyPath: The key path string, where keys are separated by dots.
+    /// - Returns: The string at the specified key path, or `nil` if the key path is invalid or the value is an empty string.
+    func string(_ keyPath: String) -> String? {
+        value(keyPath, as: String.self)?.emptyToNil
+    }
+
+    /// Retrieves the integer associated with the given key path.
+    ///
+    /// - Parameter keyPath: The key path string, where keys are separated by dots.
+    /// - Returns: The integer at the specified key path, or `nil` if the key path is invalid.
+    func int(_ keyPath: String) -> Int? {
+        value(keyPath, as: Int.self)
     }
 }

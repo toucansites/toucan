@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 13/06/2024.
 //
@@ -15,7 +15,7 @@ extension Source {
         let description: String
         let coverImage: String?
         let template: String?
-        
+
         let lastModification: Date
         let frontMatter: [String: Any]
         let markdown: String
