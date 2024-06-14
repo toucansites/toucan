@@ -79,6 +79,7 @@ extension Source {
                     description: description,
                     coverImage: coverImage,
                     template: template,
+                    assetsFolder: slug, // TODO: double check this
                     lastModification: lastModification,
                     frontMatter: frontMatter,
                     markdown: rawMarkdown.dropFrontMatter()

@@ -13,18 +13,17 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     let folder: String
 
     func linkAttributes(_ link: String?) -> [String: String] {
-        fatalError()
-//        var attributes: [String: String] = [:]
-//        guard let link, !link.isEmpty else {
-//            return attributes
-//        }
-//        if !link.hasPrefix("."),
-//            !link.hasPrefix("/"),
-//            !link.hasPrefix(site.content.config.site.baseUrl)
-//        {
-//            attributes["target"] = "_blank"
-//        }
-//        return attributes
+        var attributes: [String: String] = [:]
+        guard let link, !link.isEmpty else {
+            return attributes
+        }
+        if !link.hasPrefix("."),
+            !link.hasPrefix("/"),
+            !link.hasPrefix(site.source.config.site.baseUrl)
+        {
+            attributes["target"] = "_blank"
+        }
+        return attributes
     }
 
     func imageOverride(_ image: Image) -> String? {

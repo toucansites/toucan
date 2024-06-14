@@ -23,25 +23,23 @@ extension Site.State {
         let isCurrent: Bool
     }
     
+    struct Site {
+        let baseUrl: String
+        let title: String
+        let description: String
+        let language: String?
+    }
+    
+    struct Metadata {
+        let slug: String
+        let permalink: String
+        let title: String
+        let description: String
+        let imageUrl: String?
+    }
+    
     struct HTML<T> {
-
-        struct Site {
-            let baseUrl: String
-            let title: String
-            let description: String
-            let language: String?
-        }
-
         struct Page<C> {
-
-            struct Metadata {
-                let slug: String
-                let permalink: String
-                let title: String
-                let description: String
-                let imageUrl: String?
-            }
-
             let metadata: Metadata
             let context: C
             let content: String

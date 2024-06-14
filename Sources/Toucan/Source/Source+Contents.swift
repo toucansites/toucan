@@ -14,7 +14,9 @@ extension Source {
         let title: String
         let description: String
         let coverImage: String?
+
         let template: String?
+        let assetsFolder: String
 
         let lastModification: Date
         let frontMatter: [String: Any]
@@ -27,6 +29,7 @@ extension Source {
                 description: description,
                 coverImage: coverImage,
                 template: template,
+                assetsFolder: assetsFolder,
                 lastModification: lastModification,
                 frontMatter: frontMatter,
                 markdown: markdown

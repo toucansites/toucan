@@ -40,49 +40,49 @@ struct Site {
 
     // MARK: -
 
-//    func metadata(
-//        for content: ContentInterface
-//    ) -> MetadataState {
-//        .init(
-//            permalink: permalink(content.slug),
-//            title: content.title,
-//            description: content.description,
+    func metadata(
+        for content: Source.Content
+    ) -> State.Metadata {
+        .init(
+            slug: content.slug,
+            permalink: permalink(content.slug),
+            title: content.title,
+            description: content.description,
+            imageUrl: nil // TODO: fix this
 //            imageUrl: assetUrl(
 //                for: content.coverImage,
 //                folder: type(of: content).folder
 //            )
-//        )
-//    }
-//
-//    func render(
-//        markdown: String,
-//        folder: String
-//    ) -> String {
-//        let renderer = MarkdownToHTMLRenderer(
-//            delegate: HTMLRendererDelegate(
-//                site: self,
-//                folder: folder
-//            )
-//        )
-//        return renderer.render(markdown: markdown)
-//    }
-//
-//    func readingTime(_ value: String) -> Int {
-//        value.split(separator: " ").count / 238
-//    }
-//
-//    // MARK: - config
-//
-//    func siteState(
-//        for config: Content.Config
-//    ) -> SiteState {
-//        .init(
-//            baseUrl: config.site.baseUrl,
-//            title: config.site.title,
-//            description: config.site.description,
-//            language: config.site.language
-//        )
-//    }
+        )
+    }
+
+    func render(
+        markdown: String,
+        folder: String
+    ) -> String {
+        let renderer = MarkdownToHTMLRenderer(
+            delegate: HTMLRendererDelegate(
+                site: self,
+                folder: folder
+            )
+        )
+        return renderer.render(markdown: markdown)
+    }
+
+    func readingTime(_ value: String) -> Int {
+        value.split(separator: " ").count / 238
+    }
+
+    // MARK: - config
+
+    func siteState() -> State.Site {
+        .init(
+            baseUrl: source.config.site.baseUrl,
+            title: source.config.site.title,
+            description: source.config.site.description,
+            language: source.config.site.language
+        )
+    }
 //
 //    // MARK: - content states
 //
@@ -221,30 +221,37 @@ struct Site {
 //
 //    // MARK: - system page states
 //
-//    func home() -> HomeHTMLPageState {
-//        let homePage = content.home
-//        return .init(
-//            site: siteState(for: content.config),
-//            page: .init(
-//                slug: homePage.slug,
-//                metadata: metadata(for: homePage),
-//                context: .init(
-//                    featured: featuredPostListState(),
-//                    posts: Array(postListState().prefix(5)),
-//                    authors: Array(authorListState().prefix(5)),
-//                    tags: Array(tagListState().prefix(5)),
-//                    pages: content.custom.pages.map { pageState(for: $0) }
-//                ),
-//                content: render(
-//                    markdown: homePage.markdown,
-//                    folder: Content.Page.folder
-//                )
-//            ),
-//            userDefined: content.config.site.userDefined + homePage.userDefined,
-//            year: currentYear,
-//            template: homePage.template ?? "pages.home"
-//        )
-//    }
+    func home() -> State.Renderable<State.HTML<HomeState>> {
+        let context = State.HTML<HomeState>.init(
+            site: siteState(),
+            page: .init(
+                metadata: metadata(for: source.contents.pages.main.home),
+                context: .init(
+                    featured: [],
+                    posts: [],
+                    authors: [],
+                    tags: [],
+                    pages: []
+                ),
+                content: render(
+                    markdown: source.contents.pages.main.home.markdown,
+                    folder: source.contents.pages.main.home.assetsFolder
+                )
+            ),
+            userDefined: [:],
+            year: currentYear
+        )
+        
+        
+        return .init(
+            template: source.contents.pages.main.home.template ?? "pages.home",
+            context: context,
+            destination: destinationUrl.appendingPathComponent(
+                "index.html"
+            )
+        )
+        
+    }
 //
 //    func notFound() -> NotFoundHTMLPageState {
 //        let notFoundPage = content.notFound
