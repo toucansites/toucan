@@ -69,10 +69,15 @@ struct SiteRenderer {
         let home = site.home()
         let rss = site.rss()
         let sitemap = site.sitemap()
-
+        
         try render(renderer, home)
         try render(renderer, rss)
         try render(renderer, sitemap)
+        
+        print(site.tagList())
+        if let tags = site.tagList() {
+            try render(renderer, tags)
+        }
 
         //        try generateNotFoundPage(renderer, state)
         //        try generateBlogHomePage(renderer, state)

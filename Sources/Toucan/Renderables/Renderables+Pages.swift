@@ -9,9 +9,9 @@ import Foundation
 
 extension Renderables {
     
-    public struct Page {
+    public struct Pages {
 
-        let custom: [Renderable<Output.HTML<State.Page.Detail>>]
+        let custom: [Renderable<Output.HTML<State.Pages.Detail>>]
     }
     
 }

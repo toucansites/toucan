@@ -40,11 +40,13 @@ extension Source {
         private func getMarkdownURLs(
             at url: URL
         ) -> [URL] {
+            let extensions = ["md", "markdown"]
             var toProcess: [URL] = []
             let dirEnum = fileManager.enumerator(atPath: url.path)
             while let file = dirEnum?.nextObject() as? String {
                 let url = url.appendingPathComponent(file)
-                guard url.pathExtension.lowercased() == "md" else {
+                let ext = url.pathExtension.lowercased()
+                guard extensions.contains(ext) else {
                     continue
                 }
                 toProcess.append(url)
@@ -128,7 +130,7 @@ extension Source {
         ) throws(ContentsLoader.Error) -> Source.Content? {
             try loadContent(
                 at: markdownUrl(
-                    using: config.pages.blog.home.path
+                    using: path
                 ),
                 slugPrefix: slugPrefix
             )

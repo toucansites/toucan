@@ -9,6 +9,6 @@ struct Renderables {
     let main: Main
     let blog: Blog
     let docs: Docs
-    let pages: Page
+    let pages: Pages
 }
 

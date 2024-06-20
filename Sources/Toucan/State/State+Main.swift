@@ -14,9 +14,8 @@ extension State {
             let posts: [Blog.Post]
             let authors: [Blog.Author]
             let tags: [Blog.Tag]
-            let pages: [Page.Custom]
+            let pages: [Pages.Custom]
         }
     }
-
 }
 

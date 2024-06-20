@@ -6,10 +6,11 @@
 //
 
 extension State {
-    public struct Page {
+    
+    public struct Pages {
 
         struct Detail {
-            let page: State.Page.Custom
+            let page: State.Pages.Custom
         }
 
         struct Custom {

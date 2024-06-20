@@ -8,7 +8,6 @@
 extension Renderables {
     
     struct Main {
-
         let home: Renderable<Output.HTML<State.Main.Home>>
         let notFound: Renderable<Output.HTML<Void>>
         let rss: Renderable<Output.RSS>

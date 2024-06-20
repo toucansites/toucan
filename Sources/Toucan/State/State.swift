@@ -38,4 +38,9 @@ struct State {
         let title: String?
     }
 
+    
+//    let main: Main
+//    let blog: Blog
+//    //let docs: Docs
+//    let pages: Pages
 }

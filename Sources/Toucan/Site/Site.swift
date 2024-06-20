@@ -52,6 +52,36 @@ struct Site {
         }
         return baseUrl + components.joined(separator: "/") + "/"
     }
+    
+    func figureState(
+        for path: String?,
+        folder: String,
+        alt: String? = nil,
+        title: String? = nil
+    ) -> State.Figure? {
+        nil
+//        source.assets.url(for: <#T##String?#>, folder: <#T##String#>, permalink: <#T##(String) -> String#>)
+//        
+//        guard
+//            let url = source.assets.url(
+//                for: path,
+//                folder: folder
+//            )
+//        else {
+//            return nil
+//        }
+//        return .init(
+//            src: url,
+//            darkSrc: nil,
+//            darkSrc: assetUrl(
+//                for: path,
+//                folder: folder,
+//                variant: .dark
+//            ),
+//            alt: alt,
+//            title: title
+//        )
+    }
 
     func metadata(
         for content: Source.Content
@@ -121,21 +151,21 @@ struct Site {
     //
     //
     //
-    //    func tagState(
-    //        for tag: Content.Tag
-    //    ) -> TagState {
-    //        .init(
-    //            permalink: permalink(tag.slug),
-    //            title: tag.title,
-    //            description: tag.description,
-    //            figure: figureState(
-    //                for: tag.coverImage,
-    //                folder: Content.Tag.folder
-    //            ),
-    //            numberOfPosts: content.blog.post.contentsBy(tagSlug: tag.slug).count,
-    //            userDefined: tag.userDefined
-    //        )
-    //    }
+        func tagState(
+            for tag: Source.Content
+        ) -> State.Blog.Tag {
+            .init(
+                permalink: permalink(tag.slug),
+                title: tag.title,
+                description: tag.description,
+                figure: figureState(
+                    for: tag.coverImage,
+                    folder: tag.assetsFolder
+                ),
+                numberOfPosts: 0, //content.blog.post.contentsBy(tagSlug: tag.slug).count,
+                userDefined: [:] //tag.userDefined
+            )
+        }
     //
     //    func pageState(
     //        for page: Content.Page
@@ -176,11 +206,11 @@ struct Site {
     //
     //    // MARK: - list states
     //
-    //    func tagListState() -> [TagState] {
-    //        content.blog.tag.contents
-    //            .sorted { $0.title > $1.title }
-    //            .map { tagState(for: $0) }
-    //    }
+    func tagListState() -> [State.Blog.Tag] {
+        source.contents.blog.tags
+            .sorted { $0.title > $1.title }
+            .map { tagState(for: $0) }
+    }
     //
     //    func authorListState() -> [AuthorState] {
     //        content.blog.author.contents
@@ -334,26 +364,49 @@ struct Site {
     //        )
     //    }
     //
-    //    func tagList() -> TagListHTMLPageState {
-    //        let tagsPage = content.blog.tag.home
-    //        return .init(
-    //            site: siteState(for: content.config),
-    //            page: .init(
-    //                slug: tagsPage.slug,
-    //                metadata: metadata(for: tagsPage),
-    //                context: .init(
-    //                    tags: tagListState()
-    //                ),
-    //                content: render(
-    //                    markdown: tagsPage.markdown,
-    //                    folder: Content.Page.folder
-    //                )
-    //            ),
-    //            userDefined: content.config.site.userDefined + tagsPage.userDefined,
-    //            year: currentYear,
-    //            template: tagsPage.template ?? "pages.blog.tags"
-    //        )
-    //    }
+    func tagList() -> Renderable<Output.HTML<State.Blog.Tag.List>>? {
+        guard let tags = source.contents.pages.blog.tags else {
+            return nil
+        }
+        return .init(
+            template: tags.template ?? "pages.blog.tags",
+            context: .init(
+                site: siteState(),
+                page: .init(
+                    metadata: metadata(for: tags),
+                    context: .init(tags: []),
+                    content: render(
+                        markdown: tags.markdown,
+                        folder: tags.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl.appendingPathComponent(
+                "tags/index.html"
+            )
+        )
+        
+//        let tagsPage = content.blog.tag.home
+//        return .init(
+//            site: siteState(for: content.config),
+//            page: .init(
+//                slug: tagsPage.slug,
+//                metadata: metadata(for: tagsPage),
+//                context: .init(
+//                    tags: tagListState()
+//                ),
+//                content: render(
+//                    markdown: tagsPage.markdown,
+//                    folder: Content.Page.folder
+//                )
+//            ),
+//            userDefined: content.config.site.userDefined + tagsPage.userDefined,
+//            year: currentYear,
+//            template: tagsPage.template ?? "pages.blog.tags"
+//        )
+    }
     //
     //    func postListPages() -> [PostListHTMLPageState] {
     //        let postsPage = content.blog.post.home
@@ -736,34 +789,5 @@ struct Site {
         //            pages: []
         //        )
     }
-    //
-    //    // MARK: - helpers
-
-    
-
-    //    func figureState(
-    //        for path: String?,
-    //        folder: String,
-    //        alt: String? = nil,
-    //        title: String? = nil
-    //    ) -> FigureState? {
-    //        guard
-    //            let url = assetUrl(
-    //                for: path,
-    //                folder: folder
-    //            )
-    //        else {
-    //            return nil
-    //        }
-    //        return .init(
-    //            src: url,
-    //            darkSrc: assetUrl(
-    //                for: path,
-    //                folder: folder,
-    //                variant: .dark
-    //            ),
-    //            alt: alt,
-    //            title: title
-    //        )
-    //    }
+   
 }

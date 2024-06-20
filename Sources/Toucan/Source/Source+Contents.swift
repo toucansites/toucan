@@ -115,7 +115,22 @@ extension Source.Contents {
         let slugs = all().map(\.slug)
         let uniqueSlugs = Set(slugs)
         guard slugs.count == uniqueSlugs.count else {
-            fatalError("invalid slugs")
+            var seenSlugs = Set<String>()
+            var duplicateSlugs = Set<String>()
+
+            for element in slugs {
+                if seenSlugs.contains(element) {
+                    duplicateSlugs.insert(element)
+                } 
+                else {
+                    seenSlugs.insert(element)
+                }
+            }
+
+            for element in duplicateSlugs {
+                fatalError("Duplicate slug: \(element)")
+            }
+            fatalError("Invalid slugs")
         }
     }
 }
