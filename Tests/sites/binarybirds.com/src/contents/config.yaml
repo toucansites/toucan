@@ -1,4 +1,3 @@
----
 site:
   baseUrl: http://localhost:3000/
   language: en-US
@@ -10,4 +9,3 @@ posts:
   slug: ''
   page:
     limit: 10
----

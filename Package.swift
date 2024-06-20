@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.10
 import PackageDescription
 
 let package = Package(
@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.1"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
+        .package(url: "https://github.com/apple/swift-testing", from: "0.10.0"),
     ],
     targets: [
         .target(
@@ -50,6 +51,7 @@ let package = Package(
             name: "ToucanTests",
             dependencies: [
                 .target(name: "Toucan"),
+                .product(name: "Testing", package: "swift-testing"),
             ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")

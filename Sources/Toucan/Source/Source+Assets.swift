@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 14/06/2024.
 //
@@ -8,14 +8,14 @@
 import Foundation
 
 extension Source {
-    
+
     struct Assets {
-        
+
         enum Variant {
             case light
             case dark
         }
-        
+
         /// key value dictionary where the key is the asset reference and the value is the path of the asset file
         let storage: [String: String]
 
@@ -39,16 +39,17 @@ extension Source {
             case .dark:
                 var items = value.split(separator: ".")
                 items.insert("~dark", at: items.count - 1)
-                key = items
+                key =
+                    items
                     .joined(separator: ".")
                     .replacingOccurrences(of: ".~dark", with: "~dark")
             }
-            
+
             key = key.replacingOccurrences(
                 of: "./",
                 with: "./\(folder)/"
             )
-            
+
             if let newPath = storage[key] {
                 return permalink(newPath)
             }

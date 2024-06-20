@@ -26,6 +26,8 @@ struct SiteSourceTestSuite {
         arguments: [
             "demo",
             "theswiftdev.com",
+            "binarybirds.com",
+            "swiftonserver.com",
         ]
     )
     func loadConfig(
@@ -43,11 +45,13 @@ struct SiteSourceTestSuite {
         )
         _ = try configLoader.load()
     }
-    
+
     @Test(
         arguments: [
             "demo",
             "theswiftdev.com",
+            "binarybirds.com",
+            "swiftonserver.com",
         ]
     )
     func loadContents(
@@ -64,21 +68,21 @@ struct SiteSourceTestSuite {
             frontMatterParser: .init()
         )
         let config = try configLoader.load()
-        
+
         let contentsLoader = Source.ContentsLoader(
             contentsUrl: contentsUrl,
             config: config,
             fileManager: .default,
             frontMatterParser: .init()
         )
-        
+
         let contents = try contentsLoader.load()
         for content in contents.all() {
             print(content.slug)
         }
         try contents.validateSlugs()
     }
-    
+
     //
     //    @Test
     //    func userDefined() async throws {

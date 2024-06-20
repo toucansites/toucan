@@ -88,10 +88,10 @@ extension Source {
 }
 
 extension Source.Contents {
-    
+
     func all() -> [Source.Content] {
         var contents: [Source.Content?] = []
-        
+
         contents += [pages.main.home]
         contents += [pages.main.notFound]
         contents += [pages.blog.home]
@@ -110,7 +110,7 @@ extension Source.Contents {
 
         return contents.compactMap { $0 }
     }
-    
+
     func validateSlugs() throws {
         let slugs = all().map(\.slug)
         let uniqueSlugs = Set(slugs)

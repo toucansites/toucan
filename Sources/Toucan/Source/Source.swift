@@ -11,7 +11,7 @@ struct Source {
 
     let config: Config
     let contents: Contents
-    let assets: Assets   
+    let assets: Assets
 }
 
 extension Source {
@@ -41,13 +41,13 @@ extension Source {
                 frontMatterParser: frontMatterParser
             )
             let contents = try contentsLoader.load()
-            
+
             let assetsLoader = AssetsLoader(
                 config: config,
                 contents: contents,
                 fileManager: fileManager
             )
-            
+
             let assets = try assetsLoader.load()
 
             return .init(

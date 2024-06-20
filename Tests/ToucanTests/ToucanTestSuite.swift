@@ -21,7 +21,7 @@ struct ToucanTestSuite {
             .joined(separator: "/")
             + "/sites/"
     }
-    
+
     @Test(
         arguments: [
             "demo",
@@ -44,20 +44,20 @@ struct ToucanTestSuite {
             frontMatterParser: .init()
         )
         let config = try configLoader.load()
-        
+
         let contentsLoader = Source.ContentsLoader(
             contentsUrl: contentsUrl,
             config: config,
             fileManager: .default,
             frontMatterParser: .init()
         )
-        
+
         let contents = try contentsLoader.load()
         for content in contents.all() {
             print(content.slug)
         }
         try contents.validateSlugs()
-        
+
         let site = Site(
             source: .init(
                 config: config,
@@ -68,12 +68,12 @@ struct ToucanTestSuite {
             ),
             destinationUrl: destUrl
         )
-        
+
         let renderer = SiteRenderer(
             site: site,
             templatesUrl: templatesUrl
         )
-        
-        try renderer.render()   
+
+        try renderer.render()
     }
 }
