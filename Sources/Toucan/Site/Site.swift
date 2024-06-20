@@ -209,6 +209,7 @@ struct Site {
     func tagListState() -> [State.Blog.Tag] {
         source.contents.blog.tags
             .sorted { $0.title > $1.title }
+            .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
             .map { tagState(for: $0) }
     }
     //
