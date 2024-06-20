@@ -374,7 +374,7 @@ struct Site {
                 site: siteState(),
                 page: .init(
                     metadata: metadata(for: tags),
-                    context: .init(tags: []),
+                    context: .init(tags: tagListState()),
                     content: render(
                         markdown: tags.markdown,
                         folder: tags.assetsFolder

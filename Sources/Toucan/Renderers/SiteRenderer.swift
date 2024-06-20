@@ -74,7 +74,6 @@ struct SiteRenderer {
         try render(renderer, rss)
         try render(renderer, sitemap)
         
-        print(site.tagList())
         if let tags = site.tagList() {
             try render(renderer, tags)
         }
