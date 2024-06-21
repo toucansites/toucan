@@ -74,24 +74,31 @@ struct SiteGenerator {
             templatesUrl: templatesUrl
         )
         
+        // reset
+        try fileManager.delete(at: site.destinationUrl)
+        try fileManager.createDirectory(at: site.destinationUrl)
+
+        // copy public files first
         try copyPublicFiles()
 
+        // render pages
         let home = site.home()
         let notFound = site.notFound()
-        let rss = site.rss()
-        let sitemap = site.sitemap()
-        
         try render(renderer, home)
         try render(renderer, notFound)
+        
+        // render rss & sitemap
+        let rss = site.rss()
+        let sitemap = site.sitemap()
         try render(renderer, rss)
         try render(renderer, sitemap)
         
-        // blog
+        // render blog
         if let renderable = site.blogHome() {
             try render(renderer, renderable)
         }
 
-        // authors
+        // render authors
         if let renderable = site.authorList() {
             try render(renderer, renderable)
         }
@@ -99,7 +106,7 @@ struct SiteGenerator {
             try render(renderer, renderable)
         }
         
-        // tags
+        // render tags
         if let renderable = site.tagList() {
             try render(renderer, renderable)
         }
@@ -107,6 +114,10 @@ struct SiteGenerator {
             try render(renderer, renderable)
         }
         
+        // custom pages
+        for renderable in site.customPages() {
+            try render(renderer, renderable)
+        }
     }
 
     // MARK: -

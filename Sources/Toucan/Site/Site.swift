@@ -452,6 +452,8 @@ struct Site {
             )
         }
     }
+    
+    
     //
     //    func nextPost(for slug: String) -> PostState? {
     //        let posts = content.blog.post.sortedContents
@@ -605,6 +607,41 @@ struct Site {
     //            )
     //        }
     //    }
+    
+    func customPages() -> [Renderable<Output.HTML<Context.Pages.Detail>>] {
+        source.contents.pages.custom.map { content in
+            return .init(
+                template: content.template ?? "pages.single.page",
+                context: .init(
+                    site: getContext(),
+                    page: .init(
+                        metadata: metadata(for: content),
+                        // TODO: use site content
+                        context: .init(
+                            page: .init(
+                                permalink: permalink(content.slug),
+                                title: content.title,
+                                description: content.description,
+                                figure: nil,
+                                userDefined: [:]
+                            )
+                        ),
+                        content: render(
+                            markdown: content.markdown,
+                            folder: content.assetsFolder
+                        )
+                    ),
+                    userDefined: [:],
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(content.slug)
+                    .appendingPathComponent("index.html")
+            )
+        }
+    }
+    
+    
 
     // MARK: - rss
 
