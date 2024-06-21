@@ -60,34 +60,26 @@ struct SiteRenderer {
     //    }
 
     func render() throws {
-        //        let state = site.buildState()
-
         let renderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl
         )
 
         let home = site.home()
+        let notFound = site.notFound()
         let rss = site.rss()
         let sitemap = site.sitemap()
         
         try render(renderer, home)
+        try render(renderer, notFound)
         try render(renderer, rss)
         try render(renderer, sitemap)
         
-        if let tags = site.tagList() {
-            try render(renderer, tags)
+        if let renderable = site.tagList() {
+            try render(renderer, renderable)
         }
-
-        //        try generateNotFoundPage(renderer, state)
-        //        try generateBlogHomePage(renderer, state)
-        //
-        //        try generateCustomPages(renderer, state)
-        //        try generateTagPages(renderer, state)
-        //        try generateAuthorPages(renderer, state)
-        //        try generatePostPages(renderer, state)
-        //
-        //        try generateRSS(renderer, state)
-        //        try generateSitemap(renderer, state)
+        if let renderable = site.authorList() {
+            try render(renderer, renderable)
+        }
     }
 
     // MARK: -
@@ -96,7 +88,6 @@ struct SiteRenderer {
         _ renderer: MustacheToHTMLRenderer,
         _ renderable: Renderable<T>
     ) throws {
-
         try fileManager.createParentFolderIfNeeded(
             for: renderable.destination
         )

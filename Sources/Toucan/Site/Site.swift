@@ -129,43 +129,43 @@ struct Site {
     //
     //    // MARK: - content states
     //
-    //    func authorState(
-    //        for author: Content.Author
-    //    ) -> AuthorState {
-    //        .init(
-    //            permalink: permalink(author.slug),
-    //            title: author.title,
-    //            description: author.description,
-    //            figure: figureState(
-    //                for: author.coverImage,
-    //                folder: Content.Author.folder
-    //            ),
-    //            numberOfPosts: content.blog.post.contentsBy(authorSlug: author.slug).count,
-    //            userDefined: author.userDefined,
-    //            markdown: render(
-    //                        markdown: author.markdown,
-    //                        folder: Content.Author.folder
-    //                    )
-    //        )
-    //    }
-    //
-    //
-    //
-        func tagState(
-            for tag: Source.Content
-        ) -> State.Blog.Tag {
-            .init(
-                permalink: permalink(tag.slug),
-                title: tag.title,
-                description: tag.description,
-                figure: figureState(
-                    for: tag.coverImage,
-                    folder: tag.assetsFolder
-                ),
-                numberOfPosts: 0, //content.blog.post.contentsBy(tagSlug: tag.slug).count,
-                userDefined: [:] //tag.userDefined
+    func authorState(
+        for author: Source.Content
+    ) -> State.Blog.Author {
+        .init(
+            permalink: permalink(author.slug),
+            title: author.title,
+            description: author.description,
+            figure: figureState(
+                for: author.coverImage,
+                folder: author.assetsFolder
+            ),
+            numberOfPosts: 0,
+            //content.blog.post.contentsBy(authorSlug: author.slug).count,
+            userDefined: [:],
+            //author.userDefined,
+            markdown: render(
+                markdown: author.markdown,
+                folder: author.assetsFolder
             )
-        }
+        )
+    }
+
+    func tagState(
+        for tag: Source.Content
+    ) -> State.Blog.Tag {
+        .init(
+            permalink: permalink(tag.slug),
+            title: tag.title,
+            description: tag.description,
+            figure: figureState(
+                for: tag.coverImage,
+                folder: tag.assetsFolder
+            ),
+            numberOfPosts: 0, //content.blog.post.contentsBy(tagSlug: tag.slug).count,
+            userDefined: [:] //tag.userDefined
+        )
+    }
     //
     //    func pageState(
     //        for page: Content.Page
@@ -207,17 +207,16 @@ struct Site {
     //    // MARK: - list states
     //
     func tagListState() -> [State.Blog.Tag] {
-        source.contents.blog.tags
-            .sorted { $0.title > $1.title }
-            .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
-            .map { tagState(for: $0) }
+        source.contents.blog.alphabeticallySortedTags.map {
+            tagState(for: $0)
+        }
     }
-    //
-    //    func authorListState() -> [AuthorState] {
-    //        content.blog.author.contents
-    //            .sorted { $0.title > $1.title }
-    //            .map { authorState(for: $0) }
-    //    }
+    
+    func authorListState() -> [State.Blog.Author] {
+        source.contents.blog.alphabeticallySortedAuthors.map {
+            authorState(for: $0)
+        }
+    }
     //
     //    func postListState() -> [PostState] {
     //        content.blog.post.sortedContents.map {
@@ -296,26 +295,46 @@ struct Site {
         )
 
     }
-    //
-    //    func notFound() -> NotFoundHTMLPageState {
-    //        let notFoundPage = content.notFound
-    //        return .init(
-    //            site: siteState(for: content.config),
-    //            page: .init(
-    //                slug: notFoundPage.slug,
-    //                metadata: metadata(for: notFoundPage),
-    //                context: .init(),
-    //                content: render(
-    //                    markdown: notFoundPage.markdown,
-    //                    folder: Content.Page.folder
-    //                )
-    //            ),
-    //            userDefined: content.config.site.userDefined
-    //                + notFoundPage.userDefined,
-    //            year: currentYear,
-    //            template: notFoundPage.template ?? "pages.404"
-    //        )
-    //    }
+    
+    func notFound() -> Renderable<Output.HTML<Void>> {
+        let page = source.contents.pages.main.notFound
+        return .init(
+            template: page.template ?? "pages.404",
+            context: .init(
+                site: siteState(),
+                page: .init(
+                    metadata: metadata(for: page),
+                    context: (),
+                    content: render(
+                        markdown: page.markdown,
+                        folder: page.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent("404.html")
+        )
+        
+//        let notFoundPage = content.notFound
+//        return .init(
+//            site: siteState(for: content.config),
+//            page: .init(
+//                slug: notFoundPage.slug,
+//                metadata: metadata(for: notFoundPage),
+//                context: .init(),
+//                content: render(
+//                    markdown: notFoundPage.markdown,
+//                    folder: Content.Page.folder
+//                )
+//            ),
+//            userDefined: content.config.site.userDefined
+//                + notFoundPage.userDefined,
+//            year: currentYear,
+//            template: notFoundPage.template ?? "pages.404"
+//        )
+    }
     //
     //    // MARK: - blog
     //
@@ -343,28 +362,50 @@ struct Site {
     //        )
     //    }
     //
-    //    func authorList() -> AuthorListHTMLPageState {
-    //        let authorsPage = content.blog.author.home
-    //        return .init(
-    //            site: siteState(for: content.config),
-    //            page: .init(
-    //                slug: authorsPage.slug,
-    //                metadata: metadata(for: authorsPage),
-    //                context: .init(
-    //                    authors: authorListState()
-    //                ),
-    //                content: render(
-    //                    markdown: authorsPage.markdown,
-    //                    folder: Content.Page.folder
-    //                )
-    //            ),
-    //            userDefined: content.config.site.userDefined
-    //                + authorsPage.userDefined,
-    //            year: currentYear,
-    //            template: authorsPage.template ?? "pages.blog.authors"
-    //        )
-    //    }
-    //
+
+    func authorList() -> Renderable<Output.HTML<State.Blog.Author.List>>? {
+        guard let authors = source.contents.pages.blog.authors else {
+            return nil
+        }
+        return .init(
+            template: authors.template ?? "pages.blog.authors",
+            context: .init(
+                site: siteState(),
+                page: .init(
+                    metadata: metadata(for: authors),
+                    context: .init(authors: authorListState()),
+                    content: render(
+                        markdown: authors.markdown,
+                        folder: authors.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(authors.slug)
+                .appendingPathComponent("index.html")
+        )
+//        return .init(
+//            site: siteState(for: content.config),
+//            page: .init(
+//                slug: authorsPage.slug,
+//                metadata: metadata(for: authorsPage),
+//                context: .init(
+//                    authors: authorListState()
+//                ),
+//                content: render(
+//                    markdown: authorsPage.markdown,
+//                    folder: Content.Page.folder
+//                )
+//            ),
+//            userDefined: content.config.site.userDefined
+//            + authorsPage.userDefined,
+//            year: currentYear,
+//            template: authorsPage.template ?? "pages.blog.authors"
+//        )
+    }
+    
     func tagList() -> Renderable<Output.HTML<State.Blog.Tag.List>>? {
         guard let tags = source.contents.pages.blog.tags else {
             return nil
@@ -384,9 +425,9 @@ struct Site {
                 userDefined: [:],
                 year: currentYear
             ),
-            destination: destinationUrl.appendingPathComponent(
-                "tags/index.html"
-            )
+            destination: destinationUrl
+                .appendingPathComponent(tags.slug)
+                .appendingPathComponent("index.html")
         )
         
 //        let tagsPage = content.blog.tag.home
