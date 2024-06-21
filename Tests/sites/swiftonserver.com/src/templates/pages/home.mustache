@@ -29,7 +29,7 @@
     {{/empty(page.context.featured)}}
     {{^empty(page.context.featured)}}
     {{#page.context.featured}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.featured}}
     {{/empty(page.context.featured)}}
     
@@ -40,7 +40,7 @@
     {{/empty(page.context.posts)}}
     {{^empty(page.context.posts)}}
     {{#page.context.posts}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.posts}}
     {{/empty(page.context.posts)}}
     
@@ -50,7 +50,7 @@
     {{/empty(page.context.authors)}}
     {{^empty(page.context.authors)}}
     {{#page.context.authors}}
-        {{> _partials.author}}
+        {{> blog.blocks.author}}
     {{/page.context.authors}}
     {{/empty(page.context.authors)}}
     
@@ -60,7 +60,7 @@
     {{/empty(page.context.tags)}}
     {{^empty(page.context.tags)}}
     {{#page.context.tags}}
-        {{> _partials.tag}}
+        {{> blog.blocks.tag}}
     {{/page.context.tags}}
     {{/empty(page.context.tags)}}
 

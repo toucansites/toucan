@@ -11,7 +11,7 @@
                 {{#authors}}
                         <a class="authorBadge" href="{{permalink}}">
                             <div class="midi">
-                            {{> _partials.figure}}
+                            {{> blocks.figure}}
                             </div>
                             <div>{{title}}</div>
                         </a>
@@ -27,7 +27,7 @@
             </section>
         
             {{#figure}}
-                {{> _partials.figure}}
+                {{> blocks.figure}}
             {{/figure}}
             </header>
 
@@ -40,7 +40,7 @@
                 {{^empty(tags)}}
                 <div class="meta">
                 {{#tags}}
-                    {{> _partials.postTag}}
+                    {{> blog.blocks.postTag}}
                 {{/tags}}
                 </div>
                 {{/empty(tags)}}

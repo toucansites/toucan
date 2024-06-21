@@ -14,7 +14,7 @@
     {{^empty(page.context.posts)}}
     <div class="grid-221">
     {{#page.context.posts}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.posts}}
     </div>
     {{/empty(page.context.posts)}}
@@ -25,7 +25,7 @@
     
     <div class="pagination">
     {{#page.context.pagination}}
-        {{> _partials.pagination}}
+        {{> blocks.pagination}}
     {{/page.context.pagination}}
     </div>
     {{/empty(page.context.pagination)}}

@@ -13,13 +13,13 @@
             {{^empty(tags)}}
             <div class="meta">
             {{#tags}}
-                {{> _partials.tag}}
+                {{> blog.blocks.tag}}
             {{/tags}}
             </div>
             {{/empty(tags)}}
             {{#authors}}
                 {{#figure}}
-                {{> _partials.authorFigure}}
+                {{> blog.blocks.authorFigure}}
                 {{/figure}}
             <p>
                 <span class="author">Written by: <a href="{{userDefined.authorLink}}" target="_blank">{{title}}</a> @ 
@@ -30,7 +30,7 @@
         </section>
         
         {{#figure}}
-        {{> _partials.figure}}
+        {{> blocks.figure}}
         {{/figure}}
     </header>
 
@@ -47,7 +47,7 @@
     <section id="about-author" class="content-wrapper">
         {{#authors}}
             {{#figure}}
-            {{> _partials.authorFigure}}
+            {{> blog.blocks.authorFigure}}
             {{/figure}}
             <h4>About {{title}}</h4>
             <p class="author-about">{{& markdown}}</p>
@@ -64,14 +64,14 @@
             {{#page.context.next}}
             <hr>
                 <h2 class="morePostsTitle">Next post</h2>
-                {{> _partials.post}}
+                {{> blog.blocks.post}}
             {{/page.context.next}}
             {{^page.context.prev}}
             {{/page.context.prev}}
             {{#page.context.prev}}
             <hr>
                 <h2 class="morePostsTitle">Previous post</h2>
-                {{> _partials.post}}
+                {{> blog.blocks.post}}
             {{/page.context.prev}}
         
     </div>
@@ -85,7 +85,7 @@
     {{/empty(page.context.related)}}
     {{^empty(page.context.related)}}
     {{#page.context.related}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.related}}
     {{/empty(page.context.related)}}
     </div>
@@ -98,7 +98,7 @@
     {{/empty(page.context.moreByAuthor)}}
     {{^empty(page.context.moreByAuthor)}}
     {{#page.context.moreByAuthor}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.moreByAuthor}}
     {{/empty(page.context.moreByAuthor)}}
     </div>

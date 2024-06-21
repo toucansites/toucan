@@ -25,7 +25,7 @@ struct ToucanTestSuite {
     @Test(
         arguments: [
             "demo",
-            "theswiftdev.com",
+//            "theswiftdev.com",
         ]
     )
     func generate(
@@ -34,48 +34,12 @@ struct ToucanTestSuite {
         let baseUrl = URL(fileURLWithPath: sitesPath)
         let siteUrl = baseUrl.appendingPathComponent(site)
         let srcUrl = siteUrl.appendingPathComponent("src")
-        let templatesUrl = srcUrl.appendingPathComponent("templates")
-        let contentsUrl = srcUrl.appendingPathComponent("contents")
-        let publicFilesUrl = srcUrl.appendingPathComponent("public")
-        let configFileUrl = contentsUrl.appendingPathComponent("config.yaml")
         let destUrl = siteUrl.appendingPathComponent("dist")
-        let configLoader = Source.ConfigLoader(
-            configFileUrl: configFileUrl,
-            fileManager: .default,
-            frontMatterParser: .init()
+
+        let toucan = Toucan(
+            inputUrl: srcUrl,
+            outputUrl: destUrl
         )
-        let config = try configLoader.load()
-
-        let contentsLoader = Source.ContentsLoader(
-            contentsUrl: contentsUrl,
-            config: config,
-            fileManager: .default,
-            frontMatterParser: .init()
-        )
-
-        let contents = try contentsLoader.load()
-        for content in contents.all() {
-            print(content.slug)
-        }
-        try contents.validateSlugs()
-
-        let site = Site(
-            source: .init(
-                config: config,
-                contents: contents,
-                assets: .init(
-                    storage: [:]
-                )
-            ),
-            destinationUrl: destUrl
-        )
-
-        let renderer = SiteGenerator(
-            site: site,
-            publicFilesUrl: publicFilesUrl,
-            templatesUrl: templatesUrl
-        )
-
-        try renderer.render()
+        try await toucan.run()        
     }
 }

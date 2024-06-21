@@ -2,7 +2,7 @@
 slug: my-page
 title: My custom page
 description: This is my custom page... 
-template: _custom.my-page
+template: custom.my-page
 ---
 
 

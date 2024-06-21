@@ -1,18 +1,18 @@
 //
 //  File.swift
+//  
 //
-//
-//  Created by Tibor Bodecs on 14/05/2024.
+//  Created by Tibor Bodecs on 21/06/2024.
 //
 
 import Foundation
 
-struct SiteGenerator {
+struct SiteRenderer {
 
     let site: Site
 
-    let publicFilesUrl: URL
     let templatesUrl: URL
+    let overridesUrl: URL
 
     let fileManager: FileManager = .default
 
@@ -60,27 +60,13 @@ struct SiteGenerator {
     //        }
     //    }
 
-    func copyPublicFiles() throws {
-        for file in fileManager.listDirectory(at: publicFilesUrl) {
-            try fileManager.copy(
-                from: publicFilesUrl.appendingPathComponent(file),
-                to: site.destinationUrl.appendingPathComponent(file)
-            )
-        }
-    }
+    
 
     func render() throws {
         let renderer = try MustacheToHTMLRenderer(
-            templatesUrl: templatesUrl
+            templatesUrl: templatesUrl,
+            overridesUrl: overridesUrl
         )
-        
-        // reset
-        try fileManager.delete(at: site.destinationUrl)
-        try fileManager.createDirectory(at: site.destinationUrl)
-
-        // copy public files first
-        try copyPublicFiles()
-
         // render pages
         let home = site.home()
         let notFound = site.notFound()

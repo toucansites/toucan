@@ -20,7 +20,7 @@
     <div class="grid">
     {{#page.context.posts}}
         <div class="post card">
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
         </div>
     {{/page.context.posts}}
     </div>
@@ -32,7 +32,7 @@
     
     <div class="pagination">
     {{#page.context.pagination}}
-        {{> _partials.pagination}}
+        {{> blocks.pagination}}
     {{/page.context.pagination}}
     </div>
     {{/empty(page.context.pagination)}}

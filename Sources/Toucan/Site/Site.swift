@@ -185,7 +185,7 @@ struct Site {
             )
 
         return .init(
-            template: source.contents.pages.main.home.template ?? "pages.home",
+            template: source.contents.pages.main.home.template ?? "main.home",
             context: context,
             destination: destinationUrl.appendingPathComponent(
                 "index.html"
@@ -196,7 +196,7 @@ struct Site {
     func notFound() -> Renderable<Output.HTML<Void>> {
         let page = source.contents.pages.main.notFound
         return .init(
-            template: page.template ?? "pages.404",
+            template: page.template ?? "main.404",
             context: .init(
                 site: getContext(),
                 page: .init(
@@ -223,7 +223,7 @@ struct Site {
         }
 
         return .init(
-            template: content.template ?? "pages.blog.home",
+            template: content.template ?? "blog.home",
             context: .init(
                 site: getContext(),
                 page: .init(
@@ -256,7 +256,7 @@ struct Site {
             return nil
         }
         return .init(
-            template: authors.template ?? "pages.blog.authors",
+            template: authors.template ?? "blog.authors",
             context: .init(
                 site: getContext(),
                 page: .init(
@@ -283,7 +283,7 @@ struct Site {
     func authorDetails() -> [Renderable<Output.HTML<Context.Blog.Author.Detail>>] {
         content.blog.authors.map { author in
             return .init(
-                template: author.content.template ?? "pages.single.author",
+                template: author.content.template ?? "blog.single.author",
                 context: .init(
                     site: getContext(),
                     page: .init(
@@ -315,7 +315,7 @@ struct Site {
             return nil
         }
         return .init(
-            template: tags.template ?? "pages.blog.tags",
+            template: tags.template ?? "blog.tags",
             context: .init(
                 site: getContext(),
                 page: .init(
@@ -343,7 +343,7 @@ struct Site {
     func tagDetails() -> [Renderable<Output.HTML<Context.Blog.Tag.Detail>>] {
         content.blog.tags.map { tag in
             return .init(
-                template: tag.content.template ?? "pages.single.tag",
+                template: tag.content.template ?? "blog.single.tag",
                 context: .init(
                     site: getContext(),
                     page: .init(
@@ -374,7 +374,7 @@ struct Site {
             return nil
         }
         return .init(
-            template: posts.template ?? "pages.blog.posts",
+            template: posts.template ?? "blog.posts",
             context: .init(
                 site: getContext(),
                 page: .init(
@@ -480,7 +480,7 @@ struct Site {
     func postDetails() -> [Renderable<Output.HTML<Context.Blog.Post.Detail>>] {
         content.blog.posts.map { post in
             return .init(
-                template: post.content.template ?? "pages.single.post",
+                template: post.content.template ?? "blog.single.post",
                 context: .init(
                     site: getContext(),
                     page: .init(

@@ -25,7 +25,8 @@ struct MustacheToHTMLRenderer {
     private let ids: [String]
 
     init(
-        templatesUrl: URL
+        templatesUrl: URL,
+        overridesUrl: URL
     ) throws {
         let ext = "mustache"
         var templates: [String: MustacheTemplate] = [:]
@@ -51,8 +52,35 @@ struct MustacheToHTMLRenderer {
                 )
             }
         }
+        
+        if let dirContents = FileManager.default.enumerator(
+            at: overridesUrl,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        ) {
+            for case let url as URL in dirContents
+            where url.pathExtension == ext {
+                var relativePathComponents = url.pathComponents.dropFirst(
+                    overridesUrl.pathComponents.count
+                )
+                let name = String(
+                    relativePathComponents.removeLast()
+                        .dropLast(".\(ext)".count)
+                )
+                relativePathComponents.append(name)
+                let id = relativePathComponents.joined(separator: ".")
+                templates[id] = try MustacheTemplate(
+                    string: .init(contentsOf: url)
+                )
+            }
+        }
+        
+        
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
+        print("---")
+        print(self.ids)
+        print("---")
     }
 
     func render(

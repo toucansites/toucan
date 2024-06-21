@@ -6,7 +6,7 @@
     {{#page.context.author}}
     <header>
         <div class="profile-picture">
-            {{> _partials.figure}}
+            {{> blocks.figure}}
         </div>
         <h1>{{title}}</h1>
         <p>{{description}}</p>
@@ -22,7 +22,7 @@
     {{^empty(page.context.posts)}}
     <div class="grid">
     {{#page.context.posts}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.posts}}
     </div>
     {{/empty(page.context.posts)}}

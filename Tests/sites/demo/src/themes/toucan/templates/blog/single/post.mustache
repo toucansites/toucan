@@ -13,14 +13,14 @@
             {{^empty(tags)}}
             <div class="meta">
             {{#tags}}
-                {{> _partials.tag}}
+                {{> blog.blocks.tag}}
             {{/tags}}
             </div>
             {{/empty(tags)}}
         </section>
         
         {{#figure}}
-        {{> _partials.figure}}
+        {{> blocks.figure}}
         {{/figure}}
     </header>
 
@@ -32,12 +32,12 @@
     
     <h2>Next</h2>
     {{#page.context.next}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.next}}
     
     <h2>Prev</h2>
     {{#page.context.prev}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.prev}}
     
     <h2>Related</h2>
@@ -46,7 +46,7 @@
     {{/empty(page.context.related)}}
     {{^empty(page.context.related)}}
     {{#page.context.related}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.related}}
     {{/empty(page.context.related)}}
     
@@ -56,7 +56,7 @@
     {{/empty(page.context.moreByAuthor)}}
     {{^empty(page.context.moreByAuthor)}}
     {{#page.context.moreByAuthor}}
-        {{> _partials.post}}
+        {{> blog.blocks.post}}
     {{/page.context.moreByAuthor}}
     {{/empty(page.context.moreByAuthor)}}
 

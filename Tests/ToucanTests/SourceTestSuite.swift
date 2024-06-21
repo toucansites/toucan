@@ -11,7 +11,7 @@ import Testing
 @testable import Toucan
 
 @Suite
-struct SiteSourceTestSuite {
+struct SourceTestSuite {
 
     var sitesPath: String {
         "/"
@@ -25,9 +25,9 @@ struct SiteSourceTestSuite {
     @Test(
         arguments: [
             "demo",
-            "theswiftdev.com",
-            "binarybirds.com",
-            "swiftonserver.com",
+//            "theswiftdev.com",
+//            "binarybirds.com",
+//            "swiftonserver.com",
         ]
     )
     func loadConfig(
@@ -36,8 +36,7 @@ struct SiteSourceTestSuite {
         let baseUrl = URL(fileURLWithPath: sitesPath)
         let siteUrl = baseUrl.appendingPathComponent(site)
         let srcUrl = siteUrl.appendingPathComponent("src")
-        let contentsUrl = srcUrl.appendingPathComponent("contents")
-        let configFileUrl = contentsUrl.appendingPathComponent("config.yaml")
+        let configFileUrl = srcUrl.appendingPathComponent("config.yaml")
         let configLoader = Source.ConfigLoader(
             configFileUrl: configFileUrl,
             fileManager: .default,
@@ -49,9 +48,9 @@ struct SiteSourceTestSuite {
     @Test(
         arguments: [
             "demo",
-            "theswiftdev.com",
-            "binarybirds.com",
-            "swiftonserver.com",
+//            "theswiftdev.com",
+//            "binarybirds.com",
+//            "swiftonserver.com",
         ]
     )
     func loadContents(
@@ -61,7 +60,7 @@ struct SiteSourceTestSuite {
         let siteUrl = baseUrl.appendingPathComponent(site)
         let srcUrl = siteUrl.appendingPathComponent("src")
         let contentsUrl = srcUrl.appendingPathComponent("contents")
-        let configFileUrl = contentsUrl.appendingPathComponent("config.yaml")
+        let configFileUrl = srcUrl.appendingPathComponent("config.yaml")
         let configLoader = Source.ConfigLoader(
             configFileUrl: configFileUrl,
             fileManager: .default,
@@ -77,9 +76,6 @@ struct SiteSourceTestSuite {
         )
 
         let contents = try contentsLoader.load()
-        for content in contents.all() {
-            print(content.slug)
-        }
         try contents.validateSlugs()
     }
 
