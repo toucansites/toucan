@@ -78,6 +78,7 @@ extension Context {
             let figure: Context.Figure??
             let numberOfPosts: Int
             let userDefined: [String: Any]
+            let markdown: String
 
         }
 

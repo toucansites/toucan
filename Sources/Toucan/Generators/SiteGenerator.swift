@@ -80,6 +80,11 @@ struct SiteGenerator {
         if let renderable = site.authorList() {
             try render(renderer, renderable)
         }
+        
+        for renderable in site.authorDetails() {
+            try render(renderer, renderable)
+        }
+        
     }
 
     // MARK: -

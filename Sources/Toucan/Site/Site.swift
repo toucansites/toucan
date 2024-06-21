@@ -22,143 +22,7 @@ struct Site {
     let rssDateFormatter: DateFormatter
     let sitemapDateFormatter: DateFormatter
     
-    let content: Content
-    
-
-    struct Content {
-        
-        struct Blog {
-
-            struct Post {
-                let content: Source.Content
-                let published: Date
-                let tags: [String]
-                let authors: [String]
-                let featured: Bool
-                
-                init(
-                    content: Source.Content,
-                    config: Source.Config,
-                    dateFormatter: DateFormatter
-                ) {
-                    self.content = content
-                    
-                    dateFormatter.dateFormat = config.site.dateFormat
-
-                    if
-                        let rawDate = content.frontMatter["publication"] as? String,
-                        let date = dateFormatter.date(from: rawDate)
-                    {
-                        self.published = date
-                    }
-                    else {
-                        self.published = Date()
-                    }
-                    
-                    let tags = content.frontMatter["tags"] as? [String] ?? []
-                    self.tags = tags.map { slug in
-                        return slug.safeSlug(
-                            prefix: config.contents.blog.tags.slugPrefix
-                        )
-                    }
-                    
-                    let authors = content.frontMatter["authors"] as? [String] ?? []
-                    self.authors = authors.map { slug in
-                        return slug.safeSlug(
-                            prefix: config.contents.blog.authors.slugPrefix
-                        )
-                    }
-                    
-                    self.featured = content.frontMatter["featured"] as? Bool ?? false
-                }
-                
-                func context(site: Site) -> Context.Blog.Post {
-                    .init(
-                        permalink: site.permalink(content.slug),
-                        title: content.title,
-                        excerpt: content.description,
-                        date: "",
-                        figure: nil,
-                        tags: [],
-                        authors: [],
-                        readingTime: site.readingTime(content.markdown),
-                        featured: featured,
-                        userDefined: [:]
-                    )
-                }
-            }
-
-            struct Author {
-                let content: Source.Content
-                let posts: [Content.Blog.Post]
-
-                func context(site: Site) -> Context.Blog.Author {
-                    .init(
-                        permalink: site.permalink(content.slug),
-                        title: content.title,
-                        description: content.description,
-                        figure: nil,
-                        numberOfPosts: posts.count,
-                        userDefined: [:],
-                        markdown: site.render(
-                            markdown: content.markdown,
-                            folder: content.assetsFolder
-                        )
-                    )
-                }
-            }
-
-            struct Tag {
-                let content: Source.Content
-                let posts: [Content.Blog.Post]
-                
-                func context(site: Site) -> Context.Blog.Tag {
-                    .init(
-                        permalink: site.permalink(content.slug),
-                        title: content.title,
-                        description: content.description,
-                        figure: nil,
-                        numberOfPosts: posts.count,
-                        userDefined: [:]
-//                        markdown: site.render(
-//                            markdown: content.markdown,
-//                            folder: content.assetsFolder
-//                        )
-                    )
-                }
-            }
-
-            let posts: [Post]
-            let authors: [Author]
-            let tags: [Tag]
-            
-            func sortedAuthors() -> [Author] {
-                authors.sorted {
-                    $0.content.title.localizedCaseInsensitiveCompare($1.content.title) == .orderedAscending
-                }
-            }
-
-            func sortedTags() -> [Tag] {
-                tags.sorted {
-                    $0.content.title.localizedCaseInsensitiveCompare($1.content.title) == .orderedAscending
-                }
-            }
-
-            func sortedPosts() -> [Post] {
-                posts
-                    .sorted { $0.published > $1.published }
-            }
-
-            func featuredPosts() -> [Post] {
-                posts
-                    .filter { $0.featured }
-                    .sorted { $0.published > $1.published }
-            }
-        }
-        
-        let blog: Blog
-    }
-    
+    let content: Site.Content
 
     init(
         source: Source,
@@ -379,48 +243,7 @@ struct Site {
     //    }
     //
 
-    func authorList() -> Renderable<Output.HTML<Context.Blog.Author.List>>? {
-        guard let authors = source.contents.pages.blog.authors else {
-            return nil
-        }
-        return .init(
-            template: authors.template ?? "pages.blog.authors",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: authors),
-                    context: .init(authors: content.blog.sortedAuthors().map { $0.context(site: self) }),
-                    content: render(
-                        markdown: authors.markdown,
-                        folder: authors.assetsFolder
-                    )
-                ),
-                userDefined: [:],
-                year: currentYear
-            ),
-            destination: destinationUrl
-                .appendingPathComponent(authors.slug)
-                .appendingPathComponent("index.html")
-        )
-//        return .init(
-//            site: siteState(for: content.config),
-//            page: .init(
-//                slug: authorsPage.slug,
-//                metadata: metadata(for: authorsPage),
-//                context: .init(
-//                    authors: authorListState()
-//                ),
-//                content: render(
-//                    markdown: authorsPage.markdown,
-//                    folder: Content.Page.folder
-//                )
-//            ),
-//            userDefined: content.config.site.userDefined
-//            + authorsPage.userDefined,
-//            year: currentYear,
-//            template: authorsPage.template ?? "pages.blog.authors"
-//        )
-    }
+    
     
     func tagList() -> Renderable<Output.HTML<Context.Blog.Tag.List>>? {
         guard let tags = source.contents.pages.blog.tags else {
@@ -432,7 +255,11 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: tags),
-                    context: .init(tags: content.blog.sortedTags().map { $0.context(site: self) }),
+                    context: .init(
+                        tags: content.blog.sortedTags().map {
+                            $0.context(site: self)
+                        }
+                    ),
                     content: render(
                         markdown: tags.markdown,
                         folder: tags.assetsFolder
@@ -445,25 +272,6 @@ struct Site {
                 .appendingPathComponent(tags.slug)
                 .appendingPathComponent("index.html")
         )
-        
-//        let tagsPage = content.blog.tag.home
-//        return .init(
-//            site: siteState(for: content.config),
-//            page: .init(
-//                slug: tagsPage.slug,
-//                metadata: metadata(for: tagsPage),
-//                context: .init(
-//                    tags: tagListState()
-//                ),
-//                content: render(
-//                    markdown: tagsPage.markdown,
-//                    folder: Content.Page.folder
-//                )
-//            ),
-//            userDefined: content.config.site.userDefined + tagsPage.userDefined,
-//            year: currentYear,
-//            template: tagsPage.template ?? "pages.blog.tags"
-//        )
     }
     //
     //    func postListPages() -> [PostListHTMLPageState] {
@@ -545,31 +353,64 @@ struct Site {
     //
     //        return result
     //    }
-    //
-    //    // MARK: - detail page states
-    //
-    //    func authorDetails() -> [AuthorDetailHTMLPageState] {
-    //        content.blog.author.contents.map {
-    //            .init(
-    //                site: siteState(for: content.config),
-    //                page: .init(
-    //                    slug: $0.slug,
-    //                    metadata: metadata(for: $0),
-    //                    context: .init(
-    //                        author: authorState(for: $0),
-    //                        posts: postListState(authorSlug: $0.slug)
-    //                    ),
-    //                    content: render(
-    //                        markdown: $0.markdown,
-    //                        folder: Content.Author.folder
-    //                    )
-    //                ),
-    //                userDefined: content.config.site.userDefined + $0.userDefined,
-    //                year: currentYear,
-    //                template: $0.template ?? "pages.single.author"
-    //            )
-    //        }
-    //    }
+    
+    // MARK: - author
+    
+    func authorList() -> Renderable<Output.HTML<Context.Blog.Author.List>>? {
+        guard let authors = source.contents.pages.blog.authors else {
+            return nil
+        }
+        return .init(
+            template: authors.template ?? "pages.blog.authors",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: authors),
+                    context: .init(
+                        authors: content.blog.sortedAuthors().map {
+                            $0.context(site: self)
+                        }
+                    ),
+                    content: render(
+                        markdown: authors.markdown,
+                        folder: authors.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(authors.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+    func authorDetails() -> [Renderable<Output.HTML<Context.Blog.Author.Detail>>] {
+        content.blog.authors.map { author in
+            return .init(
+                template: author.content.template ?? "pages.single.author",
+                context: .init(
+                    site: getContext(),
+                    page: .init(
+                        metadata: metadata(for: author.content),
+                        context: .init(
+                            author: author.context(site: self),
+                            posts: author.posts.map { $0.context(site: self) }
+                        ),
+                        content: render(
+                            markdown: author.content.markdown,
+                            folder: author.content.assetsFolder
+                        )
+                    ),
+                    userDefined: [:],
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(author.content.slug)
+                    .appendingPathComponent("index.html")
+            )
+        }
+    }
     //
     //    func tagDetails() -> [TagDetailHTMLPageState] {
     //        content.blog.tag.contents.map {
