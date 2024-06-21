@@ -30,7 +30,8 @@ struct MustacheToHTMLRenderer {
     ) throws {
         let ext = "mustache"
         var templates: [String: MustacheTemplate] = [:]
-
+        
+        // TODO: eliminate duplicate code
         if let dirContents = FileManager.default.enumerator(
             at: templatesUrl,
             includingPropertiesForKeys: [.isRegularFileKey],
@@ -75,12 +76,11 @@ struct MustacheToHTMLRenderer {
             }
         }
         
-        
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
-        print("---")
-        print(self.ids)
-        print("---")
+//        print("---")
+//        print(self.ids)
+//        print("---")
     }
 
     func render(

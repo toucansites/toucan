@@ -98,6 +98,15 @@ public struct Toucan {
         inputUrl
             .appendingPathComponent("theme_overrides")
             .appendingPathComponent("toucan")
+            .appendingPathComponent(Directories.templates)
+    }
+    
+    // TODO: fix this
+    var templateOverridesAssetsUrl: URL {
+        inputUrl
+            .appendingPathComponent("theme_overrides")
+            .appendingPathComponent("toucan")
+            .appendingPathComponent(Directories.assets)
     }
     
     
@@ -120,7 +129,11 @@ public struct Toucan {
             from: themeAssetsUrl,
             to: outputUrl
         )
-        // TODO: copy theme override assets
+        // theme override assets
+        try fileManager.copyRecursively(
+            from: templateOverridesAssetsUrl,
+            to: outputUrl
+        )
         // content assets
         try fileManager.copyRecursively(
             from: assetsUrl,
