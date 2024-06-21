@@ -9,7 +9,7 @@ import Foundation
 
 extension Array where Element: Sendable {
 
-    func map<T: Sendable>(
+    func mapC<T: Sendable>(
         concurrency: Int = ProcessInfo.processInfo.processorCount,
         _ t: @escaping @Sendable (Element) async throws -> T
     ) async throws -> [T] {

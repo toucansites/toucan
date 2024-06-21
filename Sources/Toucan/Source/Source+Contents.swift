@@ -46,18 +46,6 @@ extension Source {
             let authors: [Content]
             let tags: [Content]
             let posts: [Content]
-
-            var alphabeticallySortedTags: [Content] {
-                tags.sorted {
-                    $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
-                }
-            }
-
-            var alphabeticallySortedAuthors: [Content] {
-                authors.sorted {
-                    $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
-                }
-            }
         }
 
         struct Docs {

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 14/06/2024.
 //
 
-struct State {
+struct Context {
 
     struct Site {
         let baseUrl: String

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 20/06/2024.
 //
 
-extension State {
+extension Context {
     
     struct Blog {
 
@@ -16,7 +16,6 @@ extension State {
                 let pagination: [Pagination]
             }
 
-            
             struct Detail {
                 let post: Post
 
@@ -31,7 +30,7 @@ extension State {
             let title: String
             let excerpt: String
             let date: String
-            let figure: State.Figure??
+            let figure: Context.Figure??
 
             let tags: [Tag]
             let authors: [Author]
@@ -55,7 +54,7 @@ extension State {
             let permalink: String
             let title: String
             let description: String
-            let figure: State.Figure?
+            let figure: Context.Figure?
             let numberOfPosts: Int
             let userDefined: [String: Any]
             let markdown: String
@@ -76,7 +75,7 @@ extension State {
             let permalink: String
             let title: String
             let description: String
-            let figure: State.Figure??
+            let figure: Context.Figure??
             let numberOfPosts: Int
             let userDefined: [String: Any]
 

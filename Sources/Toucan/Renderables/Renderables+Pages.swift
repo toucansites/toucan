@@ -11,7 +11,6 @@ extension Renderables {
     
     public struct Pages {
 
-        let custom: [Renderable<Output.HTML<State.Pages.Detail>>]
+        let custom: [Renderable<Output.HTML<Context.Pages.Detail>>]
     }
-    
 }

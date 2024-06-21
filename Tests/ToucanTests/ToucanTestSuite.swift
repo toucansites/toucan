@@ -69,7 +69,7 @@ struct ToucanTestSuite {
             destinationUrl: destUrl
         )
 
-        let renderer = SiteRenderer(
+        let renderer = SiteGenerator(
             site: site,
             templatesUrl: templatesUrl
         )

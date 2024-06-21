@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SiteRenderer {
+struct SiteGenerator {
 
     let site: Site
 

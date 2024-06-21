@@ -10,21 +10,21 @@ extension Renderables {
     struct Blog {
 
         struct Author {
-            let list: Renderable<Output.HTML<State.Blog.Author.List>>?
-            let details: [Renderable<Output.HTML<State.Blog.Author.Detail>>]
+            let list: Renderable<Output.HTML<Context.Blog.Author.List>>?
+            let details: [Renderable<Output.HTML<Context.Blog.Author.Detail>>]
         }
 
         struct Tag {
-            let list: Renderable<Output.HTML<State.Blog.Tag.List>>?
-            let details: [Renderable<Output.HTML<State.Blog.Tag.Detail>>]
+            let list: Renderable<Output.HTML<Context.Blog.Tag.List>>?
+            let details: [Renderable<Output.HTML<Context.Blog.Tag.Detail>>]
         }
 
         struct Post {
-            let pages: [Renderable<Output.HTML<State.Blog.Post.List>>]
-            let details: [Renderable<Output.HTML<State.Blog.Post.Detail>>]
+            let pages: [Renderable<Output.HTML<Context.Blog.Post.List>>]
+            let details: [Renderable<Output.HTML<Context.Blog.Post.Detail>>]
         }
 
-        let home: Renderable<Output.HTML<State.Blog.Home>>?
+        let home: Renderable<Output.HTML<Context.Blog.Home>>?
         let author: Author
         let tag: Tag
         let post: Post
