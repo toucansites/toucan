@@ -114,6 +114,14 @@ struct SiteGenerator {
             try render(renderer, renderable)
         }
         
+        // render posts
+        if let renderable = site.postList() {
+            try render(renderer, renderable)
+        }
+        for renderable in site.postDetails() {
+            try render(renderer, renderable)
+        }
+        
         // custom pages
         for renderable in site.customPages() {
             try render(renderer, renderable)

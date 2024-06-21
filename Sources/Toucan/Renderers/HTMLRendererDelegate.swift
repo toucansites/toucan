@@ -27,7 +27,8 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        fatalError()
+        nil
+//        fatalError()
         //        guard
         //            let source = image.source,
         //            source.hasPrefix("."),

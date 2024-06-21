@@ -160,7 +160,7 @@ struct Site {
         )
     }
     
-    // MARK: - site page renderables
+    // MARK: - main
     
     func home() -> Renderable<Output.HTML<Context.Main.Home>> {
         let context = Output.HTML<Context.Main.Home>
@@ -214,92 +214,6 @@ struct Site {
                 .appendingPathComponent("404.html")
         )
     }
-
-    
-    
-
-    
-    
-    
-    //    func postListPages() -> [PostListHTMLPageState] {
-    //        let postsPage = content.blog.post.home
-    //        let pageLimit = content.config.blog.posts.page.limit
-    //        let pages = content.blog.post.sortedContents.chunks(ofCount: pageLimit)
-    //
-    //        func replace(
-    //            _ number: Int,
-    //            _ value: String
-    //        ) -> String {
-    //            value.replacingOccurrences(
-    //                of: "{{number}}",
-    //                with: String(number)
-    //            )
-    //        }
-    //
-    //        var result: [PostListHTMLPageState] = []
-    //        for (index, posts) in pages.enumerated() {
-    //            let pageNumber = index + 1
-    //
-    //            let title = replace(pageNumber, postsPage.title)
-    //            let description = replace(pageNumber, postsPage.description)
-    //            let slug = replace(pageNumber, postsPage.slug)
-    //
-    //            let state: PostListHTMLPageState = .init(
-    //                site: siteState(
-    //                    for: content.config
-    //                ),
-    //                page: .init(
-    //                    slug: slug,
-    //                    metadata: .init(
-    //                        permalink: permalink(slug),
-    //                        title: title,
-    //                        description: description,
-    //                        imageUrl: assetUrl(
-    //                            for: postsPage.coverImage,
-    //                            folder: Content.Page.folder
-    //                        )
-    //                    ),
-    //                    context: .init(
-    //                        posts: posts.map {
-    //                            postState(
-    //                                for: $0,
-    //                                authors: content.blog.author.contentsBy(
-    //                                    slugs: $0.authorSlugs
-    //                                ),
-    //                                tags: content.blog.tag.contentsBy(
-    //                                    slugs: $0.tagSlugs
-    //                                )
-    //                            )
-    //                        },
-    //                        pagination: (1...pages.count)
-    //                            .map {
-    //                                .init(
-    //                                    number: $0,
-    //                                    total: pages.count,
-    //                                    slug: replace($0, postsPage.slug),
-    //                                    permalink: permalink(
-    //                                        replace($0, postsPage.slug)
-    //                                    ),
-    //                                    isCurrent: pageNumber == $0
-    //                                )
-    //                            }
-    //                    ),
-    //                    content: render(
-    //                        markdown: postsPage.markdown,
-    //                        folder: Content.Page.folder
-    //                    )
-    //                ),
-    //                userDefined: content.config.site.userDefined
-    //                    + postsPage.userDefined,
-    //                year: currentYear,
-    //                template: postsPage.template ?? "pages.blog.posts"
-    //            )
-    //
-    //            result.append(state)
-    //        }
-    //
-    //        return result
-    //    }
     
     // MARK: - blog
     
@@ -453,160 +367,148 @@ struct Site {
         }
     }
     
+    // MARK: - post
     
-    //
-    //    func nextPost(for slug: String) -> PostState? {
-    //        let posts = content.blog.post.sortedContents
-    //
-    //        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-    //            if index > 0 {
-    //                let post = posts[index - 1]
-    //                return postState(
-    //                    for: post,
-    //                    authors: content.blog.author.contentsBy(
-    //                        slugs: post.authorSlugs
-    //                    ),
-    //                    tags: content.blog.tag.contentsBy(
-    //                        slugs: post.tagSlugs
-    //                    )
-    //                )
-    //            }
-    //        }
-    //        return nil
-    //    }
-    //
-    //    func prevPost(for slug: String) -> PostState? {
-    //        let posts = content.blog.post.sortedContents
-    //
-    //        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-    //            if index < posts.count - 1 {
-    //                let post = posts[index + 1]
-    //                return postState(
-    //                    for: post,
-    //                    authors: content.blog.author.contentsBy(
-    //                        slugs: post.authorSlugs
-    //                    ),
-    //                    tags: content.blog.tag.contentsBy(
-    //                        slugs: post.tagSlugs
-    //                    )
-    //                )
-    //            }
-    //        }
-    //        return nil
-    //    }
-    //
-    //    func relatedPosts(for slug: String) -> [PostState] {
-    //        var result: [PostState] = []
-    //
-    //        let posts = content.blog.post.sortedContents
-    //        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-    //            let post = posts[index]
-    //            for tagSlug in post.tagSlugs {
-    //                result += content.blog.post.contentsBy(tagSlug: tagSlug)
-    //                    .filter { $0.slug != slug }
-    //                    .map {
-    //                        postState(
-    //                            for: $0,
-    //                            authors: content.blog.author.contentsBy(
-    //                                slugs: $0.authorSlugs
-    //                            ),
-    //                            tags: content.blog.tag.contentsBy(
-    //                                slugs: $0.tagSlugs
-    //                            )
-    //                        )
-    //                    }
-    //            }
-    //        }
-    //        return Array(result.shuffled().prefix(5))
-    //    }
-    //
-    //    func moreByPosts(for slug: String) -> [PostState] {
-    //        var result: [PostState] = []
-    //
-    //        let posts = content.blog.post.sortedContents
-    //        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-    //            let post = posts[index]
-    //            for authorSlug in post.authorSlugs {
-    //                result += content.blog.post.contentsBy(authorSlug: authorSlug)
-    //                    .filter { $0.slug != slug }
-    //                    .map {
-    //                        postState(
-    //                            for: $0,
-    //                            authors: content.blog.author.contentsBy(
-    //                                slugs: $0.authorSlugs
-    //                            ),
-    //                            tags: content.blog.tag.contentsBy(
-    //                                slugs: $0.tagSlugs
-    //                            )
-    //                        )
-    //                    }
-    //            }
-    //        }
-    //        return Array(result.shuffled().prefix(5))
-    //    }
-    //
-    //    func postDetails() -> [PostDetailHTMLPageState] {
-    //        content.blog.post.contents.map {
-    //            .init(
-    //                site: siteState(for: content.config),
-    //                page: .init(
-    //                    slug: $0.slug,
-    //                    metadata: metadata(for: $0),
-    //                    context: .init(
-    //                        post: postState(
-    //                            for: $0,
-    //                            authors: content.blog.author.contentsBy(
-    //                                slugs: $0.authorSlugs
-    //                            ),
-    //                            tags: content.blog.tag.contentsBy(
-    //                                slugs: $0.tagSlugs
-    //                            )
-    //                        ),
-    //                        related: relatedPosts(for: $0.slug),
-    //                        moreByAuthor: moreByPosts(for: $0.slug),
-    //                        next: nextPost(for: $0.slug),
-    //                        prev: prevPost(for: $0.slug)
-    //                    ),
-    //                    content: render(
-    //                        markdown: $0.markdown,
-    //                        folder: Content.Post.folder
-    //                    )
-    //                ),
-    //                userDefined: content.config.site.userDefined + $0.userDefined,
-    //                year: currentYear,
-    //                template: $0.template ?? "pages.single.post"
-    //            )
-    //        }
-    //    }
-    //
-    //    func pages() -> [PageDetailHTMLPageState] {
-    //        content.custom.pages.map {
-    //            .init(
-    //                site: siteState(for: content.config),
-    //                page: .init(
-    //                    slug: $0.slug,
-    //                    metadata: metadata(for: $0),
-    //                    context: .init(
-    //                        permalink: permalink($0.slug),
-    //                        title: $0.title,
-    //                        description: $0.description,
-    //                        figure: figureState(
-    //                            for: $0.coverImage,
-    //                            folder: Content.Page.folder
-    //                        ),
-    //                        userDefined: $0.userDefined
-    //                    ),
-    //                    content: render(
-    //                        markdown: $0.markdown,
-    //                        folder: Content.Page.folder
-    //                    )
-    //                ),
-    //                userDefined: content.config.site.userDefined + $0.userDefined,
-    //                year: currentYear,
-    //                template: $0.template ?? "pages.single.page"
-    //            )
-    //        }
-    //    }
+    func postList() -> Renderable<Output.HTML<Context.Blog.Post.List>>? {
+        guard let posts = source.contents.pages.blog.posts else {
+            return nil
+        }
+        return .init(
+            template: posts.template ?? "pages.blog.posts",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: posts),
+                    context: .init(
+                        posts: [],
+                        pagination: []
+                    ),
+                    content: render(
+                        markdown: posts.markdown,
+                        folder: posts.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(posts.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+//        func postListPages() -> [PostListHTMLPageState] {
+//            let postsPage = content.blog.post.home
+//            let pageLimit = content.config.blog.posts.page.limit
+//            let pages = content.blog.post.sortedContents.chunks(ofCount: pageLimit)
+//    
+//            func replace(
+//                _ number: Int,
+//                _ value: String
+//            ) -> String {
+//                value.replacingOccurrences(
+//                    of: "{{number}}",
+//                    with: String(number)
+//                )
+//            }
+//    
+//            var result: [PostListHTMLPageState] = []
+//            for (index, posts) in pages.enumerated() {
+//                let pageNumber = index + 1
+//    
+//                let title = replace(pageNumber, postsPage.title)
+//                let description = replace(pageNumber, postsPage.description)
+//                let slug = replace(pageNumber, postsPage.slug)
+//    
+//                let state: PostListHTMLPageState = .init(
+//                    site: siteState(
+//                        for: content.config
+//                    ),
+//                    page: .init(
+//                        slug: slug,
+//                        metadata: .init(
+//                            permalink: permalink(slug),
+//                            title: title,
+//                            description: description,
+//                            imageUrl: assetUrl(
+//                                for: postsPage.coverImage,
+//                                folder: Content.Page.folder
+//                            )
+//                        ),
+//                        context: .init(
+//                            posts: posts.map {
+//                                postState(
+//                                    for: $0,
+//                                    authors: content.blog.author.contentsBy(
+//                                        slugs: $0.authorSlugs
+//                                    ),
+//                                    tags: content.blog.tag.contentsBy(
+//                                        slugs: $0.tagSlugs
+//                                    )
+//                                )
+//                            },
+//                            pagination: (1...pages.count)
+//                                .map {
+//                                    .init(
+//                                        number: $0,
+//                                        total: pages.count,
+//                                        slug: replace($0, postsPage.slug),
+//                                        permalink: permalink(
+//                                            replace($0, postsPage.slug)
+//                                        ),
+//                                        isCurrent: pageNumber == $0
+//                                    )
+//                                }
+//                        ),
+//                        content: render(
+//                            markdown: postsPage.markdown,
+//                            folder: Content.Page.folder
+//                        )
+//                    ),
+//                    userDefined: content.config.site.userDefined
+//                        + postsPage.userDefined,
+//                    year: currentYear,
+//                    template: postsPage.template ?? "pages.blog.posts"
+//                )
+//    
+//                result.append(state)
+//            }
+//    
+//            return result
+//        }
+   
+    func postDetails() -> [Renderable<Output.HTML<Context.Blog.Post.Detail>>] {
+        content.blog.posts.map { post in
+            return .init(
+                template: post.content.template ?? "pages.single.post",
+                context: .init(
+                    site: getContext(),
+                    page: .init(
+                        metadata: metadata(for: post.content),
+                        context: .init(
+                            post: post.context(site: self),
+                            related: [],
+                            moreByAuthor: [],
+                            next: nil,
+                            prev: nil
+                        ),
+                        content: render(
+                            markdown: post.content.markdown,
+                            folder: post.content.assetsFolder
+                        )
+                    ),
+                    userDefined: [:],
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(post.content.slug)
+                    .appendingPathComponent("index.html")
+            )
+        }
+    }
+    
+    
+    // MARK: - custom
     
     func customPages() -> [Renderable<Output.HTML<Context.Pages.Detail>>] {
         source.contents.pages.custom.map { content in
@@ -640,8 +542,6 @@ struct Site {
             )
         }
     }
-    
-    
 
     // MARK: - rss
 
