@@ -188,6 +188,7 @@ extension Source {
                 using: config.pages.blog.home.path,
                 slugPrefix: nil
             )
+            
             let blogAuthorsPage = try loadContent(
                 using: config.pages.blog.authors.path,
                 slugPrefix: nil

@@ -11,6 +11,7 @@ struct SiteGenerator {
 
     let site: Site
 
+    let publicFilesUrl: URL
     let templatesUrl: URL
 
     let fileManager: FileManager = .default
@@ -59,10 +60,21 @@ struct SiteGenerator {
     //        }
     //    }
 
+    func copyPublicFiles() throws {
+        for file in fileManager.listDirectory(at: publicFilesUrl) {
+            try fileManager.copy(
+                from: publicFilesUrl.appendingPathComponent(file),
+                to: site.destinationUrl.appendingPathComponent(file)
+            )
+        }
+    }
+
     func render() throws {
         let renderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl
         )
+        
+        try copyPublicFiles()
 
         let home = site.home()
         let notFound = site.notFound()
@@ -74,14 +86,24 @@ struct SiteGenerator {
         try render(renderer, rss)
         try render(renderer, sitemap)
         
-        if let renderable = site.tagList() {
+        // blog
+        if let renderable = site.blogHome() {
             try render(renderer, renderable)
         }
+
+        // authors
         if let renderable = site.authorList() {
             try render(renderer, renderable)
         }
-        
         for renderable in site.authorDetails() {
+            try render(renderer, renderable)
+        }
+        
+        // tags
+        if let renderable = site.tagList() {
+            try render(renderer, renderable)
+        }
+        for renderable in site.tagDetails() {
             try render(renderer, renderable)
         }
         

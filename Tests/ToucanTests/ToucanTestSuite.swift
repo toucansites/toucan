@@ -36,6 +36,7 @@ struct ToucanTestSuite {
         let srcUrl = siteUrl.appendingPathComponent("src")
         let templatesUrl = srcUrl.appendingPathComponent("templates")
         let contentsUrl = srcUrl.appendingPathComponent("contents")
+        let publicFilesUrl = srcUrl.appendingPathComponent("public")
         let configFileUrl = contentsUrl.appendingPathComponent("config.yaml")
         let destUrl = siteUrl.appendingPathComponent("dist")
         let configLoader = Source.ConfigLoader(
@@ -71,6 +72,7 @@ struct ToucanTestSuite {
 
         let renderer = SiteGenerator(
             site: site,
+            publicFilesUrl: publicFilesUrl,
             templatesUrl: templatesUrl
         )
 

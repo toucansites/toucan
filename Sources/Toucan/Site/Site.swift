@@ -215,65 +215,12 @@ struct Site {
         )
     }
 
-    //
-    //    // MARK: - blog
-    //
-    //    func blogPage() -> BlogHTMLPageState {
-    //        let blogPage = content.blog.home
-    //        return .init(
-    //            site: siteState(for: content.config),
-    //            page: .init(
-    //                slug: blogPage.slug,
-    //                metadata: metadata(for: blogPage),
-    //                context: .init(
-    //                    featured: featuredPostListState(),
-    //                    posts: postListState(),
-    //                    authors: authorListState(),
-    //                    tags: tagListState()
-    //                ),
-    //                content: render(
-    //                    markdown: blogPage.markdown,
-    //                    folder: Content.Page.folder
-    //                )
-    //            ),
-    //            userDefined: content.config.site.userDefined + blogPage.userDefined,
-    //            year: currentYear,
-    //            template: blogPage.template ?? "pages.blog.home"
-    //        )
-    //    }
-    //
+    
+    
 
     
     
-    func tagList() -> Renderable<Output.HTML<Context.Blog.Tag.List>>? {
-        guard let tags = source.contents.pages.blog.tags else {
-            return nil
-        }
-        return .init(
-            template: tags.template ?? "pages.blog.tags",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: tags),
-                    context: .init(
-                        tags: content.blog.sortedTags().map {
-                            $0.context(site: self)
-                        }
-                    ),
-                    content: render(
-                        markdown: tags.markdown,
-                        folder: tags.assetsFolder
-                    )
-                ),
-                userDefined: [:],
-                year: currentYear
-            ),
-            destination: destinationUrl
-                .appendingPathComponent(tags.slug)
-                .appendingPathComponent("index.html")
-        )
-    }
-    //
+    
     //    func postListPages() -> [PostListHTMLPageState] {
     //        let postsPage = content.blog.post.home
     //        let pageLimit = content.config.blog.posts.page.limit
@@ -354,7 +301,41 @@ struct Site {
     //        return result
     //    }
     
-    // MARK: - author
+    // MARK: - blog
+    
+    func blogHome() -> Renderable<Output.HTML<Context.Blog.Home>>? {
+        guard let content = source.contents.pages.blog.home else {
+            return nil
+        }
+
+        return .init(
+            template: content.template ?? "pages.blog.home",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: content),
+                    context: .init(
+                        featured: [],
+                        posts: [],
+                        authors: [],
+                        tags: []
+                    ),
+                    content: render(
+                        markdown: content.markdown,
+                        folder: content.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(content.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+    
+    // MARK: - authors
     
     func authorList() -> Renderable<Output.HTML<Context.Blog.Author.List>>? {
         guard let authors = source.contents.pages.blog.authors else {
@@ -411,29 +392,66 @@ struct Site {
             )
         }
     }
-    //
-    //    func tagDetails() -> [TagDetailHTMLPageState] {
-    //        content.blog.tag.contents.map {
-    //            .init(
-    //                site: siteState(for: content.config),
-    //                page: .init(
-    //                    slug: $0.slug,
-    //                    metadata: metadata(for: $0),
-    //                    context: .init(
-    //                        tag: tagState(for: $0),
-    //                        posts: postListState(tagSlug: $0.slug)
-    //                    ),
-    //                    content: render(
-    //                        markdown: $0.markdown,
-    //                        folder: Content.Tag.folder
-    //                    )
-    //                ),
-    //                userDefined: content.config.site.userDefined + $0.userDefined,
-    //                year: currentYear,
-    //                template: $0.template ?? "pages.single.tag"
-    //            )
-    //        }
-    //    }
+    
+    // MARK: - tags
+    
+    
+    func tagList() -> Renderable<Output.HTML<Context.Blog.Tag.List>>? {
+        guard let tags = source.contents.pages.blog.tags else {
+            return nil
+        }
+        return .init(
+            template: tags.template ?? "pages.blog.tags",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: tags),
+                    context: .init(
+                        tags: content.blog.sortedTags().map {
+                            $0.context(site: self)
+                        }
+                    ),
+                    content: render(
+                        markdown: tags.markdown,
+                        folder: tags.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(tags.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+    
+    func tagDetails() -> [Renderable<Output.HTML<Context.Blog.Tag.Detail>>] {
+        content.blog.tags.map { tag in
+            return .init(
+                template: tag.content.template ?? "pages.single.tag",
+                context: .init(
+                    site: getContext(),
+                    page: .init(
+                        metadata: metadata(for: tag.content),
+                        context: .init(
+                            tag: tag.context(site: self),
+                            posts: tag.posts.map { $0.context(site: self) }
+                        ),
+                        content: render(
+                            markdown: tag.content.markdown,
+                            folder: tag.content.assetsFolder
+                        )
+                    ),
+                    userDefined: [:],
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(tag.content.slug)
+                    .appendingPathComponent("index.html")
+            )
+        }
+    }
     //
     //    func nextPost(for slug: String) -> PostState? {
     //        let posts = content.blog.post.sortedContents
@@ -647,46 +665,4 @@ struct Site {
             )
         )
     }
-    //
-    //    // MARK: - build entire site state
-    //
-    func buildState() -> Renderables {
-        fatalError()
-        //        .init(
-        //            main: .init(
-        //                home: .init(
-        //                    template: "",
-        //                    context: .init(
-        //                        site: .init(
-        //                            baseUrl: "",
-        //                            title: "",
-        //                            description: "",
-        //                            language: nil
-        //                        ),
-        //                        page: .init(
-        //                            metadata: .init(
-        //                                slug: "",
-        //                                permalink: "",
-        //                                title: "",
-        //                                description: "",
-        //                                imageUrl: nil
-        //                            ),
-        //                            context: .init(featured: [], posts: [], authors: [], tags: [], pages: []),
-        //                            content: ""
-        //                        ),
-        //                        userDefined: [:],
-        //                        year: 2024
-        //                    ),
-        //                    destination: .init(fileURLWithPath: "")
-        //                ),
-        //                notFound: .init(template: <#T##String#>, context: <#T##State.HTML<Void>#>, destination: <#T##URL#>),
-        //                rss: <#T##State.Renderable<State.RSS>#>,
-        //                sitemap: <#T##State.Renderable<State.Sitemap>#>
-        //            ),
-        //            blog: <#T##State.Blog#>,
-        //            docs: <#T##State.Docs#>,
-        //            pages: []
-        //        )
-    }
-   
 }
