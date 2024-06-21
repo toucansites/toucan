@@ -178,7 +178,7 @@ extension Source {
                 ) as? [String: Any] ?? [:]
                 
                 let site = yaml.dict("site")
-                let content = yaml.dict("content")
+                let content = yaml.dict("contents")
                 let pages = yaml.dict("pages")
 
                 return .init(

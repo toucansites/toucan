@@ -219,6 +219,8 @@ public struct Toucan {
             frontMatterParser: .init()
         )
         let config = try configLoader.load()
+        
+//        print(config)
 
         let contentsLoader = Source.ContentsLoader(
             contentsUrl: contentsUrl,
