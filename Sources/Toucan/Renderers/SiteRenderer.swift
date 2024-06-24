@@ -101,7 +101,7 @@ struct SiteRenderer {
         }
         
         // render posts
-        if let renderable = site.postList() {
+        for renderable in site.postListPaginated() {
             try render(renderer, renderable)
         }
         for renderable in site.postDetails() {
