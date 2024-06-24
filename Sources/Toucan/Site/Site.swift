@@ -410,7 +410,6 @@ struct Site {
                             ),
                             context: .init(
                                 posts: postsChunk.map { $0.context(site: self) },
-//                                pagination: []
                                 pagination: (1...pages.count)
                                     .map {
                                         .init(
