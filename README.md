@@ -4,6 +4,19 @@ Toucan is a static site generator written in Swift.
 
 ## Todos
 
+- finish asset support
+- post pagination
+
+- docs categories & guides + templates (similar to post + tag)
+    - render docs home page
+    - render docs categories page
+    - render docs guides page
+    - render docs categories (all the contents)
+    - render docs guides (all the contents)
+
+- user defined values support
+
+
 - add current path check (to mark menu as current)
 - add blog has multiple pages -> link to posts/page/1
 
@@ -17,6 +30,8 @@ Toucan is a static site generator written in Swift.
 - hreflang attribute support
 - optional blog content (posts, authors, tags) when loading content
 ? collections (vs tags?)
+
+
 
 ## Directory structure
 
