@@ -369,113 +369,77 @@ struct Site {
     
     // MARK: - post
     
-    func postList() -> Renderable<Output.HTML<Context.Blog.Post.List>>? {
+    func postListPaginated(
+    ) -> [Renderable<Output.HTML<Context.Blog.Post.List>>] {
         guard let posts = source.contents.pages.blog.posts else {
-            return nil
+            return []
         }
-        return .init(
-            template: posts.template ?? "blog.posts",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: posts),
+
+        let pageLimit = 10 // TODO: add config
+        let pages = content.blog.sortedPosts().chunks(ofCount: pageLimit)
+        
+        func replace(
+            _ number: Int,
+            _ value: String
+        ) -> String {
+            value.replacingOccurrences(
+                of: "{{number}}",
+                with: String(number)
+            )
+        }
+
+        var result: [Renderable<Output.HTML<Context.Blog.Post.List>>] = []
+        for (index, postsChunk) in pages.enumerated() {
+            let pageNumber = index + 1
+            
+            let title = replace(pageNumber, posts.title)
+            let description = replace(pageNumber, posts.description)
+            let slug = replace(pageNumber, posts.slug)
+            
+            let r = Renderable<Output.HTML<Context.Blog.Post.List>>(
+                    template: posts.template ?? "blog.posts",
                     context: .init(
-                        posts: [],
-                        pagination: []
+                        site: getContext(),
+                        page: .init(
+                            metadata: .init(
+                                slug: slug,
+                                permalink: permalink(slug),
+                                title: title,
+                                description: description,
+                                imageUrl: posts.coverImage
+                            ),
+                            context: .init(
+                                posts: postsChunk.map { $0.context(site: self) },
+                                pagination: (1...pages.count)
+                                    .map {
+                                        .init(
+                                            number: $0,
+                                            total: pages.count,
+                                            slug: replace($0, posts.slug),
+                                            permalink: permalink(
+                                                replace($0, posts.slug)
+                                            ),
+                                            isCurrent: pageNumber == $0
+                                        )
+                                    }
+                            ),
+                            content: render(
+                                markdown: posts.markdown,
+                                folder: posts.assetsFolder
+                            )
+                        ),
+                        userDefined: [:],
+                        year: currentYear
                     ),
-                    content: render(
-                        markdown: posts.markdown,
-                        folder: posts.assetsFolder
-                    )
-                ),
-                userDefined: [:],
-                year: currentYear
-            ),
-            destination: destinationUrl
-                .appendingPathComponent(posts.slug)
-                .appendingPathComponent("index.html")
-        )
+                    destination: destinationUrl
+                        .appendingPathComponent(slug)
+                        .appendingPathComponent("index.html")
+                )
+            
+            result.append(r)
+        }
+        return result
     }
-    
-    //        func postListPages() -> [PostListHTMLPageState] {
-    //            let postsPage = content.blog.post.home
-    //            let pageLimit = content.config.blog.posts.page.limit
-    //            let pages = content.blog.post.sortedContents.chunks(ofCount: pageLimit)
-    //
-    //            func replace(
-    //                _ number: Int,
-    //                _ value: String
-    //            ) -> String {
-    //                value.replacingOccurrences(
-    //                    of: "{{number}}",
-    //                    with: String(number)
-    //                )
-    //            }
-    //
-    //            var result: [PostListHTMLPageState] = []
-    //            for (index, posts) in pages.enumerated() {
-    //                let pageNumber = index + 1
-    //
-    //                let title = replace(pageNumber, postsPage.title)
-    //                let description = replace(pageNumber, postsPage.description)
-    //                let slug = replace(pageNumber, postsPage.slug)
-    //
-    //                let state: PostListHTMLPageState = .init(
-    //                    site: siteState(
-    //                        for: content.config
-    //                    ),
-    //                    page: .init(
-    //                        slug: slug,
-    //                        metadata: .init(
-    //                            permalink: permalink(slug),
-    //                            title: title,
-    //                            description: description,
-    //                            imageUrl: assetUrl(
-    //                                for: postsPage.coverImage,
-    //                                folder: Content.Page.folder
-    //                            )
-    //                        ),
-    //                        context: .init(
-    //                            posts: posts.map {
-    //                                postState(
-    //                                    for: $0,
-    //                                    authors: content.blog.author.contentsBy(
-    //                                        slugs: $0.authorSlugs
-    //                                    ),
-    //                                    tags: content.blog.tag.contentsBy(
-    //                                        slugs: $0.tagSlugs
-    //                                    )
-    //                                )
-    //                            },
-    //                            pagination: (1...pages.count)
-    //                                .map {
-    //                                    .init(
-    //                                        number: $0,
-    //                                        total: pages.count,
-    //                                        slug: replace($0, postsPage.slug),
-    //                                        permalink: permalink(
-    //                                            replace($0, postsPage.slug)
-    //                                        ),
-    //                                        isCurrent: pageNumber == $0
-    //                                    )
-    //                                }
-    //                        ),
-    //                        content: render(
-    //                            markdown: postsPage.markdown,
-    //                            folder: Content.Page.folder
-    //                        )
-    //                    ),
-    //                    userDefined: content.config.site.userDefined
-    //                        + postsPage.userDefined,
-    //                    year: currentYear,
-    //                    template: postsPage.template ?? "pages.blog.posts"
-    //                )
-    //
-    //                result.append(state)
-    //            }
-    //
-    //            return result
-    //        }
     
     func postDetails() -> [Renderable<Output.HTML<Context.Blog.Post.Detail>>] {
         content.blog.posts.map { post in
