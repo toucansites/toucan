@@ -9,31 +9,31 @@ import Foundation
 import Algorithms
 
 struct Site {
-
+    
     enum Error: Swift.Error {
         case missingPage(String)
     }
-
+    
     let source: Source
     let destinationUrl: URL
-
+    
     let currentYear: Int
     let dateFormatter: DateFormatter
     let rssDateFormatter: DateFormatter
     let sitemapDateFormatter: DateFormatter
     
     let content: Site.Content
-
+    
     init(
         source: Source,
         destinationUrl: URL
     ) {
         self.source = source
         self.destinationUrl = destinationUrl
-
+        
         let calendar = Calendar(identifier: .gregorian)
         self.currentYear = calendar.component(.year, from: .init())
-
+        
         self.dateFormatter = DateFormatters.baseFormatter
         self.dateFormatter.dateFormat = source.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
@@ -47,7 +47,7 @@ struct Site {
                 dateFormatter: DateFormatters.baseFormatter
             )
         }
-
+        
         self.content = .init(
             blog: .init(
                 posts: posts,
@@ -72,11 +72,11 @@ struct Site {
             )
         )
     }
-
+    
     // MARK: - utilities
-
+    
     var baseUrl: String { source.config.site.baseUrl }
-
+    
     func permalink(_ value: String) -> String {
         let components = value.split(separator: "/").map(String.init)
         if components.isEmpty {
@@ -115,7 +115,7 @@ struct Site {
             title: title
         )
     }
-
+    
     func metadata(
         for content: Source.Content
     ) -> Context.Metadata {
@@ -131,7 +131,7 @@ struct Site {
             )
         )
     }
-
+    
     func render(
         markdown: String,
         folder: String
@@ -144,13 +144,13 @@ struct Site {
         )
         return renderer.render(markdown: markdown)
     }
-
+    
     func readingTime(_ value: String) -> Int {
         value.split(separator: " ").count / 238
     }
     
     // MARK: - context helpers
-
+    
     func getContext() -> Context.Site {
         .init(
             baseUrl: source.config.site.baseUrl,
@@ -183,7 +183,7 @@ struct Site {
                 userDefined: [:],
                 year: currentYear
             )
-
+        
         return .init(
             template: source.contents.pages.main.home.template ?? "main.home",
             context: context,
@@ -192,7 +192,7 @@ struct Site {
             )
         )
     }
-
+    
     func notFound() -> Renderable<Output.HTML<Void>> {
         let page = source.contents.pages.main.notFound
         return .init(
@@ -221,7 +221,7 @@ struct Site {
         guard let content = source.contents.pages.blog.home else {
             return nil
         }
-
+        
         return .init(
             template: content.template ?? "blog.home",
             context: .init(
@@ -309,11 +309,11 @@ struct Site {
     
     // MARK: - tags
     
-    
     func tagList() -> Renderable<Output.HTML<Context.Blog.Tag.List>>? {
         guard let tags = source.contents.pages.blog.tags else {
             return nil
         }
+        
         return .init(
             template: tags.template ?? "blog.tags",
             context: .init(
@@ -397,86 +397,86 @@ struct Site {
         )
     }
     
-//        func postListPages() -> [PostListHTMLPageState] {
-//            let postsPage = content.blog.post.home
-//            let pageLimit = content.config.blog.posts.page.limit
-//            let pages = content.blog.post.sortedContents.chunks(ofCount: pageLimit)
-//    
-//            func replace(
-//                _ number: Int,
-//                _ value: String
-//            ) -> String {
-//                value.replacingOccurrences(
-//                    of: "{{number}}",
-//                    with: String(number)
-//                )
-//            }
-//    
-//            var result: [PostListHTMLPageState] = []
-//            for (index, posts) in pages.enumerated() {
-//                let pageNumber = index + 1
-//    
-//                let title = replace(pageNumber, postsPage.title)
-//                let description = replace(pageNumber, postsPage.description)
-//                let slug = replace(pageNumber, postsPage.slug)
-//    
-//                let state: PostListHTMLPageState = .init(
-//                    site: siteState(
-//                        for: content.config
-//                    ),
-//                    page: .init(
-//                        slug: slug,
-//                        metadata: .init(
-//                            permalink: permalink(slug),
-//                            title: title,
-//                            description: description,
-//                            imageUrl: assetUrl(
-//                                for: postsPage.coverImage,
-//                                folder: Content.Page.folder
-//                            )
-//                        ),
-//                        context: .init(
-//                            posts: posts.map {
-//                                postState(
-//                                    for: $0,
-//                                    authors: content.blog.author.contentsBy(
-//                                        slugs: $0.authorSlugs
-//                                    ),
-//                                    tags: content.blog.tag.contentsBy(
-//                                        slugs: $0.tagSlugs
-//                                    )
-//                                )
-//                            },
-//                            pagination: (1...pages.count)
-//                                .map {
-//                                    .init(
-//                                        number: $0,
-//                                        total: pages.count,
-//                                        slug: replace($0, postsPage.slug),
-//                                        permalink: permalink(
-//                                            replace($0, postsPage.slug)
-//                                        ),
-//                                        isCurrent: pageNumber == $0
-//                                    )
-//                                }
-//                        ),
-//                        content: render(
-//                            markdown: postsPage.markdown,
-//                            folder: Content.Page.folder
-//                        )
-//                    ),
-//                    userDefined: content.config.site.userDefined
-//                        + postsPage.userDefined,
-//                    year: currentYear,
-//                    template: postsPage.template ?? "pages.blog.posts"
-//                )
-//    
-//                result.append(state)
-//            }
-//    
-//            return result
-//        }
-   
+    //        func postListPages() -> [PostListHTMLPageState] {
+    //            let postsPage = content.blog.post.home
+    //            let pageLimit = content.config.blog.posts.page.limit
+    //            let pages = content.blog.post.sortedContents.chunks(ofCount: pageLimit)
+    //
+    //            func replace(
+    //                _ number: Int,
+    //                _ value: String
+    //            ) -> String {
+    //                value.replacingOccurrences(
+    //                    of: "{{number}}",
+    //                    with: String(number)
+    //                )
+    //            }
+    //
+    //            var result: [PostListHTMLPageState] = []
+    //            for (index, posts) in pages.enumerated() {
+    //                let pageNumber = index + 1
+    //
+    //                let title = replace(pageNumber, postsPage.title)
+    //                let description = replace(pageNumber, postsPage.description)
+    //                let slug = replace(pageNumber, postsPage.slug)
+    //
+    //                let state: PostListHTMLPageState = .init(
+    //                    site: siteState(
+    //                        for: content.config
+    //                    ),
+    //                    page: .init(
+    //                        slug: slug,
+    //                        metadata: .init(
+    //                            permalink: permalink(slug),
+    //                            title: title,
+    //                            description: description,
+    //                            imageUrl: assetUrl(
+    //                                for: postsPage.coverImage,
+    //                                folder: Content.Page.folder
+    //                            )
+    //                        ),
+    //                        context: .init(
+    //                            posts: posts.map {
+    //                                postState(
+    //                                    for: $0,
+    //                                    authors: content.blog.author.contentsBy(
+    //                                        slugs: $0.authorSlugs
+    //                                    ),
+    //                                    tags: content.blog.tag.contentsBy(
+    //                                        slugs: $0.tagSlugs
+    //                                    )
+    //                                )
+    //                            },
+    //                            pagination: (1...pages.count)
+    //                                .map {
+    //                                    .init(
+    //                                        number: $0,
+    //                                        total: pages.count,
+    //                                        slug: replace($0, postsPage.slug),
+    //                                        permalink: permalink(
+    //                                            replace($0, postsPage.slug)
+    //                                        ),
+    //                                        isCurrent: pageNumber == $0
+    //                                    )
+    //                                }
+    //                        ),
+    //                        content: render(
+    //                            markdown: postsPage.markdown,
+    //                            folder: Content.Page.folder
+    //                        )
+    //                    ),
+    //                    userDefined: content.config.site.userDefined
+    //                        + postsPage.userDefined,
+    //                    year: currentYear,
+    //                    template: postsPage.template ?? "pages.blog.posts"
+    //                )
+    //
+    //                result.append(state)
+    //            }
+    //
+    //            return result
+    //        }
+    
     func postDetails() -> [Renderable<Output.HTML<Context.Blog.Post.Detail>>] {
         content.blog.posts.map { post in
             return .init(
@@ -542,9 +542,9 @@ struct Site {
             )
         }
     }
-
+    
     // MARK: - rss
-
+    
     func rss() -> Renderable<Output.RSS> {
         let items: [Output.RSS.Item] = source.contents.blog.posts.map {
             .init(
@@ -556,11 +556,11 @@ struct Site {
                 )
             )
         }
-
+        
         let publicationDate =
-            items.first?.publicationDate
-            ?? rssDateFormatter.string(from: .init())
-
+        items.first?.publicationDate
+        ?? rssDateFormatter.string(from: .init())
+        
         let context = Output.RSS(
             title: source.config.site.title,
             description: source.config.site.description,
@@ -570,7 +570,7 @@ struct Site {
             publicationDate: publicationDate,
             items: items
         )
-
+        
         return .init(
             template: "rss",
             context: context,
@@ -579,19 +579,19 @@ struct Site {
             )
         )
     }
-
+    
     // MARK: - sitemap
-
+    
     func sitemap() -> Renderable<Output.Sitemap> {
         let context = Output.Sitemap(
             urls: source.contents.all()
                 .map { content in
-                    .init(
-                        location: permalink(content.slug),
-                        lastModification: sitemapDateFormatter.string(
-                            from: content.lastModification
+                        .init(
+                            location: permalink(content.slug),
+                            lastModification: sitemapDateFormatter.string(
+                                from: content.lastModification
+                            )
                         )
-                    )
                 }
         )
         return .init(
@@ -601,5 +601,154 @@ struct Site {
                 "sitemap.xml"
             )
         )
+    }
+    
+    // MARK: - docs
+    
+    func docsHome() -> Renderable<Output.HTML<Context.Docs.Home>>? {
+        guard let content = source.contents.pages.docs.home else {
+            return nil
+        }
+        
+        return .init(
+            template: content.template ?? "docs.home",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: content),
+                    context: .init(
+                        categories: source.contents.docs.categories.map {
+                            .init(title: $0.title)
+                        },
+                        guides: source.contents.docs.guides.map {
+                            .init(title: $0.title)
+                        }
+                    ),
+                    content: render(
+                        markdown: content.markdown,
+                        folder: content.assetsFolder
+                    )
+                ),
+                userDefined: [:],    // TODO: user defined
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(content.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+    func docsCategoryList(
+    ) -> Renderable<Output.HTML<Context.Docs.Category.List>>? {
+        guard let content = source.contents.pages.docs.categories else {
+            return nil
+        }
+        
+        return .init(
+            template: content.template ?? "docs.categories",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: content),
+                    context: .init(
+                        categories: source.contents.docs.categories.map {
+                            .init(title: $0.title)
+                        }
+                    ),
+                    content: render(
+                        markdown: content.markdown,
+                        folder: content.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(content.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+    func docsCategoryDetails(
+    ) -> [Renderable<Output.HTML<Context.Docs.Category>>] {
+        source.contents.docs.categories.map { item in
+            .init(
+                template: item.template ?? "docs.single.category",
+                context: .init(
+                    site: getContext(),
+                    page: .init(
+                        metadata: metadata(for: item),
+                        context: .init(title: item.title),
+                        content: render(
+                            markdown: item.markdown,
+                            folder: item.assetsFolder
+                        )
+                    ),
+                    userDefined: [:],    // TODO: user defined
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(item.slug)
+                    .appendingPathComponent("index.html")
+            )
+        }
+    }
+    
+    // MARK: - guides
+    
+    func docsGuideList(
+    ) -> Renderable<Output.HTML<Context.Docs.Guide.List>>? {
+        guard let content = source.contents.pages.docs.guides else {
+            return nil
+        }
+        
+        return .init(
+            template: content.template ?? "docs.guides",
+            context: .init(
+                site: getContext(),
+                page: .init(
+                    metadata: metadata(for: content),
+                    context: .init(
+                        guides: source.contents.docs.guides.map {
+                            .init(title: $0.title)
+                        }
+                    ),
+                    content: render(
+                        markdown: content.markdown,
+                        folder: content.assetsFolder
+                    )
+                ),
+                userDefined: [:],
+                year: currentYear
+            ),
+            destination: destinationUrl
+                .appendingPathComponent(content.slug)
+                .appendingPathComponent("index.html")
+        )
+    }
+    
+    func docsGuideDetails(
+    ) -> [Renderable<Output.HTML<Context.Docs.Guide>>] {
+        source.contents.docs.guides.map { item in
+            .init(
+                template: item.template ?? "docs.single.guide",
+                context: .init(
+                    site: getContext(),
+                    page: .init(
+                        metadata: metadata(for: item),
+                        context: .init(title: item.title),
+                        content: render(
+                            markdown: item.markdown,
+                            folder: item.assetsFolder
+                        )
+                    ),
+                    userDefined: [:],    // TODO: user defined
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(item.slug)
+                    .appendingPathComponent("index.html")
+            )
+        }
     }
 }
