@@ -89,4 +89,31 @@ extension Context {
             let tags: [Tag]
         }
     }
+    
+    // TODO: move
+    struct Docs {
+        
+        struct Category {
+            
+            struct List {
+                let categories: [Category]
+            }
+            
+            let title: String
+        }
+        
+        struct Guide {
+            
+            struct List {
+                let guides: [Guide]
+            }
+            
+            let title: String
+        }
+        
+        struct Home {
+            let categories: [Category]
+            let guides: [Guide]
+        }
+    }
 }

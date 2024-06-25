@@ -112,6 +112,27 @@ struct SiteRenderer {
         for renderable in site.customPages() {
             try render(renderer, renderable)
         }
+        
+        // docs
+        if let docsHome = site.docsHome() {
+            try render(renderer, docsHome)
+        }
+        
+        // docs categories
+        if let docsCategoryList = site.docsCategoryList() {
+            try render(renderer, docsCategoryList)
+        }
+        for renderable in site.docsCategoryDetails() {
+            try render(renderer, renderable)
+        }
+        
+        // docs guides
+        if let docsGuidList = site.docsGuideList() {
+            try render(renderer, docsGuidList)
+        }
+        for renderable in site.docsGuideDetails() {
+            try render(renderer, renderable)
+        }
     }
 
     // MARK: -
