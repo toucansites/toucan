@@ -136,6 +136,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         featured: [],
                         posts: [],
@@ -166,6 +168,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: (),
                     content: render(content: content)
                 ),
@@ -190,6 +194,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         featured: [],
                         posts: [],
@@ -222,6 +228,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         authors: self.content.blog.sortedAuthors().map {
                             $0.context(site: self)
@@ -246,6 +254,8 @@ struct Site {
                     site: getContext(),
                     page: .init(
                         metadata: metadata(for: author.content),
+                        css: author.content.cssUrls(),
+                        js: author.content.jsUrls(),
                         context: .init(
                             author: author.context(site: self),
                             posts: author.posts.map { $0.context(site: self) }
@@ -275,6 +285,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         tags: self.content.blog.sortedTags().map {
                             $0.context(site: self)
@@ -300,6 +312,8 @@ struct Site {
                     site: getContext(),
                     page: .init(
                         metadata: metadata(for: tag.content),
+                        css: tag.content.cssUrls(),
+                        js: tag.content.jsUrls(),
                         context: .init(
                             tag: tag.context(site: self),
                             posts: tag.posts.map { $0.context(site: self) }
@@ -357,6 +371,8 @@ struct Site {
                                 description: description,
                                 imageUrl: posts.image
                             ),
+                            css: posts.cssUrls(),
+                            js: posts.jsUrls(),
                             context: .init(
                                 posts: postsChunk.map { $0.context(site: self) },
                                 pagination: (1...pages.count)
@@ -395,6 +411,8 @@ struct Site {
                     site: getContext(),
                     page: .init(
                         metadata: metadata(for: post.content),
+                        css: post.content.cssUrls(),
+                        js: post.content.jsUrls(),
                         context: .init(
                             post: post.context(site: self),
                             related: [],
@@ -425,6 +443,8 @@ struct Site {
                     site: getContext(),
                     page: .init(
                         metadata: metadata(for: content),
+                        css: content.cssUrls(),
+                        js: content.jsUrls(),
                         // TODO: use site content
                         context: .init(
                             page: .init(
@@ -521,6 +541,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         categories: source.contents.docs.categories.map {
                             .init(title: $0.title)
@@ -552,6 +574,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         categories: source.contents.docs.categories.map {
                             .init(title: $0.title)
@@ -577,6 +601,8 @@ struct Site {
                     site: getContext(),
                     page: .init(
                         metadata: metadata(for: item),
+                        css: item.cssUrls(),
+                        js: item.jsUrls(),
                         context: .init(title: item.title),
                         content: render(content: item)
                     ),
@@ -604,6 +630,8 @@ struct Site {
                 site: getContext(),
                 page: .init(
                     metadata: metadata(for: content),
+                    css: content.cssUrls(),
+                    js: content.jsUrls(),
                     context: .init(
                         guides: source.contents.docs.guides.map {
                             .init(title: $0.title)
@@ -629,6 +657,8 @@ struct Site {
                     site: getContext(),
                     page: .init(
                         metadata: metadata(for: item),
+                        css: item.cssUrls(),
+                        js: item.jsUrls(),
                         context: .init(title: item.title),
                         content: render(content: item)
                     ),

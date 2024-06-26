@@ -8,11 +8,14 @@ redirects:
         - lorem-turing
         - lorem/turing/bar/baz
 
+css:
+    - ./alan-turing/alan-turing.css
+js:
+    - ./alan-turing/alan-turing.js
+
 userDefined:
     foo:
         bar:
             buuuuuuu
         hihihihi:
             hehehe
-    css: ./alan-turing/alan-turing.css
-    js: ./alan-turing/alan-turing.js

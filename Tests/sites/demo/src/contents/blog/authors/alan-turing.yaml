@@ -12,5 +12,3 @@ userDefined:
     foo:
         bar:
             biiii
-    css: ./alan-turing/alan-turing.css
-    js: ./alan-turing/alan-turing.js

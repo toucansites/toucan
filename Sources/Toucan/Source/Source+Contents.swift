@@ -16,6 +16,9 @@ extension Source {
         let title: String
         let description: String
         let image: String?
+        
+        let css: [String]
+        let js: [String]
 
         let template: String?
         let assetsPath: String
@@ -33,6 +36,8 @@ extension Source {
                 title: title,
                 description: description,
                 image: image,
+                css: css,
+                js: js,
                 template: template,
                 assetsPath: assetsPath,
                 lastModification: lastModification,
@@ -43,13 +48,25 @@ extension Source {
             )
         }
         
-        func imageUrl() -> String? {
+        func resolveAsset(_ value: String?) -> String? {
             let prefix = "./\(assetsPath)"
-            guard let image, image.hasPrefix(prefix) else {
-                return image
+            guard let value, value.hasPrefix(prefix) else {
+                return value
             }
-            let base = String(image.dropFirst(prefix.count))
-            return "/assets/" + slug + "/" + base
+            let base = String(value.dropFirst(prefix.count))
+            return "/assets/" + slug + "/" + base.safeSlug(prefix: nil)
+        }
+        
+        func imageUrl() -> String? {
+            resolveAsset(image)
+        }
+        
+        func cssUrls() -> [String] {
+            css.compactMap { resolveAsset($0) }
+        }
+        
+        func jsUrls() -> [String] {
+            js.compactMap { resolveAsset($0) }
         }
     }
 

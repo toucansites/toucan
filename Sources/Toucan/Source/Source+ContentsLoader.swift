@@ -68,11 +68,13 @@ extension Source {
                 let id = fileName.droppingEverythingAfterLastOccurrence(of: ".")
                 let lastModification = try fileManager.modificationDate(at: url)
                 
+                let dirUrl = URL(fileURLWithPath: location)
+                    
                 let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
                 var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
                 
                 for c in [id + ".yaml", id + ".yml"] {
-                    let url = URL(fileURLWithPath: location + c)
+                    let url = dirUrl.appendingPathComponent(c)
                     guard fileManager.fileExists(at: url) else {
                         continue
                     }
@@ -92,6 +94,38 @@ extension Source {
                     "redirects.from",
                     as: [String].self
                 ) ?? []
+                
+                let assetsUrl = dirUrl
+                    .appendingPathComponent(assetsPath ?? id)
+                
+                let styleCss = assetsUrl
+                    .appendingPathComponent("style.css")
+                
+                let mainJs = assetsUrl
+                    .appendingPathComponent("main.js")
+                
+                var css: [String] = []
+                if fileManager.fileExists(at: styleCss) {
+                    let cssFile = "./" + id + "/style.css"
+                    css.append(cssFile)
+                }
+                let cssFiles = frontMatter.value(
+                    "css",
+                    as: [String].self
+                ) ?? []
+                css += cssFiles
+                
+                var js: [String] = []
+                if fileManager.fileExists(at: mainJs) {
+                    let jsFile = "./" + id + "/main.js"
+                    js.append(jsFile)
+                }
+
+                let jsFiles = frontMatter.value(
+                    "css",
+                    as: [String].self
+                ) ?? []
+                js += jsFiles
 
 //                print(id)
 //                print(fileName)
@@ -106,6 +140,8 @@ extension Source {
                     title: title,
                     description: description,
                     image: image,
+                    css: css,
+                    js: js,
                     template: template,
                     assetsPath: assetsPath ?? id,
                     lastModification: lastModification,

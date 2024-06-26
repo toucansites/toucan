@@ -1,1 +1,1 @@
-console.log("Hello, World!")
+console.warn("global main js")

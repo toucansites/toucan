@@ -8,8 +8,11 @@
 extension Output {
 
     struct HTML<T> {
+
         struct Page<C> {
             let metadata: Context.Metadata
+            let css: [String]
+            let js: [String]
             let context: C
             let content: String
         }
