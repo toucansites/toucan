@@ -2,7 +2,7 @@
 slug: push-notifications-with-swift-server-side
 title: Sending push notifications using server side Swift in 2023
 description: Learn how to send push notifications with Swift on the server side using the Google FCM API and the APN Swift library.
-coverImage: ./push-notifications-with-swift-server-side/cover.jpg
+image: ./push-notifications-with-swift-server-side/cover.jpg
 publication: 2023-05-18 17:36:12
 tags:
   - swift

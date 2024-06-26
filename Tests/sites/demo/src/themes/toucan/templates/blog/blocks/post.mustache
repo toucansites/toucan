@@ -1,6 +1,8 @@
 <div class="post card">
     <a href="{{permalink}}" target="">
-        {{> blocks.figure}}
+        
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        
         <section>
             <time datetime="{{date}}">{{date}}</time>
             <h2 class="title">{{title}}</h2>
@@ -11,7 +13,7 @@
     
     {{#authors}}
         <div class="mini">
-        {{> blocks.figure}}
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         </div>
     {{/authors}}
     

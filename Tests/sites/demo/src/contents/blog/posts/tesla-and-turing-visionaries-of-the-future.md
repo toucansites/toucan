@@ -1,7 +1,7 @@
 ---
 title: "Tesla and Turing: Visionaries of the Future"
 description: Exploring how Tesla and Turing's visions have shaped our present and future.
-coverImage: ./tesla-and-turing-visionaries-of-the-future/cover.jpg
+image: ./tesla-and-turing-visionaries-of-the-future/cover.jpg
 publication: 1948-03-22 12:01:01
 tags: 
     - computing

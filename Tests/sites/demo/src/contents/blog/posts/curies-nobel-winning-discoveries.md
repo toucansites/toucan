@@ -1,7 +1,7 @@
 ---
 title: Curie's Nobel-Winning Discoveries
 description: An overview of Marie Curie's Nobel Prize-winning discoveries in science.
-coverImage: ./curies-nobel-winning-discoveries/cover.jpg
+image: ./curies-nobel-winning-discoveries/cover.jpg
 publication: 1911/11/07 12:01:01
 tags: 
     - chemistry

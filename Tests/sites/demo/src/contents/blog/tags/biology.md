@@ -1,5 +1,5 @@
 ---
 title: Biology
 description: Biology
-coverImage: ./biology/biology.webp
+image: ./biology/biology.webp
 ---

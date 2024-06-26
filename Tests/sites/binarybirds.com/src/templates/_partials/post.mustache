@@ -1,5 +1,5 @@
     <a href="{{permalink}}" target="">
-        {{> blocks.figure}}
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <div class="content">
             <time datetime="{{date}}">{{date}}</time>
             <h3 class="title">{{title}}</h3>
@@ -7,7 +7,7 @@
         {{#authors}}
             <div class="authorBadge">
                 <div class="mini">
-                {{> blocks.figure}}
+                    {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
                 </div>
                 <div>{{title}}</div>
             </div>

@@ -14,10 +14,12 @@ extension Context {
         }
 
         struct Custom {
+            let slug: String
             let permalink: String
             let title: String
             let description: String
-            let figure: Context.Figure??
+            let imageUrl: String?
+
             let userDefined: [String: Any]
         }
     }

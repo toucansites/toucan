@@ -1,7 +1,7 @@
 ---
 title: "Curie and Turing: Innovations in Science"
 description: Exploring the innovative contributions of Marie Curie and Alan Turing.
-coverImage: ./curie-and-turing-innovations-in-science/cover.jpg
+image: ./curie-and-turing-innovations-in-science/cover.jpg
 publication: 1952/11/08 12:01:01
 tags: 
     - computing

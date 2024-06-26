@@ -21,8 +21,31 @@ extension Source {
 
         let fileManager: FileManager
 
-        func load() throws -> Assets {
-            .init(storage: [:])
+        func load(to destination: URL) throws -> Assets {
+
+            for content in contents.all() {
+                let assetsUrl = content.location
+                    .appendingPathComponent(content.assetsFolder)
+                
+                guard
+                    fileManager.directoryExists(at: assetsUrl),
+                    !fileManager.listDirectory(at: assetsUrl).isEmpty
+                else {
+                    continue
+                }
+                
+                let outputUrl = destination
+                    .appendingPathComponent(content.slug)
+
+                try fileManager.copyRecursively(
+                    from: assetsUrl,
+                    to: outputUrl
+                )
+            }
+
+            return .init(
+                storage: [:]
+            )
         }
     }
 }

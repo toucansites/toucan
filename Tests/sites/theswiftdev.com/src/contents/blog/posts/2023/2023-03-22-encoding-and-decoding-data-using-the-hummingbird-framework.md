@@ -3,7 +3,7 @@ slug: encoding-and-decoding-data-using-the-hummingbird-framework
 title: Encoding and decoding data using the Hummingbird framework
 description: URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.
 publication: 2023-03-22 16:20:00
-coverImage: ./22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
+image: ./22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
 tags: Swift, Hummingbird
 ---
 

@@ -1,5 +1,5 @@
 ---
 title: Physics
 description: Physics
-coverImage: ./physics/physics.webp
+image: ./physics/physics.webp
 ---

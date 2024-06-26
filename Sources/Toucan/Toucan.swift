@@ -211,36 +211,47 @@ public struct Toucan {
         
         try resetOutputDirectory()
         try copyAssets()
-
         
-        let configLoader = Source.ConfigLoader(
-            configFileUrl: configFileUrl,
-            fileManager: .default,
-            frontMatterParser: .init()
-        )
-        let config = try configLoader.load()
+        let outputAssetsUrl = outputUrl
+            .appendingPathComponent(Directories.assets)
         
-//        print(config)
+        if !fileManager.directoryExists(at: outputAssetsUrl) {
+            try fileManager.createDirectory(at: outputAssetsUrl)
+        }
 
-        let contentsLoader = Source.ContentsLoader(
+        let loader = Source.Loader(
+            configUrl: configFileUrl,
             contentsUrl: contentsUrl,
-            config: config,
-            fileManager: .default,
+            assetsUrl: outputAssetsUrl,
+            fileManager: fileManager,
             frontMatterParser: .init()
         )
+        
+        let source = try await loader.load()
 
-        let contents = try contentsLoader.load()
-        try contents.validateSlugs()
+        
+//        let configLoader = Source.ConfigLoader(
+//            configFileUrl: configFileUrl,
+//            fileManager: .default,
+//            frontMatterParser: .init()
+//        )
+//        let config = try configLoader.load()
+//        
+////        print(config)
+//
+//        let contentsLoader = Source.ContentsLoader(
+//            contentsUrl: contentsUrl,
+//            config: config,
+//            fileManager: .default,
+//            frontMatterParser: .init()
+//        )
+//
+//        let contents = try contentsLoader.load()
+//        try contents.validateSlugs()
 
         // TODO: use content assets
         let site = Site(
-            source: .init(
-                config: config,
-                contents: contents,
-                assets: .init(
-                    storage: [:]
-                )
-            ),
+            source: source,
             destinationUrl: outputUrl
         )
 

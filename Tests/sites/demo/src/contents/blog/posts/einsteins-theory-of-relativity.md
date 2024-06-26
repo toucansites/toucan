@@ -1,7 +1,7 @@
 ---
 title: Einstein's Theory of Relativity
 description: Understanding the profound implications of Albert Einstein's theory of relativity.
-coverImage: ./einsteins-theory-of-relativity/cover.jpg
+image: ./einsteins-theory-of-relativity/cover.jpg
 publication: 1915/11/25 12:01:01
 tags: 
     - physics

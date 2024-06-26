@@ -1,5 +1,5 @@
 ---
 title: Chemistry
 description: Chemistry
-coverImage: ./chemistry/chemistry.webp
+image: ./chemistry/chemistry.webp
 ---

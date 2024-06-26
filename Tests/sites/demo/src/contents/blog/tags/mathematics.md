@@ -1,5 +1,5 @@
 ---
 title: Mathematics
 description: Mathematics
-coverImage: ./mathematics/mathematics.webp
+image: ./mathematics/mathematics.webp
 ---

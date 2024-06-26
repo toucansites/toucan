@@ -1,7 +1,7 @@
 ---
 title: Marie Curie and the Birth of Radioactivity Research
 description: The pioneering experiments of Marie Curie in the field of radioactivity.
-coverImage: ./marie-curie-and-the-birth-of-radioactivity-research/cover.jpg
+image: ./marie-curie-and-the-birth-of-radioactivity-research/cover.jpg
 publication: 1902-03-15 12:01:01
 tags: 
     - chemistry

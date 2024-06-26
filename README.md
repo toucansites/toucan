@@ -160,7 +160,7 @@ search:
                     "title": "",
                     "description": "",
                     "permalink": ""
-                    "coverImage": ""
+                    "image": ""
                 }
             }
         ]

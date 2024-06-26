@@ -1,7 +1,7 @@
 ---
 title: "Einstein and Curie: Discoveries in Physics and Chemistry"
 description: Joint contributions of Einstein and Curie to physics and chemistry.
-coverImage: ./einstein-and-curie-discoveries-in-physics-and-chemistry/cover.jpg
+image: ./einstein-and-curie-discoveries-in-physics-and-chemistry/cover.jpg
 publication: 1925/10/11 12:01:01
 tags: 
     - physics

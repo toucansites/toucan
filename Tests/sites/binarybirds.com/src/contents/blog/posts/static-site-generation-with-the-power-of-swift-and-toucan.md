@@ -2,7 +2,7 @@
 slug: static-site-generation-with-the-power-of-swift-and-toucan
 title: Static site geneneration with the power of Swift and Toucan
 description: Toucan is a lightweight static site generator written in Swift. This article will guide you through the process of creating your own website using it.
-coverImage: ./static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg
+image: ./static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg
 publication: 2023-04-24 18:32:25
 tags:
   - swift

@@ -6,7 +6,7 @@
     {{#page.context.author}}
     <header>
         <div class="profile-picture">
-            {{> blocks.figure}}
+            {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         </div>
         <h1>{{title}}</h1>
         <p>{{description}}</p>

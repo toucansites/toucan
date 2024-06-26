@@ -1,6 +1,6 @@
 ---
 title: Tibor Bödecs
-coverImage: https://github.com/tib.png
+image: https://github.com/tib.png
 authorLink: https://x.com/tiborbodecs
 company: Binary Birds Kft.
 companyLink: https://binarybirds.com/

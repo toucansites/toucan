@@ -18,16 +18,17 @@ extension Source {
 
     struct Loader {
 
-        let url: URL
+        let configUrl: URL
+        let contentsUrl: URL
+        let assetsUrl: URL
+        let fileManager: FileManager
+        let frontMatterParser: FrontMatterParser
 
         /// load the configuration & the contents of the site source
         func load() async throws -> Source {
 
-            let fileManager = FileManager.default
-            let frontMatterParser = FrontMatterParser()
-
             let configLoader = ConfigLoader(
-                configFileUrl: url.appendingPathComponent("config.yaml"),
+                configFileUrl: configUrl,
                 fileManager: fileManager,
                 frontMatterParser: frontMatterParser
             )
@@ -35,7 +36,7 @@ extension Source {
             let config = try configLoader.load()
 
             let contentsLoader = ContentsLoader(
-                contentsUrl: url.appendingPathComponent("contents"),
+                contentsUrl: contentsUrl,
                 config: config,
                 fileManager: fileManager,
                 frontMatterParser: frontMatterParser
@@ -48,7 +49,9 @@ extension Source {
                 fileManager: fileManager
             )
 
-            let assets = try assetsLoader.load()
+            let assets = try assetsLoader.load(
+                to: assetsUrl
+            )
 
             return .init(
                 config: config,

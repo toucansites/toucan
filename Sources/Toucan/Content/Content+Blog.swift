@@ -56,11 +56,13 @@ extension Site.Content {
             
             func context(site: Site) -> Context.Blog.Post {
                 .init(
+                    slug: content.slug,
                     permalink: site.permalink(content.slug),
                     title: content.title,
-                    excerpt: content.description,
+                    description: content.description,
+                    imageUrl: content.resolvedImageUrl(),
+                    // TODO: fix this
                     date: "",
-                    figure: nil,
                     tags: [],
                     authors: [],
                     readingTime: site.readingTime(content.markdown),
@@ -76,16 +78,15 @@ extension Site.Content {
 
             func context(site: Site) -> Context.Blog.Author {
                 .init(
+                    slug: content.slug,
                     permalink: site.permalink(content.slug),
                     title: content.title,
                     description: content.description,
-                    figure: nil,
+                    imageUrl: content.resolvedImageUrl(),
+                    // TODO: fix this
                     numberOfPosts: posts.count,
                     userDefined: [:],
-                    markdown: site.render(
-                        markdown: content.markdown,
-                        folder: content.assetsFolder
-                    )
+                    markdown: site.render(content: content)
                 )
             }
         }
@@ -96,16 +97,15 @@ extension Site.Content {
             
             func context(site: Site) -> Context.Blog.Tag {
                 .init(
+                    slug: content.slug,
                     permalink: site.permalink(content.slug),
                     title: content.title,
                     description: content.description,
-                    figure: nil,
+                    imageUrl: content.resolvedImageUrl(),
+                    
                     numberOfPosts: posts.count,
                     userDefined: [:],
-                    markdown: site.render(
-                        markdown: content.markdown,
-                        folder: content.assetsFolder
-                    )
+                    markdown: site.render(content: content)
                 )
             }
         }

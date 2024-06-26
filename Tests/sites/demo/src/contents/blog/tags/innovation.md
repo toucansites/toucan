@@ -1,5 +1,5 @@
 ---
 title: Innovation
 description: Innovation
-coverImage: ./innovation/innovation.webp
+image: ./innovation/innovation.webp
 ---

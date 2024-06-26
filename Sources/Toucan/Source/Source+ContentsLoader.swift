@@ -63,7 +63,9 @@ extension Source {
             }
             
             do {
-                let id = String(url.lastPathComponent.dropLast(3))
+                let fileName = url.lastPathComponent
+                let location = String(url.path.dropLast(fileName.count))
+                let id = String(fileName.dropLast(3))
                 let lastModification = try fileManager.modificationDate(at: url)
                 
                 let rawMarkdown = try String(contentsOf: url)
@@ -72,16 +74,25 @@ extension Source {
                 let slug = frontMatter.string("slug") ?? id
                 let title = frontMatter.string("title") ?? ""
                 let description = frontMatter.string("description") ?? ""
-                let coverImage = frontMatter.string("coverImage")
+                let image = frontMatter.string("image")
                 let template = frontMatter.string("template")
+                let assetsFolder = frontMatter.string("assetsFolder")
+
+//                print(id)
+//                print(fileName)
+//                print(slug)
+//                print(location)
+//                print(assetsFolder ?? id)
+//                print("---")
                 
                 return .init(
+                    location: .init(fileURLWithPath: location),
                     slug: slug.safeSlug(prefix: slugPrefix),
                     title: title,
                     description: description,
-                    coverImage: coverImage,
+                    image: image,
                     template: template,
-                    assetsFolder: slug, // TODO: double check this
+                    assetsFolder: assetsFolder ?? id,
                     lastModification: lastModification,
                     frontMatter: frontMatter,
                     markdown: rawMarkdown.dropFrontMatter()

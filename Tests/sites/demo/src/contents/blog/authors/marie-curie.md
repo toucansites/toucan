@@ -1,7 +1,7 @@
 ---
 title: Marie Curie
 description: Marie Curie
-coverImage: ./marie-curie/marie-curie.webp
+image: ./marie-curie/marie-curie.webp
 
 ---
 

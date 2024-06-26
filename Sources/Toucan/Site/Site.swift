@@ -88,34 +88,6 @@ struct Site {
         return baseUrl + components.joined(separator: "/") + "/"
     }
     
-    func figureState(
-        for path: String?,
-        folder: String,
-        alt: String? = nil,
-        title: String? = nil
-    ) -> Context.Figure? {
-        guard
-            let url = source.assets.url(
-                for: path,
-                folder: folder,
-                permalink: permalink(_:)
-            )
-        else {
-            return nil
-        }
-        return .init(
-            src: url,
-            darkSrc: source.assets.url(
-                for: path,
-                folder: folder,
-                variant: .dark,
-                permalink: permalink(_:)
-            ),
-            alt: alt,
-            title: title
-        )
-    }
-    
     func metadata(
         for content: Source.Content
     ) -> Context.Metadata {
@@ -125,7 +97,7 @@ struct Site {
             title: content.title,
             description: content.description,
             imageUrl: source.assets.url(
-                for: content.coverImage,
+                for: content.image,
                 folder: content.assetsFolder,
                 permalink: permalink(_:)
             )
@@ -133,16 +105,15 @@ struct Site {
     }
     
     func render(
-        markdown: String,
-        folder: String
+        content: Source.Content
     ) -> String {
         let renderer = MarkdownToHTMLRenderer(
             delegate: HTMLRendererDelegate(
                 site: self,
-                folder: folder
+                content: content
             )
         )
-        return renderer.render(markdown: markdown)
+        return renderer.render(markdown: content.markdown)
     }
     
     func readingTime(_ value: String) -> Int {
@@ -176,8 +147,7 @@ struct Site {
                         pages: []
                     ),
                     content: render(
-                        markdown: source.contents.pages.main.home.markdown,
-                        folder: source.contents.pages.main.home.assetsFolder
+                        content: source.contents.pages.main.home
                     )
                 ),
                 userDefined: [:],
@@ -202,10 +172,7 @@ struct Site {
                 page: .init(
                     metadata: metadata(for: page),
                     context: (),
-                    content: render(
-                        markdown: page.markdown,
-                        folder: page.assetsFolder
-                    )
+                    content: render(content: page)
                 ),
                 userDefined: [:],
                 year: currentYear
@@ -235,8 +202,7 @@ struct Site {
                         tags: []
                     ),
                     content: render(
-                        markdown: content.markdown,
-                        folder: content.assetsFolder
+                        content: content
                     )
                 ),
                 userDefined: [:],
@@ -266,10 +232,7 @@ struct Site {
                             $0.context(site: self)
                         }
                     ),
-                    content: render(
-                        markdown: authors.markdown,
-                        folder: authors.assetsFolder
-                    )
+                    content: render(content: authors)
                 ),
                 userDefined: [:],
                 year: currentYear
@@ -292,10 +255,7 @@ struct Site {
                             author: author.context(site: self),
                             posts: author.posts.map { $0.context(site: self) }
                         ),
-                        content: render(
-                            markdown: author.content.markdown,
-                            folder: author.content.assetsFolder
-                        )
+                        content: render(content: author.content)
                     ),
                     userDefined: [:],
                     year: currentYear
@@ -325,10 +285,7 @@ struct Site {
                             $0.context(site: self)
                         }
                     ),
-                    content: render(
-                        markdown: tags.markdown,
-                        folder: tags.assetsFolder
-                    )
+                    content: render(content: tags)
                 ),
                 userDefined: [:],
                 year: currentYear
@@ -352,10 +309,7 @@ struct Site {
                             tag: tag.context(site: self),
                             posts: tag.posts.map { $0.context(site: self) }
                         ),
-                        content: render(
-                            markdown: tag.content.markdown,
-                            folder: tag.content.assetsFolder
-                        )
+                        content: render(content: tag.content)
                     ),
                     userDefined: [:],
                     year: currentYear
@@ -406,7 +360,7 @@ struct Site {
                                 permalink: permalink(slug),
                                 title: title,
                                 description: description,
-                                imageUrl: posts.coverImage
+                                imageUrl: posts.image
                             ),
                             context: .init(
                                 posts: postsChunk.map { $0.context(site: self) },
@@ -423,10 +377,7 @@ struct Site {
                                         )
                                     }
                             ),
-                            content: render(
-                                markdown: posts.markdown,
-                                folder: posts.assetsFolder
-                            )
+                            content: render(content: posts)
                         ),
                         userDefined: [:],
                         year: currentYear
@@ -456,10 +407,7 @@ struct Site {
                             next: nil,
                             prev: nil
                         ),
-                        content: render(
-                            markdown: post.content.markdown,
-                            folder: post.content.assetsFolder
-                        )
+                        content: render(content: post.content)
                     ),
                     userDefined: [:],
                     year: currentYear
@@ -485,17 +433,15 @@ struct Site {
                         // TODO: use site content
                         context: .init(
                             page: .init(
+                                slug: content.slug,
                                 permalink: permalink(content.slug),
                                 title: content.title,
                                 description: content.description,
-                                figure: nil,
+                                imageUrl: content.resolvedImageUrl(),
                                 userDefined: [:]
                             )
                         ),
-                        content: render(
-                            markdown: content.markdown,
-                            folder: content.assetsFolder
-                        )
+                        content: render(content: content)
                     ),
                     userDefined: [:],
                     year: currentYear
@@ -588,10 +534,7 @@ struct Site {
                             .init(title: $0.title)
                         }
                     ),
-                    content: render(
-                        markdown: content.markdown,
-                        folder: content.assetsFolder
-                    )
+                    content: render(content: content)
                 ),
                 userDefined: [:],    // TODO: user defined
                 year: currentYear
@@ -619,10 +562,7 @@ struct Site {
                             .init(title: $0.title)
                         }
                     ),
-                    content: render(
-                        markdown: content.markdown,
-                        folder: content.assetsFolder
-                    )
+                    content: render(content: content)
                 ),
                 userDefined: [:],
                 year: currentYear
@@ -643,10 +583,7 @@ struct Site {
                     page: .init(
                         metadata: metadata(for: item),
                         context: .init(title: item.title),
-                        content: render(
-                            markdown: item.markdown,
-                            folder: item.assetsFolder
-                        )
+                        content: render(content: item)
                     ),
                     userDefined: [:],    // TODO: user defined
                     year: currentYear
@@ -677,10 +614,7 @@ struct Site {
                             .init(title: $0.title)
                         }
                     ),
-                    content: render(
-                        markdown: content.markdown,
-                        folder: content.assetsFolder
-                    )
+                    content: render(content: content)
                 ),
                 userDefined: [:],
                 year: currentYear
@@ -701,10 +635,7 @@ struct Site {
                     page: .init(
                         metadata: metadata(for: item),
                         context: .init(title: item.title),
-                        content: render(
-                            markdown: item.markdown,
-                            folder: item.assetsFolder
-                        )
+                        content: render(content: item)
                     ),
                     userDefined: [:],    // TODO: user defined
                     year: currentYear

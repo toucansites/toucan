@@ -10,10 +10,12 @@ import Foundation
 extension Source {
 
     struct Content {
+        let location: URL
+        
         let slug: String
         let title: String
         let description: String
-        let coverImage: String?
+        let image: String?
 
         let template: String?
         let assetsFolder: String
@@ -24,16 +26,25 @@ extension Source {
 
         func updated(slug: String) -> Self {
             .init(
+                location: location,
                 slug: slug,
                 title: title,
                 description: description,
-                coverImage: coverImage,
+                image: image,
                 template: template,
                 assetsFolder: assetsFolder,
                 lastModification: lastModification,
                 frontMatter: frontMatter,
                 markdown: markdown
             )
+        }
+        
+        func resolvedImageUrl() -> String? {
+            guard let image, image.hasPrefix("./\(assetsFolder)") else {
+                return image
+            }
+            let base = String(image.dropFirst("./\(assetsFolder)".count))
+            return "/assets/" + slug + "/" + base
         }
     }
 

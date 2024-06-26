@@ -11,7 +11,7 @@
                 {{#authors}}
                         <a class="authorBadge" href="{{permalink}}">
                             <div class="midi">
-                            {{> blocks.figure}}
+                            {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
                             </div>
                             <div>{{title}}</div>
                         </a>
@@ -27,7 +27,7 @@
             </section>
         
             {{#figure}}
-                {{> blocks.figure}}
+                {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
             {{/figure}}
             </header>
 

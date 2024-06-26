@@ -1,5 +1,5 @@
 ---
 title: Energy
 description: Energy
-coverImage: ./energy/energy.webp
+image: ./energy/energy.webp
 ---

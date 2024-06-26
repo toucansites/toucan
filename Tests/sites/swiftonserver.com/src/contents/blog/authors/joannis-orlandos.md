@@ -1,6 +1,6 @@
 ---
 title: Joannis Orlandos
-coverImage: https://github.com/joannis.png
+image: https://github.com/joannis.png
 authorLink: https://x.com/JoannisOrlandos
 company: Unbeatable Software B.V.
 companyUrl: https://unbeatable.software

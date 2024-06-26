@@ -1,6 +1,8 @@
 <a href="{{permalink}}">
     <div class="partialAuthor">
-        <div class="profile-picture">{{> blocks.figure}}</div>
+        <div class="profile-picture">
+            {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        </div>
         <h3>{{title}}</h3>
         <p>({{numberOfPosts}}) posts</p>
     </div>

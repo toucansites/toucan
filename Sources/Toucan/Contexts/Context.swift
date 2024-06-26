@@ -29,16 +29,7 @@ struct Context {
         let slug: String
         let permalink: String
         let isCurrent: Bool
-    }
-    
-    struct Figure {
-        let src: String
-        let darkSrc: String?
-        let alt: String?
-        let title: String?
-    }
-
-    
+    }    
 //    let main: Main
 //    let blog: Blog
 //    //let docs: Docs

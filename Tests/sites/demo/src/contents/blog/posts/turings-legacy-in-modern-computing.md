@@ -1,7 +1,7 @@
 ---
 title: Turing's Legacy in Modern Computing
 description: Explore Alan Turing's pioneering work that laid the foundation for modern computing.
-coverImage: ./turings-legacy-in-modern-computing/cover.jpg
+image: ./turings-legacy-in-modern-computing/cover.jpg
 publication: 1950-06-07 12:01:01
 tags: 
     - computing

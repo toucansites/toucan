@@ -26,11 +26,12 @@ extension Context {
                 let prev: Post?
             }
 
+            let slug: String
             let permalink: String
             let title: String
-            let excerpt: String
+            let description: String
+            let imageUrl: String?
             let date: String
-            let figure: Context.Figure??
 
             let tags: [Tag]
             let authors: [Author]
@@ -51,10 +52,12 @@ extension Context {
                 let posts: [Post]
             }
             
+            let slug: String
             let permalink: String
             let title: String
             let description: String
-            let figure: Context.Figure?
+            let imageUrl: String?
+            
             let numberOfPosts: Int
             let userDefined: [String: Any]
             let markdown: String
@@ -72,10 +75,12 @@ extension Context {
             }
 
             
+            let slug: String
             let permalink: String
             let title: String
             let description: String
-            let figure: Context.Figure??
+            let imageUrl: String?
+
             let numberOfPosts: Int
             let userDefined: [String: Any]
             let markdown: String

@@ -1,7 +1,7 @@
 ---
 title: Nikola Tesla
 description: Nikola Tesla
-coverImage: ./nikola-tesla/nikola-tesla.webp
+image: ./nikola-tesla/nikola-tesla.webp
 
 ---
 

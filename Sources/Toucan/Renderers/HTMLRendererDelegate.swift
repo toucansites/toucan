@@ -6,11 +6,13 @@
 //
 
 import Markdown
+import Foundation
 
 struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
 
     let site: Site
-    let folder: String
+    let content: Source.Content
+    let fileManager: FileManager = .default
 
     func linkAttributes(_ link: String?) -> [String: String] {
         var attributes: [String: String] = [:]
@@ -27,15 +29,29 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        nil
-//        fatalError()
-        //        guard
-        //            let source = image.source,
-        //            source.hasPrefix("."),
-        //            let url = site.assetUrl(for: source, folder: folder)
-        //        else {
-        //            return nil
-        //        }
+        guard
+            let source = image.source,
+            source.hasPrefix("./")
+//            let url = site.assetUrl(for: source, folder: folder)
+        else {
+            return nil
+        }
+        
+        let src = String(source.dropFirst())
+        
+        let url = "/assets/" + content.slug + src
+        
+        var title = ""
+        if let ttl = image.title {
+            title = #" title="\#(ttl)""#
+        }
+
+        return """
+            <img src="\(url)" alt="\(image.plainText)"\(title)>
+        """
+        
+        
+        
         //        var drk = ""
         //        if let darkUrl = site.assetUrl(
         //            for: source,
@@ -46,9 +62,9 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         //                #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
         //        }
         //        var title = ""
-        //        if let ttl = image.title {
-        //            title = #" title="\#(ttl)""#
-        //        }
+//                if let ttl = image.title {
+//                    title = #" title="\#(ttl)""#
+//                }
         //        return #"""
         //                <figure>
         //                   <picture>

@@ -1,7 +1,7 @@
 ---
 title: "Fermi and Einstein: A Dialogue on Physics"
 description: Insights from discussions between Fermi and Einstein on the future of physics.
-coverImage: ./fermi-and-einstein-a-dialogue-on-physics/cover.jpg
+image: ./fermi-and-einstein-a-dialogue-on-physics/cover.jpg
 publication: 1934/06/21 12:01:01
 tags: 
     - physics
