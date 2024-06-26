@@ -60,14 +60,14 @@ extension Site.Content {
                     permalink: site.permalink(content.slug),
                     title: content.title,
                     description: content.description,
-                    imageUrl: content.resolvedImageUrl(),
+                    imageUrl: content.imageUrl(),
                     // TODO: fix this
                     date: "",
                     tags: [],
                     authors: [],
                     readingTime: site.readingTime(content.markdown),
                     featured: featured,
-                    userDefined: [:]
+                    userDefined: content.userDefined
                 )
             }
         }
@@ -82,10 +82,10 @@ extension Site.Content {
                     permalink: site.permalink(content.slug),
                     title: content.title,
                     description: content.description,
-                    imageUrl: content.resolvedImageUrl(),
+                    imageUrl: content.imageUrl(),
                     // TODO: fix this
                     numberOfPosts: posts.count,
-                    userDefined: [:],
+                    userDefined: content.userDefined,
                     markdown: site.render(content: content)
                 )
             }
@@ -101,10 +101,10 @@ extension Site.Content {
                     permalink: site.permalink(content.slug),
                     title: content.title,
                     description: content.description,
-                    imageUrl: content.resolvedImageUrl(),
+                    imageUrl: content.imageUrl(),
                     
                     numberOfPosts: posts.count,
-                    userDefined: [:],
+                    userDefined: content.userDefined,
                     markdown: site.render(content: content)
                 )
             }

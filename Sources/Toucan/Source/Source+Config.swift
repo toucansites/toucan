@@ -28,6 +28,7 @@ extension Source {
             let description: String
             let language: String?
             let dateFormat: String?
+            let userDefined: [String: Any]
         }
 
         // MARK: - content configs

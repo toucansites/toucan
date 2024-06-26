@@ -76,7 +76,8 @@ extension Source {
                 let description = frontMatter.string("description") ?? ""
                 let image = frontMatter.string("image")
                 let template = frontMatter.string("template")
-                let assetsFolder = frontMatter.string("assetsFolder")
+                let assetsPath = frontMatter.string("assets.path")
+                let userDefined = frontMatter.dict("userDefined")
 
 //                print(id)
 //                print(fileName)
@@ -92,8 +93,9 @@ extension Source {
                     description: description,
                     image: image,
                     template: template,
-                    assetsFolder: assetsFolder ?? id,
+                    assetsPath: assetsPath ?? id,
                     lastModification: lastModification,
+                    userDefined: userDefined,
                     frontMatter: frontMatter,
                     markdown: rawMarkdown.dropFrontMatter()
                 )

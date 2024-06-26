@@ -18,9 +18,10 @@ extension Source {
         let image: String?
 
         let template: String?
-        let assetsFolder: String
-
+        let assetsPath: String
         let lastModification: Date
+        let userDefined: [String: Any]
+        
         let frontMatter: [String: Any]
         let markdown: String
 
@@ -32,18 +33,20 @@ extension Source {
                 description: description,
                 image: image,
                 template: template,
-                assetsFolder: assetsFolder,
+                assetsPath: assetsPath,
                 lastModification: lastModification,
+                userDefined: userDefined,
                 frontMatter: frontMatter,
                 markdown: markdown
             )
         }
         
-        func resolvedImageUrl() -> String? {
-            guard let image, image.hasPrefix("./\(assetsFolder)") else {
+        func imageUrl() -> String? {
+            let prefix = "./\(assetsPath)"
+            guard let image, image.hasPrefix(prefix) else {
                 return image
             }
-            let base = String(image.dropFirst("./\(assetsFolder)".count))
+            let base = String(image.dropFirst(prefix.count))
             return "/assets/" + slug + "/" + base
         }
     }

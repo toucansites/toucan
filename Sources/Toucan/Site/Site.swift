@@ -96,11 +96,7 @@ struct Site {
             permalink: permalink(content.slug),
             title: content.title,
             description: content.description,
-            imageUrl: source.assets.url(
-                for: content.image,
-                folder: content.assetsFolder,
-                permalink: permalink(_:)
-            )
+            imageUrl: content.imageUrl().map { permalink($0) }
         )
     }
     
@@ -134,11 +130,12 @@ struct Site {
     // MARK: - main
     
     func home() -> Renderable<Output.HTML<Context.Main.Home>> {
+        let content = source.contents.pages.main.home
         let context = Output.HTML<Context.Main.Home>
             .init(
                 site: getContext(),
                 page: .init(
-                    metadata: metadata(for: source.contents.pages.main.home),
+                    metadata: metadata(for: content),
                     context: .init(
                         featured: [],
                         posts: [],
@@ -146,11 +143,9 @@ struct Site {
                         tags: [],
                         pages: []
                     ),
-                    content: render(
-                        content: source.contents.pages.main.home
-                    )
+                    content: render(content: content)
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             )
         
@@ -164,17 +159,17 @@ struct Site {
     }
     
     func notFound() -> Renderable<Output.HTML<Void>> {
-        let page = source.contents.pages.main.notFound
+        let content = source.contents.pages.main.notFound
         return .init(
-            template: page.template ?? "main.404",
+            template: content.template ?? "main.404",
             context: .init(
                 site: getContext(),
                 page: .init(
-                    metadata: metadata(for: page),
+                    metadata: metadata(for: content),
                     context: (),
-                    content: render(content: page)
+                    content: render(content: content)
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
@@ -205,7 +200,7 @@ struct Site {
                         content: content
                     )
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
@@ -218,27 +213,27 @@ struct Site {
     // MARK: - authors
     
     func authorList() -> Renderable<Output.HTML<Context.Blog.Author.List>>? {
-        guard let authors = source.contents.pages.blog.authors else {
+        guard let content = source.contents.pages.blog.authors else {
             return nil
         }
         return .init(
-            template: authors.template ?? "blog.authors",
+            template: content.template ?? "blog.authors",
             context: .init(
                 site: getContext(),
                 page: .init(
-                    metadata: metadata(for: authors),
+                    metadata: metadata(for: content),
                     context: .init(
-                        authors: content.blog.sortedAuthors().map {
+                        authors: self.content.blog.sortedAuthors().map {
                             $0.context(site: self)
                         }
                     ),
-                    content: render(content: authors)
+                    content: render(content: content)
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
-                .appendingPathComponent(authors.slug)
+                .appendingPathComponent(content.slug)
                 .appendingPathComponent("index.html")
         )
     }
@@ -257,7 +252,7 @@ struct Site {
                         ),
                         content: render(content: author.content)
                     ),
-                    userDefined: [:],
+                    userDefined: source.config.site.userDefined.recursivelyMerged(with: author.content.userDefined),
                     year: currentYear
                 ),
                 destination: destinationUrl
@@ -270,28 +265,28 @@ struct Site {
     // MARK: - tags
     
     func tagList() -> Renderable<Output.HTML<Context.Blog.Tag.List>>? {
-        guard let tags = source.contents.pages.blog.tags else {
+        guard let content = source.contents.pages.blog.tags else {
             return nil
         }
         
         return .init(
-            template: tags.template ?? "blog.tags",
+            template: content.template ?? "blog.tags",
             context: .init(
                 site: getContext(),
                 page: .init(
-                    metadata: metadata(for: tags),
+                    metadata: metadata(for: content),
                     context: .init(
-                        tags: content.blog.sortedTags().map {
+                        tags: self.content.blog.sortedTags().map {
                             $0.context(site: self)
                         }
                     ),
-                    content: render(content: tags)
+                    content: render(content: content)
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
-                .appendingPathComponent(tags.slug)
+                .appendingPathComponent(content.slug)
                 .appendingPathComponent("index.html")
         )
     }
@@ -311,7 +306,7 @@ struct Site {
                         ),
                         content: render(content: tag.content)
                     ),
-                    userDefined: [:],
+                    userDefined: source.config.site.userDefined.recursivelyMerged(with: tag.content.userDefined),
                     year: currentYear
                 ),
                 destination: destinationUrl
@@ -379,7 +374,7 @@ struct Site {
                             ),
                             content: render(content: posts)
                         ),
-                        userDefined: [:],
+                        userDefined: source.config.site.userDefined.recursivelyMerged(with: posts.userDefined),
                         year: currentYear
                     ),
                     destination: destinationUrl
@@ -409,7 +404,7 @@ struct Site {
                         ),
                         content: render(content: post.content)
                     ),
-                    userDefined: [:],
+                    userDefined: source.config.site.userDefined.recursivelyMerged(with: post.content.userDefined),
                     year: currentYear
                 ),
                 destination: destinationUrl
@@ -437,13 +432,13 @@ struct Site {
                                 permalink: permalink(content.slug),
                                 title: content.title,
                                 description: content.description,
-                                imageUrl: content.resolvedImageUrl(),
+                                imageUrl: content.imageUrl(),
                                 userDefined: [:]
                             )
                         ),
                         content: render(content: content)
                     ),
-                    userDefined: [:],
+                    userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                     year: currentYear
                 ),
                 destination: destinationUrl
@@ -536,7 +531,7 @@ struct Site {
                     ),
                     content: render(content: content)
                 ),
-                userDefined: [:],    // TODO: user defined
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
@@ -564,7 +559,7 @@ struct Site {
                     ),
                     content: render(content: content)
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
@@ -585,7 +580,7 @@ struct Site {
                         context: .init(title: item.title),
                         content: render(content: item)
                     ),
-                    userDefined: [:],    // TODO: user defined
+                    userDefined: source.config.site.userDefined.recursivelyMerged(with: item.userDefined),
                     year: currentYear
                 ),
                 destination: destinationUrl
@@ -616,7 +611,7 @@ struct Site {
                     ),
                     content: render(content: content)
                 ),
-                userDefined: [:],
+                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
                 year: currentYear
             ),
             destination: destinationUrl
@@ -637,7 +632,7 @@ struct Site {
                         context: .init(title: item.title),
                         content: render(content: item)
                     ),
-                    userDefined: [:],    // TODO: user defined
+                    userDefined: source.config.site.userDefined.recursivelyMerged(with: item.userDefined),
                     year: currentYear
                 ),
                 destination: destinationUrl

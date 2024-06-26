@@ -222,32 +222,36 @@ public struct Toucan {
         let loader = Source.Loader(
             configUrl: configFileUrl,
             contentsUrl: contentsUrl,
-            assetsUrl: outputAssetsUrl,
             fileManager: fileManager,
             frontMatterParser: .init()
         )
         
         let source = try await loader.load()
 
-        
-//        let configLoader = Source.ConfigLoader(
-//            configFileUrl: configFileUrl,
-//            fileManager: .default,
-//            frontMatterParser: .init()
-//        )
-//        let config = try configLoader.load()
-//        
-////        print(config)
-//
-//        let contentsLoader = Source.ContentsLoader(
-//            contentsUrl: contentsUrl,
-//            config: config,
-//            fileManager: .default,
-//            frontMatterParser: .init()
-//        )
-//
-//        let contents = try contentsLoader.load()
-//        try contents.validateSlugs()
+        // MARK: copy assets
+
+        for content in source.contents.all() {
+            let assetsUrl = content.location
+                .appendingPathComponent(content.assetsPath)
+            
+            guard
+                fileManager.directoryExists(at: assetsUrl),
+                !fileManager.listDirectory(at: assetsUrl).isEmpty
+            else {
+                continue
+            }
+            
+            let outputUrl = outputAssetsUrl
+                .appendingPathComponent(content.slug)
+
+//            print(assetsUrl)
+//            print(outputUrl)
+            
+            try fileManager.copyRecursively(
+                from: assetsUrl,
+                to: outputUrl
+            )
+        }
 
         // TODO: use content assets
         let site = Site(

@@ -29,17 +29,17 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
+        let prefix = "./\(content.assetsPath)"
         guard
             let source = image.source,
-            source.hasPrefix("./")
-//            let url = site.assetUrl(for: source, folder: folder)
+            source.hasPrefix(prefix)
         else {
             return nil
         }
         
-        let src = String(source.dropFirst())
+        let src = String(source.dropFirst(prefix.count))
         
-        let url = "/assets/" + content.slug + src
+        let url = "/assets/" + content.slug + "/" + src
         
         var title = ""
         if let ttl = image.title {
@@ -49,28 +49,5 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         return """
             <img src="\(url)" alt="\(image.plainText)"\(title)>
         """
-        
-        
-        
-        //        var drk = ""
-        //        if let darkUrl = site.assetUrl(
-        //            for: source,
-        //            folder: folder,
-        //            variant: .dark
-        //        ) {
-        //            drk =
-        //                #"<source srcset="\#(darkUrl)" media="(prefers-color-scheme: dark)">\#n\#t\#t"#
-        //        }
-        //        var title = ""
-//                if let ttl = image.title {
-//                    title = #" title="\#(ttl)""#
-//                }
-        //        return #"""
-        //                <figure>
-        //                   <picture>
-        //                       \#(drk)<img class="post-image" src="\#(url)" alt="\#(image.plainText)"\#(title)>
-        //                   </picture>
-        //                </figure>
-        //            """#
     }
 }

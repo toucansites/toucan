@@ -40,16 +40,6 @@ extension Source {
         func createSiteConfig(
             _ dict: [String: Any]
         ) -> Source.Config.Site {
-            let userDefined = dict.filter {
-                ![
-                    "baseUrl",
-                    "title",
-                    "description",
-                    "language",
-                    "dateFormat",
-                ]
-                .contains($0.key)
-            }
             
             var siteBaseUrl = dict.string("baseUrl") ?? ""
             if !siteBaseUrl.hasSuffix("/") {
@@ -59,13 +49,15 @@ extension Source {
             let desc = dict.string("description")
             let lang = dict.string("language")
             let dateFormat = dict.string("dateFormat")
+            let userDefined = dict.dict("userDefined")
             
             return .init(
                 baseUrl: siteBaseUrl,
                 title: title ?? "",
                 description: desc ?? "",
                 language: lang,
-                dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss"
+                dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss",
+                userDefined: userDefined
             )
         }
         
