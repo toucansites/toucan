@@ -4,6 +4,8 @@ Toucan is a static site generator written in Swift.
 
 ## Todos
 
+- config.yaml + config.yml load
+
 - docs context + template
 
 - proper context for everything (featured, more, related, prev, next)

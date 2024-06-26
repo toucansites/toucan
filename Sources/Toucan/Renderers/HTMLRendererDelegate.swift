@@ -11,7 +11,7 @@ import Foundation
 struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
 
     let site: Site
-    let content: Source.Content
+    let content: Source.Material
     let fileManager: FileManager = .default
 
     func linkAttributes(_ link: String?) -> [String: String] {

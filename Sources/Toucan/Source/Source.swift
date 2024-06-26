@@ -10,7 +10,7 @@ import Foundation
 struct Source {
 
     let config: Config
-    let contents: Contents
+    let contents: Materials
 }
 
 extension Source {
@@ -33,7 +33,7 @@ extension Source {
 
             let config = try configLoader.load()
 
-            let contentsLoader = ContentsLoader(
+            let contentsLoader = MaterialsLoader(
                 contentsUrl: contentsUrl,
                 config: config,
                 fileManager: fileManager,

@@ -68,7 +68,7 @@ struct SourceTestSuite {
         )
         let config = try configLoader.load()
 
-        let contentsLoader = Source.ContentsLoader(
+        let contentsLoader = Source.MaterialsLoader(
             contentsUrl: contentsUrl,
             config: config,
             fileManager: .default,

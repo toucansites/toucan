@@ -140,71 +140,6 @@ public struct Toucan {
             to: outputUrl
         )
     }
-    
-    
-
-    /// copy one asset type using a directory a source identifier and a target slug
-//    private func copyAssets(
-//        directory: String,
-//        id: String,
-//        slug: String
-//    ) throws -> [String: String] {
-//        var res: [String: String] = [:]
-//        let assetInputUrl =
-//            contentsUrl
-//            .appendingPathComponent(directory)
-//            .appendingPathComponent(id)
-//
-//        print("---------------------")
-//        print(assetInputUrl.path)
-//
-//        if fileManager.directoryExists(at: assetInputUrl) {
-//            let assetOutputUrl =
-//                outputUrl
-//                .appendingPathComponent(Directories.assets)
-//                .appendingPathComponent(slug)
-//
-//            let dirEnum = fileManager.enumerator(atPath: assetInputUrl.path)
-//            while let file = dirEnum?.nextObject() as? String {
-//                let key = "./" + [directory, id, file].joined(separator: "/")
-//                let value =
-//                    "/"
-//                    + [Directories.assets, slug, file]
-//                    .joined(separator: "/")
-//                res[key] = value
-//            }
-//
-//            try fileManager.createParentFolderIfNeeded(for: assetOutputUrl)
-//
-//            try fileManager.copy(
-//                from: assetInputUrl,
-//                to: assetOutputUrl
-//            )
-//        }
-//        return res
-//    }
-
-    /// copy all the assets for the site
-//    func copyContentAssets(
-//        content: Content
-//    ) throws -> [String: String] {
-//
-//        var assets: [String: String] = [:]
-//
-//        for content in content.siteContents {
-//            if content.slug.isEmpty {
-//                continue
-//            }
-//            let res = try copyAssets(
-//                directory: type(of: content).folder,
-//                id: content.slug, // TODO: fix this
-//                slug: content.slug
-//            )
-//            assets = assets + res
-//        }
-//
-//        return assets
-//    }
 
     /// builds the static site
     public func run() async throws {
@@ -253,7 +188,6 @@ public struct Toucan {
             )
         }
 
-        // TODO: use content assets
         let site = Site(
             source: source,
             destinationUrl: outputUrl

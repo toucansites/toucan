@@ -14,7 +14,7 @@ import FileManagerKit
 extension Source {
 
     /// A structure responsible for loading contents data.
-    struct ContentsLoader {
+    struct MaterialsLoader {
         
         /// An enumeration representing possible errors that can occur while loading the content.
         enum Error: Swift.Error {
@@ -57,7 +57,7 @@ extension Source {
         func loadContent(
             at url: URL,
             slugPrefix: String?
-        ) throws(ContentsLoader.Error) -> Source.Content? {
+        ) throws(MaterialsLoader.Error) -> Source.Material? {
             guard fileManager.fileExists(at: url) else {
                 return nil
             }
@@ -82,6 +82,18 @@ extension Source {
                     let fm = try frontMatterParser.load(yaml: yaml)
                     frontMatter = frontMatter.recursivelyMerged(with: fm)
                 }
+                
+                var data: [[String: Any]] = []
+                for d in [id + ".data.yaml", id + ".data.yml"] {
+                    let url = dirUrl.appendingPathComponent(d)
+                    guard fileManager.fileExists(at: url) else {
+                        continue
+                    }
+                    let yaml = try String(contentsOf: url, encoding: .utf8)
+                    let da = try frontMatterParser.load(yaml: yaml, as: [[String: Any]].self) ?? []
+                    data += da
+                }
+                
                 
                 let slug = frontMatter.string("slug") ?? id
                 let title = frontMatter.string("title") ?? ""
@@ -147,17 +159,18 @@ extension Source {
                     lastModification: lastModification,
                     redirects: redirects,
                     userDefined: userDefined,
+                    data: data,
                     frontMatter: frontMatter,
                     markdown: rawMarkdown.dropFrontMatter()
                 )
             }
             catch {
-                throw ContentsLoader.Error.content(error)
+                throw MaterialsLoader.Error.content(error)
             }
         }
         
         func loadMainHomePageContent(
-        ) throws(ContentsLoader.Error) -> Source.Content {
+        ) throws(MaterialsLoader.Error) -> Source.Material {
             let homePageUrl = markdownUrl(
                 using: config.pages.main.home.path
             )
@@ -169,7 +182,7 @@ extension Source {
         }
         
         func loadMainNotFoundPageContent(
-        ) throws(ContentsLoader.Error) -> Source.Content {
+        ) throws(MaterialsLoader.Error) -> Source.Material {
             let notFoundPageUrl = markdownUrl(
                 using: config.pages.main.notFound.path
             )
@@ -191,7 +204,7 @@ extension Source {
         func loadContent(
             using path: String,
             slugPrefix: String?
-        ) throws(ContentsLoader.Error) -> Source.Content? {
+        ) throws(MaterialsLoader.Error) -> Source.Material? {
             try loadContent(
                 at: markdownUrl(
                     using: path
@@ -202,7 +215,7 @@ extension Source {
         
         func loadContents(
             using config: Source.Config.ContentConfig
-        ) throws(ContentsLoader.Error) -> [Source.Content] {
+        ) throws(MaterialsLoader.Error) -> [Source.Material] {
             let customPagesDirectoryUrl = contentsUrl
                 .appendingPathComponent(config.folder)
 
@@ -216,7 +229,7 @@ extension Source {
         // MARK: -
         
         func loadBlogContents(
-        ) throws(ContentsLoader.Error) -> Source.Contents.Blog {
+        ) throws(MaterialsLoader.Error) -> Source.Materials.Blog {
             .init(
                 authors: try loadContents(
                     using: config.contents.blog.authors
@@ -231,7 +244,7 @@ extension Source {
         }
         
         func loadDocsContents(
-        ) throws(ContentsLoader.Error) -> Source.Contents.Docs {
+        ) throws(MaterialsLoader.Error) -> Source.Materials.Docs {
             .init(
                 categories: try loadContents(
                     using: config.contents.docs.categories
@@ -243,7 +256,7 @@ extension Source {
         }
 
         func loadPagesContents(
-        ) throws(ContentsLoader.Error) -> Source.Contents.Pages {
+        ) throws(MaterialsLoader.Error) -> Source.Materials.Pages {
             
             let mainHomePage = try loadMainHomePageContent()
             let mainNotFoundPage = try loadMainNotFoundPageContent()
@@ -305,7 +318,7 @@ extension Source {
         /// - Returns: A `Contents` object containing the loaded contents.
         /// - Throws: An error if loading the contents fails.
         func load(
-        ) throws -> Contents {
+        ) throws -> Materials {
             .init(
                 blog: try loadBlogContents(),
                 docs: try loadDocsContents(),

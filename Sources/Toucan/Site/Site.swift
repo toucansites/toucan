@@ -89,7 +89,7 @@ struct Site {
     }
     
     func metadata(
-        for content: Source.Content
+        for content: Source.Material
     ) -> Context.Metadata {
         .init(
             slug: content.slug,
@@ -101,7 +101,7 @@ struct Site {
     }
     
     func render(
-        content: Source.Content
+        content: Source.Material
     ) -> String {
         let renderer = MarkdownToHTMLRenderer(
             delegate: HTMLRendererDelegate(
@@ -138,6 +138,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         featured: [],
                         posts: [],
@@ -170,6 +171,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: (),
                     content: render(content: content)
                 ),
@@ -196,6 +198,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         featured: [],
                         posts: [],
@@ -230,6 +233,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         authors: self.content.blog.sortedAuthors().map {
                             $0.context(site: self)
@@ -256,6 +260,7 @@ struct Site {
                         metadata: metadata(for: author.content),
                         css: author.content.cssUrls(),
                         js: author.content.jsUrls(),
+                        data: author.content.data,
                         context: .init(
                             author: author.context(site: self),
                             posts: author.posts.map { $0.context(site: self) }
@@ -287,6 +292,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         tags: self.content.blog.sortedTags().map {
                             $0.context(site: self)
@@ -314,6 +320,7 @@ struct Site {
                         metadata: metadata(for: tag.content),
                         css: tag.content.cssUrls(),
                         js: tag.content.jsUrls(),
+                        data: tag.content.data,
                         context: .init(
                             tag: tag.context(site: self),
                             posts: tag.posts.map { $0.context(site: self) }
@@ -373,6 +380,7 @@ struct Site {
                             ),
                             css: posts.cssUrls(),
                             js: posts.jsUrls(),
+                            data: posts.data,
                             context: .init(
                                 posts: postsChunk.map { $0.context(site: self) },
                                 pagination: (1...pages.count)
@@ -413,6 +421,7 @@ struct Site {
                         metadata: metadata(for: post.content),
                         css: post.content.cssUrls(),
                         js: post.content.jsUrls(),
+                        data: post.content.data,
                         context: .init(
                             post: post.context(site: self),
                             related: [],
@@ -445,6 +454,7 @@ struct Site {
                         metadata: metadata(for: content),
                         css: content.cssUrls(),
                         js: content.jsUrls(),
+                        data: content.data,
                         // TODO: use site content
                         context: .init(
                             page: .init(
@@ -543,6 +553,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         categories: source.contents.docs.categories.map {
                             .init(title: $0.title)
@@ -576,6 +587,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         categories: source.contents.docs.categories.map {
                             .init(title: $0.title)
@@ -603,6 +615,7 @@ struct Site {
                         metadata: metadata(for: item),
                         css: item.cssUrls(),
                         js: item.jsUrls(),
+                        data: item.data,
                         context: .init(title: item.title),
                         content: render(content: item)
                     ),
@@ -632,6 +645,7 @@ struct Site {
                     metadata: metadata(for: content),
                     css: content.cssUrls(),
                     js: content.jsUrls(),
+                    data: content.data,
                     context: .init(
                         guides: source.contents.docs.guides.map {
                             .init(title: $0.title)
@@ -659,6 +673,7 @@ struct Site {
                         metadata: metadata(for: item),
                         css: item.cssUrls(),
                         js: item.jsUrls(),
+                        data: item.data,
                         context: .init(title: item.title),
                         content: render(content: item)
                     ),

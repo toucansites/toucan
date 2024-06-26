@@ -1,8 +1,6 @@
 title: Alan Turing
 description: Alan Turing is an amazing scientist
 image: ./alan-turing/alan-turing.webp
-assets:
-    path: alan-turing
 redirects:
     from:
         - lorem-turing

@@ -31,9 +31,16 @@ struct FrontMatterParser {
     func load(
         yaml: String
     ) throws -> [String: Any] {
+        try load(yaml: yaml, as: [String: Any].self) ?? [:]
+    }
+    
+    func load<T>(
+        yaml: String,
+        as: T.Type
+    ) throws -> T? {
         try Yams.load(
             yaml: String(yaml),
             Resolver.default.removing(.timestamp)
-        ) as? [String: Any] ?? [:]
+        ) as? T
     }
 }

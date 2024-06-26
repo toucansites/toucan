@@ -1,22 +1,5 @@
 import Foundation
 
-/// An extension for `Dictionary` that provides a method to merge two dictionaries.
-///
-/// This extension defines the `+` operator for dictionaries, allowing two dictionaries to be merged.
-/// If both dictionaries contain the same key, the value from the right-hand side dictionary will be used.
-extension Dictionary {
-
-    /// Merges two dictionaries, with values from the right-hand side dictionary taking precedence in case of conflicts.
-    ///
-    /// - Parameters:
-    ///   - lhs: The left-hand side dictionary.
-    ///   - rhs: The right-hand side dictionary.
-    /// - Returns: A new dictionary containing the merged key-value pairs.
-    static func + (lhs: Self, rhs: Self) -> Self {
-        lhs.merging(rhs) { (_, new) in new }
-    }
-}
-
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
 extension Dictionary where Key == String, Value == Any {
     

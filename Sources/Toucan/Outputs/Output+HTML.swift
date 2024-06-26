@@ -13,6 +13,7 @@ extension Output {
             let metadata: Context.Metadata
             let css: [String]
             let js: [String]
+            let data: [Any]
             let context: C
             let content: String
         }

@@ -9,7 +9,7 @@ import Foundation
 
 extension Source {
 
-    struct Content {
+    struct Material {
         let location: URL
         
         let slug: String
@@ -25,6 +25,7 @@ extension Source {
         let lastModification: Date
         let redirects: [String]
         let userDefined: [String: Any]
+        let data: [[String: Any]]
         
         let frontMatter: [String: Any]
         let markdown: String
@@ -43,6 +44,7 @@ extension Source {
                 lastModification: lastModification,
                 redirects: redirects,
                 userDefined: userDefined,
+                data: data,
                 frontMatter: frontMatter,
                 markdown: markdown
             )
@@ -73,17 +75,17 @@ extension Source {
     // MARK: - contents
 
     //@DebugDescription
-    struct Contents {
+    struct Materials {
 
         struct Blog {
-            let authors: [Content]
-            let tags: [Content]
-            let posts: [Content]
+            let authors: [Material]
+            let tags: [Material]
+            let posts: [Material]
         }
 
         struct Docs {
-            let categories: [Content]
-            let guides: [Content]
+            let categories: [Material]
+            let guides: [Material]
         }
 
         // MARK: - pages
@@ -91,27 +93,27 @@ extension Source {
         struct Pages {
 
             struct Main {
-                let home: Content
-                let notFound: Content
+                let home: Material
+                let notFound: Material
             }
 
             struct Blog {
-                let home: Content?
-                let authors: Content?
-                let tags: Content?
-                let posts: Content?
+                let home: Material?
+                let authors: Material?
+                let tags: Material?
+                let posts: Material?
             }
 
             struct Docs {
-                let home: Content?
-                let categories: Content?
-                let guides: Content?
+                let home: Material?
+                let categories: Material?
+                let guides: Material?
             }
 
             let main: Main
             let blog: Blog
             let docs: Docs
-            let custom: [Content]
+            let custom: [Material]
         }
 
         let blog: Blog
@@ -120,10 +122,10 @@ extension Source {
     }
 }
 
-extension Source.Contents {
+extension Source.Materials {
 
-    func all() -> [Source.Content] {
-        var contents: [Source.Content?] = []
+    func all() -> [Source.Material] {
+        var contents: [Source.Material?] = []
 
         contents += [pages.main.home]
         contents += [pages.main.notFound]
