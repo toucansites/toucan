@@ -47,7 +47,7 @@ struct Site {
                 dateFormatter: DateFormatters.baseFormatter
             )
         }
-        
+
         self.content = .init(
             blog: .init(
                 posts: posts,
@@ -129,31 +129,40 @@ struct Site {
     
     // MARK: - main
     
+    func getOutputHTMLContext<T>(
+        content: Source.Material,
+        context: T
+    ) -> Output.HTML<T> {
+        .init(
+            site: getContext(),
+            page: .init(
+                metadata: metadata(for: content),
+                css: content.cssUrls(),
+                js: content.jsUrls(),
+                data: content.data,
+                context: context,
+                content: render(content: content)
+            ),
+            userDefined: source.config.site.userDefined
+                .recursivelyMerged(with: content.userDefined),
+            year: currentYear
+        )
+    }
+    
     func home() -> Renderable<Output.HTML<Context.Main.Home>> {
         let content = source.contents.pages.main.home
-        let context = Output.HTML<Context.Main.Home>
-            .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        featured: [],
-                        posts: [],
-                        authors: [],
-                        tags: [],
-                        pages: []
-                    ),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
+        let context = getOutputHTMLContext(
+            content: content,
+            context: Context.Main.Home(
+                featured: [],
+                posts: [],
+                authors: [],
+                tags: [],
+                pages: []
             )
-        
+        )
         return .init(
-            template: source.contents.pages.main.home.template ?? "main.home",
+            template: content.template ?? "main.home",
             context: context,
             destination: destinationUrl.appendingPathComponent(
                 "index.html"
@@ -163,21 +172,13 @@ struct Site {
     
     func notFound() -> Renderable<Output.HTML<Void>> {
         let content = source.contents.pages.main.notFound
+        let context = getOutputHTMLContext(
+            content: content,
+            context: ()
+        )
         return .init(
             template: content.template ?? "main.404",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: (),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
+            context: context,
             destination: destinationUrl
                 .appendingPathComponent("404.html")
         )
