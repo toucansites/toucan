@@ -25,8 +25,14 @@ struct FrontMatterParser {
         guard let rawMetadata = parts.first else {
             return [:]
         }
-        return try Yams.load(
-            yaml: String(rawMetadata),
+        return try load(yaml: String(rawMetadata))
+    }
+    
+    func load(
+        yaml: String
+    ) throws -> [String: Any] {
+        try Yams.load(
+            yaml: String(yaml),
             Resolver.default.removing(.timestamp)
         ) as? [String: Any] ?? [:]
     }

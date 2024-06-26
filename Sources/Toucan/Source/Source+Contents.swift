@@ -20,6 +20,7 @@ extension Source {
         let template: String?
         let assetsPath: String
         let lastModification: Date
+        let redirects: [String]
         let userDefined: [String: Any]
         
         let frontMatter: [String: Any]
@@ -35,6 +36,7 @@ extension Source {
                 template: template,
                 assetsPath: assetsPath,
                 lastModification: lastModification,
+                redirects: redirects,
                 userDefined: userDefined,
                 frontMatter: frontMatter,
                 markdown: markdown

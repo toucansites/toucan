@@ -65,11 +65,21 @@ extension Source {
             do {
                 let fileName = url.lastPathComponent
                 let location = String(url.path.dropLast(fileName.count))
-                let id = String(fileName.dropLast(3))
+                let id = fileName.droppingEverythingAfterLastOccurrence(of: ".")
                 let lastModification = try fileManager.modificationDate(at: url)
                 
-                let rawMarkdown = try String(contentsOf: url)
-                let frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
+                let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
+                var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
+                
+                for c in [id + ".yaml", id + ".yml"] {
+                    let url = URL(fileURLWithPath: location + c)
+                    guard fileManager.fileExists(at: url) else {
+                        continue
+                    }
+                    let yaml = try String(contentsOf: url, encoding: .utf8)
+                    let fm = try frontMatterParser.load(yaml: yaml)
+                    frontMatter = frontMatter.recursivelyMerged(with: fm)
+                }
                 
                 let slug = frontMatter.string("slug") ?? id
                 let title = frontMatter.string("title") ?? ""
@@ -78,6 +88,10 @@ extension Source {
                 let template = frontMatter.string("template")
                 let assetsPath = frontMatter.string("assets.path")
                 let userDefined = frontMatter.dict("userDefined")
+                let redirects = frontMatter.value(
+                    "redirects.from",
+                    as: [String].self
+                ) ?? []
 
 //                print(id)
 //                print(fileName)
@@ -95,6 +109,7 @@ extension Source {
                     template: template,
                     assetsPath: assetsPath ?? id,
                     lastModification: lastModification,
+                    redirects: redirects,
                     userDefined: userDefined,
                     frontMatter: frontMatter,
                     markdown: rawMarkdown.dropFrontMatter()

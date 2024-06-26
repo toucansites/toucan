@@ -168,4 +168,19 @@ extension String {
         }
         return true
     }
+        
+    /// Returns a new string with everything after the last occurrence of the specified character dropped.
+    ///
+    /// - Parameter character: The character after which everything should be dropped.
+    /// - Returns: A new string with the substring up to the last occurrence of the character.
+    ///
+    /// This extension method drops everything after the last occurrence of the specified character.
+    func droppingEverythingAfterLastOccurrence(of character: Character) -> String {
+        guard let lastIndex = self.lastIndex(of: character) else {
+            // If the character is not found, return the original string
+            return self
+        }
+        let substring = self[..<lastIndex]
+        return String(substring)
+    }
 }

@@ -133,6 +133,26 @@ struct SiteRenderer {
         for renderable in site.docsGuideDetails() {
             try render(renderer, renderable)
         }
+        
+        // TODO: move this
+        struct Redirect {
+            let url: String
+        }
+        for content in site.source.contents.all() {
+            for slug in content.redirects {
+                try render(renderer,
+                    .init(
+                        template: "redirect",
+                        context: Redirect(
+                            url: site.permalink(content.slug)
+                        ),
+                        destination: site.destinationUrl
+                            .appendingPathComponent(slug)
+                            .appendingPathComponent("index.html")
+                    )
+                )
+            }
+        }
     }
 
     // MARK: -

@@ -1,0 +1,18 @@
+title: Alan Turing
+description: Alan Turing is an amazing scientist
+image: ./alan-turing/alan-turing.webp
+assets:
+    path: alan-turing
+redirects:
+    from:
+        - lorem-turing
+        - lorem/turing/bar/baz
+
+userDefined:
+    foo:
+        bar:
+            buuuuuuu
+        hihihihi:
+            hehehe
+    css: ./alan-turing/alan-turing.css
+    js: ./alan-turing/alan-turing.js
