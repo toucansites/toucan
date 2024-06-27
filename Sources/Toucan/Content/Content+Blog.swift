@@ -86,7 +86,7 @@ extension Site.Content {
                     // TODO: fix this
                     numberOfPosts: posts.count,
                     userDefined: material.userDefined,
-                    markdown: site.render(content: material)
+                    markdown: site.render(material: material)
                 )
             }
         }
@@ -105,7 +105,7 @@ extension Site.Content {
                     
                     numberOfPosts: posts.count,
                     userDefined: material.userDefined,
-                    markdown: site.render(content: material)
+                    markdown: site.render(material: material)
                 )
             }
         }

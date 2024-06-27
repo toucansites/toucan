@@ -10,9 +10,8 @@ import Foundation
 
 struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
 
-    let site: Site
-    let content: SourceMaterial
-    let fileManager: FileManager = .default
+    let config: SourceConfig
+    let material: SourceMaterial
 
     func linkAttributes(_ link: String?) -> [String: String] {
         var attributes: [String: String] = [:]
@@ -21,7 +20,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         }
         if !link.hasPrefix("."),
             !link.hasPrefix("/"),
-           !link.hasPrefix(site.source.config.site.baseUrl)
+           !link.hasPrefix(config.site.baseUrl)
         {
             attributes["target"] = "_blank"
         }
@@ -29,7 +28,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        let prefix = "./\(content.assetsPath)"
+        let prefix = "./\(material.assetsPath)"
         guard
             let source = image.source,
             source.hasPrefix(prefix)
@@ -39,7 +38,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         
         let src = String(source.dropFirst(prefix.count))
         
-        let url = "/assets/" + content.slug + "/" + src
+        let url = "/assets/" + material.slug + "/" + src
         
         var title = ""
         if let ttl = image.title {

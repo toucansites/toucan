@@ -89,27 +89,27 @@ struct Site {
     }
     
     func metadata(
-        for content: SourceMaterial
+        for material: SourceMaterial
     ) -> Context.Metadata {
         .init(
-            slug: content.slug,
-            permalink: permalink(content.slug),
-            title: content.title,
-            description: content.description,
-            imageUrl: content.imageUrl().map { permalink($0) }
+            slug: material.slug,
+            permalink: permalink(material.slug),
+            title: material.title,
+            description: material.description,
+            imageUrl: material.imageUrl().map { permalink($0) }
         )
     }
     
     func render(
-        content: SourceMaterial
+        material: SourceMaterial
     ) -> String {
         let renderer = MarkdownToHTMLRenderer(
             delegate: HTMLRendererDelegate(
-                site: self,
-                content: content
+                config: source.config,
+                material: material
             )
         )
-        return renderer.render(markdown: content.markdown)
+        return renderer.render(markdown: material.markdown)
     }
     
     func readingTime(_ value: String) -> Int {
@@ -135,8 +135,8 @@ struct Site {
     ) -> Output.HTML<T> {
         let renderer = MarkdownToHTMLRenderer(
             delegate: HTMLRendererDelegate(
-                site: self,
-                content: material
+                config: source.config,
+                material: material
             )
         )
         
