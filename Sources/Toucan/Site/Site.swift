@@ -42,7 +42,7 @@ struct Site {
         
         let posts: [Content.Blog.Post] = source.materials.blog.posts.map {
             .init(
-                content: $0,
+                material: $0,
                 config: source.config,
                 dateFormatter: DateFormatters.baseFormatter
             )
@@ -54,7 +54,7 @@ struct Site {
                 authors: source.materials.blog.authors
                     .map { author in
                             .init(
-                                content: author,
+                                material: author,
                                 posts: posts.filter {
                                     $0.authors.contains(author.slug)
                                 }
@@ -63,7 +63,7 @@ struct Site {
                 tags: source.materials.blog.tags
                     .map { tag in
                             .init(
-                                content: tag,
+                                material: tag,
                                 posts: posts.filter {
                                     $0.tags.contains(tag.slug)
                                 }
@@ -253,7 +253,7 @@ struct Site {
     
     func authorDetails() -> [Renderable<Output.HTML<Context.Blog.Author.Detail>>] {
         content.blog.authors.map { author in
-            let material = author.content
+            let material = author.material
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Author.Detail(
@@ -297,7 +297,7 @@ struct Site {
     
     func tagDetails() -> [Renderable<Output.HTML<Context.Blog.Tag.Detail>>] {
         content.blog.tags.map { tag in
-            let material = tag.content
+            let material = tag.material
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Tag.Detail(
@@ -383,7 +383,7 @@ struct Site {
     
     func postDetails() -> [Renderable<Output.HTML<Context.Blog.Post.Detail>>] {
         content.blog.posts.map { post in
-            let material = post.content
+            let material = post.material
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Post.Detail(

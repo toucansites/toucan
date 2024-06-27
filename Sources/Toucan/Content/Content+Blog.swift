@@ -12,23 +12,23 @@ extension Site.Content {
     struct Blog {
 
         struct Post {
-            let content: SourceMaterial
+            let material: SourceMaterial
             let published: Date
             let tags: [String]
             let authors: [String]
             let featured: Bool
             
             init(
-                content: SourceMaterial,
+                material: SourceMaterial,
                 config: SourceConfig,
                 dateFormatter: DateFormatter
             ) {
-                self.content = content
+                self.material = material
                 
                 dateFormatter.dateFormat = config.site.dateFormat
 
                 if
-                    let rawDate = content.frontMatter["publication"] as? String,
+                    let rawDate = material.frontMatter["publication"] as? String,
                     let date = dateFormatter.date(from: rawDate)
                 {
                     self.published = date
@@ -37,75 +37,75 @@ extension Site.Content {
                     self.published = Date()
                 }
                 
-                let tags = content.frontMatter["tags"] as? [String] ?? []
+                let tags = material.frontMatter["tags"] as? [String] ?? []
                 self.tags = tags.map { slug in
                     return slug.safeSlug(
                         prefix: config.contents.blog.tags.slugPrefix
                     )
                 }
                 
-                let authors = content.frontMatter["authors"] as? [String] ?? []
+                let authors = material.frontMatter["authors"] as? [String] ?? []
                 self.authors = authors.map { slug in
                     return slug.safeSlug(
                         prefix: config.contents.blog.authors.slugPrefix
                     )
                 }
                 
-                self.featured = content.frontMatter["featured"] as? Bool ?? false
+                self.featured = material.frontMatter["featured"] as? Bool ?? false
             }
             
             func context(site: Site) -> Context.Blog.Post {
                 .init(
-                    slug: content.slug,
-                    permalink: site.permalink(content.slug),
-                    title: content.title,
-                    description: content.description,
-                    imageUrl: content.imageUrl(),
+                    slug: material.slug,
+                    permalink: site.permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl(),
                     // TODO: fix this
                     date: "",
                     tags: [],
                     authors: [],
-                    readingTime: site.readingTime(content.markdown),
+                    readingTime: site.readingTime(material.markdown),
                     featured: featured,
-                    userDefined: content.userDefined
+                    userDefined: material.userDefined
                 )
             }
         }
 
         struct Author {
-            let content: SourceMaterial
+            let material: SourceMaterial
             let posts: [Blog.Post]
 
             func context(site: Site) -> Context.Blog.Author {
                 .init(
-                    slug: content.slug,
-                    permalink: site.permalink(content.slug),
-                    title: content.title,
-                    description: content.description,
-                    imageUrl: content.imageUrl(),
+                    slug: material.slug,
+                    permalink: site.permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl(),
                     // TODO: fix this
                     numberOfPosts: posts.count,
-                    userDefined: content.userDefined,
-                    markdown: site.render(content: content)
+                    userDefined: material.userDefined,
+                    markdown: site.render(content: material)
                 )
             }
         }
 
         struct Tag {
-            let content: SourceMaterial
+            let material: SourceMaterial
             let posts: [Blog.Post]
             
             func context(site: Site) -> Context.Blog.Tag {
                 .init(
-                    slug: content.slug,
-                    permalink: site.permalink(content.slug),
-                    title: content.title,
-                    description: content.description,
-                    imageUrl: content.imageUrl(),
+                    slug: material.slug,
+                    permalink: site.permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl(),
                     
                     numberOfPosts: posts.count,
-                    userDefined: content.userDefined,
-                    markdown: site.render(content: content)
+                    userDefined: material.userDefined,
+                    markdown: site.render(content: material)
                 )
             }
         }
@@ -116,13 +116,13 @@ extension Site.Content {
         
         func sortedAuthors() -> [Author] {
             authors.sorted {
-                $0.content.title.localizedCaseInsensitiveCompare($1.content.title) == .orderedAscending
+                $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
             }
         }
 
         func sortedTags() -> [Tag] {
             tags.sorted {
-                $0.content.title.localizedCaseInsensitiveCompare($1.content.title) == .orderedAscending
+                $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
             }
         }
 
