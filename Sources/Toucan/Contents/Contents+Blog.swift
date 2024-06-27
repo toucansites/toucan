@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Site.Content {
+extension Site.Contents {
     
     struct Blog {
 
@@ -17,7 +17,7 @@ extension Site.Content {
             let tags: [String]
             let authors: [String]
             let featured: Bool
-            
+
             init(
                 material: SourceMaterial,
                 config: SourceConfig,

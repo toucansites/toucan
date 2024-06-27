@@ -104,7 +104,14 @@ extension Context {
                 let categories: [Category]
             }
             
+            struct Detail {
+                let category: Category
+                let guides: [Guide]
+            }
+            
+            
             let title: String
+            
         }
         
         struct Guide {
@@ -113,9 +120,13 @@ extension Context {
                 let guides: [Guide]
             }
             
+            struct Detail {
+                let guide: Guide
+            }
+
             let title: String
         }
-        
+
         struct Home {
             let categories: [Category]
             let guides: [Guide]

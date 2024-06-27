@@ -30,6 +30,7 @@ struct Context {
         let permalink: String
         let isCurrent: Bool
     }    
+
 //    let main: Main
 //    let blog: Blog
 //    //let docs: Docs

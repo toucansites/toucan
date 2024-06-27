@@ -135,7 +135,7 @@ struct SiteRenderer {
         }
         
         // TODO: move this
-        struct Redirect {
+        struct Redirect: Output {
             let url: String
         }
         for content in site.source.materials.all() {
@@ -148,7 +148,7 @@ struct SiteRenderer {
                         ),
                         destination: site.destinationUrl
                             .appendingPathComponent(slug)
-                            .appendingPathComponent("index.html")
+                            .appendingPathComponent(Toucan.Files.index)
                     )
                 )
             }

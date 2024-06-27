@@ -9,7 +9,7 @@ import Foundation
 
 extension Site {
 
-    struct Content {
+    struct Contents {
 
         let blog: Blog
     }

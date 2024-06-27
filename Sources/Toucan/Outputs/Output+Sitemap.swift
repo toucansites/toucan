@@ -5,15 +5,13 @@
 //  Created by Tibor Bodecs on 14/05/2024.
 //
 
-extension Output {
+struct Sitemap: Output {
 
-    struct Sitemap {
-
-        struct URL {
-            let location: String
-            let lastModification: String
-        }
-
-        let urls: [URL]
+    struct URL {
+        let location: String
+        let lastModification: String
     }
+
+    let urls: [URL]
 }
+

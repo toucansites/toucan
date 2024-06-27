@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Renderable<T> {
+struct Renderable<T: Output> {
     let template: String
     let context: T
     let destination: URL
