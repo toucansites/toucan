@@ -11,6 +11,9 @@ extension Site {
 
     struct Contents {
 
+        let config: SourceConfig
         let blog: Blog
+        let docs: Docs
+        let pages: Pages
     }
 }

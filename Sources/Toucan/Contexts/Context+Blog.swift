@@ -9,6 +9,13 @@ extension Context {
     
     struct Blog {
 
+        struct Home {
+            let featured: [Post]
+            let posts: [Post]
+            let authors: [Author]
+            let tags: [Tag]
+        }
+
         struct Post {
 
             struct List {
@@ -85,51 +92,6 @@ extension Context {
             let userDefined: [String: Any]
             let markdown: String
 
-        }
-
-        struct Home {
-            let featured: [Post]
-            let posts: [Post]
-            let authors: [Author]
-            let tags: [Tag]
-        }
-    }
-    
-    // TODO: move
-    struct Docs {
-        
-        struct Category {
-            
-            struct List {
-                let categories: [Category]
-            }
-            
-            struct Detail {
-                let category: Category
-                let guides: [Guide]
-            }
-            
-            
-            let title: String
-            
-        }
-        
-        struct Guide {
-            
-            struct List {
-                let guides: [Guide]
-            }
-            
-            struct Detail {
-                let guide: Guide
-            }
-
-            let title: String
-        }
-
-        struct Home {
-            let categories: [Category]
-            let guides: [Guide]
         }
     }
 }
