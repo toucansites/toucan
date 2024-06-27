@@ -36,7 +36,8 @@ struct SourceMaterialLoader {
     private
     func loadMaterial(
         at url: URL,
-        slugPrefix: String?
+        slugPrefix: String?,
+        template: String
     ) throws(Self.Error) -> SourceMaterial? {
         guard fileManager.fileExists(at: url) else {
             return nil
@@ -78,7 +79,7 @@ struct SourceMaterialLoader {
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")
-            let template = frontMatter.string("template")
+            let template = frontMatter.string("template") ?? template
             let assetsPath = frontMatter.string("assets.path")
             let userDefined = frontMatter.dict("userDefined")
             let redirects = frontMatter.value(
@@ -169,19 +170,22 @@ struct SourceMaterialLoader {
     private
     func loadMaterial(
         using path: String,
-        slugPrefix: String?
+        slugPrefix: String?,
+        template: String
     ) throws(Self.Error) -> SourceMaterial? {
         try loadMaterial(
             at: markdownUrl(
                 using: path
             ),
-            slugPrefix: slugPrefix
+            slugPrefix: slugPrefix,
+            template: template
         )
     }
     
     private
     func loadMaterials(
-        using config: SourceConfig.Content
+        using config: SourceConfig.Content,
+        template: String
     ) throws(Self.Error) -> [SourceMaterial] {
         let customPagesDirectoryUrl = contentsUrl
             .appendingPathComponent(config.folder)
@@ -192,7 +196,11 @@ struct SourceMaterialLoader {
                 for: ["md", "markdown"]
             )
             .compactMap {
-                try? loadMaterial(at: $0, slugPrefix: config.slugPrefix)
+                try? loadMaterial(
+                    at: $0,
+                    slugPrefix: config.slugPrefix,
+                    template: template
+                )
             }
     }
     
@@ -205,7 +213,8 @@ struct SourceMaterialLoader {
         // TODO: exception
         guard let home = try loadMaterial(
             using: config.pages.main.home.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "main.home"
         ) else {
             fatalError("Couldn't load not home page.")
         }
@@ -219,7 +228,8 @@ struct SourceMaterialLoader {
         // TODO: exception
         guard let notFound = try loadMaterial(
             using: config.pages.main.notFound.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "main.404"
         ) else {
             fatalError("Couldn't load not found page.")
         }
@@ -236,32 +246,39 @@ struct SourceMaterialLoader {
         
         let blogHomePage = try loadMaterial(
             using: config.pages.blog.home.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "blog.home"
         )
         
         let blogAuthorsPage = try loadMaterial(
             using: config.pages.blog.authors.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "blog.authors"
         )
         let blogTagsPage = try loadMaterial(
             using: config.pages.blog.tags.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "blog.tags"
         )
         let blogPostsPage = try loadMaterial(
             using: config.pages.blog.posts.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "blog.posts"
         )
         let docsHomePage = try loadMaterial(
             using: config.pages.docs.home.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "docs.home"
         )
         let docsCategoriesPage = try loadMaterial(
             using: config.pages.docs.categories.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "docs.categories"
         )
         let docsGuidesPage = try loadMaterial(
             using: config.pages.docs.guides.path,
-            slugPrefix: nil
+            slugPrefix: nil,
+            template: "docs.guides"
         )
 
         return .init(
@@ -281,7 +298,8 @@ struct SourceMaterialLoader {
                 guides: docsGuidesPage
             ),
             custom: try loadMaterials(
-                using: config.contents.pages.custom
+                using: config.contents.pages.custom,
+                template: "pages.single.page"
             )
         )
     }
@@ -292,13 +310,16 @@ struct SourceMaterialLoader {
     ) throws(Self.Error) -> SourceMaterials.Blog {
         .init(
             authors: try loadMaterials(
-                using: config.contents.blog.authors
+                using: config.contents.blog.authors,
+                template: "blog.single.author"
             ),
             tags: try loadMaterials(
-                using: config.contents.blog.tags
+                using: config.contents.blog.tags,
+                template: "blog.single.tag"
             ),
             posts: try loadMaterials(
-                using: config.contents.blog.posts
+                using: config.contents.blog.posts,
+                template: "blog.single.post"
             )
         )
     }
@@ -309,10 +330,12 @@ struct SourceMaterialLoader {
     ) throws(Self.Error) -> SourceMaterials.Docs {
         .init(
             categories: try loadMaterials(
-                using: config.contents.docs.categories
+                using: config.contents.docs.categories,
+                template: "docs.single.category"
             ),
             guides: try loadMaterials(
-                using: config.contents.docs.guides
+                using: config.contents.docs.guides,
+                template: "docs.single.guide"
             )
         )
     }

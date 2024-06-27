@@ -18,7 +18,7 @@ struct SourceMaterial {
     let css: [String]
     let js: [String]
 
-    let template: String?
+    let template: String
     let assetsPath: String
     let lastModification: Date
     let redirects: [String]
@@ -29,13 +29,20 @@ struct SourceMaterial {
     let markdown: String
     
     let assets: [String]
+}
 
-    func updated(slug: String) -> Self {
+extension SourceMaterial {
+
+    func updated(
+        title: String? = nil,
+        description: String? = nil,
+        slug: String
+    ) -> Self {
         .init(
             url: url,
             slug: slug,
-            title: title,
-            description: description,
+            title: title ?? self.title,
+            description: description ?? self.description,
             image: image,
             css: css,
             js: js,

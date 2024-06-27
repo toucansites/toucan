@@ -130,29 +130,49 @@ struct Site {
     // MARK: - main
     
     func getOutputHTMLContext<T>(
-        content: SourceMaterial,
+        material: SourceMaterial,
         context: T
     ) -> Output.HTML<T> {
-        .init(
-            site: getContext(),
+        let renderer = MarkdownToHTMLRenderer(
+            delegate: HTMLRendererDelegate(
+                site: self,
+                content: material
+            )
+        )
+        
+        return .init(
+            site: .init(
+                baseUrl: source.config.site.baseUrl,
+                title: source.config.site.title,
+                description: source.config.site.description,
+                language: source.config.site.language
+            ),
             page: .init(
-                metadata: metadata(for: content),
-                css: content.cssUrls(),
-                js: content.jsUrls(),
-                data: content.data,
+                metadata: .init(
+                    slug: material.slug,
+                    permalink: permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl().map { permalink($0) }
+                ),
+                css: material.cssUrls(),
+                js: material.jsUrls(),
+                data: material.data,
                 context: context,
-                content: render(content: content)
+                content: renderer.render(
+                    markdown: material.markdown
+                )
             ),
             userDefined: source.config.site.userDefined
-                .recursivelyMerged(with: content.userDefined),
+                .recursivelyMerged(with: material.userDefined),
             year: currentYear
         )
     }
     
     func home() -> Renderable<Output.HTML<Context.Main.Home>> {
-        let content = source.materials.pages.main.home
+        let material = source.materials.pages.main.home
         let context = getOutputHTMLContext(
-            content: content,
+            material: material,
             context: Context.Main.Home(
                 featured: [],
                 posts: [],
@@ -162,60 +182,48 @@ struct Site {
             )
         )
         return .init(
-            template: content.template ?? "main.home",
+            template: material.template,
             context: context,
-            destination: destinationUrl.appendingPathComponent(
-                "index.html"
-            )
+            destination: destinationUrl
+                .appendingPathComponent(Toucan.Files.index)
         )
     }
     
     func notFound() -> Renderable<Output.HTML<Void>> {
-        let content = source.materials.pages.main.notFound
+        let material = source.materials.pages.main.notFound
         let context = getOutputHTMLContext(
-            content: content,
+            material: material,
             context: ()
         )
         return .init(
-            template: content.template ?? "main.404",
+            template: material.template,
             context: context,
             destination: destinationUrl
-                .appendingPathComponent("404.html")
+                .appendingPathComponent(Toucan.Files.notFound)
         )
     }
     
     // MARK: - blog
     
     func blogHome() -> Renderable<Output.HTML<Context.Blog.Home>>? {
-        guard let content = source.materials.pages.blog.home else {
+        guard let material = source.materials.pages.blog.home else {
             return nil
         }
-        
+        let context = getOutputHTMLContext(
+            material: material,
+            context: Context.Blog.Home(
+                featured: [],
+                posts: [],
+                authors: [],
+                tags: []
+            )
+        )
         return .init(
-            template: content.template ?? "blog.home",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        featured: [],
-                        posts: [],
-                        authors: [],
-                        tags: []
-                    ),
-                    content: render(
-                        content: content
-                    )
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
+            template: material.template,
+            context: context,
             destination: destinationUrl
-                .appendingPathComponent(content.slug)
-                .appendingPathComponent("index.html")
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Toucan.Files.index)
         )
     }
     
@@ -223,57 +231,42 @@ struct Site {
     // MARK: - authors
     
     func authorList() -> Renderable<Output.HTML<Context.Blog.Author.List>>? {
-        guard let content = source.materials.pages.blog.authors else {
+        guard let material = source.materials.pages.blog.authors else {
             return nil
         }
+        let context = getOutputHTMLContext(
+            material: material,
+            context: Context.Blog.Author.List(
+                authors: self.content.blog.sortedAuthors().map {
+                    $0.context(site: self)
+                }
+            )
+        )
         return .init(
-            template: content.template ?? "blog.authors",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        authors: self.content.blog.sortedAuthors().map {
-                            $0.context(site: self)
-                        }
-                    ),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
+            template: material.template,
+            context: context,
             destination: destinationUrl
-                .appendingPathComponent(content.slug)
-                .appendingPathComponent("index.html")
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Toucan.Files.index)
         )
     }
     
     func authorDetails() -> [Renderable<Output.HTML<Context.Blog.Author.Detail>>] {
         content.blog.authors.map { author in
+            let material = author.content
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Blog.Author.Detail(
+                    author: author.context(site: self),
+                    posts: author.posts.map { $0.context(site: self) }
+                )
+            )
             return .init(
-                template: author.content.template ?? "blog.single.author",
-                context: .init(
-                    site: getContext(),
-                    page: .init(
-                        metadata: metadata(for: author.content),
-                        css: author.content.cssUrls(),
-                        js: author.content.jsUrls(),
-                        data: author.content.data,
-                        context: .init(
-                            author: author.context(site: self),
-                            posts: author.posts.map { $0.context(site: self) }
-                        ),
-                        content: render(content: author.content)
-                    ),
-                    userDefined: source.config.site.userDefined.recursivelyMerged(with: author.content.userDefined),
-                    year: currentYear
-                ),
+                template: material.template,
+                context: context,
                 destination: destinationUrl
-                    .appendingPathComponent(author.content.slug)
-                    .appendingPathComponent("index.html")
+                    .appendingPathComponent(material.slug)
+                    .appendingPathComponent(Toucan.Files.index)
             )
         }
     }
@@ -281,59 +274,43 @@ struct Site {
     // MARK: - tags
     
     func tagList() -> Renderable<Output.HTML<Context.Blog.Tag.List>>? {
-        guard let content = source.materials.pages.blog.tags else {
+        guard let material = source.materials.pages.blog.tags else {
             return nil
         }
-        
+        let context = getOutputHTMLContext(
+            material: material,
+            context: Context.Blog.Tag.List(
+                tags: self.content.blog.sortedTags().map {
+                    $0.context(site: self)
+                }
+            )
+        )
         return .init(
-            template: content.template ?? "blog.tags",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        tags: self.content.blog.sortedTags().map {
-                            $0.context(site: self)
-                        }
-                    ),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
+            template: material.template,
+            context: context,
             destination: destinationUrl
-                .appendingPathComponent(content.slug)
-                .appendingPathComponent("index.html")
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Toucan.Files.index)
         )
     }
     
     
     func tagDetails() -> [Renderable<Output.HTML<Context.Blog.Tag.Detail>>] {
         content.blog.tags.map { tag in
+            let material = tag.content
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Blog.Tag.Detail(
+                    tag: tag.context(site: self),
+                    posts: tag.posts.map { $0.context(site: self) }
+                )
+            )
             return .init(
-                template: tag.content.template ?? "blog.single.tag",
-                context: .init(
-                    site: getContext(),
-                    page: .init(
-                        metadata: metadata(for: tag.content),
-                        css: tag.content.cssUrls(),
-                        js: tag.content.jsUrls(),
-                        data: tag.content.data,
-                        context: .init(
-                            tag: tag.context(site: self),
-                            posts: tag.posts.map { $0.context(site: self) }
-                        ),
-                        content: render(content: tag.content)
-                    ),
-                    userDefined: source.config.site.userDefined.recursivelyMerged(with: tag.content.userDefined),
-                    year: currentYear
-                ),
+                template: material.template,
+                context: context,
                 destination: destinationUrl
-                    .appendingPathComponent(tag.content.slug)
-                    .appendingPathComponent("index.html")
+                    .appendingPathComponent(material.slug)
+                    .appendingPathComponent(Toucan.Files.index)
             )
         }
     }
@@ -366,46 +343,38 @@ struct Site {
             let title = replace(pageNumber, posts.title)
             let description = replace(pageNumber, posts.description)
             let slug = replace(pageNumber, posts.slug)
-            
-            let r = Renderable<Output.HTML<Context.Blog.Post.List>>(
-                    template: posts.template ?? "blog.posts",
-                    context: .init(
-                        site: getContext(),
-                        page: .init(
-                            metadata: .init(
-                                slug: slug,
-                                permalink: permalink(slug),
-                                title: title,
-                                description: description,
-                                imageUrl: posts.image
-                            ),
-                            css: posts.cssUrls(),
-                            js: posts.jsUrls(),
-                            data: posts.data,
-                            context: .init(
-                                posts: postsChunk.map { $0.context(site: self) },
-                                pagination: (1...pages.count)
-                                    .map {
-                                        .init(
-                                            number: $0,
-                                            total: pages.count,
-                                            slug: replace($0, posts.slug),
-                                            permalink: permalink(
-                                                replace($0, posts.slug)
-                                            ),
-                                            isCurrent: pageNumber == $0
-                                        )
-                                    }
-                            ),
-                            content: render(content: posts)
-                        ),
-                        userDefined: source.config.site.userDefined.recursivelyMerged(with: posts.userDefined),
-                        year: currentYear
-                    ),
-                    destination: destinationUrl
-                        .appendingPathComponent(slug)
-                        .appendingPathComponent("index.html")
+
+            let material = posts.updated(
+                title: title,
+                description: description,
+                slug: slug
+            )
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Blog.Post.List(
+                    posts: postsChunk.map { $0.context(site: self) },
+                    pagination: (1...pages.count)
+                        .map {
+                            .init(
+                                number: $0,
+                                total: pages.count,
+                                slug: replace($0, posts.slug),
+                                permalink: permalink(
+                                    replace($0, posts.slug)
+                                ),
+                                isCurrent: pageNumber == $0
+                            )
+                        }
                 )
+            )
+
+            let r = Renderable<Output.HTML<Context.Blog.Post.List>>(
+                template: material.template,
+                context: context,
+                destination: destinationUrl
+                    .appendingPathComponent(slug)
+                    .appendingPathComponent(Toucan.Files.index)
+            )
             
             result.append(r)
         }
@@ -414,30 +383,23 @@ struct Site {
     
     func postDetails() -> [Renderable<Output.HTML<Context.Blog.Post.Detail>>] {
         content.blog.posts.map { post in
+            let material = post.content
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Blog.Post.Detail(
+                    post: post.context(site: self),
+                    related: [],
+                    moreByAuthor: [],
+                    next: nil,
+                    prev: nil
+                )
+            )
             return .init(
-                template: post.content.template ?? "blog.single.post",
-                context: .init(
-                    site: getContext(),
-                    page: .init(
-                        metadata: metadata(for: post.content),
-                        css: post.content.cssUrls(),
-                        js: post.content.jsUrls(),
-                        data: post.content.data,
-                        context: .init(
-                            post: post.context(site: self),
-                            related: [],
-                            moreByAuthor: [],
-                            next: nil,
-                            prev: nil
-                        ),
-                        content: render(content: post.content)
-                    ),
-                    userDefined: source.config.site.userDefined.recursivelyMerged(with: post.content.userDefined),
-                    year: currentYear
-                ),
+                template: material.template,
+                context: context,
                 destination: destinationUrl
-                    .appendingPathComponent(post.content.slug)
-                    .appendingPathComponent("index.html")
+                    .appendingPathComponent(material.slug)
+                    .appendingPathComponent(Toucan.Files.index)
             )
         }
     }
@@ -447,34 +409,145 @@ struct Site {
     
     func customPages() -> [Renderable<Output.HTML<Context.Pages.Detail>>] {
         source.materials.pages.custom.map { content in
-            return .init(
-                template: content.template ?? "pages.single.page",
-                context: .init(
-                    site: getContext(),
+            let material = content
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Pages.Detail(
                     page: .init(
-                        metadata: metadata(for: content),
-                        css: content.cssUrls(),
-                        js: content.jsUrls(),
-                        data: content.data,
-                        // TODO: use site content
-                        context: .init(
-                            page: .init(
-                                slug: content.slug,
-                                permalink: permalink(content.slug),
-                                title: content.title,
-                                description: content.description,
-                                imageUrl: content.imageUrl(),
-                                userDefined: [:]
-                            )
-                        ),
-                        content: render(content: content)
-                    ),
-                    userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                    year: currentYear
-                ),
+                        slug: content.slug,
+                        permalink: permalink(content.slug),
+                        title: content.title,
+                        description: content.description,
+                        imageUrl: content.imageUrl(),
+                        userDefined: [:]
+                    )
+                )
+            )
+            
+            return .init(
+                template: material.template,
+                context: context,
                 destination: destinationUrl
-                    .appendingPathComponent(content.slug)
-                    .appendingPathComponent("index.html")
+                    .appendingPathComponent(material.slug)
+                    .appendingPathComponent(Toucan.Files.index)
+            )
+        }
+    }
+    
+    
+    
+    
+    // MARK: - docs
+    
+    func docsHome() -> Renderable<Output.HTML<Context.Docs.Home>>? {
+        guard let material = source.materials.pages.docs.home else {
+            return nil
+        }
+        let context = getOutputHTMLContext(
+            material: material,
+            context: Context.Docs.Home(
+                categories: source.materials.docs.categories.map {
+                    .init(title: $0.title)
+                },
+                guides: source.materials.docs.guides.map {
+                    .init(title: $0.title)
+                }
+            )
+        )
+
+        return .init(
+            template: material.template,
+            context: context,
+            destination: destinationUrl
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Toucan.Files.index)
+        )
+    }
+    
+    func docsCategoryList(
+    ) -> Renderable<Output.HTML<Context.Docs.Category.List>>? {
+        guard let material = source.materials.pages.docs.categories else {
+            return nil
+        }
+        let context = getOutputHTMLContext(
+            material: material,
+            context: Context.Docs.Category.List(
+                categories: source.materials.docs.categories.map {
+                    .init(title: $0.title)
+                }
+            )
+        )
+        return .init(
+            template: material.template,
+            context: context,
+            destination: destinationUrl
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Toucan.Files.index)
+        )
+    }
+    
+    func docsCategoryDetails(
+        
+    ) -> [Renderable<Output.HTML<Context.Docs.Category>>] {
+        source.materials.docs.categories.map { item in
+            let material = item
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Docs.Category(
+                    title: item.title
+                )
+            )
+            
+            return .init(
+                template: material.template,
+                context: context,
+                destination: destinationUrl
+                    .appendingPathComponent(material.slug)
+                    .appendingPathComponent(Toucan.Files.index)
+            )
+        }
+    }
+    
+    // MARK: - guides
+    
+    func docsGuideList(
+    ) -> Renderable<Output.HTML<Context.Docs.Guide.List>>? {
+        guard let material = source.materials.pages.docs.guides else {
+            return nil
+        }
+        let context = getOutputHTMLContext(
+            material: material,
+            context: Context.Docs.Guide.List(
+                guides: source.materials.docs.guides.map {
+                    .init(title: $0.title)
+                }
+            )
+        )
+        return .init(
+            template: material.template,
+            context: context,
+            destination: destinationUrl
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Toucan.Files.index)
+        )
+    }
+    
+    func docsGuideDetails(
+    ) -> [Renderable<Output.HTML<Context.Docs.Guide>>] {
+        source.materials.docs.guides.map { item in
+            let material = item
+            let context = getOutputHTMLContext(
+                material: material,
+                context: Context.Docs.Guide(
+                    title: item.title
+                )
+            )
+            return .init(
+                template: material.template,
+                context: context,
+                destination: destinationUrl
+                    .appendingPathComponent(material.slug)
+                    .appendingPathComponent(Toucan.Files.index)
             )
         }
     }
@@ -510,11 +583,11 @@ struct Site {
         return .init(
             template: "rss",
             context: context,
-            destination: destinationUrl.appendingPathComponent(
-                "rss.xml"
-            )
+            destination: destinationUrl
+                .appendingPathComponent(Toucan.Files.rss)
         )
     }
+    
     
     // MARK: - sitemap
     
@@ -533,158 +606,8 @@ struct Site {
         return .init(
             template: "sitemap",
             context: context,
-            destination: destinationUrl.appendingPathComponent(
-                "sitemap.xml"
-            )
-        )
-    }
-    
-    // MARK: - docs
-    
-    func docsHome() -> Renderable<Output.HTML<Context.Docs.Home>>? {
-        guard let content = source.materials.pages.docs.home else {
-            return nil
-        }
-        
-        return .init(
-            template: content.template ?? "docs.home",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        categories: source.materials.docs.categories.map {
-                            .init(title: $0.title)
-                        },
-                        guides: source.materials.docs.guides.map {
-                            .init(title: $0.title)
-                        }
-                    ),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
             destination: destinationUrl
-                .appendingPathComponent(content.slug)
-                .appendingPathComponent("index.html")
+                .appendingPathComponent(Toucan.Files.sitemap)
         )
-    }
-    
-    func docsCategoryList(
-    ) -> Renderable<Output.HTML<Context.Docs.Category.List>>? {
-        guard let content = source.materials.pages.docs.categories else {
-            return nil
-        }
-        
-        return .init(
-            template: content.template ?? "docs.categories",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        categories: source.materials.docs.categories.map {
-                            .init(title: $0.title)
-                        }
-                    ),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
-            destination: destinationUrl
-                .appendingPathComponent(content.slug)
-                .appendingPathComponent("index.html")
-        )
-    }
-    
-    func docsCategoryDetails(
-    ) -> [Renderable<Output.HTML<Context.Docs.Category>>] {
-        source.materials.docs.categories.map { item in
-            .init(
-                template: item.template ?? "docs.single.category",
-                context: .init(
-                    site: getContext(),
-                    page: .init(
-                        metadata: metadata(for: item),
-                        css: item.cssUrls(),
-                        js: item.jsUrls(),
-                        data: item.data,
-                        context: .init(title: item.title),
-                        content: render(content: item)
-                    ),
-                    userDefined: source.config.site.userDefined.recursivelyMerged(with: item.userDefined),
-                    year: currentYear
-                ),
-                destination: destinationUrl
-                    .appendingPathComponent(item.slug)
-                    .appendingPathComponent("index.html")
-            )
-        }
-    }
-    
-    // MARK: - guides
-    
-    func docsGuideList(
-    ) -> Renderable<Output.HTML<Context.Docs.Guide.List>>? {
-        guard let content = source.materials.pages.docs.guides else {
-            return nil
-        }
-        
-        return .init(
-            template: content.template ?? "docs.guides",
-            context: .init(
-                site: getContext(),
-                page: .init(
-                    metadata: metadata(for: content),
-                    css: content.cssUrls(),
-                    js: content.jsUrls(),
-                    data: content.data,
-                    context: .init(
-                        guides: source.materials.docs.guides.map {
-                            .init(title: $0.title)
-                        }
-                    ),
-                    content: render(content: content)
-                ),
-                userDefined: source.config.site.userDefined.recursivelyMerged(with: content.userDefined),
-                year: currentYear
-            ),
-            destination: destinationUrl
-                .appendingPathComponent(content.slug)
-                .appendingPathComponent("index.html")
-        )
-    }
-    
-    func docsGuideDetails(
-    ) -> [Renderable<Output.HTML<Context.Docs.Guide>>] {
-        source.materials.docs.guides.map { item in
-            .init(
-                template: item.template ?? "docs.single.guide",
-                context: .init(
-                    site: getContext(),
-                    page: .init(
-                        metadata: metadata(for: item),
-                        css: item.cssUrls(),
-                        js: item.jsUrls(),
-                        data: item.data,
-                        context: .init(title: item.title),
-                        content: render(content: item)
-                    ),
-                    userDefined: source.config.site.userDefined.recursivelyMerged(with: item.userDefined),
-                    year: currentYear
-                ),
-                destination: destinationUrl
-                    .appendingPathComponent(item.slug)
-                    .appendingPathComponent("index.html")
-            )
-        }
     }
 }
