@@ -114,6 +114,8 @@ extension Site.Contents {
         let authors: [Author]
         let tags: [Tag]
         
+        // MARK: - helpers
+
         func sortedAuthors() -> [Author] {
             authors.sorted {
                 $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
@@ -126,108 +128,79 @@ extension Site.Contents {
             }
         }
 
+        func latestPosts(limit: Int = 10) -> [Post] {
+            Array(
+                sortedPosts()
+                    .prefix(limit)
+            )
+        }
+        
         func sortedPosts() -> [Post] {
             posts
                 .sorted { $0.published > $1.published }
         }
 
-        func featuredPosts() -> [Post] {
-            posts
-                .filter { $0.featured }
-                .sorted { $0.published > $1.published }
+        func featuredPosts(limit: Int = 5) -> [Post] {
+            Array(
+                posts
+                    .filter { $0.featured }
+                    .sorted { $0.published > $1.published }
+                    .prefix(limit)
+            )
+        }
+        
+        func prevPost(_ post: Post) -> Post? {
+            let posts = sortedPosts()
+            guard
+                let index = posts.firstIndex(where: { $0.material.slug == post.material.slug }),
+                index < posts.count - 1
+            else {
+                return nil
+            }
+            return posts[index + 1]
+        }
+        
+        func nextPost(_ post: Post) -> Post? {
+            let posts = sortedPosts()
+            guard 
+                let index = posts.firstIndex(where: { $0.material.slug == post.material.slug }),
+                index > 0
+            else {
+                return nil
+            }
+            return posts[index - 1]
+        }
+        
+        /// posts from the same tags
+        func related(post: Post, limit: Int = 5) -> [Post] {
+            var result: [Post] = []
+            let posts = sortedPosts()
+            for tagSlug in post.tags {
+                result += posts
+                    .filter { $0.tags.contains(tagSlug) }
+                    .filter { $0.material.slug != post.material.slug }
+            }
+            return Array(
+                result
+                    .shuffled()
+                    .prefix(limit)
+            )
+        }
+        
+        /// posts from the same author
+        func more(post: Post, limit: Int = 5) -> [Post] {
+            var result: [Post] = []
+            let posts = sortedPosts()
+            for authorSlug in post.authors {
+                result += posts
+                    .filter { $0.authors.contains(authorSlug) }
+                    .filter { $0.material.slug != post.material.slug }
+            }
+            return Array(
+                result
+                    .shuffled()
+                    .prefix(limit)
+            )
         }
     }
-    
 }
-
-
-//
-//    func nextPost(for slug: String) -> PostState? {
-//        let posts = content.blog.post.sortedContents
-//
-//        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-//            if index > 0 {
-//                let post = posts[index - 1]
-//                return postState(
-//                    for: post,
-//                    authors: content.blog.author.contentsBy(
-//                        slugs: post.authorSlugs
-//                    ),
-//                    tags: content.blog.tag.contentsBy(
-//                        slugs: post.tagSlugs
-//                    )
-//                )
-//            }
-//        }
-//        return nil
-//    }
-//
-//    func prevPost(for slug: String) -> PostState? {
-//        let posts = content.blog.post.sortedContents
-//
-//        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-//            if index < posts.count - 1 {
-//                let post = posts[index + 1]
-//                return postState(
-//                    for: post,
-//                    authors: content.blog.author.contentsBy(
-//                        slugs: post.authorSlugs
-//                    ),
-//                    tags: content.blog.tag.contentsBy(
-//                        slugs: post.tagSlugs
-//                    )
-//                )
-//            }
-//        }
-//        return nil
-//    }
-//
-//    func relatedPosts(for slug: String) -> [PostState] {
-//        var result: [PostState] = []
-//
-//        let posts = content.blog.post.sortedContents
-//        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-//            let post = posts[index]
-//            for tagSlug in post.tagSlugs {
-//                result += content.blog.post.contentsBy(tagSlug: tagSlug)
-//                    .filter { $0.slug != slug }
-//                    .map {
-//                        postState(
-//                            for: $0,
-//                            authors: content.blog.author.contentsBy(
-//                                slugs: $0.authorSlugs
-//                            ),
-//                            tags: content.blog.tag.contentsBy(
-//                                slugs: $0.tagSlugs
-//                            )
-//                        )
-//                    }
-//            }
-//        }
-//        return Array(result.shuffled().prefix(5))
-//    }
-//
-//    func moreByPosts(for slug: String) -> [PostState] {
-//        var result: [PostState] = []
-//
-//        let posts = content.blog.post.sortedContents
-//        if let index = posts.firstIndex(where: { $0.slug == slug }) {
-//            let post = posts[index]
-//            for authorSlug in post.authorSlugs {
-//                result += content.blog.post.contentsBy(authorSlug: authorSlug)
-//                    .filter { $0.slug != slug }
-//                    .map {
-//                        postState(
-//                            for: $0,
-//                            authors: content.blog.author.contentsBy(
-//                                slugs: $0.authorSlugs
-//                            ),
-//                            tags: content.blog.tag.contentsBy(
-//                                slugs: $0.tagSlugs
-//                            )
-//                        )
-//                    }
-//            }
-//        }
-//        return Array(result.shuffled().prefix(5))
-//    }

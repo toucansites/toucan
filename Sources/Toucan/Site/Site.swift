@@ -174,10 +174,10 @@ struct Site {
         let context = getOutputHTMLContext(
             material: material,
             context: Context.Main.Home(
-                featured: [],
-                posts: [],
-                authors: [],
-                tags: [],
+                featured: contents.blog.featuredPosts().map { $0.context(site: self) },
+                posts: contents.blog.latestPosts().map { $0.context(site: self) },
+                authors: contents.blog.sortedAuthors().map { $0.context(site: self) },
+                tags: contents.blog.sortedTags().map { $0.context(site: self) },
                 pages: []
             )
         )
@@ -212,10 +212,10 @@ struct Site {
         let context = getOutputHTMLContext(
             material: material,
             context: Context.Blog.Home(
-                featured: [],
-                posts: [],
-                authors: [],
-                tags: []
+                featured: contents.blog.featuredPosts().map { $0.context(site: self) },
+                posts: contents.blog.latestPosts().map { $0.context(site: self) },
+                authors: contents.blog.sortedAuthors().map { $0.context(site: self) },
+                tags: contents.blog.sortedTags().map { $0.context(site: self) }
             )
         )
         return .init(
@@ -388,10 +388,10 @@ struct Site {
                 material: material,
                 context: Context.Blog.Post.Detail(
                     post: post.context(site: self),
-                    related: [],
-                    moreByAuthor: [],
-                    next: nil,
-                    prev: nil
+                    related: contents.blog.related(post: post).map { $0.context(site: self) },
+                    moreByAuthor: contents.blog.more(post: post).map { $0.context(site: self) },
+                    next: contents.blog.nextPost(post).map { $0.context(site: self) },
+                    prev: contents.blog.prevPost(post).map { $0.context(site: self) }
                 )
             )
             return .init(
@@ -412,13 +412,14 @@ struct Site {
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Pages.Detail(
+                    // TODO: use page content
                     page: .init(
                         slug: content.slug,
                         permalink: permalink(content.slug),
                         title: content.title,
                         description: content.description,
                         imageUrl: content.imageUrl(),
-                        userDefined: [:]
+                        userDefined: [:] //TODO: !!!
                     )
                 )
             )
