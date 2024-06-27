@@ -36,9 +36,8 @@ struct SourceTestSuite {
         let baseUrl = URL(fileURLWithPath: sitesPath)
         let siteUrl = baseUrl.appendingPathComponent(site)
         let srcUrl = siteUrl.appendingPathComponent("src")
-        let configFileUrl = srcUrl.appendingPathComponent("config.yaml")
-        let configLoader = Source.ConfigLoader(
-            configFileUrl: configFileUrl,
+        let configLoader = SourceConfigLoader(
+            sourceUrl: srcUrl,
             fileManager: .default,
             frontMatterParser: .init()
         )
@@ -59,17 +58,14 @@ struct SourceTestSuite {
         let baseUrl = URL(fileURLWithPath: sitesPath)
         let siteUrl = baseUrl.appendingPathComponent(site)
         let srcUrl = siteUrl.appendingPathComponent("src")
-        let contentsUrl = srcUrl.appendingPathComponent("contents")
-        let configFileUrl = srcUrl.appendingPathComponent("config.yaml")
-        let configLoader = Source.ConfigLoader(
-            configFileUrl: configFileUrl,
+        let configLoader = SourceConfigLoader(
+            sourceUrl: srcUrl,
             fileManager: .default,
             frontMatterParser: .init()
         )
         let config = try configLoader.load()
 
-        let contentsLoader = Source.MaterialsLoader(
-            contentsUrl: contentsUrl,
+        let contentsLoader = SourceMaterialLoader(
             config: config,
             fileManager: .default,
             frontMatterParser: .init()

@@ -138,7 +138,7 @@ struct SiteRenderer {
         struct Redirect {
             let url: String
         }
-        for content in site.source.contents.all() {
+        for content in site.source.materials.all() {
             for slug in content.redirects {
                 try render(renderer,
                     .init(

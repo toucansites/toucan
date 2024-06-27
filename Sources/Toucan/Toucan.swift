@@ -47,8 +47,6 @@ public struct Toucan {
         static let notFound = "404.html"
         static let rss = "rss.xml"
         static let sitemap = "sitemap.xml"
-
-        static let config = "config.yaml"
     }
 
     public enum Directories {
@@ -76,8 +74,6 @@ public struct Toucan {
     }
 
     // MARK: - urls
-    
-    var configFileUrl: URL { inputUrl.appendingPathComponent(Files.config) }
 
     var assetsUrl: URL { inputUrl.appendingPathComponent(Directories.assets) }
     var contentsUrl: URL { inputUrl.appendingPathComponent(Directories.contents) }
@@ -154,9 +150,8 @@ public struct Toucan {
             try fileManager.createDirectory(at: outputAssetsUrl)
         }
 
-        let loader = Source.Loader(
-            configUrl: configFileUrl,
-            contentsUrl: contentsUrl,
+        let loader = SourceLoader(
+            sourceUrl: inputUrl,
             fileManager: fileManager,
             frontMatterParser: .init()
         )
@@ -165,8 +160,8 @@ public struct Toucan {
 
         // MARK: copy assets
 
-        for content in source.contents.all() {
-            let assetsUrl = content.location
+        for content in source.materials.all() {
+            let assetsUrl = content.url
                 .appendingPathComponent(content.assetsPath)
             
             guard

@@ -11,7 +11,7 @@ import Foundation
 struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
 
     let site: Site
-    let content: Source.Material
+    let content: SourceMaterial
     let fileManager: FileManager = .default
 
     func linkAttributes(_ link: String?) -> [String: String] {
@@ -21,7 +21,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         }
         if !link.hasPrefix("."),
             !link.hasPrefix("/"),
-            !link.hasPrefix(site.source.config.site.baseUrl)
+           !link.hasPrefix(site.source.config.site.baseUrl)
         {
             attributes["target"] = "_blank"
         }

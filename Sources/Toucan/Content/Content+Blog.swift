@@ -12,15 +12,15 @@ extension Site.Content {
     struct Blog {
 
         struct Post {
-            let content: Source.Material
+            let content: SourceMaterial
             let published: Date
             let tags: [String]
             let authors: [String]
             let featured: Bool
             
             init(
-                content: Source.Material,
-                config: Source.Config,
+                content: SourceMaterial,
+                config: SourceConfig,
                 dateFormatter: DateFormatter
             ) {
                 self.content = content
@@ -73,7 +73,7 @@ extension Site.Content {
         }
 
         struct Author {
-            let content: Source.Material
+            let content: SourceMaterial
             let posts: [Blog.Post]
 
             func context(site: Site) -> Context.Blog.Author {
@@ -92,7 +92,7 @@ extension Site.Content {
         }
 
         struct Tag {
-            let content: Source.Material
+            let content: SourceMaterial
             let posts: [Blog.Post]
             
             func context(site: Site) -> Context.Blog.Tag {

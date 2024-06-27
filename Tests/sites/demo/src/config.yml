@@ -12,8 +12,9 @@ site:
         foo:
             bar: baz
             baz: abc
-        
+
 contents:
+    folder: "contents"
     blog:
         authors:
             folder: "blog/authors"
