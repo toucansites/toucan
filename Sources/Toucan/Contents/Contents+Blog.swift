@@ -61,8 +61,7 @@ extension Site.Contents {
                     title: material.title,
                     description: material.description,
                     imageUrl: material.imageUrl(),
-                    // TODO: fix this
-                    date: "",
+                    date: site.dateFormatter.string(from: published),
                     tags: [],
                     authors: [],
                     readingTime: site.readingTime(material.markdown),

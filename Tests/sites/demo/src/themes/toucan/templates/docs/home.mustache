@@ -1,3 +1,38 @@
 {{<index}}
+{{$main}}
 
+{{& page.content}}
+
+<h2>Categories</h2>
+
+{{#empty(page.context.categories)}}
+Empty.
+{{/empty(page.context.categories)}}
+{{^empty(page.context.categories)}}
+<div class="grid-221">
+<ul>
+{{#page.context.categories}}
+    <li><a href="{{permalink}}">{{title}}</a></li>
+    
+    {{.}}
+{{/page.context.categories}}
+</ul>
+</div>
+{{/empty(page.context.categories)}}
+
+<h2>Guides</h2>
+
+{{#empty(page.context.guides)}}
+Empty.
+{{/empty(page.context.guides)}}
+{{^empty(page.context.guides)}}
+<ul>
+{{#page.context.guides}}
+    <li><a href="{{permalink}}">{{title}}</a></li>
+{{/page.context.guides}}
+</ul>
+{{/empty(page.context.guides)}}
+
+
+{{/main}}
 {{/index}}

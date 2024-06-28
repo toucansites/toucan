@@ -1,8 +1,27 @@
-//
-//  File.swift
-//  
-//
-//  Created by Tibor Bodecs on 21/06/2024.
-//
+{{<index}}
+{{$main}}
 
-import Foundation
+<aside>
+<h2>Categories</h2>
+
+{{#empty(page.context.categories)}}
+Empty.
+{{/empty(page.context.categories)}}
+{{^empty(page.context.categories)}}
+<div class="grid-221">
+<ul>
+{{#page.context.categories}}
+    <li><a href="{{permalink}}">{{title}}</a></li>
+{{/page.context.categories}}
+</ul>
+</div>
+{{/empty(page.context.categories)}}
+
+</aside>
+
+<article>
+{{& page.content}}
+</article>
+
+{{/main}}
+{{/index}}

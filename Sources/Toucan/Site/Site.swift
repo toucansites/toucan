@@ -76,7 +76,7 @@ struct Site {
                     .init(material: $0)
                 },
                 guides: source.materials.docs.guides.map {
-                    .init(material: $0)
+                    .init(material: $0, config: source.config)
                 }
             ),
             pages: .init(
@@ -455,8 +455,8 @@ struct Site {
         let context = getOutputHTMLContext(
             material: material,
             context: Context.Docs.Home(
-                categories: [],
-                guides: []
+                categories: contents.docs.sortedCategories.map { $0.context(site: self) },
+                guides: contents.docs.sortedGuides.map { $0.context(site: self) }
             )
         )
 
@@ -477,7 +477,7 @@ struct Site {
         let context = getOutputHTMLContext(
             material: material,
             context: Context.Docs.Category.List(
-                categories: []
+                categories: contents.docs.sortedCategories.map { $0.context(site: self) }
             )
         )
         return .init(
@@ -531,7 +531,7 @@ struct Site {
         let context = getOutputHTMLContext(
             material: material,
             context: Context.Docs.Guide.List(
-                guides: []
+                guides: contents.docs.sortedGuides.map { $0.context(site: self) }
             )
         )
         return .init(
@@ -550,25 +550,11 @@ struct Site {
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Docs.Guide.Detail(
-                    guide: .init(
-                        slug: "",
-                        permalink: "",
-                        title: "",
-                        description: "",
-                        imageUrl: nil,
-                        date: "",
-                        category: .init(
-                            slug: "",
-                            permalink: "",
-                            title: "",
-                            description: "",
-                            imageUrl: nil,
-                            date: "",
-                            guides: [],
-                            userDefined: [:]
-                        ),
-                        readingTime: 12,
-                        userDefined: [:]
+                    categories: contents.docs.categories.map {
+                        $0.context(site: self)
+                    },
+                    guide: item.context(
+                        site: self
                     )
                 )
             )

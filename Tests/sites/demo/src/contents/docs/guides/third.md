@@ -1,6 +1,10 @@
 ---
 title: Thirs
 description: Ipsum
-category: installation
-priority: 1
+category: getting-started
+order: 3
 ---
+
+# Third guide
+
+Lorem ipsum dolor sit amet 3

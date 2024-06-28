@@ -2,5 +2,5 @@
 title: Second
 description: Ipsum
 category: installation
-priority: 2
+order: 2
 ---

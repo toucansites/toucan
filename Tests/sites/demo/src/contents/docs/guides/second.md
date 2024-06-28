@@ -2,5 +2,9 @@
 title: Second
 description: Ipsum
 category: installation
-priority: 2
+order: 2
 ---
+
+# Second guide
+
+Lorem ipsum dolor sit amet 2

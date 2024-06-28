@@ -1,7 +1,7 @@
 ---
 title: Installation
 description: Installation
-priority: 2
+order: 1
 ---
 
-content
+# Installation

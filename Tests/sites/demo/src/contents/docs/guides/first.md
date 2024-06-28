@@ -2,5 +2,9 @@
 title: First
 description: Ipsum
 category: installation
-priority: 3
+order: 1
 ---
+
+# First guide
+
+Lorem ipsum dolor sit amet 1
