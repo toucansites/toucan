@@ -22,7 +22,7 @@ struct OutputRenderer {
             templatesUrl: templatesUrl,
             overridesUrl: overridesUrl
         )
-        // render pages
+
         let home = home()
         let notFound = notFound()
         try render(renderer, home)
@@ -34,60 +34,55 @@ struct OutputRenderer {
         try render(renderer, rss)
         try render(renderer, sitemap)
         
-        // render blog
+        // MARK: - blog
+    
         if let renderable = blogHome() {
             try render(renderer, renderable)
         }
-
-        // render authors
-        if let renderable = authorList() {
+        if let renderable = blogAuthorList() {
             try render(renderer, renderable)
         }
-        for renderable in authorDetails() {
+        for renderable in blogAuthorDetails() {
             try render(renderer, renderable)
         }
-        
-        // render tags
-        if let renderable = tagList() {
+        if let renderable = blogTagList() {
             try render(renderer, renderable)
         }
-        for renderable in tagDetails() {
+        for renderable in blogTagDetails() {
             try render(renderer, renderable)
         }
-        
-        // render posts
-        for renderable in postListPaginated() {
+        for renderable in blogPostListPaginated() {
             try render(renderer, renderable)
         }
-        for renderable in postDetails() {
+        for renderable in blogPostDetails() {
             try render(renderer, renderable)
         }
         
-        // custom pages
-        for renderable in customPages() {
-            try render(renderer, renderable)
-        }
+        // MARK: - docs
         
-        // docs
         if let docsHome = docsHome() {
             try render(renderer, docsHome)
         }
-        
-        // docs categories
         if let docsCategoryList = docsCategoryList() {
             try render(renderer, docsCategoryList)
         }
         for renderable in docsCategoryDetails() {
             try render(renderer, renderable)
         }
-        
-        // docs guides
         if let docsGuidList = docsGuideList() {
             try render(renderer, docsGuidList)
         }
         for renderable in docsGuideDetails() {
             try render(renderer, renderable)
         }
+        
+        // MARK: - custom pages
+        
+        for renderable in customPages() {
+            try render(renderer, renderable)
+        }
+        
+        // MARK: - redirects
         
         // TODO: move this
         struct Redirect: Output {
@@ -217,7 +212,7 @@ struct OutputRenderer {
                         title: material.title,
                         description: material.description,
                         imageUrl: material.imageUrl(),
-                        userDefined: [:] //TODO: !!!
+                        userDefined: material.userDefined
                     )
                 )
             )
@@ -259,7 +254,7 @@ struct OutputRenderer {
     
     // MARK: - authors
     
-    func authorList() -> Renderable<HTML<Context.Blog.Author.List>>? {
+    func blogAuthorList() -> Renderable<HTML<Context.Blog.Author.List>>? {
         guard let material = site.source.materials.pages.blog.authors else {
             return nil
         }
@@ -280,7 +275,7 @@ struct OutputRenderer {
         )
     }
     
-    func authorDetails() -> [Renderable<HTML<Context.Blog.Author.Detail>>] {
+    func blogAuthorDetails() -> [Renderable<HTML<Context.Blog.Author.Detail>>] {
         site.contents.blog.authors.map { author in
             let material = author.material
             let context = getOutputHTMLContext(
@@ -302,7 +297,7 @@ struct OutputRenderer {
     
     // MARK: - tags
     
-    func tagList() -> Renderable<HTML<Context.Blog.Tag.List>>? {
+    func blogTagList() -> Renderable<HTML<Context.Blog.Tag.List>>? {
         guard let material = site.source.materials.pages.blog.tags else {
             return nil
         }
@@ -324,7 +319,7 @@ struct OutputRenderer {
     }
     
     
-    func tagDetails() -> [Renderable<HTML<Context.Blog.Tag.Detail>>] {
+    func blogTagDetails() -> [Renderable<HTML<Context.Blog.Tag.Detail>>] {
         site.contents.blog.tags.map { tag in
             let material = tag.material
             let context = getOutputHTMLContext(
@@ -346,7 +341,7 @@ struct OutputRenderer {
     
     // MARK: - post
     
-    func postListPaginated(
+    func blogPostListPaginated(
     ) -> [Renderable<HTML<Context.Blog.Post.List>>] {
         guard let posts = site.source.materials.pages.blog.posts else {
             return []
@@ -410,7 +405,7 @@ struct OutputRenderer {
         return result
     }
     
-    func postDetails() -> [Renderable<HTML<Context.Blog.Post.Detail>>] {
+    func blogPostDetails() -> [Renderable<HTML<Context.Blog.Post.Detail>>] {
         site.contents.blog.posts.map { post in
             let material = post.material
             let context = getOutputHTMLContext(
@@ -489,7 +484,6 @@ struct OutputRenderer {
     }
     
     func docsCategoryDetails(
-        
     ) -> [Renderable<HTML<Context.Docs.Category.DetailPage>>] {
         site.contents.docs.categories.map { item in
             let material = item.material

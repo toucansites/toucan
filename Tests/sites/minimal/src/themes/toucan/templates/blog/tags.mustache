@@ -1,0 +1,24 @@
+{{<index}}
+
+{{$main}}
+<div id="tags" class="wrapper">
+    <header>
+        <h1>{{page.metadata.title}}</h1>
+        <p>{{page.metadata.description}}</p>
+    </header>
+
+    {{#empty(page.context.tags)}}
+    Empty.
+    {{/empty(page.context.tags)}}
+    {{^empty(page.context.tags)}}
+    <div class="grid-321">
+    {{#page.context.tags}}
+        {{> blog.blocks.tag}}
+    {{/page.context.tags}}
+    
+    </div>
+    {{/empty(page.context.tags)}}
+</div>
+{{/main}}
+
+{{/index}}

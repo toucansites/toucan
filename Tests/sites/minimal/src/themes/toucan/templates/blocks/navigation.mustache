@@ -1,0 +1,55 @@
+<header id="navigation">
+    <a id="site-logo" href="">
+        <figure>
+            <picture>
+                <source
+                    srcset="{{site.baseUrl}}images/logos/logo~dark.png"
+                    media="(prefers-color-scheme: dark)"
+                >
+                <img
+                    id="logo-image"
+                    src="{{site.baseUrl}}images/logos/logo.png"
+                    alt="Logo of {{site.title}}"
+                    title="{{site.title}}"
+                >
+            </picture>
+        </figure>
+    </a>
+
+    <nav id="primary-menu">
+        <input type="checkbox" id="primary-menu-button" name="menu-button" class="menu-button">
+        <label for="primary-menu-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </label>
+        <div class="menu-items">
+            <a href="/">Home</a>
+            <a href="/blog/">Blog</a>
+            <a href="/posts/pages/1/">Posts</a>
+            <a href="/blog/authors/">Authors</a>
+            <a href="/blog/tags/">Tags</a>
+            <a href="/docs/">Docs</a>
+            <a href="/docs/categories">Categories</a>
+            <a href="/docs/guides">Guides</a>
+            <a href="/my-page/">My page</a>
+        </div>
+    </nav>
+
+    <nav id="secondary-menu">
+        <input type="checkbox" id="secondary-menu-button" name="menu-button" class="menu-button">
+        <label for="secondary-menu-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+        </label>
+        <div class="menu-items right">
+            <a href="#">My account</a>
+            <a href="/">Logout</a>
+        </div>
+    </nav>
+</header>

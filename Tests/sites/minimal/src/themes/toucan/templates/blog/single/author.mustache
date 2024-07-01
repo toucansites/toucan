@@ -1,0 +1,43 @@
+{{<index}}
+{{$main}}
+
+{{userDefined.foo.bar}}
+------------
+<br>
+
+{{#page.data}}
+    {{name}}<br>
+    {{desc}}<br>
+    ---<br><br>
+    {{.}}<br>
+{{/page.data}}
+
+<div id="author-page" class="content wrapper">
+    {{#page.context.author}}
+    <header>
+        <div class="profile-picture">
+            {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        </div>
+        <h1>{{title}}</h1>
+        <p>{{description}}</p>
+        <p>Posts: {{numberOfPosts}}</p>    
+    </header>
+    {{/page.context.author}}
+    
+    {{& page.content}}
+
+    {{#empty(page.context.posts)}}
+    Empty.
+    {{/empty(page.context.posts)}}
+    {{^empty(page.context.posts)}}
+    <div class="grid">
+    {{#page.context.posts}}
+        {{> blog.blocks.post}}
+    {{/page.context.posts}}
+    </div>
+    {{/empty(page.context.posts)}}
+    
+</div>
+
+{{/main}}
+{{/index}}

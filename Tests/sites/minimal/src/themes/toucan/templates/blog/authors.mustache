@@ -1,0 +1,24 @@
+{{<index}}
+
+{{$main}}
+<div id="authors" class="wrapper">
+    <header>
+        <h1>{{page.metadata.title}}</h1>
+        <p>{{page.metadata.description}}</p>
+    </header>
+
+    {{#empty(page.context.authors)}}
+    Empty.
+    {{/empty(page.context.authors)}}
+    {{^empty(page.context.authors)}}
+    <div class="grid-421">
+    {{#page.context.authors}}
+        {{> blog.blocks.author}}
+    {{/page.context.authors}}
+    </div>
+    {{/empty(page.context.authors)}}
+    
+</div>
+{{/main}}
+
+{{/index}}

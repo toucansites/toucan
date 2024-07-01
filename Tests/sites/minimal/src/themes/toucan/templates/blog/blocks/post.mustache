@@ -1,0 +1,24 @@
+<div class="post card">
+    <a href="{{permalink}}" target="">
+        
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        
+        <section>
+            <time datetime="{{date}}">{{date}}</time>
+            <h2 class="title">{{title}}</h2>
+        </section>
+        <p>{{description}}</p>
+    </a>
+
+    
+    {{#authors}}
+        <div class="mini">
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        </div>
+    {{/authors}}
+    
+    {{#tags}}
+        {{title}}{{^last()}}, {{/last()}}
+    {{/tags}}
+
+</div>

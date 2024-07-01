@@ -1,0 +1,22 @@
+{{<index}}
+{{$main}}
+
+{{& page.content}}
+
+
+<h2>Guides</h2>
+
+{{#empty(page.context.guides)}}
+Empty.
+{{/empty(page.context.guides)}}
+{{^empty(page.context.guides)}}
+<ul>
+{{#page.context.guides}}
+    <li><a href="{{permalink}}">{{title}}</a></li>
+{{/page.context.guides}}
+</ul>
+{{/empty(page.context.guides)}}
+
+
+{{/main}}
+{{/index}}

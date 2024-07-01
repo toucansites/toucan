@@ -24,6 +24,7 @@ struct ToucanTestSuite {
 
     @Test(
         arguments: [
+            "minimal",
             "demo",
 //            "theswiftdev.com",
         ]
