@@ -188,10 +188,11 @@ public struct Toucan {
             destinationUrl: outputUrl
         )
 
-        let renderer = SiteRenderer(
+        let renderer = OutputRenderer(
             site: site,
             templatesUrl: templatesUrl,
-            overridesUrl: templateOverridesUrl
+            overridesUrl: templateOverridesUrl,
+            destinationUrl: outputUrl
         )
 
         try renderer.render()

@@ -22,7 +22,10 @@ extension Site.Contents {
                 self.order = material.frontMatter["order"] as? Int ?? 0
             }
             
-            func context(site: Site) -> Context.Docs.Category.Link {
+            func context(
+                site: Site,
+                guides: [Site.Contents.Docs.Guide]
+            ) -> Context.Docs.Category.Reference {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -30,11 +33,14 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     date: site.dateFormatter.string(from: material.lastModification),
-                    guides: []
+                    guides: guides.map { $0.context(site: site) }
                 )
             }
             
-            func context(site: Site) -> Context.Docs.Category.Item {
+            func context(
+                site: Site,
+                guides: [Site.Contents.Docs.Guide]
+            ) -> Context.Docs.Category.Item {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -42,7 +48,7 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     date: site.dateFormatter.string(from: material.lastModification),
-                    guides: [],
+                    guides: guides.map { $0.context(site: site) },
                     userDefined: material.userDefined
                 )
             }
@@ -67,7 +73,7 @@ extension Site.Contents {
                 )
             }
             
-            func context(site: Site) -> Context.Docs.Guide.Link {
+            func context(site: Site) -> Context.Docs.Guide.Reference {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -78,7 +84,9 @@ extension Site.Contents {
                 )
             }
             
-            func context(site: Site) -> Context.Docs.Guide.Item {
+            func context(
+                site: Site
+            ) -> Context.Docs.Guide.Item {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -95,7 +103,9 @@ extension Site.Contents {
                         date: "",
                         guides: []
                     ),
-                    userDefined: material.userDefined
+                    userDefined: material.userDefined,
+                    prev: nil,
+                    next: nil
                 )
             }
         }
@@ -103,16 +113,16 @@ extension Site.Contents {
         let categories: [Category]
         let guides: [Guide]
         
-        var sortedCategories: [Category] {
-            categories.sorted { $0.order < $1.order }
-        }
-        
-        var sortedGuides: [Guide] {
-            guides.sorted { $0.order < $1.order }
+        init(
+            categories: [Category],
+            guides: [Guide]
+        ) {
+            self.categories = categories.sorted { $0.order < $1.order }
+            self.guides = guides.sorted { $0.order < $1.order }
         }
         
         func guides(category: Category) -> [Guide] {
-            sortedGuides.filter { $0.category == category.material.slug }
+            guides.filter { $0.category == category.material.slug }
         }
         
         func category(for guide: Guide) -> Category? {

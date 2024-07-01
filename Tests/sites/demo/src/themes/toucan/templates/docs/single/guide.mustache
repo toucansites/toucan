@@ -11,7 +11,14 @@ Empty.
 <div class="grid-221">
 <ul>
 {{#page.context.categories}}
-    <li><a href="{{permalink}}">{{title}}</a></li>
+    <li>
+        <a href="{{permalink}}">{{title}}</a>
+        <ul>
+        {{#guides}}
+            <li><a href="{{permalink}}">{{title}}</a></li>
+        {{/guides}}
+        </ul>
+    </li>
 {{/page.context.categories}}
 </ul>
 </div>

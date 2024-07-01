@@ -9,12 +9,17 @@
 Empty.
 {{/empty(page.context.categories)}}
 {{^empty(page.context.categories)}}
-<div class="grid-221">
+<div>
 <ul>
 {{#page.context.categories}}
-    <li><a href="{{permalink}}">{{title}}</a></li>
-    
-    {{.}}
+    <li>
+        <a href="{{permalink}}">{{title}}</a>
+        <ul>
+        {{#guides}}
+            <li><a href="{{permalink}}">{{title}}</a></li>
+        {{/guides}}
+        </ul>
+    </li>
 {{/page.context.categories}}
 </ul>
 </div>

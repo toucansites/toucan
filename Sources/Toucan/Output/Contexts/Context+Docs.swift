@@ -9,22 +9,26 @@ extension Context {
     
     struct Docs {
         
-        struct Home {
-            let categories: [Category.Link]
-            let guides: [Guide.Link]
+        struct Navigation {
+            let categories: [Category.Item]
+        }
+        
+        struct HomePage {
+            let categories: [Category.Reference]
+            let guides: [Guide.Reference]
         }
 
         struct Category {
             
-            struct List {
-                let categories: [Category.Link]
+            struct ListPage {
+                let categories: [Category.Item]
             }
             
-            struct Detail {
+            struct DetailPage {
                 let category: Category.Item
-                let guides: [Guide.Link]
+                let guides: [Guide.Reference]
             }
-            
+
             struct Item {
                 let slug: String
                 let permalink: String
@@ -33,11 +37,11 @@ extension Context {
                 let imageUrl: String?
                 let date: String
                 
-                let guides: [Guide.Link]
+                let guides: [Guide.Reference]
                 let userDefined: [String: Any]
             }
             
-            struct Link {
+            struct Reference {
                 let slug: String
                 let permalink: String
                 let title: String
@@ -45,18 +49,18 @@ extension Context {
                 let imageUrl: String?
                 let date: String
                 
-                let guides: [Guide.Link]
+                let guides: [Guide.Reference]
             }
         }
         
         struct Guide {
             
-            struct List {
-                let guides: [Guide.Link]
+            struct ListPage {
+                let guides: [Guide.Reference]
             }
             
-            struct Detail {
-                let categories: [Category.Link]
+            struct DetailPage {
+                let categories: [Category.Reference]
                 let guide: Guide.Item
             }
             
@@ -68,11 +72,13 @@ extension Context {
                 let imageUrl: String?
                 let date: String
 
-                let category: Category.Link
+                let category: Category.Reference
                 let userDefined: [String: Any]
+                let prev: Guide.Reference?
+                let next: Guide.Reference?
             }
             
-            struct Link {
+            struct Reference {
                 let slug: String
                 let permalink: String
                 let title: String

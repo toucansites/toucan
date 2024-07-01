@@ -1,5 +1,5 @@
 ---
-title: Thirs
+title: Third
 description: Ipsum
 category: getting-started
 order: 3
