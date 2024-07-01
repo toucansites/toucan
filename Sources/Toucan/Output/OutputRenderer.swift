@@ -83,26 +83,10 @@ struct OutputRenderer {
         }
         
         // MARK: - redirects
-        
-        // TODO: move this
-        struct Redirect: Output {
-            let url: String
-        }
-        for content in site.source.materials.all() {
-            for slug in content.redirects {
-                try render(renderer,
-                    .init(
-                        template: "redirect",
-                        context: Redirect(
-                            url: site.permalink(content.slug)
-                        ),
-                        destination: site.destinationUrl
-                            .appendingPathComponent(slug)
-                            .appendingPathComponent(Toucan.Files.index)
-                    )
-                )
-            }
-        }
+
+        for renderable in redirects() {
+            try render(renderer, renderable)
+        }        
     }
 
     // MARK: -
@@ -620,5 +604,24 @@ struct OutputRenderer {
             destination: destinationUrl
                 .appendingPathComponent(Toucan.Files.sitemap)
         )
+    }
+    
+    // MARK: - redirects
+    
+    func redirects() -> [Renderable<Redirect>] {
+        site.source.materials.all().map { material in
+            material.redirects.map { slug in
+                    .init(
+                        template: "redirect",
+                        context: Redirect(
+                            url: site.permalink(material.slug)
+                        ),
+                        destination: site.destinationUrl
+                            .appendingPathComponent(slug)
+                            .appendingPathComponent(Toucan.Files.index)
+                    )
+            }
+        }
+        .flatMap { $0 }
     }
 }
