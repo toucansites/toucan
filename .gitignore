@@ -2,5 +2,6 @@
 .swiftpm
 .build
 .vscode
+.obsidian
 **/dist
 Tests/sites/benchmark/

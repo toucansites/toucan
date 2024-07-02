@@ -25,10 +25,25 @@ Empty.
 </aside>
 
 
-
 <article>
 {{& page.content}}
 </article>
+
+{{#empty(page.context.categories)}}
+Empty.
+{{/empty(page.context.categories)}}
+{{^empty(page.context.categories)}}
+<div>
+<ul>
+{{#page.context.categories}}
+    <li>
+        <a href="{{permalink}}">{{title}}</a>
+    </li>
+{{/page.context.categories}}
+</ul>
+</div>
+{{/empty(page.context.categories)}}
+
 
 {{/main}}
 {{/index}}

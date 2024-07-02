@@ -27,7 +27,19 @@ Empty.
 
 
 <article>
+
 {{& page.content}}
+
+<h2>Guides under the category</h2>
+{{#page.context.category.guides}}
+    <li>
+        <a href="{{permalink}}">{{title}}</a>
+    </li>
+{{/page.context.category.guides}}
+
+
+
+
 </article>
 
 

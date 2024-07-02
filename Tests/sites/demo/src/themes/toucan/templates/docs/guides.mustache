@@ -30,5 +30,21 @@ Empty.
 {{& page.content}}
 </article>
 
+{{#empty(page.context.guides)}}
+Empty.
+{{/empty(page.context.guides)}}
+{{^empty(page.context.guides)}}
+<div>
+<ul>
+{{#page.context.guides}}
+    <li>
+        <a href="{{permalink}}">{{title}}</a>
+    </li>
+{{/page.context.guides}}
+</ul>
+</div>
+{{/empty(page.context.guides)}}
+
+
 {{/main}}
 {{/index}}

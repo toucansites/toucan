@@ -8,3 +8,4 @@ redirects:
 ---
 
 
+Welcome to the home page.

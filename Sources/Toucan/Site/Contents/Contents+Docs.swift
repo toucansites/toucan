@@ -123,6 +123,28 @@ extension Site.Contents {
         func category(for guide: Guide) -> Category? {
             categories.first { $0.material.slug == guide.category }
         }
+        
+        func prev(_ guide: Guide) -> Guide? {
+            let guides = guides.filter { $0.category == guide.category }
+            guard
+                let index = guides.firstIndex(where: { $0.material.slug == guide.material.slug }),
+                index > 0
+            else {
+                return nil
+            }
+            return guides[index - 1]
+        }
+
+        func next(_ guide: Guide) -> Guide? {
+            let guides = guides.filter { $0.category == guide.category }
+            guard
+                let index = guides.firstIndex(where: { $0.material.slug == guide.material.slug }),
+                index < guides.count - 1
+            else {
+                return nil
+            }
+            return guides[index + 1]
+        }
     }
 
 }

@@ -2,7 +2,7 @@
 title: Third
 description: Ipsum
 category: getting-started
-order: 3
+order: 1
 ---
 
 # Third guide

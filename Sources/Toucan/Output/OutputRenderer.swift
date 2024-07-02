@@ -529,11 +529,11 @@ struct OutputRenderer {
     
     func docsGuideDetails(
     ) -> [Renderable<HTML<Context.Docs.Guide.DetailPage>>] {
-        site.contents.docs.guides.compactMap { item in
-            guard let category = site.contents.docs.category(for: item) else {
+        site.contents.docs.guides.compactMap { guides in
+            guard let category = site.contents.docs.category(for: guides) else {
                 return nil
             }
-            let material = item.material
+            let material = guides.material
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Docs.Guide.DetailPage(
@@ -543,11 +543,11 @@ struct OutputRenderer {
                             guides: site.contents.docs.guides(category: category)
                         )
                     },
-                    guide: item.context(
+                    guide: guides.context(
                         site: site,
                         category: category.context(site: site),
-                        prev: nil,
-                        next: nil
+                        prev: site.contents.docs.prev(guides)?.context(site: site),
+                        next: site.contents.docs.next(guides)?.context(site: site)
                     )
                 )
             )
