@@ -389,7 +389,7 @@ struct OutputRenderer {
                         guides: site.contents.docs.guides(category: category)
                     )
                 },
-                guides: site.contents.docs.guides.map { $0.context(site: site) }
+                guides: site.contents.docs.guides.map { $0.ref(site: site) }
             )
         )
 
@@ -475,7 +475,7 @@ struct OutputRenderer {
                         guides: site.contents.docs.guides(category: $0)
                     )
                 },
-                guides: site.contents.docs.guides.map { $0.context(site: site) }
+                guides: site.contents.docs.guides.map { $0.ref(site: site) }
             )
         )
         return .init(
@@ -505,9 +505,9 @@ struct OutputRenderer {
                     },
                     guide: guides.context(
                         site: site,
-                        category: category.context(site: site),
-                        prev: site.contents.docs.prev(guides)?.context(site: site),
-                        next: site.contents.docs.next(guides)?.context(site: site)
+                        category: category.ref(site: site),
+                        prev: site.contents.docs.prev(guides)?.ref(site: site),
+                        next: site.contents.docs.next(guides)?.ref(site: site)
                     )
                 )
             )

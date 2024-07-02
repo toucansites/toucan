@@ -26,11 +26,11 @@ extension Context {
             struct DetailPage {
                 let post: Post.Item
 
-                let related: [Post.Reference]
-                let moreByAuthor: [Post.Reference]
+                let related: [Post.Item]
+                let moreByAuthor: [Post.Item]
 
-                let next: Post.Reference?
-                let prev: Post.Reference?
+                let next: Post.Item?
+                let prev: Post.Item?
             }
 
             struct Item {
@@ -68,7 +68,7 @@ extension Context {
 
             struct DetailPage {
                 let author: Author.Item
-                let posts: [Post.Reference]
+                let posts: [Post.Item]
             }
             
             struct Item {
@@ -98,7 +98,7 @@ extension Context {
 
             struct DetailPage {
                 let tag: Tag.Item
-                let posts: [Post.Reference]
+                let posts: [Post.Item]
             }
 
             

@@ -22,7 +22,7 @@ extension Site.Contents {
                 self.order = material.frontMatter["order"] as? Int ?? 0
             }
             
-            func context(
+            func ref(
                 site: Site
             ) -> Context.Docs.Category.Reference {
                 .init(
@@ -46,7 +46,7 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     date: site.dateFormatter.string(from: material.lastModification),
-                    guides: guides.map { $0.context(site: site) }
+                    guides: guides.map { $0.ref(site: site) }
                 )
             }
         }
@@ -70,7 +70,7 @@ extension Site.Contents {
                 )
             }
             
-            func context(
+            func ref(
                 site: Site
             ) -> Context.Docs.Guide.Reference {
                 .init(

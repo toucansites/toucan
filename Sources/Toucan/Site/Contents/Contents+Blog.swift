@@ -78,7 +78,7 @@ extension Site.Contents {
                 )
             }
             
-            func context(site: Site) -> Context.Blog.Post.Reference {
+            func ref(site: Site) -> Context.Blog.Post.Reference {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
