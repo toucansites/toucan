@@ -8,6 +8,7 @@
 import Foundation
 import Algorithms
 
+/// Responsible to put together contextual objects.
 struct Site {
     
     enum Error: Swift.Error {
@@ -130,19 +131,50 @@ struct Site {
     
     // MARK: - context helpers
     
-//    func getContext() -> Context.Site {
-//        .init(
-//            baseUrl: contents.config.site.baseUrl,
-//            title: contents.config.site.title,
-//            description: contents.config.site.description,
-//            language: contents.config.site.language
-//        )
-//    }
+    func getOutputHTMLContext<T>(
+        material: SourceMaterial,
+        context: T
+    ) -> HTML<T> {
+        let renderer = MarkdownToHTMLRenderer(
+            delegate: HTMLRendererDelegate(
+                config: contents.config,
+                material: material
+            )
+        )
+        
+        return .init(
+            site: .init(
+                baseUrl: contents.config.site.baseUrl,
+                title: contents.config.site.title,
+                description: contents.config.site.description,
+                language: contents.config.site.language
+            ),
+            page: .init(
+                metadata: .init(
+                    slug: material.slug,
+                    permalink: permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl().map { permalink($0) }
+                ),
+                css: material.cssUrls(),
+                js: material.jsUrls(),
+                data: material.data,
+                context: context,
+                content: renderer.render(
+                    markdown: material.markdown
+                )
+            ),
+            userDefined: contents.config.site.userDefined
+                .recursivelyMerged(with: material.userDefined),
+            year: currentYear
+        )
+    }
+    
+    // MARK: - page contexts
     
     
-    
-    
-    
+
     
     
 }

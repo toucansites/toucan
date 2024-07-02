@@ -92,7 +92,6 @@ extension Context {
                 
                 let numberOfPosts: Int
             }
-
         }
     }
 }

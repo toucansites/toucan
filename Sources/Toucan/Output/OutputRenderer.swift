@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Responsible to build renderable files using the site context & templates.
 struct OutputRenderer {
 
     let site: Site
@@ -107,49 +108,9 @@ struct OutputRenderer {
     
     // MARK: - pages
     
-    func getOutputHTMLContext<T>(
-        material: SourceMaterial,
-        context: T
-    ) -> HTML<T> {
-        let renderer = MarkdownToHTMLRenderer(
-            delegate: HTMLRendererDelegate(
-                config: site.contents.config,
-                material: material
-            )
-        )
-        
-        return .init(
-            site: .init(
-                baseUrl: site.contents.config.site.baseUrl,
-                title: site.contents.config.site.title,
-                description: site.contents.config.site.description,
-                language: site.contents.config.site.language
-            ),
-            page: .init(
-                metadata: .init(
-                    slug: material.slug,
-                    permalink: site.permalink(material.slug),
-                    title: material.title,
-                    description: material.description,
-                    imageUrl: material.imageUrl().map { site.permalink($0) }
-                ),
-                css: material.cssUrls(),
-                js: material.jsUrls(),
-                data: material.data,
-                context: context,
-                content: renderer.render(
-                    markdown: material.markdown
-                )
-            ),
-            userDefined: site.contents.config.site.userDefined
-                .recursivelyMerged(with: material.userDefined),
-            year: site.currentYear
-        )
-    }
-    
     func notFound() -> Renderable<HTML<Void>> {
         let material = site.source.materials.pages.main.notFound
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: ()
         )
@@ -163,7 +124,7 @@ struct OutputRenderer {
     
     func home() -> Renderable<HTML<Context.Main.Home>> {
         let material = site.source.materials.pages.main.home
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Main.Home(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
@@ -186,7 +147,7 @@ struct OutputRenderer {
     func customPages() -> [Renderable<HTML<Context.Pages.Detail>>] {
         site.contents.pages.custom.map { page in
             let material = page.material
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Pages.Detail(
                     // TODO: use page content
@@ -217,7 +178,7 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.blog.home else {
             return nil
         }
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Blog.Home(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
@@ -242,7 +203,7 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.blog.authors else {
             return nil
         }
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Blog.Author.List(
                 authors: site.contents.blog.sortedAuthors().map {
@@ -262,7 +223,7 @@ struct OutputRenderer {
     func blogAuthorDetails() -> [Renderable<HTML<Context.Blog.Author.Detail>>] {
         site.contents.blog.authors.map { author in
             let material = author.material
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Author.Detail(
                     author: author.context(site: site),
@@ -285,7 +246,7 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.blog.tags else {
             return nil
         }
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Blog.Tag.List(
                 tags: site.contents.blog.sortedTags().map {
@@ -306,7 +267,7 @@ struct OutputRenderer {
     func blogTagDetails() -> [Renderable<HTML<Context.Blog.Tag.Detail>>] {
         site.contents.blog.tags.map { tag in
             let material = tag.material
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Tag.Detail(
                     tag: tag.context(site: site),
@@ -357,7 +318,7 @@ struct OutputRenderer {
                 description: description,
                 slug: slug
             )
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Post.List(
                     posts: postsChunk.map { $0.context(site: site) },
@@ -392,7 +353,7 @@ struct OutputRenderer {
     func blogPostDetails() -> [Renderable<HTML<Context.Blog.Post.Detail>>] {
         site.contents.blog.posts.map { post in
             let material = post.material
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Blog.Post.Detail(
                     post: post.context(site: site),
@@ -420,7 +381,7 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.docs.home else {
             return nil
         }
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Docs.HomePage(
                 categories: site.contents.docs.categories.map { category in
@@ -447,7 +408,7 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.docs.categories else {
             return nil
         }
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Docs.Category.ListPage(
                 categories: site.contents.docs.categories.map { category in
@@ -471,7 +432,7 @@ struct OutputRenderer {
     ) -> [Renderable<HTML<Context.Docs.Category.DetailPage>>] {
         site.contents.docs.categories.map { item in
             let material = item.material
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Docs.Category.DetailPage(
                     categories: site.contents.docs.categories.map {
@@ -506,7 +467,7 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.docs.guides else {
             return nil
         }
-        let context = getOutputHTMLContext(
+        let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Docs.Guide.ListPage(
                 categories: site.contents.docs.categories.map {
@@ -534,7 +495,7 @@ struct OutputRenderer {
                 return nil
             }
             let material = guides.material
-            let context = getOutputHTMLContext(
+            let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Docs.Guide.DetailPage(
                     categories: site.contents.docs.categories.map { category in
