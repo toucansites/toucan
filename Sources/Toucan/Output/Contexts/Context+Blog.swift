@@ -9,7 +9,7 @@ extension Context {
     
     struct Blog {
 
-        struct Home {
+        struct HomePage {
             let featured: [Post.Item]
             let posts: [Post.Item]
             let authors: [Author.Item]
@@ -18,12 +18,12 @@ extension Context {
 
         struct Post {
 
-            struct List {
+            struct ListPage {
                 let posts: [Post.Item]
                 let pagination: [Pagination]
             }
 
-            struct Detail {
+            struct DetailPage {
                 let post: Post.Item
 
                 let related: [Post.Reference]
@@ -62,11 +62,11 @@ extension Context {
 
         struct Author {
             
-            struct List {
+            struct ListPage {
                 let authors: [Author.Item]
             }
 
-            struct Detail {
+            struct DetailPage {
                 let author: Author.Item
                 let posts: [Post.Reference]
             }
@@ -92,11 +92,11 @@ extension Context {
 
         struct Tag {
             
-            struct List {
+            struct ListPage {
                 let tags: [Tag.Item]
             }
 
-            struct Detail {
+            struct DetailPage {
                 let tag: Tag.Item
                 let posts: [Post.Reference]
             }

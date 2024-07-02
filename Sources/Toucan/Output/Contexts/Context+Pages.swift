@@ -9,11 +9,11 @@ extension Context {
     
     public struct Pages {
 
-        struct Detail {
-            let page: Context.Pages.Custom
+        struct DetailPage {
+            let page: Context.Pages.Item
         }
 
-        struct Custom {
+        struct Item {
             let slug: String
             let permalink: String
             let title: String

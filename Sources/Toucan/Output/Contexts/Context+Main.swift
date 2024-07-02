@@ -9,12 +9,12 @@ extension Context {
     
     struct Main {
 
-        struct Home {
+        struct HomePage {
             let featured: [Blog.Post.Item]
             let posts: [Blog.Post.Item]
             let authors: [Blog.Author.Item]
             let tags: [Blog.Tag.Item]
-            let pages: [Pages.Custom]
+            let pages: [Pages.Item]
         }
     }
 }

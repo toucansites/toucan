@@ -122,11 +122,11 @@ struct OutputRenderer {
         )
     }
     
-    func home() -> Renderable<HTML<Context.Main.Home>> {
+    func home() -> Renderable<HTML<Context.Main.HomePage>> {
         let material = site.source.materials.pages.main.home
         let context = site.getOutputHTMLContext(
             material: material,
-            context: Context.Main.Home(
+            context: Context.Main.HomePage(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
                 authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
@@ -144,12 +144,12 @@ struct OutputRenderer {
     
     // MARK: - custom pages
     
-    func customPages() -> [Renderable<HTML<Context.Pages.Detail>>] {
+    func customPages() -> [Renderable<HTML<Context.Pages.DetailPage>>] {
         site.contents.pages.custom.map { page in
             let material = page.material
             let context = site.getOutputHTMLContext(
                 material: material,
-                context: Context.Pages.Detail(
+                context: Context.Pages.DetailPage(
                     // TODO: use page content
                     page: .init(
                         slug: material.slug,
@@ -173,13 +173,13 @@ struct OutputRenderer {
     
     // MARK: - blog
     
-    func blogHome() -> Renderable<HTML<Context.Blog.Home>>? {
+    func blogHome() -> Renderable<HTML<Context.Blog.HomePage>>? {
         guard let material = site.source.materials.pages.blog.home else {
             return nil
         }
         let context = site.getOutputHTMLContext(
             material: material,
-            context: Context.Blog.Home(
+            context: Context.Blog.HomePage(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
                 authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
@@ -198,13 +198,13 @@ struct OutputRenderer {
     
     // MARK: - authors
     
-    func blogAuthorList() -> Renderable<HTML<Context.Blog.Author.List>>? {
+    func blogAuthorList() -> Renderable<HTML<Context.Blog.Author.ListPage>>? {
         guard let material = site.source.materials.pages.blog.authors else {
             return nil
         }
         let context = site.getOutputHTMLContext(
             material: material,
-            context: Context.Blog.Author.List(
+            context: Context.Blog.Author.ListPage(
                 authors: site.contents.blog.sortedAuthors().map {
                     $0.context(site: site)
                 }
@@ -219,12 +219,12 @@ struct OutputRenderer {
         )
     }
     
-    func blogAuthorDetails() -> [Renderable<HTML<Context.Blog.Author.Detail>>] {
+    func blogAuthorDetails() -> [Renderable<HTML<Context.Blog.Author.DetailPage>>] {
         site.contents.blog.authors.map { author in
             let material = author.material
             let context = site.getOutputHTMLContext(
                 material: material,
-                context: Context.Blog.Author.Detail(
+                context: Context.Blog.Author.DetailPage(
                     author: author.context(site: site),
                     posts: author.posts.map { $0.context(site: site) }
                 )
@@ -241,13 +241,13 @@ struct OutputRenderer {
     
     // MARK: - tags
     
-    func blogTagList() -> Renderable<HTML<Context.Blog.Tag.List>>? {
+    func blogTagList() -> Renderable<HTML<Context.Blog.Tag.ListPage>>? {
         guard let material = site.source.materials.pages.blog.tags else {
             return nil
         }
         let context = site.getOutputHTMLContext(
             material: material,
-            context: Context.Blog.Tag.List(
+            context: Context.Blog.Tag.ListPage(
                 tags: site.contents.blog.sortedTags().map {
                     $0.context(site: site)
                 }
@@ -263,12 +263,12 @@ struct OutputRenderer {
     }
     
     
-    func blogTagDetails() -> [Renderable<HTML<Context.Blog.Tag.Detail>>] {
+    func blogTagDetails() -> [Renderable<HTML<Context.Blog.Tag.DetailPage>>] {
         site.contents.blog.tags.map { tag in
             let material = tag.material
             let context = site.getOutputHTMLContext(
                 material: material,
-                context: Context.Blog.Tag.Detail(
+                context: Context.Blog.Tag.DetailPage(
                     tag: tag.context(site: site),
                     posts: tag.posts.map { $0.context(site: site) }
                 )
@@ -286,7 +286,7 @@ struct OutputRenderer {
     // MARK: - post
     
     func blogPostListPaginated(
-    ) -> [Renderable<HTML<Context.Blog.Post.List>>] {
+    ) -> [Renderable<HTML<Context.Blog.Post.ListPage>>] {
         guard let posts = site.source.materials.pages.blog.posts else {
             return []
         }
@@ -304,7 +304,7 @@ struct OutputRenderer {
             )
         }
 
-        var result: [Renderable<HTML<Context.Blog.Post.List>>] = []
+        var result: [Renderable<HTML<Context.Blog.Post.ListPage>>] = []
         for (index, postsChunk) in pages.enumerated() {
             let pageNumber = index + 1
             
@@ -319,7 +319,7 @@ struct OutputRenderer {
             )
             let context = site.getOutputHTMLContext(
                 material: material,
-                context: Context.Blog.Post.List(
+                context: Context.Blog.Post.ListPage(
                     posts: postsChunk.map { $0.context(site: site) },
                     pagination: (1...pages.count)
                         .map {
@@ -336,7 +336,7 @@ struct OutputRenderer {
                 )
             )
 
-            let r = Renderable<HTML<Context.Blog.Post.List>>(
+            let r = Renderable<HTML<Context.Blog.Post.ListPage>>(
                 template: material.template,
                 context: context,
                 destination: destinationUrl
@@ -349,12 +349,12 @@ struct OutputRenderer {
         return result
     }
     
-    func blogPostDetails() -> [Renderable<HTML<Context.Blog.Post.Detail>>] {
+    func blogPostDetails() -> [Renderable<HTML<Context.Blog.Post.DetailPage>>] {
         site.contents.blog.posts.map { post in
             let material = post.material
             let context = site.getOutputHTMLContext(
                 material: material,
-                context: Context.Blog.Post.Detail(
+                context: Context.Blog.Post.DetailPage(
                     post: post.context(site: site),
                     related: site.contents.blog.related(post: post).map { $0.context(site: site) },
                     moreByAuthor: site.contents.blog.more(post: post).map { $0.context(site: site) },
