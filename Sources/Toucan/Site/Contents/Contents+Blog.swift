@@ -55,17 +55,39 @@ extension Site.Contents {
             }
             
             func context(site: Site) -> Context.Blog.Post.Item {
+                
+                let tagReferences = site.contents.blog.tags
+                    .filter { tags.contains($0.material.slug) }
+                    .map { $0.ref(site: site) }
+                
+                let authorReferences = site.contents.blog.authors
+                    .filter { authors.contains($0.material.slug) }
+                    .map { $0.ref(site: site) }
+                
+                return .init(
+                    slug: material.slug,
+                    permalink: site.permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl(),
+                    readingTime: site.readingTime(material.markdown),
+                    featured: featured,
+                    date: site.dateFormatter.string(from: published),
+                    tags: tagReferences,
+                    authors: authorReferences
+                )
+            }
+            
+            func context(site: Site) -> Context.Blog.Post.Reference {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
                     title: material.title,
                     description: material.description,
                     imageUrl: material.imageUrl(),
-                    date: site.dateFormatter.string(from: published),
-                    tags: [],
-                    authors: [],
                     readingTime: site.readingTime(material.markdown),
-                    featured: featured
+                    featured: featured,
+                    date: site.dateFormatter.string(from: published)
                 )
             }
         }
@@ -81,8 +103,17 @@ extension Site.Contents {
                     title: material.title,
                     description: material.description,
                     imageUrl: material.imageUrl(),
-                    // TODO: fix this
                     numberOfPosts: posts.count
+                )
+            }
+            
+            func ref(site: Site) -> Context.Blog.Author.Reference {
+                .init(
+                    slug: material.slug,
+                    permalink: site.permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl()
                 )
             }
         }
@@ -100,6 +131,16 @@ extension Site.Contents {
                     imageUrl: material.imageUrl(),
                     
                     numberOfPosts: posts.count
+                )
+            }
+            
+            func ref(site: Site) -> Context.Blog.Tag.Reference {
+                .init(
+                    slug: material.slug,
+                    permalink: site.permalink(material.slug),
+                    title: material.title,
+                    description: material.description,
+                    imageUrl: material.imageUrl()
                 )
             }
         }
