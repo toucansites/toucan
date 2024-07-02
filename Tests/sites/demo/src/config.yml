@@ -12,25 +12,25 @@ site:
 
 assets:
     input:
-        folder: assets
+        folder: "assets"
     output:
-        folder: 
+        folder: ""
 
 themes:
-    use: default
-    folder: themes
+    use: "default"
+    folder: "themes"
     templates:
-        folder: templates
+        folder: "templates"
     assets:
-        folder: assets
+        folder: "assets"
     overrides:
-        folder: theme_overrides
+        folder: "theme_overrides"
 
 contents:
     folder: "contents"
     assets:
         output:
-            folder: assets
+            folder: "assets"
             
     pagination:
         limit: 10

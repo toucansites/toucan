@@ -24,7 +24,7 @@ struct SourceMaterialLoader {
     /// The front matter parser used for parsing markdown files.
     let frontMatterParser: FrontMatterParser
     
-    // TODO: move this to the config
+    // TODO: move this to the config + toucan urls also
     private var contentsUrl: URL {
         config.sourceUrl.appendingPathComponent(
             config.contents.folder
