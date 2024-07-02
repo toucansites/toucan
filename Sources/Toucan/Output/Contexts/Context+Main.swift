@@ -10,10 +10,10 @@ extension Context {
     struct Main {
 
         struct Home {
-            let featured: [Blog.Post]
-            let posts: [Blog.Post]
-            let authors: [Blog.Author]
-            let tags: [Blog.Tag]
+            let featured: [Blog.Post.Item]
+            let posts: [Blog.Post.Item]
+            let authors: [Blog.Author.Item]
+            let tags: [Blog.Tag.Item]
             let pages: [Pages.Custom]
         }
     }

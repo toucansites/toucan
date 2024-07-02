@@ -10,87 +10,88 @@ extension Context {
     struct Blog {
 
         struct Home {
-            let featured: [Post]
-            let posts: [Post]
-            let authors: [Author]
-            let tags: [Tag]
+            let featured: [Post.Item]
+            let posts: [Post.Item]
+            let authors: [Author.Item]
+            let tags: [Tag.Item]
         }
 
         struct Post {
 
             struct List {
-                let posts: [Post]
+                let posts: [Post.Item]
                 let pagination: [Pagination]
             }
 
             struct Detail {
-                let post: Post
+                let post: Post.Item
 
-                let related: [Post]
-                let moreByAuthor: [Post]
+                let related: [Post.Item]
+                let moreByAuthor: [Post.Item]
 
-                let next: Post?
-                let prev: Post?
+                let next: Post.Item?
+                let prev: Post.Item?
             }
 
-            let slug: String
-            let permalink: String
-            let title: String
-            let description: String
-            let imageUrl: String?
-            let date: String
-
-            let tags: [Tag]
-            let authors: [Author]
-            let readingTime: Int
-            let featured: Bool
-            let userDefined: [String: Any]
-
+            struct Item {
+                let slug: String
+                let permalink: String
+                let title: String
+                let description: String
+                let imageUrl: String?
+                let date: String
+                
+                let tags: [Tag.Item]
+                let authors: [Author.Item]
+                let readingTime: Int
+                let featured: Bool
+                let userDefined: [String: Any]
+            }
         }
 
         struct Author {
             
             struct List {
-                let authors: [Author]
+                let authors: [Author.Item]
             }
 
             struct Detail {
-                let author: Author
-                let posts: [Post]
+                let author: Author.Item
+                let posts: [Post.Item]
             }
             
-            let slug: String
-            let permalink: String
-            let title: String
-            let description: String
-            let imageUrl: String?
-            
-            let numberOfPosts: Int
-            let userDefined: [String: Any]
-            let markdown: String
+            struct Item {
+                let slug: String
+                let permalink: String
+                let title: String
+                let description: String
+                let imageUrl: String?
+                
+                let numberOfPosts: Int
+            }
         }
 
         struct Tag {
             
             struct List {
-                let tags: [Tag]
+                let tags: [Tag.Item]
             }
 
             struct Detail {
-                let tag: Tag
-                let posts: [Post]
+                let tag: Tag.Item
+                let posts: [Post.Item]
             }
 
             
-            let slug: String
-            let permalink: String
-            let title: String
-            let description: String
-            let imageUrl: String?
-
-            let numberOfPosts: Int
-            let userDefined: [String: Any]
-            let markdown: String
+            struct Item {
+                let slug: String
+                let permalink: String
+                let title: String
+                let description: String
+                let imageUrl: String?
+                
+                let numberOfPosts: Int
+            }
 
         }
     }

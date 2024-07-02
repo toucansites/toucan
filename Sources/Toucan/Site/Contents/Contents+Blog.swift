@@ -54,7 +54,7 @@ extension Site.Contents {
                 self.featured = material.frontMatter["featured"] as? Bool ?? false
             }
             
-            func context(site: Site) -> Context.Blog.Post {
+            func context(site: Site) -> Context.Blog.Post.Item {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -75,7 +75,7 @@ extension Site.Contents {
             let material: SourceMaterial
             let posts: [Blog.Post]
 
-            func context(site: Site) -> Context.Blog.Author {
+            func context(site: Site) -> Context.Blog.Author.Item {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -83,9 +83,7 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     // TODO: fix this
-                    numberOfPosts: posts.count,
-                    userDefined: material.userDefined,
-                    markdown: site.render(material: material)
+                    numberOfPosts: posts.count
                 )
             }
         }
@@ -94,7 +92,7 @@ extension Site.Contents {
             let material: SourceMaterial
             let posts: [Blog.Post]
             
-            func context(site: Site) -> Context.Blog.Tag {
+            func context(site: Site) -> Context.Blog.Tag.Item {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -102,9 +100,7 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     
-                    numberOfPosts: posts.count,
-                    userDefined: material.userDefined,
-                    markdown: site.render(material: material)
+                    numberOfPosts: posts.count
                 )
             }
         }
