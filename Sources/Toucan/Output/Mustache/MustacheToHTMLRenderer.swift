@@ -38,7 +38,10 @@ struct MustacheToHTMLRenderer {
 
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
+        
 //        print("---")
+//        print(templatesUrl.path())
+//        print(overridesUrl.path())
 //        print(self.ids)
 //        print("---")
     }

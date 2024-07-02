@@ -10,6 +10,13 @@ import Foundation
 /// Responsible to build renderable files using the site context & templates.
 struct OutputRenderer {
 
+    public enum Files {
+        static let index = "index.html"
+        static let notFound = "404.html"
+        static let rss = "rss.xml"
+        static let sitemap = "sitemap.xml"
+    }
+
     let site: Site
 
     let templatesUrl: URL
@@ -118,7 +125,7 @@ struct OutputRenderer {
             template: material.template,
             context: context,
             destination: destinationUrl
-                .appendingPathComponent(Toucan.Files.notFound)
+                .appendingPathComponent(Files.notFound)
         )
     }
     
@@ -138,7 +145,7 @@ struct OutputRenderer {
             template: material.template,
             context: context,
             destination: destinationUrl
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -150,14 +157,7 @@ struct OutputRenderer {
             let context = site.getOutputHTMLContext(
                 material: material,
                 context: Context.Pages.DetailPage(
-                    // TODO: use page content
-                    page: .init(
-                        slug: material.slug,
-                        permalink: site.permalink(material.slug),
-                        title: material.title,
-                        description: material.description,
-                        imageUrl: material.imageUrl()
-                    )
+                    page: page.context(site: site)
                 )
             )
             
@@ -166,7 +166,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(material.slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
         }
     }
@@ -191,7 +191,7 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(material.slug)
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -215,7 +215,7 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(material.slug)
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -234,7 +234,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(material.slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
         }
     }
@@ -258,7 +258,7 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(material.slug)
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -278,7 +278,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(material.slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
         }
     }
@@ -291,7 +291,7 @@ struct OutputRenderer {
             return []
         }
 
-        let pageLimit = 10 // TODO: add config
+        let pageLimit = Int(site.source.config.contents.pagination.limit)
         let pages = site.contents.blog.sortedPosts().chunks(ofCount: pageLimit)
         
         func replace(
@@ -341,7 +341,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
             
             result.append(r)
@@ -367,7 +367,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(material.slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
         }
     }
@@ -398,7 +398,7 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(material.slug)
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -423,7 +423,7 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(material.slug)
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -454,7 +454,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(material.slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
         }
     }
@@ -483,7 +483,7 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(material.slug)
-                .appendingPathComponent(Toucan.Files.index)
+                .appendingPathComponent(Files.index)
         )
     }
     
@@ -516,7 +516,7 @@ struct OutputRenderer {
                 context: context,
                 destination: destinationUrl
                     .appendingPathComponent(material.slug)
-                    .appendingPathComponent(Toucan.Files.index)
+                    .appendingPathComponent(Files.index)
             )
         }
     }
@@ -552,7 +552,7 @@ struct OutputRenderer {
             template: "rss",
             context: context,
             destination: destinationUrl
-                .appendingPathComponent(Toucan.Files.rss)
+                .appendingPathComponent(Files.rss)
         )
     }
     
@@ -575,7 +575,7 @@ struct OutputRenderer {
             template: "sitemap",
             context: context,
             destination: destinationUrl
-                .appendingPathComponent(Toucan.Files.sitemap)
+                .appendingPathComponent(Files.sitemap)
         )
     }
     
@@ -591,7 +591,7 @@ struct OutputRenderer {
                         ),
                         destination: site.destinationUrl
                             .appendingPathComponent(slug)
-                            .appendingPathComponent(Toucan.Files.index)
+                            .appendingPathComponent(Files.index)
                     )
             }
         }

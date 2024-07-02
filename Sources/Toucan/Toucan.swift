@@ -41,20 +41,6 @@ extension FileManager {
 
 /// A static site generator.
 public struct Toucan {
-
-    public enum Files {
-        static let index = "index.html"
-        static let notFound = "404.html"
-        static let rss = "rss.xml"
-        static let sitemap = "sitemap.xml"
-    }
-
-    public enum Directories {
-        static let assets: String = "assets"
-        static let contents: String = "contents"
-        static let themes: String = "themes"
-        static let templates: String = "templates"
-    }
     
     // MARK: -
 
@@ -72,39 +58,6 @@ public struct Toucan {
         self.inputUrl = inputUrl
         self.outputUrl = outputUrl
     }
-
-    // MARK: - urls
-
-    var assetsUrl: URL { inputUrl.appendingPathComponent(Directories.assets) }
-    var contentsUrl: URL { inputUrl.appendingPathComponent(Directories.contents) }
-    
-    // TODO: fix this
-    var themeUrl: URL {
-        inputUrl
-            .appendingPathComponent(Directories.themes)
-            .appendingPathComponent("toucan")
-            
-    }
-    
-    var themeAssetsUrl: URL { themeUrl.appendingPathComponent(Directories.assets) }
-    var templatesUrl: URL { themeUrl.appendingPathComponent(Directories.templates) }
-    
-    // TODO: fix this
-    var templateOverridesUrl: URL {
-        inputUrl
-            .appendingPathComponent("theme_overrides")
-            .appendingPathComponent("toucan")
-            .appendingPathComponent(Directories.templates)
-    }
-    
-    // TODO: fix this
-    var templateOverridesAssetsUrl: URL {
-        inputUrl
-            .appendingPathComponent("theme_overrides")
-            .appendingPathComponent("toucan")
-            .appendingPathComponent(Directories.assets)
-    }
-    
     
     // MARK: - file management
 
@@ -119,36 +72,8 @@ public struct Toucan {
         try fileManager.createDirectory(at: outputUrl)
     }
 
-    func copyAssets() throws {
-        // theme assets
-        try fileManager.copyRecursively(
-            from: themeAssetsUrl,
-            to: outputUrl
-        )
-        // theme override assets
-        try fileManager.copyRecursively(
-            from: templateOverridesAssetsUrl,
-            to: outputUrl
-        )
-        // content assets
-        try fileManager.copyRecursively(
-            from: assetsUrl,
-            to: outputUrl
-        )
-    }
-
     /// builds the static site
     public func run() async throws {
-        
-        try resetOutputDirectory()
-        try copyAssets()
-        
-        let outputAssetsUrl = outputUrl
-            .appendingPathComponent(Directories.assets)
-        
-        if !fileManager.directoryExists(at: outputAssetsUrl) {
-            try fileManager.createDirectory(at: outputAssetsUrl)
-        }
 
         let loader = SourceLoader(
             sourceUrl: inputUrl,
@@ -157,6 +82,56 @@ public struct Toucan {
         )
         
         let source = try await loader.load()
+        
+        try resetOutputDirectory()
+        
+        let themeUrl = inputUrl
+            .appendingPathComponent(source.config.themes.path)
+            .appendingPathComponent(source.config.themes.use)
+        
+        let themeAssetsUrl = themeUrl
+            .appendingPathComponent(source.config.themes.assetsPath)
+
+        let themeTemplatesUrl = themeUrl
+            .appendingPathComponent(source.config.themes.templatesPath)
+        
+        let themeOverrideUrl = inputUrl
+            .appendingPathComponent(source.config.themes.overridesPath)
+            .appendingPathComponent(source.config.themes.use)
+        
+        let themeOverrideAssetsUrl = themeOverrideUrl
+            .appendingPathComponent(source.config.themes.assetsPath)
+
+        let themeOverrideTemplatesUrl = themeOverrideUrl
+            .appendingPathComponent(source.config.themes.templatesPath)
+        
+        let assetsInputUrl = inputUrl
+            .appendingPathComponent(source.config.assets.input)
+        
+        let assetsOutputUrl = outputUrl
+            .appendingPathComponent(source.config.assets.output)
+        
+        
+        // theme assets
+        try fileManager.copyRecursively(
+            from: themeAssetsUrl,
+            to: outputUrl
+        )
+        // theme override assets
+        try fileManager.copyRecursively(
+            from: themeOverrideAssetsUrl,
+            to: outputUrl
+        )
+        // global assets
+        try fileManager.copyRecursively(
+            from: assetsInputUrl,
+            to: assetsOutputUrl
+        )
+
+
+        if !fileManager.directoryExists(at: assetsOutputUrl) {
+            try fileManager.createDirectory(at: assetsOutputUrl)
+        }
 
         // MARK: copy assets
 
@@ -171,7 +146,8 @@ public struct Toucan {
                 continue
             }
             
-            let outputUrl = outputAssetsUrl
+            let outputUrl = outputUrl
+                .appendingPathComponent(source.config.contents.assets.outputPath)
                 .appendingPathComponent(content.slug)
 
 //            print(assetsUrl)
@@ -190,8 +166,8 @@ public struct Toucan {
 
         let renderer = OutputRenderer(
             site: site,
-            templatesUrl: templatesUrl,
-            overridesUrl: templateOverridesUrl,
+            templatesUrl: themeTemplatesUrl,
+            overridesUrl: themeOverrideTemplatesUrl,
             destinationUrl: outputUrl
         )
 

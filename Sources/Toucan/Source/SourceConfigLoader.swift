@@ -175,17 +175,32 @@ struct SourceConfigLoader {
                 ) as? [String: Any] ?? [:]
 
                 let site = yaml.dict("site")
+                let assets = yaml.dict("assets")
                 let content = yaml.dict("contents")
+                let themes = yaml.dict("themes")
                 let pages = yaml.dict("pages")
 
                 return .init(
                     sourceUrl: sourceUrl,
                     site: createSiteConfig(site),
+                    assets: .init(
+                        input: assets.string("input.folder") ?? "assets",
+                        output: assets.string("output.folder") ?? ""
+                    ),
                     contents: .init(
                         folder: content.string("folder") ?? "contents",
+                        assets: .init(outputPath: content.string("assets.output.folder") ?? "assets"),
+                        pagination: .init(limit: content.value("pagination.limit", as: UInt.self) ?? 10),
                         blog: createBlogConfig(content.dict("blog")),
                         docs: createDocsConfig(content.dict("docs")),
                         pages: createPagesConfig(content.dict("pages"))
+                    ),
+                    themes: .init(
+                        use: themes.string("use") ?? "default",
+                        path: themes.string("folder") ?? "themes",
+                        templatesPath: themes.string("templates.folder") ?? "templates",
+                        assetsPath: themes.string("assets.folder") ?? "assets",
+                        overridesPath: themes.string("overrides.folder") ?? "theme_overrides"
                     ),
                     pages: .init(
                         main: createMainPageConfig(pages.dict("main")),

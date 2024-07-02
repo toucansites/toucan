@@ -31,7 +31,29 @@ struct SourceConfig {
 
     // MARK: - content configs
 
+    struct Assets {
+        let input: String
+        let output: String
+    }
+
+    struct Themes {
+        let use: String
+        let path: String
+        let templatesPath: String
+        let assetsPath: String
+        let overridesPath: String
+    }
+
     struct Contents {
+        
+        struct Assets {
+            let outputPath: String
+        }
+
+        struct Pagination {
+            let limit: UInt
+        }
+
         struct Blog {
             let posts: Content
             let authors: Content
@@ -48,6 +70,8 @@ struct SourceConfig {
         }
 
         let folder: String
+        let assets: Assets
+        let pagination: Pagination
         let blog: Blog
         let docs: Docs
         let pages: Pages
@@ -84,6 +108,8 @@ struct SourceConfig {
 
     let sourceUrl: URL
     let site: Site
+    let assets: Assets
     let contents: Contents
+    let themes: Themes
     let pages: Pages
 }

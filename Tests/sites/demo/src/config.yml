@@ -5,16 +5,36 @@ site:
     description: This is a demo blog using completely fake content.
     dateFormat: "yyyy-MM-dd HH:mm:ss"
 
-    pagination:
-        limit: 10
-    
     userDefined:
         foo:
             bar: baz
             baz: abc
 
+assets:
+    input:
+        folder: assets
+    output:
+        folder: 
+
+themes:
+    use: default
+    folder: themes
+    templates:
+        folder: templates
+    assets:
+        folder: assets
+    overrides:
+        folder: theme_overrides
+
 contents:
     folder: "contents"
+    assets:
+        output:
+            folder: assets
+            
+    pagination:
+        limit: 10
+
     blog:
         authors:
             folder: "blog/authors"
