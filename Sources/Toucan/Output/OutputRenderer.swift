@@ -131,7 +131,7 @@ struct OutputRenderer {
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
                 authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
                 tags: site.contents.blog.sortedTags().map { $0.context(site: site) },
-                pages: []
+                pages: site.contents.pages.custom.map { $0.context(site: site) }
             )
         )
         return .init(
