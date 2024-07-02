@@ -65,8 +65,7 @@ extension Site.Contents {
                     tags: [],
                     authors: [],
                     readingTime: site.readingTime(material.markdown),
-                    featured: featured,
-                    userDefined: material.userDefined
+                    featured: featured
                 )
             }
         }

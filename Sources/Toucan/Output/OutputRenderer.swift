@@ -156,8 +156,7 @@ struct OutputRenderer {
                         permalink: site.permalink(material.slug),
                         title: material.title,
                         description: material.description,
-                        imageUrl: material.imageUrl(),
-                        userDefined: material.userDefined
+                        imageUrl: material.imageUrl()
                     )
                 )
             )

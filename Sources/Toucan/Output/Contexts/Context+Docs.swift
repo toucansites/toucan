@@ -34,7 +34,6 @@ extension Context {
                 let date: String
                 
                 let guides: [Guide.Reference]
-                let userDefined: [String: Any]
             }
             
             struct Reference {
@@ -68,7 +67,6 @@ extension Context {
                 let date: String
 
                 let category: Category.Reference
-                let userDefined: [String: Any]
                 let prev: Guide.Reference?
                 let next: Guide.Reference?
             }

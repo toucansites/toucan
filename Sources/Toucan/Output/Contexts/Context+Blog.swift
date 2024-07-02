@@ -45,7 +45,6 @@ extension Context {
                 let authors: [Author.Item]
                 let readingTime: Int
                 let featured: Bool
-                let userDefined: [String: Any]
             }
         }
 

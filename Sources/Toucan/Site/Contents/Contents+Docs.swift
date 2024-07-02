@@ -46,8 +46,7 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     date: site.dateFormatter.string(from: material.lastModification),
-                    guides: guides.map { $0.context(site: site) },
-                    userDefined: material.userDefined
+                    guides: guides.map { $0.context(site: site) }
                 )
             }
         }
@@ -98,7 +97,6 @@ extension Site.Contents {
                     imageUrl: material.imageUrl(),
                     date: site.dateFormatter.string(from: material.lastModification),
                     category: category,
-                    userDefined: material.userDefined,
                     prev: prev,
                     next: next
                 )
