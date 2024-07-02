@@ -1,5 +1,5 @@
 
-#authors img, #tags img, .profile-picture img {
+#authors img, #tags img, .profile-picture img, .meta img {
     width: 128px;
     border-radius: 50%;
 }
