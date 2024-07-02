@@ -87,6 +87,9 @@ struct SourceMaterialLoader {
                 as: [String].self
             ) ?? []
             
+            
+            
+            
             let assetsUrl = dirUrl
                 .appendingPathComponent(assetsPath ?? id)
             
@@ -95,6 +98,20 @@ struct SourceMaterialLoader {
             
             let mainJs = assetsUrl
                 .appendingPathComponent("main.js")
+            
+            // NOTE: hacky solution...
+            var imageUrl: String? = nil
+            if let image, fileManager.fileExists(
+                at: dirUrl.appendingPathComponent(
+                    image
+                )
+            ) {
+                imageUrl = image
+            }
+            
+//            print(image)
+//            print(imageUrl)
+//            print("---")
             
             var css: [String] = []
             if fileManager.fileExists(at: styleCss) {
@@ -134,7 +151,7 @@ struct SourceMaterialLoader {
                 slug: slug.safeSlug(prefix: slugPrefix),
                 title: title,
                 description: description,
-                image: image,
+                image: imageUrl,
                 css: css,
                 js: js,
                 template: template,
