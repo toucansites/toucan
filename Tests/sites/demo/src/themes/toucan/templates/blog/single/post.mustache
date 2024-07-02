@@ -17,6 +17,16 @@
             {{/tags}}
             </div>
             {{/empty(tags)}}
+            
+            {{#empty(authors)}}
+            {{/empty(authors)}}
+            {{^empty(authors)}}
+            <div class="meta">
+            {{#authors}}
+                {{> blog.blocks.author}}
+            {{/authors}}
+            </div>
+            {{/empty(authors)}}
         </section>
         
         {{#figure}}
