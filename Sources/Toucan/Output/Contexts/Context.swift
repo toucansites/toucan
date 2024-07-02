@@ -29,10 +29,5 @@ struct Context {
         let slug: String
         let permalink: String
         let isCurrent: Bool
-    }    
-
-//    let main: Main
-//    let blog: Blog
-//    //let docs: Docs
-//    let pages: Pages
+    }
 }

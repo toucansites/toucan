@@ -474,17 +474,18 @@ struct OutputRenderer {
             let context = getOutputHTMLContext(
                 material: material,
                 context: Context.Docs.Category.DetailPage(
-                    category: .init(
-                        slug: "",
-                        permalink: "",
-                        title: "",
-                        description: "",
-                        imageUrl: nil,
-                        date: "",
-                        guides: [],
-                        userDefined: [:]
-                    ),
-                    guides: []
+                    categories: site.contents.docs.categories.map {
+                        $0.context(
+                            site: site,
+                            guides: site.contents.docs.guides(category: $0)
+                        )
+                    },
+                    category: item.context(
+                        site: site,
+                        guides: site.contents.docs.guides(
+                            category: item
+                        )
+                    )
                 )
             )
             
@@ -508,6 +509,12 @@ struct OutputRenderer {
         let context = getOutputHTMLContext(
             material: material,
             context: Context.Docs.Guide.ListPage(
+                categories: site.contents.docs.categories.map {
+                    $0.context(
+                        site: site,
+                        guides: site.contents.docs.guides(category: $0)
+                    )
+                },
                 guides: site.contents.docs.guides.map { $0.context(site: site) }
             )
         )
@@ -522,7 +529,10 @@ struct OutputRenderer {
     
     func docsGuideDetails(
     ) -> [Renderable<HTML<Context.Docs.Guide.DetailPage>>] {
-        site.contents.docs.guides.map { item in
+        site.contents.docs.guides.compactMap { item in
+            guard let category = site.contents.docs.category(for: item) else {
+                return nil
+            }
             let material = item.material
             let context = getOutputHTMLContext(
                 material: material,
@@ -534,7 +544,10 @@ struct OutputRenderer {
                         )
                     },
                     guide: item.context(
-                        site: site
+                        site: site,
+                        category: category.context(site: site),
+                        prev: nil,
+                        next: nil
                     )
                 )
             )

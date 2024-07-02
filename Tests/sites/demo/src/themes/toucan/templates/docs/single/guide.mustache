@@ -2,13 +2,12 @@
 {{$main}}
 
 <aside>
-<h2>Categories</h2>
-
+<h2>Docs</h2>
 {{#empty(page.context.categories)}}
 Empty.
 {{/empty(page.context.categories)}}
 {{^empty(page.context.categories)}}
-<div class="grid-221">
+<div>
 <ul>
 {{#page.context.categories}}
     <li>
@@ -23,7 +22,6 @@ Empty.
 </ul>
 </div>
 {{/empty(page.context.categories)}}
-
 </aside>
 
 <article>

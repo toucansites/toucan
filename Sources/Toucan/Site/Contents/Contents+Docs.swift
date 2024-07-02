@@ -23,8 +23,7 @@ extension Site.Contents {
             }
             
             func context(
-                site: Site,
-                guides: [Site.Contents.Docs.Guide]
+                site: Site
             ) -> Context.Docs.Category.Reference {
                 .init(
                     slug: material.slug,
@@ -32,8 +31,7 @@ extension Site.Contents {
                     title: material.title,
                     description: material.description,
                     imageUrl: material.imageUrl(),
-                    date: site.dateFormatter.string(from: material.lastModification),
-                    guides: guides.map { $0.context(site: site) }
+                    date: site.dateFormatter.string(from: material.lastModification)
                 )
             }
             
@@ -73,7 +71,9 @@ extension Site.Contents {
                 )
             }
             
-            func context(site: Site) -> Context.Docs.Guide.Reference {
+            func context(
+                site: Site
+            ) -> Context.Docs.Guide.Reference {
                 .init(
                     slug: material.slug,
                     permalink: site.permalink(material.slug),
@@ -85,7 +85,10 @@ extension Site.Contents {
             }
             
             func context(
-                site: Site
+                site: Site,
+                category: Context.Docs.Category.Reference,
+                prev: Context.Docs.Guide.Reference?,
+                next: Context.Docs.Guide.Reference?
             ) -> Context.Docs.Guide.Item {
                 .init(
                     slug: material.slug,
@@ -94,18 +97,10 @@ extension Site.Contents {
                     description: material.description,
                     imageUrl: material.imageUrl(),
                     date: site.dateFormatter.string(from: material.lastModification),
-                    category: .init(
-                        slug: "",
-                        permalink: "",
-                        title: "",
-                        description: "",
-                        imageUrl: nil,
-                        date: "",
-                        guides: []
-                    ),
+                    category: category,
                     userDefined: material.userDefined,
-                    prev: nil,
-                    next: nil
+                    prev: prev,
+                    next: next
                 )
             }
         }

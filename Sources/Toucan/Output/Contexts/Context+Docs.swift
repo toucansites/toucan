@@ -8,13 +8,9 @@
 extension Context {
     
     struct Docs {
-        
-        struct Navigation {
-            let categories: [Category.Item]
-        }
-        
+                
         struct HomePage {
-            let categories: [Category.Reference]
+            let categories: [Category.Item]
             let guides: [Guide.Reference]
         }
 
@@ -25,8 +21,8 @@ extension Context {
             }
             
             struct DetailPage {
+                let categories: [Category.Item]
                 let category: Category.Item
-                let guides: [Guide.Reference]
             }
 
             struct Item {
@@ -48,19 +44,18 @@ extension Context {
                 let description: String
                 let imageUrl: String?
                 let date: String
-                
-                let guides: [Guide.Reference]
             }
         }
         
         struct Guide {
             
             struct ListPage {
+                let categories: [Category.Item]
                 let guides: [Guide.Reference]
             }
             
             struct DetailPage {
-                let categories: [Category.Reference]
+                let categories: [Category.Item]
                 let guide: Guide.Item
             }
             
