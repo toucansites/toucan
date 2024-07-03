@@ -44,15 +44,13 @@ struct SourceConfigLoader {
         let desc = dict.string("description")
         let lang = dict.string("language")
         let dateFormat = dict.string("dateFormat")
-        let userDefined = dict.dict("userDefined")
         
         return .init(
             baseUrl: siteBaseUrl,
             title: title ?? "",
             description: desc ?? "",
             language: lang,
-            dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss",
-            userDefined: userDefined
+            dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss"
         )
     }
     
@@ -206,7 +204,8 @@ struct SourceConfigLoader {
                         main: createMainPageConfig(pages.dict("main")),
                         blog: createBlogPageConfig(pages.dict("blog")),
                         docs: createDocsPageConfig(pages.dict("docs"))
-                    )
+                    ),
+                    userDefined: yaml.dict("userDefined")
                 )
             }
             catch let error as YamlError {

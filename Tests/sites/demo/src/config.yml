@@ -5,11 +5,6 @@ site:
     description: This is a demo blog using completely fake content.
     dateFormat: "yyyy-MM-dd HH:mm:ss"
 
-    userDefined:
-        foo:
-            bar: baz
-            baz: abc
-
 assets:
     input:
         folder: "assets"
@@ -79,3 +74,8 @@ pages:
             path: "pages/docs/categories"
         guides:
             path: "pages/docs/guides"
+
+userDefined:
+    foo:
+        bar: baz
+        baz: abc

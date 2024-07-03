@@ -165,7 +165,7 @@ struct Site {
                     markdown: material.markdown
                 )
             ),
-            userDefined: contents.config.site.userDefined
+            userDefined: contents.config.userDefined
                 .recursivelyMerged(with: material.userDefined),
             year: currentYear
         )

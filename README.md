@@ -6,7 +6,6 @@ Toucan is a static site generator written in Swift.
 
 - double check slug prefix configuration
 - add current path check (to mark menu as current)
-- add blog has multiple pages -> link to posts/page/1
 - image resize & optimize support?
 - content transformers -> call script using markdown input -> output
     - plugins/a "markdwon" >> plugins/b >> etc... (last one built-in stuff)
