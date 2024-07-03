@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link rel="canonical" href="{{page.metadata.canonical}}">
-    {{#page.metadata.prev}}<link rel="prev" href="{{.}}" />{{/page.metadata.prev}}
-    {{#page.metadata.next}}<link rel="next" href="{{.}}" />{{/page.metadata.next}}
+    {{#page.metadata.hreflang}}
+    <link rel="alternate" hreflang="{{lang}}" href="{{url}}">
+    {{/page.metadata.hreflang}}
+    {{#page.metadata.prev}}<link rel="prev" href="{{.}}">{{/page.metadata.prev}}
+    {{#page.metadata.next}}<link rel="next" href="{{.}}">{{/page.metadata.next}}
     
     <title>{{page.metadata.title}} - {{site.title}}</title>
     <meta name="description" content="{{page.metadata.description}}">

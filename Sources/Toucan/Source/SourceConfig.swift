@@ -27,6 +27,7 @@ struct SourceConfig {
         let language: String?
         let dateFormat: String?
         let noindex: Bool
+        let hreflang: [Context.Metadata.Hreflang]?
         
     }
 

@@ -15,6 +15,11 @@ struct Context {
     }
 
     struct Metadata {
+        struct Hreflang {
+            let lang: String
+            let url: String
+        }
+
         let slug: String
         let permalink: String
         let title: String
@@ -22,6 +27,7 @@ struct Context {
         let imageUrl: String?
         let noindex: Bool
         let canonical: String
+        let hreflang: [Hreflang]?
         let prev: String?
         let next: String?
     }

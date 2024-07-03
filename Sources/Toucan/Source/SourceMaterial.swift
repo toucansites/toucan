@@ -31,6 +31,7 @@ struct SourceMaterial {
     let assets: [String]
     let noindex: Bool
     let canonical: String?
+    let hreflang: [Context.Metadata.Hreflang]?
 }
 
 extension SourceMaterial {
@@ -59,7 +60,8 @@ extension SourceMaterial {
             markdown: markdown ?? self.markdown,
             assets: assets,
             noindex: noindex,
-            canonical: canonical
+            canonical: canonical,
+            hreflang: hreflang
         )
     }
     

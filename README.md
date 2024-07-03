@@ -29,7 +29,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
         <link rel="prev" href="https://example.com/posts/page/1" />
         <link rel="next" href="https://example.com/posts/page/3" />
 
-- hreflang attributes support
++ hreflang attributes support
     gb site:
         <link rel="canonical" href="https://example.com/gb/" /> 
         <link rel=“alternate” hreflang=“en-gb” href=“https://example.com/gb/” />  
@@ -41,7 +41,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
         <link rel=“alternate” hreflang=“en” href=“https://example.com/” />  
         <link rel=“alternate” hreflang=“x-default” href=“https://example.com/” />
 
-    - site:
+    site / material config:
         hreflang:
             - lang: en
               url: https://www.example.com/

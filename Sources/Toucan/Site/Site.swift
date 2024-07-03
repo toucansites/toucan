@@ -90,15 +90,19 @@ struct Site {
     
     // MARK: - utilities
 
-    func permalink(_ value: String) -> String {
+    func permalink(
+        _ value: String,
+        _ baseUrl: String? = nil
+    ) -> String {
+        let baseUrl = baseUrl ?? contents.config.site.baseUrl
         let components = value.split(separator: "/").map(String.init)
         if components.isEmpty {
-            return contents.config.site.baseUrl
+            return baseUrl
         }
         if components.last?.split(separator: ".").count ?? 0 > 1 {
-            return contents.config.site.baseUrl + components.joined(separator: "/")
+            return baseUrl + components.joined(separator: "/")
         }
-        return contents.config.site.baseUrl + components.joined(separator: "/") + "/"
+        return baseUrl + components.joined(separator: "/") + "/"
     }
     
     func render(
@@ -148,6 +152,13 @@ struct Site {
                     imageUrl: material.imageUrl().map { permalink($0) },
                     noindex: contents.config.site.noindex || material.noindex,
                     canonical: material.canonical ?? permalink(material.slug),
+                    hreflang: material.hreflang ?? 
+                        contents.config.site.hreflang?.map {
+                            .init(
+                                lang: $0.lang,
+                                url: permalink(material.slug, $0.url)
+                            )
+                        },
                     prev: prev,
                     next: next
                 ),

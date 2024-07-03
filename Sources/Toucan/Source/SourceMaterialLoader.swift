@@ -89,6 +89,23 @@ struct SourceMaterialLoader {
             let noindex = frontMatter.value("noindex", as: Bool.self) ?? false
             let canonical = frontMatter.string("canonical")?.emptyToNil
             
+            var hreflang = frontMatter.value(
+                "hreflang",
+                as: [[String: String]].self
+            )?.compactMap { dict -> Context.Metadata.Hreflang? in
+                guard
+                    let lang = dict["lang"]?.emptyToNil,
+                    let url = dict["url"]?.emptyToNil
+                else {
+                    return nil
+                }
+                return .init(lang: lang, url: url)
+            }
+            /// fallback to empty array if key is explicitly defined
+            if hreflang == nil, frontMatter["hreflang"] != nil {
+                hreflang = []
+            }
+            
 
             let assetsUrl = dirUrl
                 .appendingPathComponent(assetsPath ?? id)
@@ -164,7 +181,8 @@ struct SourceMaterialLoader {
                 markdown: rawMarkdown.dropFrontMatter(),
                 assets: assets,
                 noindex: noindex,
-                canonical: canonical
+                canonical: canonical,
+                hreflang: hreflang
             )
         }
         catch {

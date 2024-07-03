@@ -5,6 +5,14 @@ site:
     description: This is a demo blog using completely fake content.
     dateFormat: "yyyy-MM-dd HH:mm:ss"
     noindex: false
+    hreflang:
+        - lang: en
+          url: https://www.example.com/
+        - lang: en-gb
+          url: https://www.example.com/gb/
+        - lang: x-default
+          url: https://www.example.com/
+
 
 assets:
     input:

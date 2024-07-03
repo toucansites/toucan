@@ -46,13 +46,27 @@ struct SourceConfigLoader {
         let dateFormat = dict.string("dateFormat")
         let noindex = dict.value("noindex", as: Bool.self) ?? false
         
+        let hreflang = dict.value(
+            "hreflang",
+            as: [[String: String]].self
+        )?.compactMap { dict -> Context.Metadata.Hreflang? in
+            guard
+                let lang = dict["lang"]?.emptyToNil,
+                let url = dict["url"]?.emptyToNil
+            else {
+                return nil
+            }
+            return .init(lang: lang, url: url)
+        }
+
         return .init(
             baseUrl: siteBaseUrl,
             title: title ?? "",
             description: desc ?? "",
             language: lang,
             dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss",
-            noindex: noindex
+            noindex: noindex,
+            hreflang: hreflang
         )
     }
     
