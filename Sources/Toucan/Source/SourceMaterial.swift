@@ -38,6 +38,7 @@ extension SourceMaterial {
     func updated(
         title: String? = nil,
         description: String? = nil,
+        markdown: String? = nil,
         slug: String
     ) -> Self {
         .init(
@@ -55,7 +56,7 @@ extension SourceMaterial {
             userDefined: userDefined,
             data: data,
             frontMatter: frontMatter,
-            markdown: markdown,
+            markdown: markdown ?? self.markdown,
             assets: assets,
             noindex: noindex,
             canonical: canonical

@@ -1,10 +1,10 @@
 ---
-slug: blog/posts/pages/{{number}}
-title: Posts / {{number}}
-description: This is the posts page / {{number}}  
+slug: blog/posts/pages/{{pages.current}}
+title: Posts / {{pages.current}}
+description: This is the posts page / {{pages.current}}  
 image: images/defaults/default.png
 ---
 
-# Posts
+# Posts - {{pages.current}} / {{pages.total}}
 
-This is the posts page
+This is the posts page - {{pages.current}} / {{pages.total}}

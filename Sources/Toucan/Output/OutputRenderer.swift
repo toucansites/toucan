@@ -189,27 +189,21 @@ struct OutputRenderer {
         if let posts = site.source.materials.pages.blog.posts {
             pagination = (1...pages.count)
                 .map {
-                    .init(
+                    let slug = replacePaginationInfo(
+                        current: $0,
+                        total: pages.count,
+                        in: posts.slug
+                    )
+                    return .init(
                         number: $0,
                         total: pages.count,
-                        slug: replace($0, posts.slug),
-                        permalink: site.permalink(
-                            replace($0, posts.slug)
-                        ),
+                        slug: slug,
+                        permalink: site.permalink(slug),
                         isCurrent: false
                     )
                 }
         }
         
-        func replace(
-            _ number: Int,
-            _ value: String
-        ) -> String {
-            value.replacingOccurrences(
-                of: "{{number}}",
-                with: String(number)
-            )
-        }
 
         let context = site.getOutputHTMLContext(
             material: material,
@@ -320,6 +314,21 @@ struct OutputRenderer {
     
     // MARK: - post
     
+    func replacePaginationInfo(
+        current: Int,
+        total: Int,
+        in value: String
+    ) -> String {
+        value.replacingOccurrences(
+            of: "{{pages.current}}",
+            with: String(current)
+        )
+        .replacingOccurrences(
+            of: "{{pages.total}}",
+            with: String(total)
+        )
+    }
+    
     func blogPostListPaginated(
     ) -> [Renderable<HTML<Context.Blog.Post.ListPage>>] {
         guard let posts = site.source.materials.pages.blog.posts else {
@@ -328,16 +337,6 @@ struct OutputRenderer {
 
         let pageLimit = Int(site.source.config.contents.pagination.limit)
         let pages = site.contents.blog.sortedPosts().chunks(ofCount: pageLimit)
-        
-        func replace(
-            _ number: Int,
-            _ value: String
-        ) -> String {
-            value.replacingOccurrences(
-                of: "{{number}}",
-                with: String(number)
-            )
-        }
 
         var result: [Renderable<HTML<Context.Blog.Post.ListPage>>] = []
         for (index, postsChunk) in pages.enumerated() {
@@ -345,23 +344,48 @@ struct OutputRenderer {
             
             
             
-            let title = replace(pageNumber, posts.title)
-            let description = replace(pageNumber, posts.description)
-            let slug = replace(pageNumber, posts.slug)
+            let title = replacePaginationInfo(
+                current: pageNumber,
+                total: pages.count,
+                in: posts.title
+            )
+            let description = replacePaginationInfo(
+                current: pageNumber,
+                total: pages.count,
+                in: posts.description
+            )
+            let slug = replacePaginationInfo(
+                current: pageNumber,
+                total: pages.count,
+                in: posts.slug
+            )
             
             var prev: String? = nil
             if index > 0 {
-                prev = replace(pageNumber - 1, posts.slug)
+                prev = replacePaginationInfo(
+                    current: pageNumber - 1,
+                    total: pages.count,
+                    in: posts.slug
+                )
             }
             
             var next: String? = nil
             if index < pages.count - 1 {
-                next = replace(pageNumber + 1, posts.slug)
+                next = replacePaginationInfo(
+                    current: pageNumber - 1,
+                    total: pages.count,
+                    in: posts.slug
+                )
             }
 
             let material = posts.updated(
                 title: title,
                 description: description,
+                markdown: replacePaginationInfo(
+                    current: pageNumber,
+                    total: pages.count,
+                    in: posts.markdown
+                ),
                 slug: slug
             )
             let context = site.getOutputHTMLContext(
@@ -370,13 +394,16 @@ struct OutputRenderer {
                     posts: postsChunk.map { $0.context(site: site) },
                     pagination: (1...pages.count)
                         .map {
-                            .init(
+                            let slug = replacePaginationInfo(
+                                current: $0,
+                                total: pages.count,
+                                in: posts.slug
+                            )
+                            return .init(
                                 number: $0,
                                 total: pages.count,
-                                slug: replace($0, posts.slug),
-                                permalink: site.permalink(
-                                    replace($0, posts.slug)
-                                ),
+                                slug: slug,
+                                permalink: site.permalink(slug),
                                 isCurrent: pageNumber == $0
                             )
                         }
