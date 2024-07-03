@@ -60,9 +60,9 @@ extension Dictionary where Key == String, Value == Any {
     /// Retrieves the string associated with the given key path.
     ///
     /// - Parameter keyPath: The key path string, where keys are separated by dots.
-    /// - Returns: The string at the specified key path, or `nil` if the key path is invalid or the value is an empty string.
+    /// - Returns: The string at the specified key path
     func string(_ keyPath: String) -> String? {
-        value(keyPath, as: String.self)?.emptyToNil
+        value(keyPath, as: String.self)
     }
 
     /// Retrieves the integer associated with the given key path.
