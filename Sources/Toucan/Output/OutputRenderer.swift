@@ -136,8 +136,8 @@ struct OutputRenderer {
             context: Context.Main.HomePage(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
-                authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
-                tags: site.contents.blog.sortedTags().map { $0.context(site: site) },
+                authors: site.contents.blog.authors.map { $0.context(site: site) },
+                tags: site.contents.blog.tags.map { $0.context(site: site) },
                 pages: site.contents.pages.custom.map { $0.context(site: site) },
                 categories: site.contents.docs.categories.map { category in
                     category.context(
@@ -184,7 +184,7 @@ struct OutputRenderer {
             return nil
         }
         let pageLimit = Int(site.source.config.contents.pagination.limit)
-        let pages = site.contents.blog.sortedPosts().chunks(ofCount: pageLimit)
+        let pages = site.contents.blog.posts.chunks(ofCount: pageLimit)
         var pagination: [Context.Pagination] = []
         if let posts = site.source.materials.pages.blog.posts {
             pagination = (1...pages.count)
@@ -210,8 +210,8 @@ struct OutputRenderer {
             context: Context.Blog.HomePage(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
-                authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
-                tags: site.contents.blog.sortedTags().map { $0.context(site: site) },
+                authors: site.contents.blog.authors.map { $0.context(site: site) },
+                tags: site.contents.blog.tags.map { $0.context(site: site) },
                 pagination: pagination
             )
         )
@@ -234,7 +234,7 @@ struct OutputRenderer {
         let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Blog.Author.ListPage(
-                authors: site.contents.blog.sortedAuthors().map {
+                authors: site.contents.blog.authors.map {
                     $0.context(site: site)
                 }
             )
@@ -277,7 +277,7 @@ struct OutputRenderer {
         let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Blog.Tag.ListPage(
-                tags: site.contents.blog.sortedTags().map {
+                tags: site.contents.blog.tags.map {
                     $0.context(site: site)
                 }
             )
@@ -336,7 +336,7 @@ struct OutputRenderer {
         }
 
         let pageLimit = Int(site.source.config.contents.pagination.limit)
-        let pages = site.contents.blog.sortedPosts().chunks(ofCount: pageLimit)
+        let pages = site.contents.blog.posts.chunks(ofCount: pageLimit)
 
         var result: [Renderable<HTML<Context.Blog.Post.ListPage>>] = []
         for (index, postsChunk) in pages.enumerated() {
@@ -600,14 +600,14 @@ struct OutputRenderer {
     // MARK: - rss
     
     func rss() -> Renderable<RSS> {
-        let items: [RSS.Item] = site.contents.blog.sortedPosts().map { item in
+        let items: [RSS.Item] = site.contents.blog.posts.map { item in
             let material = item.material
             return .init(
                 permalink: site.permalink(material.slug),
                 title: material.title,
                 description: material.description,
                 publicationDate: site.rssDateFormatter.string(
-                    from: item.published
+                    from: item.material.publication
                 )
             )
         }

@@ -23,6 +23,9 @@ struct SourceMaterialLoader {
     let fileManager: FileManager
     /// The front matter parser used for parsing markdown files.
     let frontMatterParser: FrontMatterParser
+
+    /// The current date.
+    let now: Date = .init()
     
     // TODO: move this to the config + toucan urls also
     private var contentsUrl: URL {
@@ -49,10 +52,12 @@ struct SourceMaterialLoader {
             let lastModification = try fileManager.modificationDate(at: url)
             
             let dirUrl = URL(fileURLWithPath: location)
-                
+
+            // MARK: - load markdown + front matter data
+
             let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
             var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
-            
+
             // TODO: use url
             for c in [id + ".yaml", id + ".yml"] {
                 let url = dirUrl.appendingPathComponent(c)
@@ -75,10 +80,50 @@ struct SourceMaterialLoader {
                 data += da
             }
             
+            // MARK: - load data & filter based on draft, publication, expiration
+            
+            let draft = frontMatter.value("draft", as: Bool.self) ?? false
+            
+            /// filter out draft
+            if draft {
+                return nil
+            }
+            let dateFormatter = DateFormatters.contentLoader
+
+            var publication: Date = now
+            if
+                let rawDate = frontMatter["publication"] as? String,
+                let date = dateFormatter.date(from: rawDate)
+            {
+                publication = date
+            }
+            
+            /// filter out unpublished
+            if publication > now {
+                return nil
+            }
+            
+            var expiration: Date? = nil
+            if
+                let rawDate = frontMatter["expiration"] as? String,
+                let date = dateFormatter.date(from: rawDate)
+            {
+                expiration = date
+            }
+            
+            /// filter out expired
+            if let expiration, expiration < now {
+                return nil
+            }
+            
+            
+            // MARK: - load material metadata
+            
             let slug = frontMatter.string("slug")?.emptyToNil ?? id
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")?.emptyToNil
+            
             let template = frontMatter.string("template") ?? template
             let assetsPath = frontMatter.string("assets.path")?.emptyToNil
             let userDefined = frontMatter.dict("userDefined")
@@ -105,7 +150,6 @@ struct SourceMaterialLoader {
             if hreflang == nil, frontMatter["hreflang"] != nil {
                 hreflang = []
             }
-            
 
             let assetsUrl = dirUrl
                 .appendingPathComponent(assetsPath ?? id)
@@ -169,6 +213,9 @@ struct SourceMaterialLoader {
                 title: title,
                 description: description,
                 image: imageUrl,
+                draft: draft,
+                publication: publication,
+                expiration: expiration,
                 css: css,
                 js: js,
                 template: template,

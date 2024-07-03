@@ -33,7 +33,7 @@ struct FrontMatterParser {
     ) throws -> [String: Any] {
         try load(yaml: yaml, as: [String: Any].self) ?? [:]
     }
-    
+
     func load<T>(
         yaml: String,
         as: T.Type

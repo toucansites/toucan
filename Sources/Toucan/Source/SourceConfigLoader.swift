@@ -64,7 +64,7 @@ struct SourceConfigLoader {
             title: title ?? "",
             description: desc ?? "",
             language: lang,
-            dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss",
+            dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm",
             noindex: noindex,
             hreflang: hreflang
         )

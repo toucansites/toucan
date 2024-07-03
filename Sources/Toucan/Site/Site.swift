@@ -182,8 +182,8 @@ struct Site {
 //        return .init(
 //            featured: contents.blog.featuredPosts().map { $0.context(site: self) },
 //            posts: contents.blog.latestPosts().map { $0.context(site: self) },
-//            authors: contents.blog.sortedAuthors().map { $0.context(site: self) },
-//            tags: contents.blog.sortedTags().map { $0.context(site: self) },
+//            authors: contents.blog.authors.map { $0.context(site: self) },
+//            tags: contents.blog.tags.map { $0.context(site: self) },
 //            pages: []
 //        )
 //    }

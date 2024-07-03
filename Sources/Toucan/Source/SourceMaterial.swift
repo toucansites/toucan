@@ -14,6 +14,9 @@ struct SourceMaterial {
     let title: String
     let description: String
     let image: String?
+    let draft: Bool
+    let publication: Date
+    let expiration: Date?
     
     let css: [String]
     let js: [String]
@@ -48,6 +51,9 @@ extension SourceMaterial {
             title: title ?? self.title,
             description: description ?? self.description,
             image: image,
+            draft: draft,
+            publication: publication,
+            expiration: expiration,
             css: css,
             js: js,
             template: template,

@@ -13,7 +13,6 @@ extension Site.Contents {
 
         struct Post {
             let material: SourceMaterial
-            let published: Date
             let tags: [String]
             let authors: [String]
             let featured: Bool
@@ -24,18 +23,6 @@ extension Site.Contents {
                 dateFormatter: DateFormatter
             ) {
                 self.material = material
-                
-                dateFormatter.dateFormat = config.site.dateFormat
-
-                if
-                    let rawDate = material.frontMatter["publication"] as? String,
-                    let date = dateFormatter.date(from: rawDate)
-                {
-                    self.published = date
-                }
-                else {
-                    self.published = Date()
-                }
                 
                 let tags = material.frontMatter["tags"] as? [String] ?? []
                 self.tags = tags.map { slug in
@@ -72,7 +59,7 @@ extension Site.Contents {
                     imageUrl: material.imageUrl(),
                     readingTime: site.readingTime(material.markdown),
                     featured: featured,
-                    date: site.dateFormatter.string(from: published),
+                    date: site.dateFormatter.string(from: material.publication),
                     tags: tagReferences,
                     authors: authorReferences
                 )
@@ -87,7 +74,7 @@ extension Site.Contents {
                     imageUrl: material.imageUrl(),
                     readingTime: site.readingTime(material.markdown),
                     featured: featured,
-                    date: site.dateFormatter.string(from: published)
+                    date: site.dateFormatter.string(from: material.publication)
                 )
             }
         }
@@ -149,45 +136,48 @@ extension Site.Contents {
         let authors: [Author]
         let tags: [Tag]
         
-        // MARK: - helpers
+        init(
+            posts: [Post],
+            authors: [Author],
+            tags: [Tag]
+        ) {
+            self.posts = posts
+                .sorted {
+                    $0.material.publication > $1.material.publication
+                }
 
-        func sortedAuthors() -> [Author] {
-            authors.sorted {
-                $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
-            }
-        }
-
-        func sortedTags() -> [Tag] {
-            tags.sorted {
-                $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
-            }
-        }
-
-        func latestPosts(limit: Int = 10) -> [Post] {
-            Array(
-                sortedPosts()
-                    .prefix(limit)
-            )
+            self.authors = authors
+                .sorted {
+                    $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
+                }
+            
+            self.tags = tags
+                .sorted {
+                    $0.material.title.localizedCaseInsensitiveCompare($1.material.title) == .orderedAscending
+                }
         }
         
-        func sortedPosts() -> [Post] {
-            posts
-                .sorted { $0.published > $1.published }
+        // MARK: - helpers
+
+        func latestPosts(limit: Int = 10) -> [Post] {
+            Array(posts.prefix(limit))
         }
 
         func featuredPosts(limit: Int = 5) -> [Post] {
             Array(
                 posts
                     .filter { $0.featured }
-                    .sorted { $0.published > $1.published }
                     .prefix(limit)
             )
         }
         
+        func postIndex(for post: Post) -> Int? {
+            posts.firstIndex(where: { $0.material.slug == post.material.slug })
+        }
+        
         func prevPost(_ post: Post) -> Post? {
-            let posts = sortedPosts()
             guard
-                let index = posts.firstIndex(where: { $0.material.slug == post.material.slug }),
+                let index = postIndex(for: post),
                 index < posts.count - 1
             else {
                 return nil
@@ -196,9 +186,8 @@ extension Site.Contents {
         }
         
         func nextPost(_ post: Post) -> Post? {
-            let posts = sortedPosts()
             guard 
-                let index = posts.firstIndex(where: { $0.material.slug == post.material.slug }),
+                let index = postIndex(for: post),
                 index > 0
             else {
                 return nil
@@ -209,7 +198,6 @@ extension Site.Contents {
         /// posts from the same tags
         func related(post: Post, limit: Int = 5) -> [Post] {
             var result: [Post] = []
-            let posts = sortedPosts()
             for tagSlug in post.tags {
                 result += posts
                     .filter { $0.tags.contains(tagSlug) }
@@ -225,7 +213,6 @@ extension Site.Contents {
         /// posts from the same author
         func more(post: Post, limit: Int = 5) -> [Post] {
             var result: [Post] = []
-            let posts = sortedPosts()
             for authorSlug in post.authors {
                 result += posts
                     .filter { $0.authors.contains(authorSlug) }
