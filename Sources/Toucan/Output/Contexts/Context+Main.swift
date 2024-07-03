@@ -15,6 +15,7 @@ extension Context {
             let authors: [Blog.Author.Item]
             let tags: [Blog.Tag.Item]
             let pages: [Pages.Item]
+            let categories: [Docs.Category.Item]
         }
     }
 }

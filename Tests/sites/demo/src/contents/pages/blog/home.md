@@ -1,10 +1,10 @@
 ---
 slug: blog
-title: Blog title
-description: Blog description 
+title: Blog
+description: This is the blog page. 
 image: images/defaults/default.png
 ---
 
-## Blog home page
+# Blog
 
-asdf 
+This is the blog page.

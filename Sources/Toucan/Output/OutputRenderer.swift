@@ -138,7 +138,13 @@ struct OutputRenderer {
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
                 authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
                 tags: site.contents.blog.sortedTags().map { $0.context(site: site) },
-                pages: site.contents.pages.custom.map { $0.context(site: site) }
+                pages: site.contents.pages.custom.map { $0.context(site: site) },
+                categories: site.contents.docs.categories.map { category in
+                    category.context(
+                        site: site,
+                        guides: site.contents.docs.guides(category: category)
+                    )
+                }
             )
         )
         return .init(
@@ -177,13 +183,42 @@ struct OutputRenderer {
         guard let material = site.source.materials.pages.blog.home else {
             return nil
         }
+        let pageLimit = Int(site.source.config.contents.pagination.limit)
+        let pages = site.contents.blog.sortedPosts().chunks(ofCount: pageLimit)
+        var pagination: [Context.Pagination] = []
+        if let posts = site.source.materials.pages.blog.posts {
+            pagination = (1...pages.count)
+                .map {
+                    .init(
+                        number: $0,
+                        total: pages.count,
+                        slug: replace($0, posts.slug),
+                        permalink: site.permalink(
+                            replace($0, posts.slug)
+                        ),
+                        isCurrent: false
+                    )
+                }
+        }
+        
+        func replace(
+            _ number: Int,
+            _ value: String
+        ) -> String {
+            value.replacingOccurrences(
+                of: "{{number}}",
+                with: String(number)
+            )
+        }
+
         let context = site.getOutputHTMLContext(
             material: material,
             context: Context.Blog.HomePage(
                 featured: site.contents.blog.featuredPosts().map { $0.context(site: site) },
                 posts: site.contents.blog.latestPosts().map { $0.context(site: site) },
                 authors: site.contents.blog.sortedAuthors().map { $0.context(site: site) },
-                tags: site.contents.blog.sortedTags().map { $0.context(site: site) }
+                tags: site.contents.blog.sortedTags().map { $0.context(site: site) },
+                pagination: pagination
             )
         )
         return .init(

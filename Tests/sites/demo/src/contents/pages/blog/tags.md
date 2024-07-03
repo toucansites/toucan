@@ -1,7 +1,9 @@
 ---
 slug: blog/tags
-title: Tags page
-description: This is the tags page...
+title: Tags
+description: This is the tags page.
 ---
 
-# This is the tags page
+# Tags
+
+This is the tags page

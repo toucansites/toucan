@@ -1,14 +1,9 @@
 {{<index}}
-
 {{$main}}
+
+{{& page.content}}
+
 <div id="home" class="wrapper">
-    <header>
-        <h1>{{page.metadata.title}}</h1>
-        <p>{{page.metadata.description}}</p>
-        <br>
-        <a href="{{userDefined.ctaUrl}}">{{userDefined.ctaLabel}}</a>
-    </header>
-    
     <h2>Pages</h2>
     {{#empty(page.context.pages)}}
     Empty.
@@ -23,14 +18,16 @@
     </ul>
     {{/empty(page.context.pages)}}
     
-    <h2>Featured</h2>
+    <h2>Featured posts</h2>
     {{#empty(page.context.featured)}}
     Empty.
     {{/empty(page.context.featured)}}
     {{^empty(page.context.featured)}}
+    <div class="grid-321">
     {{#page.context.featured}}
         {{> blog.blocks.post}}
     {{/page.context.featured}}
+    </div>
     {{/empty(page.context.featured)}}
     
     
@@ -39,9 +36,11 @@
     Empty.
     {{/empty(page.context.posts)}}
     {{^empty(page.context.posts)}}
+    <div class="grid-321">
     {{#page.context.posts}}
         {{> blog.blocks.post}}
     {{/page.context.posts}}
+    </div>
     {{/empty(page.context.posts)}}
     
     <h2>Authors</h2>
@@ -49,9 +48,11 @@
     Empty.
     {{/empty(page.context.authors)}}
     {{^empty(page.context.authors)}}
+        <div class="grid-321">
     {{#page.context.authors}}
         {{> blog.blocks.author}}
     {{/page.context.authors}}
+    </div>
     {{/empty(page.context.authors)}}
     
     <h2>Tags</h2>
@@ -59,13 +60,35 @@
     Empty.
     {{/empty(page.context.tags)}}
     {{^empty(page.context.tags)}}
+        <div class="grid-321">
     {{#page.context.tags}}
         {{> blog.blocks.tag}}
     {{/page.context.tags}}
+    </div>
     {{/empty(page.context.tags)}}
-
+    
+    
+    <h2>Docs</h2>
+    {{#empty(page.context.categories)}}
+    Empty.
+    {{/empty(page.context.categories)}}
+    {{^empty(page.context.categories)}}
+    <div>
+    <ul>
+    {{#page.context.categories}}
+        <li>
+            <a href="{{permalink}}">{{title}}</a>
+            <ul>
+            {{#guides}}
+                <li><a href="{{permalink}}">{{title}}</a></li>
+            {{/guides}}
+            </ul>
+        </li>
+    {{/page.context.categories}}
+    </ul>
+    </div>
+    {{/empty(page.context.categories)}}
 
 </div>
 {{/main}}
-
 {{/index}}

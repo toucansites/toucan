@@ -14,6 +14,7 @@ extension Context {
             let posts: [Post.Item]
             let authors: [Author.Item]
             let tags: [Tag.Item]
+            let pagination: [Pagination]
         }
 
         struct Post {

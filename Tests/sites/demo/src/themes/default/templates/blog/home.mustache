@@ -1,15 +1,24 @@
 {{<index}}
-
 {{$main}}
     
-<div id="blog" class="wrapper">
-    <header>
-        <h1>{{page.metadata.title}}</h1>
-        <p>{{page.metadata.description}}</p>
-    </header>
-    
-    
+{{& page.content}}
 
+<div id="blog" class="wrapper">
+    
+    <h2>Featured posts</h2>
+    {{#empty(page.context.featured)}}
+    Empty.
+    {{/empty(page.context.featured)}}
+    {{^empty(page.context.featured)}}
+    <div class="grid-321">
+    {{#page.context.featured}}
+        {{> blog.blocks.post}}
+    {{/page.context.featured}}
+    </div>
+    {{/empty(page.context.featured)}}
+    
+    
+    <h2>Latest posts</h2>
     {{#empty(page.context.posts)}}
     Empty.
     {{/empty(page.context.posts)}}
@@ -21,6 +30,35 @@
     </div>
     {{/empty(page.context.posts)}}
     
+    
+    <h2>Authors</h2>
+    {{#empty(page.context.authors)}}
+    Empty.
+    {{/empty(page.context.authors)}}
+    {{^empty(page.context.authors)}}
+        <div class="grid-321">
+    {{#page.context.authors}}
+        {{> blog.blocks.author}}
+    {{/page.context.authors}}
+    </div>
+    {{/empty(page.context.authors)}}
+    
+    <h2>Tags</h2>
+    {{#empty(page.context.tags)}}
+    Empty.
+    {{/empty(page.context.tags)}}
+    {{^empty(page.context.tags)}}
+        <div class="grid-321">
+    {{#page.context.tags}}
+        {{> blog.blocks.tag}}
+    {{/page.context.tags}}
+    </div>
+    {{/empty(page.context.tags)}}
+    
+    
+    
+
+    <h2>Post pagination</h2>
     {{#empty(page.context.pagination)}}
     {{/empty(page.context.pagination)}}
     {{^empty(page.context.pagination)}}
@@ -33,5 +71,4 @@
 
 </div>
 {{/main}}
-
 {{/index}}

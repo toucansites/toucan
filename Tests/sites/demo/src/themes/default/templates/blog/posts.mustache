@@ -1,12 +1,9 @@
 {{<index}}
-
 {{$main}}
 
+{{& page.content}}
+
 <div id="posts" class="wrapper">
-    <header>
-        <h1>{{page.metadata.title}}</h1>
-        <p>{{page.metadata.description}}</p>
-    </header>
 
     {{#empty(page.context.posts)}}
     Empty.
@@ -31,6 +28,6 @@
     {{/empty(page.context.pagination)}}
 
 </div>
-{{/main}}
 
+{{/main}}
 {{/index}}

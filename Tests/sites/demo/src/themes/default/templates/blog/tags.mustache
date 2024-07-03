@@ -1,11 +1,9 @@
 {{<index}}
-
 {{$main}}
+
+{{& page.content}}
+
 <div id="tags" class="wrapper">
-    <header>
-        <h1>{{page.metadata.title}}</h1>
-        <p>{{page.metadata.description}}</p>
-    </header>
 
     {{#empty(page.context.tags)}}
     Empty.
@@ -19,6 +17,6 @@
     </div>
     {{/empty(page.context.tags)}}
 </div>
-{{/main}}
 
+{{/main}}
 {{/index}}
