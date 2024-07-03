@@ -17,27 +17,31 @@ hreflang:
 
 # lorem ipsum
 
+lorem ipsum dolor sit amet 
 
-@Columns(
-    desktop: 3 
-    tablet: 2
+@Grid(
+    desktop: 4,
+    tablet: 2,
     mobile: 1
 ) {
-  @Column {
-      lorem ipsum
-  }
-  @Column {
-      dolor sit amet
-  }
-}
-
-@Valami(x: 1, y: 2) {
-    foo
-}
-
-dolor sit amet
-
-@Outer {
-    This line establishes indentation to be removed from these inner contents.
-    This line will line up with the last.
+    @Column {
+        ### first section
+        
+        lorem ipsum dolor sit amet 
+    }
+    @Column {
+        ### second section
+        
+        lorem ipsum dolor sit amet 
+    }
+    @Column {
+        ### third section
+        
+        lorem ipsum dolor sit amet 
+    }
+    @Column {
+        ### fourth section
+        
+        lorem ipsum dolor sit amet 
+    }
 }

@@ -177,29 +177,46 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         return tag(name: "p", content: .children(paragraph.children))
     }
 
-    //    mutating func visitBlockDirective(
-    //        _ blockDirective: BlockDirective
-    //    ) -> Result {
-    //        if !blockDirective.argumentText.isEmpty {
-    //            var parseErrors = [DirectiveArgumentText.ParseError]()
-    //            let arguments = blockDirective.argumentText.parseNameValueArguments(parseErrors: &parseErrors)
-    //
-    //            print(parseErrors.isEmpty)
-    //
-    //            for argument in arguments {
-    //                print(argument.name, argument.value)
-    //            }
-    //        }
-    //
-    //        return tag(
-    //            name: "div",
-    //            attributes: [
-    //                .init(key: "class", value: blockDirective.name)
-    //            ],
-    //            content: .children(blockDirective.children)
-    //        )
-    //        ""
-    //    }
+    mutating func visitBlockDirective(
+        _ blockDirective: BlockDirective
+    ) -> Result {
+        var parseErrors = [DirectiveArgumentText.ParseError]()
+        var arguments: [DirectiveArgument] = []
+        let blockName = blockDirective.name.lowercased()
+        if !blockDirective.argumentText.isEmpty {
+            arguments = blockDirective.argumentText.parseNameValueArguments(parseErrors: &parseErrors)
+        }
+        guard parseErrors.isEmpty else {
+            return ""
+        }
+        
+//        print(blockName, "-----------------------")
+        switch blockName {
+        case "grid":
+            var cssClass = "grid-"
+            for argument in arguments {
+//                print(argument.name, argument.value)
+                cssClass += argument.value
+            }
+            return tag(
+                name: "div",
+                attributes: [
+                    .init(key: "class", value: cssClass)
+                ],
+                content: .children(blockDirective.children)
+            )
+        case "column":
+            return tag(
+                name: "div",
+                attributes: [
+                    .init(key: "class", value: "column")
+                ],
+                content: .children(blockDirective.children)
+            )
+        default:
+            return ""
+        }
+    }
 
     mutating func visitInlineCode(_ inlineCode: InlineCode) -> Result {
         tag(name: "code", content: .value(inlineCode.code))
