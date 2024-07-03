@@ -78,6 +78,7 @@ extension Context {
                 let description: String
                 let imageUrl: String?
                 let date: String
+                let category: Category.Reference?
             }
         }
     }

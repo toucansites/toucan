@@ -79,7 +79,8 @@ extension Site.Contents {
                     title: material.title,
                     description: material.description,
                     imageUrl: material.imageUrl(),
-                    date: site.dateFormatter.string(from: material.lastModification)
+                    date: site.dateFormatter.string(from: material.lastModification),
+                    category: site.contents.docs.category(for: category).map { $0.ref(site: site) }
                 )
             }
             
@@ -118,27 +119,59 @@ extension Site.Contents {
             guides.filter { $0.category == category.material.slug }
         }
         
+        func category(for category: String) -> Category? {
+            categories.first { $0.material.slug == category }
+        }
+        
         func category(for guide: Guide) -> Category? {
             categories.first { $0.material.slug == guide.category }
         }
         
+        func guides(category: String) -> [Guide] {
+            guides.filter { $0.category == category }
+        }
+        
+        func guideIndex(for guide: Guide, in guides: [Guide]) -> Int? {
+            guides.firstIndex(where: { $0.material.slug == guide.material.slug })
+        }
+        
+        func categoryIndex(for category: String) -> Int? {
+            categories.firstIndex(where: { $0.material.slug == category })
+        }
+        
         func prev(_ guide: Guide) -> Guide? {
-            let guides = guides.filter { $0.category == guide.category }
+            let guides = guides(category: guide.category)
             guard
-                let index = guides.firstIndex(where: { $0.material.slug == guide.material.slug }),
+                let index = guideIndex(for: guide, in: guides),
                 index > 0
             else {
+                if
+                    let categoryIndex = categoryIndex(for: guide.category),
+                    categoryIndex > 0
+                {
+                    let nextIndex = categoryIndex - 1
+                    let category = categories[nextIndex]
+                    return self.guides(category: category).last
+                }
                 return nil
             }
             return guides[index - 1]
         }
 
         func next(_ guide: Guide) -> Guide? {
-            let guides = guides.filter { $0.category == guide.category }
+            let guides = guides(category: guide.category)
             guard
-                let index = guides.firstIndex(where: { $0.material.slug == guide.material.slug }),
+                let index = guideIndex(for: guide, in: guides),
                 index < guides.count - 1
             else {
+                if 
+                    let categoryIndex = categoryIndex(for: guide.category),
+                    categoryIndex < categories.count - 1
+                {
+                    let nextIndex = categoryIndex + 1
+                    let category = categories[nextIndex]
+                    return self.guides(category: category).first
+                }
                 return nil
             }
             return guides[index + 1]

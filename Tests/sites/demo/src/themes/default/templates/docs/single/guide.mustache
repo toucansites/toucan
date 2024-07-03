@@ -30,17 +30,23 @@ Empty.
 </article>
 
 <div class="content-wrapper">
-    {{^page.context.guide.next}}
-    {{/page.context.guide.next}}
-    {{#page.context.guide.next}}
-        Next: <a href="{{permalink}}">{{title}}</a>
-    {{/page.context.guide.next}}
-
     {{^page.context.guide.prev}}
     {{/page.context.guide.prev}}
     {{#page.context.guide.prev}}
-        Prev: <a href="{{permalink}}">{{title}}</a>
+        Prev: <br>
+        {{category.title}}<br>
+        <a href="{{permalink}}">{{title}}</a>
     {{/page.context.guide.prev}}
+    <br>
+    <br>
+    {{^page.context.guide.next}}
+    {{/page.context.guide.next}}
+    {{#page.context.guide.next}}
+        Next: <br>
+        {{category.title}}<br>
+        <a href="{{permalink}}">{{title}}</a>
+    {{/page.context.guide.next}}
+
 </div>
 
 {{/main}}

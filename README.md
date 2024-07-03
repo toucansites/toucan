@@ -10,10 +10,10 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
     noindex: true
     <meta name="robots" content="noindex">
     
-- draft content:
++ draft content:
     draft: true -> not being rendered.
 
-- publication date, expiration date support for posts:
++ publication date, expiration date support for posts:
     publication: 2023-04-22 12:01:01
     expiration: 2024-04-22 12:01:01
     
@@ -49,10 +49,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
               url: https://www.example.com/gb/
             - lang: x-default
               url: https://www.example.com/
-
-- prev / next guide support iterating over doc categories
  
-- date x y ago feature
 - demo template design
 - toucan user guides
 - Swift 5.10 docker
@@ -64,6 +61,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 
 ### 2.0
 
+- date x y ago feature
 ? add current path check (to mark menu as current)
 - image resize & optimize support
 - content transformers -> call script using markdown input -> output
