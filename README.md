@@ -1,18 +1,85 @@
 # Toucan
 
-Toucan is a static site generator written in Swift.
+Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 
-## Todos
+## Roadmap
 
-- add current path check (to mark menu as current)
-- image resize & optimize support?
+### 1.0-alpha.1
+
+- draft content:
+    draft: true -> not being rendered.
+
+- noindex tag support:
+    noindex: true
+    <meta name="robots" content="noindex">
+    
+- publication date, expiration date support for posts:
+    publication: 2023-04-22 12:01:01
+    expiration: 2024-04-22 12:01:01
+    
+    filter posts based on actual date.
+
+- canonical url support:
+    self-referencing by default:
+        <link rel="canonical" href="https://example.com/" />
+    override:
+        canonical: https://foo.com/bar/baz
+        
+    pagination canonicals:
+        <link rel="prev" href="https://example.com/posts/page/1" />
+        <link rel="next" href="https://example.com/posts/page/3" />
+
+- hreflang attributes support
+    gb site:
+        <link rel="canonical" href="https://example.com/gb/" /> 
+        <link rel=“alternate” hreflang=“en-gb” href=“https://example.com/gb/” />  
+        <link rel=“alternate” hreflang=“en” href=“https://example.com/” />  
+        <link rel=“alternate” hreflang=“x-default” href=“https://example.com/” />  
+    us site:
+        <link rel="canonical" href="https://example.com/" /> 
+        <link rel=“alternate” hreflang=“en-gb” href=“https://example.com/gb/” />  
+        <link rel=“alternate” hreflang=“en” href=“https://example.com/” />  
+        <link rel=“alternate” hreflang=“x-default” href=“https://example.com/” />
+
+    - site:
+        hreflang:
+            - lang: en
+              url: https://www.example.com/
+            - lang: en-gb
+              url: https://www.example.com/gb/
+            - lang: x-default
+              url: https://www.example.com/
+
+- prev / next guide support iterating over doc categories
+ 
+- demo template design
+- toucan user guides
+- Swift 5.10 docker
+- toucan installer
+- toucan website
+- file watcher
+- web server & preview
+
+
+### 2.0
+
+? add current path check (to mark menu as current)
+- image resize & optimize support
 - content transformers -> call script using markdown input -> output
     - plugins/a "markdwon" >> plugins/b >> etc... (last one built-in stuff)
-? draft posts (noindex tag support?)
-? canonical url support
-- hreflang attribute support
-- prev / next guide support iterating over doc categories 
-
+- content composition protocols + modules, e.g. blog, docs, etc.
+- sitemap index support
+- content importer
+    - jekyll
+    - hugo
+    - ghost
+    - wordpress
+    - medium
+    - notion
+- publish subcommand 
+    - github pages
+    - aws bucket?
+    
 
 ## Directory structure
 
