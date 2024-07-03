@@ -2,7 +2,12 @@
 <html {{#site.language}}lang="{{.}}"{{/site.language}}>
 <head>
     <meta charset="utf-8">
+    {{#page.metadata.noindex}}<meta name="robots" content="noindex">{{/page.metadata.noindex}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="canonical" href="{{page.metadata.canonical}}">
+    {{#page.metadata.prev}}<link rel="prev" href="{{.}}" />{{/page.metadata.prev}}
+    {{#page.metadata.next}}<link rel="next" href="{{.}}" />{{/page.metadata.next}}
     
     <title>{{page.metadata.title}} - {{site.title}}</title>
     <meta name="description" content="{{page.metadata.description}}">
@@ -33,8 +38,6 @@
 </head>
 
 <body>
-    
-    
 
     {{> blocks.navigation}}
         

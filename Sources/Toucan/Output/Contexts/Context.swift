@@ -20,6 +20,10 @@ struct Context {
         let title: String
         let description: String
         let imageUrl: String?
+        let noindex: Bool
+        let canonical: String
+        let prev: String?
+        let next: String?
     }
 
     struct Pagination {

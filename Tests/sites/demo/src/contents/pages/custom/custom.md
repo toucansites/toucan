@@ -3,6 +3,8 @@ slug: my-page
 title: My custom page
 description: This is my custom page... 
 template: custom.my-page
+noindex: true
+canonical: https://example.com/my-page/
 ---
 
 

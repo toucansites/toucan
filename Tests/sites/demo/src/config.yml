@@ -4,6 +4,7 @@ site:
     title: Scientific Titans Blog
     description: This is a demo blog using completely fake content.
     dateFormat: "yyyy-MM-dd HH:mm:ss"
+    noindex: false
 
 assets:
     input:

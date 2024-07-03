@@ -29,6 +29,8 @@ struct SourceMaterial {
     let markdown: String
     
     let assets: [String]
+    let noindex: Bool
+    let canonical: String?
 }
 
 extension SourceMaterial {
@@ -54,7 +56,9 @@ extension SourceMaterial {
             data: data,
             frontMatter: frontMatter,
             markdown: markdown,
-            assets: assets
+            assets: assets,
+            noindex: noindex,
+            canonical: canonical
         )
     }
     

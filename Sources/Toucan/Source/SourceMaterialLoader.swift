@@ -75,21 +75,21 @@ struct SourceMaterialLoader {
                 data += da
             }
             
-            let slug = frontMatter.string("slug") ?? id
+            let slug = frontMatter.string("slug")?.emptyToNil ?? id
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
-            let image = frontMatter.string("image")
+            let image = frontMatter.string("image")?.emptyToNil
             let template = frontMatter.string("template") ?? template
-            let assetsPath = frontMatter.string("assets.path")
+            let assetsPath = frontMatter.string("assets.path")?.emptyToNil
             let userDefined = frontMatter.dict("userDefined")
             let redirects = frontMatter.value(
                 "redirects.from",
                 as: [String].self
             ) ?? []
+            let noindex = frontMatter.value("noindex", as: Bool.self) ?? false
+            let canonical = frontMatter.string("canonical")?.emptyToNil
             
-            
-            
-            
+
             let assetsUrl = dirUrl
                 .appendingPathComponent(assetsPath ?? id)
             
@@ -162,7 +162,9 @@ struct SourceMaterialLoader {
                 data: data,
                 frontMatter: frontMatter,
                 markdown: rawMarkdown.dropFrontMatter(),
-                assets: assets
+                assets: assets,
+                noindex: noindex,
+                canonical: canonical
             )
         }
         catch {

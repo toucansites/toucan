@@ -101,18 +101,6 @@ struct Site {
         return contents.config.site.baseUrl + components.joined(separator: "/") + "/"
     }
     
-    func metadata(
-        for material: SourceMaterial
-    ) -> Context.Metadata {
-        .init(
-            slug: material.slug,
-            permalink: permalink(material.slug),
-            title: material.title,
-            description: material.description,
-            imageUrl: material.imageUrl().map { permalink($0) }
-        )
-    }
-    
     func render(
         material: SourceMaterial
     ) -> String {
@@ -130,10 +118,12 @@ struct Site {
     }
     
     // MARK: - context helpers
-    
+
     func getOutputHTMLContext<T>(
         material: SourceMaterial,
-        context: T
+        context: T,
+        prev: String? = nil,
+        next: String? = nil
     ) -> HTML<T> {
         let renderer = MarkdownToHTMLRenderer(
             delegate: HTMLRendererDelegate(
@@ -155,7 +145,11 @@ struct Site {
                     permalink: permalink(material.slug),
                     title: material.title,
                     description: material.description,
-                    imageUrl: material.imageUrl().map { permalink($0) }
+                    imageUrl: material.imageUrl().map { permalink($0) },
+                    noindex: contents.config.site.noindex || material.noindex,
+                    canonical: material.canonical ?? permalink(material.slug),
+                    prev: prev,
+                    next: next
                 ),
                 css: material.cssUrls(),
                 js: material.jsUrls(),

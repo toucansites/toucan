@@ -343,9 +343,21 @@ struct OutputRenderer {
         for (index, postsChunk) in pages.enumerated() {
             let pageNumber = index + 1
             
+            
+            
             let title = replace(pageNumber, posts.title)
             let description = replace(pageNumber, posts.description)
             let slug = replace(pageNumber, posts.slug)
+            
+            var prev: String? = nil
+            if index > 0 {
+                prev = replace(pageNumber - 1, posts.slug)
+            }
+            
+            var next: String? = nil
+            if index < pages.count - 1 {
+                next = replace(pageNumber + 1, posts.slug)
+            }
 
             let material = posts.updated(
                 title: title,
@@ -368,7 +380,9 @@ struct OutputRenderer {
                                 isCurrent: pageNumber == $0
                             )
                         }
-                )
+                ),
+                prev: prev.map { site.permalink($0) },
+                next: next.map { site.permalink($0) }
             )
 
             let r = Renderable<HTML<Context.Blog.Post.ListPage>>(

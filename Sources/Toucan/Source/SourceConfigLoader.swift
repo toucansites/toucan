@@ -44,13 +44,15 @@ struct SourceConfigLoader {
         let desc = dict.string("description")
         let lang = dict.string("language")
         let dateFormat = dict.string("dateFormat")
+        let noindex = dict.value("noindex", as: Bool.self) ?? false
         
         return .init(
             baseUrl: siteBaseUrl,
             title: title ?? "",
             description: desc ?? "",
             language: lang,
-            dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss"
+            dateFormat: dateFormat ?? "yyyy-MM-dd HH:mm:ss",
+            noindex: noindex
         )
     }
     

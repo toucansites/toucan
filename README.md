@@ -9,7 +9,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 - draft content:
     draft: true -> not being rendered.
 
-- noindex tag support:
++ noindex tag support (site + page level):
     noindex: true
     <meta name="robots" content="noindex">
     
@@ -19,7 +19,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
     
     filter posts based on actual date.
 
-- canonical url support:
++ canonical url support:
     self-referencing by default:
         <link rel="canonical" href="https://example.com/" />
     override:
