@@ -132,8 +132,17 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     mutating func visitHeading(
         _ heading: Heading
     ) -> Result {
-        tag(
+        
+        var attributes: [Attribute] = []
+        if [2, 3].contains(heading.level) {
+            let fragment = heading.plainText.lowercased().slugify()
+            let id = Attribute(key: "id", value: "\(fragment)")
+            attributes.append(id)
+            
+        }
+        return tag(
             name: "h\(heading.level)",
+            attributes: attributes,
             content: .children(heading.children)
         )
     }

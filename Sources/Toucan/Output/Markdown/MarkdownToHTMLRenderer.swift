@@ -48,4 +48,15 @@ public struct MarkdownToHTMLRenderer {
 
         return htmlVisitor.visitDocument(document)
     }
+    
+    public func toc(
+        markdown: String
+    ) -> [ToC] {
+        let document = Document(
+            parsing: markdown
+        )
+        var tocVisitor = MarkupToToCVisitor()
+
+        return tocVisitor.visitDocument(document)
+    }
 }

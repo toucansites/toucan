@@ -136,6 +136,13 @@ struct Site {
             )
         )
         
+        let toc = renderer.toc(markdown: material.markdown)
+        
+        
+        let tree = ToCTree.buildToCTree(from: toc)
+        
+        print(tree)
+        
         return .init(
             site: .init(
                 baseUrl: contents.config.site.baseUrl,
@@ -168,7 +175,8 @@ struct Site {
                 context: context,
                 content: renderer.render(
                     markdown: material.markdown
-                )
+                ),
+                toc: tree
             ),
             userDefined: contents.config.userDefined
                 .recursivelyMerged(with: material.userDefined),

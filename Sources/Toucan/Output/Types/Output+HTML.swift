@@ -14,6 +14,7 @@ struct HTML<T>: Output {
         let data: [Any]
         let context: C
         let content: String
+        let toc: [ToCTree]
     }
 
     let site: Context.Site

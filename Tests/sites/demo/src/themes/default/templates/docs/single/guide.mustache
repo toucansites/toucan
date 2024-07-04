@@ -56,14 +56,25 @@
     <div class="right">
         <aside>
             <h3>Table of Contents</h3>
+            {{#empty(page.toc)}}
+            Empty.
+            {{/empty(page.toc)}}
+            {{^empty(page.toc)}}
+            <div>
             <ul>
-                <li>Lorem</li>
+            {{#page.toc}}
                 <li>
+                    <a href="#{{fragment}}">{{text}}</a>
                     <ul>
-                        <li>ipsum</li>
+                    {{#children}}
+                        <li><a href="#{{fragment}}">{{text}}</a></li>
+                    {{/children}}
                     </ul>
                 </li>
+            {{/page.toc}}
             </ul>
+            </div>
+            {{/empty(page.toc)}}
         </aside>
     </div>
 </div>
