@@ -2,34 +2,14 @@
 {{$main}}
 <div class="content-with-sidebars">
     <div class="left">
-        <aside class="left">
-            {{#empty(page.context.categories)}}
-            Empty.
-            {{/empty(page.context.categories)}}
-            {{^empty(page.context.categories)}}
-            <div>
-            <ul>
-            {{#page.context.categories}}
-                <li>
-                    <a href="{{permalink}}">{{title}}</a>
-                    <ul>
-                    {{#guides}}
-                        <li><a href="{{permalink}}">{{title}}</a></li>
-                    {{/guides}}
-                    </ul>
-                </li>
-            {{/page.context.categories}}
-            </ul>
-            </div>
-            {{/empty(page.context.categories)}}
-        </aside>
+        {{> docs.blocks.nav}}
     </div>
     <div class="center">
         <article>
             <a href="/docs/">Docs home</a>
             {{& page.content}}
         
-            <h2>Guides</h2>
+            <h4>Guides</h4>
             {{#page.context.category.guides}}
                 <li>
                     <a href="{{permalink}}">{{title}}</a>
@@ -39,17 +19,7 @@
         </article>
     </div>
     <div class="right">
-        <aside>
-            <h3>Table of Contents</h3>
-            <ul>
-                <li>Lorem</li>
-                <li>
-                    <ul>
-                        <li>ipsum</li>
-                    </ul>
-                </li>
-            </ul>
-        </aside>
+        {{> docs.blocks.toc}}
     </div>
 </div>
 {{/main}}

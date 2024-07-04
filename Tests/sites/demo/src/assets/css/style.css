@@ -40,7 +40,7 @@ footer img {
 
 
 
-h2 {
+h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
 }
 
@@ -53,13 +53,14 @@ h2 {
 }
 
 .content-with-sidebars .left {
-/*    background: red;*/
-}
-.content-with-sidebars .center {
 /*    background: #fff;*/
 }
+.content-with-sidebars .center {
+    background: #fff;
+    padding: 30px;
+}
 .content-with-sidebars .right {
-/*    background: blue;*/
+/*    background: #fff;*/
 }
 
 @media screen and (min-width: 600px) {

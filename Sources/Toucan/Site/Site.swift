@@ -136,12 +136,9 @@ struct Site {
             )
         )
         
+        // TODO: make this better
         let toc = renderer.toc(markdown: material.markdown)
-        
-        
         let tree = ToCTree.buildToCTree(from: toc)
-        
-        print(tree)
         
         return .init(
             site: .init(

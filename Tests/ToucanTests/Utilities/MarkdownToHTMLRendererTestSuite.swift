@@ -65,7 +65,7 @@ struct MarkdownToHTMLRendererTestSuite {
         let output = renderer.render(markdown: input)
 
         let expectation = #"""
-            <p>Lorem ipsum</p><hr><h2>dolor</h2><p>sit</p><hr><p>amet.</p>
+            <p>Lorem ipsum</p><hr><h2 id="dolor">dolor</h2><p>sit</p><hr><p>amet.</p>
             """#
 
         #expect(output == expectation)
@@ -171,7 +171,7 @@ struct MarkdownToHTMLRendererTestSuite {
         let output = renderer.render(markdown: input)
 
         let expectation = #"""
-            <h2>Lorem ipsum dolor sit amet.</h2>
+            <h2 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h2>
             """#
 
         #expect(output == expectation)
@@ -188,7 +188,7 @@ struct MarkdownToHTMLRendererTestSuite {
         let output = renderer.render(markdown: input)
 
         let expectation = #"""
-            <h3>Lorem ipsum dolor sit amet.</h3>
+            <h3 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h3>
             """#
 
         #expect(output == expectation)
