@@ -57,6 +57,7 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 - toucan website
 - file watcher
 - web server & preview
+- schema.org + json-ld support
 
 
 ### 2.0

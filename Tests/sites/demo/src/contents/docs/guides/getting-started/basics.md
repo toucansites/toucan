@@ -1,11 +1,11 @@
 ---
-title: First
-description: Ipsum
-category: installation
+title: Basics
+description: Basics
+category: getting-started
 order: 1
 ---
 
-# First guide
+# Basics
 
 Lorem ipsum dolor sit amet 1
 

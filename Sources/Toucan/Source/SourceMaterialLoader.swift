@@ -39,16 +39,24 @@ struct SourceMaterialLoader {
     private
     func loadMaterial(
         at url: URL,
+        baseUrl: URL,
         slugPrefix: String?,
         template: String
     ) throws(Self.Error) -> SourceMaterial? {
         guard fileManager.fileExists(at: url) else {
             return nil
         }
+
         do {
+            let cmp = url.pathComponents.dropFirst(baseUrl.pathComponents.count)
             let fileName = url.lastPathComponent
             let location = String(url.path.dropLast(fileName.count))
-            let id = fileName.droppingEverythingAfterLastOccurrence(of: ".")
+
+            var id = fileName
+            if !cmp.isEmpty {
+                id = cmp.joined(separator: "/")
+            }
+            id = id.droppingEverythingAfterLastOccurrence(of: ".")
             let lastModification = try fileManager.modificationDate(at: url)
             
             let dirUrl = URL(fileURLWithPath: location)
@@ -257,10 +265,14 @@ struct SourceMaterialLoader {
         slugPrefix: String?,
         template: String
     ) throws(Self.Error) -> SourceMaterial? {
-        try loadMaterial(
+        let baseUrl = contentsUrl
+            .appendingPathComponent(path)
+
+        return try loadMaterial(
             at: markdownUrl(
                 using: path
             ),
+            baseUrl: baseUrl,
             slugPrefix: slugPrefix,
             template: template
         )
@@ -282,6 +294,7 @@ struct SourceMaterialLoader {
             .compactMap {
                 try? loadMaterial(
                     at: $0,
+                    baseUrl: customPagesDirectoryUrl,
                     slugPrefix: config.slugPrefix,
                     template: template
                 )

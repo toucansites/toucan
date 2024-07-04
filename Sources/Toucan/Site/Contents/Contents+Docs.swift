@@ -63,7 +63,7 @@ extension Site.Contents {
                 self.material = material
                 self.order = material.frontMatter["order"] as? Int ?? 0
                 guard let c = material.frontMatter["category"] as? String else {
-                    fatalError("Missing docs category")
+                    fatalError("Missing docs category for `\(material.slug)`.")
                 }
                 self.category = c.safeSlug(
                     prefix: config.contents.docs.categories.slugPrefix

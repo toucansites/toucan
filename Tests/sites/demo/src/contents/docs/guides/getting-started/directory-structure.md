@@ -1,11 +1,11 @@
 ---
-title: Fourth guide
-description: Ipsum
+title: Directory structure
+description: Directory structure
 category: getting-started
 order: 2
 ---
 
-# Fourth guide
+# Directory structure
 
 Lorem ipsum dolor sit amet 4
 

@@ -52,10 +52,10 @@ contents:
     docs:
         categories:
             folder: "docs/categories"
-            slugPrefix: "docs/categories"
+            slugPrefix: "docs"
         guides:
             folder: "docs/guides"
-            slugPrefix: "docs/guides"
+            slugPrefix: "docs"
     pages:
         custom:
             folder: "pages/custom"

@@ -1,10 +1,10 @@
 ---
-title: Third
-description: Ipsum
+title: Commands
+description: Commands
 category: getting-started
-order: 1
+order: 4
 ---
 
-# Third guide
+# Commands
 
 Lorem ipsum dolor sit amet 3
