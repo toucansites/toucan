@@ -835,11 +835,6 @@ a.card {
     user-select: none;
 }
 
-.left { text-align: left; }
-.center { text-align: center; }
-.right { text-align: right; }
-.uppercase { text-transform: uppercase; }
-
 .separator::after {
     content: "...";
     font-size: var(--font-size-4xl);

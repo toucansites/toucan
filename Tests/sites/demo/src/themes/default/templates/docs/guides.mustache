@@ -1,50 +1,64 @@
+
 {{<index}}
 {{$main}}
+<div class="content-with-sidebars">
+    <div class="left">
+        <aside class="left">
+            {{#empty(page.context.categories)}}
+            Empty.
+            {{/empty(page.context.categories)}}
+            {{^empty(page.context.categories)}}
+            <div>
+            <ul>
+            {{#page.context.categories}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                    <ul>
+                    {{#guides}}
+                        <li><a href="{{permalink}}">{{title}}</a></li>
+                    {{/guides}}
+                    </ul>
+                </li>
+            {{/page.context.categories}}
+            </ul>
+            </div>
+            {{/empty(page.context.categories)}}
+        </aside>
+    </div>
+    <div class="center">
+        <article>
+            {{& page.content}}
 
-<aside>
-<h2>Docs</h2>
-{{#empty(page.context.categories)}}
-Empty.
-{{/empty(page.context.categories)}}
-{{^empty(page.context.categories)}}
-<div>
-<ul>
-{{#page.context.categories}}
-    <li>
-        <a href="{{permalink}}">{{title}}</a>
-        <ul>
-        {{#guides}}
-            <li><a href="{{permalink}}">{{title}}</a></li>
-        {{/guides}}
-        </ul>
-    </li>
-{{/page.context.categories}}
-</ul>
+            {{#empty(page.context.categories)}}
+            Empty.
+            {{/empty(page.context.categories)}}
+            {{^empty(page.context.categories)}}
+            <div>
+            <ul>
+            {{#page.context.guides}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                </li>
+            {{/page.context.guides}}
+            </ul>
+            </div>
+            {{/empty(page.context.categories)}}
+
+        </article>
+    </div>
+    <div class="right">
+        <aside>
+            <h3>Table of Contents</h3>
+            <ul>
+                <li>Lorem</li>
+                <li>
+                    <ul>
+                        <li>ipsum</li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+    </div>
 </div>
-{{/empty(page.context.categories)}}
-</aside>
-
-
-
-<article>
-{{& page.content}}
-</article>
-
-{{#empty(page.context.guides)}}
-Empty.
-{{/empty(page.context.guides)}}
-{{^empty(page.context.guides)}}
-<div>
-<ul>
-{{#page.context.guides}}
-    <li>
-        <a href="{{permalink}}">{{title}}</a>
-    </li>
-{{/page.context.guides}}
-</ul>
-</div>
-{{/empty(page.context.guides)}}
-
-
 {{/main}}
 {{/index}}

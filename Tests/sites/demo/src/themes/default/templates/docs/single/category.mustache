@@ -1,48 +1,56 @@
 {{<index}}
 {{$main}}
+<div class="content-with-sidebars">
+    <div class="left">
+        <aside class="left">
+            {{#empty(page.context.categories)}}
+            Empty.
+            {{/empty(page.context.categories)}}
+            {{^empty(page.context.categories)}}
+            <div>
+            <ul>
+            {{#page.context.categories}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                    <ul>
+                    {{#guides}}
+                        <li><a href="{{permalink}}">{{title}}</a></li>
+                    {{/guides}}
+                    </ul>
+                </li>
+            {{/page.context.categories}}
+            </ul>
+            </div>
+            {{/empty(page.context.categories)}}
+        </aside>
+    </div>
+    <div class="center">
+        <article>
+            <a href="/docs/">Docs home</a>
+            {{& page.content}}
+        
+            <h2>Guides</h2>
+            {{#page.context.category.guides}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                </li>
+            {{/page.context.category.guides}}
 
-<aside>
-<h2>Docs</h2>
-{{#empty(page.context.categories)}}
-Empty.
-{{/empty(page.context.categories)}}
-{{^empty(page.context.categories)}}
-<div>
-<ul>
-{{#page.context.categories}}
-    <li>
-        <a href="{{permalink}}">{{title}}</a>
-        <ul>
-        {{#guides}}
-            <li><a href="{{permalink}}">{{title}}</a></li>
-        {{/guides}}
-        </ul>
-    </li>
-{{/page.context.categories}}
-</ul>
+        </article>
+    </div>
+    <div class="right">
+        <aside>
+            <h3>Table of Contents</h3>
+            <ul>
+                <li>Lorem</li>
+                <li>
+                    <ul>
+                        <li>ipsum</li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+    </div>
 </div>
-{{/empty(page.context.categories)}}
-</aside>
-
-
-
-<article>
-
-{{& page.content}}
-
-<h2>Guides under the category</h2>
-{{#page.context.category.guides}}
-    <li>
-        <a href="{{permalink}}">{{title}}</a>
-    </li>
-{{/page.context.category.guides}}
-
-
-
-
-</article>
-
-
-
 {{/main}}
 {{/index}}

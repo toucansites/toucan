@@ -52,11 +52,13 @@ struct SourceMaterialLoader {
             let fileName = url.lastPathComponent
             let location = String(url.path.dropLast(fileName.count))
 
-            var id = fileName
+            let id = fileName.droppingEverythingAfterLastOccurrence(of: ".")
+            var defaultSlug = id
             if !cmp.isEmpty {
-                id = cmp.joined(separator: "/")
+                defaultSlug = cmp.joined(separator: "/")
+                    .droppingEverythingAfterLastOccurrence(of: ".")
             }
-            id = id.droppingEverythingAfterLastOccurrence(of: ".")
+            
             let lastModification = try fileManager.modificationDate(at: url)
             
             let dirUrl = URL(fileURLWithPath: location)
@@ -127,7 +129,7 @@ struct SourceMaterialLoader {
             
             // MARK: - load material metadata
             
-            let slug = frontMatter.string("slug")?.emptyToNil ?? id
+            let slug = frontMatter.string("slug")?.emptyToNil ?? defaultSlug
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")?.emptyToNil
