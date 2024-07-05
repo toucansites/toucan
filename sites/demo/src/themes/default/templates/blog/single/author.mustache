@@ -15,12 +15,12 @@
 <div id="author-page" class="content wrapper">
     {{#page.context.author}}
     <header>
-        <div class="profile-picture">
-            {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        </div>
+        {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        <br><br>
         <h1>{{title}}</h1>
+        <hr>
         <p>{{description}}</p>
-        <p>Posts: {{numberOfPosts}}</p>    
+        <p>{{numberOfPosts}} posts</p>
     </header>
     {{/page.context.author}}
     

@@ -1,8 +1,8 @@
 :root {
-    --color: #21a9ff;
-    --color-1: #fa3ebe;
-    --color-2: purple;
-    --color-3: #105CD5;
+    --color: #FB9652;
+    --color-1: #f05138; /* hover */
+    --color-2: #E64918; /* active */
+    --color-3: #dc5f00; /* visited */
     
     --bg-color: #fff;
     --bg-color-1: #f5f5f5;
@@ -35,10 +35,10 @@
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        --color: #21a9ff;
-        --color-1: #fa3ebe;
-        --color-2: purple;
-        --color-3: #105CD5;
+        --color: #dc5f00;
+        --color-1: #f05138; /* hover */
+        --color-2: #E64918; /* active */
+        --color-3: #FB9652; /* visited */
 
         --bg-color: #000;
         --bg-color-1: #1a1a1a;
@@ -64,14 +64,13 @@ body {
 #page-container {
     padding: 32px;
 }
+a {
+    
+}
 a:hover, a:active {
     cursor: pointer;
+    text-decoration: none;
 }
-.profile-picture img {
-    width: 128px;
-    border-radius: 64px;
-}
-
 
 footer {
     margin: 32px;
@@ -94,48 +93,107 @@ footer #logo-image {
 
 
 
-.content-with-sidebars {
+#docs {
     display: grid;
     grid-template-columns: 1fr;
 }
-.content-with-sidebars > div {
+#docs > div {
     overflow: hidden;
 }
-.content-with-sidebars .left, .content-with-sidebars .right {
+#docs .left, #docs .right {
     display: none;
 }
 
-.content-with-sidebars .left {
+#docs .left {
     border-right: 1px solid var(--bg-color-2);
     padding: 16px;
 }
-.content-with-sidebars .center {
+#docs .center {
     padding: 0;
 }
-.content-with-sidebars .right {
+#docs .right {
     border-left: 1px solid var(--bg-color-2);
     padding: 16px;
 }
+#docs .left ul {
+    padding-left: 0;
+    margin-top: 0;
+}
+#docs .left ul ul {
+    list-style-type: none;
+    padding-left: 16px;
+}
+#docs .left ul li {
+    list-style-type: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+    
+}
+#docs .left ul ul {
+    margin-top: 8px;
+}
+#docs .left ul .category {
+    margin-top: 28px;
+}
+#docs .left ul .category:first-child {
+    margin-top: 0;
+}
+
+#docs .left aside > ul > li > a {
+    color: var(--text-color-1);
+    font-weight: bold;
+}
+#docs .left ul li a {
+    color: var(--text-color-3);
+}
+#docs .left ul li a:hover {
+    color: var(--color-1);
+}
+
+#docs .right aside {
+    margin-bottom: 16px;
+}
+#docs .right ul {
+    padding-left: 8px;
+}
+#docs .right ul li {
+    font-size: 14px;
+    list-style-type: none;
+    margin-bottom: 8px;
+}
+#docs .right ul ul {
+    margin-top: 8px;
+}
+#docs .right ul .first-level {
+    margin-top: 8px;
+}
+#docs .right a {
+    color: var(--text-color-3);
+}
+#docs .right ul a:hover {
+    color: var(--text-color-1);
+}
+
 
 
 @media screen and (min-width: 600px) {
-    .content-with-sidebars {
+    #docs {
         display: grid;
         grid-template-columns: 2fr 4fr;
     }
-    .content-with-sidebars .center {
+    #docs .center {
         padding: 16px 32px;
     }
-    .content-with-sidebars .left {
+    #docs .left {
         display: block;
     }
 }
 @media screen and (min-width: 900px) {
-    .content-with-sidebars {
+    #docs {
         display: grid;
         grid-template-columns: 1fr 3fr 1fr;
     }
-    .content-with-sidebars .right {
+    #docs .right {
         display: block;
     }
 }
@@ -146,3 +204,94 @@ footer #logo-image {
 }
 @media screen and (min-width: 1800px) {
 }
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+hr {
+    border: none;
+    border-bottom: 4px solid var(--color);
+    width: 64px;
+}
+body {
+    font-size: 18px;
+    
+}
+h1 {
+    font-size: 48px;
+    font-weight: 800;
+}
+h2 {
+    font-size: 36px;
+}
+h3 {
+    font-size: 28px;
+}
+h4 {
+    font-size: 24px;
+}
+h5 {
+    font-size: 20px;
+}
+h6 {
+    font-size: 18px;
+}
+p {
+    font-size: 18px;
+    line-height: 1.5rem;
+    color: var(--text-color-2);
+    margin-bottom: 32px;
+}
+
+img.small {
+    width: 32px;
+}
+img.medium {
+    width: 64px;
+}
+img.large {
+    width: 128px;
+}
+img.rounded {
+    border-radius: 50%;
+}
+
+a:hover, a:active {
+    cursor: pointer;
+}
+a:link {
+    color: var(--color);
+}
+a:active {
+    color: var(--color-2);
+}
+a:visited {
+    color: var(--color-3);
+}
+a:hover {
+    color: var(--color-1);
+}
+a.selected {
+    color: var(--color-2);
+}
+
+
+#tag header img {
+    margin-bottom: 8px;
+}
+
+.card {
+    padding: 16px;
+    border: 1px solid var(--bg-color-2);
+}
+
+.card:hover {
+    border: 1px solid var(--bg-color-3);
+    background: var(--bg-color-1);
+}
+.card h2 {
+    color: var(--text-color);
+}
+

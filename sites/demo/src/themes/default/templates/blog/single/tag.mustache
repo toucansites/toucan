@@ -1,21 +1,19 @@
 {{<index}}
 {{$main}}
 
-<div id="posts" class="wrapper">
+<div id="tag">
     {{#page.context.tag}}
     <header>
-        <div class="profile-picture">
-            {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        </div>
+        {{#imageUrl}}<img class="medium" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <h1>{{title}}</h1>
+        <hr>
         <p>{{description}}</p>
-        <p>Posts: {{numberOfPosts}}</p>
+        <p>{{numberOfPosts}} posts</p>
     </header>
     {{/page.context.tag}}
 
 
     {{& page.content}}
-    
     
     {{#empty(page.context.posts)}}
     Empty.

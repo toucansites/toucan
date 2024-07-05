@@ -1,28 +1,8 @@
 {{<index}}
 {{$main}}
-<div class="content-with-sidebars">
+<div id="docs">
     <div class="left">
-        <aside>
-            {{#empty(page.context.categories)}}
-            Empty.
-            {{/empty(page.context.categories)}}
-            {{^empty(page.context.categories)}}
-            <div>
-            <ul>
-            {{#page.context.categories}}
-                <li>
-                    <a href="{{permalink}}">{{title}}</a>
-                    <ul>
-                    {{#guides}}
-                        <li><a href="{{permalink}}">{{title}}</a></li>
-                    {{/guides}}
-                    </ul>
-                </li>
-            {{/page.context.categories}}
-            </ul>
-            </div>
-            {{/empty(page.context.categories)}}
-        </aside>
+        {{> docs.blocks.categories }}
     </div>
     <div class="center">
         <article>
@@ -54,28 +34,7 @@
         </article>
     </div>
     <div class="right">
-        <aside>
-            <h3>Table of Contents</h3>
-            {{#empty(page.toc)}}
-            Empty.
-            {{/empty(page.toc)}}
-            {{^empty(page.toc)}}
-            <div>
-            <ul>
-            {{#page.toc}}
-                <li>
-                    <a href="#{{fragment}}">{{text}}</a>
-                    <ul>
-                    {{#children}}
-                        <li><a href="#{{fragment}}">{{text}}</a></li>
-                    {{/children}}
-                    </ul>
-                </li>
-            {{/page.toc}}
-            </ul>
-            </div>
-            {{/empty(page.toc)}}
-        </aside>
+        {{> blocks.toc }}
     </div>
 </div>
 {{/main}}

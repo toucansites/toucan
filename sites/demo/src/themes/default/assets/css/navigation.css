@@ -43,6 +43,9 @@
     padding: 16px;
     border-top: 0.5px solid var(--bg-color-3);
 }
+#navigation .menu-items a:hover {
+    color: var(--color-1)
+}
 #navigation input:checked ~ .menu-items {
     max-height: 999px;
 }
