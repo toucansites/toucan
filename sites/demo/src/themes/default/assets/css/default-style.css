@@ -1,0 +1,148 @@
+:root {
+    --color: #21a9ff;
+    --color-1: #fa3ebe;
+    --color-2: purple;
+    --color-3: #105CD5;
+    
+    --bg-color: #fff;
+    --bg-color-1: #f5f5f5;
+    --bg-color-2: #efefef;
+    --bg-color-3: #e0e0e0;
+    --bg-color-4: #afafaf;
+    
+    --text-color: #333;
+    --text-color-1: #000;
+    --text-color-2: #666;
+    --text-color-3: #999;
+
+    --white-color: #ffffff;
+    --black-color: #000000;
+}
+@media screen and (min-width: 600px) {
+    
+}
+@media screen and (min-width: 900px) {
+    
+}
+@media screen and (min-width: 1200px) {
+    
+}
+@media screen and (min-width: 1500px) {
+    
+}
+@media screen and (min-width: 1800px) {
+    
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color: #21a9ff;
+        --color-1: #fa3ebe;
+        --color-2: purple;
+        --color-3: #105CD5;
+
+        --bg-color: #000;
+        --bg-color-1: #1a1a1a;
+        --bg-color-2: #262626;
+        --bg-color-3: #333333;
+        --bg-color-4: #606060;
+        
+        --text-color: #c9c9c9;
+        --text-color-1: #f0f0f0;
+        --text-color-2: #999;
+        --text-color-3: #ccc;
+    }
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+#page-container {
+    padding: 32px;
+}
+a:hover, a:active {
+    cursor: pointer;
+}
+.profile-picture img {
+    width: 128px;
+    border-radius: 64px;
+}
+
+
+footer {
+    margin: 32px;
+    border-top: 0.5px solid var(--bg-color-3);
+    padding-top: 16px;
+}
+footer #logo-image {
+    height: 32px;
+}
+
+
+.selection-off {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+
+.content-with-sidebars {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+.content-with-sidebars > div {
+    overflow: hidden;
+}
+.content-with-sidebars .left, .content-with-sidebars .right {
+    display: none;
+}
+
+.content-with-sidebars .left {
+    border-right: 1px solid var(--bg-color-2);
+    padding: 16px;
+}
+.content-with-sidebars .center {
+    padding: 0;
+}
+.content-with-sidebars .right {
+    border-left: 1px solid var(--bg-color-2);
+    padding: 16px;
+}
+
+
+@media screen and (min-width: 600px) {
+    .content-with-sidebars {
+        display: grid;
+        grid-template-columns: 2fr 4fr;
+    }
+    .content-with-sidebars .center {
+        padding: 16px 32px;
+    }
+    .content-with-sidebars .left {
+        display: block;
+    }
+}
+@media screen and (min-width: 900px) {
+    .content-with-sidebars {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+    .content-with-sidebars .right {
+        display: block;
+    }
+}
+@media screen and (min-width: 1200px) {
+    
+}
+@media screen and (min-width: 1500px) {
+}
+@media screen and (min-width: 1800px) {
+}
