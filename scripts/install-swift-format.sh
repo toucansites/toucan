@@ -7,9 +7,9 @@ fatal() { error "$@"; exit 1; }
 
 # https://github.com/apple/swift-format
 
-VERSION="509.0.0"
+VERSION="510.1.0"
 
-curl -L -o "${VERSION}.tar.gz" "https://github.com/apple/swift-format/archive/refs/tags/${VERSION}.tar.gz"
+curl -L -o "${VERSION}.tar.gz" "https://github.com/swiftlang/swift-format/archive/refs/tags/${VERSION}.tar.gz"
 tar -xf "${VERSION}.tar.gz"
 cd "swift-format-${VERSION}"
 swift build -c release

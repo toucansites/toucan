@@ -1,0 +1,82 @@
+{{<index}}
+{{$main}}
+<div class="content-with-sidebars">
+    <div class="left">
+        <aside class="left">
+            {{#empty(page.context.categories)}}
+            Empty.
+            {{/empty(page.context.categories)}}
+            {{^empty(page.context.categories)}}
+            <div>
+            <ul>
+            {{#page.context.categories}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                    <ul>
+                    {{#guides}}
+                        <li><a href="{{permalink}}">{{title}}</a></li>
+                    {{/guides}}
+                    </ul>
+                </li>
+            {{/page.context.categories}}
+            </ul>
+            </div>
+            {{/empty(page.context.categories)}}
+        </aside>
+    </div>
+    <div class="center">
+        <article>
+            {{#page.context.guide.category}}
+            <a href="{{permalink}}">{{title}}</a>
+            {{/page.context.guide.category}}
+            {{& page.content}}
+
+        
+            <div class="">
+                {{^page.context.guide.prev}}
+                {{/page.context.guide.prev}}
+                {{#page.context.guide.prev}}
+                    Prev: <br>
+                    {{category.title}}<br>
+                    <a href="{{permalink}}">{{title}}</a>
+                {{/page.context.guide.prev}}
+                <br>
+                <br>
+                {{^page.context.guide.next}}
+                {{/page.context.guide.next}}
+                {{#page.context.guide.next}}
+                    Next: <br>
+                    {{category.title}}<br>
+                    <a href="{{permalink}}">{{title}}</a>
+                {{/page.context.guide.next}}
+
+            </div>
+        </article>
+    </div>
+    <div class="right">
+        <aside>
+            <h3>Table of Contents</h3>
+            {{#empty(page.toc)}}
+            Empty.
+            {{/empty(page.toc)}}
+            {{^empty(page.toc)}}
+            <div>
+            <ul>
+            {{#page.toc}}
+                <li>
+                    <a href="#{{fragment}}">{{text}}</a>
+                    <ul>
+                    {{#children}}
+                        <li><a href="#{{fragment}}">{{text}}</a></li>
+                    {{/children}}
+                    </ul>
+                </li>
+            {{/page.toc}}
+            </ul>
+            </div>
+            {{/empty(page.toc)}}
+        </aside>
+    </div>
+</div>
+{{/main}}
+{{/index}}

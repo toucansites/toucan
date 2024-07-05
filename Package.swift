@@ -4,57 +4,50 @@ import PackageDescription
 let package = Package(
     name: "toucan",
     platforms: [
-        .macOS(.v13),
-        .iOS(.v16),
-        .tvOS(.v16),
-        .watchOS(.v9),
+        .macOS(.v14),
+        .iOS(.v17),
+        .tvOS(.v17),
+        .watchOS(.v10),
         .visionOS(.v1),
     ],
     products: [
         .executable(name: "toucan-cli", targets: ["toucan-cli"]),
-        .library(name: "Toucan", targets: ["Toucan"]),
+        .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
-        .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-algorithms", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
         .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.1"),
-        .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
-        .package(url: "https://github.com/apple/swift-testing", from: "0.10.0"),
+        .package(url: "https://github.com/jpsim/Yams", from: "5.0.0"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0-rc.1"),
+        .package(url: "https://github.com/eonil/FSEvents", branch: "master"),
     ],
     targets: [
+        .executableTarget(
+            name: "toucan-cli",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Hummingbird", package: "hummingbird"),
+                .product(name: "EonilFSEvents", package: "FSEvents"),
+                .target(name: "ToucanSDK"),
+            ]
+        ),
         .target(
-            name: "Toucan",
+            name: "ToucanSDK",
             dependencies: [
                 .product(name: "Algorithms", package: "swift-algorithms"),
                 .product(name: "Markdown", package: "swift-markdown"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "Yams", package: "yams"),
-            ],
-            swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
-            ]
-        ),
-        .executableTarget(
-            name: "toucan-cli",
-            dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .target(name: "Toucan"),
-            ],
-            swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
             ]
         ),
         .testTarget(
-            name: "ToucanTests",
+            name: "ToucanSDKTests",
             dependencies: [
-                .target(name: "Toucan"),
-                .product(name: "Testing", package: "swift-testing"),
-            ],
-            swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
+                .target(name: "ToucanSDK"),
             ]
         )
     ]
