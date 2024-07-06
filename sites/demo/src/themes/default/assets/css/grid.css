@@ -1,86 +1,32 @@
-.grid-2,
-.grid-3,
-.grid-4
-.grid-5,
-.grid-6,
-.grid-9,
-.grid-221,
-.grid-321,
-.grid-421 {
+.grid {
     display: grid;
     column-gap: 32px;
     row-gap: 32px;
-}
-.grid-2 > *, .grid-3 > *, .grid-4 > *, .grid-5 > *, .grid-6 > *, .grid-9, .grid-221 > *, .grid-321 > *, .grid-421 {
     grid-column: span 1;
-}
-.grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
-.grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-.grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-.grid-5 {
-    grid-template-columns: repeat(5, 1fr);
-}
-.grid-6 {
-    grid-template-columns: repeat(6, 1fr);
-}
-.grid-9 {
-    grid-template-columns: repeat(9, 1fr);
-}
-.grid-221,
-.grid-321,
-.grid-421 {
     grid-template-columns: repeat(1, 1fr);
 }
+.grid.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+.grid.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+.grid.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
 @media screen and (min-width: 600px) {
-    .grid-221, .grid-321, .grid-421 {
+    .grid.grid-221, .grid.grid-321, .grid.grid-421 {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 @media screen and (min-width: 900px) {
-    .grid-221 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .grid-321 {
+    .grid.grid-211 {
         grid-template-columns: repeat(3, 1fr);
     }
-    .grid-421 {
+    .grid.grid-311, .grid.grid-321 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .grid.grid-411,.grid.grid-421 {
         grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-
-.grid-6 {
-    grid-template-columns: repeat(6, 1fr);
-}
-.grid-6 > * {
-    grid-column: span 6;
-}
-@media screen and (min-width: 600px) {
-    .grid-6 .card:first-child {
-        grid-column: span 2;
-    }
-    .grid-6 > * {
-        grid-column: span 3;
-    }
-    .grid-6 .card:first-child {
-        grid-column: span 6;
-    }
-    
-}
-@media screen and (min-width: 900px) {
-    .grid-6 > * {
-        grid-column: span 2;
-    }
-    .grid-6 > .card:first-child {
-        grid-column: span 3;
-    }
-    .grid-6 .card:nth-child(2) {
-        grid-column: span 3;
     }
 }

@@ -202,7 +202,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
 //        print(blockName, "-----------------------")
         switch blockName {
         case "grid":
-            var cssClass = "grid-"
+            var cssClass = "grid grid-"
             for argument in arguments {
 //                print(argument.name, argument.value)
                 cssClass += argument.value

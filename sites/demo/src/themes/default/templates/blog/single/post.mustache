@@ -33,7 +33,7 @@
     </section>
     
     <section>
-    <div class="grid-221">
+    <div class="grid grid-221">
     {{^page.context.prev}}
     <div></div>
     {{/page.context.prev}}
@@ -64,7 +64,7 @@
     {{^empty(page.context.related)}}
     <h4>Related posts</h4>
     <hr class="spacer">
-    <div class="grid-221">
+    <div class="grid grid-221">
     {{#page.context.related}}
         {{> blog.blocks.post}}
     {{/page.context.related}}
@@ -78,7 +78,7 @@
     {{^empty(page.context.moreByAuthor)}}
     <h4>More posts by the author(s)</h4>
     <hr class="spacer">
-    <div class="grid-221">
+    <div class="grid grid-221">
     {{#page.context.moreByAuthor}}
         {{> blog.blocks.post}}
     {{/page.context.moreByAuthor}}

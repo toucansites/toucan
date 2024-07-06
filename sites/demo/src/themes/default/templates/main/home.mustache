@@ -23,7 +23,7 @@
     Empty.
     {{/empty(page.context.featured)}}
     {{^empty(page.context.featured)}}
-    <div class="grid-321">
+    <div class="grid grid-321">
     {{#page.context.featured}}
         {{> blog.blocks.post}}
     {{/page.context.featured}}
@@ -36,7 +36,7 @@
     Empty.
     {{/empty(page.context.posts)}}
     {{^empty(page.context.posts)}}
-    <div class="grid-321">
+    <div class="grid grid-321">
     {{#page.context.posts}}
         {{> blog.blocks.post}}
     {{/page.context.posts}}
@@ -48,7 +48,7 @@
     Empty.
     {{/empty(page.context.authors)}}
     {{^empty(page.context.authors)}}
-        <div class="grid-321">
+        <div class="grid grid-321">
     {{#page.context.authors}}
         {{> blog.blocks.author}}
     {{/page.context.authors}}
@@ -60,7 +60,7 @@
     Empty.
     {{/empty(page.context.tags)}}
     {{^empty(page.context.tags)}}
-        <div class="grid-321">
+        <div class="grid grid-321">
     {{#page.context.tags}}
         {{> blog.blocks.tag}}
     {{/page.context.tags}}
