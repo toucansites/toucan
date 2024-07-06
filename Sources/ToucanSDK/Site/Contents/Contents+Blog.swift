@@ -163,7 +163,7 @@ extension Site.Contents {
             Array(posts.prefix(limit))
         }
 
-        func featuredPosts(limit: Int = 5) -> [Post] {
+        func featuredPosts(limit: Int = 6) -> [Post] {
             Array(
                 posts
                     .filter { $0.featured }
@@ -196,7 +196,7 @@ extension Site.Contents {
         }
         
         /// posts from the same tags
-        func related(post: Post, limit: Int = 5) -> [Post] {
+        func related(post: Post, limit: Int = 4) -> [Post] {
             var result: [Post] = []
             for tagSlug in post.tags {
                 result += posts
@@ -211,7 +211,7 @@ extension Site.Contents {
         }
         
         /// posts from the same author
-        func more(post: Post, limit: Int = 5) -> [Post] {
+        func more(post: Post, limit: Int = 4) -> [Post] {
             var result: [Post] = []
             for authorSlug in post.authors {
                 result += posts

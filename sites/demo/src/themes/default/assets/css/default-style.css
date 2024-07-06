@@ -205,6 +205,9 @@ footer #logo-image {
 @media screen and (min-width: 1800px) {
 }
 
+section {
+    margin-bottom: 64px;
+}
 h1, h2, h3, h4, h5, h6 {
     margin-bottom: 8px;
     font-weight: 800;
@@ -214,6 +217,9 @@ hr {
     border: none;
     border-bottom: 4px solid var(--color);
     width: 64px;
+}
+hr.spacer {
+    border: none;
 }
 body {
     font-size: 18px;
@@ -283,6 +289,7 @@ a.selected {
 }
 
 .card {
+    position: relative;
     padding: 16px;
     border: 1px solid var(--bg-color-2);
 }
@@ -294,4 +301,66 @@ a.selected {
 .card h2 {
     color: var(--text-color);
 }
+.card img {
+    margin-bottom: 8px;
+}
+.tag-list a {
+    font-weight: bold;
+}
+time {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color);
+}
+.card .featured {
+    position: absolute;
+    top: 8px;
+    right: -8px;
+    background: #6600CC;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
 
+article.post {
+    margin: 0 auto;
+    max-width: 680px;
+}
+article.post header {
+    margin-bottom: 64px;
+}
+
+.fixed-toc {
+    display: none;
+    position: fixed;
+    top: 96px;
+    right: 32px;
+    background: var(--bg-color-1);
+    padding: 16px;
+    border: 1px solid var(--bg-color-2);
+}
+.fixed-toc {
+    font-size: 16px;
+}
+.fixed-toc ul {
+    list-style-type: none;
+    padding-left: 16px;
+}
+.fixed-toc ul ul {
+    margin-top: 8px;
+}
+.fixed-toc ul li {
+    margin-bottom: 8px;
+}
+.fixed-toc ul .first-level {
+    margin-top: 8px;
+}
+.fixed-toc a {
+    color: var(--text-color-3);
+}
+.fixed-toc ul a:hover {
+    color: var(--text-color-1);
+}

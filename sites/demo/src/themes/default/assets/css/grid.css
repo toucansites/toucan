@@ -8,8 +8,8 @@
 .grid-321,
 .grid-421 {
     display: grid;
-    column-gap: 16px;
-    row-gap: 16px;
+    column-gap: 32px;
+    row-gap: 32px;
 }
 .grid-2 > *, .grid-3 > *, .grid-4 > *, .grid-5 > *, .grid-6 > *, .grid-9, .grid-221 > *, .grid-321 > *, .grid-421 {
     grid-column: span 1;

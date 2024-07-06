@@ -1,75 +1,89 @@
 {{<index}}
 {{$main}}
 
-{{#page.context.post}}
-<article>
+<article class="post">
+    {{#page.context.post}}
     <header>
-        <section id="post-header" class="content-wrapper">
-            <time datetime="{{date}}">{{date}}</time>
-            <h1 class="title">{{title}}</h1>
-            <p class="excerpt">{{description}}</p>
-            {{#empty(tags)}}
-            {{/empty(tags)}}
-            {{^empty(tags)}}
-            <div class="meta">
-            {{#tags}}
-                {{> blog.blocks.tag}}
-            {{/tags}}
-            </div>
-            {{/empty(tags)}}
-            
-            {{#empty(authors)}}
-            {{/empty(authors)}}
-            {{^empty(authors)}}
-            <div class="meta">
-            {{#authors}}
-                {{> blog.blocks.author}}
-            {{/authors}}
-            </div>
-            {{/empty(authors)}}
-        </section>
-
-        {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        <br><br>
+        <time datetime="{{date}}">{{date}}</time>
+        <h1>{{title}}</h1>
+        <hr>
+        <p class="excerpt">{{description}}</p>
+        
+        <div class="author-list">
+        {{#authors}}
+            <a href="{{permalink}}">
+            {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+            </a>
+        {{/authors}}
+        </div>
+        <div class="tag-list">
+        {{#tags}}
+            <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
+        {{/tags}}
+        </div>
     </header>
+    {{/page.context.post}}
 
-    <section id="contents" class="content-wrapper">
+    <section>
     
     {{& page.content}}
         
     </section>
     
-    <h2>Next</h2>
-    {{#page.context.next}}
-        {{> blog.blocks.post}}
-    {{/page.context.next}}
-    
-    <h2>Prev</h2>
+    <section>
+    <div class="grid-221">
     {{#page.context.prev}}
+    <div>
+        <h4>&larr; Previous post</h4>
+        <hr class="spacer">
         {{> blog.blocks.post}}
+    </div>
     {{/page.context.prev}}
     
-    <h2>Related</h2>
+    {{#page.context.next}}
+    <div>
+        <h4 style="text-align: right;">Next post &rarr;</h4>
+        <hr class="spacer">
+        {{> blog.blocks.post}}
+    </div>
+    {{/page.context.next}}
+    </div>
+    </section>
+    
+    <section>
     {{#empty(page.context.related)}}
-    Empty.
     {{/empty(page.context.related)}}
     {{^empty(page.context.related)}}
+    <h4>Related posts</h4>
+    <hr class="spacer">
+    <div class="grid-221">
     {{#page.context.related}}
         {{> blog.blocks.post}}
     {{/page.context.related}}
+    </div>
     {{/empty(page.context.related)}}
+    </section>
     
-    <h2>More by author(s)</h2>
+    
     {{#empty(page.context.moreByAuthor)}}
-    Empty.
     {{/empty(page.context.moreByAuthor)}}
     {{^empty(page.context.moreByAuthor)}}
+    <h4>More posts by the author(s)</h4>
+    <hr class="spacer">
+    <div class="grid-221">
     {{#page.context.moreByAuthor}}
         {{> blog.blocks.post}}
     {{/page.context.moreByAuthor}}
+    </div>
     {{/empty(page.context.moreByAuthor)}}
 
 </article>
-{{/page.context.post}}
+
+<div class="fixed-toc">
+{{> blocks.toc }}
+</div>
 
 {{/main}}
 {{/index}}
