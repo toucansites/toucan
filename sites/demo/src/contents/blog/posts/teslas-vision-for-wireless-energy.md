@@ -16,15 +16,13 @@ authors:
 
 Paragraphs are separated by a blank line.
 
-2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
-look like:
+2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists look like:
 
   * this one
   * that one
   * the other one
 
-Note that --- not considering the asterisk --- the actual text
-content starts at 4-columns in.
+Note that --- not considering the asterisk --- the actual text content starts at 4-columns in.
 
 > Block quotes are
 > written like so.
@@ -32,6 +30,44 @@ content starts at 4-columns in.
 > They can span multiple paragraphs,
 > if you like.
 
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
-in chapters 12--14"). Three dots ... will be converted to an ellipsis.
-Unicode is supported. ☺
+Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all in chapters 12--14"). Three dots ... will be converted to an ellipsis. Unicode is supported. ☺
+
+```swift
+actor AppState {
+    enum DownloadState {
+        case notDownloaded
+        case downloading
+        case downloaded
+    }
+
+    var downloadState = DownloadState.notDownloaded
+    let stream: AsyncStream<UIEvent>
+
+    init(stream: AsyncStream<UIEvent>) {
+        self.stream = stream
+    }
+
+    func handleEvents() async {
+        for await event in stream {
+            switch event {
+            case .startDownloadTapped:
+                switch downloadState {
+                case .notDownloaded:
+                    downloadState = .downloading
+                    do {
+                        try await startDownload()
+                        downloadState = .downloaded
+                    } catch {
+                        downloadState = .notDownloaded
+                    }
+                case .downloading, .downloaded:
+                    // Don't respond to user input
+                    continue
+                }
+            }
+        }
+    }
+}
+```
+
+Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all in chapters 12--14"). Three dots ... will be converted to an ellipsis. Unicode is supported. ☺

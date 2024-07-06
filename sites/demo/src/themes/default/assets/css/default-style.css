@@ -93,6 +93,14 @@ footer #logo-image {
 }
 
 
+pre {
+    border: 1px solid var(--bg-color-2);
+    font-size: 14px;
+    line-height: 1.25rem;
+}
+pre code.hljs {
+/*    padding: 8px !important;*/
+}
 
 #docs {
     display: grid;
@@ -365,3 +373,5 @@ article.post header {
 .fixed-toc ul a:hover {
     color: var(--text-color-1);
 }
+
+
