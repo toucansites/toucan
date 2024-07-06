@@ -81,7 +81,7 @@ struct Site {
                 }
             ),
             pages: .init(
-                custom: source.materials.pages.custom.map {
+                custom: source.materials.pages.custom.pages.map {
                     .init(material: $0)
                 }
             )

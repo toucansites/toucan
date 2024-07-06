@@ -9,6 +9,10 @@ extension Context {
     
     public struct Pages {
 
+        struct Home {
+            let pages: [Pages.Item]
+        }
+
         struct DetailPage {
             let page: Context.Pages.Item
         }

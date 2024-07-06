@@ -86,6 +86,9 @@ struct OutputRenderer {
         
         // MARK: - custom pages
         
+        if let customPagesHome = customPagesHome() {
+            try render(renderer, customPagesHome)
+        }
         for renderable in customPages() {
             try render(renderer, renderable)
         }
@@ -156,6 +159,26 @@ struct OutputRenderer {
     }
     
     // MARK: - custom pages
+    
+    func customPagesHome() -> Renderable<HTML<Context.Pages.Home>>? {
+        guard let material = site.source.materials.pages.custom.home else {
+            return nil
+        }
+        let context = site.getOutputHTMLContext(
+            material: material,
+            context: Context.Pages.Home(
+                pages: site.contents.pages.custom.map { $0.context(site: site) }
+            )
+        )
+
+        return .init(
+            template: material.template,
+            context: context,
+            destination: destinationUrl
+                .appendingPathComponent(material.slug)
+                .appendingPathComponent(Files.index)
+        )
+    }
     
     func customPages() -> [Renderable<HTML<Context.Pages.DetailPage>>] {
         site.contents.pages.custom.map { page in

@@ -379,6 +379,16 @@ struct SourceMaterialLoader {
             slugPrefix: nil,
             template: "docs.guides"
         )
+        
+        let customPagesHome = try loadMaterial(
+            using: "pages/pages",
+            slugPrefix: nil,
+            template: "pages.home"
+        )
+        let customPages = try loadMaterials(
+            using: config.contents.pages.custom,
+            template: "pages.single.page"
+        )
 
         return .init(
             main: .init(
@@ -396,9 +406,9 @@ struct SourceMaterialLoader {
                 categories: docsCategoriesPage,
                 guides: docsGuidesPage
             ),
-            custom: try loadMaterials(
-                using: config.contents.pages.custom,
-                template: "pages.single.page"
+            custom: .init(
+                home: customPagesHome,
+                pages: customPages
             )
         )
     }

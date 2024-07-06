@@ -42,11 +42,16 @@ struct SourceMaterials {
             let categories: SourceMaterial?
             let guides: SourceMaterial?
         }
+        
+        struct Custom {
+            let home: SourceMaterial?
+            let pages: [SourceMaterial]
+        }
 
         let main: Main
         let blog: Blog
         let docs: Docs
-        let custom: [SourceMaterial]
+        let custom: Custom
     }
 
     let blog: Blog
@@ -69,7 +74,8 @@ extension SourceMaterials {
         result += [pages.docs.home]
         result += [pages.docs.categories]
         result += [pages.docs.guides]
-        result += pages.custom
+        result += [pages.custom.home]
+        result += pages.custom.pages
         result += blog.authors
         result += blog.tags
         result += blog.posts
