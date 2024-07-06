@@ -12,25 +12,34 @@
             {{& page.content}}
 
         
-            <div class="">
-                {{^page.context.guide.prev}}
-                {{/page.context.guide.prev}}
-                {{#page.context.guide.prev}}
-                    Prev: <br>
-                    {{category.title}}<br>
-                    <a href="{{permalink}}">{{title}}</a>
-                {{/page.context.guide.prev}}
-                <br>
-                <br>
-                {{^page.context.guide.next}}
-                {{/page.context.guide.next}}
-                {{#page.context.guide.next}}
-                    Next: <br>
-                    {{category.title}}<br>
-                    <a href="{{permalink}}">{{title}}</a>
-                {{/page.context.guide.next}}
-
+            <section>
+            <div class="grid-221">
+            {{^page.context.guide.prev}}
+            <div></div>
+            {{/page.context.guide.prev}}
+            {{#page.context.guide.prev}}
+            <div>
+                <h4>&larr; Previous guide</h4>
+                <hr class="spacer">
+                {{category.title}}<br>
+                <a href="{{permalink}}">{{title}}</a>
             </div>
+            {{/page.context.guide.prev}}
+                
+            {{^page.context.guide.next}}
+            <div></div>
+            {{/page.context.guide.next}}
+            {{#page.context.guide.next}}
+            <div>
+                <h4 style="text-align: right;">Next guide &rarr;</h4>
+                <hr class="spacer">
+                {{category.title}}<br>
+                <a href="{{permalink}}">{{title}}</a>
+            </div>
+            {{/page.context.guide.next}}
+            </div>
+            </section>
+
         </article>
     </div>
     <div class="right">

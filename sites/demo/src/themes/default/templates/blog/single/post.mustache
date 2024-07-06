@@ -34,6 +34,9 @@
     
     <section>
     <div class="grid-221">
+    {{^page.context.prev}}
+    <div></div>
+    {{/page.context.prev}}
     {{#page.context.prev}}
     <div>
         <h4>&larr; Previous post</h4>
@@ -42,6 +45,9 @@
     </div>
     {{/page.context.prev}}
     
+    {{^page.context.next}}
+    <div></div>
+    {{/page.context.next}}
     {{#page.context.next}}
     <div>
         <h4 style="text-align: right;">Next post &rarr;</h4>
