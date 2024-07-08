@@ -97,6 +97,7 @@ pre {
     border: 1px solid var(--bg-color-2);
     font-size: 14px;
     line-height: 1.25rem;
+    margin-bottom: 32px;
 }
 pre code.hljs {
 /*    padding: 8px !important;*/
@@ -136,7 +137,6 @@ pre code.hljs {
     list-style-type: none;
     margin-bottom: 8px;
     font-size: 14px;
-    
 }
 #docs .left ul ul {
     margin-top: 8px;
@@ -147,7 +147,6 @@ pre code.hljs {
 #docs .left ul .category:first-child {
     margin-top: 0;
 }
-
 #docs .left aside > ul > li > a {
     color: var(--text-color-1);
     font-weight: bold;
@@ -182,7 +181,12 @@ pre code.hljs {
 #docs .right ul a:hover {
     color: var(--text-color-1);
 }
-
+#docs .prev > *, #docs .next > * {
+    display: block;
+}
+#docs .next > * {
+    text-align: right;
+}
 
 
 @media screen and (min-width: 600px) {
@@ -375,3 +379,16 @@ article.post header {
 }
 
 
+.pagination {
+    margin-top: 64px;
+}
+.pagination a {
+    padding: 8px 16px;
+    margin-right: 4px;
+    border: 1px solid var(--bg-color-2);
+}
+
+.pagination a:hover {
+    border: 1px solid var(--bg-color-3);
+    background: var(--bg-color-1);
+}

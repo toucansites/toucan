@@ -13,14 +13,17 @@ featured: true
 ---
 
 
-
-# An h1 header
+# This is an example
 
 Paragraphs are separated by a blank line.
 
 [Second](/posts/second-post/) 
 
-![Cover image alt text](./first-post/set-env-in-xcode.png "Cover image title")
+![image alt text](./curie-and-turing-innovations-in-science/balaton/balaton-10.jpg "image title")
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis tincidunt id aliquet risus. Pharetra diam sit amet nisl suscipit. Suspendisse potenti nullam ac tortor vitae purus faucibus. Faucibus ornare suspendisse sed nisi lacus sed viverra. Suscipit tellus mauris a diam maecenas sed enim. Euismod elementum nisi quis eleifend. Ante in nibh mauris cursus mattis molestie. Ipsum dolor sit amet consectetur. Risus viverra adipiscing at in.
+
+![image alt text](./curie-and-turing-innovations-in-science/balaton/balaton-02.jpg "image title")
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:

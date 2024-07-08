@@ -1,7 +1,38 @@
 import Foundation
 
 extension String {
+        
+    var minifiedCss: String {
+        var css = self
+        let patterns = [
+            "\n": "",
+            "\\s+": " ",
+            "\\s*:\\s*": ":",
+            "\\s*\\,\\s*": ",",
+            "\\s*\\{\\s": "{",
+            "\\s*\\}\\s*": "}",
+            "\\s*\\;\\s*": ";",
+            "\\{\\s*": "{",
+        ]
 
+        for pattern in patterns {
+            let regex = try! NSRegularExpression(
+                pattern: pattern.key,
+                options: .caseInsensitive
+            )
+            let range = NSRange(css.startIndex..., in: css)
+            css = regex.stringByReplacingMatches(
+                in: css,
+                options: [],
+                range: range,
+                withTemplate: pattern.value
+            )
+        }
+        return css
+    }
+    
+
+    
     /// Converts an empty string to `nil`, otherwise returns the string itself.
     ///
     /// - Returns: An optional `String` that is `nil` if the string is empty, otherwise the original string.

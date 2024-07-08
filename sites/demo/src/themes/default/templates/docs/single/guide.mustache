@@ -18,10 +18,9 @@
             <div></div>
             {{/page.context.guide.prev}}
             {{#page.context.guide.prev}}
-            <div>
+            <div class="prev">
                 <h4>&larr; Prev guide</h4>
-                <hr class="spacer">
-                {{category.title}}<br>
+                <small>{{category.title}}</small>
                 <a href="{{permalink}}">{{title}}</a>
             </div>
             {{/page.context.guide.prev}}
@@ -30,10 +29,9 @@
             <div></div>
             {{/page.context.guide.next}}
             {{#page.context.guide.next}}
-            <div>
+            <div class="next">
                 <h4 style="text-align: right;">Next guide &rarr;</h4>
-                <hr class="spacer">
-                {{category.title}}<br>
+                <small>{{category.title}}</small>
                 <a href="{{permalink}}">{{title}}</a>
             </div>
             {{/page.context.guide.next}}
