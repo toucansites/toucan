@@ -1,11 +1,11 @@
 ---
-title: Directory structure
-description: Directory structure
+title: Site structure
+description: Site structure
 category: getting-started
 order: 2
 ---
 
-# Directory structure
+# Site structure
 
 Lorem ipsum dolor sit amet 4
 

@@ -132,21 +132,211 @@ This section provides a complete reference for the Toucan configuration file, de
 
 ### Site
 
-Site related configuration values:
+Site-related configuration values:
 
-- `baseUrl`: **String** - The base url of the entire website.
-- `language`: **String** - The [ISO 639-1](https://www.w3schools.com/tags/ref_language_codes.asp) lang code for the website, can be a [country code](https://www.w3schools.com/tags/ref_country_codes.asp).
-- `title`: **String** - The title of the website. Scientific Titans Blog
-- `description`: **String** - The description of the website. 
-- `dateFormat`: **String** - default value: "yyyy.MM.dd. HH:mm"
-- `noindex`: **Bool** - default value: `false`
-- `hreflang`: **Dictionary** - 
+#### `baseUrl`
+**Type:** String
+**Description:** The base URL of the entire website.
+**Example:**
 
+```yaml
+baseUrl: http://example.com
+```
+
+#### `language`
+**Type:** String
+**Description:** The [ISO 639-1](https://www.w3schools.com/tags/ref_language_codes.asp) language code for the website, can be a [country code](https://www.w3schools.com/tags/ref_country_codes.asp).
+**Example:**
+
+```yaml
+language: en
+```
+
+#### `title`
+
+**Type:** String
+**Description:** The title of the website.
+**Example:**
+
+```yaml
+title: Scientific Titans Blog
+```
+
+#### `description`
+
+**Type:** String
+**Description:** The description of the website.
+**Example:**
+
+```yaml
+description: A blog about the greatest scientific minds and their discoveries.
+```
+
+#### `dateFormat`
+
+**Type:** String
+**Description:** The date format used on the website.
+**Default Value:** `"yyyy.MM.dd. HH:mm"`
+**Example:**
+
+```yaml
+dateFormat: "yyyy.MM.dd. HH:mm"
+```
+
+#### `noindex`
+
+**Type:** Bool
+**Description:** If `true`, the site will be marked as not indexable by search engines.
+**Default Value:** `false`
+**Example:**
+
+```yaml
+noindex: false
+```
+
+#### `hreflang`
+**Type:** Array of objects
+**Description:** The array of hreflang objects for specifying alternate language versions of the site.
+
+##### `hreflang.lang`
+**Type:** String
+**Description:** The [ISO 639-1](https://www.w3schools.com/tags/ref_language_codes.asp) language code for the website, can be a [country code](https://www.w3schools.com/tags/ref_country_codes.asp).
+
+##### `hreflang.url`
+**Type:** String
+**Description:** The full URL of the site in the specified language.
+
+**Example:**
+
+```yaml
+hreflang:
+    - lang: en
+      url: http://example.com/en/
+    - lang: es
+      url: http://example.com/es/
+```
 
 
 ### Assets
 
+Asset management related configuration values:
+
+#### `input`
+
+**Type:** Object
+**Description:** The configuration for the assets input. The contents of this folder will be copied to the output folder.
+
+
+##### `input.folder`
+
+**Type:** String
+**Description:** The location of the assets folder.
+**Default Value:** "assets"
+**Example:**
+
+```yaml
+input:
+    folder: "assets"
+```
+
+#### `output`
+
+**Type:** Object
+**Description:** The configuration for the assets output. If the destination folder name is empty the root folder will be used.
+
+
+##### `output.folder`
+
+**Type:** String
+**Description:** The location of the destination folder.
+**Default Value:** ""
+**Example:**
+
+```yaml
+output:
+    folder: ""
+```
+
+
 ### Themes
+
+Theme related configuration values:
+
+#### `use`
+
+**Type:** String
+**Description:** The name of the selected theme.
+**Default Value:** `default`
+**Example:**
+
+```yaml
+use: "default"
+```
+
+#### `folder`
+
+**Type:** String
+**Description:** The location of the themes folder inside the src directory.
+**Default Value:** `themes`
+**Example:**
+
+```yaml
+folder: "themes"
+```
+
+#### `templates`
+
+**Type:** Object
+**Description:** The configuration for the theme templates.
+
+
+##### `templates.folder`
+
+**Type:** String
+**Description:** The location of the templates folder inside the theme folder.
+**Default Value:** "templates"
+**Example:**
+
+```yaml
+templates:
+    folder: "templates"
+```
+
+#### `assets`
+
+**Type:** Object
+**Description:** The configuration for the theme assets.
+
+
+##### `assets.folder`
+
+**Type:** String
+**Description:** The location of the assets folder inside the theme folder.
+**Default Value:** "assets"
+**Example:**
+
+```yaml
+assets:
+    folder: "templates"
+```
+
+#### `overrides`
+
+**Type:** Object
+**Description:** The configuration for the theme overrides.
+
+
+##### `overrides.folder`
+
+**Type:** String
+**Description:** The location of the theme overrides folder inside the src folder.
+**Default Value:** "theme_overrides"
+**Example:**
+
+```yaml
+overrides:
+    folder: "theme_overrides"
+```
 
 ### Contents
 
