@@ -8,7 +8,7 @@
 import XCTest
 @testable import ToucanSDK
 
-final class MarkdownToHTMLRendererTestSuite: XCTest {
+final class MarkdownToHTMLRendererTestSuite: XCTestCase {
 
     // MARK: - standard elements
 
@@ -281,6 +281,24 @@ final class MarkdownToHTMLRendererTestSuite: XCTest {
 
         let expectation = #"""
             <ol><li>foo</li><li>bar</li><li>baz</li></ol>
+            """#
+
+        XCTAssert(output == expectation)
+    }
+    
+    func testListWithCode() throws {
+
+        let input = #"""
+            - foo `aaa`
+            - bar
+            - baz
+            """#
+
+        let renderer = MarkdownToHTMLRenderer()
+        let output = renderer.render(markdown: input)
+
+        let expectation = #"""
+            <ul><li>foo <code>aaa</code></li><li>bar</li><li>baz</li></ul>
             """#
 
         XCTAssert(output == expectation)

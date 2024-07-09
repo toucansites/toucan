@@ -180,8 +180,13 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     mutating func visitParagraph(
         _ paragraph: Paragraph
     ) -> Result {
+        // NOTE: this is a bad workaround.
         if paragraph.isInsideList {
-            return paragraph.plainText
+            var result = ""
+            for child in paragraph.children {
+                result += visit(child)
+            }
+            return result
         }
         return tag(name: "p", content: .children(paragraph.children))
     }
@@ -231,9 +236,9 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         tag(name: "code", content: .value(inlineCode.code))
     }
 
-    //    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
-    //        fatalError()
-    //    }
+//    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
+//        fatalError()
+//    }
 
     mutating func visitEmphasis(_ emphasis: Emphasis) -> Result {
         tag(name: "em", content: .children(emphasis.children))
