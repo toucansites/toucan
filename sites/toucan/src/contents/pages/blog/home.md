@@ -1,10 +1,10 @@
 ---
-slug: blog
-title: Blog
+slug: news
+title: News
 description: This is the news page. 
 image: images/defaults/default.png
 ---
 
-# Blog
+# News
 
-Blog posts.
+Latest news

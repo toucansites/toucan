@@ -1,0 +1,19 @@
+<aside>
+    {{#empty(page.context.categories)}}
+    Empty.
+    {{/empty(page.context.categories)}}
+    {{^empty(page.context.categories)}}
+    <ul>
+    {{#page.context.categories}}
+        <li class="category">
+            <a href="{{permalink}}">{{title}}</a>
+            <ul>
+            {{#guides}}
+                <li><a href="{{permalink}}">{{title}}</a></li>
+            {{/guides}}
+            </ul>
+        </li>
+    {{/page.context.categories}}
+    </ul>
+    {{/empty(page.context.categories)}}
+</aside>

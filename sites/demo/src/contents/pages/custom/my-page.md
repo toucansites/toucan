@@ -4,5 +4,7 @@ description: This is my custom page...
 ---
 
 
-# Showcases
+# My custom page
+
+Lorem ipsum dolor sit amet.
 
