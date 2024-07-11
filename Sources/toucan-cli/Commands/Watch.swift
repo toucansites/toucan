@@ -50,9 +50,7 @@ extension Entrypoint {
             eventStream.setDispatchQueue(DispatchQueue.main)
             
             try eventStream.start()
-            print(
-                "👀 Watching: `\(input)` -> \(output)."
-            )
+            print("👀 Watching: `\(input)` -> \(output).")
             dispatchMain()
         }
     }

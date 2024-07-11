@@ -1,0 +1,6 @@
+site:
+    baseUrl: http://localhost:3000/
+    language: en-US
+    title: Binary Birds
+    description: Server-side Swift development and consulting. Secure, efficient, scalable solutions.
+    dateFormat: "yyyy.MM.dd. HH:mm"
