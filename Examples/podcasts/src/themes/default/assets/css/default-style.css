@@ -392,3 +392,9 @@ article.post header {
     border: 1px solid var(--bg-color-3);
     background: var(--bg-color-1);
 }
+
+
+.page-wrapper {
+    margin: 0 auto;
+    max-width: 680px;
+}

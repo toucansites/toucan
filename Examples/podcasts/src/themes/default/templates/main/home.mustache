@@ -1,5 +1,6 @@
 {{<index}}
 {{$main}}
+<div class="page-wrapper">
 
 {{& page.content}}
 
@@ -8,7 +9,7 @@
 Empty.
 {{/empty(page.context.posts)}}
 {{^empty(page.context.posts)}}
-<div class="grid grid-321">
+<div class="grid grid-1">
 {{#page.context.posts}}
     {{> blog.blocks.post}}
 {{/page.context.posts}}
@@ -26,5 +27,6 @@ Empty.
 </div>
 {{/empty(page.context.pagination)}}
 
+</div>
 {{/main}}
 {{/index}}

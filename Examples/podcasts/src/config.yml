@@ -1,8 +1,8 @@
 site:
     baseUrl: http://localhost:3000/
     language: en-US
-    title: Podcasts example
-    description: This is an example for publishing podcasts.
+    title: The AWS Developers Podcast
+    description: Seb and friends chat with the people behind Amazon Web Services (AWS) and the developers who are building on it
     dateFormat: "yyyy.MM.dd. HH:mm"
 
 contents:
@@ -15,7 +15,7 @@ contents:
             slugPrefix: "podcasts"
         posts:
             folder: "podcast/episodes"
-            slugPrefix: "episode"
+            slugPrefix: "podcasts/episodes"
     pages:
         custom:
             folder: "pages/custom"
@@ -36,3 +36,7 @@ pages:
             path: "pages/blog/tags"
         posts:
             path: "pages/blog/posts"
+
+userDefined:
+    apple:
+        podcastId: id1574162669

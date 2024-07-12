@@ -46,6 +46,7 @@ extension Context {
                 let date: String
                 let tags: [Tag.Reference]
                 let authors: [Author.Reference]
+                let userDefined: [String: Any] // TODO: add to other refs
             }
             
             struct Reference {
@@ -58,6 +59,7 @@ extension Context {
                 let readingTime: Int
                 let featured: Bool
                 let date: String
+                let userDefined: [String: Any] // TODO: add to other refs
             }
         }
 

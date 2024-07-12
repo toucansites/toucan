@@ -61,7 +61,9 @@ extension Site.Contents {
                     featured: featured,
                     date: site.dateFormatter.string(from: material.publication),
                     tags: tagReferences,
-                    authors: authorReferences
+                    authors: authorReferences,
+                    userDefined: site.contents.config.userDefined
+                        .recursivelyMerged(with: material.userDefined)
                 )
             }
             
@@ -74,7 +76,9 @@ extension Site.Contents {
                     imageUrl: material.imageUrl(),
                     readingTime: site.readingTime(material.markdown),
                     featured: featured,
-                    date: site.dateFormatter.string(from: material.publication)
+                    date: site.dateFormatter.string(from: material.publication),
+                    userDefined: site.contents.config.userDefined
+                        .recursivelyMerged(with: material.userDefined)
                 )
             }
         }
