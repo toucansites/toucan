@@ -7,6 +7,8 @@ order: 2
 
 # Configuration
 
+---
+
 The site configuration for Toucan is stored in a config.yaml file, though the .yml extension can also be used.
 
 

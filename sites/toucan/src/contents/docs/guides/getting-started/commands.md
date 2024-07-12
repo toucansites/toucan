@@ -6,6 +6,7 @@ order: 5
 ---
 
 # Commands
+---
 
 Toucan includes three built-in subcommands to generate static sites: _generate_, _watch_, and _serve_. 
 
