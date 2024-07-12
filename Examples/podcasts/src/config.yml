@@ -38,5 +38,9 @@ pages:
             path: "pages/blog/posts"
 
 userDefined:
+    podcast:
+        feed: true
+    downloadUrl: http://www.podtrac.com/pts/redirect.mp3/developers.podcast.go-aws.com/media/
     apple:
         podcastId: id1574162669
+    

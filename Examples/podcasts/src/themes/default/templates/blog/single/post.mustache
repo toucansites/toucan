@@ -10,6 +10,15 @@
         <time datetime="{{date}}">{{date}}</time>
         <h1>{{title}}</h1>
         <hr>
+        <iframe
+            src="https://embed.podcasts.apple.com/us/podcast/{{userDefined.apple.podcastId}}?i={{userDefined.apple.episodeId}}&amp;itsct=podcast_box&amp;itscg=30200"
+            height="175px"
+            frameborder="0"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+            allow="autoplay *; encrypted-media *;"
+            style="width: 100%; max-width: 660px; overflow: hidden; border-radius: 10px; background: transparent;"
+        ></iframe>
+    
         <p class="excerpt">{{description}}</p>
         
         <div class="author-list">
@@ -27,15 +36,8 @@
     </header>
     {{/page.context.post}}
 
-    <iframe
-        src="https://embed.podcasts.apple.com/us/podcast/{{userDefined.apple.podcastId}}?i={{userDefined.apple.episodeId}}&amp;itsct=podcast_box&amp;itscg=30200"
-        height="175px"
-        frameborder="0"
-        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-        allow="autoplay *; encrypted-media *;"
-        style="width: 100%; max-width: 660px; overflow: hidden; border-radius: 10px; background: transparent;"
-    ></iframe>
-
+    
+{{userDefined.downloadUrl}}{{userDefined.downloadFile}}
     <audio src="{{ site.podcast.link }}{{ page.file }}" controls="">
     <a href="{{ site.podcast.link }}{{ page.file }}">Download episode »</a>
     </audio>
@@ -55,9 +57,10 @@
     {{/page.context.prev}}
     {{#page.context.prev}}
     <div>
+        <a href="{{permalink}}">
         <h4>&larr; Prev post</h4>
         <hr class="spacer">
-        {{> blog.blocks.post}}
+        </a>
     </div>
     {{/page.context.prev}}
     
@@ -66,40 +69,15 @@
     {{/page.context.next}}
     {{#page.context.next}}
     <div>
+        <a href="{{permalink}}">
         <h4 style="text-align: right;">Next post &rarr;</h4>
-        <hr class="spacer">
-        {{> blog.blocks.post}}
+        </a>
     </div>
     {{/page.context.next}}
     </div>
     </section>
     
-    <section>
-    {{#empty(page.context.related)}}
-    {{/empty(page.context.related)}}
-    {{^empty(page.context.related)}}
-    <h4>Related posts</h4>
-    <hr class="spacer">
-    <div class="grid grid-221">
-    {{#page.context.related}}
-        {{> blog.blocks.post}}
-    {{/page.context.related}}
-    </div>
-    {{/empty(page.context.related)}}
-    </section>
     
-    
-    {{#empty(page.context.moreByAuthor)}}
-    {{/empty(page.context.moreByAuthor)}}
-    {{^empty(page.context.moreByAuthor)}}
-    <h4>More posts by the author(s)</h4>
-    <hr class="spacer">
-    <div class="grid grid-221">
-    {{#page.context.moreByAuthor}}
-        {{> blog.blocks.post}}
-    {{/page.context.moreByAuthor}}
-    </div>
-    {{/empty(page.context.moreByAuthor)}}
 
 </article>
 

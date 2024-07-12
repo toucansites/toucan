@@ -14,6 +14,7 @@ struct OutputRenderer {
         static let index = "index.html"
         static let notFound = "404.html"
         static let rss = "rss.xml"
+        static let feed = "feed.xml"
         static let sitemap = "sitemap.xml"
     }
 
@@ -39,8 +40,12 @@ struct OutputRenderer {
         // render rss & sitemap
         let rss = rss()
         let sitemap = sitemap()
+        
         try render(renderer, rss)
         try render(renderer, sitemap)
+        if let feed = feed() {
+            try render(renderer, feed)
+        }
         
         // MARK: - blog
     
@@ -652,6 +657,44 @@ struct OutputRenderer {
             context: context,
             destination: destinationUrl
                 .appendingPathComponent(Files.rss)
+        )
+    }
+    
+    func feed() -> Renderable<Feed>? {
+        let userDefined = site.contents.config.userDefined
+        guard userDefined.value("podcast.feed", as: Bool.self) ?? false else {
+            return nil
+        }
+        let items: [Feed.Item] = site.contents.blog.posts.map { item in
+            let material = item.material
+            return .init(
+                permalink: site.permalink(material.slug),
+                title: material.title,
+                description: material.description,
+                publicationDate: site.rssDateFormatter.string(
+                    from: item.material.publication
+                )
+            )
+        }
+        
+        let publicationDate = items.first?.publicationDate ?? site.rssDateFormatter.string(from: .init())
+        
+        let context = Feed(
+            title: site.contents.config.site.title,
+            description: site.contents.config.site.description,
+            baseUrl: site.contents.config.site.baseUrl,
+            language: site.contents.config.site.language,
+            lastBuildDate: site.rssDateFormatter.string(from: .init()),
+            publicationDate: publicationDate,
+            items: items
+        )
+        
+        return .init(
+            template: "feed",
+            context: context,
+            destination: destinationUrl
+                .appendingPathComponent("podcasts")
+                .appendingPathComponent(Files.feed)
         )
     }
     
