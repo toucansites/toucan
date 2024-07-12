@@ -2,7 +2,7 @@
 title: Commands
 description: Commands
 category: getting-started
-order: 4
+order: 5
 ---
 
 # Commands

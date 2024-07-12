@@ -2,7 +2,7 @@
 title: Configuration
 description: Configuration
 category: getting-started
-order: 3
+order: 2
 ---
 
 # Configuration
@@ -17,7 +17,7 @@ In this section, we provide both a minimal and a complete example for the Toucan
 
 ### Minimal
 
-Here’s an minimal example of a complete site configuration:
+Here’s an minimal example of a site configuration:
 
 ```yaml
 site:
