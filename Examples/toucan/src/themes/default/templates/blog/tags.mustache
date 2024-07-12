@@ -1,0 +1,22 @@
+{{<index}}
+{{$main}}
+
+{{& page.content}}
+
+<div id="tags" class="wrapper">
+
+    {{#empty(page.context.tags)}}
+    Empty.
+    {{/empty(page.context.tags)}}
+    {{^empty(page.context.tags)}}
+    <div class="grid grid-321">
+    {{#page.context.tags}}
+        {{> blog.blocks.tag}}
+    {{/page.context.tags}}
+    
+    </div>
+    {{/empty(page.context.tags)}}
+</div>
+
+{{/main}}
+{{/index}}

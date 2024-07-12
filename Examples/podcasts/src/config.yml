@@ -1,0 +1,38 @@
+site:
+    baseUrl: http://localhost:3000/
+    language: en-US
+    title: Podcasts example
+    description: This is an example for publishing podcasts.
+    dateFormat: "yyyy.MM.dd. HH:mm"
+
+contents:
+    blog:
+        authors:
+            folder: "podcast/authors"
+            slugPrefix: "authors"
+        tags:
+            folder: "podcast/tags"
+            slugPrefix: "podcasts"
+        posts:
+            folder: "podcast/episodes"
+            slugPrefix: "episode"
+    pages:
+        custom:
+            folder: "pages/custom"
+            slugPrefix: ""
+
+pages:
+    main:
+        home:
+            path: "pages/home"
+        notFound:
+            path: "pages/404"
+    blog:
+        home:
+            path: "pages/blog/home"
+        authors:
+            path: "pages/blog/authors"
+        tags:
+            path: "pages/blog/tags"
+        posts:
+            path: "pages/blog/posts"

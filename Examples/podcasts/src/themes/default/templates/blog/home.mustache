@@ -1,0 +1,47 @@
+{{<index}}
+{{$main}}
+
+{{& page.content}}
+
+
+
+<div id="blog" class="wrapper">
+    
+    <h2>Featured posts</h2>
+    {{#empty(page.context.featured)}}
+    Empty.
+    {{/empty(page.context.featured)}}
+    {{^empty(page.context.featured)}}
+    <div class="grid grid-321">
+    {{#page.context.featured}}
+        {{> blog.blocks.post}}
+    {{/page.context.featured}}
+    </div>
+    {{/empty(page.context.featured)}}
+    
+    <h2>Latest posts</h2>
+    {{#empty(page.context.posts)}}
+    Empty.
+    {{/empty(page.context.posts)}}
+    {{^empty(page.context.posts)}}
+    <div class="grid grid-321">
+    {{#page.context.posts}}
+        {{> blog.blocks.post}}
+    {{/page.context.posts}}
+    </div>
+    {{/empty(page.context.posts)}}
+    
+    
+    {{#empty(page.context.pagination)}}
+    {{/empty(page.context.pagination)}}
+    {{^empty(page.context.pagination)}}
+    <div class="pagination">
+    {{#page.context.pagination}}
+        {{> blocks.pagination}}
+    {{/page.context.pagination}}
+    </div>
+    {{/empty(page.context.pagination)}}
+
+</div>
+{{/main}}
+{{/index}}

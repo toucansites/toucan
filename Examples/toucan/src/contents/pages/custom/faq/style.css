@@ -1,0 +1,37 @@
+h2 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+details {
+    
+}
+summary {
+    padding: 16px;
+    padding-bottom: 8px;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    transition: height 1s ease;
+}
+summary:hover {
+    cursor: pointer;
+}
+summary::-webkit-details-marker {
+    display: none;
+}
+summary:after {
+    content: "\002B";
+}
+details[open] summary {
+    border-bottom: 1px solid var(--bg-color-3);
+    margin-bottom: 16px;
+}
+
+details[open] summary:after {
+    content: "\00D7";
+}
+
+details[open] div {
+    padding: 16px;
+    padding-top: 8px;
+}
