@@ -98,7 +98,9 @@ struct SourceMaterialLoader {
             if draft {
                 return nil
             }
+
             let dateFormatter = DateFormatters.contentLoader
+            dateFormatter.dateFormat = self.config.site.dateFormat
 
             var publication: Date = now
             if
