@@ -3,7 +3,7 @@ site:
     language: en-US
     title: The AWS Developers Podcast
     description: Seb and friends chat with the people behind Amazon Web Services (AWS) and the developers who are building on it
-    dateFormat: "yyyy.MM.dd. HH:mm"
+    dateFormat: "yyyy-MM-dd HH:mm:ss Z"
 
 contents:
     blog:
