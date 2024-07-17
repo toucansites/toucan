@@ -1,91 +1,17 @@
-#navigation {
-    background: var(--bg-color);
-    margin: 16px 32px;
-    margin-bottom: 0px;
-    border-bottom: 0.5px solid var(--bg-color-3);
+body > header {
+    background: #232F3D url("/images/banners/web-transparent.png") left center no-repeat;
     overflow: hidden;
-}
-#navigation > a {
-    display: block;
-    line-height: 0;
-    padding: 8px 0;
+    height: 320px;
+    padding: 40px;
     text-align: center;
 }
-#navigation > a img {
-    height: 32px;
-    width: auto;
+body > header .title {
+    font-weight: bold;
+    font-size: 32px;
+    color: #fff;
 }
-#navigation nav svg {
-    width: 24px;
-    height: 24px;
-}
-#navigation #primary-menu-button {
-    display: none;
-}
-#navigation #primary-menu-button + label {
-    margin: 0;
-    position: absolute;
-    top: 16px;
-    left: 24px;
-    line-height: 0;
-    padding: 12px;
-}
-#navigation #primary-menu-button + label:hover {
-    cursor: pointer;
-}
-#navigation .menu-items {
-    max-height: 0px;
-    transition: max-height .3s ease-in-out 0s;
-}
-#navigation .menu-items a {
-    display: block;
-    color: var(--text-color);
-    padding: 16px;
-    border-top: 0.5px solid var(--bg-color-3);
-}
-#navigation .menu-items a:hover {
-    color: var(--color-1)
-}
-#navigation input:checked ~ .menu-items {
-    max-height: 999px;
-}
-#navigation line {
-    transition: transform .3s ease-in-out 0s;
-    transform-origin: 50% 50%;
-}
-#navigation input:checked ~ label line:nth-child(1) {
-    transform: translateX(-50px);
-}
-#navigation input:checked ~ label line:nth-child(2) {
-    transform: rotate(45deg) translateY(6px);
-}
-#navigation input:checked ~ label line:nth-child(3) {
-    transform: rotate(-45deg) translateY(-6px);
-}
-@media screen and (min-width: 600px) {
-    #navigation {
-        display: grid;
-        grid-template-columns: auto 1fr;
-    }
-    #site-logo {
-        grid-column: span 1;
-    }
-    #navigation nav {
-        overflow: hidden;
-        grid-column: span 1;
-    }
-    #primary-menu-button ~ label {
-        display: none;
-    }
-    #navigation nav .menu-items {
-        display: block;
-        max-height: none;
-        text-align: right;
-        padding: 8px;
-    }
-    #navigation nav .menu-items a {
-        padding: 8px;
-        display: inline-block;
-        border: none;
-    }
+body > header .description {
+    font-weight: bold;
+    font-size: 22px;
+    color: #fff;
 }

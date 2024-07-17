@@ -693,7 +693,7 @@ struct OutputRenderer {
             template: "feed",
             context: context,
             destination: destinationUrl
-                .appendingPathComponent("podcasts")
+                .appendingPathComponent("podcast")
                 .appendingPathComponent(Files.feed)
         )
     }

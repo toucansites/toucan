@@ -12,10 +12,10 @@ contents:
             slugPrefix: "authors"
         tags:
             folder: "podcast/tags"
-            slugPrefix: "podcasts"
+            slugPrefix: "podcast"
         posts:
             folder: "podcast/episodes"
-            slugPrefix: "podcasts/episodes"
+            slugPrefix: "podcast/episodes"
     pages:
         custom:
             folder: "pages/custom"
