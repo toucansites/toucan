@@ -13,13 +13,6 @@ site:
         - lang: x-default
           url: https://www.example.com/
 
-
-assets:
-    input:
-        folder: "assets"
-    output:
-        folder: ""
-
 themes:
     use: "default"
     folder: "themes"
@@ -30,61 +23,10 @@ themes:
     overrides:
         folder: "theme_overrides"
 
-contents:
-    folder: "contents"
+types:
+    folder: "types"
+
+content:
+    folder: "content"
     assets:
-        output:
-            folder: "assets"
-            
-    pagination:
-        limit: 10
-
-    blog:
-        authors:
-            folder: "blog/authors"
-            slugPrefix: "blog/authors"
-        tags:
-            folder: "blog/tags"
-            slugPrefix: "blog/tags"
-        posts:
-            folder: "blog/posts"
-            slugPrefix: "blog/posts"
-    docs:
-        categories:
-            folder: "docs/categories"
-            slugPrefix: "docs"
-        guides:
-            folder: "docs/guides"
-            slugPrefix: "docs"
-    pages:
-        custom:
-            folder: "pages/custom"
-            slugPrefix: ""
-
-pages:
-    main:
-        home:
-            path: "pages/home"
-        notFound:
-            path: "pages/404"
-    blog:
-        home:
-            path: "pages/blog/home"
-        authors:
-            path: "pages/blog/authors"
-        tags:
-            path: "pages/blog/tags"
-        posts:
-            path: "pages/blog/posts"
-    docs:
-        home:
-            path: "pages/docs/home"
-        categories:
-            path: "pages/docs/categories"
-        guides:
-            path: "pages/docs/guides"
-
-userDefined:
-    foo:
-        bar: baz
-        baz: abc
+        folder: "assets"

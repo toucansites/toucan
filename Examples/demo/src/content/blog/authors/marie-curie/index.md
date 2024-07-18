@@ -1,4 +1,5 @@
 ---
+type: author
 title: Marie Curie
 description: Marie Curie
 image: ./marie-curie/marie-curie.webp

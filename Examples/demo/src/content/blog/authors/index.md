@@ -1,5 +1,4 @@
 ---
-slug: blog/authors
 title: Authors
 description: This is the authors page.
 image: ./foo.jpg 

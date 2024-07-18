@@ -235,4 +235,10 @@ extension String {
         }
         return result
     }
+    
+//    public func transform(
+//        _ block: (Self) -> Self
+//    ) -> Self {
+//        block(self)
+//    }
 }
