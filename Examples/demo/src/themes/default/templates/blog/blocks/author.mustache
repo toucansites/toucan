@@ -1,10 +1,10 @@
 <div class="card">
-    <a href="/{{slug}}">
+    <a href="{{permalink}}">
         <center>
         {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <br><br>
         <h2>{{title}}</h2>
-        <p>{{numberOfPosts}} posts</p>
+        <p>{{count(posts)}} posts</p>
         </center>
     </a>
 </div>

@@ -2,18 +2,20 @@
 {{$main}}
 
 <div id="tag">
-    {{#context.tag}}
+    {{#context}}
     <header>
         {{#imageUrl}}<img class="medium" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <h1>{{title}}</h1>
         <hr>
         <p>{{description}}</p>
-        <p>{{numberOfPosts}} posts</p>
+        <p>{{count(context.posts)}} posts</p>
     </header>
-    {{/context.tag}}
+    {{/context}}
 
+    
+    
 
-    {{& content}}
+    {{& context.contents}}
     
     {{#empty(context.posts)}}
     Empty.

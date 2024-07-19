@@ -1,8 +1,10 @@
 {{<html}}
 {{$main}}
 
+
+
 <article class="post">
-    {{#context.post}}
+    {{#context}}
     <header>
         {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <br><br>
@@ -15,6 +17,7 @@
         {{#authors}}
             <a href="{{permalink}}">
             {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+            <span class="name">{{title}}</span>
             </a>
         {{/authors}}
         </div>
@@ -24,11 +27,11 @@
         {{/tags}}
         </div>
     </header>
-    {{/context.post}}
+    {{/context}}
 
     <section>
     
-    {{& content}}
+    {{& context.contents}}
         
     </section>
     
@@ -73,17 +76,17 @@
     </section>
     
     
-    {{#empty(context.moreByAuthor)}}
-    {{/empty(context.moreByAuthor)}}
-    {{^empty(context.moreByAuthor)}}
+    {{#empty(context.moreByAuthors)}}
+    {{/empty(context.moreByAuthors)}}
+    {{^empty(context.moreByAuthors)}}
     <h4>More posts by the author(s)</h4>
     <hr class="spacer">
     <div class="grid grid-221">
-    {{#context.moreByAuthor}}
+    {{#context.moreByAuthors}}
         {{> blog.blocks.post}}
-    {{/context.moreByAuthor}}
+    {{/context.moreByAuthors}}
     </div>
-    {{/empty(context.moreByAuthor)}}
+    {{/empty(context.moreByAuthors)}}
 
 </article>
 

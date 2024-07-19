@@ -11,7 +11,7 @@ import Foundation
 struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
 
     let config: Config
-    let material: PageBundle
+    let pageBundle: PageBundle
 
     func linkAttributes(_ link: String?) -> [String: String] {
         var attributes: [String: String] = [:]
@@ -28,7 +28,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        let prefix = "./\(material.assetsPath)"
+        let prefix = "./\(pageBundle.assetsPath)"
         guard
             let source = image.source,
             source.hasPrefix(prefix)
@@ -38,7 +38,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         
         let src = String(source.dropFirst(prefix.count))
         
-        let url = "/assets/" + material.slug + "/" + src
+        let url = "/assets/" + pageBundle.slug + "/" + src
         
         var title = ""
         if let ttl = image.title {

@@ -23,7 +23,7 @@ context:
     local:
         posts:
             references: post
-            foreignKey: tags
+            foreignKey: authors
             sort: title
             order: asc
             limit: 10

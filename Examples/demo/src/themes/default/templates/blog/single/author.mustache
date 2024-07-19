@@ -2,21 +2,19 @@
 {{$main}}
 
 <div id="author-page" class="content wrapper">
-    {{#context.author}}
+    {{#context}}
     <header>
         {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <br><br>
         <h1>{{title}}</h1>
         <hr>
         <p>{{description}}</p>
-        <p>{{numberOfPosts}} posts</p>
+        <p>{{count(posts)}} posts</p>
     </header>
-    {{/context.author}}
+    {{/context}}
     
-    {{page}}
-    {{& content}}
-
-    -----------------
+    {{& context.contents}}
+    
     {{#empty(context.posts)}}
     Empty.
     {{/empty(context.posts)}}

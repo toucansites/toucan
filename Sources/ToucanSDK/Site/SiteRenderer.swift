@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logging
 
 /// Responsible to build renderable files using the site context & templates.
 struct SiteRenderer {
@@ -30,6 +31,7 @@ struct SiteRenderer {
     let destinationUrl: URL
     
     let fileManager: FileManager = .default
+    let logger: Logger
     
     init(
         source: Source,
@@ -49,6 +51,12 @@ struct SiteRenderer {
         self.dateFormatter.dateFormat = source.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
         self.sitemapDateFormatter = DateFormatters.sitemap
+        
+        self.logger = {
+            var logger = Logger(label: "SiteRenderer")
+            logger.logLevel = .debug
+            return logger
+        }()
     }
 
 
@@ -68,15 +76,14 @@ struct SiteRenderer {
                     .filtered(value.filter)
                     // TODO: proper pagination
                     .limited(value.limit)
-                    
             }
         }
         
-        print("site context:")
+        logger.trace("site context:")
         for (key, values) in siteContext {
-            print("\t\(key):")
+            logger.trace("\t\(key):")
             for item in values {
-                print("\t - \(item.slug)")
+                logger.trace("\t - \(item.slug)")
             }
         }
 
@@ -103,18 +110,15 @@ struct SiteRenderer {
 //        }        
     }
     
-
+    func getFullContext(
+        pageBundle: PageBundle
+    ) -> [String: Any] {
     
-    func render(
-        pageBundle: PageBundle,
-        siteContext: [String: [PageBundle]],
-        renderer: MustacheToHTMLRenderer
-    ) throws {
         let id = pageBundle.contextAwareIdentifier
         let contentType = source.contentType(for: pageBundle)
         
-        print("slug: `\(pageBundle.slug)`")
-        print("type: \(pageBundle.type)")
+        logger.trace("slug: `\(pageBundle.slug)`")
+        logger.trace("type: \(pageBundle.type)")
         
         // resolve relations
         var relations: [String: [PageBundle]] = [:]
@@ -138,17 +142,17 @@ struct SiteRenderer {
             relations[key] = refs
         }
 
-        print("relations:")
+        logger.trace("relations:")
         for (key, values) in relations {
-            print("\t\(key):")
+            logger.trace("\t\(key):")
             for item in values {
-                print("\t - \(item.slug)")
+                logger.trace("\t - \(item.slug)")
             }
         }
 
-        // resolve page context
+        // resolve local context
         // TODO: contextually this should be ok
-        var pageContext: [String: [PageBundle]] = [:]
+        var localContext: [String: [PageBundle]] = [:]
         for (key, value) in contentType.context?.local ?? [:] {
             
             if value.foreignKey.hasPrefix("$") {
@@ -173,18 +177,18 @@ struct SiteRenderer {
                     guard idx > 0 else {
                         continue
                     }
-                    pageContext[key] = [refs[idx - 1]]
+                    localContext[key] = [refs[idx - 1]]
                 case "next":
                     guard idx < refs.count - 1 else {
                         continue
                     }
-                    pageContext[key] = [refs[idx + 1]]
+                    localContext[key] = [refs[idx + 1]]
                 case "same":
                     guard let arg = arguments.first else {
                         continue
                     }
                     let ids = Set(pageBundle.referenceIdentifiers(for: arg))
-                    pageContext[key] = refs.filter { pb in
+                    localContext[key] = refs.filter { pb in
                         if pb.slug == pageBundle.slug {
                             return false
                         }
@@ -197,7 +201,7 @@ struct SiteRenderer {
                 }
             }
             else {
-                pageContext[key] = source
+                localContext[key] = source
                     .pageBundles(by: value.references)
                     .filter {
                         $0.referenceIdentifiers(
@@ -208,15 +212,32 @@ struct SiteRenderer {
                     .limited(value.limit)
             }
         }
-        print("context:")
-        for (key, values) in pageContext {
-            print("\t\(key):")
+        logger.trace("context:")
+        for (key, values) in localContext {
+            logger.trace("\t\(key):")
             for item in values {
-                print("\t - \(item.slug)")
+                logger.trace("\t - \(item.slug)")
             }
         }
 
-        print("")
+        var customContext: [String: Any] = [:]
+        customContext["permalink"] = source.permalink(pageBundle.slug)
+        customContext["contents"] = source.render(pageBundle: pageBundle)
+
+        return pageBundle.frontMatter
+            .recursivelyMerged(with: relations)
+            .recursivelyMerged(with: localContext)
+            .recursivelyMerged(with: customContext)
+    }
+    
+    func render(
+        pageBundle: PageBundle,
+        siteContext: [String: [PageBundle]],
+        renderer: MustacheToHTMLRenderer
+    ) throws {
+        
+        let context = getFullContext(pageBundle: pageBundle)
+
         var fileUrl = destinationUrl
             .appendingPathComponent(pageBundle.slug)
             .appendingPathComponent(Files.index)
@@ -238,10 +259,10 @@ struct SiteRenderer {
                     title: source.config.site.title,
                     description: source.config.site.description,
                     language: source.config.site.language,
-                    context: siteContext
+                    context: siteContext.mapValues { $0.map { getFullContext(pageBundle: $0) }}
                 ),
                 page: pageBundle,
-                context: pageContext,
+                context: context,
                 year: currentYear
             ),
             to: fileUrl
