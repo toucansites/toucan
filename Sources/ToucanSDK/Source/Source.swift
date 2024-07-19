@@ -9,9 +9,12 @@ import Foundation
 
 struct Source {
     
-//    let config: SourceConfig
-//    let materials: SourceMaterials
-//    
+    let url: URL
+    let config: Config
+    let contentTypes: [ContentType]
+    let pageBundles: [PageBundle]
+
+
 //    func all() -> [SourceMaterial] {
 //        var result: [SourceMaterial?] = []
 //
@@ -57,5 +60,28 @@ struct Source {
 //            fatalError("Invalid slugs")
 //        }
 //    }
+
+    
+    func bundleContext() -> [String: [PageBundle]] {
+        var result: [String: [PageBundle]] = [:]
+        for type in bundleTypes() {
+            result[type] = pageBundlesBy(type: type)
+        }
+        return result
+    }
+    
+    func bundleTypes() -> Set<String> {
+        var types: Set<String> = .init()
+        for bundle in pageBundles {
+            types.insert(bundle.type)
+        }
+        return types
+    }
+
+    func pageBundlesBy(type: String) -> [PageBundle] {
+        pageBundles.filter { $0.type == type }
+    }
+    
+    
 }
 

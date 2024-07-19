@@ -1,8 +1,5 @@
-//
-//  File.swift
-//  toucan
-//
-//  Created by Tibor Bodecs on 18/07/2024.
-//
-
-import Foundation
+id: guide
+template: guide
+properties:
+    - category
+    - order

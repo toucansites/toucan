@@ -9,7 +9,6 @@ import Foundation
 import FileManagerKit
 import Yams
 
-
 struct ConfigLoader {
     
     /// An enumeration representing possible errors that can occur while loading the configuration.

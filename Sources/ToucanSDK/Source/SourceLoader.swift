@@ -14,14 +14,20 @@ struct SourceLoader {
     let frontMatterParser: FrontMatterParser
 
     /// load the configuration & the contents of the site source
-    func load() throws {
+    func load() throws -> Source {
 
         let configLoader = ConfigLoader(
             sourceUrl: sourceUrl,
             fileManager: fileManager
         )
-
         let config = try configLoader.load()
+        
+        let contentTypeLoader = ContentTypeLoader(
+            sourceUrl: sourceUrl,
+            config: config,
+            fileManager: fileManager
+        )
+        let contentTypes = try contentTypeLoader.load()
 
         let pageBundleLoader = PageBundleLoader(
             sourceUrl: sourceUrl,
@@ -31,9 +37,11 @@ struct SourceLoader {
         )
         let pageBundles = try pageBundleLoader.load()
 
-//        return .init(
-//            config: config,
-//            materials: materials
-//        )
+        return .init(
+            url: sourceUrl,
+            config: config,
+            contentTypes: contentTypes,
+            pageBundles: pageBundles
+        )
     }
 }

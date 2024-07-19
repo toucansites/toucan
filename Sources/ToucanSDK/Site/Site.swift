@@ -1,45 +1,45 @@
-////
-////  File.swift
-////
-////
-////  Created by Tibor Bodecs on 03/05/2024.
-////
 //
-//import Foundation
-//import Algorithms
+//  File.swift
 //
-///// Responsible to put together contextual objects.
-//struct Site {
-//    
-//    enum Error: Swift.Error {
-//        case missingPage(String)
-//    }
 //
-//    let source: Source
-//    let destinationUrl: URL
-//    
-//    let currentYear: Int
-//    let dateFormatter: DateFormatter
-//    let rssDateFormatter: DateFormatter
-//    let sitemapDateFormatter: DateFormatter
-//    
-//    let contents: Site.Contents
-//    
-//    init(
-//        source: Source,
-//        destinationUrl: URL
-//    ) {
-//        self.source = source
-//        self.destinationUrl = destinationUrl
-//        
-//        let calendar = Calendar(identifier: .gregorian)
-//        self.currentYear = calendar.component(.year, from: .init())
-//        
-//        self.dateFormatter = DateFormatters.baseFormatter
-//        self.dateFormatter.dateFormat = source.config.site.dateFormat
-//        self.rssDateFormatter = DateFormatters.rss
-//        self.sitemapDateFormatter = DateFormatters.sitemap
-//        
+//  Created by Tibor Bodecs on 03/05/2024.
+//
+
+import Foundation
+import Algorithms
+
+/// Responsible to put together contextual objects.
+struct Site {
+    
+    enum Error: Swift.Error {
+        case missingPage(String)
+    }
+
+    let source: Source
+    let destinationUrl: URL
+    
+    let currentYear: Int
+    let dateFormatter: DateFormatter
+    let rssDateFormatter: DateFormatter
+    let sitemapDateFormatter: DateFormatter
+    
+    init(
+        source: Source,
+        destinationUrl: URL
+    ) {
+        self.source = source
+        self.destinationUrl = destinationUrl
+        
+        let calendar = Calendar(identifier: .gregorian)
+        self.currentYear = calendar.component(.year, from: .init())
+        
+        self.dateFormatter = DateFormatters.baseFormatter
+        self.dateFormatter.dateFormat = source.config.site.dateFormat
+        self.rssDateFormatter = DateFormatters.rss
+        self.sitemapDateFormatter = DateFormatters.sitemap
+        
+        
+//
 //        
 //        let posts: [Contents.Blog.Post] = source.materials.blog.posts.map {
 //            .init(
@@ -86,7 +86,7 @@
 //                }
 //            )
 //        )
-//    }
+    }
 //    
 //    // MARK: - utilities
 //
@@ -192,5 +192,5 @@
 ////            pages: []
 ////        )
 ////    }
-//    
-//}
+    
+}

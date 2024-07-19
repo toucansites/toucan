@@ -90,54 +90,52 @@ public struct Toucan {
             frontMatterParser: .init()
         )
         let source = try loader.load()
-//        
-//        // TODO: output url is completely wiped, check if it's safe to delete everything
-//        try resetOutputDirectory()
+
+        // TODO: output url is completely wiped, check if it's safe to delete everything
+        try resetOutputDirectory()
         
-//        let themeUrl = inputUrl
-//            .appendingPathComponent(source.config.themes.path)
-//            .appendingPathComponent(source.config.themes.use)
-//        
-//        let themeAssetsUrl = themeUrl
-//            .appendingPathComponent(source.config.themes.assetsPath)
-//
-//        let themeTemplatesUrl = themeUrl
-//            .appendingPathComponent(source.config.themes.templatesPath)
-//        
-//        let themeOverrideUrl = inputUrl
-//            .appendingPathComponent(source.config.themes.overridesPath)
-//            .appendingPathComponent(source.config.themes.use)
-//        
-//        let themeOverrideAssetsUrl = themeOverrideUrl
-//            .appendingPathComponent(source.config.themes.assetsPath)
-//
-//        let themeOverrideTemplatesUrl = themeOverrideUrl
-//            .appendingPathComponent(source.config.themes.templatesPath)
-//        
+        let themeUrl = inputUrl
+            .appendingPathComponent(source.config.themes.folder)
+            .appendingPathComponent(source.config.themes.use)
+        
+        let themeAssetsUrl = themeUrl
+            .appendingPathComponent(source.config.themes.assets.folder)
+
+        let themeTemplatesUrl = themeUrl
+            .appendingPathComponent(source.config.themes.templates.folder)
+        
+        let themeOverrideUrl = inputUrl
+            .appendingPathComponent(source.config.themes.overrides.folder)
+            .appendingPathComponent(source.config.themes.use)
+        
+        let themeOverrideAssetsUrl = themeOverrideUrl
+            .appendingPathComponent(source.config.themes.assets.folder)
+
+        let themeOverrideTemplatesUrl = themeOverrideUrl
+            .appendingPathComponent(source.config.themes.templates.folder)
+        
 //        let assetsInputUrl = inputUrl
-//            .appendingPathComponent(source.config.assets.input)
+//            .appendingPathComponent(source.config.assets.folder)
 //        
 //        let assetsOutputUrl = outputUrl
 //            .appendingPathComponent(source.config.assets.output)
-//        
-//        
-//        // theme assets
-//        try fileManager.copyRecursively(
-//            from: themeAssetsUrl,
-//            to: outputUrl
-//        )
-//        // theme override assets
-//        try fileManager.copyRecursively(
-//            from: themeOverrideAssetsUrl,
-//            to: outputUrl
-//        )
-//        // global assets
+
+        // theme assets
+        try fileManager.copyRecursively(
+            from: themeAssetsUrl,
+            to: outputUrl
+        )
+        // theme override assets
+        try fileManager.copyRecursively(
+            from: themeOverrideAssetsUrl,
+            to: outputUrl
+        )
+        // global assets
 //        try fileManager.copyRecursively(
 //            from: assetsInputUrl,
 //            to: assetsOutputUrl
 //        )
-//
-//
+
 //        if !fileManager.directoryExists(at: assetsOutputUrl) {
 //            try fileManager.createDirectory(at: assetsOutputUrl)
 //        }
@@ -167,19 +165,14 @@ public struct Toucan {
 //                to: outputUrl
 //            )
 //        }
-//
-//        let site = Site(
-//            source: source,
-//            destinationUrl: outputUrl
-//        )
-//
-//        let renderer = OutputRenderer(
-//            site: site,
-//            templatesUrl: themeTemplatesUrl,
-//            overridesUrl: themeOverrideTemplatesUrl,
-//            destinationUrl: outputUrl
-//        )
-//
-//        try renderer.render()
+
+        let renderer = OutputRenderer(
+            source: source,
+            templatesUrl: themeTemplatesUrl,
+            overridesUrl: themeOverrideTemplatesUrl,
+            destinationUrl: outputUrl
+        )
+
+        try renderer.render()
     }
 }

@@ -144,7 +144,8 @@ struct PageBundleLoader {
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")?.emptyToNil
             
-            let template = frontMatter.string("template") ?? "TODO"
+            #warning("use content type template property")
+            let template = frontMatter.string("template") ?? "pages.single.page"
             let assetsPath = frontMatter.string("assets.path")?.emptyToNil
             let userDefined = frontMatter.dict("userDefined")
             let redirects = frontMatter.value(
