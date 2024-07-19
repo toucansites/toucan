@@ -46,26 +46,27 @@ struct ContentTypeLoader {
         }
         /// add default page type if needed
         if !hasPageOverride {
-            types.append(
-                .init(
-                    id: "page",
-                    context: .init(
-                        site: [
-                            "pages": .init(
-                                sort: "title",
-                                order: .asc,
-                                pagination: .init(limit: 10)
-                            )
-                        ],
-                        page: [:],
-                        relations: [:]
-                    ),
-                    template: "pages.single.page",
-                    properties: [
-                        "TODO"
-                    ]
-                )
-            )
+    #warning("todo")
+//            types.append(
+//                .init(
+//                    id: "page",
+//                    context: .init(
+//                        site: [
+//                            "pages": .init(
+//                                sort: "title",
+//                                order: .asc,
+//                                pagination: .init(limit: 10)
+//                            )
+//                        ],
+//                        page: [:],
+//                        relations: [:]
+//                    ),
+//                    template: "pages.single.page",
+//                    properties: [
+//                        "TODO"
+//                    ]
+//                )
+//            )
         }
 
         return types

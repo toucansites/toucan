@@ -233,7 +233,7 @@ struct PageBundleLoader {
                 expiration: expiration,
                 css: css,
                 js: js,
-                template: template,
+                template: template ?? "pages.single.page",
                 assetsPath: assetsPath ?? "assets",
                 lastModification: lastModification,
                 redirects: redirects,

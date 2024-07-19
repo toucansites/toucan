@@ -1,7 +1,10 @@
 id: page
 
 properties:
-    - order
+    order:
+        type: int
+        required: true
+
 
 context:
     site:

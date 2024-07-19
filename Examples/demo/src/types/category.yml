@@ -1,8 +1,10 @@
 id: category
 
 properties:
-    - order
-
+    order:
+        type: int
+        required: true
+    
 context:
     site:
         categories:
@@ -11,14 +13,13 @@ context:
             pagination:
                 limit: 10
 
-    page:
+    local:
         guides:
             references: guide
-            using: category
-            join: one
-            limit: 5
-            sort: order
+            foreignKey: category
+            sort: title
             order: asc
+            limit: 10
 
         
 

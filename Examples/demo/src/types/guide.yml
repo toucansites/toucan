@@ -1,7 +1,14 @@
 id: guide
 
 properties:
-    - order
+    order:
+        type: int
+        required: true
+
+relations:
+    category:
+        references: category
+        join: one
 
 context:
     site:

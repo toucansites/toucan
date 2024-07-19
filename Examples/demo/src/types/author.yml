@@ -1,7 +1,16 @@
 id: author
 
+# can be used to validate & generate a type
 properties:
-    - order
+    order:
+        type: int
+        required: true
+    date:
+        type: date
+        required: true
+    tags:
+        type: array
+        required: true
 
 context:
     site:

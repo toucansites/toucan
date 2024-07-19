@@ -52,178 +52,146 @@ struct OutputRenderer {
     }
 
 
+    // TODO: logger
     func render() throws {
         let renderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl,
             overridesUrl: overridesUrl
         )
+
+        var siteContext: [String: [PageBundle]] = [:]
+        for contentType in source.contentTypes {
+            for (key, value) in contentType.context?.site ?? [:] {
+                siteContext[key] = source
+                    .pageBundles(by: contentType.id)
+                    .sorted(key: value.sort, order: value.order)
+                    // TODO: proper pagination
+                    .limited(value.pagination?.limit)
+            }
+        }
         
-        let context = source.bundleContext()
-        
+        print("site context:")
+        for (key, values) in siteContext {
+            print("\t\(key):")
+            for item in values {
+                print("\t - \(item.slug)")
+            }
+        }
+        print("")
+
         for pageBundle in source.pageBundles {
-            let id = String(pageBundle.slug.split(separator: "/").last ?? "")
-            var pageContext: [String: Any] = [:]
-            let contentType = source.contentType(for: pageBundle)
-            
-            // resolve relations
-            for (key, value) in contentType.context?.relations ?? [:] {
-
-                var refIds: [String] = []
-                switch value.join {
-                case .one:
-                    if let ref = pageBundle.frontMatter[key] as? String {
-                        refIds.append(ref)
-                    }
-                case .many:
-                    refIds = pageBundle.frontMatter[key] as? [String] ?? []
-                }
-                
-                let refs = source
-                    .pageBundlesBy(type: value.references)
-                    /// filter down based on the condition
-                    .filter { item in
-                        let id = String(item.slug.split(separator: "/").last ?? "")
-                        return refIds.contains(id)
-                    }
-                    // TODO: complete hack... needs better solution.
-                    .sorted { lhs, rhs in
-                        guard
-                            let l = lhs.frontMatter[value.sort] as? String,
-                            let r = rhs.frontMatter[value.sort] as? String
-                        else {
-                            guard
-                                let l = lhs.frontMatter[value.sort] as? Int,
-                                let r = rhs.frontMatter[value.sort] as? Int
-                            else {
-                                return false
-                            }
-                            switch value.order {
-                            case .asc:
-                                return l < r
-                            case .desc:
-                                return l > r
-                            }
-                        }
-                        // TODO: proper case insensitive compare
-                        switch value.order {
-                        case .asc:
-                            return l.lowercased() < r.lowercased()
-                        case .desc:
-                            return l.lowercased() > r.lowercased()
-                        }
-                    }
-                    /// meh... will work for now...
-                    .prefix(value.limit ?? Int.max)
-
-//                print(pageBundle.slug, "-", pageBundle.type)
-//                print(refs.map(\.title))
-                pageContext[key] = refs
-            }
-
-            // resolve page context
-            // TODO: contextually this should be ok
-            for (key, value) in contentType.context?.page ?? [:] {
-                let refs = source
-                    .pageBundlesBy(type: value.references)
-                    /// filter down based on the condition
-                    .filter { item in
-                        
-                        var refs: [String] = []
-                        switch value.join {
-                        case .one:
-                            if let ref = item.frontMatter[value.using] as? String {
-                                refs.append(ref)
-                            }
-                        case .many:
-                            refs = item.frontMatter[value.using] as? [String] ?? []
-                        }
-                        return refs.contains(id)
-                    }
-                    // TODO: complete hack... needs better solution.
-                    .sorted { lhs, rhs in
-                        guard
-                            let l = lhs.frontMatter[value.sort] as? String,
-                            let r = rhs.frontMatter[value.sort] as? String
-                        else {
-                            guard
-                                let l = lhs.frontMatter[value.sort] as? Int,
-                                let r = rhs.frontMatter[value.sort] as? Int
-                            else {
-                                return false
-                            }
-                            switch value.order {
-                            case .asc:
-                                return l < r
-                            case .desc:
-                                return l > r
-                            }
-                        }
-                        // TODO: proper case insensitive compare
-                        switch value.order {
-                        case .asc:
-                            return l.lowercased() < r.lowercased()
-                        case .desc:
-                            return l.lowercased() > r.lowercased()
-                        }
-                    }
-                    /// meh... will work for now...
-                    .prefix(value.limit ?? Int.max)
-
-
-//                print(refs.map(\.title))
-                
-                pageContext[key] = refs
-            }
-
-            
-            print(pageBundle.slug, "-", pageBundle.type)
-            print(pageContext.keys.joined(separator: ", "))
-            print("----------------------")
-            if pageBundle.type == "guide" {
-                print(pageContext["prev"])
-            }
-            
             try render(
-                renderer,
-                .init(
-                    template: pageBundle.template,
-                    context: HTML(
-                        site: .init(
-                            baseUrl: source.config.site.baseUrl,
-                            title: source.config.site.title,
-                            description: source.config.site.description,
-                            language: source.config.site.language
-                        ),
-                        page: pageBundle,
-                        context: context,
-                        year: currentYear
-                    ),
-                    destination: destinationUrl
-                        .appendingPathComponent(pageBundle.slug)
-                        .appendingPathComponent(Files.index)
-                )
+                pageBundle: pageBundle,
+                siteContext: siteContext,
+                renderer: renderer
             )
         }
 
-//        let home = home()
-//        let notFound = notFound()
-//        try render(renderer, home)
-//        try render(renderer, notFound)
-//        
 //        // render rss & sitemap
 //        let rss = rss()
 //        let sitemap = sitemap()
-//        
 //        try render(renderer, rss)
 //        try render(renderer, sitemap)
 //        if let feed = feed() {
 //            try render(renderer, feed)
 //        }
-//        // MARK: - redirects
-//
 //        for renderable in redirects() {
 //            try render(renderer, renderable)
 //        }        
+    }
+    
+    func render(
+        pageBundle: PageBundle,
+        siteContext: [String: [PageBundle]],
+        renderer: MustacheToHTMLRenderer
+    ) throws {
+        let id = pageBundle.contextAwareIdentifier
+        let contentType = source.contentType(for: pageBundle)
+        
+        print("slug: `\(pageBundle.slug)`")
+        print("type: \(pageBundle.type)")
+        
+        // resolve relations
+        var relations: [String: [PageBundle]] = [:]
+        for (key, value) in contentType.relations ?? [:] {
+            let refIds = pageBundle.referenceIdentifiers(
+                for: key,
+                join: value.join
+            )
+
+            let refs = source
+                .pageBundles(by: value.references)
+                /// filter down based on the condition
+                .filter { item in
+                    refIds.contains(item.contextAwareIdentifier)
+                }
+                .sorted(key: value.sort, order: value.order)
+                .limited(value.limit)
+
+//                print(pageBundle.slug, "-", pageBundle.type)
+//                print(refs.map(\.title))
+            relations[key] = refs
+        }
+
+        print("relations:")
+        for (key, values) in relations {
+            print("\t\(key):")
+            for item in values {
+                print("\t - \(item.slug)")
+            }
+        }
+        
+
+        
+        // resolve page context
+        // TODO: contextually this should be ok
+        var pageContext: [String: [PageBundle]] = [:]
+        for (key, value) in contentType.context?.local ?? [:] {
+            let refs = source
+                .pageBundles(by: value.references)
+                /// filter down based on the condition
+                .filter {
+                    $0.referenceIdentifiers(
+                        for: value.foreignKey
+                    ).contains(id)
+                }
+                .sorted(key: value.sort, order: value.order)
+                .limited(value.limit)
+
+//                print(refs.map(\.title))
+            
+            pageContext[key] = refs
+        }
+        print("context:")
+        for (key, values) in pageContext {
+            print("\t\(key):")
+            for item in values {
+                print("\t - \(item.slug)")
+            }
+        }
+
+        
+        print("")
+        try render(
+            renderer,
+            .init(
+                template: pageBundle.template,
+                context: HTML(
+                    site: .init(
+                        baseUrl: source.config.site.baseUrl,
+                        title: source.config.site.title,
+                        description: source.config.site.description,
+                        language: source.config.site.language
+                    ),
+                    page: pageBundle,
+                    context: pageContext,
+                    year: currentYear
+                ),
+                destination: destinationUrl
+                    .appendingPathComponent(pageBundle.slug)
+                    .appendingPathComponent(Files.index)
+            )
+        )
     }
 
     // MARK: -
@@ -481,4 +449,48 @@ struct OutputRenderer {
 //        }
 //        .flatMap { $0 }
 //    }
+}
+
+
+// NOTE: complete hack for now...
+extension [PageBundle] {
+
+    func sorted(
+        key: String?,
+        order: ContentType.Order?
+    ) -> [PageBundle] {
+        guard let key, let order else {
+            return self
+        }
+        return sorted { lhs, rhs in
+            guard
+                let l = lhs.frontMatter[key] as? String,
+                let r = rhs.frontMatter[key] as? String
+            else {
+                guard
+                    let l = lhs.frontMatter[key] as? Int,
+                    let r = rhs.frontMatter[key] as? Int
+                else {
+                    return false
+                }
+                switch order {
+                case .asc:
+                    return l < r
+                case .desc:
+                    return l > r
+                }
+            }
+            // TODO: proper case insensitive compare
+            switch order {
+            case .asc:
+                return l.lowercased() < r.lowercased()
+            case .desc:
+                return l.lowercased() > r.lowercased()
+            }
+        }
+    }
+    
+    func limited(_ value: Int?) -> [PageBundle] {
+        Array(prefix(value ?? Int.max))
+    }
 }

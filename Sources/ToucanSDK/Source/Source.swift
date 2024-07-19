@@ -37,25 +37,14 @@ struct Source {
             fatalError("Invalid slugs")
         }
     }
-
-    func bundleContext() -> [String: [PageBundle]] {
-        var result: [String: [PageBundle]] = [:]
-        for contentType in contentTypes {
-            for (key, _) in contentType.context?.site ?? [:] {
-                // TODO: sort value order etc. + convert to ctx
-                result[key] = pageBundlesBy(type: contentType.id)
-            }
-        }
-        return result
-    }
     
     func contentType(for pageBundle: PageBundle) -> ContentType {
         // TODO: proper fallback to page...?
         contentTypes.first { $0.id == pageBundle.type }!
     }
 
-    func pageBundlesBy(type: String) -> [PageBundle] {
-        pageBundles.filter { $0.type == type }
+    func pageBundles(by contentType: String) -> [PageBundle] {
+        pageBundles.filter { $0.type == contentType }
     }
     
     //    // MARK: - utilities

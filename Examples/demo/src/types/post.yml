@@ -1,7 +1,21 @@
 id: post
 
 properties:
-    - order
+    order:
+        type: int
+        required: true
+
+relations:
+    authors:
+        references: author
+        join: many
+        sort: title
+        order: asc
+    tags:
+        references: tag
+        join: many
+        sort: title
+        order: asc
 
 context:
     site:
