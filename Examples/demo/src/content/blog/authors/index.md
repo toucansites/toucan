@@ -1,8 +1,8 @@
 ---
 title: Authors
 description: This is the authors page.
-image: ./foo.jpg 
-assetsFolder: authors
+image: ./assets/foo.jpg 
+template: blog.authors
 ---
 
 # Authors

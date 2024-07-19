@@ -1,22 +1,22 @@
 {{<index}}
 {{$main}}
 
-{{& page.content}}
+{{& content}}
 
 <div id="home" class="wrapper">
     <h2>Pages</h2>
-    {{#empty(page.context.pages)}}
+    {{#empty(context.pages)}}
     Empty.
-    {{/empty(page.context.pages)}}
-    {{^empty(page.context.pages)}}
+    {{/empty(context.pages)}}
+    {{^empty(context.pages)}}
     <ul>
-    {{#page.context.pages}}
+    {{#context.pages}}
     <li>
         <a href="{{permalink}}">{{title}}</a>
     </li>
-    {{/page.context.pages}}
+    {{/context.pages}}
     </ul>
-    {{/empty(page.context.pages)}}
+    {{/empty(context.pages)}}
 </div>
 {{/main}}
 {{/index}}

@@ -2,7 +2,7 @@
 {{$main}}
 
 <div id="author-page" class="content wrapper">
-    {{#page.context.author}}
+    {{#context.author}}
     <header>
         {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <br><br>
@@ -11,20 +11,22 @@
         <p>{{description}}</p>
         <p>{{numberOfPosts}} posts</p>
     </header>
-    {{/page.context.author}}
+    {{/context.author}}
     
-    {{& page.content}}
+    {{page}}
+    {{& content}}
 
-    {{#empty(page.context.posts)}}
+    -----------------
+    {{#empty(context.posts)}}
     Empty.
-    {{/empty(page.context.posts)}}
-    {{^empty(page.context.posts)}}
+    {{/empty(context.posts)}}
+    {{^empty(context.posts)}}
     <div class="grid grid-321">
-    {{#page.context.posts}}
+    {{#context.posts}}
         {{> blog.blocks.post}}
-    {{/page.context.posts}}
+    {{/context.posts}}
     </div>
-    {{/empty(page.context.posts)}}
+    {{/empty(context.posts)}}
     
 </div>
 

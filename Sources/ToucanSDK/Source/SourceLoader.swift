@@ -32,6 +32,7 @@ struct SourceLoader {
         let pageBundleLoader = PageBundleLoader(
             sourceUrl: sourceUrl,
             config: config,
+            contentTypes: contentTypes,
             fileManager: fileManager,
             frontMatterParser: frontMatterParser
         )

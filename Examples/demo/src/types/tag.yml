@@ -1,4 +1,14 @@
 id: tag
-template: tag
+
 properties:
     - order
+
+context:
+    list:
+        name: tags
+        sort: title
+        order: asc
+        pagination:
+            limit: 10
+
+template: blog.single.tag

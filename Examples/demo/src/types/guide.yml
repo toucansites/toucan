@@ -1,5 +1,14 @@
 id: guide
-template: guide
+
 properties:
-    - category
     - order
+
+context:
+    list:
+        name: guides
+        sort: title
+        order: asc
+        pagination:
+            limit: 10
+
+template: docs.single.guide

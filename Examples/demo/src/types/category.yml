@@ -1,4 +1,14 @@
 id: category
-template: category
+
 properties:
     - order
+
+context:
+    list:
+        name: categories
+        sort: title
+        order: asc
+        pagination:
+            limit: 10
+
+template: docs.single.category

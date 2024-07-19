@@ -20,6 +20,10 @@ struct PageBundleLoader {
     let sourceUrl: URL
     /// The configuration for loading contents.
     let config: Config
+
+
+    let contentTypes: [ContentType]
+
     /// The file manager used for file operations.
     let fileManager: FileManager
     /// The front matter parser used for parsing markdown files.
@@ -30,9 +34,7 @@ struct PageBundleLoader {
     
     /// helper
     private var contentUrl: URL {
-        sourceUrl.appendingPathComponent(
-            config.content.folder
-        )
+        sourceUrl.appendingPathComponent(config.content.folder)
     }
     
     public func load() throws -> [PageBundle] {
@@ -44,10 +46,6 @@ struct PageBundleLoader {
                 try? loadPageBundle(at: $0)
             }
             .sorted { $0.slug < $1.slug }
-
-        for pageBundle in pageBundles {
-            print(pageBundle.slug, "-", pageBundle.type)
-        }
 
         return pageBundles
     }
@@ -65,16 +63,16 @@ struct PageBundleLoader {
             let fileName = url.lastPathComponent
             let location = String(url.path.dropLast(fileName.count))
             let id = String(path.dropLast(fileName.count + 1))
-
+            
             let lastModification = try fileManager.modificationDate(at: url)
             
             let dirUrl = URL(fileURLWithPath: location)
-
+            
             // MARK: - load markdown + front matter data
-
+            
             let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
             var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
-
+            
             // TODO: use url
             for c in [id + ".yaml", id + ".yml"] {
                 let url = dirUrl.appendingPathComponent(c)
@@ -85,7 +83,7 @@ struct PageBundleLoader {
                 let fm = try frontMatterParser.load(yaml: yaml)
                 frontMatter = frontMatter.recursivelyMerged(with: fm)
             }
-
+            
             var data: [[String: Any]] = []
             for d in [id + ".data.yaml", id + ".data.yml"] {
                 let url = dirUrl.appendingPathComponent(d)
@@ -105,10 +103,10 @@ struct PageBundleLoader {
             if draft {
                 return nil
             }
-
+            
             let dateFormatter = DateFormatters.contentLoader
             dateFormatter.dateFormat = self.config.site.dateFormat
-
+            
             var publication: Date = now
             if
                 let rawDate = frontMatter["publication"] as? String,
@@ -135,7 +133,6 @@ struct PageBundleLoader {
                 return nil
             }
             
-            
             // MARK: - load material metadata
             
             let slug = frontMatter.string("slug")?.emptyToNil ?? id
@@ -143,9 +140,14 @@ struct PageBundleLoader {
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")?.emptyToNil
-            
-            #warning("use content type template property")
-            let template = frontMatter.string("template") ?? "pages.single.page"
+
+            guard
+                let contentType = contentTypes.first(where: { $0.id == type })
+            else {
+                return nil
+            }
+
+            let template = frontMatter.string("template") ?? contentType.template
             let assetsPath = frontMatter.string("assets.path")?.emptyToNil
             let userDefined = frontMatter.dict("userDefined")
             let redirects = frontMatter.value(
@@ -191,10 +193,6 @@ struct PageBundleLoader {
                 imageUrl = image
             }
             
-//            print(image)
-//            print(imageUrl)
-//            print("---")
-            
             var css: [String] = []
             if fileManager.fileExists(at: styleCss) {
                 let cssFile = "./" + id + "/style.css"
@@ -217,19 +215,11 @@ struct PageBundleLoader {
                 as: [String].self
             ) ?? []
             js += jsFiles
-
-//                print(id)
-//                print(fileName)
-//                print(slug)
-//                print(location)
-//                print(assetsFolder ?? id)
-//                print("---")
             
             // TODO: proper asset resolution
             let assets = fileManager.recursivelyListDirectory(at: assetsUrl)
-            
-            let finalSlug = slug.safeSlug(prefix: nil)
 
+            let finalSlug = slug.safeSlug(prefix: nil)
             
             return .init(
                 url: .init(fileURLWithPath: location),
@@ -244,7 +234,7 @@ struct PageBundleLoader {
                 css: css,
                 js: js,
                 template: template,
-                assetsPath: assetsPath ?? id,
+                assetsPath: assetsPath ?? "assets",
                 lastModification: lastModification,
                 redirects: redirects,
                 userDefined: userDefined,

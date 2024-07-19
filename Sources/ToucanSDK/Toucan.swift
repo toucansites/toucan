@@ -114,12 +114,6 @@ public struct Toucan {
         let themeOverrideTemplatesUrl = themeOverrideUrl
             .appendingPathComponent(source.config.themes.templates.folder)
         
-//        let assetsInputUrl = inputUrl
-//            .appendingPathComponent(source.config.assets.folder)
-//        
-//        let assetsOutputUrl = outputUrl
-//            .appendingPathComponent(source.config.assets.output)
-
         // theme assets
         try fileManager.copyRecursively(
             from: themeAssetsUrl,
@@ -130,41 +124,29 @@ public struct Toucan {
             from: themeOverrideAssetsUrl,
             to: outputUrl
         )
-        // global assets
-//        try fileManager.copyRecursively(
-//            from: assetsInputUrl,
-//            to: assetsOutputUrl
-//        )
+        
 
-//        if !fileManager.directoryExists(at: assetsOutputUrl) {
-//            try fileManager.createDirectory(at: assetsOutputUrl)
-//        }
-//
-//        // MARK: copy assets
-//
-//        for content in source.materials.all() {
-//            let assetsUrl = content.url
-//                .appendingPathComponent(content.assetsPath)
-//            
-//            guard
-//                fileManager.directoryExists(at: assetsUrl),
-//                !fileManager.listDirectory(at: assetsUrl).isEmpty
-//            else {
-//                continue
-//            }
-//            
-//            let outputUrl = outputUrl
-//                .appendingPathComponent(source.config.contents.assets.outputPath)
-//                .appendingPathComponent(content.slug)
-//
-////            print(assetsUrl)
-////            print(outputUrl)
-//            
-//            try fileManager.copyRecursively(
-//                from: assetsUrl,
-//                to: outputUrl
-//            )
-//        }
+        // MARK: copy assets
+        
+        for pageBundle in source.pageBundles {
+            let assetsUrl = pageBundle.url
+                .appendingPathComponent(pageBundle.assetsPath)
+            
+            guard
+                fileManager.directoryExists(at: assetsUrl),
+                !fileManager.listDirectory(at: assetsUrl).isEmpty
+            else {
+                continue
+            }
+            
+            let outputUrl = outputUrl
+                .appendingPathComponent(pageBundle.slug)
+
+            try fileManager.copyRecursively(
+                from: assetsUrl,
+                to: outputUrl
+            )
+        }
 
         let renderer = OutputRenderer(
             source: source,

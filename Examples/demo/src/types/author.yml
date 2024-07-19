@@ -11,5 +11,5 @@ context:
         pagination:
             limit: 10
 
-template: author
+template: blog.single.author
 

@@ -1,6 +1,7 @@
 ---
 title: Not found
 description: Page not found
+template: main.404
 ---
 
 # Not found

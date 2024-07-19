@@ -11,5 +11,4 @@ context:
         pagination:
             limit: 10
 
-template: page
-
+template: pages.single.page

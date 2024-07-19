@@ -19,12 +19,38 @@ struct OutputRenderer {
     }
 
     let source: Source
+    
+    let currentYear: Int
+    let dateFormatter: DateFormatter
+    let rssDateFormatter: DateFormatter
+    let sitemapDateFormatter: DateFormatter
 
     let templatesUrl: URL
     let overridesUrl: URL
     let destinationUrl: URL
-
+    
     let fileManager: FileManager = .default
+    
+    init(
+        source: Source,
+        templatesUrl: URL,
+        overridesUrl: URL,
+        destinationUrl: URL
+    ) {
+        self.source = source
+        self.templatesUrl = templatesUrl
+        self.overridesUrl = overridesUrl
+        self.destinationUrl = destinationUrl
+        
+        let calendar = Calendar(identifier: .gregorian)
+        self.currentYear = calendar.component(.year, from: .init())
+        
+        self.dateFormatter = DateFormatters.baseFormatter
+        self.dateFormatter.dateFormat = source.config.site.dateFormat
+        self.rssDateFormatter = DateFormatters.rss
+        self.sitemapDateFormatter = DateFormatters.sitemap
+    }
+
 
     func render() throws {
         let renderer = try MustacheToHTMLRenderer(
@@ -41,14 +67,14 @@ struct OutputRenderer {
                     template: pageBundle.template,
                     context: HTML(
                         site: .init(
-                            baseUrl: "",
-                            title: "",
-                            description: "",
-                            language: nil
+                            baseUrl: source.config.site.baseUrl,
+                            title: source.config.site.title,
+                            description: source.config.site.description,
+                            language: source.config.site.language
                         ),
                         page: pageBundle,
                         context: context,
-                        year: 2023
+                        year: currentYear
                     ),
                     destination: destinationUrl
                         .appendingPathComponent(pageBundle.slug)
@@ -71,9 +97,6 @@ struct OutputRenderer {
 //        if let feed = feed() {
 //            try render(renderer, feed)
 //        }
-//        
-//        
-//        
 //        // MARK: - redirects
 //
 //        for renderable in redirects() {

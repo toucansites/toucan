@@ -34,12 +34,39 @@ struct ContentTypeLoader {
             .filter { $0.hasSuffix(".yml") }
         
         var types: [ContentType] = []
+        var hasPageOverride = false
         for file in list {
             let decoder = YAMLDecoder()
             let data = try Data(contentsOf: typesUrl.appendingPathComponent(file))
             let type = try decoder.decode(ContentType.self, from: data)
             types.append(type)
+            if type.id == "page" {
+                hasPageOverride = true
+            }
         }
+        /// add default page type if needed
+        if !hasPageOverride {
+            types.append(
+                .init(
+                    id: "page",
+                    context: .init(
+                        list: .init(
+                            name: "pages",
+                            sort: "title",
+                            order: .asc,
+                            pagination: .init(
+                                limit: 10
+                            )
+                        )
+                    ),
+                    template: "pages.single.page",
+                    properties: [
+                        "TODO"
+                    ]
+                )
+            )
+        }
+
         return types
     }
 }
