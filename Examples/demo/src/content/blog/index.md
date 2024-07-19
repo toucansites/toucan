@@ -7,5 +7,5 @@ template: blog.index
 ---
 
 # Blog
-
+---
 Blog posts.

@@ -6,6 +6,8 @@ order: 2
 ---
 
 # Getting started
+---
+Getting started category...
 
 @Grid(
     desktop: 4,

@@ -6,5 +6,5 @@ template: blog.authors.index
 ---
 
 # Authors
-
+---
 This is the authors page.
