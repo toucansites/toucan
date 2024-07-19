@@ -1,19 +1,7 @@
 {{<html}}
 {{$main}}
-<div class="page content-wrapper">
-    {{#empty(context.posts)}}
-    Empty.
-    {{/empty(context.posts)}}
-    {{^empty(context.posts)}}
-    <div class="grid grid-421">
-    {{#context.posts}}
-        {{> blog.blocks.post}}
-    {{/context.posts}}
-    </div>
-    {{/empty(context.posts)}}
-   
-    ---
-    {{& page.content}}
-</div>
+
+{{& context.contents}}
+
 {{/main}}
 {{/html}}
