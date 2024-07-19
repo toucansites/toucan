@@ -85,7 +85,7 @@ struct PageBundleLoader {
                 let fm = try frontMatterParser.load(yaml: yaml)
                 frontMatter = frontMatter.recursivelyMerged(with: fm)
             }
-            
+
             var data: [[String: Any]] = []
             for d in [id + ".data.yaml", id + ".data.yml"] {
                 let url = dirUrl.appendingPathComponent(d)

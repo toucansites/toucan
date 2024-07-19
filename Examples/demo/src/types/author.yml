@@ -1,4 +1,15 @@
 id: author
-template: author
+
 properties:
     - order
+
+context:
+    list:
+        name: authors
+        sort: title
+        order: asc
+        pagination:
+            limit: 10
+
+template: author
+

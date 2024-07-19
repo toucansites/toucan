@@ -1,15 +1,15 @@
-id: post
+id: page
 
 properties:
     - order
 
 context:
     list:
-        name: posts
+        name: pages
         sort: title
         order: asc
         pagination:
             limit: 10
 
-template: post
+template: page
 

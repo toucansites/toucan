@@ -32,6 +32,8 @@ struct OutputRenderer {
             overridesUrl: overridesUrl
         )
         
+        let context = source.bundleContext()
+        
         for pageBundle in source.pageBundles {
             try render(
                 renderer,
@@ -42,29 +44,10 @@ struct OutputRenderer {
                             baseUrl: "",
                             title: "",
                             description: "",
-                            language: ""
+                            language: nil
                         ),
-                        page: .init(
-                            metadata: .init(
-                                slug: "",
-                                permalink: "",
-                                title: "",
-                                description: "",
-                                imageUrl: "",
-                                noindex: false,
-                                canonical: "",
-                                hreflang: [],
-                                prev: nil,
-                                next: nil
-                            ),
-                            css: [],
-                            js: [],
-                            data: [],
-                            context: pageBundle,
-                            content: "",
-                            toc: []
-                        ),
-                        userDefined: [:],
+                        page: pageBundle,
+                        context: context,
                         year: 2023
                     ),
                     destination: destinationUrl

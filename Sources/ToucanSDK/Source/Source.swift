@@ -63,20 +63,24 @@ struct Source {
 
     
     func bundleContext() -> [String: [PageBundle]] {
+
         var result: [String: [PageBundle]] = [:]
-        for type in bundleTypes() {
-            result[type] = pageBundlesBy(type: type)
+        for contentType in contentTypes {
+            guard let key = contentType.context?.list?.name else {
+                continue
+            }
+            result[key] = pageBundlesBy(type: contentType.id)
         }
         return result
     }
     
-    func bundleTypes() -> Set<String> {
-        var types: Set<String> = .init()
-        for bundle in pageBundles {
-            types.insert(bundle.type)
-        }
-        return types
-    }
+//    func bundleTypes() -> Set<String> {
+//        var types: Set<String> = .init()
+//        for bundle in pageBundles {
+//            types.insert(bundle.type)
+//        }
+//        return types
+//    }
 
     func pageBundlesBy(type: String) -> [PageBundle] {
         pageBundles.filter { $0.type == type }
