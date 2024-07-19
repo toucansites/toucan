@@ -72,3 +72,25 @@ struct ContentType: Codable {
     let context: Context?
 }
 
+extension ContentType {
+
+    static let `default` = ContentType(
+        id: "page",
+        template: "pages.single.page",
+        properties: nil,
+        relations: nil,
+        context: .init(
+            site: [
+                "pages": .init(
+                    sort: "title",
+                    order: .asc,
+                    limit: nil,
+                    filter: nil
+                )
+            ],
+            local: nil
+        )
+    )
+
+}
+

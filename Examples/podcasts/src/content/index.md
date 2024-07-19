@@ -2,6 +2,7 @@
 title: The AWS Developers Podcast
 description: Seb and friends chat with the people behind Amazon Web Services (AWS) and the developers who are building on it 
 image: images/defaults/default.png
+template: index
 ---
 
 # The AWS Developers Podcast

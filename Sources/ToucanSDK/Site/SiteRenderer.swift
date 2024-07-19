@@ -54,7 +54,7 @@ struct SiteRenderer {
         
         self.logger = {
             var logger = Logger(label: "SiteRenderer")
-            logger.logLevel = .debug
+            logger.logLevel = .trace
             return logger
         }()
     }

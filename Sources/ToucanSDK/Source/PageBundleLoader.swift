@@ -45,10 +45,15 @@ struct PageBundleLoader {
             // TODO: use noindex for slug removal + allow folder grouping
             .filter { !$0.hasSuffix("noindex.md") }
             .compactMap {
-                try? loadPageBundle(at: $0)
+//                print($0)
+                return try? loadPageBundle(at: $0)
             }
             .sorted { $0.slug < $1.slug }
 
+//        for pageBundle in pageBundles {
+//            print(pageBundle.slug)
+//        }
+    
         return pageBundles
     }
 
@@ -138,7 +143,7 @@ struct PageBundleLoader {
             // MARK: - load material metadata
             
             let slug = frontMatter.string("slug")?.emptyToNil ?? id
-            let type = frontMatter.string("type")?.emptyToNil ?? "page"
+            let type = frontMatter.string("type")?.emptyToNil ?? ContentType.default.id
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")?.emptyToNil

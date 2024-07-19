@@ -34,39 +34,18 @@ struct ContentTypeLoader {
             .filter { $0.hasSuffix(".yml") }
         
         var types: [ContentType] = []
-        var hasPageOverride = false
+        var useDefaultContentType = true
         for file in list {
             let decoder = YAMLDecoder()
             let data = try Data(contentsOf: typesUrl.appendingPathComponent(file))
             let type = try decoder.decode(ContentType.self, from: data)
             types.append(type)
-            if type.id == "page" {
-                hasPageOverride = true
+            if type.id == ContentType.default.id {
+                useDefaultContentType = false
             }
         }
-        /// add default page type if needed
-        if !hasPageOverride {
-    #warning("todo")
-//            types.append(
-//                .init(
-//                    id: "page",
-//                    context: .init(
-//                        site: [
-//                            "pages": .init(
-//                                sort: "title",
-//                                order: .asc,
-//                                pagination: .init(limit: 10)
-//                            )
-//                        ],
-//                        page: [:],
-//                        relations: [:]
-//                    ),
-//                    template: "pages.single.page",
-//                    properties: [
-//                        "TODO"
-//                    ]
-//                )
-//            )
+        if useDefaultContentType {
+            types.append(.default)
         }
 
         return types

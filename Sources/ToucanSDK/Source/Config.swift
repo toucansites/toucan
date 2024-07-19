@@ -25,7 +25,7 @@ struct Config: Codable {
         let description: String
         let language: String?
         let dateFormat: String?
-        let noindex: Bool
+        let noindex: Bool?
         let hreflang: [Hreflang]?
         
     }

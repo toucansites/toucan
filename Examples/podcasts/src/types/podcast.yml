@@ -1,0 +1,28 @@
+id: podcast
+
+properties:
+    order:
+        type: int
+        required: true
+
+context:
+    site:
+        podcasts:
+            sort: title
+            order: asc
+            limit: 10
+        
+    local:
+        prev:
+            references: podcast
+            foreignKey: $prev
+            sort: order
+            order: asc
+
+        next:
+            references: podcast
+            foreignKey: $next
+            sort: order
+            order: asc
+            
+template: podcasts.single.podcast

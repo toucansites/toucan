@@ -1,4 +1,5 @@
 ---
+type: podcast
 title:  "Amazon Bedrock converse API"
 description: "This episode dives into the Amazon Bedrock Converse API, a new release that simplifies integrating large language models (LLMs) into your applications.
 
