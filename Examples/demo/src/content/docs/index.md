@@ -1,7 +1,7 @@
 ---
 title: Docs home
 description: docs home page
-template: docs.home
+template: docs.index
 ---
 
 # This is the main page for the docs
