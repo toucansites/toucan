@@ -11,23 +11,47 @@ struct ContentType: Codable {
     
     struct Context: Codable {
         
-        struct List: Codable {
-            enum Order: String, Codable {
-                case asc
-                case desc
-            }
-            
-            struct Pagination: Codable {
-                let limit: Int
-            }
-            
-            let name: String
+        enum Order: String, Codable {
+            case asc
+            case desc
+        }
+
+        enum Join: String, Codable {
+            case one
+            case many
+        }
+        
+        struct Pagination: Codable {
+            let limit: Int
+        }
+        
+        struct Site: Codable {
             let sort: String
             let order: Order
             let pagination: Pagination
         }
+        
+        struct Page: Codable {
+            let references: String
+            let using: String
+            let join: Join
+            let sort: String
+            let order: Order
+            let limit: Int?
+        }
+        
+        struct Relation: Codable {
+            let references: String
+            let join: Join
+            let sort: String
+            let order: Order
+            let limit: Int?
+        }
 
-        let list: List?
+
+        let site: [String: Site]?
+        let page: [String: Page]?
+        let relations: [String: Relation]?
     }
 
     
@@ -36,4 +60,3 @@ struct ContentType: Codable {
     let template: String
     let properties: [String]
 }
-

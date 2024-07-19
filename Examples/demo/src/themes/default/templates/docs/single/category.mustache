@@ -7,14 +7,14 @@
     <div class="center">
         <article>
             <a href="/docs/">Docs home</a>
-            {{& page.content}}
+            {{& content}}
         
             <h2>Guides</h2>
-            {{#page.context.category.guides}}
+            {{#context.category.guides}}
                 <li>
                     <a href="{{permalink}}">{{title}}</a>
                 </li>
-            {{/page.context.category.guides}}
+            {{/context.category.guides}}
 
         </article>
     </div>

@@ -4,11 +4,11 @@ properties:
     - order
 
 context:
-    list:
-        name: pages
-        sort: title
-        order: asc
-        pagination:
-            limit: 10
+    site:
+        pages:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10
 
 template: pages.single.page

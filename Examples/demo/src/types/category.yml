@@ -4,11 +4,22 @@ properties:
     - order
 
 context:
-    list:
-        name: categories
-        sort: title
-        order: asc
-        pagination:
-            limit: 10
+    site:
+        categories:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10
+
+    page:
+        guides:
+            references: guide
+            using: category
+            join: one
+            limit: 5
+            sort: order
+            order: asc
+
+        
 
 template: docs.single.category

@@ -50,14 +50,15 @@ struct ContentTypeLoader {
                 .init(
                     id: "page",
                     context: .init(
-                        list: .init(
-                            name: "pages",
-                            sort: "title",
-                            order: .asc,
-                            pagination: .init(
-                                limit: 10
+                        site: [
+                            "pages": .init(
+                                sort: "title",
+                                order: .asc,
+                                pagination: .init(limit: 10)
                             )
-                        )
+                        ],
+                        page: [:],
+                        relations: [:]
                     ),
                     template: "pages.single.page",
                     properties: [

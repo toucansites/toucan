@@ -4,11 +4,40 @@ properties:
     - order
 
 context:
-    list:
-        name: guides
-        sort: title
-        order: asc
-        pagination:
-            limit: 10
+    site:
+        guides:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10
+    page:
+        prev:
+            references: guide
+            using: id
+            join: one
+            limit: 5
+            offset: -1
+            sort: order
+            order: asc
+
+        next:
+            references: guide
+            using: id
+            join: one
+            limit: 5
+            offset: +1
+            sort: order
+            order: asc
+        
+    relations:
+        category:
+            references: category
+            join: one
+            limit: 5
+            sort: order
+            order: asc
+        
+        
+        
 
 template: docs.single.guide

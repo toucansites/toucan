@@ -61,6 +61,128 @@ struct OutputRenderer {
         let context = source.bundleContext()
         
         for pageBundle in source.pageBundles {
+            let id = String(pageBundle.slug.split(separator: "/").last ?? "")
+            var pageContext: [String: Any] = [:]
+            let contentType = source.contentType(for: pageBundle)
+            
+            // resolve relations
+            for (key, value) in contentType.context?.relations ?? [:] {
+
+                var refIds: [String] = []
+                switch value.join {
+                case .one:
+                    if let ref = pageBundle.frontMatter[key] as? String {
+                        refIds.append(ref)
+                    }
+                case .many:
+                    refIds = pageBundle.frontMatter[key] as? [String] ?? []
+                }
+                
+                let refs = source
+                    .pageBundlesBy(type: value.references)
+                    /// filter down based on the condition
+                    .filter { item in
+                        let id = String(item.slug.split(separator: "/").last ?? "")
+                        return refIds.contains(id)
+                    }
+                    // TODO: complete hack... needs better solution.
+                    .sorted { lhs, rhs in
+                        guard
+                            let l = lhs.frontMatter[value.sort] as? String,
+                            let r = rhs.frontMatter[value.sort] as? String
+                        else {
+                            guard
+                                let l = lhs.frontMatter[value.sort] as? Int,
+                                let r = rhs.frontMatter[value.sort] as? Int
+                            else {
+                                return false
+                            }
+                            switch value.order {
+                            case .asc:
+                                return l < r
+                            case .desc:
+                                return l > r
+                            }
+                        }
+                        // TODO: proper case insensitive compare
+                        switch value.order {
+                        case .asc:
+                            return l.lowercased() < r.lowercased()
+                        case .desc:
+                            return l.lowercased() > r.lowercased()
+                        }
+                    }
+                    /// meh... will work for now...
+                    .prefix(value.limit ?? Int.max)
+
+//                print(pageBundle.slug, "-", pageBundle.type)
+//                print(refs.map(\.title))
+                pageContext[key] = refs
+            }
+
+            // resolve page context
+            // TODO: contextually this should be ok
+            for (key, value) in contentType.context?.page ?? [:] {
+                let refs = source
+                    .pageBundlesBy(type: value.references)
+                    /// filter down based on the condition
+                    .filter { item in
+                        
+                        var refs: [String] = []
+                        switch value.join {
+                        case .one:
+                            if let ref = item.frontMatter[value.using] as? String {
+                                refs.append(ref)
+                            }
+                        case .many:
+                            refs = item.frontMatter[value.using] as? [String] ?? []
+                        }
+                        return refs.contains(id)
+                    }
+                    // TODO: complete hack... needs better solution.
+                    .sorted { lhs, rhs in
+                        guard
+                            let l = lhs.frontMatter[value.sort] as? String,
+                            let r = rhs.frontMatter[value.sort] as? String
+                        else {
+                            guard
+                                let l = lhs.frontMatter[value.sort] as? Int,
+                                let r = rhs.frontMatter[value.sort] as? Int
+                            else {
+                                return false
+                            }
+                            switch value.order {
+                            case .asc:
+                                return l < r
+                            case .desc:
+                                return l > r
+                            }
+                        }
+                        // TODO: proper case insensitive compare
+                        switch value.order {
+                        case .asc:
+                            return l.lowercased() < r.lowercased()
+                        case .desc:
+                            return l.lowercased() > r.lowercased()
+                        }
+                    }
+                    /// meh... will work for now...
+                    .prefix(value.limit ?? Int.max)
+
+
+//                print(refs.map(\.title))
+                
+                pageContext[key] = refs
+            }
+
+            
+            print(pageBundle.slug, "-", pageBundle.type)
+            print(pageContext.keys.joined(separator: ", "))
+            print("----------------------")
+            if pageBundle.type == "guide" {
+                print(pageContext["prev"])
+            }
+            
             try render(
                 renderer,
                 .init(

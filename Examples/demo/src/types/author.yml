@@ -4,12 +4,13 @@ properties:
     - order
 
 context:
-    list:
-        name: authors
-        sort: title
-        order: asc
-        pagination:
-            limit: 10
+    site:
+        authors:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10
+        
 
 template: blog.single.author
 

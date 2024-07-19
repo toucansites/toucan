@@ -4,11 +4,11 @@ properties:
     - order
 
 context:
-    list:
-        name: tags
-        sort: title
-        order: asc
-        pagination:
-            limit: 10
+    site:
+        tags:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10        
 
 template: blog.single.tag

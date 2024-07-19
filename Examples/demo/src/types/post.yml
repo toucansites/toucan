@@ -4,11 +4,12 @@ properties:
     - order
 
 context:
-    list:
-        name: posts
-        sort: title
-        order: asc
-        pagination:
-            limit: 10
+    site:
+        posts:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10
+        
 
 template: blog.single.post
