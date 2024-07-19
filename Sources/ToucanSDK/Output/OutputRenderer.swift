@@ -65,8 +65,10 @@ struct OutputRenderer {
                 siteContext[key] = source
                     .pageBundles(by: contentType.id)
                     .sorted(key: value.sort, order: value.order)
+                    .filtered(value.filter)
                     // TODO: proper pagination
-                    .limited(value.pagination?.limit)
+                    .limited(value.limit)
+                    
             }
         }
         
@@ -77,9 +79,10 @@ struct OutputRenderer {
                 print("\t - \(item.slug)")
             }
         }
-        print("")
 
-        for pageBundle in source.pageBundles {
+        for pageBundle in source.pageBundles
+//            .filter({ $0.type == "post" })
+        {
             try render(
                 pageBundle: pageBundle,
                 siteContext: siteContext,
@@ -99,6 +102,8 @@ struct OutputRenderer {
 //            try render(renderer, renderable)
 //        }        
     }
+    
+
     
     func render(
         pageBundle: PageBundle,
@@ -140,27 +145,68 @@ struct OutputRenderer {
                 print("\t - \(item.slug)")
             }
         }
-        
 
-        
         // resolve page context
         // TODO: contextually this should be ok
         var pageContext: [String: [PageBundle]] = [:]
         for (key, value) in contentType.context?.local ?? [:] {
-            let refs = source
-                .pageBundles(by: value.references)
-                /// filter down based on the condition
-                .filter {
-                    $0.referenceIdentifiers(
-                        for: value.foreignKey
-                    ).contains(id)
-                }
-                .sorted(key: value.sort, order: value.order)
-                .limited(value.limit)
-
-//                print(refs.map(\.title))
             
-            pageContext[key] = refs
+            if value.foreignKey.hasPrefix("$") {
+                var command = String(value.foreignKey.dropFirst())
+                var arguments: [String] = []
+                if command.contains(".") {
+                    let all = command.split(separator: ".")
+                    command = String(all[0])
+                    arguments = all.dropFirst().map(String.init)
+                }
+                
+                let refs = source
+                    .pageBundles(by: value.references)
+                    .sorted(key: value.sort, order: value.order)
+                
+                guard let idx = refs.firstIndex(where: { $0.slug == pageBundle.slug }) else {
+                    continue
+                }
+                
+                switch command {
+                case "prev":
+                    guard idx > 0 else {
+                        continue
+                    }
+                    pageContext[key] = [refs[idx - 1]]
+                case "next":
+                    guard idx < refs.count - 1 else {
+                        continue
+                    }
+                    pageContext[key] = [refs[idx + 1]]
+                case "same":
+                    guard let arg = arguments.first else {
+                        continue
+                    }
+                    let ids = Set(pageBundle.referenceIdentifiers(for: arg))
+                    pageContext[key] = refs.filter { pb in
+                        if pb.slug == pageBundle.slug {
+                            return false
+                        }
+                        let pbIds = Set(pb.referenceIdentifiers(for: arg))
+                        return !ids.intersection(pbIds).isEmpty
+                    }
+                    .limited(value.limit)
+                default:
+                    continue
+                }
+            }
+            else {
+                pageContext[key] = source
+                    .pageBundles(by: value.references)
+                    .filter {
+                        $0.referenceIdentifiers(
+                            for: value.foreignKey
+                        ).contains(id)
+                    }
+                    .sorted(key: value.sort, order: value.order)
+                    .limited(value.limit)
+            }
         }
         print("context:")
         for (key, values) in pageContext {
@@ -170,7 +216,6 @@ struct OutputRenderer {
             }
         }
 
-        
         print("")
         try render(
             renderer,
@@ -181,7 +226,8 @@ struct OutputRenderer {
                         baseUrl: source.config.site.baseUrl,
                         title: source.config.site.title,
                         description: source.config.site.description,
-                        language: source.config.site.language
+                        language: source.config.site.language,
+                        context: siteContext
                     ),
                     page: pageBundle,
                     context: pageContext,
@@ -452,7 +498,7 @@ struct OutputRenderer {
 }
 
 
-// NOTE: complete hack for now...
+// NOTE: this is a complete hack for now...
 extension [PageBundle] {
 
     func sorted(
@@ -490,7 +536,27 @@ extension [PageBundle] {
         }
     }
     
+//    func offset(_ value: Int?) -> [PageBundle] {
+//        Array(prefix(value ?? Int.max))
+//    }
+    
     func limited(_ value: Int?) -> [PageBundle] {
         Array(prefix(value ?? Int.max))
+    }
+    
+    func filtered(_ filter: ContentType.Filter?) -> [PageBundle] {
+        guard let filter else {
+            return self
+        }
+        return self.filter { pageBundle in
+            guard let field = pageBundle.frontMatter[filter.field] else {
+                return false
+            }
+            switch filter.method {
+            case .equals:
+                // this is horrible... 😱
+                return String(describing: field) == filter.value
+            }
+        }
     }
 }

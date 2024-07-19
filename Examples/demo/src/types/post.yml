@@ -22,8 +22,43 @@ context:
         posts:
             sort: title
             order: asc
-            pagination:
-                limit: 10
+            limit: 10
+        
+        featured:
+            sort: title
+            order: asc
+            limit: 10
+            filter:
+                field: featured
+                method: equals
+                value: true
+                
+    local:
+        prev:
+            references: post
+            foreignKey: $prev
+            sort: order
+            order: asc
+
+        next:
+            references: post
+            foreignKey: $next
+            sort: order
+            order: asc
+            
+        related:
+            references: post
+            foreignKey: $same.tags
+            sort: order
+            order: asc
+            limit: 6
+
+        moreByAuthors:
+            references: post
+            foreignKey: $same.authors
+            sort: order #TODO: $random
+            order: asc
+            limit: 6
         
 
 template: blog.single.post

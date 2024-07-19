@@ -12,6 +12,7 @@ struct Context {
         let title: String
         let description: String
         let language: String?
+        let context: [String: Any]?
     }
 
     struct Metadata {

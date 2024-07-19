@@ -4,7 +4,7 @@ properties:
     order:
         type: int
         required: true
-    
+
 context:
     site:
         categories:
@@ -20,7 +20,5 @@ context:
             sort: title
             order: asc
             limit: 10
-
-        
 
 template: docs.single.category

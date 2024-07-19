@@ -5,17 +5,17 @@
 
 <div id="tags" class="wrapper">
 
-    {{#empty(context.tags)}}
+    {{#empty(site.context.tags)}}
     Empty.
-    {{/empty(context.tags)}}
-    {{^empty(context.tags)}}
+    {{/empty(site.context.tags)}}
+    {{^empty(site.context.tags)}}
     <div class="grid grid-321">
-    {{#context.tags}}
+    {{#site.context.tags}}
         {{> blog.blocks.tag}}
-    {{/context.tags}}
+    {{/site.context.tags}}
     
     </div>
-    {{/empty(context.tags)}}
+    {{/empty(site.context.tags)}}
 </div>
 
 {{/main}}

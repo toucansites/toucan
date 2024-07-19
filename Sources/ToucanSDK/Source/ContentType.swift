@@ -32,17 +32,24 @@ struct ContentType: Codable {
         let limit: Int?
     }
     
+    struct Filter: Codable {
+        
+        enum Method: String, Codable {
+            case equals
+        }
+
+        let field: String
+        let method: Method
+        let value: String
+    }
+    
     struct Context: Codable {
         
-        struct Site: Codable {
-
-            struct Pagination: Codable {
-                let limit: Int
-            }
-
+        struct Site: Codable {       
             let sort: String?
             let order: Order?
-            let pagination: Pagination?
+            let limit: Int?
+            let filter: Filter?
         }
         
         struct Local: Codable {
