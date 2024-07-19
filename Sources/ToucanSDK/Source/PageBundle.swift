@@ -11,6 +11,7 @@ struct PageBundle {
     let url: URL
     
     let slug: String
+    let permalink: String
     
     let type: String
     let title: String

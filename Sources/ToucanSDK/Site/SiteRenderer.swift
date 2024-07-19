@@ -109,7 +109,8 @@ struct SiteRenderer {
 //            try render(renderer, renderable)
 //        }        
     }
-    
+
+    // TODO: recursive resolution vs context ref + list?
     func getFullContext(
         pageBundle: PageBundle
     ) -> [String: Any] {
@@ -250,7 +251,7 @@ struct SiteRenderer {
         try fileManager.createParentFolderIfNeeded(
             for: fileUrl
         )
-        
+
         try renderer.render(
             template: pageBundle.template,
             with: HTML(

@@ -226,6 +226,7 @@ struct PageBundleLoader {
             return .init(
                 url: .init(fileURLWithPath: location),
                 slug: finalSlug,
+                permalink: finalSlug.permalink(baseUrl: config.site.baseUrl),
                 type: type,
                 title: title,
                 description: description,
