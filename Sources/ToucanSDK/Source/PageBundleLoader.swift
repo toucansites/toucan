@@ -42,6 +42,8 @@ struct PageBundleLoader {
         let pageBundles = fileManager
             .recursivelyListDirectory(at: contentUrl)
             .filter { $0.hasSuffix("index.md") }
+            // TODO: use noindex for slug removal + allow folder grouping
+            .filter { !$0.hasSuffix("noindex.md") }
             .compactMap {
                 try? loadPageBundle(at: $0)
             }

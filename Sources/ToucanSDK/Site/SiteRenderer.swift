@@ -8,7 +8,7 @@
 import Foundation
 
 /// Responsible to build renderable files using the site context & templates.
-struct OutputRenderer {
+struct SiteRenderer {
 
     public enum Files {
         static let index = "index.html"
@@ -217,49 +217,38 @@ struct OutputRenderer {
         }
 
         print("")
-        try render(
-            renderer,
-            .init(
-                template: pageBundle.template,
-                context: HTML(
-                    site: .init(
-                        baseUrl: source.config.site.baseUrl,
-                        title: source.config.site.title,
-                        description: source.config.site.description,
-                        language: source.config.site.language,
-                        context: siteContext
-                    ),
-                    page: pageBundle,
-                    context: pageContext,
-                    year: currentYear
-                ),
-                destination: destinationUrl
-                    .appendingPathComponent(pageBundle.slug)
-                    .appendingPathComponent(Files.index)
-            )
-        )
-    }
+        var fileUrl = destinationUrl
+            .appendingPathComponent(pageBundle.slug)
+            .appendingPathComponent(Files.index)
+        
+        if pageBundle.slug == "404" {
+            fileUrl = destinationUrl
+                .appendingPathComponent(Files.notFound)
+        }
 
-    // MARK: -
-
-    func render<T>(
-        _ renderer: MustacheToHTMLRenderer,
-        _ renderable: Renderable<T>
-    ) throws {
         try fileManager.createParentFolderIfNeeded(
-            for: renderable.destination
+            for: fileUrl
         )
+        
         try renderer.render(
-            template: renderable.template,
-            with: renderable.context,
-            to: renderable.destination
+            template: pageBundle.template,
+            with: HTML(
+                site: .init(
+                    baseUrl: source.config.site.baseUrl,
+                    title: source.config.site.title,
+                    description: source.config.site.description,
+                    language: source.config.site.language,
+                    context: siteContext
+                ),
+                page: pageBundle,
+                context: pageContext,
+                year: currentYear
+            ),
+            to: fileUrl
         )
+
     }
-    
-    // MARK: - pages
-    
-    
-    
+
     // MARK: - post
     
     func replacePaginationInfo(
@@ -373,13 +362,6 @@ struct OutputRenderer {
 //        return result
 //    }
     
-    
-    func renderPageBundle(
-        _ pageBundle: PageBundle
-    ) throws {
-        
-        
-    }
     
     // MARK: - rss
     
@@ -560,3 +542,43 @@ extension [PageBundle] {
         }
     }
 }
+
+
+// TODO: this is tricky, next / prev over refs, using a generic approach...
+//func prev(_ guide: Guide) -> Guide? {
+//            let guides = guides(category: guide.category)
+//            guard
+//                let index = guideIndex(for: guide, in: guides),
+//                index > 0
+//            else {
+//                if
+//                    let categoryIndex = categoryIndex(for: guide.category),
+//                    categoryIndex > 0
+//                {
+//                    let nextIndex = categoryIndex - 1
+//                    let category = categories[nextIndex]
+//                    return self.guides(category: category).last
+//                }
+//                return nil
+//            }
+//            return guides[index - 1]
+//        }
+//
+//        func next(_ guide: Guide) -> Guide? {
+//            let guides = guides(category: guide.category)
+//            guard
+//                let index = guideIndex(for: guide, in: guides),
+//                index < guides.count - 1
+//            else {
+//                if
+//                    let categoryIndex = categoryIndex(for: guide.category),
+//                    categoryIndex < categories.count - 1
+//                {
+//                    let nextIndex = categoryIndex + 1
+//                    let category = categories[nextIndex]
+//                    return self.guides(category: category).first
+//                }
+//                return nil
+//            }
+//            return guides[index + 1]
+//        }

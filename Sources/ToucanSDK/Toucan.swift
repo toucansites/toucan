@@ -148,7 +148,7 @@ public struct Toucan {
             )
         }
 
-        let renderer = OutputRenderer(
+        let renderer = SiteRenderer(
             source: source,
             templatesUrl: themeTemplatesUrl,
             overridesUrl: themeOverrideTemplatesUrl,
