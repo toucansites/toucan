@@ -8,9 +8,13 @@
 import Foundation
 
 struct PageBundle {
+
+    /// The url of the page bundle.
     let url: URL
 
+    /// The slug for the page.
     let slug: String
+    /// The permalink of the page.
     let permalink: String
 
     let type: String
@@ -43,6 +47,28 @@ struct PageBundle {
 }
 
 extension PageBundle {
+
+    var context: [String: Any] {
+        var result: [String: Any] = [:]
+        result["slug"] = slug
+        result["permalink"] = permalink
+        result["title"] = title
+        result["description"] = description
+        result["imageUrl"] = image  // imageUrl() vs frontMatter["image"] ?
+        // TODO: date format
+        result["publication"] = publication
+        result["expiration"] = expiration
+        result["lastModification"] = lastModification
+        result["css"] = cssUrls()
+        result["js"] = jsUrls()
+        result["noindex"] = noindex
+        result["canonical"] = canonical
+        result["hreflang"] = hreflang
+        // TODO: better user defaults
+        return
+            result
+            .recursivelyMerged(with: userDefined)
+    }
 
     /// Returns the context aware identifier, the last component of the slug
     ///

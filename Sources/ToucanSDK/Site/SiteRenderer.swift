@@ -246,9 +246,13 @@ struct SiteRenderer {
         )
         customContext["readingTime"] = readingTime(pageBundle.markdown)
 
-        return pageBundle.frontMatter
-            .recursivelyMerged(with: relations)
-            .recursivelyMerged(with: localContext)
+        //        print(relations.mapValues { $0.map(\.context).map { $0["imageUrl"] } })
+
+        return pageBundle.context
+            .recursivelyMerged(with: relations.mapValues { $0.map(\.context) })
+            .recursivelyMerged(
+                with: localContext.mapValues { $0.map(\.context) }
+            )
             .recursivelyMerged(with: customContext)
     }
 
