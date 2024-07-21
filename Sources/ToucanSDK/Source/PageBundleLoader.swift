@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 27/06/2024.
 //
@@ -9,7 +9,7 @@ import Foundation
 import FileManagerKit
 
 struct PageBundleLoader {
-    
+
     /// An enumeration representing possible errors that can occur while loading the content.
     enum Error: Swift.Error {
         case indexFileNotExists
@@ -21,7 +21,6 @@ struct PageBundleLoader {
     /// The configuration for loading contents.
     let config: Config
 
-
     let contentTypes: [ContentType]
 
     /// The file manager used for file operations.
@@ -31,32 +30,32 @@ struct PageBundleLoader {
 
     /// The current date.
     let now: Date = .init()
-    
+
     /// helper
     private var contentUrl: URL {
         sourceUrl.appendingPathComponent(config.content.folder)
     }
-    
+
     public func load() throws -> [PageBundle] {
-        
-        let pageBundles = fileManager
+
+        let pageBundles =
+            fileManager
             .recursivelyListDirectory(at: contentUrl)
             .filter { $0.hasSuffix("index.md") }
             // TODO: use noindex for slug removal + allow folder grouping
             .filter { !$0.hasSuffix("noindex.md") }
             .compactMap {
-//                print($0)
+                //                print($0)
                 return try? loadPageBundle(at: $0)
             }
             .sorted { $0.slug < $1.slug }
 
-//        for pageBundle in pageBundles {
-//            print(pageBundle.slug)
-//        }
-    
+        //        for pageBundle in pageBundles {
+        //            print(pageBundle.slug)
+        //        }
+
         return pageBundles
     }
-
 
     func loadPageBundle(
         at path: String
@@ -70,16 +69,16 @@ struct PageBundleLoader {
             let fileName = url.lastPathComponent
             let location = String(url.path.dropLast(fileName.count))
             let id = String(path.dropLast(fileName.count + 1))
-            
+
             let lastModification = try fileManager.modificationDate(at: url)
-            
+
             let dirUrl = URL(fileURLWithPath: location)
-            
+
             // MARK: - load markdown + front matter data
-            
+
             let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
             var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
-            
+
             // TODO: use url
             for c in [id + ".yaml", id + ".yml"] {
                 let url = dirUrl.appendingPathComponent(c)
@@ -90,7 +89,7 @@ struct PageBundleLoader {
                 let fm = try frontMatterParser.load(yaml: yaml)
                 frontMatter = frontMatter.recursivelyMerged(with: fm)
             }
-            
+
             var data: [[String: Any]] = []
             for d in [id + ".data.yaml", id + ".data.yml"] {
                 let url = dirUrl.appendingPathComponent(d)
@@ -98,53 +97,56 @@ struct PageBundleLoader {
                     continue
                 }
                 let yaml = try String(contentsOf: url, encoding: .utf8)
-                let da = try frontMatterParser.load(yaml: yaml, as: [[String: Any]].self) ?? []
+                let da =
+                    try frontMatterParser.load(
+                        yaml: yaml,
+                        as: [[String: Any]].self
+                    ) ?? []
                 data += da
             }
-            
+
             // MARK: - load data & filter based on draft, publication, expiration
-            
+
             let draft = frontMatter.value("draft", as: Bool.self) ?? false
-            
+
             /// filter out draft
             if draft {
                 return nil
             }
-            
+
             let dateFormatter = DateFormatters.contentLoader
             // TODO: date format for input / per-content type basis...
             //dateFormatter.dateFormat = self.config.site.dateFormat
-            
+
             var publication: Date = now
-            if
-                let rawDate = frontMatter["publication"] as? String,
+            if let rawDate = frontMatter["publication"] as? String,
                 let date = dateFormatter.date(from: rawDate)
             {
                 publication = date
             }
-            
+
             /// filter out unpublished
             if publication > now {
                 return nil
             }
-            
+
             var expiration: Date? = nil
-            if
-                let rawDate = frontMatter["expiration"] as? String,
+            if let rawDate = frontMatter["expiration"] as? String,
                 let date = dateFormatter.date(from: rawDate)
             {
                 expiration = date
             }
-            
+
             /// filter out expired
             if let expiration, expiration < now {
                 return nil
             }
-            
+
             // MARK: - load material metadata
-            
+
             let slug = frontMatter.string("slug")?.emptyToNil ?? id
-            let type = frontMatter.string("type")?.emptyToNil ?? ContentType.default.id
+            let type =
+                frontMatter.string("type")?.emptyToNil ?? ContentType.default.id
             let title = frontMatter.string("title") ?? ""
             let description = frontMatter.string("description") ?? ""
             let image = frontMatter.string("image")?.emptyToNil
@@ -155,21 +157,24 @@ struct PageBundleLoader {
                 return nil
             }
 
-            let template = frontMatter.string("template") ?? contentType.template
+            let template =
+                frontMatter.string("template") ?? contentType.template
             let output = frontMatter.string("output")
             let assetsPath = frontMatter.string("assets.path")?.emptyToNil
             let userDefined = frontMatter.dict("userDefined")
-            let redirects = frontMatter.value(
-                "redirects.from",
-                as: [String].self
-            ) ?? []
+            let redirects =
+                frontMatter.value(
+                    "redirects.from",
+                    as: [String].self
+                ) ?? []
             let noindex = frontMatter.value("noindex", as: Bool.self) ?? false
             let canonical = frontMatter.string("canonical")?.emptyToNil
-            
+
             var hreflang = frontMatter.value(
                 "hreflang",
                 as: [[String: String]].self
-            )?.compactMap { dict -> Context.Metadata.Hreflang? in
+            )?
+            .compactMap { dict -> Context.Metadata.Hreflang? in
                 guard
                     let lang = dict["lang"]?.emptyToNil,
                     let url = dict["url"]?.emptyToNil
@@ -183,53 +188,60 @@ struct PageBundleLoader {
                 hreflang = []
             }
 
-            let assetsUrl = dirUrl
+            let assetsUrl =
+                dirUrl
                 .appendingPathComponent(assetsPath ?? id)
-            
-            let styleCss = assetsUrl
+
+            let styleCss =
+                assetsUrl
                 .appendingPathComponent("style.css")
-            
-            let mainJs = assetsUrl
+
+            let mainJs =
+                assetsUrl
                 .appendingPathComponent("main.js")
-            
+
             // NOTE: hacky solution...
             var imageUrl: String? = nil
-            if let image, fileManager.fileExists(
-                at: dirUrl.appendingPathComponent(
-                    image
+            if let image,
+                fileManager.fileExists(
+                    at: dirUrl.appendingPathComponent(
+                        image
+                    )
                 )
-            ) {
+            {
                 imageUrl = image
             }
-            
+
             var css: [String] = []
             if fileManager.fileExists(at: styleCss) {
                 let cssFile = "./" + id + "/style.css"
                 css.append(cssFile)
             }
-            let cssFiles = frontMatter.value(
-                "css",
-                as: [String].self
-            ) ?? []
+            let cssFiles =
+                frontMatter.value(
+                    "css",
+                    as: [String].self
+                ) ?? []
             css += cssFiles
-            
+
             var js: [String] = []
             if fileManager.fileExists(at: mainJs) {
                 let jsFile = "./" + id + "/main.js"
                 js.append(jsFile)
             }
 
-            let jsFiles = frontMatter.value(
-                "css",
-                as: [String].self
-            ) ?? []
+            let jsFiles =
+                frontMatter.value(
+                    "css",
+                    as: [String].self
+                ) ?? []
             js += jsFiles
-            
+
             // TODO: proper asset resolution
             let assets = fileManager.recursivelyListDirectory(at: assetsUrl)
 
             let finalSlug = slug.safeSlug(prefix: nil)
-            
+
             return .init(
                 url: .init(fileURLWithPath: location),
                 slug: finalSlug,

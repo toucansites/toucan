@@ -132,13 +132,13 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     mutating func visitHeading(
         _ heading: Heading
     ) -> Result {
-        
+
         var attributes: [Attribute] = []
         if [2, 3].contains(heading.level) {
             let fragment = heading.plainText.lowercased().slugify()
             let id = Attribute(key: "id", value: "\(fragment)")
             attributes.append(id)
-            
+
         }
         return tag(
             name: "h\(heading.level)",
@@ -198,18 +198,20 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         var arguments: [DirectiveArgument] = []
         let blockName = blockDirective.name.lowercased()
         if !blockDirective.argumentText.isEmpty {
-            arguments = blockDirective.argumentText.parseNameValueArguments(parseErrors: &parseErrors)
+            arguments = blockDirective.argumentText.parseNameValueArguments(
+                parseErrors: &parseErrors
+            )
         }
         guard parseErrors.isEmpty else {
             return ""
         }
-        
-//        print(blockName, "-----------------------")
+
+        //        print(blockName, "-----------------------")
         switch blockName {
         case "grid":
             var cssClass = "grid grid-"
             for argument in arguments {
-//                print(argument.name, argument.value)
+                //                print(argument.name, argument.value)
                 cssClass += argument.value
             }
             return tag(
@@ -236,9 +238,9 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         tag(name: "code", content: .value(inlineCode.code))
     }
 
-//    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
-//        fatalError()
-//    }
+    //    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
+    //        fatalError()
+    //    }
 
     mutating func visitEmphasis(_ emphasis: Emphasis) -> Result {
         tag(name: "em", content: .children(emphasis.children))

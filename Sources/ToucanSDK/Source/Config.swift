@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 27/06/2024.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 struct Config: Codable {
-    
+
     struct Location: Codable {
         let folder: String
     }
@@ -27,7 +27,7 @@ struct Config: Codable {
         let dateFormat: String?
         let noindex: Bool?
         let hreflang: [Hreflang]?
-        
+
     }
 
     struct Themes: Codable {
@@ -48,5 +48,3 @@ struct Config: Codable {
     let types: Location
     let content: Content
 }
-
-

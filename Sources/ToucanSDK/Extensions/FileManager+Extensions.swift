@@ -23,7 +23,7 @@ extension FileManager {
             )
         )
     }
-    
+
     func getURLs(
         at url: URL,
         for extensions: [String]
@@ -40,7 +40,7 @@ extension FileManager {
         }
         return result
     }
-    
+
     func recursivelyListDirectory(
         at url: URL
     ) -> [String] {

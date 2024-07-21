@@ -14,4 +14,3 @@ struct Sitemap: Output {
 
     let urls: [URL]
 }
-

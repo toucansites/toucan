@@ -285,7 +285,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
 
         XCTAssert(output == expectation)
     }
-    
+
     func testListWithCode() throws {
 
         let input = #"""

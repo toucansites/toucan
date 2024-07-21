@@ -8,12 +8,11 @@
 import Foundation
 
 struct Source {
-    
+
     let url: URL
     let config: Config
     let contentTypes: [ContentType]
     let pageBundles: [PageBundle]
-
 
     func validateSlugs() throws {
         let slugs = pageBundles.map(\.slug)
@@ -37,7 +36,7 @@ struct Source {
             fatalError("Invalid slugs")
         }
     }
-    
+
     func contentType(for pageBundle: PageBundle) -> ContentType {
         // TODO: proper fallback to page...?
         contentTypes.first { $0.id == pageBundle.type }!
@@ -46,7 +45,7 @@ struct Source {
     func pageBundles(by contentType: String) -> [PageBundle] {
         pageBundles.filter { $0.type == contentType }
     }
-    
+
     func rssPageBundles() -> [PageBundle] {
         contentTypes
             .filter { $0.rss == true }
@@ -55,7 +54,7 @@ struct Source {
             }
             .sorted { $0.publication > $1.publication }
     }
-    
+
     // MARK: - utilities
 
     func permalink(
@@ -64,7 +63,7 @@ struct Source {
     ) -> String {
         value.permalink(baseUrl: baseUrl ?? config.site.baseUrl)
     }
-    
+
     func render(
         pageBundle: PageBundle
     ) -> String {
@@ -76,13 +75,11 @@ struct Source {
         )
         return renderer.render(markdown: pageBundle.markdown)
     }
-    
+
     func readingTime(_ value: String) -> Int {
         value.split(separator: " ").count / 238
     }
 }
-
-
 
 extension String {
 

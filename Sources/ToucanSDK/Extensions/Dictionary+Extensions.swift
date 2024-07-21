@@ -2,7 +2,7 @@ import Foundation
 
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
 extension Dictionary where Key == String, Value == Any {
-    
+
     /// Recursively merges another `[String: Any]` dictionary into the current dictionary and returns a new dictionary.
     ///
     /// - Parameter other: The dictionary to merge into the current dictionary.
@@ -10,7 +10,9 @@ extension Dictionary where Key == String, Value == Any {
     func recursivelyMerged(with other: [String: Any]) -> [String: Any] {
         var result = self
         for (key, value) in other {
-            if let existingValue = result[key] as? [String: Any], let newValue = value as? [String: Any] {
+            if let existingValue = result[key] as? [String: Any],
+                let newValue = value as? [String: Any]
+            {
                 result[key] = existingValue.recursivelyMerged(with: newValue)
             }
             else {

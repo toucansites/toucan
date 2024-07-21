@@ -22,23 +22,3 @@ struct RSS: Output {
     let publicationDate: String
     let items: [Item]
 }
-
-// TODO: move out
-struct Feed: Output {
-
-    struct Item {
-        let permalink: String
-        let title: String
-        let description: String
-        let publicationDate: String
-    }
-
-    let title: String
-    let description: String
-    let baseUrl: String
-    let language: String?
-    let lastBuildDate: String
-    let publicationDate: String
-    let items: [Item]
-}
-

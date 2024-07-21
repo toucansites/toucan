@@ -8,7 +8,7 @@
 import Foundation
 
 struct ContentType: Codable {
-    
+
     enum Order: String, Codable {
         case asc
         case desc
@@ -23,7 +23,7 @@ struct ContentType: Codable {
         let type: String
         let required: Bool
     }
-    
+
     struct Relation: Codable {
         let references: String
         let join: Join
@@ -31,9 +31,9 @@ struct ContentType: Codable {
         let order: Order?
         let limit: Int?
     }
-    
+
     struct Filter: Codable {
-        
+
         enum Method: String, Codable {
             case equals
         }
@@ -42,16 +42,16 @@ struct ContentType: Codable {
         let method: Method
         let value: String
     }
-    
+
     struct Context: Codable {
-        
-        struct Site: Codable {       
+
+        struct Site: Codable {
             let sort: String?
             let order: Order?
             let limit: Int?
             let filter: Filter?
         }
-        
+
         struct Local: Codable {
             let references: String
             let foreignKey: String
@@ -95,4 +95,3 @@ extension ContentType {
     )
 
 }
-

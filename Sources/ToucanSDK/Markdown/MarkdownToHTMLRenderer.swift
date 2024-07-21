@@ -48,7 +48,7 @@ public struct MarkdownToHTMLRenderer {
 
         return htmlVisitor.visitDocument(document)
     }
-    
+
     public func toc(
         markdown: String
     ) -> [ToC] {

@@ -27,7 +27,7 @@ struct FrontMatterParser {
         }
         return try load(yaml: String(rawMetadata))
     }
-    
+
     func load(
         yaml: String
     ) throws -> [String: Any] {

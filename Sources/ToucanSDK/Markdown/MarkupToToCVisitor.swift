@@ -21,7 +21,7 @@ public struct ToC {
     public let level: Int
     public let text: String
     public let fragment: String
-    
+
     public init(
         level: Int,
         text: String,
@@ -50,48 +50,55 @@ public struct ToCTree {
         self.fragment = fragment
         self.children = children
     }
-    
+
     static func buildToCTree(from tocList: [ToC]) -> [ToCTree] {
         var result: [ToCTree] = []
         var stack: [ToCTree] = []
-        
-//        print(tocList)
-        
+
+        //        print(tocList)
+
         for toc in tocList {
-            let newNode = ToCTree(level: toc.level, text: toc.text, fragment: toc.fragment)
-            
+            let newNode = ToCTree(
+                level: toc.level,
+                text: toc.text,
+                fragment: toc.fragment
+            )
+
             // Find the correct parent for the current node
             while let last = stack.last, last.level >= toc.level {
                 stack.removeLast()
             }
-            
+
             if let parent = stack.last {
                 // Append new node as a child of the last node in the stack
                 var updatedParent = parent
                 updatedParent.children.append(newNode)
                 stack[stack.count - 1] = updatedParent
-                if let index = result.firstIndex(where: { $0.fragment == parent.fragment && $0.level == parent.level }) {
+                if let index = result.firstIndex(where: {
+                    $0.fragment == parent.fragment && $0.level == parent.level
+                }) {
                     result[index] = updatedParent
                 }
-            } else {
+            }
+            else {
                 // Add the new node to the result if it has no parent
                 result.append(newNode)
             }
-            
+
             // Add the new node to the stack
             stack.append(newNode)
         }
-        
+
         return result
     }
 }
 
 struct MarkupToToCVisitor: MarkupVisitor {
-    
+
     typealias Result = [ToC]
-    
+
     // MARK: - visitor functions
-    
+
     mutating func defaultVisit(_ markup: any Markup) -> Result {
         var result: [ToC] = []
         for child in markup.children {
@@ -99,9 +106,9 @@ struct MarkupToToCVisitor: MarkupVisitor {
         }
         return result
     }
-    
+
     // MARK: - elements
-    
+
     mutating func visitHeading(
         _ heading: Heading
     ) -> Result {
@@ -117,5 +124,5 @@ struct MarkupToToCVisitor: MarkupVisitor {
             )
         ]
     }
-    
+
 }

@@ -20,7 +20,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         }
         if !link.hasPrefix("."),
             !link.hasPrefix("/"),
-           !link.hasPrefix(config.site.baseUrl)
+            !link.hasPrefix(config.site.baseUrl)
         {
             attributes["target"] = "_blank"
         }
@@ -35,18 +35,18 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
         else {
             return nil
         }
-        
+
         let src = String(source.dropFirst(prefix.count))
-        
+
         let url = "/assets/" + pageBundle.slug + "/" + src
-        
+
         var title = ""
         if let ttl = image.title {
             title = #" title="\#(ttl)""#
         }
 
         return """
-            <img src="\(url)" alt="\(image.plainText)"\(title)>
-        """
+                <img src="\(url)" alt="\(image.plainText)"\(title)>
+            """
     }
 }

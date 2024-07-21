@@ -1,7 +1,7 @@
 import Foundation
 
 extension String {
-        
+
     var minifiedCss: String {
         var css = self
         let patterns = [
@@ -30,9 +30,7 @@ extension String {
         }
         return css
     }
-    
 
-    
     /// Converts an empty string to `nil`, otherwise returns the string itself.
     ///
     /// - Returns: An optional `String` that is `nil` if the string is empty, otherwise the original string.
@@ -199,14 +197,16 @@ extension String {
         }
         return true
     }
-        
+
     /// Returns a new string with everything after the last occurrence of the specified character dropped.
     ///
     /// - Parameter character: The character after which everything should be dropped.
     /// - Returns: A new string with the substring up to the last occurrence of the character.
     ///
     /// This extension method drops everything after the last occurrence of the specified character.
-    func droppingEverythingAfterLastOccurrence(of character: Character) -> String {
+    func droppingEverythingAfterLastOccurrence(
+        of character: Character
+    ) -> String {
         guard let lastIndex = self.lastIndex(of: character) else {
             // If the character is not found, return the original string
             return self
@@ -216,16 +216,20 @@ extension String {
     }
 
     func slugify() -> String {
-        let allowed = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_.")
+        let allowed = CharacterSet(
+            charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_."
+        )
         return trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
-            .folding(options: .diacriticInsensitive, locale: .init(identifier: "en_US"))
+            .folding(
+                options: .diacriticInsensitive,
+                locale: .init(identifier: "en_US")
+            )
             .components(separatedBy: allowed.inverted)
             .filter { $0 != "" }
             .joined(separator: "-")
     }
 
-    
     func replacingOccurrences(
         _ dictionary: [String: String]
     ) -> String {
@@ -235,10 +239,10 @@ extension String {
         }
         return result
     }
-    
-//    public func transform(
-//        _ block: (Self) -> Self
-//    ) -> Self {
-//        block(self)
-//    }
+
+    //    public func transform(
+    //        _ block: (Self) -> Self
+    //    ) -> Self {
+    //        block(self)
+    //    }
 }

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 27/06/2024.
 //
@@ -9,10 +9,10 @@ import Foundation
 
 struct PageBundle {
     let url: URL
-    
+
     let slug: String
     let permalink: String
-    
+
     let type: String
     let title: String
     let description: String
@@ -20,7 +20,7 @@ struct PageBundle {
     let draft: Bool
     let publication: Date
     let expiration: Date?
-    
+
     let css: [String]
     let js: [String]
 
@@ -34,16 +34,16 @@ struct PageBundle {
 
     let frontMatter: [String: Any]
     let markdown: String
-    
+
     let assets: [String]
     let noindex: Bool
     let canonical: String?
     let hreflang: [Context.Metadata.Hreflang]?
-    
+
 }
 
 extension PageBundle {
-    
+
     /// Returns the context aware identifier, the last component of the slug
     ///
     /// Can be used when referencing contents, e.g.
@@ -54,7 +54,7 @@ extension PageBundle {
     var contextAwareIdentifier: String {
         .init(slug.split(separator: "/").last ?? "")
     }
-    
+
     func referenceIdentifiers(
         for key: String
     ) -> [String] {
@@ -90,15 +90,15 @@ extension PageBundle {
         let base = String(value.dropFirst(prefix.count))
         return "/assets/" + slug + "/" + base.safeSlug(prefix: nil)
     }
-    
+
     func imageUrl() -> String? {
         resolveAsset(image)
     }
-    
+
     func cssUrls() -> [String] {
         css.compactMap { resolveAsset($0) }
     }
-    
+
     func jsUrls() -> [String] {
         js.compactMap { resolveAsset($0) }
     }

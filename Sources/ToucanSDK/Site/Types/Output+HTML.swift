@@ -43,18 +43,17 @@ struct Context {
     }
 }
 
-
 struct HTML: Output {
 
-//    struct Page {
-//        let metadata: Context.Metadata
-//        let css: [String]
-//        let js: [String]
-//        let data: [Any]
-//        let context: Any
-//        let content: String
-//        let toc: [ToCTree]
-//    }
+    //    struct Page {
+    //        let metadata: Context.Metadata
+    //        let css: [String]
+    //        let js: [String]
+    //        let data: [Any]
+    //        let context: Any
+    //        let content: String
+    //        let toc: [ToCTree]
+    //    }
 
     let site: Context.Site
     let page: PageBundle

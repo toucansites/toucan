@@ -1,6 +1,6 @@
 //
 //  Context+Redirect.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 01/07/2024.
 //

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Tibor Bodecs on 27/06/2024.
 //
@@ -21,7 +21,7 @@ struct SourceLoader {
             fileManager: fileManager
         )
         let config = try configLoader.load()
-        
+
         let contentTypeLoader = ContentTypeLoader(
             sourceUrl: sourceUrl,
             config: config,
