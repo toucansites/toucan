@@ -112,7 +112,8 @@ struct PageBundleLoader {
             }
             
             let dateFormatter = DateFormatters.contentLoader
-            dateFormatter.dateFormat = self.config.site.dateFormat
+            // TODO: date format for input / per-content type basis...
+            //dateFormatter.dateFormat = self.config.site.dateFormat
             
             var publication: Date = now
             if
@@ -155,6 +156,7 @@ struct PageBundleLoader {
             }
 
             let template = frontMatter.string("template") ?? contentType.template
+            let output = frontMatter.string("output")
             let assetsPath = frontMatter.string("assets.path")?.emptyToNil
             let userDefined = frontMatter.dict("userDefined")
             let redirects = frontMatter.value(
@@ -242,6 +244,7 @@ struct PageBundleLoader {
                 css: css,
                 js: js,
                 template: template ?? "pages.single.page",
+                output: output,
                 assetsPath: assetsPath ?? "assets",
                 lastModification: lastModification,
                 redirects: redirects,

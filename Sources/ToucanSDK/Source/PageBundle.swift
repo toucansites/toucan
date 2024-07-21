@@ -25,6 +25,7 @@ struct PageBundle {
     let js: [String]
 
     let template: String
+    let output: String?
     let assetsPath: String
     let lastModification: Date
     let redirects: [String]
@@ -38,6 +39,7 @@ struct PageBundle {
     let noindex: Bool
     let canonical: String?
     let hreflang: [Context.Metadata.Hreflang]?
+    
 }
 
 extension PageBundle {

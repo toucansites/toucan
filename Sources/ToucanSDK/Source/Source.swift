@@ -47,6 +47,15 @@ struct Source {
         pageBundles.filter { $0.type == contentType }
     }
     
+    func rssPageBundles() -> [PageBundle] {
+        contentTypes
+            .filter { $0.rss == true }
+            .flatMap {
+                pageBundles(by: $0.id)
+            }
+            .sorted { $0.publication > $1.publication }
+    }
+    
     // MARK: - utilities
 
     func permalink(
@@ -70,7 +79,7 @@ struct Source {
     
     func readingTime(_ value: String) -> Int {
         value.split(separator: " ").count / 238
-    }    
+    }
 }
 
 

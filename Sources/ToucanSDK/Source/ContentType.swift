@@ -66,6 +66,7 @@ struct ContentType: Codable {
     }
 
     let id: String
+    let rss: Bool?
     let template: String?
     let properties: [String: Property]?
     let relations: [String: Relation]?
@@ -76,6 +77,7 @@ extension ContentType {
 
     static let `default` = ContentType(
         id: "page",
+        rss: nil,
         template: "pages.single.page",
         properties: nil,
         relations: nil,

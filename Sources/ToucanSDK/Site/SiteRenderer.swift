@@ -15,7 +15,6 @@ struct SiteRenderer {
         static let index = "index.html"
         static let notFound = "404.html"
         static let rss = "rss.xml"
-        static let feed = "feed.xml"
         static let sitemap = "sitemap.xml"
     }
 
@@ -54,13 +53,11 @@ struct SiteRenderer {
         
         self.logger = {
             var logger = Logger(label: "SiteRenderer")
-            logger.logLevel = .trace
+            logger.logLevel = .debug
             return logger
         }()
     }
 
-
-    // TODO: logger
     func render() throws {
         let renderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl,
@@ -97,17 +94,9 @@ struct SiteRenderer {
             )
         }
 
-//        // render rss & sitemap
-//        let rss = rss()
-//        let sitemap = sitemap()
-//        try render(renderer, rss)
-//        try render(renderer, sitemap)
-//        if let feed = feed() {
-//            try render(renderer, feed)
-//        }
-//        for renderable in redirects() {
-//            try render(renderer, renderable)
-//        }        
+        try renderRSS(renderer: renderer)
+        try renderSitemap(renderer: renderer)
+        try renderRedirects(renderer: renderer)
     }
 
     // TODO: recursive resolution vs context ref + list?
@@ -246,6 +235,11 @@ struct SiteRenderer {
         if pageBundle.slug == "404" {
             fileUrl = destinationUrl
                 .appendingPathComponent(Files.notFound)
+        }
+        
+        if let output = pageBundle.output {
+            fileUrl = destinationUrl
+                .appendingPathComponent(output)
         }
 
         try fileManager.createParentFolderIfNeeded(
@@ -387,118 +381,88 @@ struct SiteRenderer {
     
     // MARK: - rss
     
-//    func rss() -> Renderable<RSS> {
-//        let items: [RSS.Item] = site.contents.blog.posts.map { item in
-//            let material = item.material
-//            return .init(
-//                permalink: site.permalink(material.slug),
-//                title: material.title,
-//                description: material.description,
-//                publicationDate: site.rssDateFormatter.string(
-//                    from: item.material.publication
-//                )
-//            )
-//        }
-//        
-//        let publicationDate = items.first?.publicationDate ?? site.rssDateFormatter.string(from: .init())
-//        
-//        let context = RSS(
-//            title: site.contents.config.site.title,
-//            description: site.contents.config.site.description,
-//            baseUrl: site.contents.config.site.baseUrl,
-//            language: site.contents.config.site.language,
-//            lastBuildDate: site.rssDateFormatter.string(from: .init()),
-//            publicationDate: publicationDate,
-//            items: items
-//        )
-//        
-//        return .init(
-//            template: "rss",
-//            context: context,
-//            destination: destinationUrl
-//                .appendingPathComponent(Files.rss)
-//        )
-//    }
-    
-//    func feed() -> Renderable<Feed>? {
-//        let userDefined = site.contents.config.userDefined
-//        guard userDefined.value("podcast.feed", as: Bool.self) ?? false else {
-//            return nil
-//        }
-//        let items: [Feed.Item] = site.contents.blog.posts.map { item in
-//            let material = item.material
-//            return .init(
-//                permalink: site.permalink(material.slug),
-//                title: material.title,
-//                description: material.description,
-//                publicationDate: site.rssDateFormatter.string(
-//                    from: item.material.publication
-//                )
-//            )
-//        }
-//        
-//        let publicationDate = items.first?.publicationDate ?? site.rssDateFormatter.string(from: .init())
-//        
-//        let context = Feed(
-//            title: site.contents.config.site.title,
-//            description: site.contents.config.site.description,
-//            baseUrl: site.contents.config.site.baseUrl,
-//            language: site.contents.config.site.language,
-//            lastBuildDate: site.rssDateFormatter.string(from: .init()),
-//            publicationDate: publicationDate,
-//            items: items
-//        )
-//        
-//        return .init(
-//            template: "feed",
-//            context: context,
-//            destination: destinationUrl
-//                .appendingPathComponent("podcast")
-//                .appendingPathComponent(Files.feed)
-//        )
-//    }
-    
+    func renderRSS(
+        renderer: MustacheToHTMLRenderer
+    ) throws {
+
+        let items: [RSS.Item] = source.rssPageBundles().map { item in
+            .init(
+                permalink: item.permalink,
+                title: item.title,
+                description: item.description,
+                publicationDate: rssDateFormatter.string(
+                    from: item.publication
+                )
+            )
+        }
+        
+        let publicationDate = items.first?.publicationDate ?? rssDateFormatter.string(from: .init())
+        
+        let context = RSS(
+            title: source.config.site.title,
+            description: source.config.site.description,
+            baseUrl: source.config.site.baseUrl,
+            language: source.config.site.language,
+            lastBuildDate: rssDateFormatter.string(from: .init()),
+            publicationDate: publicationDate,
+            items: items
+        )
+
+        try renderer.render(
+            template: "rss",
+            with: context,
+            to: destinationUrl.appendingPathComponent(Files.rss)
+        )
+    }
     
     // MARK: - sitemap
     
-//    func sitemap() -> Renderable<Sitemap> {
-//        let context = Sitemap(
-//            urls: site.source.materials.all()
-//                .map { content in
-//                        .init(
-//                            location: site.permalink(content.slug),
-//                            lastModification: site.sitemapDateFormatter.string(
-//                                from: content.lastModification
-//                            )
-//                        )
-//                }
-//        )
-//        return .init(
-//            template: "sitemap",
-//            context: context,
-//            destination: destinationUrl
-//                .appendingPathComponent(Files.sitemap)
-//        )
-//    }
-//    
-//    // MARK: - redirects
-//    
-//    func redirects() -> [Renderable<Redirect>] {
-//        site.source.materials.all().map { material in
-//            material.redirects.map { slug in
-//                    .init(
-//                        template: "redirect",
-//                        context: Redirect(
-//                            url: site.permalink(material.slug)
-//                        ),
-//                        destination: site.destinationUrl
-//                            .appendingPathComponent(slug)
-//                            .appendingPathComponent(Files.index)
-//                    )
-//            }
-//        }
-//        .flatMap { $0 }
-//    }
+    func renderSitemap(
+        renderer: MustacheToHTMLRenderer
+    ) throws {
+        let context = Sitemap(
+            urls: source.pageBundles
+                .sorted { $0.publication > $1.publication }
+                .map {
+                    .init(
+                        location: $0.permalink,
+                        lastModification: sitemapDateFormatter.string(
+                            from: $0.lastModification
+                        )
+                    )
+                }
+        )
+        try renderer.render(
+            template: "sitemap",
+            with: context,
+            to: destinationUrl.appendingPathComponent(Files.sitemap)
+        )
+    }
+    
+    // MARK: - redirects
+    
+    func renderRedirects(
+        renderer: MustacheToHTMLRenderer
+    ) throws {
+        for pageBundle in source.pageBundles {
+            for redirect in pageBundle.redirects {
+                
+                let fileUrl = destinationUrl
+                    .appendingPathComponent(redirect)
+                    .appendingPathComponent(Files.index)
+                
+                try fileManager.createParentFolderIfNeeded(
+                    for: fileUrl
+                )
+                
+                try renderer.render(
+                    template: "redirect",
+                    with: Redirect(url: pageBundle.permalink),
+                    to: fileUrl
+                )
+            }
+        }
+    }
 }
 
 
