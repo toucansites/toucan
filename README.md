@@ -4,9 +4,18 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 
 ## Roadmap
 
-### Must have
+### Must fix before 1.0-alpha.1
 
-- 
+- proper context building, with css, js, etc.
+- full context -> proper context + recursive issue
+- render content pagination 
+- proper asset management & minor fixes related to asset urls
+- proper toc api
+- proper content query api $prev, $next, $same, etc...
+- noindex slug removal
+- proper multiple file extension support (md + markdown, yaml + yml)
+- do not wipe output? :think:
+
 
 ### 1.0-alpha.1
 
@@ -64,14 +73,13 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 - schema.org + json-ld support
 
 
-### 2.0
+### 1.0+
 
 - date x y ago feature
 ? add current path check (to mark menu as current)
 - image resize & optimize support
 - content transformers -> call script using markdown input -> output
     - plugins/a "markdwon" >> plugins/b >> etc... (last one built-in stuff)
-- content composition protocols + modules, e.g. blog, docs, etc.
 - sitemap index support
 - content importer
     - jekyll

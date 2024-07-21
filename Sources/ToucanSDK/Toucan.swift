@@ -88,6 +88,7 @@ public struct Toucan {
             frontMatterParser: .init()
         )
         let source = try loader.load()
+        try source.validateSlugs()
 
         // TODO: output url is completely wiped, check if it's safe to delete everything
         try resetOutputDirectory()

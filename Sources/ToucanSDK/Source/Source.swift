@@ -38,8 +38,7 @@ struct Source {
     }
 
     func contentType(for pageBundle: PageBundle) -> ContentType {
-        // TODO: proper fallback to page...?
-        contentTypes.first { $0.id == pageBundle.type }!
+        contentTypes.first { $0.id == pageBundle.type } ?? ContentType.default
     }
 
     func pageBundles(by contentType: String) -> [PageBundle] {
@@ -54,14 +53,4 @@ struct Source {
             }
             .sorted { $0.publication > $1.publication }
     }
-
-    // MARK: - utilities
-
-    //    func permalink(
-    //        _ value: String,
-    //        _ baseUrl: String? = nil
-    //    ) -> String {
-    //        value.permalink(baseUrl: baseUrl ?? config.site.baseUrl)
-    //    }
-
 }
