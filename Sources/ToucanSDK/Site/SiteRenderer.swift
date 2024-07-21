@@ -58,6 +58,10 @@ struct SiteRenderer {
         }()
     }
 
+    func readingTime(_ value: String) -> Int {
+        value.split(separator: " ").count / 238
+    }
+
     func render() throws {
         let renderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl,
@@ -220,10 +224,27 @@ struct SiteRenderer {
             }
         }
 
+        let renderer = MarkdownToHTMLRenderer(
+            delegate: HTMLRendererDelegate(
+                config: source.config,
+                pageBundle: pageBundle
+            )
+        )
+
+        // TODO: proper context
         var customContext: [String: Any] = [:]
-        customContext["permalink"] = source.permalink(pageBundle.slug)
-        customContext["contents"] = source.render(pageBundle: pageBundle)
+        customContext["permalink"] = pageBundle.slug.permalink(
+            baseUrl: source.config.site.baseUrl
+        )
         customContext["imageUrl"] = pageBundle.image
+        customContext["contents"] = renderer.render(
+            markdown: pageBundle.markdown
+        )
+
+        customContext["toc"] = ToCTree.buildToCTree(
+            from: renderer.toc(markdown: pageBundle.markdown)
+        )
+        customContext["readingTime"] = readingTime(pageBundle.markdown)
 
         return pageBundle.frontMatter
             .recursivelyMerged(with: relations)

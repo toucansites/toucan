@@ -57,42 +57,11 @@ struct Source {
 
     // MARK: - utilities
 
-    func permalink(
-        _ value: String,
-        _ baseUrl: String? = nil
-    ) -> String {
-        value.permalink(baseUrl: baseUrl ?? config.site.baseUrl)
-    }
+    //    func permalink(
+    //        _ value: String,
+    //        _ baseUrl: String? = nil
+    //    ) -> String {
+    //        value.permalink(baseUrl: baseUrl ?? config.site.baseUrl)
+    //    }
 
-    func render(
-        pageBundle: PageBundle
-    ) -> String {
-        let renderer = MarkdownToHTMLRenderer(
-            delegate: HTMLRendererDelegate(
-                config: config,
-                pageBundle: pageBundle
-            )
-        )
-        return renderer.render(markdown: pageBundle.markdown)
-    }
-
-    func readingTime(_ value: String) -> Int {
-        value.split(separator: " ").count / 238
-    }
-}
-
-extension String {
-
-    func permalink(
-        baseUrl: String
-    ) -> String {
-        let components = split(separator: "/").map(String.init)
-        if components.isEmpty {
-            return baseUrl
-        }
-        if components.last?.split(separator: ".").count ?? 0 > 1 {
-            return baseUrl + components.joined(separator: "/")
-        }
-        return baseUrl + components.joined(separator: "/") + "/"
-    }
 }

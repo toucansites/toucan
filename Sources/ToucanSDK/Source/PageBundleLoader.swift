@@ -212,6 +212,7 @@ struct PageBundleLoader {
                 imageUrl = image
             }
 
+            // TODO: this is hacky
             imageUrl = imageUrl?
                 .replacingOccurrences([
                     "./assets/": ("/assets/" + slug + "/")
