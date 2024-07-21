@@ -2,5 +2,13 @@
 type: author
 title: Albert Einstein
 description: Albert Einstein
-image: ./albert-einstein/albert-einstein.webp
+image: ./assets/albert-einstein.webp
 ---
+
+
+Image:
+
+![alt](./assets/albert-einstein.webp)
+
+yolo
+aaaa

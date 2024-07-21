@@ -2,8 +2,7 @@
 type: post
 title: "Curie and Turing: Innovations in Science"
 description: Exploring the innovative contributions of Marie Curie and Alan Turing.
-image: ./curie-and-turing-innovations-in-science/cover.jpg
-publication: 1952/11/08 12:01:01
+image: ./assets/cover.jpg
 tags: 
     - computing
     - chemistry
@@ -20,11 +19,11 @@ Paragraphs are separated by a blank line.
 
 [Second](/posts/second-post/) 
 
-![image alt text](./curie-and-turing-innovations-in-science/balaton/balaton-10.jpg "image title")
+![image alt text](./assets/balaton-10.jpg "image title")
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis tincidunt id aliquet risus. Pharetra diam sit amet nisl suscipit. Suspendisse potenti nullam ac tortor vitae purus faucibus. Faucibus ornare suspendisse sed nisi lacus sed viverra. Suscipit tellus mauris a diam maecenas sed enim. Euismod elementum nisi quis eleifend. Ante in nibh mauris cursus mattis molestie. Ipsum dolor sit amet consectetur. Risus viverra adipiscing at in.
 
-![image alt text](./curie-and-turing-innovations-in-science/balaton/balaton-02.jpg "image title")
+![image alt text](./assets/balaton-02.jpg "image title")
 
 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
 look like:

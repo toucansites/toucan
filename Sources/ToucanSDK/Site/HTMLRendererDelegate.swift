@@ -28,7 +28,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        let prefix = "./\(pageBundle.assetsPath)"
+        let prefix = "./\(pageBundle.assetsPath)/"
         guard
             let source = image.source,
             source.hasPrefix(prefix)

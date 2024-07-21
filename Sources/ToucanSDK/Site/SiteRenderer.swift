@@ -86,7 +86,7 @@ struct SiteRenderer {
         }
 
         for pageBundle in source
-            .pageBundles//            .filter({ $0.type == "post" })
+            .pageBundles  //            .filter({ $0.type == "post" })
         {
             try render(
                 pageBundle: pageBundle,
@@ -223,6 +223,7 @@ struct SiteRenderer {
         var customContext: [String: Any] = [:]
         customContext["permalink"] = source.permalink(pageBundle.slug)
         customContext["contents"] = source.render(pageBundle: pageBundle)
+        customContext["imageUrl"] = pageBundle.image
 
         return pageBundle.frontMatter
             .recursivelyMerged(with: relations)

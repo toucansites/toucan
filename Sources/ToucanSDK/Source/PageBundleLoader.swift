@@ -212,6 +212,11 @@ struct PageBundleLoader {
                 imageUrl = image
             }
 
+            imageUrl = imageUrl?
+                .replacingOccurrences([
+                    "./assets/": ("/assets/" + slug + "/")
+                ])
+
             var css: [String] = []
             if fileManager.fileExists(at: styleCss) {
                 let cssFile = "./" + id + "/style.css"
