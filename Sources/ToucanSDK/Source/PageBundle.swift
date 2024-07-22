@@ -9,66 +9,125 @@ import Foundation
 
 struct PageBundle {
 
+    struct Redirect {
+
+        enum Code: Int, CaseIterable {
+            case movedPermanently = 301
+            case seeOther = 303
+            case permanentRedirect = 308
+        }
+
+        let from: String
+        let code: Code
+    }
+
+    struct Assets {
+        let path: String
+    }
+
+    struct Context {
+
+        struct Hreflang {
+            let lang: String
+            let url: String
+        }
+
+        struct DateValue {
+            let html: String
+            let rss: String
+            let sitemap: String
+        }
+
+        let slug: String
+        let permalink: String
+        let title: String
+        let description: String
+        let imageUrl: String?
+
+        let lastModification: DateValue
+        let publication: DateValue
+        let expiration: DateValue?
+
+        // head
+        let noindex: Bool
+        let canonical: String?
+        let hreflang: [Hreflang]
+        let css: [String]
+        let js: [String]
+
+        let userDefined: [String: Any]
+
+        var dict: [String: Any] {
+            var result: [String: Any] = [:]
+
+            result["slug"] = slug
+            result["permalink"] = permalink
+            result["title"] = title
+            result["description"] = description
+            result["imageUrl"] = imageUrl ?? false
+
+            result["lastModification"] = lastModification
+            result["publication"] = publication
+            result["expiration"] = expiration ?? false
+
+            result["noindex"] = noindex
+            result["canonical"] = canonical ?? false
+            result["hreflang"] = hreflang
+            result["css"] = css
+            result["js"] = js
+
+            return result.recursivelyMerged(with: userDefined)
+        }
+    }
+
     /// The url of the page bundle.
     let url: URL
-
-    /// The slug for the page.
-    let slug: String
-    /// The permalink of the page.
-    let permalink: String
-
-    let type: String
-    let title: String
-    let description: String
-    let image: String?
-    let draft: Bool
-    let publication: Date
-    let expiration: Date?
-
-    let css: [String]
-    let js: [String]
-
-    let template: String
-    let output: String?
-    let assetsPath: String
-    let lastModification: Date
-    let redirects: [String]
-    let userDefined: [String: Any]
-    let data: [[String: Any]]
-
     let frontMatter: [String: Any]
     let markdown: String
 
-    let assets: [String]
-    let noindex: Bool
-    let canonical: String?
-    let hreflang: [Context.Metadata.Hreflang]?
+    let type: String
+    let lastModification: Date
+    let publication: Date
+    let expiration: Date?
+    let template: String
+    let output: String?
+    let assets: Assets
+    let redirects: [Redirect]
+
+    //    let userDefined: [String: Any]
+    //    let data: [[String: Any]]
+
+    let context: Context
 
 }
 
 extension PageBundle {
 
-    var context: [String: Any] {
-        var result: [String: Any] = [:]
-        result["slug"] = slug
-        result["permalink"] = permalink
-        result["title"] = title
-        result["description"] = description
-        result["imageUrl"] = image  // imageUrl() vs frontMatter["image"] ?
-        // TODO: date format
-        result["publication"] = publication
-        result["expiration"] = expiration
-        result["lastModification"] = lastModification
-        result["css"] = cssUrls()
-        result["js"] = jsUrls()
-        result["noindex"] = noindex
-        result["canonical"] = canonical
-        result["hreflang"] = hreflang
-        // TODO: better user defaults
-        return
-            result
-            .recursivelyMerged(with: userDefined)
-    }
+    //    var context: [String: Any] {
+    //        var result: [String: Any] = [:]
+    ////        var result: [String: Any] = frontMatter
+    //        result["slug"] = slug
+    //        result["permalink"] = permalink
+    //        result["title"] = title
+    //        result["description"] = description
+    //        result["imageUrl"] = image  // imageUrl() vs frontMatter["image"] ?
+    //        if image == nil {
+    //            result["imageUrl"] = false
+    //        }
+    //        // TODO: date format
+    //        result["publication"] = publication
+    //        result["expiration"] = expiration
+    //        result["lastModification"] = lastModification
+    //        result["css"] = cssUrls()
+    //        result["js"] = jsUrls()
+    //        result["noindex"] = noindex
+    //        result["canonical"] = canonical
+    //        result["hreflang"] = hreflang
+    //        // TODO: better user defaults
+    //        return
+    //            result
+    //            .recursivelyMerged(with: userDefined)
+    //    }
 
     /// Returns the context aware identifier, the last component of the slug
     ///
@@ -78,7 +137,7 @@ extension PageBundle {
     /// contextAwareIdentifier: installation
     /// This way content can be identified, when knowing the type & id
     var contextAwareIdentifier: String {
-        .init(slug.split(separator: "/").last ?? "")
+        .init(context.slug.split(separator: "/").last ?? "")
     }
 
     func referenceIdentifiers(
@@ -108,24 +167,4 @@ extension PageBundle {
         return refIds
     }
 
-    func resolveAsset(_ value: String?) -> String? {
-        let prefix = "./\(assetsPath)"
-        guard let value, value.hasPrefix(prefix) else {
-            return value
-        }
-        let base = String(value.dropFirst(prefix.count))
-        return "/assets/" + slug + "/" + base.safeSlug(prefix: nil)
-    }
-
-    func imageUrl() -> String? {
-        resolveAsset(image)
-    }
-
-    func cssUrls() -> [String] {
-        css.compactMap { resolveAsset($0) }
-    }
-
-    func jsUrls() -> [String] {
-        js.compactMap { resolveAsset($0) }
-    }
 }

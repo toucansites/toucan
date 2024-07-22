@@ -7,4 +7,5 @@
 
 struct Redirect: Output {
     let url: String
+    let code: Int
 }

@@ -74,4 +74,24 @@ extension Dictionary where Key == String, Value == Any {
     func int(_ keyPath: String) -> Int? {
         value(keyPath, as: Int.self)
     }
+
+    /// Retrieves the integer associated with the given key path.
+    ///
+    /// - Parameter keyPath: The key path string, where keys are separated by dots.
+    /// - Returns: The boolean at the specified key path, or `nil` if the key path is invalid.
+    func bool(_ keyPath: String) -> Bool? {
+        value(keyPath, as: Bool.self)
+    }
+
+    func date(_ keyPath: String) -> Date? {
+        guard let rawDate = value(keyPath, as: String.self) else {
+            return nil
+        }
+        let formatter = DateFormatters.contentLoader
+        return formatter.date(from: rawDate)
+    }
+
+    func array<T>(_ keyPath: String, as type: T.Type) -> [T] {
+        value(keyPath, as: [T].self) ?? []
+    }
 }

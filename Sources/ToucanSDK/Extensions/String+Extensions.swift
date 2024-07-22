@@ -1,5 +1,26 @@
 import Foundation
 
+extension String? {
+
+    var nilToEmpty: String {
+        switch self {
+        case .none:
+            return ""
+        case .some(let value):
+            return value
+        }
+    }
+
+    var emptyToNil: String? {
+        switch self {
+        case .none:
+            return nil
+        case .some(let value):
+            return value.isEmpty ? nil : self
+        }
+    }
+}
+
 extension String {
 
     var minifiedCss: String {
@@ -29,13 +50,6 @@ extension String {
             )
         }
         return css
-    }
-
-    /// Converts an empty string to `nil`, otherwise returns the string itself.
-    ///
-    /// - Returns: An optional `String` that is `nil` if the string is empty, otherwise the original string.
-    var emptyToNil: String? {
-        return isEmpty ? nil : self
     }
 
     /// Generates a safe slug for the string, optionally with a given prefix.

@@ -134,7 +134,7 @@ public struct Toucan {
 
         for pageBundle in source.pageBundles {
             let assetsUrl = pageBundle.url
-                .appendingPathComponent(pageBundle.assetsPath)
+                .appendingPathComponent(pageBundle.assets.path)
 
             guard
                 fileManager.directoryExists(at: assetsUrl),
@@ -145,8 +145,10 @@ public struct Toucan {
 
             let outputUrl =
                 outputUrl
-                .appendingPathComponent(pageBundle.slug.isEmpty ? "" : "assets")
-                .appendingPathComponent(pageBundle.slug)
+                .appendingPathComponent(
+                    pageBundle.context.slug.isEmpty ? "" : "assets"
+                )
+                .appendingPathComponent(pageBundle.context.slug)
 
             //            print("-------------")
             //            print(assetsUrl.path)
@@ -157,7 +159,7 @@ public struct Toucan {
             )
         }
 
-        let renderer = SiteRenderer(
+        let renderer = try SiteRenderer(
             source: source,
             templatesUrl: themeTemplatesUrl,
             overridesUrl: themeOverrideTemplatesUrl,

@@ -28,7 +28,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        let prefix = "./\(pageBundle.assetsPath)/"
+        let prefix = "./\(pageBundle.assets.path)/"
         guard
             let source = image.source,
             source.hasPrefix(prefix)
@@ -38,7 +38,7 @@ struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
 
         let src = String(source.dropFirst(prefix.count))
 
-        let url = "/assets/" + pageBundle.slug + "/" + src
+        let url = "/assets/" + pageBundle.context.slug + "/" + src
 
         var title = ""
         if let ttl = image.title {

@@ -10,6 +10,30 @@ import FileManagerKit
 
 struct PageBundleLoader {
 
+    public enum Keys: String, CaseIterable {
+        case draft
+        case publication
+        case expiration
+
+        case slug
+        case type
+
+        case title
+        case description
+        case image
+
+        case template
+        case output
+        case assets
+        case redirects
+
+        case noindex
+        case canonical
+        case hreflang
+        case css
+        case js
+    }
+
     /// An enumeration representing possible errors that can occur while loading the content.
     enum Error: Swift.Error {
         case indexFileNotExists
@@ -37,25 +61,168 @@ struct PageBundleLoader {
     }
 
     public func load() throws -> [PageBundle] {
-
-        let pageBundles =
-            fileManager
+        fileManager
             .recursivelyListDirectory(at: contentUrl)
             .filter { $0.hasSuffix("index.md") }
             // TODO: use noindex for slug removal + allow folder grouping
             .filter { !$0.hasSuffix("noindex.md") }
             .compactMap {
-                //                print($0)
-                return try? loadPageBundle(at: $0)
+                try? loadPageBundle(at: $0)
             }
-            .sorted { $0.slug < $1.slug }
-
-        //        for pageBundle in pageBundles {
-        //            print(pageBundle.slug)
-        //        }
-
-        return pageBundles
+            .sorted { $0.context.slug < $1.context.slug }
     }
+
+    func loadFrontMatter(
+        id: String,
+        dirUrl: URL,
+        rawMarkdown: String
+    ) throws -> [String: Any] {
+        var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
+        // TODO: use url
+        for c in [id + ".yaml", id + ".yml"] {
+            let url = dirUrl.appendingPathComponent(c)
+            guard fileManager.fileExists(at: url) else {
+                continue
+            }
+            let yaml = try String(contentsOf: url, encoding: .utf8)
+            let fm = try frontMatterParser.load(yaml: yaml)
+            frontMatter = frontMatter.recursivelyMerged(with: fm)
+        }
+
+        var data: [[String: Any]] = []
+        for d in [id + ".data.yaml", id + ".data.yml"] {
+            let url = dirUrl.appendingPathComponent(d)
+            guard fileManager.fileExists(at: url) else {
+                continue
+            }
+            let yaml = try String(contentsOf: url, encoding: .utf8)
+            let da =
+                try frontMatterParser.load(
+                    yaml: yaml,
+                    as: [[String: Any]].self
+                ) ?? []
+            data += da
+        }
+        return frontMatter
+    }
+
+    func convert(
+        date: Date
+    ) -> PageBundle.Context.DateValue {
+        let html = DateFormatters.baseFormatter
+        let rss = DateFormatters.rss
+        let sitemap = DateFormatters.sitemap
+
+        return .init(
+            html: html.string(from: date),
+            rss: rss.string(from: date),
+            sitemap: sitemap.string(from: date)
+        )
+    }
+
+    // MARK: - fields
+
+    func draft(frontMatter: [String: Any]) -> Bool {
+        frontMatter.bool(Keys.draft.rawValue) ?? false
+    }
+
+    func publication(frontMatter: [String: Any]) -> Date {
+        guard let date = frontMatter.date(Keys.publication.rawValue) else {
+            return now
+        }
+        return date
+    }
+
+    func expiration(frontMatter: [String: Any]) -> Date? {
+        frontMatter.date(Keys.expiration.rawValue)
+    }
+
+    func slug(frontMatter: [String: Any], id: String) -> String {
+        (frontMatter.string(Keys.slug.rawValue).emptyToNil ?? id)
+            .safeSlug(prefix: nil)
+    }
+
+    func type(frontMatter: [String: Any]) -> String {
+        frontMatter.string(Keys.type.rawValue).emptyToNil
+            ?? ContentType.default.id
+    }
+
+    func title(frontMatter: [String: Any]) -> String {
+        frontMatter.string(Keys.title.rawValue).nilToEmpty
+    }
+
+    func description(frontMatter: [String: Any]) -> String {
+        frontMatter.string(Keys.description.rawValue).nilToEmpty
+    }
+
+    func image(frontMatter: [String: Any]) -> String? {
+        frontMatter.string(Keys.image.rawValue).emptyToNil
+    }
+
+    func template(
+        frontMatter: [String: Any],
+        contentType: ContentType
+    ) -> String {
+        frontMatter.string(Keys.template.rawValue).emptyToNil ?? contentType
+            .template ?? ContentType.default.template ?? "pages.single.page"
+    }
+
+    func output(frontMatter: [String: Any]) -> String? {
+        frontMatter.string(Keys.output.rawValue).emptyToNil
+    }
+
+    func assets(frontMatter: [String: Any]) -> String {
+        frontMatter.string(Keys.assets.rawValue + ".path").emptyToNil
+            ?? "assets"
+    }
+
+    func noindex(frontMatter: [String: Any]) -> Bool {
+        frontMatter.bool(Keys.noindex.rawValue) ?? false
+    }
+
+    func canonical(frontMatter: [String: Any]) -> String? {
+        frontMatter.string(Keys.canonical.rawValue).emptyToNil
+    }
+
+    func hreflang(frontMatter: [String: Any]) -> [PageBundle.Context.Hreflang] {
+        frontMatter
+            .array(Keys.hreflang.rawValue, as: [String: String].self)
+            .compactMap { dict in
+                guard
+                    let lang = dict["lang"].emptyToNil,
+                    let url = dict["url"].emptyToNil
+                else {
+                    return nil
+                }
+                return .init(lang: lang, url: url)
+            }
+    }
+
+    func redirects(frontMatter: [String: Any]) -> [PageBundle.Redirect] {
+        frontMatter
+            .array(Keys.redirects.rawValue, as: [String: String].self)
+            .compactMap { dict -> PageBundle.Redirect? in
+                guard let from = dict["from"].emptyToNil else {
+                    return nil
+                }
+                let code =
+                    dict["code"]
+                    .flatMap { Int($0) }
+                    .flatMap { PageBundle.Redirect.Code(rawValue: $0) }
+                    ?? .movedPermanently
+                return .init(from: from, code: code)
+            }
+    }
+
+    func css(frontMatter: [String: Any]) -> [String] {
+        frontMatter.array(Keys.css.rawValue, as: String.self)
+    }
+
+    func js(frontMatter: [String: Any]) -> [String] {
+        frontMatter.array(Keys.js.rawValue, as: String.self)
+    }
+
+    // MARK: - loading
 
     func loadPageBundle(
         at path: String
@@ -67,217 +234,145 @@ struct PageBundleLoader {
 
         do {
             let fileName = url.lastPathComponent
-            let location = String(url.path.dropLast(fileName.count))
+            let dirPath = String(url.path.dropLast(fileName.count))
+            let dirUrl = URL(fileURLWithPath: dirPath)
             let id = String(path.dropLast(fileName.count + 1))
-
             let lastModification = try fileManager.modificationDate(at: url)
-
-            let dirUrl = URL(fileURLWithPath: location)
-
-            // MARK: - load markdown + front matter data
-
             let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
-            var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
+            let markdown = rawMarkdown.dropFrontMatter()
+            let frontMatter = try loadFrontMatter(
+                id: id,
+                dirUrl: dirUrl,
+                rawMarkdown: rawMarkdown
+            )
 
-            // TODO: use url
-            for c in [id + ".yaml", id + ".yml"] {
-                let url = dirUrl.appendingPathComponent(c)
-                guard fileManager.fileExists(at: url) else {
-                    continue
-                }
-                let yaml = try String(contentsOf: url, encoding: .utf8)
-                let fm = try frontMatterParser.load(yaml: yaml)
-                frontMatter = frontMatter.recursivelyMerged(with: fm)
-            }
-
-            var data: [[String: Any]] = []
-            for d in [id + ".data.yaml", id + ".data.yml"] {
-                let url = dirUrl.appendingPathComponent(d)
-                guard fileManager.fileExists(at: url) else {
-                    continue
-                }
-                let yaml = try String(contentsOf: url, encoding: .utf8)
-                let da =
-                    try frontMatterParser.load(
-                        yaml: yaml,
-                        as: [[String: Any]].self
-                    ) ?? []
-                data += da
-            }
-
-            // MARK: - load data & filter based on draft, publication, expiration
-
-            let draft = frontMatter.value("draft", as: Bool.self) ?? false
-
-            /// filter out draft
-            if draft {
+            /// filter out drafts
+            if draft(frontMatter: frontMatter) {
                 return nil
             }
-
-            let dateFormatter = DateFormatters.contentLoader
-            // TODO: date format for input / per-content type basis...
-            //dateFormatter.dateFormat = self.config.site.dateFormat
-
-            var publication: Date = now
-            if let rawDate = frontMatter["publication"] as? String,
-                let date = dateFormatter.date(from: rawDate)
-            {
-                publication = date
-            }
-
             /// filter out unpublished
+            let publication = publication(frontMatter: frontMatter)
             if publication > now {
                 return nil
             }
-
-            var expiration: Date? = nil
-            if let rawDate = frontMatter["expiration"] as? String,
-                let date = dateFormatter.date(from: rawDate)
-            {
-                expiration = date
-            }
-
             /// filter out expired
+            let expiration = expiration(frontMatter: frontMatter)
             if let expiration, expiration < now {
                 return nil
             }
 
-            // MARK: - load material metadata
+            let slug = slug(frontMatter: frontMatter, id: id)
+            let type = type(frontMatter: frontMatter)
 
-            let slug = frontMatter.string("slug")?.emptyToNil ?? id
-            let type =
-                frontMatter.string("type")?.emptyToNil ?? ContentType.default.id
-            let title = frontMatter.string("title") ?? ""
-            let description = frontMatter.string("description") ?? ""
-            let image = frontMatter.string("image")?.emptyToNil
-
-            guard
-                let contentType = contentTypes.first(where: { $0.id == type })
-            else {
+            let contentType = contentTypes.first { $0.id == type }
+            guard let contentType else {
+                // TODO: fatal or log invalid content type
                 return nil
             }
 
-            let template =
-                frontMatter.string("template") ?? contentType.template
-            let output = frontMatter.string("output")
-            let assetsPath = frontMatter.string("assets.path")?.emptyToNil
-            let userDefined = frontMatter.dict("userDefined")
-            let redirects =
-                frontMatter.value(
-                    "redirects.from",
-                    as: [String].self
-                ) ?? []
-            let noindex = frontMatter.value("noindex", as: Bool.self) ?? false
-            let canonical = frontMatter.string("canonical")?.emptyToNil
+            let title = title(frontMatter: frontMatter)
+            let description = description(frontMatter: frontMatter)
+            let image = image(frontMatter: frontMatter)
 
-            var hreflang = frontMatter.value(
-                "hreflang",
-                as: [[String: String]].self
-            )?
-            .compactMap { dict -> Context.Metadata.Hreflang? in
-                guard
-                    let lang = dict["lang"]?.emptyToNil,
-                    let url = dict["url"]?.emptyToNil
-                else {
-                    return nil
-                }
-                return .init(lang: lang, url: url)
-            }
-            /// fallback to empty array if key is explicitly defined
-            if hreflang == nil, frontMatter["hreflang"] != nil {
-                hreflang = []
-            }
+            let template = template(
+                frontMatter: frontMatter,
+                contentType: contentType
+            )
+            let output = output(frontMatter: frontMatter)
 
-            let assetsUrl =
-                dirUrl
-                .appendingPathComponent(assetsPath ?? id)
-
-            let styleCss =
-                assetsUrl
-                .appendingPathComponent("style.css")
-
-            let mainJs =
-                assetsUrl
-                .appendingPathComponent("main.js")
-
-            // NOTE: hacky solution...
-            var imageUrl: String? = nil
-            if let image,
-                fileManager.fileExists(
-                    at: dirUrl.appendingPathComponent(
-                        image
-                    )
-                )
-            {
-                imageUrl = image
-            }
-
-            // TODO: this is hacky
-            imageUrl = imageUrl?
-                .replacingOccurrences([
-                    "./assets/": ("/assets/" + slug + "/")
-                ])
-
-            var css: [String] = []
-            if fileManager.fileExists(at: styleCss) {
-                let cssFile = "./" + id + "/style.css"
-                css.append(cssFile)
-            }
-            let cssFiles =
-                frontMatter.value(
-                    "css",
-                    as: [String].self
-                ) ?? []
-            css += cssFiles
-
-            var js: [String] = []
-            if fileManager.fileExists(at: mainJs) {
-                let jsFile = "./" + id + "/main.js"
-                js.append(jsFile)
-            }
-
-            let jsFiles =
-                frontMatter.value(
-                    "css",
-                    as: [String].self
-                ) ?? []
-            js += jsFiles
-
-            // TODO: proper asset resolution
+            let assetsPath = assets(frontMatter: frontMatter)
+            let assetsUrl = dirUrl.appendingPathComponent(assetsPath)
             let assets = fileManager.recursivelyListDirectory(at: assetsUrl)
 
-            let finalSlug = slug.safeSlug(prefix: nil)
+            let noindex = noindex(frontMatter: frontMatter)
+            let canonical = canonical(frontMatter: frontMatter)
+            let hreflang = hreflang(frontMatter: frontMatter)
+            let redirects = redirects(frontMatter: frontMatter)
 
-            return .init(
-                url: .init(fileURLWithPath: location),
-                slug: finalSlug,
-                permalink: finalSlug.permalink(baseUrl: config.site.baseUrl),
-                type: type,
+            //            print("-------------------")
+            //            print(assetsUrl.path())
+            //            print(assets.joined(separator: "\n"))
+
+            let assetsPrefix = "./\(assetsPath)/"
+            /// resolve imageUrl for the page bundle
+            var imageUrl: String? = nil
+            if let image,
+                image.hasPrefix(assetsPrefix),
+                assets.contains(String(image.dropFirst(assetsPrefix.count)))
+            {
+                imageUrl = image.finalAssetUrl(in: assetsPath, slug: slug)
+            }
+
+            /// inject style.css if exists, resolve js paths for css assets
+            var css = css(frontMatter: frontMatter)
+            if assets.contains("style.css") {
+                css.append("./\(assetsPath)/style.css")
+            }
+            css = css.map { $0.finalAssetUrl(in: assetsPath, slug: slug) }
+
+            /// inject main.js if exists, resolve js paths for js assets
+            var js = js(frontMatter: frontMatter)
+            if assets.contains("main.js") {
+                js.append("./\(assetsPath)/main.js")
+            }
+            js = js.map { $0.finalAssetUrl(in: assetsPath, slug: slug) }
+
+            let propertyKeys = contentType.properties?.keys.sorted() ?? []
+            let relationKeys = contentType.relations?.keys.sorted() ?? []
+            let userDefined = frontMatter.filter { element in
+                !Keys.allCases.map(\.rawValue).contains(element.key)
+                    && !propertyKeys.contains(element.key)
+                    && !relationKeys.contains(element.key)
+            }
+
+            let context = PageBundle.Context(
+                slug: slug,
+                permalink: slug.permalink(baseUrl: config.site.baseUrl),
                 title: title,
                 description: description,
-                image: imageUrl,
-                draft: draft,
-                publication: publication,
-                expiration: expiration,
-                css: css,
-                js: js,
-                template: template ?? "pages.single.page",
-                output: output,
-                assetsPath: assetsPath ?? "assets",
-                lastModification: lastModification,
-                redirects: redirects,
-                userDefined: userDefined,
-                data: data,
-                frontMatter: frontMatter,
-                markdown: rawMarkdown.dropFrontMatter(),
-                assets: assets,
+                imageUrl: imageUrl,
+                lastModification: convert(date: lastModification),
+                publication: convert(date: publication),
+                expiration: expiration.map { convert(date: $0) },
                 noindex: noindex,
                 canonical: canonical,
-                hreflang: hreflang
+                hreflang: hreflang,
+                css: css,
+                js: js,
+                userDefined: userDefined
+            )
+            return .init(
+                url: .init(fileURLWithPath: dirPath),
+                frontMatter: frontMatter,
+                markdown: markdown,
+                type: type,
+                lastModification: lastModification,
+                publication: publication,
+                expiration: expiration,
+                template: template,
+                output: output,
+                assets: .init(path: assetsPath),
+                redirects: redirects,
+                context: context
             )
         }
         catch {
             throw Error.pageBundle(error)
         }
+    }
+}
+
+extension String {
+
+    func finalAssetUrl(
+        in path: String,
+        slug: String
+    ) -> String {
+        let prefix = "./\(path)/"
+        guard hasPrefix(prefix) else {
+            return self
+        }
+        let path = String(dropFirst(prefix.count))
+        return "/assets/" + slug + "/" + path
     }
 }

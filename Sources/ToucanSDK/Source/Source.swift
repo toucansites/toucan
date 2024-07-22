@@ -15,7 +15,7 @@ struct Source {
     let pageBundles: [PageBundle]
 
     func validateSlugs() throws {
-        let slugs = pageBundles.map(\.slug)
+        let slugs = pageBundles.map(\.context.slug)
         let uniqueSlugs = Set(slugs)
         guard slugs.count == uniqueSlugs.count else {
             var seenSlugs = Set<String>()
