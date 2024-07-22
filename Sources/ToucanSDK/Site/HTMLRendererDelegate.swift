@@ -8,7 +8,7 @@
 import Markdown
 import Foundation
 
-struct HTMLRendererDelegate: MarkdownToHTMLRenderer.Delegate {
+struct HTMLRendererDelegate: MarkdownRenderer.Delegate {
 
     let config: Config
     let pageBundle: PageBundle

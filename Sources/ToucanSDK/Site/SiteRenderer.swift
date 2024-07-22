@@ -71,29 +71,19 @@ struct SiteRenderer {
         value.split(separator: " ").count / 238
     }
 
-    func siteContext(
+    func contentContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
-
-        let renderer = MarkdownToHTMLRenderer(
+        let renderer = MarkdownRenderer(
             delegate: HTMLRendererDelegate(
                 config: source.config,
                 pageBundle: pageBundle
             )
         )
-
-        // TODO: proper context
         var context: [String: Any] = [:]
-        context["permalink"] = pageBundle.context.slug.permalink(
-            baseUrl: source.config.site.baseUrl
-        )
-        context["imageUrl"] = pageBundle.context.imageUrl
         context["readingTime"] = readingTime(pageBundle.markdown)
-        context["toc"] = renderer.toc(markdown: pageBundle.markdown)
-        context["contents"] = renderer.render(markdown: pageBundle.markdown)
-
-        //        print(relations.mapValues { $0.map(\.context).map { $0["imageUrl"] } })
-
+        context["toc"] = renderer.renderToC(markdown: pageBundle.markdown)
+        context["contents"] = renderer.renderHTML(markdown: pageBundle.markdown)
         return context
     }
 
@@ -200,7 +190,6 @@ struct SiteRenderer {
         return localContext
     }
 
-    // TODO: recursive resolution vs context ref + list?
     func getFullContext(
         pageBundle: PageBundle
     ) -> [String: Any] {
@@ -217,8 +206,6 @@ struct SiteRenderer {
             }
         }
 
-        // resolve local context
-        // TODO: contextually this should be ok
         let localContext = localContext(for: pageBundle)
         logger.trace("local context:")
         for (key, values) in localContext {
@@ -228,15 +215,16 @@ struct SiteRenderer {
             }
         }
 
-        // TODO: fix this
         return pageBundle.context.dict
             .recursivelyMerged(
                 with: relations.mapValues { $0.map(\.context.dict) }
             )
             .recursivelyMerged(
-                with: localContext.mapValues { $0.map(\.context.dict) }
+                with: localContext.mapValues {
+                    $0.map(\.context.dict)
+                }
             )
-            .recursivelyMerged(with: siteContext(for: pageBundle))
+            .recursivelyMerged(with: contentContext(for: pageBundle))
     }
 
     // MARK: - page bundle rendering

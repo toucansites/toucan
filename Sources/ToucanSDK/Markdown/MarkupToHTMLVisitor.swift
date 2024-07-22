@@ -35,10 +35,10 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
 
     typealias Result = String
 
-    let delegate: MarkdownToHTMLRenderer.Delegate?
+    let delegate: MarkdownRenderer.Delegate?
 
     init(
-        delegate: MarkdownToHTMLRenderer.Delegate? = nil
+        delegate: MarkdownRenderer.Delegate? = nil
     ) {
         self.delegate = delegate
     }
