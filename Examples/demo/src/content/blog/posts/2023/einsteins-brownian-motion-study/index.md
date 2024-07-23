@@ -2,7 +2,7 @@
 type: post
 title: Einstein's Brownian Motion Study
 description: The impact of Einstein's study on Brownian motion on statistical mechanics.
-image: ./einsteins-brownian-motion-study/cover.jpg
+image: ./assets/cover.jpg
 publication: 1908/01/30 12:01:01
 tags: 
     - physics

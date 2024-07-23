@@ -47,7 +47,7 @@ Isolation is a way to ensure that only one task can access a piece of state at a
 
 The easier and new way to share state between tasks is using an `actor`. An actor is a reference type, like classes, that is automatically Sendable. Unlike classes, actors do not support inheritance.
 
-Actors achieve Sendable support by only allowing access from the actor's own _isolated_ context. Reading values and calling methods on an actor is forced by the compiler to happen in that isolated context.
+Actors achieve Sendable support by only allowing access from the actor's own _isolated_ page. Reading values and calling methods on an actor is forced by the compiler to happen in that isolated page.
 
 When accessing an actor's state or calling its functions, you can prefix your call with `async`, if you're not doing so already. The compiler will enforce that only one thread is accessing the actor's state at a time, and suspend until the actor is available.
 

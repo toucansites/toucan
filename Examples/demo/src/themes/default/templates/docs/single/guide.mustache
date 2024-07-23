@@ -1,41 +1,42 @@
 {{<html}}
 {{$main}}
+
 <div id="docs">
     <div class="left">
         {{> docs.blocks.categories }}
     </div>
     <div class="center">
         <article>
-            {{#context.guide.category}}
+            {{#page.guide.category}}
             <a href="{{permalink}}">{{title}}</a>
-            {{/context.guide.category}}
+            {{/page.guide.category}}
             
-            {{& context.contents}}
+            {{& page.contents}}
 
 
             <section>
             <div class="grid grid-2">
-            {{^context.guide.prev}}
+            {{^page.guide.prev}}
             <div></div>
-            {{/context.guide.prev}}
-            {{#context.guide.prev}}
+            {{/page.guide.prev}}
+            {{#page.guide.prev}}
             <div class="prev">
                 <h4>&larr; Prev guide</h4>
                 <small>{{category.title}}</small>
                 <a href="{{permalink}}">{{title}}</a>
             </div>
-            {{/context.guide.prev}}
+            {{/page.guide.prev}}
                 
-            {{^context.guide.next}}
+            {{^page.guide.next}}
             <div></div>
-            {{/context.guide.next}}
-            {{#context.guide.next}}
+            {{/page.guide.next}}
+            {{#page.guide.next}}
             <div class="next">
                 <h4 style="text-align: right;">Next guide &rarr;</h4>
                 <small>{{category.title}}</small>
                 <a href="{{permalink}}">{{title}}</a>
             </div>
-            {{/context.guide.next}}
+            {{/page.guide.next}}
             </div>
             </section>
 

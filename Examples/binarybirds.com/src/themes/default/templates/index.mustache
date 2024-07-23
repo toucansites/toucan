@@ -2,28 +2,28 @@
 <html {{#site.language}}lang="{{.}}"{{/site.language}}>
 <head>
     <meta charset="utf-8">
-    {{#page.metadata.noindex}}<meta name="robots" content="noindex">{{/page.metadata.noindex}}
+    {{#page.noindex}}<meta name="robots" content="noindex">{{/page.noindex}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <link rel="canonical" href="{{page.metadata.canonical}}">
-    {{#page.metadata.hreflang}}
+    <link rel="canonical" href="{{page.canonical}}">
+    {{#page.hreflang}}
     <link rel="alternate" hreflang="{{lang}}" href="{{url}}">
-    {{/page.metadata.hreflang}}
-    {{#page.metadata.prev}}<link rel="prev" href="{{.}}">{{/page.metadata.prev}}
-    {{#page.metadata.next}}<link rel="next" href="{{.}}">{{/page.metadata.next}}
+    {{/page.hreflang}}
+    {{#page.prev}}<link rel="prev" href="{{.}}">{{/page.prev}}
+    {{#page.next}}<link rel="next" href="{{.}}">{{/page.next}}
     
-    <title>{{page.metadata.title}} - {{site.title}}</title>
-    <meta name="description" content="{{page.metadata.description}}">
+    <title>{{page.title}} - {{site.title}}</title>
+    <meta name="description" content="{{page.description}}">
     
-    <meta property="og:url" content="{{page.metadata.permalink}}">
-    <meta property="og:title" content="{{page.metadata.title}} - {{site.title}}">
-    <meta property="og:description" content="{{page.metadata.description}}">
-    {{#page.metadata.imageUrl}}<meta property="og:image" content="{{.}}" />{{/page.metadata.imageUrl}}
+    <meta property="og:url" content="{{page.permalink}}">
+    <meta property="og:title" content="{{page.title}} - {{site.title}}">
+    <meta property="og:description" content="{{page.description}}">
+    {{#page.imageUrl}}<meta property="og:image" content="{{.}}" />{{/page.imageUrl}}
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{page.metadata.title}} - {{site.title}}">
-    <meta name="twitter:description" content="{{page.metadata.description}}">
-    {{#page.metadata.imageUrl}}<meta name="twitter:image" content="{{.}}">{{/page.metadata.imageUrl}}
+    <meta name="twitter:title" content="{{page.title}} - {{site.title}}">
+    <meta name="twitter:description" content="{{page.description}}">
+    {{#page.imageUrl}}<meta name="twitter:image" content="{{.}}">{{/page.imageUrl}}
     
     <link rel="stylesheet" href="{{site.baseUrl}}css/modern-normalize.css">
     <link rel="stylesheet" href="{{site.baseUrl}}css/modern-base.css">

@@ -2,7 +2,7 @@
 type: post
 title: Tesla's Vision for Wireless Energy
 description: Nikola Tesla's ambitious vision for a world powered by wireless energy.
-image: ./teslas-vision-for-wireless-energy/cover.jpg
+image: ./assets/cover.jpg
 publication: 1919-09-10 12:01:01
 tags: 
     - energy

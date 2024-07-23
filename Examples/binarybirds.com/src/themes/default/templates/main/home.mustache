@@ -1,7 +1,7 @@
 {{<html}}
 {{$main}}
 
-{{& context.contents}}
+{{& page.contents}}
 
 <div id="home" class="wrapper">
       <!--* Hero Section -->
@@ -252,9 +252,9 @@
           and services to our clients.
         </p>
         <div class="teamContainer">
-          {{#page.context.authors}}
+          {{#page.authors}}
           {{> _partials.member}}
-          {{/page.context.authors}}
+          {{/page.authors}}
         </div>
       </section>
 

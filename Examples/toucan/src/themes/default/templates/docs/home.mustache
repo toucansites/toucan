@@ -7,17 +7,17 @@
     </div>
     <div class="center">
         <article>
-            {{& context.contents}}
+            {{& page.contents}}
 
             <h2>List of all the docs again</h2>
 
-            {{#empty(page.context.categories)}}
+            {{#empty(page.categories)}}
             Empty.
-            {{/empty(page.context.categories)}}
-            {{^empty(page.context.categories)}}
+            {{/empty(page.categories)}}
+            {{^empty(page.categories)}}
             <div>
             <ul>
-            {{#page.context.categories}}
+            {{#page.categories}}
                 <li>
                     <a href="{{permalink}}">{{title}}</a>
                     <ul>
@@ -26,10 +26,10 @@
                     {{/guides}}
                     </ul>
                 </li>
-            {{/page.context.categories}}
+            {{/page.categories}}
             </ul>
             </div>
-            {{/empty(page.context.categories)}}
+            {{/empty(page.categories)}}
 
         </article>
     </div>

@@ -2,5 +2,5 @@
 type: tag
 title: Computing
 description: Computing
-image: ./computing/computing.webp
+image: ./assets/computing.webp
 ---

@@ -1,7 +1,7 @@
 {{<html}}
 {{$main}}
 
-{{#page.context.post}}
+{{#page.post}}
 <article>
     <header>
         <section id="post-header" class="content-wrapper">
@@ -26,42 +26,42 @@
 
     <section id="contents" class="content-wrapper">
     
-    {{& context.contents}}
+    {{& page.contents}}
         
     </section>
     
     <h2>Next</h2>
-    {{#page.context.next}}
+    {{#page.next}}
         {{> blog.blocks.post}}
-    {{/page.context.next}}
+    {{/page.next}}
     
     <h2>Prev</h2>
-    {{#page.context.prev}}
+    {{#page.prev}}
         {{> blog.blocks.post}}
-    {{/page.context.prev}}
+    {{/page.prev}}
     
     <h2>Related</h2>
-    {{#empty(page.context.related)}}
+    {{#empty(page.related)}}
     Empty.
-    {{/empty(page.context.related)}}
-    {{^empty(page.context.related)}}
-    {{#page.context.related}}
+    {{/empty(page.related)}}
+    {{^empty(page.related)}}
+    {{#page.related}}
         {{> blog.blocks.post}}
-    {{/page.context.related}}
-    {{/empty(page.context.related)}}
+    {{/page.related}}
+    {{/empty(page.related)}}
     
     <h2>More by author(s)</h2>
-    {{#empty(page.context.moreByAuthor)}}
+    {{#empty(page.moreByAuthor)}}
     Empty.
-    {{/empty(page.context.moreByAuthor)}}
-    {{^empty(page.context.moreByAuthor)}}
-    {{#page.context.moreByAuthor}}
+    {{/empty(page.moreByAuthor)}}
+    {{^empty(page.moreByAuthor)}}
+    {{#page.moreByAuthor}}
         {{> blog.blocks.post}}
-    {{/page.context.moreByAuthor}}
-    {{/empty(page.context.moreByAuthor)}}
+    {{/page.moreByAuthor}}
+    {{/empty(page.moreByAuthor)}}
 
 </article>
-{{/page.context.post}}
+{{/page.post}}
 
 {{/main}}
 {{/html}}

@@ -2,7 +2,7 @@
 type: post
 title: Tesla's Impact on Engineering Innovations
 description: An exploration of Tesla's engineering feats that reshaped modern technology.
-image: ./teslas-impact-on-engineering-innovations/cover.jpg
+image: ./assets/cover.jpg
 publication: 1908-07-14 12:01:01
 tags: 
     - engineering

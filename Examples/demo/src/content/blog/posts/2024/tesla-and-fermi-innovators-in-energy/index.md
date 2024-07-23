@@ -2,7 +2,7 @@
 type: post
 title: "Tesla and Fermi: Innovators in Energy"
 description: Collaboration between Nikola Tesla and Enrico Fermi in energy advancements.
-image: ./tesla-and-fermi-innovators-in-energy/cover.jpg
+image: ./assets/cover.jpg
 publication: 1940-02-28 12:01:01
 tags: 
     - energy

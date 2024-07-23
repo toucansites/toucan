@@ -1,89 +1,89 @@
 {{<html}}
 {{$main}}
 <article class="post">
-    {{#context}}
+    
     <header>
-        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        {{#page.imageUrl}}<img src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
         <br><br>
-        <time datetime="{{date}}">{{date}}</time>
-        <h1>{{title}}</h1>
+        <time datetime="{{page.date}}">{{page.date}}</time>
+        <h1>{{page.title}}</h1>
         <hr>
-        <p class="excerpt">{{description}}</p>
+        <p class="excerpt">{{page.description}}</p>
         
         <div class="author-list">
-        {{#authors}}
+        {{#page.authors}}
             <a href="{{permalink}}">
             {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
             <span class="name">{{title}}</span>
             </a>
-        {{/authors}}
+        {{/page.authors}}
         </div>
         <div class="tag-list">
-        {{#tags}}
+        {{#page.tags}}
             <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
-        {{/tags}}
+        {{/page.tags}}
         </div>
     </header>
-    {{/context}}
+    
 
     <section>
     
-    {{& context.contents}}
+    {{& page.contents}}
         
     </section>
     
     <section>
     <div class="grid grid-221">
-    {{^context.prev}}
+    {{^page.prev}}
     <div></div>
-    {{/context.prev}}
-    {{#context.prev}}
+    {{/page.prev}}
+    {{#page.prev}}
     <div>
         <h4>&larr; Prev post</h4>
         <hr class="spacer">
         {{> blog.blocks.post}}
     </div>
-    {{/context.prev}}
+    {{/page.prev}}
     
-    {{^context.next}}
+    {{^page.next}}
     <div></div>
-    {{/context.next}}
-    {{#context.next}}
+    {{/page.next}}
+    {{#page.next}}
     <div>
         <h4 style="text-align: right;">Next post &rarr;</h4>
         <hr class="spacer">
         {{> blog.blocks.post}}
     </div>
-    {{/context.next}}
+    {{/page.next}}
     </div>
     </section>
     
     <section>
-    {{#empty(context.related)}}
-    {{/empty(context.related)}}
-    {{^empty(context.related)}}
+    {{#empty(page.related)}}
+    {{/empty(page.related)}}
+    {{^empty(page.related)}}
     <h4>Related posts</h4>
     <hr class="spacer">
     <div class="grid grid-221">
-    {{#context.related}}
+    {{#page.related}}
         {{> blog.blocks.post}}
-    {{/context.related}}
+    {{/page.related}}
     </div>
-    {{/empty(context.related)}}
+    {{/empty(page.related)}}
     </section>
     
     
-    {{#empty(context.moreByAuthors)}}
-    {{/empty(context.moreByAuthors)}}
-    {{^empty(context.moreByAuthors)}}
+    {{#empty(page.moreByAuthors)}}
+    {{/empty(page.moreByAuthors)}}
+    {{^empty(page.moreByAuthors)}}
     <h4>More posts by the author(s)</h4>
     <hr class="spacer">
     <div class="grid grid-221">
-    {{#context.moreByAuthors}}
+    {{#page.moreByAuthors}}
         {{> blog.blocks.post}}
-    {{/context.moreByAuthors}}
+    {{/page.moreByAuthors}}
     </div>
-    {{/empty(context.moreByAuthors)}}
+    {{/empty(page.moreByAuthors)}}
 
 </article>
 

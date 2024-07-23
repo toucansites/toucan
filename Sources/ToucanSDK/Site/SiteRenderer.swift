@@ -71,22 +71,6 @@ struct SiteRenderer {
         value.split(separator: " ").count / 238
     }
 
-    func contentContext(
-        for pageBundle: PageBundle
-    ) -> [String: Any] {
-        let renderer = MarkdownRenderer(
-            delegate: HTMLRendererDelegate(
-                config: source.config,
-                pageBundle: pageBundle
-            )
-        )
-        var context: [String: Any] = [:]
-        context["readingTime"] = readingTime(pageBundle.markdown)
-        context["toc"] = renderer.renderToC(markdown: pageBundle.markdown)
-        context["contents"] = renderer.renderHTML(markdown: pageBundle.markdown)
-        return context
-    }
-
     func relations(
         for pageBundle: PageBundle
     ) -> [String: [PageBundle]] {
@@ -110,8 +94,23 @@ struct SiteRenderer {
 
             relations[key] = refs
         }
-        //        print(relations["authors"]?.map(\.image))
         return relations
+    }
+    
+    func globalContext() -> [String: [PageBundle]] {
+        var globalContext: [String: [PageBundle]] = [:]
+        for contentType in source.contentTypes {
+            for (key, value) in contentType.context?.site ?? [:] {
+                globalContext[key] =
+                    source
+                    .pageBundles(by: contentType.id)
+                    .sorted(key: value.sort, order: value.order)
+                    .filtered(value.filter)
+                    // TODO: proper pagination
+                    .limited(value.limit)
+            }
+        }
+        return globalContext
     }
 
     func localContext(
@@ -189,11 +188,27 @@ struct SiteRenderer {
         }
         return localContext
     }
+    
+    func contentContext(
+        for pageBundle: PageBundle
+    ) -> [String: Any] {
+        let renderer = MarkdownRenderer(
+            delegate: HTMLRendererDelegate(
+                config: source.config,
+                pageBundle: pageBundle
+            )
+        )
+        var context: [String: Any] = [:]
+        context["readingTime"] = readingTime(pageBundle.markdown)
+        context["toc"] = renderer.renderToC(markdown: pageBundle.markdown)
+        context["contents"] = renderer.renderHTML(markdown: pageBundle.markdown)
+        return context
+    }
 
-    func getFullContext(
+    func getContext(
         pageBundle: PageBundle
     ) -> [String: Any] {
-        logger.trace("slug: `\(pageBundle.context.slug)`")
+        logger.trace("slug: \(pageBundle.context.slug)")
         logger.trace("type: \(pageBundle.type)")
 
         let relations = relations(for: pageBundle)
@@ -214,6 +229,12 @@ struct SiteRenderer {
                 logger.trace("\t - \(item.context.slug)")
             }
         }
+        
+//        if pageBundle.context.slug.contains("blog/authors/albert-einstein") {
+//            print("---")
+//            print(relations)
+//            print(localContext.keys)
+//        }
 
         return pageBundle.context.dict
             .recursivelyMerged(
@@ -231,10 +252,8 @@ struct SiteRenderer {
 
     func renderHTML(
         pageBundle: PageBundle,
-        siteContext: [String: [PageBundle]]
+        globalContext: [String: [PageBundle]]
     ) throws {
-
-        let context = getFullContext(pageBundle: pageBundle)
 
         var fileUrl =
             destinationUrl
@@ -257,13 +276,6 @@ struct SiteRenderer {
             for: fileUrl
         )
 
-        //        if pageBundle.slug == "blog" {
-        //            let ctx = siteContext.mapValues {
-        //                $0.map { getFullContext(pageBundle: $0) }
-        //            }
-        //            dump(ctx["posts"])
-        //        }
-
         try templateRenderer.render(
             template: pageBundle.template,
             with: HTML(
@@ -272,12 +284,11 @@ struct SiteRenderer {
                     title: source.config.site.title,
                     description: source.config.site.description,
                     language: source.config.site.language,
-                    context: siteContext.mapValues {
-                        $0.map { getFullContext(pageBundle: $0) }
+                    context: globalContext.mapValues {
+                        $0.map { getContext(pageBundle: $0) }
                     }
                 ),
-                page: pageBundle,
-                context: context,
+                page: getContext(pageBundle: pageBundle),
                 year: currentYear
             ),
             to: fileUrl
@@ -288,21 +299,10 @@ struct SiteRenderer {
     // MARK: - render related methods
 
     func render() throws {
-        var siteContext: [String: [PageBundle]] = [:]
-        for contentType in source.contentTypes {
-            for (key, value) in contentType.context?.site ?? [:] {
-                siteContext[key] =
-                    source
-                    .pageBundles(by: contentType.id)
-                    .sorted(key: value.sort, order: value.order)
-                    .filtered(value.filter)
-                    // TODO: proper pagination
-                    .limited(value.limit)
-            }
-        }
+        let globalContext = globalContext()
 
-        logger.trace("site context:")
-        for (key, values) in siteContext {
+        logger.trace("global context:")
+        for (key, values) in globalContext {
             logger.trace("\t\(key):")
             for item in values {
                 logger.trace("\t - \(item.context.slug)")
@@ -312,7 +312,7 @@ struct SiteRenderer {
         for pageBundle in source.pageBundles {
             try renderHTML(
                 pageBundle: pageBundle,
-                siteContext: siteContext
+                globalContext: globalContext
             )
         }
 

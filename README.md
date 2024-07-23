@@ -6,11 +6,8 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 
 ### Must fix before 1.0-alpha.1
 
-- proper context building, with css, js, etc.
-- full context -> proper context + recursive issue
+- recursive context?
 - render content pagination 
-- proper asset management & minor fixes related to asset urls
-- proper toc api
 - proper content query api $prev, $next, $same, etc...
 - noindex slug removal
 - proper multiple file extension support (md + markdown, yaml + yml)

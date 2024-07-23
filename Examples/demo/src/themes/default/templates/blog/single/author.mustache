@@ -1,28 +1,28 @@
 {{<html}}
 {{$main}}
 <div id="author-page">
-    {{#context}}
+    
     <header>
-        {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        <h1>{{title}}</h1>
+        {{#page.imageUrl}}<img class="large rounded" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
+        <h1>{{page.title}}</h1>
         <hr>
-        <p>{{description}}</p>
-        <p>{{count(posts)}} posts</p>
+        <p>{{page.description}}</p>
+        <p>{{count(page.posts)}} posts</p>
     </header>
-    {{/context}}
+
+    {{& page.contents}}
     
-    {{& context.contents}}
-    
-    {{#empty(context.posts)}}
+    {{#empty(page.posts)}}
     Empty.
-    {{/empty(context.posts)}}
-    {{^empty(context.posts)}}
+    {{/empty(page.posts)}}
+    {{^empty(page.posts)}}
     <div class="grid grid-321">
-    {{#context.posts}}
+    {{#page.posts}}
+        
         {{> blog.blocks.post}}
-    {{/context.posts}}
+    {{/page.posts}}
     </div>
-    {{/empty(context.posts)}}
+    {{/empty(page.posts)}}
     
 </div>
 

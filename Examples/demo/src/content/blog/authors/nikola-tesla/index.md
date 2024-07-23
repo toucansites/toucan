@@ -2,7 +2,7 @@
 type: author
 title: Nikola Tesla
 description: Nikola Tesla
-image: ./nikola-tesla/nikola-tesla.webp
+image: ./assets/nikola-tesla.webp
 
 ---
 

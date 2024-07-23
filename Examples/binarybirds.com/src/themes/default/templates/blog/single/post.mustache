@@ -2,7 +2,7 @@
 {{$main}}
 
 <article class="post">
-    {{#page.context.post}}
+    {{#page.post}}
     <header>
         {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <br><br>
@@ -24,66 +24,66 @@
         {{/tags}}
         </div>
     </header>
-    {{/page.context.post}}
+    {{/page.post}}
 
     <section>
     
-    {{& context.contents}}
+    {{& page.contents}}
         
     </section>
     
     <section>
     <div class="grid grid-221">
-    {{^page.context.prev}}
+    {{^page.prev}}
     <div></div>
-    {{/page.context.prev}}
-    {{#page.context.prev}}
+    {{/page.prev}}
+    {{#page.prev}}
     <div>
         <h4>&larr; Prev post</h4>
         <hr class="spacer">
         {{> blog.blocks.post}}
     </div>
-    {{/page.context.prev}}
+    {{/page.prev}}
     
-    {{^page.context.next}}
+    {{^page.next}}
     <div></div>
-    {{/page.context.next}}
-    {{#page.context.next}}
+    {{/page.next}}
+    {{#page.next}}
     <div>
         <h4 style="text-align: right;">Next post &rarr;</h4>
         <hr class="spacer">
         {{> blog.blocks.post}}
     </div>
-    {{/page.context.next}}
+    {{/page.next}}
     </div>
     </section>
     
     <section>
-    {{#empty(page.context.related)}}
-    {{/empty(page.context.related)}}
-    {{^empty(page.context.related)}}
+    {{#empty(page.related)}}
+    {{/empty(page.related)}}
+    {{^empty(page.related)}}
     <h4>Related posts</h4>
     <hr class="spacer">
     <div class="grid grid-221">
-    {{#page.context.related}}
+    {{#page.related}}
         {{> blog.blocks.post}}
-    {{/page.context.related}}
+    {{/page.related}}
     </div>
-    {{/empty(page.context.related)}}
+    {{/empty(page.related)}}
     </section>
     
     
-    {{#empty(page.context.moreByAuthor)}}
-    {{/empty(page.context.moreByAuthor)}}
-    {{^empty(page.context.moreByAuthor)}}
+    {{#empty(page.moreByAuthor)}}
+    {{/empty(page.moreByAuthor)}}
+    {{^empty(page.moreByAuthor)}}
     <h4>More posts by the author(s)</h4>
     <hr class="spacer">
     <div class="grid grid-221">
-    {{#page.context.moreByAuthor}}
+    {{#page.moreByAuthor}}
         {{> blog.blocks.post}}
-    {{/page.context.moreByAuthor}}
+    {{/page.moreByAuthor}}
     </div>
-    {{/empty(page.context.moreByAuthor)}}
+    {{/empty(page.moreByAuthor)}}
 
 </article>
 

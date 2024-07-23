@@ -2,7 +2,7 @@
 type: author
 title: Alan Turing
 description: Alan Turing is an amazing scientist
-image: ./alan-turing/alan-turing.webp
+image: ./assets/alan-turing.webp
 redirects:
     from:
         - lorem-turing

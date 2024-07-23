@@ -1,10 +1,10 @@
 <aside>
-    {{#empty(page.context.categories)}}
+    {{#empty(page.categories)}}
     Empty.
-    {{/empty(page.context.categories)}}
-    {{^empty(page.context.categories)}}
+    {{/empty(page.categories)}}
+    {{^empty(page.categories)}}
     <ul>
-    {{#page.context.categories}}
+    {{#page.categories}}
         <li class="category">
             <a href="{{permalink}}">{{title}}</a>
             <ul>
@@ -13,7 +13,7 @@
             {{/guides}}
             </ul>
         </li>
-    {{/page.context.categories}}
+    {{/page.categories}}
     </ul>
-    {{/empty(page.context.categories)}}
+    {{/empty(page.categories)}}
 </aside>

@@ -2,7 +2,7 @@
 type: post
 title: Marie Curie and the Advancement of X-rays
 description: Curie's role in advancing the use and understanding of X-rays in medicine.
-image: ./marie-curie-and-the-advancement-of-x-rays/cover.jpg
+image: ./assets/cover.jpg
 publication: 1914-05-18 12:01:01
 tags: 
     - chemistry

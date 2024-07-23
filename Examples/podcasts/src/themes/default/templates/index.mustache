@@ -2,7 +2,7 @@
 {{$main}}
 <div class="page-wrapper">
 
-{{& context.contents}}
+{{& page.contents}}
 
 <h2>Podcast episodes</h2>
 {{#empty(site.context.podcasts)}}
@@ -17,15 +17,15 @@ Empty.
 {{/empty(site.context.podcasts)}}
 
 
-{{#empty(context.pagination)}}
-{{/empty(context.pagination)}}
-{{^empty(context.pagination)}}
+{{#empty(page.pagination)}}
+{{/empty(page.pagination)}}
+{{^empty(page.pagination)}}
 <div class="pagination">
-{{#context.pagination}}
+{{#page.pagination}}
     {{> blocks.pagination}}
-{{/context.pagination}}
+{{/page.pagination}}
 </div>
-{{/empty(context.pagination)}}
+{{/empty(page.pagination)}}
 
 </div>
 {{/main}}

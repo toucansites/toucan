@@ -1,14 +1,14 @@
 ---
-type: post
-title: Fermi's Advances in Nuclear Energy
-description: Enrico Fermi's critical role in the development of nuclear energy and its uses.
-image: ./fermis-advances-in-nuclear-energy/cover.jpg
-publication: 1942-12-02 12:01:01
+title: "Fermi and Einstein: A Dialogue on Physics"
+description: Insights from discussions between Fermi and Einstein on the future of physics.
+image: ./assets/cover.jpg
+publication: 1934/06/21 12:01:01
 tags: 
-    - energy
     - physics
+    - mathematics
 authors: 
     - enrico-fermi
+    - albert-einstein
 ---
 
 

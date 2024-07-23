@@ -2,66 +2,66 @@
 {{$main}}
 <div id="home" class="wrapper">
     <header>
-        <h1>{{page.metadata.title}}</h1>
-        <p>{{page.metadata.description}}</p>
+        <h1>{{page.title}}</h1>
+        <p>{{page.description}}</p>
         <br>
         <a href="{{userDefined.ctaUrl}}">{{userDefined.ctaLabel}}</a>
     </header>
     
     <h2>Pages</h2>
-    {{#empty(page.context.pages)}}
+    {{#empty(page.pages)}}
     Empty.
-    {{/empty(page.context.pages)}}
-    {{^empty(page.context.pages)}}
+    {{/empty(page.pages)}}
+    {{^empty(page.pages)}}
     <ul>
-    {{#page.context.pages}}
+    {{#page.pages}}
     <li>
         <a href="{{permalink}}">{{title}}</a>
     </li>
-    {{/page.context.pages}}
+    {{/page.pages}}
     </ul>
-    {{/empty(page.context.pages)}}
+    {{/empty(page.pages)}}
     
     <h2>Featured</h2>
-    {{#empty(page.context.featured)}}
+    {{#empty(page.featured)}}
     Empty.
-    {{/empty(page.context.featured)}}
-    {{^empty(page.context.featured)}}
-    {{#page.context.featured}}
+    {{/empty(page.featured)}}
+    {{^empty(page.featured)}}
+    {{#page.featured}}
         {{> blog.blocks.post}}
-    {{/page.context.featured}}
-    {{/empty(page.context.featured)}}
+    {{/page.featured}}
+    {{/empty(page.featured)}}
     
     
     <h2>Latest posts</h2>
-    {{#empty(page.context.posts)}}
+    {{#empty(page.posts)}}
     Empty.
-    {{/empty(page.context.posts)}}
-    {{^empty(page.context.posts)}}
-    {{#page.context.posts}}
+    {{/empty(page.posts)}}
+    {{^empty(page.posts)}}
+    {{#page.posts}}
         {{> blog.blocks.post}}
-    {{/page.context.posts}}
-    {{/empty(page.context.posts)}}
+    {{/page.posts}}
+    {{/empty(page.posts)}}
     
     <h2>Authors</h2>
-    {{#empty(page.context.authors)}}
+    {{#empty(page.authors)}}
     Empty.
-    {{/empty(page.context.authors)}}
-    {{^empty(page.context.authors)}}
-    {{#page.context.authors}}
+    {{/empty(page.authors)}}
+    {{^empty(page.authors)}}
+    {{#page.authors}}
         {{> blog.blocks.author}}
-    {{/page.context.authors}}
-    {{/empty(page.context.authors)}}
+    {{/page.authors}}
+    {{/empty(page.authors)}}
     
     <h2>Tags</h2>
-    {{#empty(page.context.tags)}}
+    {{#empty(page.tags)}}
     Empty.
-    {{/empty(page.context.tags)}}
-    {{^empty(page.context.tags)}}
-    {{#page.context.tags}}
+    {{/empty(page.tags)}}
+    {{^empty(page.tags)}}
+    {{#page.tags}}
         {{> blog.blocks.tag}}
-    {{/page.context.tags}}
-    {{/empty(page.context.tags)}}
+    {{/page.tags}}
+    {{/empty(page.tags)}}
 
 
 </div>

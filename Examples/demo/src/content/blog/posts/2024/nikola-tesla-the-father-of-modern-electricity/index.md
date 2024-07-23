@@ -2,7 +2,7 @@
 type: post
 title: "Nikola Tesla: The Father of Modern Electricity"
 description: Discover Nikola Tesla's innovations that transformed the world of electricity.
-image: ./nikola-tesla-the-father-of-modern-electricity/cover.jpg
+image: ./assets/cover.jpg
 publication: 1893-05-16 12:01:01
 tags: 
     - energy

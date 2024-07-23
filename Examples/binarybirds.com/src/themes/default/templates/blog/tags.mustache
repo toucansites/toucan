@@ -1,21 +1,21 @@
 {{<html}}
 {{$main}}
 
-{{& context.contents}}
+{{& page.contents}}
 
 <div id="tags" class="wrapper">
 
-    {{#empty(page.context.tags)}}
+    {{#empty(page.tags)}}
     Empty.
-    {{/empty(page.context.tags)}}
-    {{^empty(page.context.tags)}}
+    {{/empty(page.tags)}}
+    {{^empty(page.tags)}}
     <div class="grid grid-321">
-    {{#page.context.tags}}
+    {{#page.tags}}
         {{> blog.blocks.tag}}
-    {{/page.context.tags}}
+    {{/page.tags}}
     
     </div>
-    {{/empty(page.context.tags)}}
+    {{/empty(page.tags)}}
 </div>
 
 {{/main}}

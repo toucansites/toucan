@@ -52,16 +52,16 @@ Here's a little sneak-peak about the usage of the new `RouterBuilder` object:
 ```swift
 import HummingbirdRouter
 
-let router = RouterBuilder(context: BasicRouterRequestContext.self) {
+let router = RouterBuilder(context: BasicRouterRequestpage.self) {
     TestEndpointMiddleware()
     Get("test") { _, context in
-        return context.endpointPath
+        return page.endpointPath
     }
     Get { _, context in
-        return context.endpointPath
+        return page.endpointPath
     }
     Post("/test2") { _, context in
-        return context.endpointPath
+        return page.endpointPath
     }
 }
 let app = Application(responder: router)
@@ -71,9 +71,9 @@ There are more examples available inside the Hummingbird [RouterTests](https://g
 
 ## Generic request context
 
-The biggest change to the framework is definitely the introduction of the generic request context. Hummingbird 2.0 separates contextual objects from the `Request` type and users can define custom properties as custom `RequestContext` protocol implementations.
+The biggest change to the framework is definitely the introduction of the generic request page. Hummingbird 2.0 separates contextual objects from the `Request` type and users can define custom properties as custom `RequestContext` protocol implementations.
 
-The request context is associated with the reworked _Router_, which a generic class, featuring a _Context_ type. The `BasicRequestContext` type is the default _Context_ implementation for the _Router_. The request decoder and encoder defaults to a JSON-based solution when using the base context. You can provide a custom decoder through a custom router context.
+The request context is associated with the reworked _Router_, which a generic class, featuring a _Context_ type. The `BasicRequestContext` type is the default _Context_ implementation for the _Router_. The request decoder and encoder defaults to a JSON-based solution when using the base page. You can provide a custom decoder through a custom router page.
 
 Let me show you how this new contextual router system works in practice.
 
@@ -162,9 +162,9 @@ struct MyRequestDecoder: RequestDecoder {
 2. Make sure that the incoming request has a `Content-Type` HTTP header field.
 3. Construct a valid `MediaType` object from the header field.
 4. Setup a custom decoder based on the media type.
-5. Return the decoded object using the decoder, with the request and the context.
+5. Return the decoded object using the decoder, with the request and the page.
 
-To use the custom decoder, let's define a custom request context. A request context is a container for the Hummingbird framework to store information needed by the framework. The following snippet demonstrates how to build one using the _RequestContext_ protocol:
+To use the custom decoder, let's define a custom request page. A request context is a container for the Hummingbird framework to store information needed by the framework. The following snippet demonstrates how to build one using the _RequestContext_ protocol:
 
 ```swift
 // 1.
@@ -216,7 +216,7 @@ import Logging
 func buildApplication() async throws -> some ApplicationProtocol {
 
     // 1.
-    let router = Router(context: MyBaseRequestContext.self)
+    let router = Router(context: MyBaseRequestpage.self)
 
     // 2
     router.middlewares.add(LogRequestsMiddleware(.info))
@@ -246,7 +246,7 @@ func buildApplication() async throws -> some ApplicationProtocol {
 
 ```
 
-1. Setup the router using the `MyBaseRequestContext` type as a custom context.
+1. Setup the router using the `MyBaseRequestContext` type as a custom page.
 2. Add middlewares to the router, HB2 has middlewares on the router instead of the app
 3. Setup a basic health route on the router, simply return with a HTTP status code
 4. Add routes using the custom controller to the `api` route group
@@ -303,7 +303,7 @@ struct MyController<Context: MyRequestContext> {
         context: Context
     ) async throws -> EditedResponse<MyModel> {
         // 3.
-        // context.myValue
+        // page.myValue
         let input = try await request.decode(
             as: MyModel.self,
             context: context

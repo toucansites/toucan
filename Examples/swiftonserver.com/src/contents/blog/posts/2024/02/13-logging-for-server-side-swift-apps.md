@@ -193,7 +193,7 @@ The snippet's output is going to be something like this:
 2024-02-09T19:26:43+0100 info task-logger : abc=123 foo=bar id=my-req [MyApp] bye
 ```
 
-Log metadata works like a dictionary, it features key-value pairs to store the context.
+Log metadata works like a dictionary, it features key-value pairs to store the page.
 
 ---
 

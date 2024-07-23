@@ -6,35 +6,35 @@
     </div>
     <div class="center">
         <article>
-            {{#page.context.guide.category}}
+            {{#page.guide.category}}
             <a href="{{permalink}}">{{title}}</a>
-            {{/page.context.guide.category}}
-            {{& context.contents}}
+            {{/page.guide.category}}
+            {{& page.contents}}
 
         
             <section>
             <div class="grid grid-2">
-            {{^page.context.guide.prev}}
+            {{^page.guide.prev}}
             <div></div>
-            {{/page.context.guide.prev}}
-            {{#page.context.guide.prev}}
+            {{/page.guide.prev}}
+            {{#page.guide.prev}}
             <div class="prev">
                 <h4>&larr; Prev guide</h4>
                 <small>{{category.title}}</small>
                 <a href="{{permalink}}">{{title}}</a>
             </div>
-            {{/page.context.guide.prev}}
+            {{/page.guide.prev}}
                 
-            {{^page.context.guide.next}}
+            {{^page.guide.next}}
             <div></div>
-            {{/page.context.guide.next}}
-            {{#page.context.guide.next}}
+            {{/page.guide.next}}
+            {{#page.guide.next}}
             <div class="next">
                 <h4 style="text-align: right;">Next guide &rarr;</h4>
                 <small>{{category.title}}</small>
                 <a href="{{permalink}}">{{title}}</a>
             </div>
-            {{/page.context.guide.next}}
+            {{/page.guide.next}}
             </div>
             </section>
 

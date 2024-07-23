@@ -3,7 +3,7 @@
 
 <article class="post">
 
-    {{#page.context.post}}
+    {{#page.post}}
     <header>
         {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         <br><br>
@@ -34,7 +34,7 @@
         {{/tags}}
         </div>
     </header>
-    {{/page.context.post}}
+    {{/page.post}}
 
     
 {{userDefined.downloadUrl}}{{userDefined.downloadFile}}
@@ -46,34 +46,34 @@
 
     <section>
     
-    {{& context.contents}}
+    {{& page.contents}}
         
     </section>
     
     <section>
     <div class="grid grid-221">
-    {{^page.context.prev}}
+    {{^page.prev}}
     <div></div>
-    {{/page.context.prev}}
-    {{#page.context.prev}}
+    {{/page.prev}}
+    {{#page.prev}}
     <div>
         <a href="{{permalink}}">
         <h4>&larr; Prev post</h4>
         <hr class="spacer">
         </a>
     </div>
-    {{/page.context.prev}}
+    {{/page.prev}}
     
-    {{^page.context.next}}
+    {{^page.next}}
     <div></div>
-    {{/page.context.next}}
-    {{#page.context.next}}
+    {{/page.next}}
+    {{#page.next}}
     <div>
         <a href="{{permalink}}">
         <h4 style="text-align: right;">Next post &rarr;</h4>
         </a>
     </div>
-    {{/page.context.next}}
+    {{/page.next}}
     </div>
     </section>
     

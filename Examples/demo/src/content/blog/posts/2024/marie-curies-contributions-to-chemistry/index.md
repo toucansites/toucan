@@ -2,7 +2,7 @@
 type: post
 title: Marie Curie's Contributions to Chemistry
 description: A look at Marie Curie's groundbreaking research in radioactivity and its impact.
-image: ./marie-curies-contributions-to-chemistry/cover.jpg
+image: ./assets/cover.jpg
 publication: 1903-12-10 12:01:01
 tags: 
     - chemistry
