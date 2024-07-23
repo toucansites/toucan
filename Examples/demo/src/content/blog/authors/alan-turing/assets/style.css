@@ -1,1 +1,3 @@
-
+img.large.rounded {
+    filter: grayscale(100%);
+}

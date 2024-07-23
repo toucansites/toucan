@@ -27,6 +27,7 @@ struct ConfigLoader {
 
     func load() throws -> Config {
         let configUrl = sourceUrl.appendingPathComponent("config")
+
         let yamlConfigUrls = [
             configUrl.appendingPathExtension("yaml"),
             configUrl.appendingPathExtension("yml"),
@@ -36,15 +37,7 @@ struct ConfigLoader {
                 continue
             }
             do {
-                let rawYaml = try String(contentsOf: yamlConfigUrl)
                 let rawYamlData = try Data(contentsOf: yamlConfigUrl)
-
-                let yaml =
-                    try Yams.load(
-                        yaml: String(rawYaml),
-                        Resolver.default.removing(.timestamp)
-                    ) as? [String: Any] ?? [:]
-
                 let decoder = YAMLDecoder()
                 return try decoder.decode(Config.self, from: rawYamlData)
 

@@ -7,6 +7,12 @@
 
 import Foundation
 import FileManagerKit
+import Yams
+
+struct PageBundleLocation {
+    let slug: String
+    let path: String
+}
 
 struct PageBundleLoader {
 
@@ -55,21 +61,104 @@ struct PageBundleLoader {
     /// The current date.
     let now: Date = .init()
 
+    let indexName = "index"
+    let noindexName = "noindex"
+    let mdExtensions = ["md", "markdown"]
+    let yamlExtensions = ["yaml", "yml"]
+
+    var extensions: [String] {
+        mdExtensions + yamlExtensions
+    }
+
     /// helper
     private var contentUrl: URL {
         sourceUrl.appendingPathComponent(config.content.folder)
     }
 
     public func load() throws -> [PageBundle] {
-        fileManager
-            .recursivelyListDirectory(at: contentUrl)
-            .filter { $0.hasSuffix("index.md") }
-            // TODO: use noindex for slug removal + allow folder grouping
-            .filter { !$0.hasSuffix("noindex.md") }
+        try loadBundleLocations()
+            .sorted { $0.path < $1.path }
             .compactMap {
-                try? loadPageBundle(at: $0)
+                return try? loadPageBundle(at: $0)
             }
             .sorted { $0.context.slug < $1.context.slug }
+    }
+
+    // MARK: - load helpers
+
+    func loadBundleLocations(
+        slug: [String] = [],
+        path: [String] = []
+    ) throws -> [PageBundleLocation] {
+        var result: [PageBundleLocation] = []
+
+        let p = path.joined(separator: "/")
+        let url = contentUrl.appendingPathComponent(p)
+
+        if containsIndexFile(name: indexName, at: url) {
+            result.append(
+                .init(
+                    slug: slug.joined(separator: "/"),
+                    path: p
+                )
+            )
+        }
+
+        let list = fileManager.listDirectory(at: url)
+        for item in list {
+            var newSlug = slug
+            let childUrl = url.appendingPathComponent(item)
+            if !containsIndexFile(name: noindexName, at: childUrl) {
+                newSlug += [item]
+            }
+            let newPath = path + [item]
+            result += try loadBundleLocations(slug: newSlug, path: newPath)
+        }
+
+        return result
+    }
+
+    func containsIndexFile(
+        name: String,
+        at url: URL
+    ) -> Bool {
+        for ext in extensions {
+            let fileUrl = url.appendingPathComponent("\(name).\(ext)")
+            if fileManager.fileExists(at: fileUrl) {
+                return true
+            }
+        }
+        return false
+    }
+
+    func loadLastModificationDate(
+        at url: URL
+    ) throws -> Date {
+        var date: Date?
+        for ext in extensions {
+            let fileUrl = url.appendingPathComponent("\(indexName).\(ext)")
+            guard fileManager.fileExists(at: fileUrl) else {
+                continue
+            }
+            let fileDate = try fileManager.modificationDate(at: fileUrl)
+            if date == nil || date! < fileDate {
+                date = fileDate
+            }
+        }
+        precondition(date != nil, "Last modification date is nil.")
+        return date!
+    }
+
+    func loadRawMarkdown(
+        at url: URL
+    ) throws -> String {
+        for ext in mdExtensions {
+            let fileUrl = url.appendingPathComponent("\(indexName).\(ext)")
+            if fileManager.fileExists(at: fileUrl) {
+                return try String(contentsOf: fileUrl, encoding: .utf8)
+            }
+        }
+        return ""
     }
 
     func loadFrontMatter(
@@ -77,31 +166,25 @@ struct PageBundleLoader {
         dirUrl: URL,
         rawMarkdown: String
     ) throws -> [String: Any] {
+        /// use front matter from the markdown file
         var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
-        // TODO: use url
-        for c in [id + ".yaml", id + ".yml"] {
-            let url = dirUrl.appendingPathComponent(c)
-            guard fileManager.fileExists(at: url) else {
-                continue
-            }
-            let yaml = try String(contentsOf: url, encoding: .utf8)
-            let fm = try frontMatterParser.load(yaml: yaml)
-            frontMatter = frontMatter.recursivelyMerged(with: fm)
-        }
 
-        var data: [[String: Any]] = []
-        for d in [id + ".data.yaml", id + ".data.yml"] {
-            let url = dirUrl.appendingPathComponent(d)
-            guard fileManager.fileExists(at: url) else {
-                continue
-            }
-            let yaml = try String(contentsOf: url, encoding: .utf8)
-            let da =
-                try frontMatterParser.load(
-                    yaml: yaml,
-                    as: [[String: Any]].self
-                ) ?? []
-            data += da
+        /// load additional yaml files for meta data overrides
+        let overrides: [String: Any] = try Yaml.load(
+            at: dirUrl,
+            name: id,
+            fileManager: fileManager
+        )
+        frontMatter = frontMatter.recursivelyMerged(with: overrides)
+
+        /// load additional data files for data definitions
+        let data: [[String: Any]] = try Yaml.load(
+            at: dirUrl,
+            name: "\(id).data",
+            fileManager: fileManager
+        )
+        if !data.isEmpty {
+            frontMatter["data"] = data
         }
         return frontMatter
     }
@@ -137,8 +220,8 @@ struct PageBundleLoader {
         frontMatter.date(Keys.expiration.rawValue)
     }
 
-    func slug(frontMatter: [String: Any], id: String) -> String {
-        (frontMatter.string(Keys.slug.rawValue).emptyToNil ?? id)
+    func slug(frontMatter: [String: Any], fallback: String) -> String {
+        (frontMatter.string(Keys.slug.rawValue).emptyToNil ?? fallback)
             .safeSlug(prefix: nil)
     }
 
@@ -225,23 +308,19 @@ struct PageBundleLoader {
     // MARK: - loading
 
     func loadPageBundle(
-        at path: String
+        at location: PageBundleLocation
     ) throws -> PageBundle? {
-        let url = contentUrl.appendingPathComponent(path)
-        guard fileManager.fileExists(at: url) else {
+        let dirUrl = contentUrl.appendingPathComponent(location.path)
+        guard fileManager.directoryExists(at: dirUrl) else {
             return nil
         }
-
         do {
-            let fileName = url.lastPathComponent
-            let dirPath = String(url.path.dropLast(fileName.count))
-            let dirUrl = URL(fileURLWithPath: dirPath)
-            let id = String(path.dropLast(fileName.count + 1))
-            let lastModification = try fileManager.modificationDate(at: url)
-            let rawMarkdown = try String(contentsOf: url, encoding: .utf8)
+            let lastModification = try loadLastModificationDate(at: dirUrl)
+            let rawMarkdown = try loadRawMarkdown(at: dirUrl)
             let markdown = rawMarkdown.dropFrontMatter()
+
             let frontMatter = try loadFrontMatter(
-                id: id,
+                id: indexName,
                 dirUrl: dirUrl,
                 rawMarkdown: rawMarkdown
             )
@@ -261,7 +340,7 @@ struct PageBundleLoader {
                 return nil
             }
 
-            let slug = slug(frontMatter: frontMatter, id: id)
+            let slug = slug(frontMatter: frontMatter, fallback: location.slug)
             let type = type(frontMatter: frontMatter)
 
             let contentType = contentTypes.first { $0.id == type }
@@ -342,7 +421,7 @@ struct PageBundleLoader {
                 userDefined: userDefined
             )
             return .init(
-                url: .init(fileURLWithPath: dirPath),
+                url: dirUrl,
                 frontMatter: frontMatter,
                 markdown: markdown,
                 type: type,

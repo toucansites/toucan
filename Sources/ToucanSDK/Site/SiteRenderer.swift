@@ -96,7 +96,7 @@ struct SiteRenderer {
         }
         return relations
     }
-    
+
     func globalContext() -> [String: [PageBundle]] {
         var globalContext: [String: [PageBundle]] = [:]
         for contentType in source.contentTypes {
@@ -188,7 +188,7 @@ struct SiteRenderer {
         }
         return localContext
     }
-    
+
     func contentContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
@@ -229,12 +229,12 @@ struct SiteRenderer {
                 logger.trace("\t - \(item.context.slug)")
             }
         }
-        
-//        if pageBundle.context.slug.contains("blog/authors/albert-einstein") {
-//            print("---")
-//            print(relations)
-//            print(localContext.keys)
-//        }
+
+        //        if pageBundle.context.slug.contains("blog/authors/albert-einstein") {
+        //            print("---")
+        //            print(relations)
+        //            print(localContext.keys)
+        //        }
 
         return pageBundle.context.dict
             .recursivelyMerged(

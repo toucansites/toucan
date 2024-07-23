@@ -15,14 +15,14 @@ struct Context {
         let context: [String: Any]?
     }
 
-//    struct Pagination {
-//        let number: Int
-//        let total: Int
-//
-//        let slug: String
-//        let permalink: String
-//        let isCurrent: Bool
-//    }
+    //    struct Pagination {
+    //        let number: Int
+    //        let total: Int
+    //
+    //        let slug: String
+    //        let permalink: String
+    //        let isCurrent: Bool
+    //    }
 }
 
 struct HTML: Output {
