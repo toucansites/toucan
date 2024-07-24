@@ -54,9 +54,7 @@ struct PageBundle {
         let hreflang: [Hreflang]
         let css: [String]
         let js: [String]
-
-        let userDefined: [String: Any]
-
+        
         var dict: [String: Any] {
             var result: [String: Any] = [:]
 
@@ -76,7 +74,7 @@ struct PageBundle {
             result["css"] = css
             result["js"] = js
 
-            return result.recursivelyMerged(with: userDefined)
+            return result
         }
     }
 
@@ -94,8 +92,8 @@ struct PageBundle {
     let assets: Assets
     let redirects: [Redirect]
 
-    //    let userDefined: [String: Any]
-    //    let data: [[String: Any]]
+    let userDefined: [String: Any]
+    let data: [[String: Any]]
 
     let context: Context
 

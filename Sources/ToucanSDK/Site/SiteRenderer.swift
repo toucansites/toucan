@@ -289,6 +289,8 @@ struct SiteRenderer {
                     }
                 ),
                 page: getContext(pageBundle: pageBundle),
+                userDefined: pageBundle.userDefined, // TODO: merge with site
+                data: pageBundle.data,
                 year: currentYear
             ),
             to: fileUrl

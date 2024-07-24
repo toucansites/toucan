@@ -167,7 +167,7 @@ struct PageBundleLoader {
         rawMarkdown: String
     ) throws -> [String: Any] {
         /// use front matter from the markdown file
-        var frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
+        let frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
 
         /// load additional yaml files for meta data overrides
         let overrides: [String: Any] = try Yaml.load(
@@ -175,18 +175,19 @@ struct PageBundleLoader {
             name: id,
             fileManager: fileManager
         )
-        frontMatter = frontMatter.recursivelyMerged(with: overrides)
-
+        return frontMatter.recursivelyMerged(with: overrides)
+    }
+    
+    func loadData(
+        id: String,
+        dirUrl: URL
+    ) throws -> [[String: Any]] {
         /// load additional data files for data definitions
-        let data: [[String: Any]] = try Yaml.load(
+        try Yaml.load(
             at: dirUrl,
             name: "\(id).data",
             fileManager: fileManager
         )
-        if !data.isEmpty {
-            frontMatter["data"] = data
-        }
-        return frontMatter
     }
 
     func convert(
@@ -325,6 +326,11 @@ struct PageBundleLoader {
                 rawMarkdown: rawMarkdown
             )
 
+            let data = try loadData(
+                id: indexName,
+                dirUrl: dirUrl
+            )
+
             /// filter out drafts
             if draft(frontMatter: frontMatter) {
                 return nil
@@ -417,9 +423,9 @@ struct PageBundleLoader {
                 canonical: canonical,
                 hreflang: hreflang,
                 css: css,
-                js: js,
-                userDefined: userDefined
+                js: js
             )
+            
             return .init(
                 url: dirUrl,
                 frontMatter: frontMatter,
@@ -432,6 +438,8 @@ struct PageBundleLoader {
                 output: output,
                 assets: .init(path: assetsPath),
                 redirects: redirects,
+                userDefined: userDefined,
+                data: data,
                 context: context
             )
         }

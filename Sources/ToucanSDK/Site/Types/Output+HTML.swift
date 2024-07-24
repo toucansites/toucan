@@ -29,5 +29,7 @@ struct HTML: Output {
 
     let site: Context.Site
     let page: [String: Any]
+    let userDefined: [String: Any]
+    let data: [[String: Any]]
     let year: Int
 }
