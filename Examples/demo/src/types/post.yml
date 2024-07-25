@@ -2,6 +2,9 @@ id: post
 rss: true
 
 properties:
+    featured:
+        type: bool
+        required: true
     order:
         type: int
         required: true

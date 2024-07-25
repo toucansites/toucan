@@ -7,6 +7,32 @@
 
 import Foundation
 import Logging
+import Dispatch
+import ShellKit
+
+final class Cache {
+    
+    let q = DispatchQueue(label: "com.binarybirds.toucan.cache", attributes: .concurrent)
+
+    var storage: [String: Any]
+    
+    init() {
+        self.storage = [:]
+    }
+    
+    func set(key: String, value: Any) {
+        q.async(flags: .barrier) {
+            self.storage[key] = value
+        }
+        
+    }
+    
+    func get(key: String) -> Any? {
+        q.sync() {
+            self.storage[key]
+        }
+    }
+}
 
 /// Responsible to build renderable files using the site context & templates.
 struct SiteRenderer {
@@ -33,6 +59,8 @@ struct SiteRenderer {
     let logger: Logger
 
     let templateRenderer: MustacheToHTMLRenderer
+    
+    var cache: Cache
 
     init(
         source: Source,
@@ -63,6 +91,8 @@ struct SiteRenderer {
             templatesUrl: templatesUrl,
             overridesUrl: overridesUrl
         )
+        
+        self.cache = .init()
     }
 
     // MARK: - context related
@@ -198,19 +228,82 @@ struct SiteRenderer {
                 pageBundle: pageBundle
             )
         )
+
+        let transformersUrl = source.url.appendingPathComponent("transformers")
+        let transformers = fileManager.listDirectory(at: transformersUrl)
+            .filter { !$0.hasPrefix(".") }
+            .sorted()
+        
+        var contents = ""
+        let markdown = pageBundle.markdown.dropFrontMatter()
+
+        if !transformers.isEmpty {
+            let shell = Shell(env: ProcessInfo.processInfo.environment)
+
+            // Create a temporary directory URL
+            let tempDirectoryURL = FileManager.default.temporaryDirectory
+            let fileName = UUID().uuidString
+            let fileURL = tempDirectoryURL.appendingPathComponent(fileName)
+
+    //        print(fileURL.path)
+            try! markdown.write(to: fileURL, atomically: true, encoding: .utf8)
+        
+            let opt = pageBundle.userDefined.dict("transformer.options") as? [String: String] ?? [:]
+            let options = opt.map { #"--\#($0) "\#($1)""# }.joined(separator: " ")
+            
+            for transformer in transformers {
+                let bin = transformersUrl.appendingPathComponent(transformer).path
+                do {
+                    let cmd = #"\#(bin) --file "\#(fileURL.path)" --slug "\#(pageBundle.context.slug)" \#(options)"#
+//                    print(cmd)
+                    let log = try shell.run(cmd)
+                    if !log.isEmpty {
+                        print(log)
+                    }
+                }
+                catch {
+                    print(error.localizedDescription)
+                }
+            }
+            contents = try! String(contentsOf: fileURL, encoding: .utf8)
+            try? fileManager.delete(at: fileURL)
+        }
+        else {
+            contents = renderer.renderHTML(markdown: markdown)
+        }
+
         var context: [String: Any] = [:]
-        context["readingTime"] = readingTime(pageBundle.markdown)
-        context["toc"] = renderer.renderToC(markdown: pageBundle.markdown)
-        context["contents"] = renderer.renderHTML(markdown: pageBundle.markdown)
+        context["readingTime"] = readingTime(markdown)
+        context["toc"] = renderer.renderToC(markdown: markdown)
+        context["contents"] = contents
+        
         return context
     }
 
     func getContext(
         pageBundle: PageBundle
     ) -> [String: Any] {
+        
+        if let res = cache.get(key: pageBundle.context.slug) as? [String: Any] {
+            return res
+        }
+        
         logger.trace("slug: \(pageBundle.context.slug)")
         logger.trace("type: \(pageBundle.type)")
 
+        
+//        let contentType = source.contentType(for: pageBundle)
+//        if contentType.id == "post" {
+//            var props: [String: Any] = [:]
+//
+//            for (key, _) in contentType.properties ?? [:] {
+//                let value = pageBundle.frontMatter[key]
+//                props[key] = value
+//            }
+//            print(props)
+//        }
+        
+        
         let relations = relations(for: pageBundle)
 
         logger.trace("relations:")
@@ -236,7 +329,7 @@ struct SiteRenderer {
         //            print(localContext.keys)
         //        }
 
-        return pageBundle.context.dict
+        let res = pageBundle.context.dict
             .recursivelyMerged(
                 with: relations.mapValues { $0.map(\.context.dict) }
             )
@@ -246,6 +339,9 @@ struct SiteRenderer {
                 }
             )
             .recursivelyMerged(with: contentContext(for: pageBundle))
+        
+        cache.set(key: pageBundle.context.slug, value: res)
+        return res
     }
 
     // MARK: - page bundle rendering
