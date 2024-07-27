@@ -1,0 +1,10 @@
+type: post
+title: "Templating with Swift-Mustache"
+description: "Learn how to template emails and web pages with Swift-Mustache."
+publication: 2024/05/14 12:01:01
+tags:
+    - Swift
+    - Templating
+    - Mustache
+authors:
+    - joannis-orlandos

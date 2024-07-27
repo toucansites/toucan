@@ -1,0 +1,34 @@
+{{<html}}
+{{$main}}
+
+{{& page.contents}}
+
+
+<h2>Featured posts</h2>
+{{#empty(site.context.featured)}}
+Empty.
+{{/empty(site.context.featured)}}
+{{^empty(site.context.featured)}}
+<div class="grid grid-321">
+{{#site.context.featured}}
+    {{> blog.blocks.post}}
+{{/site.context.featured}}
+</div>
+{{/empty(site.context.featured)}}
+
+
+<h2>Latest posts</h2>
+{{#empty(site.context.posts)}}
+Empty.
+{{/empty(site.context.posts)}}
+{{^empty(site.context.posts)}}
+<div class="grid grid-321">
+{{#site.context.posts}}
+    {{> blog.blocks.post}}
+{{/site.context.posts}}
+</div>
+{{/empty(site.context.posts)}}
+
+
+{{/main}}
+{{/html}}

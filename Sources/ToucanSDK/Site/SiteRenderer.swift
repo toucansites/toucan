@@ -281,32 +281,52 @@ struct SiteRenderer {
             )
         )
 
+        // TODO: check if transformer exists
         let transformersUrl = source.url.appendingPathComponent("transformers")
-        let transformers = fileManager.listDirectory(at: transformersUrl)
+        let availableTransformers = fileManager
+            .listDirectory(at: transformersUrl)
             .filter { !$0.hasPrefix(".") }
             .sorted()
+       
         
-        var contents = ""
+        let contentType = source.contentType(for: pageBundle)
+        let run = contentType.transformers?.run ?? []
+        let renderFallback = contentType.transformers?.render ?? true
+        
+//        let transformers = pageBundle.frontMatter.dict("transformers")
+//        let renderFallback = transformers.bool("render")
+//        let run = transformers.array("run", as: [String: Any].self)
+        
         let markdown = pageBundle.markdown.dropFrontMatter()
+        var contents = ""
 
-        // TODO: proper transformers settings
-        if false, !transformers.isEmpty {
+        // TODO: better transformers settings merge with page bundle
+        if !run.isEmpty {
             let shell = Shell(env: ProcessInfo.processInfo.environment)
 
             // Create a temporary directory URL
             let tempDirectoryURL = FileManager.default.temporaryDirectory
             let fileName = UUID().uuidString
             let fileURL = tempDirectoryURL.appendingPathComponent(fileName)
-
             try! markdown.write(to: fileURL, atomically: true, encoding: .utf8)
-        
-            let opt = pageBundle.userDefined.dict("transformer.options") as? [String: String] ?? [:]
-            let options = opt.map { #"--\#($0) "\#($1)""# }.joined(separator: " ")
-            
-            for transformer in transformers {
-                let bin = transformersUrl.appendingPathComponent(transformer).path
+
+            for r in run {
+                guard availableTransformers.contains(r.name) else {
+                    continue
+                }
+                var rawOptions = r.options ?? [:]
+                rawOptions["file"] = fileURL.path
+                // TODO: this is not necessary the right way...
+                rawOptions["id"] = pageBundle.contextAwareIdentifier
+                rawOptions["slug"] = pageBundle.context.slug
+
+                let bin = transformersUrl.appendingPathComponent(r.name).path
+                let options = rawOptions
+                    .map { #"--\#($0) "\#($1)""# }
+                    .joined(separator: " ")
+
                 do {
-                    let cmd = #"\#(bin) --file "\#(fileURL.path)" --slug "\#(pageBundle.context.slug)" \#(options)"#
+                    let cmd = #"\#(bin) \#(options)"#
 //                    print(cmd)
                     let log = try shell.run(cmd)
                     if !log.isEmpty {
@@ -314,13 +334,14 @@ struct SiteRenderer {
                     }
                 }
                 catch {
-                    print(error.localizedDescription)
+                    print("\(error)")
                 }
             }
             contents = try! String(contentsOf: fileURL, encoding: .utf8)
             try? fileManager.delete(at: fileURL)
         }
-        else {
+        
+        if renderFallback {
             contents = renderer.renderHTML(markdown: markdown)
         }
 

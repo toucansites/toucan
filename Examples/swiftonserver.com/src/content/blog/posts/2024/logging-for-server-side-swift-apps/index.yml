@@ -1,0 +1,11 @@
+type: post
+title: Logging for server-side Swift apps
+# mainTopic: Observability TODO: Re-enable
+description: Discover how to integrate the Logging library into an application, use various log levels, and tailor the unified logging API for backend projects.
+date: 2024/02/13
+publication: 2024/07/02 12:01:01
+tags: Swift, Logging, Observability
+authors:
+    - tibor-bodecs
+sample: https://github.com/swift-on-server/logging-for-server-side-swift-apps-sample
+featured: true

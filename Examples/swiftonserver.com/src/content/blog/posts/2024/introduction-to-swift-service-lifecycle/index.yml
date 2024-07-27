@@ -1,0 +1,9 @@
+type: post
+title: Introduction to Swift Service Lifecycle
+mainTopic: Architecture
+description: This article offers practical examples to introduce the Swift Service Lifecycle library.
+date: 2024/05/22
+publication: 2024/07/02 12:01:01
+tags: Swift, Service
+authors:
+    - tibor-bodecs

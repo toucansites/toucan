@@ -1,0 +1,10 @@
+type: post
+title: "Building an HTTP client using SwiftNIO"
+description: "Learn how to build a simple HTTP client using SwiftNIO and structured concurrency."
+publication: 2024/02/20 12:01:01
+tags:
+    - Swift
+    - SwiftNIO
+    - Networking
+authors:
+    - joannis-orlandos

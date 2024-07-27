@@ -1,0 +1,9 @@
+type: post
+title: "Developing with Swift in Visual Studio Code"
+description: "Learn how to set up your Visual Studio Code for Swift development using Docker, Dev Containers and the Swift for VS Code extension."
+publication: 2024/01/16 12:01:01
+tags:
+    - Swift
+    - VSCode
+authors:
+    - joannis-orlandos

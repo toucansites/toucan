@@ -71,6 +71,17 @@ struct ContentType: Codable {
         let local: [String: Local]?
 
     }
+    
+    struct Transformers: Codable {
+        
+        struct Transformer: Codable {
+            let name: String
+            let options: [String: String]?
+        }
+
+        let run: [Transformer]?
+        let render: Bool?
+    }
 
     let id: String
     let rss: Bool?
@@ -79,6 +90,7 @@ struct ContentType: Codable {
     let properties: [String: Property]?
     let relations: [String: Relation]?
     let context: Context?
+    let transformers: Transformers?
 }
 
 extension ContentType {
@@ -100,7 +112,8 @@ extension ContentType {
                 )
             ],
             local: nil
-        )
+        ),
+        transformers: nil
     )
     
     static let pagination = ContentType(
@@ -113,6 +126,7 @@ extension ContentType {
         context: .init(
             site: [:],
             local: nil
-        )
+        ),
+        transformers: nil
     )
 }
