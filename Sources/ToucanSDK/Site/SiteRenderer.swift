@@ -9,7 +9,9 @@ import Foundation
 import Logging
 import Dispatch
 import ShellKit
+import Algorithms
 
+// TODO: use actor & modern concurrency
 final class Cache {
     
     let q = DispatchQueue(label: "com.binarybirds.toucan.cache", attributes: .concurrent)
@@ -105,7 +107,7 @@ struct SiteRenderer {
         for pageBundle: PageBundle
     ) -> [String: [PageBundle]] {
         let contentType = source.contentType(for: pageBundle)
-        var relations: [String: [PageBundle]] = [:]
+        var result: [String: [PageBundle]] = [:]
         for (key, value) in contentType.relations ?? [:] {
             let refIds = pageBundle.referenceIdentifiers(
                 for: key,
@@ -122,25 +124,75 @@ struct SiteRenderer {
                 .sorted(key: value.sort, order: value.order)
                 .limited(value.limit)
 
-            relations[key] = refs
+            result[key] = refs
         }
-        return relations
+        return result
     }
 
     func globalContext() -> [String: [PageBundle]] {
-        var globalContext: [String: [PageBundle]] = [:]
+        var result: [String: [PageBundle]] = [:]
         for contentType in source.contentTypes {
             for (key, value) in contentType.context?.site ?? [:] {
-                globalContext[key] =
-                    source
-                    .pageBundles(by: contentType.id)
+                let pageBundles = source.pageBundles(by: contentType.id)
                     .sorted(key: value.sort, order: value.order)
+                result[key] =
+                    pageBundles
                     .filtered(value.filter)
                     // TODO: proper pagination
                     .limited(value.limit)
             }
         }
-        return globalContext
+        return result
+    }
+    
+    // TODO: optimize & merge with data? 
+    func paginationContext(
+        for pageBundle: PageBundle
+    ) -> [String: [Context.Pagination.Link]] {
+        var result: [String: [Context.Pagination.Link]] = [:]
+        for contentType in source.contentTypes {
+            guard let pagination = contentType.pagination else { continue }
+            let paginationBundle = source.pageBundles.first { pageBundle in
+                guard pageBundle.type == ContentType.pagination.id else { return false }
+                guard pageBundle.id == pagination.bundle else { return false }
+                guard pageBundle.context.slug.contains("{{number}}") else { return false }
+                return true
+            }
+            guard let paginationBundle else {
+                continue
+            }
+
+            let pageBundles = source.pageBundles(by: contentType.id)
+                .sorted(key: pagination.sort, order: pagination.order)
+
+            let limit = pagination.limit
+            let pages = pageBundles.chunks(ofCount: limit)
+            let total = pages.count
+            
+            var ctx: [Context.Pagination.Link] = []
+            for (index, _) in pages.enumerated() {
+                let number = index + 1
+                let slug = paginationBundle.context.slug.replacingOccurrences([
+                    "{{number}}": String(number),
+                    "{{total}}": String(total),
+                ])
+                let permalink = slug.permalink(
+                    baseUrl: source.config.site.baseUrl
+                )
+                let isCurrent = pageBundle.context.slug == slug
+                ctx.append(
+                    .init(
+                        number: number,
+                        total: total,
+                        slug: slug,
+                        permalink: permalink,
+                        isCurrent: isCurrent
+                    )
+                )
+            }
+            result[contentType.id] = ctx
+        }
+        return result
     }
 
     func localContext(
@@ -237,7 +289,8 @@ struct SiteRenderer {
         var contents = ""
         let markdown = pageBundle.markdown.dropFrontMatter()
 
-        if !transformers.isEmpty {
+        // TODO: proper transformers settings
+        if false, !transformers.isEmpty {
             let shell = Shell(env: ProcessInfo.processInfo.environment)
 
             // Create a temporary directory URL
@@ -245,7 +298,6 @@ struct SiteRenderer {
             let fileName = UUID().uuidString
             let fileURL = tempDirectoryURL.appendingPathComponent(fileName)
 
-    //        print(fileURL.path)
             try! markdown.write(to: fileURL, atomically: true, encoding: .utf8)
         
             let opt = pageBundle.userDefined.dict("transformer.options") as? [String: String] ?? [:]
@@ -348,7 +400,9 @@ struct SiteRenderer {
 
     func renderHTML(
         pageBundle: PageBundle,
-        globalContext: [String: [PageBundle]]
+        globalContext: [String: [PageBundle]],
+        paginationContext: [String: [Context.Pagination.Link]],
+        paginationData: [String: [PageBundle]]
     ) throws {
 
         var fileUrl =
@@ -385,8 +439,15 @@ struct SiteRenderer {
                     }
                 ),
                 page: getContext(pageBundle: pageBundle),
-                userDefined: pageBundle.userDefined, // TODO: merge with site
+                userDefined: pageBundle.userDefined,
+                // TODO: merge with site
                 data: pageBundle.data,
+                pagination: .init(
+                    links: paginationContext,
+                    data: paginationData.mapValues {
+                        $0.map { getContext(pageBundle: $0) }
+                    }
+                ),
                 year: currentYear
             ),
             to: fileUrl
@@ -408,11 +469,121 @@ struct SiteRenderer {
         }
 
         for pageBundle in source.pageBundles {
+            guard pageBundle.type != ContentType.pagination.id else {
+                continue
+            }
             try renderHTML(
                 pageBundle: pageBundle,
-                globalContext: globalContext
+                globalContext: globalContext,
+                paginationContext: paginationContext(for: pageBundle),
+                paginationData: [:]
             )
         }
+        
+        for contentType in source.contentTypes {
+            guard let pagination = contentType.pagination else { continue }
+
+            for pageBundle in source.pageBundles {
+                guard pageBundle.type == ContentType.pagination.id else { continue }
+                guard pageBundle.id == pagination.bundle else { continue }
+                guard pageBundle.context.slug.contains("{{number}}") else { continue}
+                
+                let pageBundles = source.pageBundles(by: contentType.id)
+                    .sorted(key: pagination.sort, order: pagination.order)
+
+                let limit = pagination.limit
+                let pages = pageBundles.chunks(ofCount: limit)
+                let total = pages.count
+
+                func replace(
+                    in value: String,
+                    number: Int,
+                    total: Int
+                ) -> String {
+                    value.replacingOccurrences([
+                        "{{number}}": String(number),
+                        "{{total}}": String(total),
+                    ])
+                }
+                
+                if
+                    let home = pageBundle.frontMatter["home"] as? String,
+                    !home.isEmpty
+                {
+//                    print("---------------------")
+//                    print(home)
+                }
+                
+                for (index, current) in pages.enumerated() {
+                    let number = index + 1
+                    let finalSlug = replace(
+                        in: pageBundle.context.slug,
+                        number: number,
+                        total: total
+                    )
+                    let finalPermalink = finalSlug.permalink(
+                        baseUrl: source.config.site.baseUrl
+                    )
+                    let finalTitle = replace(
+                        in: pageBundle.context.title,
+                        number: number,
+                        total: total
+                    )
+                    let finalDescription = replace(
+                        in: pageBundle.context.description,
+                        number: number,
+                        total: total
+                    )
+                    let finalMarkdown = replace(
+                        in: pageBundle.markdown,
+                        number: number,
+                        total: total
+                    )
+
+                    let finalBundle = PageBundle(
+                        id: pageBundle.id,
+                        url: pageBundle.url,
+                        frontMatter: pageBundle.frontMatter,
+                        markdown: finalMarkdown,
+                        type: pageBundle.type,
+                        lastModification: pageBundle.lastModification,
+                        publication: pageBundle.publication,
+                        expiration: pageBundle.expiration,
+                        template: pageBundle.template,
+                        output: pageBundle.output,
+                        assets: pageBundle.assets,
+                        redirects: pageBundle.redirects,
+                        userDefined: pageBundle.userDefined,
+                        data: pageBundle.data,
+                        context: .init(
+                            slug: finalSlug,
+                            permalink: finalPermalink,
+                            title: finalTitle,
+                            description: finalDescription,
+                            imageUrl: pageBundle.context.imageUrl,
+                            lastModification: pageBundle.context.lastModification,
+                            publication: pageBundle.context.publication,
+                            expiration: pageBundle.context.expiration,
+                            noindex: pageBundle.context.noindex,
+                            canonical: pageBundle.context.canonical,
+                            hreflang: pageBundle.context.hreflang,
+                            css: pageBundle.context.css,
+                            js: pageBundle.context.js
+                        )
+                    )
+                    
+                    
+
+                    try renderHTML(
+                        pageBundle: finalBundle,
+                        globalContext: globalContext,
+                        paginationContext: paginationContext(for: finalBundle),
+                        paginationData: [contentType.id: Array(current)]
+                    )
+                }
+            }
+        }
+        
 
         try renderRSS()
         try renderSitemap()
@@ -455,8 +626,7 @@ struct SiteRenderer {
 
     func renderSitemap() throws {
         let context = Sitemap(
-            urls: source.pageBundles
-                .sorted { $0.publication > $1.publication }
+            urls: source.sitemapPageBundles()
                 .map {
                     .init(
                         location: $0.context.permalink,
@@ -557,120 +727,6 @@ extension [PageBundle] {
         }
     }
 }
-
-// TODO: pagination
-// MARK: - post
-
-//    func replacePaginationInfo(
-//        current: Int,
-//        total: Int,
-//        in value: String
-//    ) -> String {
-//        value.replacingOccurrences(
-//            of: "{{pages.current}}",
-//            with: String(current)
-//        )
-//        .replacingOccurrences(
-//            of: "{{pages.total}}",
-//            with: String(total)
-//        )
-//    }
-
-//    func blogPostListPaginated(
-//    ) -> [Renderable<HTML<Context.Blog.Post.ListPage>>] {
-//        guard let posts = site.source.materials.pages.blog.posts else {
-//            return []
-//        }
-//
-//        let pageLimit = Int(site.source.config.contents.pagination.limit)
-//        let pages = site.contents.blog.posts.chunks(ofCount: pageLimit)
-//
-//        var result: [Renderable<HTML<Context.Blog.Post.ListPage>>] = []
-//        for (index, postsChunk) in pages.enumerated() {
-//            let pageNumber = index + 1
-//
-//
-//
-//            let title = replacePaginationInfo(
-//                current: pageNumber,
-//                total: pages.count,
-//                in: posts.title
-//            )
-//            let description = replacePaginationInfo(
-//                current: pageNumber,
-//                total: pages.count,
-//                in: posts.description
-//            )
-//            let slug = replacePaginationInfo(
-//                current: pageNumber,
-//                total: pages.count,
-//                in: posts.slug
-//            )
-//
-//            var prev: String? = nil
-//            if index > 0 {
-//                prev = replacePaginationInfo(
-//                    current: pageNumber - 1,
-//                    total: pages.count,
-//                    in: posts.slug
-//                )
-//            }
-//
-//            var next: String? = nil
-//            if index < pages.count - 1 {
-//                next = replacePaginationInfo(
-//                    current: pageNumber - 1,
-//                    total: pages.count,
-//                    in: posts.slug
-//                )
-//            }
-//
-//            let material = posts.updated(
-//                title: title,
-//                description: description,
-//                markdown: replacePaginationInfo(
-//                    current: pageNumber,
-//                    total: pages.count,
-//                    in: posts.markdown
-//                ),
-//                slug: slug
-//            )
-//            let context = site.getOutputHTMLContext(
-//                material: material,
-//                context: Context.Blog.Post.ListPage(
-//                    posts: postsChunk.map { $0.context(site: site) },
-//                    pagination: (1...pages.count)
-//                        .map {
-//                            let slug = replacePaginationInfo(
-//                                current: $0,
-//                                total: pages.count,
-//                                in: posts.slug
-//                            )
-//                            return .init(
-//                                number: $0,
-//                                total: pages.count,
-//                                slug: slug,
-//                                permalink: site.permalink(slug),
-//                                isCurrent: pageNumber == $0
-//                            )
-//                        }
-//                ),
-//                prev: prev.map { site.permalink($0) },
-//                next: next.map { site.permalink($0) }
-//            )
-//
-//            let r = Renderable<HTML<Context.Blog.Post.ListPage>>(
-//                template: material.template,
-//                context: context,
-//                destination: destinationUrl
-//                    .appendingPathComponent(slug)
-//                    .appendingPathComponent(Files.index)
-//            )
-//
-//            result.append(r)
-//        }
-//        return result
-//    }
 
 // TODO: this is tricky, next / prev over refs, using a generic approach...
 //func prev(_ guide: Guide) -> Guide? {

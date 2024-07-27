@@ -47,10 +47,17 @@ struct Source {
 
     func rssPageBundles() -> [PageBundle] {
         contentTypes
+            .filter { $0.id != ContentType.pagination.id }
             .filter { $0.rss == true }
             .flatMap {
                 pageBundles(by: $0.id)
             }
+            .sorted { $0.publication > $1.publication }
+    }
+    
+    func sitemapPageBundles() -> [PageBundle] {
+        pageBundles
+            .filter { $0.type != ContentType.pagination.id }
             .sorted { $0.publication > $1.publication }
     }
 }

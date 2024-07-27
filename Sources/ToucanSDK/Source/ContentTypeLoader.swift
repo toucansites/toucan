@@ -48,6 +48,9 @@ struct ContentTypeLoader {
         if useDefaultContentType {
             types.append(.default)
         }
+        // TODO: pagination type is not allowed
+        types = types.filter { $0.id != ContentType.pagination.id }
+        types.append(.pagination)
 
         return types
     }

@@ -427,6 +427,7 @@ struct PageBundleLoader {
             )
             
             return .init(
+                id: location.path,
                 url: dirUrl,
                 frontMatter: frontMatter,
                 markdown: markdown,

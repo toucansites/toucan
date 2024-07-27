@@ -19,6 +19,13 @@ struct ContentType: Codable {
         case many
     }
 
+    struct Pagination: Codable {
+        let bundle: String
+        let limit: Int
+        let sort: String?
+        let order: Order?
+    }
+    
     struct Property: Codable {
         let type: String
         let required: Bool
@@ -68,6 +75,7 @@ struct ContentType: Codable {
     let id: String
     let rss: Bool?
     let template: String?
+    let pagination: Pagination?
     let properties: [String: Property]?
     let relations: [String: Relation]?
     let context: Context?
@@ -79,6 +87,7 @@ extension ContentType {
         id: "page",
         rss: nil,
         template: "pages.single.page",
+        pagination: nil,
         properties: nil,
         relations: nil,
         context: .init(
@@ -93,5 +102,17 @@ extension ContentType {
             local: nil
         )
     )
-
+    
+    static let pagination = ContentType(
+        id: "pagination",
+        rss: nil,
+        template: "pages.single.page",
+        pagination: nil,
+        properties: nil,
+        relations: nil,
+        context: .init(
+            site: [:],
+            local: nil
+        )
+    )
 }

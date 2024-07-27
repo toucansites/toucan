@@ -1,6 +1,15 @@
 {{<html}}
 {{$main}}
-    
+
+{{#empty(pagination.post)}}
+{{/empty(pagination.post)}}
+{{^empty(pagination.post)}}
+{{#pagination.post}}
+    {{number}}
+    {{total}}
+{{/pagination.post}}
+{{/empty(pagination.post)}}
+
 {{& page.contents}}
 
 <div id="blog" class="wrapper">

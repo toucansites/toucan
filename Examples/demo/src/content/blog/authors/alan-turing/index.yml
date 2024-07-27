@@ -15,3 +15,6 @@ foo:
         hehehe
 
 template: alan
+transformer:
+    options:
+        article: templating-with-swift-mustache

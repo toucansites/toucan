@@ -79,6 +79,9 @@ struct PageBundle {
     }
 
     /// The url of the page bundle.
+    
+    /// the location of the page bundle
+    let id: String
     let url: URL
     let frontMatter: [String: Any]
     let markdown: String
