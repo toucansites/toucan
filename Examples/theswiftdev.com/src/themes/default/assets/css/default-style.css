@@ -235,7 +235,7 @@ hr.spacer {
     border: none;
 }
 body {
-    font-size: 18px;
+    font-size: 22px;
     
 }
 h1 {
@@ -258,8 +258,8 @@ h6 {
     font-size: 18px;
 }
 p {
-    font-size: 18px;
-    line-height: 1.5rem;
+    font-size: 22px;
+    line-height: 1.8rem;
     color: var(--text-color-2);
     margin-bottom: 32px;
 }
