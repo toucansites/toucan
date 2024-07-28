@@ -4,9 +4,10 @@ slug: swift-dependency-injection-design-pattern
 title: Swift dependency injection design pattern
 description: Want to learn the Dependency Injection pattern using Swift? This tutorial will show you how to write loosely coupled code using DI.
 publication: 2018-07-17 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 First of all I really like this little quote by James Shore:

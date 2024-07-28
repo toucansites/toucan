@@ -4,9 +4,10 @@ slug: swift-builder-design-pattern
 title: Swift builder design pattern
 description: Learn how to implement the builder pattern in Swift to hide the complexity of creating objects with lots of individual properties.
 publication: 2018-05-24 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## How does the builder pattern work?

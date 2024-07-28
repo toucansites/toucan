@@ -4,7 +4,8 @@ slug: generating-random-numbers-in-swift
 title: Generating random numbers in Swift
 description: Learn everything what you'll ever need to generate random values in Swift using the latest methods and covering some old techniques.
 publication: 2018-08-07 16:20:00
-tags: Swift, random numbers
+tags: 
+    - swift
 authors:
   - tibor-bodecs
 ---

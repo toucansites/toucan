@@ -4,9 +4,10 @@ slug: swift-delegate-design-pattern
 title: Swift delegate design pattern
 description: The delegate design pattern is a relatively easy way to communicate between two objects through a common interface, protocol in Swift.
 publication: 2018-06-27 16:20:00
-tags: Swift, iOS, design patterns'
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Implementing delegation in Swift

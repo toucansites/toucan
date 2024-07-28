@@ -4,7 +4,8 @@ slug: deep-dive-into-swift-frameworks
 title: Deep dive into Swift frameworks
 description: Learn everything about Swift modules, libraries, packages, closed source frameworks, command line tools and more.
 publication: 2018-01-25 16:20:00
-tags: Swift, frameworks, libraries
+tags: 
+    - swift
 authors:
   - tibor-bodecs
 ---

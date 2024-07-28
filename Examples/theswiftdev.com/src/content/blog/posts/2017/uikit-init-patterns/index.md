@@ -4,7 +4,10 @@ slug: uikit-init-patterns
 title: UIKit init patterns
 description: Learn about the initialization process of the two well known classes in UIKit. Say hello to UIViewcontroller, and UIView init patterns.
 publication: 2017-10-10 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - ios
+    - uikit
+    - design-pattern
 authors:
   - tibor-bodecs
 ---

@@ -4,9 +4,10 @@ slug: swift-object-pool-design-pattern
 title: Swift object pool design pattern
 description: In this quick tutorial I'll explain & show you how to implement the object pool design pattern using the Swift programming language.
 publication: 2018-12-09 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## A generic object pool in Swift

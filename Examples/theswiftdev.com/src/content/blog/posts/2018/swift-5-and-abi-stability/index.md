@@ -4,9 +4,10 @@ slug: swift-5-and-abi-stability
 title: Swift 5 and ABI stability
 description: Apple's Swift 5 language version will be a huge milestone for the developer community, let's see what are the possible benefits of it.
 publication: 2018-11-16 16:20:00
-tags: Swift, ABI
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## ABI stability

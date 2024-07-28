@@ -4,7 +4,13 @@ slug: networking-examples-for-appleos
 title: Networking examples for appleOS
 description: Learn how to use Bonjour, with UDP/TCP sockets, streams and how to communicate through CoreBluetooth or the watch APIs.
 publication: 2018-02-27 16:20:00
-tags: Networking, UDP, TCP, Bonjour
+tags: 
+    - ios
+    - watchos
+    - tvOS
+    - macOS
+    - iPadOS
+    - visionOS
 authors:
   - tibor-bodecs
 ---

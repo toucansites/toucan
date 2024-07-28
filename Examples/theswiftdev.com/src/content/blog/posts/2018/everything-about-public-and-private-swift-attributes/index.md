@@ -4,7 +4,8 @@ slug: everything-about-public-and-private-swift-attributes
 title: Everything about public and private Swift attributes
 description: Have you ever heard about Swift language attributes? In this article I'm trying to gather all the @ annotations and their meanings.
 publication: 2017-10-10 16:20:00
-tags: Swift
+tags: 
+    - swift
 authors:
   - tibor-bodecs
 ---

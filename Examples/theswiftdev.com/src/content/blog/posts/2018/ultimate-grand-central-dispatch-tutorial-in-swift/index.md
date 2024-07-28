@@ -4,9 +4,10 @@ slug: ultimate-grand-central-dispatch-tutorial-in-swift
 title: Ultimate Grand Central Dispatch tutorial in Swift
 description: Learn the principles of multi-threading with the GCD framework in Swift. Queues, tasks, groups everything you'll ever need I promise.
 publication: 2018-07-10 16:20:00
-tags: Swift, Dispatch, Queues, Concurrency
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## GCD concurrency tutorial for beginners

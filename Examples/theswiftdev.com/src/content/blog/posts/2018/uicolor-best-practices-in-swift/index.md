@@ -4,9 +4,10 @@ slug: uicolor-best-practices-in-swift
 title: UIColor best practices in Swift
 description: Learn what are color models, how to convert hex values to UIColor and back, generate random colors, where to find beautiful palettes.
 publication: 2018-05-03 16:20:00
-tags: UIKit, iOS, UIColor
+tags: 
+    - uikit
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What are color models and color spaces?

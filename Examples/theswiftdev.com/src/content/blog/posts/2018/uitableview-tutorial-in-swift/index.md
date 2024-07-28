@@ -4,9 +4,10 @@ slug: uitableview-tutorial-in-swift
 title: UITableView tutorial in Swift
 description: This guide is made for beginners to learn the foundations of the UITableView class programmatically with auto layout in Swift.
 publication: 2018-12-01 16:20:00
-tags: UIKit, iOS, UITableView
+tags: 
+    - uikit
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## How to create a table view programmatically?

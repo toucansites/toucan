@@ -4,9 +4,10 @@ slug: swift-abstract-factory-design-pattern
 title: Swift abstract factory design pattern
 description: "Let's combine factory method with simple factory voilá: here is the abstract factory design pattern written in Swift language!"
 publication: 2018-06-03 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Abstract factory in Swift

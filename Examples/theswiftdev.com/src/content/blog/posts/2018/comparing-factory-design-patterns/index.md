@@ -4,7 +4,8 @@ slug: comparing-factory-design-patterns
 title: Comparing factory design patterns
 description: Learn what's the difference between static factory, simple factory, factory method and abstract factory using the Swift language.
 publication: 2018-06-05 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design patterns
 authors:
   - tibor-bodecs
 ---

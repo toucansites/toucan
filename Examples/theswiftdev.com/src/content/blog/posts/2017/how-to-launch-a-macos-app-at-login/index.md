@@ -4,7 +4,9 @@ slug: how-to-launch-a-macos-app-at-login
 title: How to launch a macOS app at login?
 description: In this tutorial I'll show you how to launch a completely sandboxed macOS application on system startup written in Swift.
 publication: 2017-10-27 16:20:00
-tags: macOS, Swift
+tags: 
+    - macos
+    - swift
 authors:
   - tibor-bodecs
 ---

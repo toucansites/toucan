@@ -4,9 +4,10 @@ slug: swift-factory-method-design-pattern
 title: Swift factory method design pattern
 description: The factory method design pattern is a dedicated non-static method for hiding the creation logic of an object. Let's make it in Swift!
 publication: 2018-05-31 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Factory method is just a non-static method

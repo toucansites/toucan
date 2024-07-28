@@ -4,9 +4,11 @@ slug: conventions-for-xcode
 title: Conventions for Xcode
 description: Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this.
 publication: 2016-07-06 16:20:00
-tags: Xcode, iOS
+tags: 
+    - xcode
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 Apple has so much frameworks and APIs that I don't even know many of them. We are also living in the age of [application extensions](https://developer.apple.com/app-extensions/). If you are trying to create a brand new [target in Xcode](https://developer.apple.com/library/archive/featuredarticles/XcodeConcepts/Concept-Targets.html), you might end up scratching your head. 🤔

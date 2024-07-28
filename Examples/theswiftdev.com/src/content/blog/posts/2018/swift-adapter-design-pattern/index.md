@@ -4,9 +4,10 @@ slug: swift-adapter-design-pattern
 title: Swift adapter design pattern
 description: Turn an incompatible object into a target interface or class by using a real world example and the adapter design pattern in Swift.
 publication: 2018-07-29 16:20:00
-tags: Swift, iOS, Design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 Fist of all let me emphasize that, this is the real world representation of what we're going to build in this little Swift adapter pattern tutorial:

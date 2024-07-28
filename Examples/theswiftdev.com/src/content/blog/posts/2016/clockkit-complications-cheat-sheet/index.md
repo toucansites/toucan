@@ -6,7 +6,7 @@ description: ClockKit families and templates, there are so many of them. It's a 
 image: ./images/clockkit-cheatsheet.jpg
 publication: 2016-04-28 16:20:00
 tags:
-  - watch-os
+  - watchos
 authors:
   - tibor-bodecs
 ---

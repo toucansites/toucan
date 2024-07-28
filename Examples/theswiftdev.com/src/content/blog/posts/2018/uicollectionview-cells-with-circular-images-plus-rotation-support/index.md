@@ -4,9 +4,11 @@ slug: uicollectionview-cells-with-circular-images-plus-rotation-support
 title: UICollectionView cells with circular images plus rotation support
 description: Learn how to make rounded corners for UIImageView items wrapped inside collection view cells, with rotation support.
 publication: 2018-01-24 16:20:00
-tags: UIKit, iOS, UICollectionView
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Circular cells inside a collection view

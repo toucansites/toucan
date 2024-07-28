@@ -4,9 +4,10 @@ slug: swift-command-design-pattern
 title: Swift command design pattern
 description: This time I'm going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift.
 publication: 2018-06-13 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 The [command pattern](https://en.wikipedia.org/wiki/Command_pattern) can be handy if you'd like to provide a common interface for different actions that will be executed later in time. Usually it's an object that encapsulates all the information needed to run the underlying action properly.

@@ -4,9 +4,10 @@ slug: swift-simple-factory-design-pattern
 title: Swift simple factory design pattern
 description: This time let's talk about the simple factory design pattern to encapsulate object creation in a really simple way using Swift.
 publication: 2018-05-29 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Simple factory implementation using switch-case

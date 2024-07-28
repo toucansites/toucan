@@ -18,6 +18,12 @@
     --white-color: #ffffff;
     --black-color: #000000;
 }
+button.hljs-copy-button {
+    background-color: black;
+}
+button.hljs-copy-button:hover {
+    cursor: pointer;
+}
 @media screen and (min-width: 600px) {
     
 }

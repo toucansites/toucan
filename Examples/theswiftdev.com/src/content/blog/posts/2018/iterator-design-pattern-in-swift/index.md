@@ -4,9 +4,10 @@ slug: iterator-design-pattern-in-swift
 title: Iterator design pattern in Swift
 description: Learn the iterator design pattern by using some custom sequences, conforming to the IteratorProtocol from the Swift standard library.
 publication: 2018-08-19 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 This time I'm going to focus on the [iterator design pattern](https://en.wikipedia.org/wiki/Iterator_pattern). The pattern is heavily used in the [Swift standard library](https://developer.apple.com/documentation/swift/swift_standard_library), there are protocols that will give you support if you need to create an iterator, but honestly: I've never implemented this pattern directly. 😅
