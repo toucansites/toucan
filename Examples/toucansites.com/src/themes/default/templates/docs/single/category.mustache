@@ -1,0 +1,26 @@
+{{<html}}
+{{$main}}
+<div id="docs">
+    <div class="left">
+        {{> docs.blocks.categories }}
+    </div>
+    <div class="center">
+        <article>
+            <a href="/docs/">Docs</a>
+            {{& page.contents}}
+        
+            <h2>Guides</h2>
+            {{#page.guides}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                </li>
+            {{/page.guides}}
+
+        </article>
+    </div>
+    <div class="right">
+        {{> blocks.toc }}
+    </div>
+</div>
+{{/main}}
+{{/html}}

@@ -1,0 +1,24 @@
+site:
+    baseUrl: http://localhost:3000/
+    language: en-US
+    title: ToucanSites.com
+    description: This is a demo blog using completely fake content.
+    dateFormat: "yyyy.MM.dd. HH:mm"
+
+themes:
+    use: "default"
+    folder: "themes"
+    templates:
+        folder: "templates"
+    assets:
+        folder: "assets"
+    overrides:
+        folder: "theme_overrides"
+
+types:
+    folder: "types"
+
+content:
+    folder: "content"
+    assets:
+        folder: "assets"

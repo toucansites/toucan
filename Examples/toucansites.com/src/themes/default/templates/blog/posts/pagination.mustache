@@ -1,0 +1,32 @@
+{{<html}}
+{{$main}}
+
+{{& page.contents}}
+
+<div id="posts" class="wrapper">
+
+    {{#empty(pagination.data.post)}}
+    Empty.
+    {{/empty(pagination.data.post)}}
+    {{^empty(pagination.data.post)}}
+    <div class="grid grid-321">
+    {{#pagination.data.post}}
+        {{> blog.blocks.post}}
+    {{/pagination.data.post}}
+    </div>
+    {{/empty(pagination.data.post)}}
+    
+    {{#empty(pagination.links.post)}}
+    {{/empty(pagination.links.post)}}
+    {{^empty(pagination.links.post)}}
+    <div class="pagination">
+    {{#pagination.links.post}}
+        {{> blocks.pagination}}
+    {{/pagination.links.post}}
+    </div>
+    {{/empty(pagination.links.post)}}
+
+</div>
+
+{{/main}}
+{{/html}}
