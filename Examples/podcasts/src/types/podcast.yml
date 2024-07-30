@@ -8,8 +8,8 @@ properties:
 context:
     site:
         podcasts:
-            sort: title
-            order: asc
+            sort: publication
+            order: desc
             limit: 10
         
     local:
