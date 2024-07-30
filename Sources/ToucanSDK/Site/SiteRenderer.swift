@@ -606,9 +606,9 @@ struct SiteRenderer {
         }
         
 
-        try renderRSS()
-        try renderSitemap()
-        try renderRedirects()
+        try? renderRSS()
+        try? renderSitemap()
+        try? renderRedirects()
     }
 
     func renderRSS() throws {
