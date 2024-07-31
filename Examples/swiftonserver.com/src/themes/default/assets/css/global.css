@@ -1340,6 +1340,9 @@ ul#next-steps li {
 img.small {
     width: 32px;
 }
+img.large {
+    width: 128px;
+}
 img.rounded {
     border-radius: 50%;
 }
@@ -1352,24 +1355,27 @@ aside#toc ul {
 
 .article-with-toc {
     position: relative;
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: block;
 }
-
-.article-with-toc aside {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-}
-
 .article-with-toc article {
     max-width: 600px;
     margin: 0 auto;
 }
-
-.article-with-toc aside {
-    padding: 16px 32px;
-}
-.article-with-toc aside ul {
+@media screen and (min-width: 900px) {
+    .article-with-toc {
+        display: grid;
+        grid-template-columns: 1fr auto;
+    }
     
+    .article-with-toc aside {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+    }
+    .article-with-toc aside {
+        padding: 16px 32px;
+    }
+    .article-with-toc aside ul {
+        
+    }
 }
