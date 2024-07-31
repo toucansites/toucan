@@ -67,7 +67,7 @@
         display: grid;
         grid-template-columns: auto 1fr;
     }
-    #site-logo {
+    #navigation > a {
         grid-column: span 1;
     }
     #navigation nav {

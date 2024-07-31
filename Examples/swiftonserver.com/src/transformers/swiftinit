@@ -62,6 +62,11 @@ if [[ -z "${SWIFTINIT_API_KEY}" ]]; then
     exit 0
 fi
 
+if [[ -z "${SWIFTINIT_TARGET}" ]]; then
+    echo "❌ No SwiftInit target: SWIFTINIT_TARGET."
+    exit 0
+fi
+
 echo "⏳ Rendering: ${SWIFTINIT_ID}."
 
 # WORK_DIR=$(basename "$PWD")
@@ -74,7 +79,7 @@ if test -f "$CACHE_FILE"; then
     exit 0
 fi
 
-curl "https://api.swiftinit.org/render/swift-on-server.site:preview/site/${SWIFTINIT_ID}?account=${SWIFTINIT_ACCOUNT}&api_key=${SWIFTINIT_API_KEY}" >> "${CACHE_FILE}"
+curl "https://api.swiftinit.org/render/${SWIFTINIT_TARGET}/${SWIFTINIT_ID}?account=${SWIFTINIT_ACCOUNT}&api_key=${SWIFTINIT_API_KEY}" >> "${CACHE_FILE}"
 
 cat "${CACHE_FILE}" >> "${TOUCAN_FILE}"
     
