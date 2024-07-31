@@ -1,7 +1,28 @@
 import Foundation
 
+extension String? {
+
+    var nilToEmpty: String {
+        switch self {
+        case .none:
+            return ""
+        case .some(let value):
+            return value
+        }
+    }
+
+    var emptyToNil: String? {
+        switch self {
+        case .none:
+            return nil
+        case .some(let value):
+            return value.isEmpty ? nil : self
+        }
+    }
+}
+
 extension String {
-        
+
     var minifiedCss: String {
         var css = self
         let patterns = [
@@ -29,15 +50,6 @@ extension String {
             )
         }
         return css
-    }
-    
-
-    
-    /// Converts an empty string to `nil`, otherwise returns the string itself.
-    ///
-    /// - Returns: An optional `String` that is `nil` if the string is empty, otherwise the original string.
-    var emptyToNil: String? {
-        return isEmpty ? nil : self
     }
 
     /// Generates a safe slug for the string, optionally with a given prefix.
@@ -199,14 +211,16 @@ extension String {
         }
         return true
     }
-        
+
     /// Returns a new string with everything after the last occurrence of the specified character dropped.
     ///
     /// - Parameter character: The character after which everything should be dropped.
     /// - Returns: A new string with the substring up to the last occurrence of the character.
     ///
     /// This extension method drops everything after the last occurrence of the specified character.
-    func droppingEverythingAfterLastOccurrence(of character: Character) -> String {
+    func droppingEverythingAfterLastOccurrence(
+        of character: Character
+    ) -> String {
         guard let lastIndex = self.lastIndex(of: character) else {
             // If the character is not found, return the original string
             return self
@@ -216,16 +230,20 @@ extension String {
     }
 
     func slugify() -> String {
-        let allowed = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_.")
+        let allowed = CharacterSet(
+            charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_."
+        )
         return trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
-            .folding(options: .diacriticInsensitive, locale: .init(identifier: "en_US"))
+            .folding(
+                options: .diacriticInsensitive,
+                locale: .init(identifier: "en_US")
+            )
             .components(separatedBy: allowed.inverted)
             .filter { $0 != "" }
             .joined(separator: "-")
     }
 
-    
     func replacingOccurrences(
         _ dictionary: [String: String]
     ) -> String {
@@ -235,4 +253,23 @@ extension String {
         }
         return result
     }
+
+    func permalink(
+        baseUrl: String
+    ) -> String {
+        let components = split(separator: "/").map(String.init)
+        if components.isEmpty {
+            return baseUrl
+        }
+        if components.last?.split(separator: ".").count ?? 0 > 1 {
+            return baseUrl + components.joined(separator: "/")
+        }
+        return baseUrl + components.joined(separator: "/") + "/"
+    }
+
+    //    public func transform(
+    //        _ block: (Self) -> Self
+    //    ) -> Self {
+    //        block(self)
+    //    }
 }

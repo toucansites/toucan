@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 03/05/2024.
 //
 
-
-
 import Foundation
 import FileManagerKit
 
@@ -22,7 +20,7 @@ extension FileManager {
         if !directoryExists(at: outputURL) {
             try createDirectory(at: outputURL)
         }
-        
+
         for item in listDirectory(at: inputURL) {
             let itemSourceUrl = inputURL.appendingPathComponent(item)
             let itemDestinationUrl = outputURL.appendingPathComponent(item)
@@ -41,7 +39,7 @@ extension FileManager {
 
 /// A static site generator.
 public struct Toucan {
-    
+
     // MARK: -
 
     let inputUrl: URL
@@ -68,13 +66,13 @@ public struct Toucan {
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
     }
-    
+
     // MARK: - file management
 
     let fileManager = FileManager.default
 
     // MARK: - directory management
-    
+
     func resetOutputDirectory() throws {
         if fileManager.exists(at: outputUrl) {
             try fileManager.delete(at: outputUrl)
@@ -89,39 +87,38 @@ public struct Toucan {
             fileManager: fileManager,
             frontMatterParser: .init()
         )
-        
         let source = try loader.load()
-        
+        try source.validateSlugs()
+
         // TODO: output url is completely wiped, check if it's safe to delete everything
         try resetOutputDirectory()
-        
-        let themeUrl = inputUrl
-            .appendingPathComponent(source.config.themes.path)
-            .appendingPathComponent(source.config.themes.use)
-        
-        let themeAssetsUrl = themeUrl
-            .appendingPathComponent(source.config.themes.assetsPath)
 
-        let themeTemplatesUrl = themeUrl
-            .appendingPathComponent(source.config.themes.templatesPath)
-        
-        let themeOverrideUrl = inputUrl
-            .appendingPathComponent(source.config.themes.overridesPath)
+        let themeUrl =
+            inputUrl
+            .appendingPathComponent(source.config.themes.folder)
             .appendingPathComponent(source.config.themes.use)
-        
-        let themeOverrideAssetsUrl = themeOverrideUrl
-            .appendingPathComponent(source.config.themes.assetsPath)
 
-        let themeOverrideTemplatesUrl = themeOverrideUrl
-            .appendingPathComponent(source.config.themes.templatesPath)
-        
-        let assetsInputUrl = inputUrl
-            .appendingPathComponent(source.config.assets.input)
-        
-        let assetsOutputUrl = outputUrl
-            .appendingPathComponent(source.config.assets.output)
-        
-        
+        let themeAssetsUrl =
+            themeUrl
+            .appendingPathComponent(source.config.themes.assets.folder)
+
+        let themeTemplatesUrl =
+            themeUrl
+            .appendingPathComponent(source.config.themes.templates.folder)
+
+        let themeOverrideUrl =
+            inputUrl
+            .appendingPathComponent(source.config.themes.overrides.folder)
+            .appendingPathComponent(source.config.themes.use)
+
+        let themeOverrideAssetsUrl =
+            themeOverrideUrl
+            .appendingPathComponent(source.config.themes.assets.folder)
+
+        let themeOverrideTemplatesUrl =
+            themeOverrideUrl
+            .appendingPathComponent(source.config.themes.templates.folder)
+
         // theme assets
         try fileManager.copyRecursively(
             from: themeAssetsUrl,
@@ -132,50 +129,38 @@ public struct Toucan {
             from: themeOverrideAssetsUrl,
             to: outputUrl
         )
-        // global assets
-        try fileManager.copyRecursively(
-            from: assetsInputUrl,
-            to: assetsOutputUrl
-        )
-
-
-        if !fileManager.directoryExists(at: assetsOutputUrl) {
-            try fileManager.createDirectory(at: assetsOutputUrl)
-        }
 
         // MARK: copy assets
 
-        for content in source.materials.all() {
-            let assetsUrl = content.url
-                .appendingPathComponent(content.assetsPath)
-            
+        for pageBundle in source.pageBundles {
+            let assetsUrl = pageBundle.url
+                .appendingPathComponent(pageBundle.assets.path)
+
             guard
                 fileManager.directoryExists(at: assetsUrl),
                 !fileManager.listDirectory(at: assetsUrl).isEmpty
             else {
                 continue
             }
-            
-            let outputUrl = outputUrl
-                .appendingPathComponent(source.config.contents.assets.outputPath)
-                .appendingPathComponent(content.slug)
 
-//            print(assetsUrl)
-//            print(outputUrl)
-            
+            let outputUrl =
+                outputUrl
+                .appendingPathComponent(
+                    pageBundle.context.slug.isEmpty ? "" : "assets"
+                )
+                .appendingPathComponent(pageBundle.context.slug)
+
+            //            print("-------------")
+            //            print(assetsUrl.path)
+            //            print(outputUrl.path)
             try fileManager.copyRecursively(
                 from: assetsUrl,
                 to: outputUrl
             )
         }
 
-        let site = Site(
+        let renderer = try SiteRenderer(
             source: source,
-            destinationUrl: outputUrl
-        )
-
-        let renderer = OutputRenderer(
-            site: site,
             templatesUrl: themeTemplatesUrl,
             overridesUrl: themeOverrideTemplatesUrl,
             destinationUrl: outputUrl

@@ -19,9 +19,12 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-algorithms", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
         .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
+        .package(url: "https://github.com/binarybirds/shell-kit", from: "1.0.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.2"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.0.0"),
-        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0-rc.2"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0-rc.3"),
+        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.6.0"),
+
         .package(url: "https://github.com/eonil/FSEvents", branch: "master"),
     ],
     targets: [
@@ -31,6 +34,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Hummingbird", package: "hummingbird"),
                 .product(name: "EonilFSEvents", package: "FSEvents"),
+                .product(name: "ShellKit", package: "shell-kit"),
                 .target(name: "ToucanSDK"),
             ]
         ),
@@ -41,6 +45,7 @@ let package = Package(
                 .product(name: "Markdown", package: "swift-markdown"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "Mustache", package: "swift-mustache"),
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "Yams", package: "yams"),
             ]
         ),

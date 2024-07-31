@@ -1,0 +1,24 @@
+id: tag
+
+properties:
+    order:
+        type: int
+        required: true
+
+
+context:
+    site:
+        tags:
+            sort: title
+            order: asc
+            pagination:
+                limit: 10
+                
+    local:
+        posts:
+            references: post
+            foreignKey: tags
+            sort: publication
+            order: desc
+
+template: blog.single.tag

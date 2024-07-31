@@ -34,14 +34,14 @@ final class ToucanTestSuite: XCTestCase {
         )
         try toucan.generate()
     }
-    
+
     func testGenerate() async throws {
         for argument in [
-//                "minimal",
-                "demo",
-    //            "theswiftdev.com",
-    //            "binarybirds.com",
-    //            "swiftonserver.com",
+            //                "minimal",
+            "demo"
+            //            "theswiftdev.com",
+            //            "binarybirds.com",
+            //            "swiftonserver.com",
         ] {
             try await generate(argument)
         }

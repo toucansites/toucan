@@ -9,16 +9,16 @@ extension Entrypoint {
     struct Watch: ParsableCommand {
 
         static var _commandName: String = "watch"
-        
+
         @Argument(help: "The input directory (default: src).")
         var input: String = "./src"
-        
+
         @Argument(help: "The output directory (default: docs).")
         var output: String = "./docs"
-        
+
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
-        
+
         func run() throws {
             let toucan = Toucan(
                 input: input,
@@ -26,7 +26,7 @@ extension Entrypoint {
                 baseUrl: baseUrl
             )
             try toucan.generate()
-            
+
             let eventStream = try EonilFSEventStream(
                 pathsToWatch: [input],
                 sinceWhen: .now,
@@ -46,9 +46,9 @@ extension Entrypoint {
                     print("Site re-generated.")
                 }
             )
-            
+
             eventStream.setDispatchQueue(DispatchQueue.main)
-            
+
             try eventStream.start()
             print("👀 Watching: `\(input)` -> \(output).")
             dispatchMain()

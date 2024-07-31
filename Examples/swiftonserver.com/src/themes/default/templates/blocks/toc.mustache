@@ -1,0 +1,19 @@
+<aside id="toc">
+    {{#empty(page.toc)}}
+    {{/empty(page.toc)}}
+    {{^empty(page.toc)}}
+    <h4>On this page</h4>
+    <ul>
+    {{#page.toc}}
+        <li class="first-level">
+            <a href="#{{fragment}}">{{text}}</a>
+            <ul>
+            {{#children}}
+                <li><a href="#{{fragment}}">{{text}}</a></li>
+            {{/children}}
+            </ul>
+        </li>
+    {{/page.toc}}
+    </ul>
+    {{/empty(page.toc)}}
+</aside>

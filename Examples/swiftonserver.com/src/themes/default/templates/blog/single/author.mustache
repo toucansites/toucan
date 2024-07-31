@@ -1,0 +1,29 @@
+{{<html}}
+{{$main}}
+<div id="author-page">
+    
+    <header>
+        {{#page.imageUrl}}<img class="large rounded" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
+        <h1>{{page.title}}</h1>
+        <p>{{page.description}}</p>
+        <p>{{count(page.posts)}} posts</p>
+    </header>
+
+    {{& page.contents}}
+    
+    {{#empty(page.posts)}}
+    Empty.
+    {{/empty(page.posts)}}
+    {{^empty(page.posts)}}
+    <div class="grid grid-321">
+    {{#page.posts}}
+        
+        {{> blog.blocks.post}}
+    {{/page.posts}}
+    </div>
+    {{/empty(page.posts)}}
+    
+</div>
+
+{{/main}}
+{{/html}}

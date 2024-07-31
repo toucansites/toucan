@@ -1,5 +1,5 @@
 {
-  "originHash" : "fb9dd425da1b77eed579971764136287365f6d82c593483dc2984905da513cad",
+  "originHash" : "36ec23fca01b1c2e92bcbfe643407133ddc865f7a9501752e4cd12b59c9a4b7b",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -33,8 +33,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird.git",
       "state" : {
-        "revision" : "0e6de7141f4feda30c319c1a14047b7057f38db5",
-        "version" : "2.0.0-rc.1"
+        "revision" : "50f887ff416593b468cf238b9536f671786a1507",
+        "version" : "2.0.0-rc.2"
+      }
+    },
+    {
+      "identity" : "shell-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/binarybirds/shell-kit",
+      "state" : {
+        "revision" : "8507fc5a1d4c9b4aca71fa69bf6030fb94229d37",
+        "version" : "1.0.1"
       }
     },
     {
@@ -141,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/swift-mustache",
       "state" : {
-        "revision" : "2663d13ea7c50a8ee2178732895283246fd91b4e",
-        "version" : "2.0.0-beta.1"
+        "revision" : "cde358e364ab26f2b72a5f70613cfb0a574de6c9",
+        "version" : "2.0.0-beta.3"
       }
     },
     {

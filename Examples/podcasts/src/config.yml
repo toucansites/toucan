@@ -5,37 +5,23 @@ site:
     description: Seb and friends chat with the people behind Amazon Web Services (AWS) and the developers who are building on it
     dateFormat: "yyyy-MM-dd HH:mm:ss Z"
 
-contents:
-    blog:
-        authors:
-            folder: "podcast/authors"
-            slugPrefix: "authors"
-        tags:
-            folder: "podcast/tags"
-            slugPrefix: "podcast"
-        posts:
-            folder: "podcast/episodes"
-            slugPrefix: "podcast/episodes"
-    pages:
-        custom:
-            folder: "pages/custom"
-            slugPrefix: ""
+themes:
+    use: "default"
+    folder: "themes"
+    templates:
+        folder: "templates"
+    assets:
+        folder: "assets"
+    overrides:
+        folder: "theme_overrides"
 
-pages:
-    main:
-        home:
-            path: "pages/home"
-        notFound:
-            path: "pages/404"
-    blog:
-        home:
-            path: "pages/blog/home"
-        authors:
-            path: "pages/blog/authors"
-        tags:
-            path: "pages/blog/tags"
-        posts:
-            path: "pages/blog/posts"
+types:
+    folder: "types"
+
+content:
+    folder: "content"
+    assets:
+        folder: "assets"
 
 userDefined:
     podcast:

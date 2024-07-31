@@ -1,0 +1,86 @@
+#!/bin/bash
+
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --file)
+      TOUCAN_FILE="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --slug)
+      TOUCAN_SLUG="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --id)
+      SWIFTINIT_ID="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --default)
+      DEFAULT=YES
+      shift # past argument
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+
+#echo "INPUT  = ${INPUT}"
+#echo "SEARCH PATH     = ${SEARCHPATH}"
+#echo "DEFAULT         = ${DEFAULT}"
+#echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
+#if [[ -n $1 ]]; then
+#    echo "Last line of file specified as non-opt/last argument:"
+#    tail -1 "$1"
+#fi
+#EOF
+
+if [[ -z "${SWIFTINIT_ID}" ]]; then
+    echo "⚠️ Not a SwiftInit page: ${TOUCAN_SLUG}."
+    exit 0
+fi
+
+if [[ -z "${SWIFTINIT_ACCOUNT}" ]]; then
+    echo "❌ No SwiftInit account is set: SWIFTINIT_ACCOUNT."
+    exit 0
+fi
+
+if [[ -z "${SWIFTINIT_API_KEY}" ]]; then
+    echo "❌ No SwiftInit api key is set: SWIFTINIT_API_KEY."
+    exit 0
+fi
+
+if [[ -z "${SWIFTINIT_TARGET}" ]]; then
+    echo "❌ No SwiftInit target: SWIFTINIT_TARGET."
+    exit 0
+fi
+
+echo "⏳ Rendering: ${SWIFTINIT_ID}."
+
+# WORK_DIR=$(basename "$PWD")
+CACHE_DIR="./cache/swiftinit/"
+CACHE_FILE="${CACHE_DIR}${SWIFTINIT_ID}.html"
+
+if test -f "$CACHE_FILE"; then
+    cat "${CACHE_FILE}" >> "${TOUCAN_FILE}"
+    echo "✅ Rendering from cache: ${SWIFTINIT_ID}."
+    exit 0
+fi
+
+curl "https://api.swiftinit.org/render/${SWIFTINIT_TARGET}/${SWIFTINIT_ID}?account=${SWIFTINIT_ACCOUNT}&api_key=${SWIFTINIT_API_KEY}" >> "${CACHE_FILE}"
+
+cat "${CACHE_FILE}" >> "${TOUCAN_FILE}"
+    
+echo "✅ Rendering: ${SWIFTINIT_ID}."

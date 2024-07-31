@@ -1,0 +1,83 @@
+{{<html}}
+{{$main}}
+
+{{#empty(pagination.post)}}
+{{/empty(pagination.post)}}
+{{^empty(pagination.post)}}
+{{#pagination.post}}
+    {{number}}
+    {{total}}
+{{/pagination.post}}
+{{/empty(pagination.post)}}
+
+{{& page.contents}}
+
+<div id="blog" class="wrapper">
+    
+    <h2>Featured posts</h2>
+    {{#empty(site.context.featured)}}
+    Empty.
+    {{/empty(site.context.featured)}}
+    {{^empty(site.context.featured)}}
+    <div class="grid grid-321">
+    {{#site.context.featured}}
+        {{> blog.blocks.post}}
+    {{/site.context.featured}}
+    </div>
+    {{/empty(site.context.featured)}}
+    
+    
+    <h2>Latest posts</h2>
+    {{#empty(site.context.posts)}}
+    Empty.
+    {{/empty(site.context.posts)}}
+    {{^empty(site.context.posts)}}
+    <div class="grid grid-321">
+    {{#site.context.posts}}
+        {{> blog.blocks.post}}
+    {{/site.context.posts}}
+    </div>
+    {{/empty(site.context.posts)}}
+    
+    
+    <h2>Authors</h2>
+    {{#empty(site.context.authors)}}
+    Empty.
+    {{/empty(site.context.authors)}}
+    {{^empty(site.context.authors)}}
+        <div class="grid grid-321">
+    {{#site.context.authors}}
+        {{> blog.blocks.author}}
+    {{/site.context.authors}}
+    </div>
+    {{/empty(site.context.authors)}}
+    
+    <h2>Tags</h2>
+    {{#empty(site.context.tags)}}
+    Empty.
+    {{/empty(site.context.tags)}}
+    {{^empty(site.context.tags)}}
+        <div class="grid grid-321">
+    {{#site.context.tags}}
+        {{> blog.blocks.tag}}
+    {{/site.context.tags}}
+    </div>
+    {{/empty(site.context.tags)}}
+    
+    
+    
+
+    <h2>Post pagination</h2>
+    {{#empty(site.context.pagination)}}
+    {{/empty(site.context.pagination)}}
+    {{^empty(site.context.pagination)}}
+    <div class="pagination">
+    {{#site.context.pagination}}
+        {{> blocks.pagination}}
+    {{/site.context.pagination}}
+    </div>
+    {{/empty(site.context.pagination)}}
+
+</div>
+{{/main}}
+{{/html}}

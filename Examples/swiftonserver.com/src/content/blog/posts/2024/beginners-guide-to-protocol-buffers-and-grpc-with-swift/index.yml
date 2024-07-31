@@ -1,0 +1,9 @@
+type: post
+title: "Beginner's Guide to Protocol Buffers and gRPC with Swift"
+description: "Learn Protocol Buffers and gRPC with Swift in this easy, step-by-step beginner's guide."
+publication: 2024/08/07 12:01:01
+tags:
+    - networking
+    - packages
+authors:
+    - tibor-bodecs

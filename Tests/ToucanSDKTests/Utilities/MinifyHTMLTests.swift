@@ -15,8 +15,8 @@ final class MinifyHTMLTests: XCTestCase {
         let html =
             "<html>   <body>   <h1>Hello, world!</h1>   </body>   </html>"
         let minifiedHTML = html.minifyHTML()
-//        print(minifiedHTML)
-        
+        //        print(minifiedHTML)
+
         XCTAssert(!minifiedHTML.isEmpty)
     }
 

@@ -19,7 +19,6 @@ final class SourceTestSuite: XCTestCase {
             + "/sites/"
     }
 
-    
     func loadConfig(
         _ site: String
     ) async throws {
@@ -33,19 +32,18 @@ final class SourceTestSuite: XCTestCase {
         )
         _ = try configLoader.load()
     }
-    
+
     func testLoadConfig() async throws {
         for argument in [
-                "demo",
-    //            "theswiftdev.com",
-    //            "binarybirds.com",
-    //            "swiftonserver.com",
+            "demo"
+            //            "theswiftdev.com",
+            //            "binarybirds.com",
+            //            "swiftonserver.com",
         ] {
             try await loadConfig(argument)
         }
-        
-    }
 
+    }
 
     func loadContents(
         _ site: String
@@ -69,17 +67,17 @@ final class SourceTestSuite: XCTestCase {
         let contents = try contentsLoader.load()
         try contents.validateSlugs()
     }
-    
+
     func testLoadContents() async throws {
         for argument in [
-                "demo",
-    //            "theswiftdev.com",
-    //            "binarybirds.com",
-    //            "swiftonserver.com",
+            "demo"
+            //            "theswiftdev.com",
+            //            "binarybirds.com",
+            //            "swiftonserver.com",
         ] {
             try await loadContents(argument)
         }
-        
+
     }
 
     //    func testUserDefined() async throws {

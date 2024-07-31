@@ -1,33 +1,33 @@
-{{<index}}
+{{<html}}
 {{$main}}
 
-{{& page.content}}
+{{& page.contents}}
 
 <div id="posts" class="wrapper">
 
-    {{#empty(page.context.posts)}}
+    {{#empty(page.posts)}}
     Empty.
-    {{/empty(page.context.posts)}}
-    {{^empty(page.context.posts)}}
+    {{/empty(page.posts)}}
+    {{^empty(page.posts)}}
     <div class="grid grid-321">
-    {{#page.context.posts}}
+    {{#page.posts}}
         {{> blog.blocks.post}}
-    {{/page.context.posts}}
+    {{/page.posts}}
     </div>
-    {{/empty(page.context.posts)}}
+    {{/empty(page.posts)}}
     
-    {{#empty(page.context.pagination)}}
-    {{/empty(page.context.pagination)}}
-    {{^empty(page.context.pagination)}}
+    {{#empty(page.pagination)}}
+    {{/empty(page.pagination)}}
+    {{^empty(page.pagination)}}
     
     <div class="pagination">
-    {{#page.context.pagination}}
+    {{#page.pagination}}
         {{> blocks.pagination}}
-    {{/page.context.pagination}}
+    {{/page.pagination}}
     </div>
-    {{/empty(page.context.pagination)}}
+    {{/empty(page.pagination)}}
 
 </div>
 
 {{/main}}
-{{/index}}
+{{/html}}

@@ -1,22 +1,22 @@
-{{<index}}
+{{<html}}
 {{$main}}
 
-{{& page.content}}
+{{& page.contents}}
 
 <div id="authors" class="wrapper">
 
-    {{#empty(page.context.authors)}}
+    {{#empty(page.authors)}}
     Empty.
-    {{/empty(page.context.authors)}}
-    {{^empty(page.context.authors)}}
+    {{/empty(page.authors)}}
+    {{^empty(page.authors)}}
     <div class="grid grid-421">
-    {{#page.context.authors}}
+    {{#page.authors}}
         {{> blog.blocks.author}}
-    {{/page.context.authors}}
+    {{/page.authors}}
     </div>
-    {{/empty(page.context.authors)}}
+    {{/empty(page.authors)}}
     
 </div>
 
 {{/main}}
-{{/index}}
+{{/html}}

@@ -1,0 +1,20 @@
+image: ./assets/alan-turing.webp
+redirects:
+    - from: lorem-turing
+    - from: lorem/turing/bar/baz
+
+css:
+    - ./assets/alan.css
+js:
+    - ./assets/alan.js
+
+foo:
+    bar:
+        buuuuuuu
+    hihihihi:
+        hehehe
+
+template: alan
+transformer:
+    options:
+        article: templating-with-swift-mustache

@@ -1,6 +1,0 @@
-- name: foo
-  desc: foo1
-- name: bar
-  desc: foo2
-- name: baz
-  desc: foo3

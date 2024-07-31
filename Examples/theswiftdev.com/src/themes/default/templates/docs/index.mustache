@@ -1,0 +1,40 @@
+{{<html}}
+{{$main}}
+<div id="docs">
+    <div class="left">
+        {{> docs.blocks.categories }}
+    </div>
+    <div class="center">
+        <article>
+            {{& page.contents}}
+
+            <h2>Categories & guides</h2>
+
+            {{#empty(site.context.categories)}}
+            Empty.
+            {{/empty(site.context.categories)}}
+            {{^empty(site.context.categories)}}
+            <div>
+            <ul>
+            {{#site.context.categories}}
+                <li>
+                    <a href="{{permalink}}">{{title}}</a>
+                    <ul>
+                    {{#guides}}
+                        <li><a href="{{permalink}}">{{title}}</a></li>
+                    {{/guides}}
+                    </ul>
+                </li>
+            {{/site.context.categories}}
+            </ul>
+            </div>
+            {{/empty(site.context.categories)}}
+
+        </article>
+    </div>
+    <div class="right">
+        {{> blocks.toc }}
+    </div>
+</div>
+{{/main}}
+{{/html}}

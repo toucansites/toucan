@@ -1,0 +1,34 @@
+<div class="post card">
+
+    {{#featured}}<span class="featured">featured</span>{{/featured}}
+    <h1>TOTO:{{toto}}{{title}}</H1>
+    <a href="{{permalink}}" target="">
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        <time datetime="{{userDefined.displayDate}}">{{userDefined.displayDate}}</time>
+        <h2 class="title">{{title}}</h2>
+        <hr>
+        <p>{{description}}</p>
+        
+        <iframe
+        src="https://embed.podcasts.apple.com/us/podcast/{{userDefined.apple.podcastId}}?i={{userDefined.apple.episodeId}}&amp;itsct=podcast_box&amp;itscg=30200"
+        height="175px"
+        frameborder="0"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+        allow="autoplay *; encrypted-media *;"
+        style="width: 100%; max-width: 660px; overflow: hidden; border-radius: 10px; background: transparent;"
+    ></iframe>
+    </a>
+    
+    <div class="author-list">
+    {{#authors}}
+        <a href="{{permalink}}">
+        {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        </a>
+    {{/authors}}
+    </div>
+    <div class="tag-list">
+    {{#tags}}
+        <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
+    {{/tags}}
+    </div>
+</div>

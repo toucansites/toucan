@@ -1,0 +1,61 @@
+{{<html}}
+{{$main}}
+
+<div class="article-with-toc">
+<div>
+<article class="post">
+   
+    <section>
+    
+    {{& page.contents}}
+        
+    </section>
+
+    <header>
+        {{#page.imageUrl}}<img src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
+        <br><br>
+        <time datetime="{{page.date}}">{{page.date}}</time>
+
+        
+        <div class="author-list">
+        {{#page.authors}}
+            <a href="{{permalink}}">
+            {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+            <span class="name">{{title}}</span>
+            </a>
+        {{/page.authors}}
+        </div>
+        <div class="tag-list">
+        {{#page.tags}}
+            <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
+        {{/page.tags}}
+        </div>
+    </header>
+    
+    
+    
+    
+    <section>
+    {{#empty(page.related)}}
+    {{/empty(page.related)}}
+    {{^empty(page.related)}}
+    <h4>Related posts</h4>
+    
+    <div class="grid grid-221">
+    {{#page.related}}
+        {{> blog.blocks.post}}
+    {{/page.related}}
+    </div>
+    {{/empty(page.related)}}
+    </section>
+    
+
+</article>
+</div>
+<div>
+    {{> blocks.toc }}
+</div>
+</div>
+
+{{/main}}
+{{/html}}

@@ -2,7 +2,7 @@ import Foundation
 
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
 extension Dictionary where Key == String, Value == Any {
-    
+
     /// Recursively merges another `[String: Any]` dictionary into the current dictionary and returns a new dictionary.
     ///
     /// - Parameter other: The dictionary to merge into the current dictionary.
@@ -10,7 +10,9 @@ extension Dictionary where Key == String, Value == Any {
     func recursivelyMerged(with other: [String: Any]) -> [String: Any] {
         var result = self
         for (key, value) in other {
-            if let existingValue = result[key] as? [String: Any], let newValue = value as? [String: Any] {
+            if let existingValue = result[key] as? [String: Any],
+                let newValue = value as? [String: Any]
+            {
                 result[key] = existingValue.recursivelyMerged(with: newValue)
             }
             else {
@@ -71,5 +73,25 @@ extension Dictionary where Key == String, Value == Any {
     /// - Returns: The integer at the specified key path, or `nil` if the key path is invalid.
     func int(_ keyPath: String) -> Int? {
         value(keyPath, as: Int.self)
+    }
+
+    /// Retrieves the integer associated with the given key path.
+    ///
+    /// - Parameter keyPath: The key path string, where keys are separated by dots.
+    /// - Returns: The boolean at the specified key path, or `nil` if the key path is invalid.
+    func bool(_ keyPath: String) -> Bool? {
+        value(keyPath, as: Bool.self)
+    }
+
+    func date(_ keyPath: String) -> Date? {
+        guard let rawDate = value(keyPath, as: String.self) else {
+            return nil
+        }
+        let formatter = DateFormatters.contentLoader
+        return formatter.date(from: rawDate)
+    }
+
+    func array<T>(_ keyPath: String, as type: T.Type) -> [T] {
+        value(keyPath, as: [T].self) ?? []
     }
 }

@@ -1,0 +1,442 @@
+<section class='introduction'><h1>Useful scripts for server-side Swift libraries</h1></section><section class='details literature'><p>Several open-source server-side Swift projects include a scripts directory. These scripts are employed to conduct checks on the source code, utilizing a Swift code formatter / linter or similar tools. Even among the most popular repositories, the scripts unfortunately exhibit a noticeable level of inconsistency:</p><ul><li><p><a href='https://github.com/apple/swift-openapi-generator/tree/main/scripts' target='_blank' rel='external'>Swift OpenAPI Generator</a></p></li><li><p><a href='https://github.com/apple/swift-nio/tree/main/scripts' target='_blank' rel='external'>SwiftNIO</a></p></li><li><p><a href='https://github.com/apple/swift-log/tree/main/scripts' target='_blank' rel='external'>SwiftLog</a></p></li><li><p><a href='https://github.com/hummingbird-project/hummingbird/tree/main/scripts' target='_blank' rel='external'>Hummingbird</a></p></li><li><p><a href='https://github.com/feather-framework/feather-openapi-kit/tree/main/scripts' target='_blank' rel='external'>FeatherOpenAPIKit</a></p></li></ul><p>Upon examining these repositories, it becomes evident that while some utilize the “soundness.sh” script to perform checks, others refer to the very same script as “validation.sh”. Besides the differences in naming conventions, these bash scripts also contain slight variations.</p><p>The aim of this article is to provide insight into common scripts that are implemented across a wide range of open-source server-side Swift repositories.</p><p>To begin, let’s categorize the scripts based on their functionalities and purposes. This initial step will help us gain a clearer understanding of their roles within the repositories.</p><p>A potential naming convention could utilize the following prefixes:</p><ul><li><p><code>check-xyz.sh</code> for conducting checks</p></li><li><p><code>generate-xyz.sh</code> for generating source code or resources</p></li><li><p><code>install-xyz.sh</code> for tool installation</p></li><li><p><code>run-xyz.sh</code> for executing tasks</p></li><li><p><code>test-xyz.sh</code> for testing functionalities</p></li></ul><p>Now that we’ve categorized the scripts, let’s go through each one, providing a detailed explanation of its functionality line by line. This will help to elucidate the purpose and operation of each script within its respective category.</p><h2 id='Check%20for%20broken%20symlinks'><a href='#Check%20for%20broken%20symlinks'>Check for broken symlinks</a></h2><p>This script (<code>check-broken-symlinks.sh</code>) checks for broken symlinks within a Git repository.  If any broken symlinks are found, it prints an error message and exits with a non-zero status; otherwise, it prints a success message and exits normally.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span># 1.<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span># 3.<span class='newline'>
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span>log "Checking for broken symlinks..."<span class='newline'>
+</span>NUM_BROKEN_SYMLINKS=0<span class='newline'>
+</span># 4.<span class='newline'>
+</span>while read -r -d '' file; do<span class='newline'>
+</span>    # 5.<span class='newline'>
+</span>    if ! test -e "${REPO_ROOT}/${file}"; then<span class='newline'>
+</span>        error "Broken symlink: ${file}"<span class='newline'>
+</span>        ((NUM_BROKEN_SYMLINKS++))<span class='newline'>
+</span>    fi<span class='newline'>
+</span>done &lt; &lt;(git -C "${REPO_ROOT}" ls-files -z)<span class='newline'>
+
+</span># 6.<span class='newline'>
+</span>if [ "${NUM_BROKEN_SYMLINKS}" -gt 0 ]; then<span class='newline'>
+</span>    fatal "❌ Found ${NUM_BROKEN_SYMLINKS} symlinks."<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>log "✅ Found 0 symlinks."</code></pre><ol><li><p>Enhance script reliability by enforcing strict variables, error handling and pipeline behavior.</p></li><li><p>Definition of custom functions for managing logging and error handling.</p></li><li><p>Determine the directory where the script is located and the root directory of the repository.</p></li><li><p>Iterate over each file in the repository using the <code>git ls-files -z</code> command.</p></li><li><p>Check if the corresponding file exists in the repository, if not increment the counter.</p></li><li><p>If any broken symlinks were found, exit using fatal, otherwise print a success message.</p></li></ol><p>This bash script can be used to automate the process of checking for broken symbolic links within a Git repository.</p><h2 id='Check%20unacceptable%20language'><a href='#Check%20unacceptable%20language'>Check unacceptable language</a></h2><p>This Bash script (<code>check-unacceptable-language.sh</code>) uses unacceptable language patterns and proceeds to check for their presence within the repository using Git commands. If any files containing unacceptable language are found, it exits with an error message; otherwise, it logs a success message indicating no unacceptable language was found.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>UNACCEPTABLE_LANGUAGE_PATTERNS_PATH="${CURRENT_SCRIPT_DIR}/unacceptable-language.txt"<span class='newline'>
+
+</span>log "Checking for unacceptable language..."<span class='newline'>
+</span># 2.<span class='newline'>
+</span>PATHS_WITH_UNACCEPTABLE_LANGUAGE=$(git -C "${REPO_ROOT}" grep \<span class='newline'>
+</span>  -l -F -w \<span class='newline'>
+</span>  -f "${UNACCEPTABLE_LANGUAGE_PATTERNS_PATH}" \<span class='newline'>
+</span>  -- \<span class='newline'>
+</span>  ":(exclude)${UNACCEPTABLE_LANGUAGE_PATTERNS_PATH}" \<span class='newline'>
+</span>) || true | /usr/bin/paste -s -d " " -<span class='newline'>
+
+</span># 3.<span class='newline'>
+</span>if [ -n "${PATHS_WITH_UNACCEPTABLE_LANGUAGE}" ]; then<span class='newline'>
+</span>  fatal "❌ Found unacceptable language in files: ${PATHS_WITH_UNACCEPTABLE_LANGUAGE}."<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>log "✅ Found no unacceptable language."</code></pre><ol><li><p>Defines the path to the <code>unacceptable-language.txt</code> file, which contains all the words separated by a newline.</p></li><li><p>Check all the files within the repository, if it contains unacceptable words add it to the paths array.</p></li><li><p>If there’s a file that contains unacceptable language, exit with a fatal error, otherwise print a success message.</p></li></ol><p>A good starting point for the unacceptable language text file:</p><pre class='snippet'><code><span class='newline'></span>blacklist<span class='newline'>
+</span>whitelist<span class='newline'>
+</span>slave<span class='newline'>
+</span>master<span class='newline'>
+</span>sane<span class='newline'>
+</span>sanity<span class='newline'>
+</span>insane<span class='newline'>
+</span>insanity<span class='newline'>
+</span>kill<span class='newline'>
+</span>killed<span class='newline'>
+</span>killing<span class='newline'>
+</span>hang<span class='newline'>
+</span>hung<span class='newline'>
+</span>hanged<span class='newline'>
+</span>hanging</code></pre><p>By searching through the repository’s files, this script can automate the process of enforcing compliance with coding standards within the repository.</p><h2 id='Check%20local%20swift%20dependencies'><a href='#Check%20local%20swift%20dependencies'>Check local swift dependencies</a></h2><p>This script (<code>check-local-swift-dependencies.sh</code>) checks the <code>Package.swift</code> file in a Git repository to see if it contains references to local Swift packages.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>read -ra PATHS_TO_CHECK &lt;&lt;&lt; "$( \<span class='newline'>
+</span>  git -C "${REPO_ROOT}" ls-files -z \<span class='newline'>
+</span>  "Package.swift" \<span class='newline'>
+</span>  | xargs -0 \<span class='newline'>
+</span>)"<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>for FILE_PATH in "${PATHS_TO_CHECK[@]}"; do<span class='newline'>
+</span>echo $FILE_PATH<span class='newline'>
+</span>    if [[ $(grep ".package(path:" "${FILE_PATH}"|wc -l) -ne 0 ]] ; then<span class='newline'>
+</span>        fatal "❌ The '${FILE_PATH}' file contains local Swift package reference(s)."<span class='newline'>
+</span>    fi<span class='newline'>
+</span>done <span class='newline'>
+
+</span>log "✅ Found 0 local Swift package dependency references."</code></pre><ol><li><p>Read the repository and detect <code>Package.swift</code> files.</p></li><li><p>Check if a Package.swift file contains local dependencies.</p></li></ol><p>This becomes handy during the development of packages using local dependencies, as it guarantees that once changes are pushed to the repository, any remaining local development dependencies are removed.</p><h2 id='Install%20swift%20format'><a href='#Install%20swift%20format'>Install swift format</a></h2><p>The script (<code>install-swift-format.sh</code>) provided below installs <a href='https://github.com/apple/swift-format' target='_blank' rel='external'>swift-format</a> with a predetermined version.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span># https://github.com/apple/swift-format<span class='newline'>
+</span># 1. <span class='newline'>
+</span>VERSION="509.0.0"<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>curl -L -o "${VERSION}.tar.gz" "https://github.com/apple/swift-format/archive/refs/tags/${VERSION}.tar.gz"<span class='newline'>
+</span>tar -xf "${VERSION}.tar.gz"<span class='newline'>
+</span># 3.<span class='newline'>
+</span>cd "swift-format-${VERSION}"<span class='newline'>
+</span>swift build -c release<span class='newline'>
+</span># 4.<span class='newline'>
+</span>install .build/release/swift-format /usr/local/bin/swift-format<span class='newline'>
+</span># 5.<span class='newline'>
+</span>cd ..<span class='newline'>
+</span>rm -f "${VERSION}.tar.gz"<span class='newline'>
+</span>rm -rf "swift-format-${VERSION}"</code></pre><ol><li><p>Define the desired swift-format version.</p></li><li><p>Download and extract the swift-format repository.</p></li><li><p>Build the swift-format executable</p></li><li><p>Install the swift-format binary</p></li><li><p>Cleanup unnecessary files and directories.</p></li></ol><h2 id='Run%20swift-format'><a href='#Run%20swift-format'>Run swift-format</a></h2><p>The following script (<code>run-swift-format.sh</code>) executes <code>swift-format</code> to perform linting and fix potential code issues, enhancing code readability and adherence to established formatting standards.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>FORMAT_COMMAND=(lint --strict)<span class='newline'>
+</span>for arg in "$@"; do<span class='newline'>
+</span>  if [ "$arg" == "--fix" ]; then<span class='newline'>
+</span>    FORMAT_COMMAND=(format --in-place)<span class='newline'>
+</span>  fi<span class='newline'>
+</span>done<span class='newline'>
+
+</span># 2. <span class='newline'>
+</span>SWIFTFORMAT_BIN=${SWIFTFORMAT_BIN:-$(command -v swift-format)} || fatal "❌ SWIFTFORMAT_BIN unset and no swift-format on PATH"<span class='newline'>
+
+</span># 3.<span class='newline'>
+</span>git -C "${REPO_ROOT}" ls-files -z '*.swift' \<span class='newline'>
+</span>    | grep -z -v \<span class='newline'>
+</span>    -e 'Sources/CoreOpenAPIRuntimeKit/Types.swift' \<span class='newline'>
+</span>    -e 'Package.swift' \<span class='newline'>
+</span>  | xargs -0 "${SWIFTFORMAT_BIN}" "${FORMAT_COMMAND[@]}" --parallel \<span class='newline'>
+</span>  &amp;&amp; SWIFT_FORMAT_RC=$? || SWIFT_FORMAT_RC=$?<span class='newline'>
+
+</span># 4.<span class='newline'>
+</span>if [ "${SWIFT_FORMAT_RC}" -ne 0 ]; then<span class='newline'>
+</span>  fatal "❌ Running swift-format produced errors.<span class='newline'>
+
+</span>  To fix, run the following command:<span class='newline'>
+
+</span>    % ./scripts/run-swift-format.sh --fix<span class='newline'>
+</span>  "<span class='newline'>
+</span>  exit "${SWIFT_FORMAT_RC}"<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>log "✅ Ran swift-format with no errors."</code></pre><ol><li><p>If the –fix argument is provided, the formatting command is adjusted to perform in-place formatting.</p></li><li><p>Sets the variable <code>SWIFTFORMAT_BIN</code> to the path of the swift-format binary, if not found, the script will fail.</p></li><li><p>Run swift-format using all the files in the repository, excluding the listed ones. The result code of swift-format execution is stored in SWIFT_FORMAT_RC.</p></li><li><p>If swift-format encounters errors during execution, the script exits with a fatal error message.</p></li></ol><h2 id='Run%20checks'><a href='#Run%20checks'>Run checks</a></h2><p>This script (<code>run-checks.sh</code>) executes all checks found in the scripts directory, and additionally runs the <code>run-swift-format.sh</code> script for supplementary checks.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>NUM_CHECKS_FAILED=0<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>SCRIPT_PATHS=(<span class='newline'>
+</span>  "${CURRENT_SCRIPT_DIR}/check-broken-symlinks.sh"<span class='newline'>
+</span>  "${CURRENT_SCRIPT_DIR}/check-unacceptable-language.sh"<span class='newline'>
+</span>  "${CURRENT_SCRIPT_DIR}/check-local-swift-dependencies.sh"<span class='newline'>
+</span>)<span class='newline'>
+
+</span># 3.<span class='newline'>
+</span>for SCRIPT_PATH in "${SCRIPT_PATHS[@]}"; do<span class='newline'>
+</span>  log "Running ${SCRIPT_PATH}..."<span class='newline'>
+</span>  if ! bash "${SCRIPT_PATH}"; then<span class='newline'>
+</span>    ((NUM_CHECKS_FAILED+=1))<span class='newline'>
+</span>  fi<span class='newline'>
+</span>done<span class='newline'>
+
+</span># 4. <span class='newline'>
+</span>FIX_FORMAT=""<span class='newline'>
+</span>for arg in "$@"; do<span class='newline'>
+</span>  if [ "$arg" == "--fix" ]; then<span class='newline'>
+</span>    FIX_FORMAT="--fix"<span class='newline'>
+</span>  fi<span class='newline'>
+</span>done<span class='newline'>
+
+</span># 5.<span class='newline'>
+</span>log "Running swift-format..."<span class='newline'>
+</span>bash "${CURRENT_SCRIPT_DIR}"/run-swift-format.sh $FIX_FORMAT &gt; /dev/null<span class='newline'>
+</span>FORMAT_EXIT_CODE=$?<span class='newline'>
+</span>if [ $FORMAT_EXIT_CODE -ne 0 ]; then<span class='newline'>
+</span>  ((NUM_CHECKS_FAILED+=1))<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>#6. <span class='newline'>
+</span>if [ "${NUM_CHECKS_FAILED}" -gt 0 ]; then<span class='newline'>
+</span>  fatal "❌ ${NUM_CHECKS_FAILED} check(s) failed."<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>log "✅ All check(s) passed."</code></pre><ol><li><p>Initializes a counter variable NUM_CHECKS_FAILED to track the number of failed checks.</p></li><li><p>Defines an array SCRIPT_PATHS containing paths to several scripts for performing different checks.</p></li><li><p>Executes each script in SCRIPT_PATHS, logging its execution and incrementing NUM_CHECKS_FAILED if it fails.</p></li><li><p>Parses command-line arguments to determine if the –fix flag is present for fixing formatting issues.</p></li><li><p>Runs a script for Swift code formatting, suppressing output (/dev/null), and updates NUM_CHECKS_FAILED if it fails.</p></li><li><p>Checks if any checks have failed and exits with an error message if so; otherwise, logs success.</p></li></ol><h2 id='Generate%20contributors%20list'><a href='#Generate%20contributors%20list'>Generate contributors list</a></h2><p>This script (<code>generate-contributors-list.sh</code>) is designed to gather all contributors for a Git repository, producing a <code>CONTRIBUTORS.txt</code> file within the repository’s root directory.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>CONTRIBUTORS=$( cd "$CURRENT_SCRIPT_DIR"/.. &amp;&amp; git shortlog -es | cut -f2 | sed 's/^/- /' )<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>cat &gt; "$REPO_ROOT/CONTRIBUTORS.txt" &lt;&lt;- EOF<span class='newline'>
+</span>	### Contributors<span class='newline'>
+
+</span>	$CONTRIBUTORS<span class='newline'>
+
+</span>	**Updating this list**<span class='newline'>
+
+</span>	Please do not edit this file manually. It is generated using \`bash ./scripts/generate-contributors-list.sh\`. <span class='newline'>
+</span>	If a name is misspelled or appearing multiple times: add an entry in \`./.mailmap\`.<span class='newline'>
+</span>EOF</code></pre><ol><li><p>Gather the name and email address of all the contributors using <code>git shortlog -es</code></p></li><li><p>Output the list of the contributors to the <code>CONTRIBUTORS.txt</code> file to the repo root.</p></li></ol><p>If repeated names are found in the contributors file, they can be eliminated by utilizing a custom .mailmap file.</p><pre class='snippet'><code><span class='newline'></span>Tibor Bödecs &lt;mail.tib@gmail.com&gt; Tibor Bodecs &lt;mail.tib@gmail.com&gt;</code></pre><p>The mailmap file follows the format: <code>name1 &lt;email1&gt; name2 &lt;email2&gt;</code>. This allows for overriding <code>name2</code> with <code>name1</code>.</p><h2 id='Check%20API%20breakage'><a href='#Check%20API%20breakage'>Check API breakage</a></h2><p>This script (<code>check-api-breakage.sh</code>) aims to identify API-breaking changes within a Swift package.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>git fetch -t <span class='newline'>
+</span>LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>swift package diagnose-api-breaking-changes "$LATEST_TAG" 2&gt;&amp;1 &gt; api-breakage-output.log || { <span class='newline'>
+</span>    NUM=$(cat api-breakage-output.log|grep "💔"|wc -l)<span class='newline'>
+</span>    log "❌ Found ${NUM} API breakages."<span class='newline'>
+</span>    cat api-breakages.log<span class='newline'>
+</span>    exit 0;<span class='newline'>
+</span>}<span class='newline'>
+
+</span>log "✅ Found no API breakages."</code></pre><ol><li><p>Fetches all tags from the remote repository and determine the latest one.</p></li><li><p>Check for API-breaking changes since the latest tag.</p></li></ol><p>Despite any breaking changes detected by the <code>swift package diagnose-api-breaking-changes</code> command, this script will exit gracefully, and its output will be logged in the <code>api-breakage-output.log</code> file. The log file is a means to inform developers about any API-breaking changes.</p><h2 id='Run%20chmod'><a href='#Run%20chmod'>Run chmod</a></h2><p>This script (<code>run-chmod.sh</code>) ensures that the appropriate permissions are set on the scripts directory.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span>chmod -R oug+x "${REPO_ROOT}/scripts/"</code></pre><p>This Bash script ensures that all scripts within a Git repository are executable by adding execute permissions recursively.</p><h2 id='Install%20Swift%20OpenAPI%20generator%20(install-swift-openapi-generator.sh)'><a href='#Install%20Swift%20OpenAPI%20generator%20(install-swift-openapi-generator.sh)'>Install Swift OpenAPI generator (<code>install-swift-openapi-generator.sh</code>)</a></h2><p>This script is designed to install the Swift OpenAPI generator tool onto your system.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span># https://github.com/apple/swift-openapi-generator<span class='newline'>
+</span>VERSION="1.2.1"<span class='newline'>
+
+</span>curl -L -o "${VERSION}.tar.gz" "https://github.com/apple/swift-openapi-generator/archive/refs/tags/${VERSION}.tar.gz"<span class='newline'>
+</span>tar -xf "${VERSION}.tar.gz"<span class='newline'>
+</span>cd "swift-openapi-generator-${VERSION}"<span class='newline'>
+</span>swift build -c release<span class='newline'>
+</span>install .build/release/swift-openapi-generator /usr/local/bin/swift-openapi-generator<span class='newline'>
+</span>cd ..<span class='newline'>
+</span>rm -f "${VERSION}.tar.gz"<span class='newline'>
+</span>rm -rf "swift-openapi-generator-${VERSION}"</code></pre><p>After running this script, the <code>swift-openapi-generator</code> command will be available for use.</p><h2 id='Check%20OpenAPI%20security'><a href='#Check%20OpenAPI%20security'>Check OpenAPI security</a></h2><p>This script (<code>check-openapi-security.sh</code>) employs the <a href='https://hub.docker.com/r/owasp/zap2docker-weekly/' target='_blank' rel='external nofollow noopener ugc'>OWASP ZAP security tool</a> to scan the OpenAPI YAML file for possible vulnerabilities.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>OPENAPI_YAML_LOCATION="${REPO_ROOT}/openapi";<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>docker run --rm --name "openapi-security-check" \<span class='newline'>
+</span>    -v "${OPENAPI_YAML_LOCATION}:/app" \<span class='newline'>
+</span>    -t owasp/zap2docker-weekly zap-api-scan.py \<span class='newline'>
+</span>    -t /app/openapi.yaml -f openapi</code></pre><ol><li><p>Define the location of the OpenAPI YAML file within the repository.</p></li><li><p>Use a Docker container to scan the OpenAPI YAML file for potential vulnerabilities.</p></li></ol><h2 id='Check%20OpenAPI%20validation'><a href='#Check%20OpenAPI%20validation'>Check OpenAPI validation</a></h2><p>This script (<code>check-openapi-validation.sh</code>) utilizes the <a href='https://pypi.org/project/openapi-spec-validator/' target='_blank' rel='external nofollow noopener ugc'>OpenAPI spec validator</a> to validate the OpenAPI YAML file.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>OPENAPI_YAML_LOCATION="${REPO_ROOT}/openapi";<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>docker run --rm --name "openapi-validate" \<span class='newline'>
+</span>    -v "${OPENAPI_YAML_LOCATION}/openapi.yaml:/openapi.yaml" \<span class='newline'>
+</span>    pythonopenapi/openapi-spec-validator /openapi.yaml</code></pre><ol><li><p>Define the location of the OpenAPI YAML file within the repository.</p></li><li><p>Use a Docker container to validate the OpenAPI YAML file.</p></li></ol><h2 id='Run%20OpenAPI%20server'><a href='#Run%20OpenAPI%20server'>Run OpenAPI server</a></h2><p>This script (<code>run-openapi-server.sh</code>) can be used to quickly host a web service to preview an OpenAPI YAML file using the <a href='https://github.com/swagger-api/swagger-ui' target='_blank' rel='external'>SwaggerUI</a> library.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>OPENAPI_YAML_LOCATION="${REPO_ROOT}/openapi/";<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>docker run --rm --name "openapi-server" \<span class='newline'>
+</span>    -v "${OPENAPI_YAML_LOCATION}:/usr/share/nginx/html" \<span class='newline'>
+</span>    -p 8888:80 nginx</code></pre><ol><li><p>Define the location of the OpenAPI YAML file within the repository.</p></li><li><p>Use a Docker container to start nginx using the 8888 port.</p></li></ol><p>The <code>openapi</code> directory should contain both the <code>openapi.yaml</code> file and the <code>index.html</code> file with the following contents:</p><pre class='snippet'><code class='language-html'><span class='newline'></span>&lt;!DOCTYPE html&gt;<span class='newline'>
+</span>&lt;html&gt;<span class='newline'>
+</span>&lt;head&gt;<span class='newline'>
+</span>    &lt;title&gt;OpenAPI&lt;/title&gt;<span class='newline'>
+</span>    &lt;meta charset="UTF-8"&gt;<span class='newline'>
+</span>    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;<span class='newline'>
+</span>    &lt;link href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.12.0/swagger-ui.min.css" rel="stylesheet"&gt;<span class='newline'>
+</span>&lt;/head&gt;<span class='newline'>
+
+</span>&lt;body onload="render()"&gt;<span class='newline'>
+</span>    &lt;div id="swagger-ui"&gt;&lt;/div&gt;<span class='newline'>
+</span>    &lt;script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.12.0/swagger-ui-bundle.min.js"&gt;&lt;/script&gt;<span class='newline'>
+</span>    &lt;script&gt;<span class='newline'>
+</span>        function render() {<span class='newline'>
+</span>            var ui = SwaggerUIBundle({<span class='newline'>
+</span>                url:  `/openapi.yaml`,<span class='newline'>
+</span>                dom_id: '#swagger-ui',<span class='newline'>
+</span>                docExpansion: 'none',<span class='newline'>
+</span>                presets: [<span class='newline'>
+</span>                    SwaggerUIBundle.presets.apis,<span class='newline'>
+</span>                    SwaggerUIBundle.SwaggerUIStandalonePreset<span class='newline'>
+</span>                ]<span class='newline'>
+</span>            });<span class='newline'>
+</span>        }<span class='newline'>
+</span>    &lt;/script&gt;<span class='newline'>
+</span>&lt;/body&gt;<span class='newline'>
+</span>&lt;/html&gt;</code></pre><p>Once the script has been executed, the Swagger UI services should be accessible via the <a target='_blank' href='https://localhost:8888/' rel='external nofollow noopener ugc'>https://localhost:8888/</a> address.</p><h2 id='Check%20DocC%20warnings'><a href='#Check%20DocC%20warnings'>Check DocC warnings</a></h2><p>This script (<code>check-docc-warnings.sh</code>) builds the DocC documentation and checks for potential issues within it:</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>log "Checking required environment variables..."<span class='newline'>
+</span>test -n "${DOCC_TARGET:-}" || fatal "DOCC_TARGET unset"<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>swift package --package-path "${REPO_ROOT}" plugin generate-documentation \<span class='newline'>
+</span>  --product "${DOCC_TARGET}" \<span class='newline'>
+</span>  --analyze \<span class='newline'>
+</span>  --level detailed \<span class='newline'>
+</span>  --warnings-as-errors \<span class='newline'>
+</span>  &amp;&amp; DOCC_PLUGIN_RC=$? || DOCC_PLUGIN_RC=$?<span class='newline'>
+
+</span># 3.<span class='newline'>
+</span>if [ "${DOCC_PLUGIN_RC}" -ne 0 ]; then<span class='newline'>
+</span>  fatal "❌ Generating documentation produced warnings and/or errors."<span class='newline'>
+</span>  exit "${DOCC_PLUGIN_RC}"<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>log "✅ Generated documentation with no warnings."</code></pre><ol><li><p>The DocC target should be provided as an environment variable (<code>DOCC_TARGET</code>).</p></li><li><p>The Swift package manager analyzes the documentation and saves the error output.</p></li><li><p>If there were any issues with the documentation, display the errors.</p></li></ol><h2 id='Check%20license%20headers'><a href='#Check%20license%20headers'>Check license headers</a></h2><p>This script (<code>check-license-headers.sh</code>) enables developers to verify license headers across project files. Additionally, it offers the capability to generate a diff file for patching all files, thereby ensuring uniform license headers throughout the project.</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>#!/usr/bin/env bash<span class='newline'>
+</span>set -euo pipefail<span class='newline'>
+
+</span>log() { printf -- "** %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>error() { printf -- "** ERROR: %s\n" "$*" &gt;&amp;2; }<span class='newline'>
+</span>fatal() { error "$@"; exit 1; }<span class='newline'>
+
+</span>CURRENT_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )"<span class='newline'>
+</span>REPO_ROOT="$(git -C "${CURRENT_SCRIPT_DIR}" rev-parse --show-toplevel)"<span class='newline'>
+
+</span># 1.<span class='newline'>
+</span>HEADER_TEMPLATE=$(cat $CURRENT_SCRIPT_DIR/license-header.txt)<span class='newline'>
+</span>AUTHOR="Binary Birds Kft"<span class='newline'>
+</span>YEAR=$(date +%Y)<span class='newline'>
+
+</span>PATHS_WITH_INVALID_HEADER=( )<span class='newline'>
+
+</span># 2.<span class='newline'>
+</span>read -ra PATHS_TO_CHECK_FOR_LICENSE &lt;&lt;&lt; "$( \<span class='newline'>
+</span>    git -C "${REPO_ROOT}" ls-files -z \<span class='newline'>
+</span>        ":(exclude).*" \<span class='newline'>
+</span>        ":(exclude)*.txt" \<span class='newline'>
+</span>        ":(exclude)*.sh" \<span class='newline'>
+</span>        ":(exclude)*.html" \<span class='newline'>
+</span>        ":(exclude)*.yaml" \<span class='newline'>
+</span>        ":(exclude)Package.swift" \<span class='newline'>
+</span>  | xargs -0 \<span class='newline'>
+</span>)"<span class='newline'>
+
+</span>for FILE_PATH in "${PATHS_TO_CHECK_FOR_LICENSE[@]}"; do<span class='newline'>
+</span>    # 3.<span class='newline'>
+</span>    FILE_BASENAME=$(basename -- "${FILE_PATH}")<span class='newline'>
+</span>    FILE_EXTENSION="${FILE_BASENAME##*.}"<span class='newline'>
+
+</span>    # 4.<span class='newline'>
+</span>    case "${FILE_EXTENSION}" in<span class='newline'>
+</span>        swift) EXPECTED_HEADER=$(sed -e 's|@@|//|g' &lt;&lt;&lt;"${HEADER_TEMPLATE}") ;;<span class='newline'>
+</span>        yml) EXPECTED_HEADER=$(sed -e 's|@@|##|g' &lt;&lt;&lt;"${HEADER_TEMPLATE}") ;;<span class='newline'>
+</span>        sh) EXPECTED_HEADER=$(cat &lt;(echo '#!/usr/bin/env bash') &lt;(sed -e 's|@@|##|g' &lt;&lt;&lt;"${HEADER_TEMPLATE}")) ;;<span class='newline'>
+</span>        *) fatal "Unsupported file extension for file (exclude or update this script): ${FILE_PATH}" ;;<span class='newline'>
+</span>    esac<span class='newline'>
+
+</span>    # 5.<span class='newline'>
+</span>    EXPECTED_HEADER=$(sed "s/{FILE}/${FILE_BASENAME}/" &lt;&lt;&lt; "${EXPECTED_HEADER}")<span class='newline'>
+</span>    EXPECTED_HEADER=$(sed "s/{AUTHOR}/$AUTHOR/" &lt;&lt;&lt; "${EXPECTED_HEADER}")<span class='newline'>
+</span>    EXPECTED_HEADER=$(sed "s/{YEAR}/$YEAR/" &lt;&lt;&lt; "${EXPECTED_HEADER}")<span class='newline'>
+</span>    <span class='newline'>
+</span>    # 6.<span class='newline'>
+</span>    EXPECTED_HEADER_LINECOUNT=$(wc -l &lt;&lt;&lt;"${EXPECTED_HEADER}")<span class='newline'>
+</span>    FILE_HEADER=$(head -n "${EXPECTED_HEADER_LINECOUNT}" "${FILE_PATH}")<span class='newline'>
+
+</span>    # 7.<span class='newline'>
+</span>    if ! diff -u \<span class='newline'>
+</span>        --label "Expected header" &lt;(echo "${FILE_HEADER}") \<span class='newline'>
+</span>        --label "${FILE_PATH}" &lt;(echo "${EXPECTED_HEADER}")<span class='newline'>
+</span>    then<span class='newline'>
+</span>        PATHS_WITH_INVALID_HEADER+=("${FILE_PATH} ")<span class='newline'>
+</span>    fi<span class='newline'>
+</span>done<span class='newline'>
+
+</span># 8.<span class='newline'>
+</span>if [ "${#PATHS_WITH_INVALID_HEADER[@]}" -gt 0 ]; then<span class='newline'>
+</span>    fatal "❌ Found invalid license header in files: ${PATHS_WITH_INVALID_HEADER[*]}."<span class='newline'>
+</span>fi<span class='newline'>
+
+</span>log "✅ Found no files with invalid license header."</code></pre><ol><li><p>Define the location of the external header template file, an author, and the current year as variables.</p></li><li><p>Obtain all files for license header checks, excluding some using specified patterns.</p></li><li><p>Store the basename and extension of the file as variables for later use.</p></li><li><p>Replace <code>@@</code> characters according to the file type to ensure proper documentation comments for the license.</p></li><li><p>Replace the <code>{FILE}</code>, <code>{AUTHOR}</code>, and <code>{YEAR}</code> variables in the header template.</p></li><li><p>Retrieve the original license file header based on the line count of the expected header.</p></li><li><p>Check if the expected license header matches the file header and collect any differences.</p></li><li><p>If there are invalid or missing license headers, return with an error.</p></li></ol><p>The diff command, within the <em>check-license-headers</em> script can create a patch file, and it can be applied using the following command:</p><pre class='snippet'><code class='language-sh'><span class='newline'></span>./scripts/check-license-headers.sh &gt; license.patch<span class='newline'>
+</span>patch -s -p0 &lt; license.patch </code></pre><p>This script ensures that all project files maintain a uniform license header, and it simplifies the process of identifying and resolving any issues using the patch command.</p><h2 id='Conclusion'><a href='#Conclusion'>Conclusion</a></h2><p>Shell scripts are helpful tools in a developer’s job of maintaining a codebase. Through automated checks, you can ensure that standards are adhered to. Scripts can hook into any tool, and are used for running tests and gathering code coverage. In an upcoming article, we’ll explore how to set up GitHub Actions to execute these scripts.</p></section>
