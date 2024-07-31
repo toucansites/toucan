@@ -15,12 +15,12 @@ Toucan powers numerous websites; here are a few notable examples:
 ) {
     @Column {
         [
-            ![Swift on Server](./showcases/swiftonserver.png)
+            ![Swift on Server](./assets/swiftonserver.png)
         ](https://swiftonserver.com/)
     }
     @Column {
         [
-            ![The.Swift.Dev](./showcases/theswiftdev.png)
+            ![The.Swift.Dev](./assets/theswiftdev.png)
         ](https://theswiftdev.com/)
     }
 }
