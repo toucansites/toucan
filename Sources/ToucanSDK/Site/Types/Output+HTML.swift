@@ -19,17 +19,17 @@ struct Context {
         struct Link {
             let number: Int
             let total: Int
-            
+
             let slug: String
             let permalink: String
             let isCurrent: Bool
         }
 
-//        let home: Link?
-//        let first: Link?
-//        let prev: Link?
-//        let next: Link?
-//        let last: Link?
+        //        let home: Link?
+        //        let first: Link?
+        //        let prev: Link?
+        //        let next: Link?
+        //        let last: Link?
 
         let links: [String: [Link]]
         let data: [String: Any]

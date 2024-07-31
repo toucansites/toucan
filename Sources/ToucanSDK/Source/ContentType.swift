@@ -25,7 +25,7 @@ struct ContentType: Codable {
         let sort: String?
         let order: Order?
     }
-    
+
     struct Property: Codable {
         let type: String
         let required: Bool
@@ -71,9 +71,9 @@ struct ContentType: Codable {
         let local: [String: Local]?
 
     }
-    
+
     struct Transformers: Codable {
-        
+
         struct Transformer: Codable {
             let name: String
             let options: [String: String]?
@@ -115,7 +115,7 @@ extension ContentType {
         ),
         transformers: nil
     )
-    
+
     static let pagination = ContentType(
         id: "pagination",
         rss: nil,

@@ -6,7 +6,7 @@ image: ./how-to-write-openapi-specs-using-swift-and-openapi-kit/cover.jpg
 publication: 2023-07-06 16:15:54
 tags:
   - swift
-  - open-api
+  - openapi
 authors:
   - tibor-bodecs
 ---

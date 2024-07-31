@@ -33,38 +33,14 @@
     </header>
     
     
-    <section>
-    <div class="grid grid-221">
-    {{^page.prev}}
-    <div></div>
-    {{/page.prev}}
-    {{#page.prev}}
-    <div>
-        <h4>&larr; Prev post</h4>
-        <hr class="spacer">
-        {{> blog.blocks.post}}
-    </div>
-    {{/page.prev}}
     
-    {{^page.next}}
-    <div></div>
-    {{/page.next}}
-    {{#page.next}}
-    <div>
-        <h4 style="text-align: right;">Next post &rarr;</h4>
-        <hr class="spacer">
-        {{> blog.blocks.post}}
-    </div>
-    {{/page.next}}
-    </div>
-    </section>
     
     <section>
     {{#empty(page.related)}}
     {{/empty(page.related)}}
     {{^empty(page.related)}}
     <h4>Related posts</h4>
-    <hr class="spacer">
+    
     <div class="grid grid-221">
     {{#page.related}}
         {{> blog.blocks.post}}
@@ -73,18 +49,6 @@
     {{/empty(page.related)}}
     </section>
     
-    
-    {{#empty(page.moreByAuthors)}}
-    {{/empty(page.moreByAuthors)}}
-    {{^empty(page.moreByAuthors)}}
-    <h4>More posts by the author(s)</h4>
-    <hr class="spacer">
-    <div class="grid grid-221">
-    {{#page.moreByAuthors}}
-        {{> blog.blocks.post}}
-    {{/page.moreByAuthors}}
-    </div>
-    {{/empty(page.moreByAuthors)}}
 
 </article>
 </div>

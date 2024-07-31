@@ -3,7 +3,7 @@ rss: true
 
 pagination:
     bundle: blog/posts/pagination
-    limit: 2
+    limit: 12
     sort: title
     order: asc
 

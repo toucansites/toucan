@@ -14,24 +14,27 @@ import SwiftSoup
 
 // TODO: use actor & modern concurrency
 final class Cache {
-    
-    let q = DispatchQueue(label: "com.binarybirds.toucan.cache", attributes: .concurrent)
+
+    let q = DispatchQueue(
+        label: "com.binarybirds.toucan.cache",
+        attributes: .concurrent
+    )
 
     var storage: [String: Any]
-    
+
     init() {
         self.storage = [:]
     }
-    
+
     func set(key: String, value: Any) {
         q.async(flags: .barrier) {
             self.storage[key] = value
         }
-        
+
     }
-    
+
     func get(key: String) -> Any? {
-        q.sync() {
+        q.sync {
             self.storage[key]
         }
     }
@@ -62,7 +65,7 @@ struct SiteRenderer {
     let logger: Logger
 
     let templateRenderer: MustacheToHTMLRenderer
-    
+
     var cache: Cache
 
     init(
@@ -94,7 +97,7 @@ struct SiteRenderer {
             templatesUrl: templatesUrl,
             overridesUrl: overridesUrl
         )
-        
+
         self.cache = .init()
     }
 
@@ -145,8 +148,8 @@ struct SiteRenderer {
         }
         return result
     }
-    
-    // TODO: optimize & merge with data? 
+
+    // TODO: optimize & merge with data?
     func paginationContext(
         for pageBundle: PageBundle
     ) -> [String: [Context.Pagination.Link]] {
@@ -154,9 +157,13 @@ struct SiteRenderer {
         for contentType in source.contentTypes {
             guard let pagination = contentType.pagination else { continue }
             let paginationBundle = source.pageBundles.first { pageBundle in
-                guard pageBundle.type == ContentType.pagination.id else { return false }
+                guard pageBundle.type == ContentType.pagination.id else {
+                    return false
+                }
                 guard pageBundle.id == pagination.bundle else { return false }
-                guard pageBundle.context.slug.contains("{{number}}") else { return false }
+                guard pageBundle.context.slug.contains("{{number}}") else {
+                    return false
+                }
                 return true
             }
             guard let paginationBundle else {
@@ -169,7 +176,7 @@ struct SiteRenderer {
             let limit = pagination.limit
             let pages = pageBundles.chunks(ofCount: limit)
             let total = pages.count
-            
+
             var ctx: [Context.Pagination.Link] = []
             for (index, _) in pages.enumerated() {
                 let number = index + 1
@@ -284,25 +291,24 @@ struct SiteRenderer {
 
         // TODO: check if transformer exists
         let transformersUrl = source.url.appendingPathComponent("transformers")
-        let availableTransformers = fileManager
+        let availableTransformers =
+            fileManager
             .listDirectory(at: transformersUrl)
             .filter { !$0.hasPrefix(".") }
             .sorted()
-       
-        
+
         let contentType = source.contentType(for: pageBundle)
         let run = contentType.transformers?.run ?? []
         let renderFallback = contentType.transformers?.render ?? true
-        
-//        let transformers = pageBundle.frontMatter.dict("transformers")
-//        let renderFallback = transformers.bool("render")
-//        let run = transformers.array("run", as: [String: Any].self)
-        
+
+        //        let transformers = pageBundle.frontMatter.dict("transformers")
+        //        let renderFallback = transformers.bool("render")
+        //        let run = transformers.array("run", as: [String: Any].self)
+
         let markdown = pageBundle.markdown.dropFrontMatter()
         var toc: [ToC]? = nil
         var time: Int? = nil
         var contents = ""
-        
 
         // TODO: better transformers settings merge with page bundle
         if !run.isEmpty {
@@ -325,13 +331,14 @@ struct SiteRenderer {
                 rawOptions["slug"] = pageBundle.context.slug
 
                 let bin = transformersUrl.appendingPathComponent(r.name).path
-                let options = rawOptions
+                let options =
+                    rawOptions
                     .map { #"--\#($0) "\#($1)""# }
                     .joined(separator: " ")
 
                 do {
                     let cmd = #"\#(bin) \#(options)"#
-//                    print(cmd)
+                    //                    print(cmd)
                     let log = try shell.run(cmd)
                     if !log.isEmpty {
                         print(log)
@@ -343,21 +350,21 @@ struct SiteRenderer {
             }
             contents = try! String(contentsOf: fileURL, encoding: .utf8)
             try? fileManager.delete(at: fileURL)
-            
+
             time = readingTime(contents)
-            
+
             do {
                 let doc: Document = try SwiftSoup.parse(contents)
-                
+
                 var tocList: [MarkupToHXVisitor.HX] = []
                 let headings = try doc.select("h2, h3")
                 for h in headings {
                     let n = h.nodeName()
                     let attr = try h.attr("id")
                     let val = try h.text()
-                    
+
                     let level = n.hasSuffix("2") ? 2 : 3
-                    
+
                     tocList.append(
                         .init(
                             level: level,
@@ -366,16 +373,18 @@ struct SiteRenderer {
                         )
                     )
                 }
-                
+
                 toc = MarkdownRenderer.buildToC(tocList)
 
-            } catch Exception.Error(let type, let message) {
+            }
+            catch Exception.Error(let type, let message) {
                 print(message)
-            } catch {
+            }
+            catch {
                 print("error")
             }
         }
-        
+
         if renderFallback {
             contents = renderer.renderHTML(markdown: markdown)
         }
@@ -384,34 +393,29 @@ struct SiteRenderer {
         context["readingTime"] = time ?? readingTime(markdown)
         context["toc"] = toc ?? renderer.renderToC(markdown: markdown)
         context["contents"] = contents
-        
+
         return context
     }
 
     func getContext(
         pageBundle: PageBundle
     ) -> [String: Any] {
-        
+
         if let res = cache.get(key: pageBundle.context.slug) as? [String: Any] {
             return res
         }
-        
+
         logger.trace("slug: \(pageBundle.context.slug)")
         logger.trace("type: \(pageBundle.type)")
 
-        
-//        let contentType = source.contentType(for: pageBundle)
-//        if contentType.id == "post" {
-//            var props: [String: Any] = [:]
-//
-//            for (key, _) in contentType.properties ?? [:] {
-//                let value = pageBundle.frontMatter[key]
-//                props[key] = value
-//            }
-//            print(props)
-//        }
-        
-        
+        let contentType = source.contentType(for: pageBundle)
+
+        var properties: [String: Any] = [:]
+        for (key, _) in contentType.properties ?? [:] {
+            let value = pageBundle.frontMatter[key]
+            properties[key] = value
+        }
+
         let relations = relations(for: pageBundle)
 
         logger.trace("relations:")
@@ -431,13 +435,10 @@ struct SiteRenderer {
             }
         }
 
-        //        if pageBundle.context.slug.contains("blog/authors/albert-einstein") {
-        //            print("---")
-        //            print(relations)
-        //            print(localContext.keys)
-        //        }
-
         let res = pageBundle.context.dict
+            .recursivelyMerged(
+                with: properties
+            )
             .recursivelyMerged(
                 with: relations.mapValues { $0.map(\.context.dict) }
             )
@@ -447,8 +448,9 @@ struct SiteRenderer {
                 }
             )
             .recursivelyMerged(with: contentContext(for: pageBundle))
-        
+
         cache.set(key: pageBundle.context.slug, value: res)
+
         return res
     }
 
@@ -535,15 +537,19 @@ struct SiteRenderer {
                 paginationData: [:]
             )
         }
-        
+
         for contentType in source.contentTypes {
             guard let pagination = contentType.pagination else { continue }
 
             for pageBundle in source.pageBundles {
-                guard pageBundle.type == ContentType.pagination.id else { continue }
+                guard pageBundle.type == ContentType.pagination.id else {
+                    continue
+                }
                 guard pageBundle.id == pagination.bundle else { continue }
-                guard pageBundle.context.slug.contains("{{number}}") else { continue}
-                
+                guard pageBundle.context.slug.contains("{{number}}") else {
+                    continue
+                }
+
                 let pageBundles = source.pageBundles(by: contentType.id)
                     .sorted(key: pagination.sort, order: pagination.order)
 
@@ -561,15 +567,14 @@ struct SiteRenderer {
                         "{{total}}": String(total),
                     ])
                 }
-                
-                if
-                    let home = pageBundle.frontMatter["home"] as? String,
+
+                if let home = pageBundle.frontMatter["home"] as? String,
                     !home.isEmpty
                 {
-//                    print("---------------------")
-//                    print(home)
+                    //                    print("---------------------")
+                    //                    print(home)
                 }
-                
+
                 for (index, current) in pages.enumerated() {
                     let number = index + 1
                     let finalSlug = replace(
@@ -617,7 +622,8 @@ struct SiteRenderer {
                             title: finalTitle,
                             description: finalDescription,
                             imageUrl: pageBundle.context.imageUrl,
-                            lastModification: pageBundle.context.lastModification,
+                            lastModification: pageBundle.context
+                                .lastModification,
                             publication: pageBundle.context.publication,
                             expiration: pageBundle.context.expiration,
                             noindex: pageBundle.context.noindex,
@@ -627,8 +633,6 @@ struct SiteRenderer {
                             js: pageBundle.context.js
                         )
                     )
-                    
-                    
 
                     try renderHTML(
                         pageBundle: finalBundle,
@@ -639,7 +643,6 @@ struct SiteRenderer {
                 }
             }
         }
-        
 
         try? renderRSS()
         try? renderSitemap()

@@ -3,7 +3,6 @@ title: "What's new in Hummingbird 2?"
 description: "Discover Hummingbird 2: a Swift-based HTTP server framework, with modern concurrency and customizable request contexts."
 publication: 2024/02/27 12:01:01
 tags:
-    - swift
     - hummingbird
     - server
 authors:

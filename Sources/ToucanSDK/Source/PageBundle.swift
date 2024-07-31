@@ -54,7 +54,7 @@ struct PageBundle {
         let hreflang: [Hreflang]
         let css: [String]
         let js: [String]
-        
+
         var dict: [String: Any] {
             var result: [String: Any] = [:]
 
@@ -79,7 +79,7 @@ struct PageBundle {
     }
 
     /// The url of the page bundle.
-    
+
     /// the location of the page bundle
     let id: String
     let url: URL

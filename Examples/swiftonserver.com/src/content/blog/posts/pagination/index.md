@@ -8,6 +8,6 @@ image: images/defaults/default.png
 template: blog.posts.pagination
 ---
 
-# Posts {{number}} / {{total}}
+# Posts
 
-This is the posts page {{number}} / {{total}}
+Browse all posts:

@@ -5,5 +5,5 @@ template: blog.tags.index
 ---
 
 # Tags
----
-This is the tags page
+
+Browse articles by tags:

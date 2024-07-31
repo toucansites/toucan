@@ -177,7 +177,7 @@ struct PageBundleLoader {
         )
         return frontMatter.recursivelyMerged(with: overrides)
     }
-    
+
     func loadData(
         id: String,
         dirUrl: URL
@@ -425,7 +425,7 @@ struct PageBundleLoader {
                 css: css,
                 js: js
             )
-            
+
             return .init(
                 id: location.path,
                 url: dirUrl,

@@ -3,8 +3,8 @@ title: "Using SwiftNIO - Channels"
 description: "Create a TCP server using SwiftNIO and structured concurrency"
 publication: 2024/02/08 12:01:01
 tags:
-    - swift
-    - swiftNIO
+    - swiftnio
     - networking
+    - server
 authors:
     - joannis-orlandos

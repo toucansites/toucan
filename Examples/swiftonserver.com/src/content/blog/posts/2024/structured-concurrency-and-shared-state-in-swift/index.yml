@@ -3,7 +3,6 @@ title: "Structured Concurrency and Shared State in Swift"
 description: "Learn how actors and sendable prevent race conditions in your concurrent code."
 publication: 2024/03/25 12:01:01
 tags:
-    - Swift
     - structured-concurrency
 authors:
     - joannis-orlandos

@@ -3,6 +3,10 @@
 
 {{& page.contents}}
 
+<br>
+
+<section>
+<h2>Featured posts</h2>
 
 {{#empty(site.context.featured)}}
 Empty.
@@ -14,9 +18,10 @@ Empty.
 {{/site.context.featured}}
 </div>
 {{/empty(site.context.featured)}}
-
-
-<br><br><br><br><br><br>
+</section>
+<br>
+<section>
+<h2>Latest posts</h2>
 
 {{#empty(site.context.posts)}}
 Empty.
@@ -28,7 +33,7 @@ Empty.
 {{/site.context.posts}}
 </div>
 {{/empty(site.context.posts)}}
-
+</section>
 
 {{/main}}
 {{/html}}

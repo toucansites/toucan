@@ -3,8 +3,9 @@ title: "Using OpenAPI Generator with Hummingbird"
 description: "Learn how to use OpenAPI Generator to create Swift APIs with Hummingbird."
 publication: 2024/03/5 12:01:01
 tags:
+    - documentation
     - hummingbird
-    - OpenAPI
-    - Documentation
+    - openapi
+    - server
 authors:
     - joannis-orlandos

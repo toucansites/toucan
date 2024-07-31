@@ -1,14 +1,13 @@
 #navigation {
     background: var(--bg-color);
-    margin: 16px 32px;
+    margin: 0 32px;
     margin-bottom: 0px;
-    border-bottom: 0.5px solid var(--bg-color-3);
     overflow: hidden;
 }
 #navigation > a {
     display: block;
     line-height: 0;
-    padding: 8px 0;
+    padding: 16px 0;
     text-align: center;
 }
 #navigation > a img {
@@ -25,8 +24,8 @@
 #navigation #primary-menu-button + label {
     margin: 0;
     position: absolute;
-    top: 16px;
-    left: 24px;
+    top: 8px;
+    left: 16px;
     line-height: 0;
     padding: 12px;
 }
@@ -41,7 +40,7 @@
     display: block;
     color: var(--text-color);
     padding: 16px;
-    border-top: 0.5px solid var(--bg-color-3);
+    border-top: 0.5px dotted var(--bg-color-3);
 }
 #navigation .menu-items a:hover {
     color: var(--color-1)
