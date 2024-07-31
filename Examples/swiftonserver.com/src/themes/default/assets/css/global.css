@@ -1344,18 +1344,32 @@ img.rounded {
     border-radius: 50%;
 }
 
-article {
-    margin: 0 auto;
-    max-width: 640px;
-}
-
-aside#toc {
-    position: fixed;
-    top: 64px;
-    right: 16px;
-}
 
 aside#toc ul {
     margin: 0;
     padding: 0;
+}
+
+.article-with-toc {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.article-with-toc aside {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+.article-with-toc article {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.article-with-toc aside {
+    padding: 16px 32px;
+}
+.article-with-toc aside ul {
+    
 }

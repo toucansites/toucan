@@ -1,5 +1,8 @@
 {{<html}}
 {{$main}}
+
+<div class="article-with-toc">
+<div>
 <article class="post">
    
     <section>
@@ -84,9 +87,10 @@
     {{/empty(page.moreByAuthors)}}
 
 </article>
-
-<div class="fixed-toc">
-{{> blocks.toc }}
+</div>
+<div>
+    {{> blocks.toc }}
+</div>
 </div>
 
 {{/main}}
