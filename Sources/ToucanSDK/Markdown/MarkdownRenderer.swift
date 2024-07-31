@@ -59,12 +59,12 @@ public struct MarkdownRenderer {
             parsing: markdown
         )
         var headingsVisitor = MarkupToHXVisitor()
-        return buildToC(headingsVisitor.visitDocument(document))
+        return Self.buildToC(headingsVisitor.visitDocument(document))
     }
 
     // MARK: - private
 
-    private func buildToC(
+    static func buildToC(
         _ headings: [MarkupToHXVisitor.HX]
     ) -> [ToC] {
         var result: [ToC] = []

@@ -10,6 +10,7 @@ import Logging
 import Dispatch
 import ShellKit
 import Algorithms
+import SwiftSoup
 
 // TODO: use actor & modern concurrency
 final class Cache {
@@ -298,7 +299,10 @@ struct SiteRenderer {
 //        let run = transformers.array("run", as: [String: Any].self)
         
         let markdown = pageBundle.markdown.dropFrontMatter()
+        var toc: [ToC]? = nil
+        var time: Int? = nil
         var contents = ""
+        
 
         // TODO: better transformers settings merge with page bundle
         if !run.isEmpty {
@@ -339,6 +343,37 @@ struct SiteRenderer {
             }
             contents = try! String(contentsOf: fileURL, encoding: .utf8)
             try? fileManager.delete(at: fileURL)
+            
+            time = readingTime(contents)
+            
+            do {
+                let doc: Document = try SwiftSoup.parse(contents)
+                
+                var tocList: [MarkupToHXVisitor.HX] = []
+                let headings = try doc.select("h2, h3")
+                for h in headings {
+                    let n = h.nodeName()
+                    let attr = try h.attr("id")
+                    let val = try h.text()
+                    
+                    let level = n.hasSuffix("2") ? 2 : 3
+                    
+                    tocList.append(
+                        .init(
+                            level: level,
+                            text: val,
+                            fragment: attr
+                        )
+                    )
+                }
+                
+                toc = MarkdownRenderer.buildToC(tocList)
+
+            } catch Exception.Error(let type, let message) {
+                print(message)
+            } catch {
+                print("error")
+            }
         }
         
         if renderFallback {
@@ -346,8 +381,8 @@ struct SiteRenderer {
         }
 
         var context: [String: Any] = [:]
-        context["readingTime"] = readingTime(markdown)
-        context["toc"] = renderer.renderToC(markdown: markdown)
+        context["readingTime"] = time ?? readingTime(markdown)
+        context["toc"] = toc ?? renderer.renderToC(markdown: markdown)
         context["contents"] = contents
         
         return context

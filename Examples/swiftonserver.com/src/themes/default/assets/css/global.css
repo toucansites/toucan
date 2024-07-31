@@ -1348,3 +1348,14 @@ article {
     margin: 0 auto;
     max-width: 640px;
 }
+
+aside#toc {
+    position: fixed;
+    top: 64px;
+    right: 16px;
+}
+
+aside#toc ul {
+    margin: 0;
+    padding: 0;
+}
