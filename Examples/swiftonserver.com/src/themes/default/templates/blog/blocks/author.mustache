@@ -1,10 +1,5 @@
-<div class="card">
-    <a href="{{permalink}}">
-        <center>
-        {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        <br><br>
-        <h2>{{title}}</h2>
-        <p>{{count(posts)}} posts</p>
-        </center>
-    </a>
+<div class="card author">
+    {{#imageUrl}}<a href="{{permalink}}"><img class="large rounded" src="{{imageUrl}}" alt="{{title}}"></a>{{/imageUrl}}
+    <h2><a href="{{permalink}}">{{title}}</a></h2>
+    <p>{{count(posts)}} posts</p>
 </div>

@@ -1,21 +1,22 @@
-<div class="post card">
-    {{#featured}}<span class="featured">★</span>{{/featured}}
-    <a href="{{permalink}}" target="">
-        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        <time datetime="{{date}}">{{date}}</time>
-        <h2 class="title">{{title}}</h2>
-        <hr>
-        <p>{{description}}</p>
-    </a>
-    
+<div class="card{{#featured}} featured{{/featured}}">
+    {{#featured}}<span class="featured">featured</span>{{/featured}}
+    {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
     <div class="author-list">
     {{#authors}}
         <a href="{{permalink}}">
         {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        <span class="name">{{title}}</span>
         </a>
+        <a href="{{permalink}}"><span class="name">{{title}}</span></a>
     {{/authors}}
     </div>
+    <div class="meta">
+        
+        <time datetime="{{publication.sitemap}}">{{publication.sitemap}}</time> &middot; <span>{{readingTime}} min read</span>
+    </div>
+    
+    <h2 class="title"><a href="{{permalink}}" target="">{{title}}</a></h2>
+    <p>{{description}}</p>
+
     <div class="tag-list">
     {{#tags}}
         <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}

@@ -1,17 +1,16 @@
 #navigation {
-    background: var(--bg-color);
-    margin: 0 32px;
-    margin-bottom: 0px;
+    margin-top: 16px;
     overflow: hidden;
+    border-bottom: 3px solid var(--background-color-1);
 }
 #navigation > a {
     display: block;
     line-height: 0;
-    padding: 16px 0;
+    padding: 8px;
     text-align: center;
 }
 #navigation > a img {
-    height: 32px;
+    height: 44px;
     width: auto;
 }
 #navigation nav svg {
@@ -22,10 +21,10 @@
     display: none;
 }
 #navigation #primary-menu-button + label {
-    margin: 0;
     position: absolute;
-    top: 8px;
-    left: 16px;
+    top: 22px;
+    left: 0;
+    margin: 0;
     line-height: 0;
     padding: 12px;
 }
@@ -35,15 +34,16 @@
 #navigation .menu-items {
     max-height: 0px;
     transition: max-height .3s ease-in-out 0s;
+    margin-top: 6px;
 }
 #navigation .menu-items a {
     display: block;
-    color: var(--text-color);
     padding: 16px;
-    border-top: 0.5px dotted var(--bg-color-3);
+    border-top: 0.5px solid var(--background-color-1);
+    color: var(--text-color);
 }
 #navigation .menu-items a:hover {
-    color: var(--color-1)
+    color: var(--link-color-hover)
 }
 #navigation input:checked ~ .menu-items {
     max-height: 999px;

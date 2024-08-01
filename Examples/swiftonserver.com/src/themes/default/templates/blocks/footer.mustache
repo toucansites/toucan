@@ -1,5 +1,6 @@
-<footer>
-    <section>
+<footer id="site-footer">
+    <div class="grid grid-421">
+
         <figure>
             <picture>
                 <source
@@ -14,18 +15,43 @@
                 >
             </picture>
         </figure>
-
-        <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
         
-        <p>
-            <a href="https://binarybirds.com/">Home</a> ·
-            <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
-            <a href="https://github.com/binarybirds/">GitHub</a> ·
-            <a href="https://x.com/tiborbodecs">X (Twitter)</a> ·
-            <a href="{{site.baseUrl}}rss.xml" target="_blank">RSS</a> ·
-            <a href="{{site.baseUrl}}sitemap.xml" target="_blank">Sitemap</a>
-        </p>
-
-        <small>{{site.title}} &copy; 2022 - {{year}}.</small>
+        <div>
+            <h4>Swift on server</h4>
+            <ul>
+                <li><a href="mailto:binarybirdsofficial@gmail.com">Email</a></li>
+                <li><a href="https://github.com/binarybirds/">GitHub</a></li>
+                <li><a href="{{site.baseUrl}}rss.xml" target="_blank">RSS</a></li>
+                <li><a href="{{site.baseUrl}}sitemap.xml" target="_blank">Sitemap</a></li>
+            </ul>
+        </div>
+        
+        <div>
+            <h4>Joannis Orlandos</h4>
+            <ul>
+                <li><a href="https://binarybirds.com/">Company</a></li>
+                <li><a href="mailto:binarybirdsofficial@gmail.com">Email</a></li>
+                <li><a href="https://github.com/binarybirds/">GitHub</a></li>
+                <li><a href="https://x.com/tiborbodecs">X (Twitter)</a></li>
+                
+            </ul>
+        </div>
+        
+        <div>
+            <h4>Tibor Bödecs</h4>
+            <ul>
+                <li><a href="https://binarybirds.com/">Company</a></li>
+                <li><a href="mailto:binarybirdsofficial@gmail.com">Email</a></li>
+                <li><a href="https://github.com/binarybirds/">GitHub</a></li>
+                <li><a href="https://x.com/tiborbodecs">X (Twitter)</a></li>
+                
+            </ul>
+        </div>
+        
+    </div>
+    
+    <section class="grid grid-221">
+        <small>{{site.title}} &copy; 2022 - {{year}}</small>
+        <small>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</small>
     </section>
 </footer>
