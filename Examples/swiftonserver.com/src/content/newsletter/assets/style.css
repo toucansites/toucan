@@ -1,4 +1,4 @@
-body > main {
-    background-color: var(--bg-color);
+iframe {
+    width: 510px;
+    padding: 0;
 }
-
