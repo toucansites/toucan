@@ -50,9 +50,7 @@ img.large {
     border-radius: 32px;
     padding: 0 16px;
 }
-.card.featured {
-    border: 3px solid var(--link-color-hover);
-}
+
 .card .featured {
     position: absolute;
     top: 16px;
@@ -60,7 +58,7 @@ img.large {
     padding: 8px 16px;
     border-radius: 32px;
     background: var(--background-color-1);
-    color: var(--link-color-hover);
+    color: var(--link-color);
     text-transform: uppercase;
     font-size: 12px;
     font-weight: bold;
