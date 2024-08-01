@@ -5,11 +5,12 @@
     <header>
         {{#page.imageUrl}}<img class="large rounded" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
         <h1>{{page.title}}</h1>
-        <p>{{page.description}}</p>
-        <p>{{count(page.posts)}} posts</p>
+        <a href="{{userDefined.companyUrl}}">{{userDefined.companyName}}</a>
+        {{& page.contents}}
+        <a class="cta" href="{{userDefined.ctaUrl}}">{{userDefined.ctaLabel}}</a>
     </header>
-
-    {{& page.contents}}
+    
+    <p><br>{{count(page.posts)}} posts</p>
     
     {{#empty(page.posts)}}
     Empty.

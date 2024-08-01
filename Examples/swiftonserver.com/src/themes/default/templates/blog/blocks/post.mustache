@@ -6,12 +6,11 @@
         <a href="{{permalink}}">
         {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
         </a>
-        <a href="{{permalink}}"><span class="name">{{title}}</span></a>
     {{/authors}}
     </div>
     <div class="meta">
-        
-        <time datetime="{{publication.sitemap}}">{{publication.sitemap}}</time> &middot; <span>{{readingTime}} min read</span>
+        <time datetime="{{publication.html}}">{{publication.html}}</time>
+        {{#readingTime}} &middot; <span class="reading-time">{{readingTime}} min read</span>{{/readingTime}}
     </div>
     
     <h2 class="title"><a href="{{permalink}}" target="">{{title}}</a></h2>

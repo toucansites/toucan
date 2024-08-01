@@ -4,8 +4,8 @@ rss: true
 pagination:
     bundle: blog/posts/pagination
     limit: 12
-    sort: title
-    order: asc
+    sort: publication
+    order: desc
 
 properties:
     featured:
@@ -30,13 +30,13 @@ relations:
 context:
     site:
         posts:
-            sort: title
-            order: asc
+            sort: publication
+            order: desc
             limit: 9
         
         featured:
-            sort: title
-            order: asc
+            sort: publication
+            order: desc
             limit: 9
             filter:
                 field: featured

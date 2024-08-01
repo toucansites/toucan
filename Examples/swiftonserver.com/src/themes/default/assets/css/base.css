@@ -76,12 +76,15 @@ a.source.github::before {
     font-weight: bold;
 }
 a.source.github {
-    text-align: center;
     display: block;
     margin-top: 4px;
+    margin-left: 16px;
     margin-bottom: 32px;
 }
 
+li {
+    margin-bottom: 16px;
+}
 p code, li code {
     font-family: monospace;
     font-weight: bold;
@@ -90,22 +93,8 @@ p code a, li code a {
     font-weight: normal;
 }
 li p {
-    margin-top: 0;
+    margin: 0;
 }
-p code a:hover, li code a:hover {
-    color: var(--link-color);
-    border-bottom: 1px solid var(--link-color);
-}
-p code a:after, li code a:after, a.source.github:after {
-    display: inline-block;
-    content: "";
-    width: 12px;
-    height: 12px;
-    margin-left: 0.5em;
-    margin-right: 0.25em;
-    background: var(--link-color);
-    mask-image: url('data:image/svg+xml;utf8,    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">    <path fill-rule="evenodd" clip-rule="evenodd"     d="M 7.5,10 13.6,3.7 14.2,2.9 14,3.7 V 7 h 2 V 0.5 L 15.5,0 H 9 v 2 h 3.3 L 13.1,1.8 12.3,2.4 6,8.5 Z"/>    <path fill-rule="evenodd" clip-rule="evenodd"     d="M 7,0 H 0.5 L 0,0.5 v 15 L 0.5,16 h 15 L 16,15.5 V 9 h -2 v 5 H 2 V 2 h 5 z"/>    </svg>');
-    mask-size: 100% 100%;
-    -webkit-mask-image: url('data:image/svg+xml;utf8,    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">    <path fill-rule="evenodd" clip-rule="evenodd"     d="M 7.5,10 13.6,3.7 14.2,2.9 14,3.7 V 7 h 2 V 0.5 L 15.5,0 H 9 v 2 h 3.3 L 13.1,1.8 12.3,2.4 6,8.5 Z"/>    <path fill-rule="evenodd" clip-rule="evenodd"     d="M 7,0 H 0.5 L 0,0.5 v 15 L 0.5,16 h 15 L 16,15.5 V 9 h -2 v 5 H 2 V 2 h 5 z"/>    </svg>');
-    -webkit-mask-size: 100% 100%;
+p code a, li code a {
+    border-bottom: 1px dotted var(--text-color);
 }

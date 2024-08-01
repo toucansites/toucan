@@ -194,6 +194,7 @@ struct PageBundleLoader {
         date: Date
     ) -> PageBundle.Context.DateValue {
         let html = DateFormatters.baseFormatter
+        html.dateFormat = config.site.dateFormat
         let rss = DateFormatters.rss
         let sitemap = DateFormatters.sitemap
 

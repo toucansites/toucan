@@ -361,6 +361,7 @@ struct SiteRenderer {
                 for h in headings {
                     let n = h.nodeName()
                     let attr = try h.attr("id")
+                    guard !attr.isEmpty else { continue }
                     let val = try h.text()
 
                     let level = n.hasSuffix("2") ? 2 : 3
@@ -377,7 +378,7 @@ struct SiteRenderer {
                 toc = MarkdownRenderer.buildToC(tocList)
 
             }
-            catch Exception.Error(let type, let message) {
+            catch Exception.Error(_, let message) {
                 print(message)
             }
             catch {

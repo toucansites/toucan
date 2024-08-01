@@ -6,4 +6,4 @@ template: blog.authors.index
 
 # Authors
 
-Browse articles by authors:
+Browse articles by authors.
