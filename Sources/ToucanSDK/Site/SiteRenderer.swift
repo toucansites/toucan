@@ -739,30 +739,50 @@ extension [PageBundle] {
         guard let key, let order else {
             return self
         }
-        return sorted { lhs, rhs in
-            guard
-                let l = lhs.frontMatter[key] as? String,
-                let r = rhs.frontMatter[key] as? String
-            else {
-                guard
-                    let l = lhs.frontMatter[key] as? Int,
-                    let r = rhs.frontMatter[key] as? Int
-                else {
-                    return false
-                }
+        switch key {
+        case "publication":
+            return sorted { lhs, rhs in
                 switch order {
                 case .asc:
-                    return l < r
+                    return lhs.publication < rhs.publication
                 case .desc:
-                    return l > r
+                    return lhs.publication > rhs.publication
                 }
             }
-            // TODO: proper case insensitive compare
-            switch order {
-            case .asc:
-                return l.lowercased() < r.lowercased()
-            case .desc:
-                return l.lowercased() > r.lowercased()
+        default:
+            return sorted { lhs, rhs in
+                guard
+                    let l = lhs.frontMatter[key] as? String,
+                    let r = rhs.frontMatter[key] as? String
+                else {
+                    guard
+                        let l = lhs.frontMatter[key] as? Int,
+                        let r = rhs.frontMatter[key] as? Int
+                    else {
+                        return false
+                    }
+                    switch order {
+                    case .asc:
+                        return l < r
+                    case .desc:
+                        return l > r
+                    }
+                }
+                // TODO: proper case insensitive compare
+                switch order {
+                case .asc:
+//                    switch l.caseInsensitiveCompare(r) {
+//                    case .orderedAscending:
+//                        return true
+//                    case .orderedDescending:
+//                        return false
+//                    case .orderedSame:
+//                        return false
+//                    }
+                    return l.lowercased() < r.lowercased()
+                case .desc:
+                    return l.lowercased() > r.lowercased()
+                }
             }
         }
     }

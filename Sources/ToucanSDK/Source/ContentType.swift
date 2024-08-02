@@ -27,7 +27,17 @@ struct ContentType: Codable {
     }
 
     struct Property: Codable {
-        let type: String
+        enum DataType: String, Codable, CaseIterable {
+            case string
+            case int
+            case double
+            case bool
+            case date
+            case array
+            case object
+        }
+
+        let type: DataType
         let required: Bool
     }
 
