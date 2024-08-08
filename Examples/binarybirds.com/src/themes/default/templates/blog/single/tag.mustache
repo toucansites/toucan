@@ -2,16 +2,14 @@
 {{$main}}
 
 <div id="tag">
-    {{#page.tag}}
+    
     <header>
-        {{#imageUrl}}<img class="medium" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        <h1>{{title}}</h1>
+        {{#page.imageUrl}}<img class="medium" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
+        <h1>{{page.title}}</h1>
         <hr>
-        <p>{{description}}</p>
-        <p>{{numberOfPosts}} posts</p>
+        <p>{{page.description}}</p>
+        <p>{{count(page.posts)}} posts</p>
     </header>
-    {{/page.tag}}
-
 
     {{& page.contents}}
     

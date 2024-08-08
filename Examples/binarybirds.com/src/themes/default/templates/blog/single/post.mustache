@@ -1,30 +1,30 @@
 {{<html}}
 {{$main}}
-
 <article class="post">
-    {{#page.post}}
+    
     <header>
-        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        {{#page.imageUrl}}<img src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
         <br><br>
-        <time datetime="{{date}}">{{date}}</time>
-        <h1>{{title}}</h1>
+        <time datetime="{{page.date}}">{{page.date}}</time>
+        <h1>{{page.title}}</h1>
         <hr>
-        <p class="excerpt">{{description}}</p>
+        <p class="excerpt">{{page.description}}</p>
         
         <div class="author-list">
-        {{#authors}}
+        {{#page.authors}}
             <a href="{{permalink}}">
             {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+            <span class="name">{{title}}</span>
             </a>
-        {{/authors}}
+        {{/page.authors}}
         </div>
         <div class="tag-list">
-        {{#tags}}
+        {{#page.tags}}
             <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
-        {{/tags}}
+        {{/page.tags}}
         </div>
     </header>
-    {{/page.post}}
+    
 
     <section>
     
@@ -73,17 +73,17 @@
     </section>
     
     
-    {{#empty(page.moreByAuthor)}}
-    {{/empty(page.moreByAuthor)}}
-    {{^empty(page.moreByAuthor)}}
+    {{#empty(page.moreByAuthors)}}
+    {{/empty(page.moreByAuthors)}}
+    {{^empty(page.moreByAuthors)}}
     <h4>More posts by the author(s)</h4>
     <hr class="spacer">
     <div class="grid grid-221">
-    {{#page.moreByAuthor}}
+    {{#page.moreByAuthors}}
         {{> blog.blocks.post}}
-    {{/page.moreByAuthor}}
+    {{/page.moreByAuthors}}
     </div>
-    {{/empty(page.moreByAuthor)}}
+    {{/empty(page.moreByAuthors)}}
 
 </article>
 

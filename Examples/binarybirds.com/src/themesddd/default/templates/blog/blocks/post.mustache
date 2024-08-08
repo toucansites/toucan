@@ -1,0 +1,23 @@
+<div class="post card">
+    {{#featured}}<span class="featured">featured</span>{{/featured}}
+    <a href="{{permalink}}" target="">
+        {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        <time datetime="{{date}}">{{date}}</time>
+        <h2 class="title">{{title}}</h2>
+        <hr>
+        <p>{{description}}</p>
+    </a>
+    
+    <div class="author-list">
+    {{#authors}}
+        <a href="{{permalink}}">
+        {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+        </a>
+    {{/authors}}
+    </div>
+    <div class="tag-list">
+    {{#tags}}
+        <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
+    {{/tags}}
+    </div>
+</div>

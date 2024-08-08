@@ -4,3 +4,21 @@ site:
     title: Binary Birds
     description: Server-side Swift development and consulting. Secure, efficient, scalable solutions.
     dateFormat: "yyyy.MM.dd. HH:mm"
+
+themes:
+    use: "default"
+    folder: "themes"
+    templates:
+        folder: "templates"
+    assets:
+        folder: "assets"
+    overrides:
+        folder: "theme_overrides"
+
+types:
+    folder: "types"
+
+content:
+    folder: "content"
+    assets:
+        folder: "assets"
