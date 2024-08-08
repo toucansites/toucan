@@ -8,7 +8,7 @@
 import Foundation
 
 struct SourceLoader {
-
+    let baseUrl: String?
     let sourceUrl: URL
     let fileManager: FileManager
     let frontMatterParser: FrontMatterParser
@@ -20,7 +20,10 @@ struct SourceLoader {
             sourceUrl: sourceUrl,
             fileManager: fileManager
         )
-        let config = try configLoader.load()
+        var config = try configLoader.load()
+        if let baseUrl {
+            config.site.baseUrl = baseUrl
+        }
 
         let contentTypeLoader = ContentTypeLoader(
             sourceUrl: sourceUrl,
