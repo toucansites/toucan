@@ -1,6 +1,7 @@
 type: post
 title: "Advanced Async Sequences in Swift"
 description: "Learn how to use and create your own AsyncSequences."
+image: ./assets/cover.jpg
 publication: 2024/07/02 12:01:01
 tags:
     - structured-concurrency

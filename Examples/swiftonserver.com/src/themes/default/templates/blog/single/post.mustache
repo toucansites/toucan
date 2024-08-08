@@ -16,8 +16,7 @@
             </section>
 
             <footer>
-                {{#page.imageUrl}}<img src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
-                <br><br>
+                <br>
                 <time datetime="{{page.date}}">{{page.date}}</time>
 
                 
@@ -35,7 +34,7 @@
                 {{/page.tags}}
                 </div>
             </footer>
-            
+                        
             <section class="group">
                 {{#empty(page.related)}}
                 {{/empty(page.related)}}
@@ -61,7 +60,8 @@
                 <a href="https://www.serversideswift.info/" target="_blank">ServerSide.swift</a>
             </h4>
             <p>26th-27th September 2024. London, UK</p>
-            <a class="cta" href="https://www.serversideswift.info/tickets/">Buy a ticket</a>
+            <p>Discount code: <strong><a href="https://ti.to/serverside-swift/2024/discount/SWIFTONSERVER" target="_blank">SWIFTONSERVER</a></strong></p>
+            <a class="cta" href="https://www.serversideswift.info/tickets/" target="_blank">Buy a ticket</a>
         </div>
         
         {{> blocks.toc }}

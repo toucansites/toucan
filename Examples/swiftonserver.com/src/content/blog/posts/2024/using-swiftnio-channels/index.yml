@@ -1,6 +1,7 @@
 type: post
 title: "Using SwiftNIO - Channels"
 description: "Create a TCP server using SwiftNIO and structured concurrency"
+image: ./assets/cover.jpg
 publication: 2024/02/08 12:01:01
 tags:
     - swiftnio

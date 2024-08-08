@@ -1,6 +1,7 @@
 type: post
 title: "WebSocket tutorial using Swift and Hummingbird"
 description: "In this article, you will learn about WebSockets and how to use them with the Hummingbird framework in a straightforward, easy-to-follow manner."
+image: ./assets/cover.jpg
 publication: 2024/06/27 12:01:01
 tags:
     - hummingbird

@@ -1,6 +1,7 @@
 type: post
 title: "Introduction to Swift Service Lifecycle"
 description: "This article offers practical examples to introduce the Swift Service Lifecycle library."
+image: ./assets/cover.jpg
 publication: 2024/05/22 12:01:01
 tags:
     - services

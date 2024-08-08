@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     {{#page.noindex}}<meta name="robots" content="noindex">{{/page.noindex}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <link rel="canonical" href="{{page.canonical}}">
     {{#page.hreflang}}
     <link rel="alternate" hreflang="{{lang}}" href="{{url}}">
     {{/page.hreflang}}
-    {{#page.prev}}<link rel="prev" href="{{.}}">{{/page.prev}}
-    {{#page.next}}<link rel="next" href="{{.}}">{{/page.next}}
+    {{#page.prev}}<link rel="prev" href="{{permalink}}">{{/page.prev}}
+    {{#page.next}}<link rel="next" href="{{permalink}}">{{/page.next}}
     
     <title>{{page.title}} - {{site.title}}</title>
     <meta name="description" content="{{page.description}}">
@@ -56,9 +56,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
           const container = document.querySelector("div#ss\\:tooltips");
-          container.querySelectorAll('pre code').forEach((el) => {
-              el.classList.add('nohighlight');
-          });
+          if (container !== null) {
+              container.querySelectorAll('pre code').forEach((el) => {
+                  el.classList.add('nohighlight');
+              });
+          }
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

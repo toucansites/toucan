@@ -69,7 +69,7 @@ struct PageBundle {
             result["expiration"] = expiration ?? false
 
             result["noindex"] = noindex
-            result["canonical"] = canonical ?? false
+            result["canonical"] = canonical ?? permalink
             result["hreflang"] = hreflang
             result["css"] = css
             result["js"] = js
