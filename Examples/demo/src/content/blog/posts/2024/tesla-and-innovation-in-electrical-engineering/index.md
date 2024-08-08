@@ -3,7 +3,7 @@ type: post
 title: Tesla and Innovation in Electrical Engineering
 description: The pivotal innovations Tesla introduced in electrical engineering.
 image: ./assets/cover.jpg
-publication: 1897-04-23 12:01:01
+publication: 1897-04-23 12:00:00
 tags: 
     - engineering
     - technology

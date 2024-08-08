@@ -3,8 +3,8 @@ type: post
 title: "Turing and Fermi: Shaping Modern Science"
 description: Collaborative impacts of Turing and Fermi on modern scientific fields.
 image: ./assets/cover.jpg
-publication: 1953-08-29 12:01:01
-expiration: 2025-08-29 12:01:01
+publication: 1953-08-29 12:00:00
+expiration: 2025-08-29 12:00:00
 featured: true
 draft: false
 tags: 

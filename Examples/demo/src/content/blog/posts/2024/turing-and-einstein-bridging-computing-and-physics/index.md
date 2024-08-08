@@ -3,7 +3,7 @@ type: post
 title: "Turing and Einstein: Bridging Computing and Physics"
 description: How Turing and Einstein's work intersects in modern scientific applications.
 image: ./assets/cover.jpg
-publication: 1946-09-11 12:01:01
+publication: 1946-09-11 12:00:00
 tags: 
     - computing
     - physics

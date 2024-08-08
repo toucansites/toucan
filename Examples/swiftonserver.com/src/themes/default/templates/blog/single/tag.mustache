@@ -7,10 +7,12 @@
         {{#page.imageUrl}}<img class="medium" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
         <h1>{{page.title}}</h1>
         <p>{{page.description}}</p>
-        <p>{{count(page.posts)}} posts</p>
+        
     </header>
 
     {{& page.contents}}
+    
+    <p>{{count(page.posts)}} posts</p>
     
     {{#empty(page.posts)}}
     Empty.

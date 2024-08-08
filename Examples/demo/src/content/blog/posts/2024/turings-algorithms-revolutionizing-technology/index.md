@@ -3,7 +3,7 @@ type: post
 title: "Turing's Algorithms: Revolutionizing Technology"
 description: The impact of Alan Turing's algorithms on the evolution of technology.
 image: ./assets/cover.jpg
-publication: 1951-01-05 12:01:01
+publication: 1951-01-05 12:00:00
 tags: 
     - computing
     - technology

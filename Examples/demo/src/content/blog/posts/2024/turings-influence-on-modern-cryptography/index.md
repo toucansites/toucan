@@ -3,7 +3,7 @@ type: post
 title: Turing's Influence on Modern Cryptography
 description: How Alan Turing's work has influenced the field of cryptography today.
 image: ./assets/cover.jpg
-publication: 1943-12-19 12:01:01
+publication: 1943-12-19 12:00:00
 tags: 
     - computing
     - technology

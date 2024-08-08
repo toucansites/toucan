@@ -7,3 +7,9 @@ iframe {
     background: var(--background-color);
     color: var(--text-color);
 }
+
+.white {
+    background: white;
+    border-radius: 15px;
+    padding: 0 15px;
+}

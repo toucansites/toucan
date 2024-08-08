@@ -3,7 +3,7 @@ type: post
 title: Fermi's Advances in Nuclear Energy
 description: Enrico Fermi's critical role in the development of nuclear energy and its uses.
 image: ./assets/cover.jpg
-publication: 1942-12-02 12:01:01
+publication: 1942-12-02 12:00:00
 tags: 
     - energy
     - physics

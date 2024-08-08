@@ -59,15 +59,15 @@ context:
         related:
             references: post
             foreignKey: $same.tags
-            sort: order
-            order: asc
+            sort: publication
+            order: desc
             limit: 6
 
         moreByAuthors:
             references: post
             foreignKey: $same.authors
-            sort: order #TODO: $random
-            order: asc
+            sort: publication #TODO: $random
+            order: desc
             limit: 6
         
 

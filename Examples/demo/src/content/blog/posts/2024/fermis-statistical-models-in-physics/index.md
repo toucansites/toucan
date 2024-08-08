@@ -3,7 +3,7 @@ type: post
 title: Fermi's Statistical Models in Physics
 description: The significance of Enrico Fermi's statistical models in the field of physics.
 image: ./assets/cover.jpg
-publication: 1936-05-09 12:01:01
+publication: 1936-05-09 12:00:00
 tags: 
     - physics
     - mathematics

@@ -3,7 +3,7 @@ type: post
 title: Einstein's Light Quantum Hypothesis
 description: The significance of Einstein's hypothesis on light quanta in modern physics.
 image: ./assets/cover.jpg
-publication: 1905/12/18 12:01:01
+publication: 1905/12/18 12:00:00
 tags: 
     - physics
     - innovation

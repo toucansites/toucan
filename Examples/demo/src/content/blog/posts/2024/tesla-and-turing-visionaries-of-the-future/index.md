@@ -3,7 +3,7 @@ type: post
 title: "Tesla and Turing: Visionaries of the Future"
 description: Exploring how Tesla and Turing's visions have shaped our present and future.
 image: ./assets/cover.jpg
-publication: 1948-03-22 12:01:01
+publication: 1948-03-22 12:00:00
 tags: 
     - computing
     - energy

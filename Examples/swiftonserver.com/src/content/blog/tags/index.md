@@ -6,4 +6,4 @@ template: blog.tags.index
 
 # Tags
 
-Browse articles by tags:
+Browse articles by tags.

@@ -3,8 +3,8 @@ type: post
 title: "Curie and Fermi: Pioneers of Nuclear Science"
 description: Collaboration between Marie Curie and Enrico Fermi in advancing nuclear science.
 image: ./assets/cover.jpg
-publication: 1938-04-22 12:01:01
-expiration: 2028-04-22 12:01:01
+publication: 1938-04-22 12:00:00
+expiration: 2028-04-22 12:00:00
 tags: 
     - chemistry
     - energy

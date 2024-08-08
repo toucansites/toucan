@@ -3,7 +3,7 @@ type: post
 title: Einstein's Theory of Relativity
 description: Understanding the profound implications of Albert Einstein's theory of relativity.
 image: ./assets/cover.jpg
-publication: 1915/11/25 12:01:01
+publication: 1915/11/25 12:00:00
 tags: 
     - physics
     - mathematics

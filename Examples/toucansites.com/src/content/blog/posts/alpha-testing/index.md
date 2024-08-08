@@ -2,7 +2,7 @@
 type: post
 title: Alpha testing
 description: Alpha testing
-publication: 2024-07-10 12:01:01
+publication: 2024-07-10 12:00:00
 tags: 
     - news
 authors: 

@@ -3,7 +3,7 @@ type: post
 title: Fermi's Work on the Atomic Bomb
 description: Enrico Fermi's crucial role in the development of the atomic bomb during WWII.
 image: ./assets/cover.jpg
-publication: 1945-07-16 12:01:01
+publication: 1945-07-16 12:00:00
 tags: 
     - physics
     - engineering

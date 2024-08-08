@@ -8,7 +8,10 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
 
 - recursive context?
 - pagination improvements 
+    - prev / next links for pages
 - proper content query api $prev, $next, $same, etc...
+- merge site user variables with page user defined
+- test, test, test
 
 ? do not wipe output :think:
 
@@ -23,8 +26,8 @@ Toucan is a markdown-based Static Site Generator (SSG) written in Swift.
     draft: true -> not being rendered.
 
 + publication date, expiration date support for posts:
-    publication: 2023-04-22 12:01:01
-    expiration: 2024-04-22 12:01:01
+    publication: 2023-04-22 12:00:00
+    expiration: 2024-04-22 12:00:00
     
     filter posts based on actual date.
 
@@ -225,3 +228,5 @@ search:
         ]
 
     javascript api call
+
+

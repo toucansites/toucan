@@ -2,15 +2,15 @@ type: post
 title: "Advanced Async Sequences in Swift"
 description: "Learn how to use and create your own AsyncSequences."
 image: ./assets/cover.jpg
-publication: 2024/07/02 12:01:01
+publication: 2024/07/02 12:00:00
 tags:
     - structured-concurrency
 authors:
     - joannis-orlandos
 featured: true
-transformers:
-    run:
-        - name: swiftinit
-          options:
-                article: async-http-client-by-example
-    render: false
+#transformers:
+#    run:
+#        - name: swiftinit
+#          options:
+#                article: async-http-client-by-example
+#    render: false
