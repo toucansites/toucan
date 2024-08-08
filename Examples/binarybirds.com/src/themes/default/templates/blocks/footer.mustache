@@ -1,31 +1,79 @@
-<footer>
-    <section>
-        <figure>
-            <picture>
-                <source
-                    srcset="{{site.baseUrl}}images/logos/logo~dark.png"
-                    media="(prefers-color-scheme: dark)"
-                >
-                <img
-                    id="logo-image"
-                    src="{{site.baseUrl}}images/logos/logo.png"
-                    alt="Logo of {{site.title}}"
-                    title="{{site.title}}"
-                >
-            </picture>
-        </figure>
-
-        <p>This site was generated using the <a href="https://swift.org/" target="_blank">Swift</a> programming language.</p>
-        
-        <p>
-            <a href="https://binarybirds.com/">Home</a> ·
-            <a href="mailto:binarybirdsofficial@gmail.com">Email</a> ·
-            <a href="https://github.com/binarybirds/">GitHub</a> ·
-            <a href="https://x.com/tiborbodecs">X (Twitter)</a> ·
-            <a href="{{site.baseUrl}}rss.xml" target="_blank">RSS</a> ·
-            <a href="{{site.baseUrl}}sitemap.xml" target="_blank">Sitemap</a>
-        </p>
-
-        <small>{{site.title}} &copy; 2022 - {{year}}.</small>
-    </section>
+<footer class="footer">
+  <div class="footerContainer">
+    <div class="footerLogoContainer">
+      <div class="footerLogo">
+        <picture>
+          <img
+            alt="BinaryBirds logo"
+            loading="lazy"
+            width="64"
+            height="64"
+            decoding="async"
+            style="color: transparent"
+            src="{{site.baseUrl}}icons/logo-dark.png"
+          />
+        </picture>
+        <h2 class="footerTitle">Binary Birds</h2>
+      </div>
+      <p>
+        Server-side swift solutions from experts. </br> Secure, efficient,
+        scalable solutions.
+      </p>
+    </div>
+    <div class="footerLinks">
+      <div class="footerSocialMedia">
+        <a href="https://github.com/BinaryBirds" target="_blank" rel="noopener noreferrer"><i id="footerGitHub" class="devicon-github-original"></i></a>
+        <a href="https://theswiftdev.com" target="_blank" rel="noopener noreferrer">
+          <img
+            id="footerTSD"
+            src="{{site.baseUrl}}icons/tsdicon.png"
+            alt="The Swift Dev"
+            width="36"
+            height="36"
+          />
+        </a>
+        <a href="https://feathercms.com" target="_blank" rel="noopener noreferrer">
+          <img
+            id="footerFeather"
+            src="{{site.baseUrl}}icons/featherIcon.png"
+            alt="Feather CMS"
+            width="36"
+            height="36"
+          />
+        </a>
+      </div>
+      <a href="mailto:binarybirdsoffical@gmail.com">
+        <svg
+        id="envelopeIcon"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        height="24"
+        width="24"
+        stroke="currentColor"
+        >
+          <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+           />
+        </svg>
+        binarybirdsoffical@gmail.com
+      </a>
+    </div>
+  <div class="footerNav">
+    <nav class="footerNavigation">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/development">Development</a></li>
+        <li>
+          <a href="/consulting">Consulting</a>
+        </li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
+    </nav>
+    <span id="copyright"></span>
+  </div>
+  </div>
 </footer>
