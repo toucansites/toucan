@@ -20,7 +20,7 @@ struct Config: Codable {
             let url: String
         }
 
-        let baseUrl: String
+        var baseUrl: String
         let title: String
         let description: String
         let language: String?
@@ -43,7 +43,7 @@ struct Config: Codable {
         let assets: Location
     }
 
-    let site: Site
+    var site: Site
     let themes: Themes
     let types: Location
     let content: Content
