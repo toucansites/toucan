@@ -58,6 +58,7 @@ struct Source {
     func sitemapPageBundles() -> [PageBundle] {
         pageBundles
             .filter { $0.type != ContentType.pagination.id }
+            .filter { $0.id != "404" }
             .sorted { $0.publication > $1.publication }
     }
 }
