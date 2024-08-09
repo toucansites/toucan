@@ -1,8 +1,8 @@
 #navigation {
-    background: var(--bg-color);
+    background: var(--background-color);
     margin: 16px 32px;
     margin-bottom: 0px;
-    border-bottom: 0.5px solid var(--bg-color-3);
+    border-bottom: 0.5px solid var(--background-color-3);
     overflow: hidden;
 }
 #navigation > a {
@@ -41,10 +41,10 @@
     display: block;
     color: var(--text-color);
     padding: 16px;
-    border-top: 0.5px solid var(--bg-color-3);
+    border-top: 0.5px solid var(--background-color-3);
 }
 #navigation .menu-items a:hover {
-    color: var(--color-1)
+    color: var(--link-color-hover)
 }
 #navigation input:checked ~ .menu-items {
     max-height: 999px;

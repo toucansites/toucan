@@ -8,7 +8,7 @@ properties:
 context:
     site:
         categories:
-            sort: title
+            sort: order
             order: asc
             pagination:
                 limit: 10
@@ -17,7 +17,7 @@ context:
         guides:
             references: guide
             foreignKey: category
-            sort: title
+            sort: order
             order: asc
             limit: 10
 

@@ -1,64 +1,9 @@
-:root {
-    --color: #FB9652;
-    --color-1: #f05138; /* hover */
-    --color-2: #E64918; /* active */
-    --color-3: #dc5f00; /* visited */
-    
-    --bg-color: #fff;
-    --bg-color-1: #f5f5f5;
-    --bg-color-2: #efefef;
-    --bg-color-3: #e0e0e0;
-    --bg-color-4: #afafaf;
-    
-    --text-color: #333;
-    --text-color-1: #000;
-    --text-color-2: #666;
-    --text-color-3: #999;
-
-    --white-color: #ffffff;
-    --black-color: #000000;
-}
-@media screen and (min-width: 600px) {
-    
-}
-@media screen and (min-width: 900px) {
-    
-}
-@media screen and (min-width: 1200px) {
-    
-}
-@media screen and (min-width: 1500px) {
-    
-}
-@media screen and (min-width: 1800px) {
-    
-}
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color: #dc5f00;
-        --color-1: #f05138; /* hover */
-        --color-2: #E64918; /* active */
-        --color-3: #FB9652; /* visited */
-
-        --bg-color: #000;
-        --bg-color-1: #1a1a1a;
-        --bg-color-2: #262626;
-        --bg-color-3: #333333;
-        --bg-color-4: #606060;
-        
-        --text-color: #c9c9c9;
-        --text-color-1: #f0f0f0;
-        --text-color-2: #999;
-        --text-color-3: #ccc;
-    }
-}
-
 html, body {
     padding: 0;
     margin: 0;
 }
 body {
-    background: var(--bg-color);
+    background: var(--background-color);
     color: var(--text-color);
 }
 #page-container {
@@ -74,7 +19,7 @@ a:hover, a:active {
 
 footer {
     margin: 32px;
-    border-top: 0.5px solid var(--bg-color-3);
+    border-top: 0.5px solid var(--background-color-3);
     padding-top: 16px;
 }
 footer #logo-image {
@@ -94,7 +39,7 @@ footer #logo-image {
 
 
 pre {
-    border: 1px solid var(--bg-color-2);
+    border: 1px solid var(--background-color-2);
     font-size: 14px;
     line-height: 1.25rem;
     margin-bottom: 32px;
@@ -115,14 +60,14 @@ pre code.hljs {
 }
 
 #docs .left {
-    border-right: 1px solid var(--bg-color-2);
+    border-right: 1px solid var(--background-color-2);
     padding: 16px;
 }
 #docs .center {
     padding: 0;
 }
 #docs .right {
-    border-left: 1px solid var(--bg-color-2);
+    border-left: 1px solid var(--background-color-2);
     padding: 16px;
 }
 #docs .left ul {
@@ -155,7 +100,7 @@ pre code.hljs {
     color: var(--text-color-3);
 }
 #docs .left ul li a:hover {
-    color: var(--color-1);
+    color: var(--link-color-hover);
 }
 
 #docs .right aside {
@@ -228,7 +173,7 @@ h1, h2, h3, h4, h5, h6 {
 
 hr {
     border: none;
-    border-bottom: 4px solid var(--color);
+    border-bottom: 4px solid var(--link-color);
     width: 64px;
 }
 hr.spacer {
@@ -280,21 +225,6 @@ img.rounded {
 a:hover, a:active {
     cursor: pointer;
 }
-a:link {
-    color: var(--color);
-}
-a:active {
-    color: var(--color-2);
-}
-a:visited {
-    color: var(--color-3);
-}
-a:hover {
-    color: var(--color-1);
-}
-a.selected {
-    color: var(--color-2);
-}
 
 
 #tag header img {
@@ -304,12 +234,12 @@ a.selected {
 .card {
     position: relative;
     padding: 16px;
-    border: 1px solid var(--bg-color-2);
+    border: 1px solid var(--background-color-2);
 }
 
 .card:hover {
-    border: 1px solid var(--bg-color-3);
-    background: var(--bg-color-1);
+    border: 1px solid var(--background-color-3);
+    background: var(--background-color-1);
 }
 .card h2 {
     color: var(--text-color);
@@ -323,7 +253,7 @@ a.selected {
 time {
     font-size: 14px;
     font-weight: bold;
-    color: var(--color);
+    color: var(--link-color);
 }
 .card .featured {
     position: absolute;
@@ -351,9 +281,9 @@ article.post header {
     position: fixed;
     top: 96px;
     right: 32px;
-    background: var(--bg-color-1);
+    background: var(--background-color-1);
     padding: 16px;
-    border: 1px solid var(--bg-color-2);
+    border: 1px solid var(--background-color-2);
 }
 .fixed-toc {
     font-size: 16px;
@@ -385,10 +315,10 @@ article.post header {
 .pagination a {
     padding: 8px 16px;
     margin-right: 4px;
-    border: 1px solid var(--bg-color-2);
+    border: 1px solid var(--background-color-2);
 }
 
 .pagination a:hover {
-    border: 1px solid var(--bg-color-3);
-    background: var(--bg-color-1);
+    border: 1px solid var(--background-color-3);
+    background: var(--background-color-1);
 }

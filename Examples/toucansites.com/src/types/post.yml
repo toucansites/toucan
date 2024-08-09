@@ -4,8 +4,8 @@ rss: true
 pagination:
     bundle: blog/posts/pagination
     limit: 2
-    sort: title
-    order: asc
+    sort: publication
+    order: desc
 
 properties:
     featured:
@@ -30,13 +30,13 @@ relations:
 context:
     site:
         posts:
-            sort: title
-            order: asc
+            sort: publication
+            order: desc
             limit: 10
         
         featured:
-            sort: title
-            order: asc
+            sort: publication
+            order: desc
             limit: 10
             filter:
                 field: featured
@@ -47,27 +47,27 @@ context:
         prev:
             references: post
             foreignKey: $prev
-            sort: order
-            order: asc
+            sort: publication
+            order: desc
 
         next:
             references: post
             foreignKey: $next
-            sort: order
-            order: asc
+            sort: publication
+            order: desc
             
         related:
             references: post
             foreignKey: $same.tags
-            sort: order
-            order: asc
+            sort: publication
+            order: desc
             limit: 6
 
         moreByAuthors:
             references: post
             foreignKey: $same.authors
-            sort: order #TODO: $random
-            order: asc
+            sort: publication #TODO: $random
+            order: desc
             limit: 6
         
 
