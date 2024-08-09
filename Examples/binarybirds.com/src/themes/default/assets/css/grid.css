@@ -21,7 +21,7 @@
 }
 @media screen and (min-width: 900px) {
     .grid.grid-211 {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
     .grid.grid-311, .grid.grid-321 {
         grid-template-columns: repeat(3, 1fr);

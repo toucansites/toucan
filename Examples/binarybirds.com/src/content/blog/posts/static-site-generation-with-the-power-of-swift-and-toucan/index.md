@@ -6,7 +6,7 @@ image: ./static-site-generation-with-the-power-of-swift-and-toucan/cover.jpg
 publication: 2023-04-24 18:32:25
 tags:
   - swift
-  - toucan
+  - product-updates
 authors:
   - tibor-bodecs
 ---

@@ -6,7 +6,6 @@ image: ./push-notifications-with-swift-server-side/cover.jpg
 publication: 2023-05-18 17:36:12
 tags:
   - swift
-  - push-notification
 authors:
   - gabor-lengyel
 ---

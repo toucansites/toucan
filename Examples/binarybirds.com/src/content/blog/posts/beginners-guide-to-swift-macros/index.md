@@ -6,7 +6,6 @@ image: ./beginners-guide-to-swift-macros/cover.jpg
 publication: 2023-06-07 14:57:12
 tags:
   - swift
-  - macros
 authors:
   - tibor-bodecs
 ---

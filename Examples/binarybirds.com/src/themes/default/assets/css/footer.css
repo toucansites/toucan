@@ -1,0 +1,32 @@
+#footer-container {
+    background: var(--background-color);
+    border-top: 0.5px solid var(--background-color-3);
+}
+#footer-container footer {
+    padding: 32px 16px;
+    text-align: center;
+}
+#footer-container footer picture img {
+    width: 64px;
+}
+#footer-container footer nav {
+    border-top: 0.5px solid var(--background-color-3);
+}
+#footer-container footer nav ul {
+    margin: 0;
+    padding: 0;
+}
+#footer-container footer nav li {
+    display: inline-block;
+    padding: 32px 0;
+    margin: 0;
+    margin-right: 32px;
+}
+@media screen and (min-width: 900px) {
+    #footer-container footer {
+        text-align: left;
+    }
+    #footer-container footer .links {
+        text-align: right;
+    }
+}
