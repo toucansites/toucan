@@ -5,9 +5,9 @@ image: images/defaults/default.png
 ---
 
 
-# Transform your Markdown into static website using the power of Swift and host it for free
+# The Markdown-based static site generator written in Swift
 
-Toucan, our lightweight static site generator written in Swift, will give your websites wings by utilizing Markdown through customizable templates. Best of all, it can be hosted for free on GitHub Pages!
+Elevate your websites with Toucan, the brand new static site generator that turns Markdown into beautifully crafted sites using customizable themes. And the best part? You can host it for free on GitHub Pages!
 
 
 
@@ -17,35 +17,50 @@ Toucan, our lightweight static site generator written in Swift, will give your w
     mobile: 1
 ) {
     @Column {
+        ![](./images/features/feature-swift.png)
+        
         ### Built with Swift
         
         Swift, one of the most powerful and efficient programming languages available today. Swift's modern syntax and performance-oriented architecture enable our generator to create static sites with lightning speed and exceptional reliability and security.
             [Quick-start in seconds](http://localhost:3000/docs/getting-started/)
     }
     @Column {
-        ### Utilizing Markdown
+        ![](./images/features/feature-markdown.png)
+            
+        ### Markdown-based
         
         Markdown is the perfect content writing tool because of its simplicity, readability, and lightweight nature, which ensure faster build times and consistent formatting. And there are excellent editors such as: Obsidian or Typora.
             [Create your content](http://localhost:3000/docs/content-management/)
     }
     @Column {
+        ![](./images/features/feature-premium-themes.png)
+        
+        ### Premium themes
+        
+        We created 3 different templates: Blog, One pager, Technical documentation. Explore these themes and find the one that will fit your needs and elevates your prupose to the next level.
+            [Templates](http://localhost:3000/docs/deployment/)
+    }
+    @Column {
+        ![](./images/features/feature-free-hosting.png)
+        
         ### No hosting fees
         
         GitHub hosting provides a completely hosting-free solution. By using GitHub's robust infrastructure, you can effortlessly deploy and manage your websites with zero hosting fees, ensuring a cost-effective and efficient web development experience.
             [Check out hosting guide](http://localhost:3000/docs/deployment/)
     }
-    @Column {
-        ### Templates
-        
-        We created 3 different templates: Blog, One pager, Technical documentation. Explore these themes and find the one that will fit your needs and elevates your prupose to the next level.
-            [Templates](http://localhost:3000/docs/deployment/)
-    }
 }
 
-<br>
+## Quick start
 
-## Quick Start
-`brew install toucan`
+Convert your Markdown into a static website using the power of Swift and host it for free. 
+
+```sh
+brew install binarybirds/toucan
+toucan create mysite.com
+toucan serve
+```
+
+Toucan, our lightweight static site generator written in Swift, will give your websites wings by utilizing Markdown through customizable templates. Best of all, it can be hosted for free on GitHub Pages!
 
 
 <br>

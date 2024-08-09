@@ -2,7 +2,7 @@
     background: var(--background-color);
     margin: 16px 32px;
     margin-bottom: 0px;
-    border-bottom: 0.5px solid var(--background-color-3);
+    border-bottom: 4px solid var(--background-color-1);
     overflow: hidden;
 }
 #navigation > a {

@@ -1,32 +1,16 @@
-html, body {
-    padding: 0;
-    margin: 0;
-}
-body {
-    background: var(--background-color);
-    color: var(--text-color);
-}
 #page-container {
     padding: 32px;
-}
-a {
-    
-}
-a:hover, a:active {
-    cursor: pointer;
-    text-decoration: none;
 }
 
 footer {
     margin: 32px;
-    border-top: 0.5px solid var(--background-color-3);
+    border-top: 4px solid var(--background-color-1);
     padding-top: 16px;
 }
 footer #logo-image {
     height: 32px;
     margin-bottom: 32px;
 }
-
 
 .selection-off {
     -webkit-touch-callout: none;
@@ -38,15 +22,6 @@ footer #logo-image {
 }
 
 
-pre {
-    border: 1px solid var(--background-color-2);
-    font-size: 14px;
-    line-height: 1.25rem;
-    margin-bottom: 32px;
-}
-pre code.hljs {
-/*    padding: 8px !important;*/
-}
 
 #docs {
     display: grid;
@@ -155,76 +130,9 @@ pre code.hljs {
         display: block;
     }
 }
-@media screen and (min-width: 1200px) {
-    
-}
-@media screen and (min-width: 1500px) {
-}
-@media screen and (min-width: 1800px) {
-}
 
-section {
-    margin-bottom: 64px;
-}
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 8px;
-    font-weight: 800;
-}
 
-hr {
-    border: none;
-    border-bottom: 4px solid var(--link-color);
-    width: 64px;
-}
-hr.spacer {
-    border: none;
-}
-body {
-    font-size: 18px;
-    
-}
-h1 {
-    font-size: 48px;
-    font-weight: 800;
-}
-h2 {
-    font-size: 36px;
-}
-h3 {
-    font-size: 28px;
-}
-h4 {
-    font-size: 24px;
-}
-h5 {
-    font-size: 20px;
-}
-h6 {
-    font-size: 18px;
-}
-p {
-    font-size: 18px;
-    line-height: 1.5rem;
-    color: var(--text-color-2);
-    margin-bottom: 32px;
-}
 
-img.small {
-    width: 32px;
-}
-img.medium {
-    width: 64px;
-}
-img.large {
-    width: 128px;
-}
-img.rounded {
-    border-radius: 50%;
-}
-
-a:hover, a:active {
-    cursor: pointer;
-}
 
 
 #tag header img {
