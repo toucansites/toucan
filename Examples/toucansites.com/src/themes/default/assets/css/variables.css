@@ -10,9 +10,12 @@
     --background-color-3: #e0e0e0;
     --background-color-4: #afafaf;
     
+    --primary-text-color: #061E38;
+    --primary-background-color: #F9E1C6;
+    
     --text-color: #333;
     --text-color-1: #000;
-    --text-color-2: #666;
+    --text-color-2: #182533;
     --text-color-3: #999;
 
     --white-color: #ffffff;
@@ -38,7 +41,7 @@
 
         --text-color: #c9c9c9;
         --text-color-1: #f0f0f0;
-        --text-color-2: #999;
+        --text-color-2: #C9B8A5;
         --text-color-3: #ccc;
 
         --background-color: #000;
@@ -47,6 +50,9 @@
         --background-color-3: #333333;
         --background-color-4: #606060;
 
+        --primary-text-color: #F9E1C6;
+        --primary-background-color: #061E38;
+        
         --white-color: #ffffff;
         --black-color: #000000;
         --blue-color: #0d79ff;

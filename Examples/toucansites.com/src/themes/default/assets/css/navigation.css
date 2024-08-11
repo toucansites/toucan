@@ -2,17 +2,19 @@
     background: var(--background-color);
     margin: 16px 32px;
     margin-bottom: 0px;
-    border-bottom: 4px solid var(--background-color-1);
+    border-bottom: 8px solid var(--primary-text-color);
     overflow: hidden;
+    position: relative;
+    font-weight: bold;
 }
 #navigation > a {
     display: block;
     line-height: 0;
-    padding: 8px 0;
+/*    padding: 8px 0;*/
     text-align: center;
 }
 #navigation > a img {
-    height: 32px;
+    height: 44px;
     width: auto;
 }
 #navigation nav svg {
@@ -25,8 +27,8 @@
 #navigation #primary-menu-button + label {
     margin: 0;
     position: absolute;
-    top: 16px;
-    left: 24px;
+    top: 0px;
+    left: 0px;
     line-height: 0;
     padding: 12px;
 }
@@ -38,10 +40,12 @@
     transition: max-height .3s ease-in-out 0s;
 }
 #navigation .menu-items a {
+    position: relative;
     display: block;
-    color: var(--text-color);
+    color: var(--primary-text-color);
     padding: 16px;
-    border-top: 0.5px solid var(--background-color-3);
+    border-top: 4px solid var(--primary-text-color);
+    z-index: 10;
 }
 #navigation .menu-items a:hover {
     color: var(--link-color-hover)

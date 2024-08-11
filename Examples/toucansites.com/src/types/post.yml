@@ -2,8 +2,8 @@ id: post
 rss: true
 
 pagination:
-    bundle: blog/posts/pagination
-    limit: 2
+    bundle: blog/articles/pagination
+    limit: 1
     sort: publication
     order: desc
 

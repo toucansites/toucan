@@ -3,14 +3,16 @@
 }
 
 footer {
+    position: relative;
     margin: 32px;
-    border-top: 4px solid var(--background-color-1);
     padding-top: 16px;
+    border-top: 8px solid var(--primary-text-color);
 }
 footer #logo-image {
-    height: 32px;
-    margin-bottom: 32px;
+    height: 44px;
+/*    margin-bottom: 32px;*/
 }
+
 
 .selection-off {
     -webkit-touch-callout: none;
@@ -138,20 +140,12 @@ footer #logo-image {
 #tag header img {
     margin-bottom: 8px;
 }
-
 .card {
     position: relative;
     padding: 16px;
-    border: 1px solid var(--background-color-2);
+    border: 8px solid var(--primary-text-color);
 }
 
-.card:hover {
-    border: 1px solid var(--background-color-3);
-    background: var(--background-color-1);
-}
-.card h2 {
-    color: var(--text-color);
-}
 .card img {
     margin-bottom: 8px;
 }
@@ -161,7 +155,7 @@ footer #logo-image {
 time {
     font-size: 14px;
     font-weight: bold;
-    color: var(--link-color);
+    color: var(--primary-text-color);
 }
 .card .featured {
     position: absolute;
@@ -229,4 +223,57 @@ article.post header {
 .pagination a:hover {
     border: 1px solid var(--background-color-3);
     background: var(--background-color-1);
+}
+
+.centered {
+    text-align: center;
+}
+#main-logo img {
+    max-width: 120px;
+}
+.small-wrapper {
+    margin: 0 auto;
+    max-width: 780px;
+    margin-bottom: 64px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-text-color);
+}
+
+
+/*.feature a {*/
+/*    background: #061E38;*/
+/*    color: #F9E1C6;*/
+/*    font-weight: bold;*/
+/*    border-radius: 32px;*/
+/*    padding: 8px 24px;*/
+/*}*/
+.feature img {
+/*    border-radius: 16px;*/
+    border: 8px solid var(--primary-text-color);
+}
+.feature.swift img {
+    background: #FE4A2C;
+/*    background: linear-gradient(340deg, rgba(255,133,0,1) 0%, rgba(255,201,0,1) 100%);*/
+}
+.feature.markdown img {
+    background: #169E9B;
+/*    background: linear-gradient(340deg, rgba(0,124,255,1) 0%, rgba(0,188,255,1) 100%);*/
+}
+.feature.themes img {
+    background: #FECF04;
+/*    background: linear-gradient(340deg, rgba(255,0,117,1) 0%, rgba(255,0,79,1) 100%);*/
+}
+.feature.hosting img {
+    background: #4FDF41;
+/*    background: linear-gradient(340deg, rgba(0,221,82,1) 0%, rgba(0,184,13,1) 100%);*/
+}
+
+details {
+    border: 8px solid var(--primary-text-color);
+    margin-bottom: 8px;
+}
+details summary {
+    
 }

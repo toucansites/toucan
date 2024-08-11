@@ -1,7 +1,87 @@
 {{<html}}
 {{$main}}
 
-{{& page.contents}}
+
+<div class="centered">
+
+    <picture id="main-logo">
+        <source
+            srcset="./images/logos/logo~dark.png"
+            media="(prefers-color-scheme: dark)"
+            >
+        <img
+            src="./images/logos/logo.png"
+            alt="Logo of Toucan"
+            title="Toucan"
+            >
+    </picture>
+
+    <div class="small-wrapper">
+        <h1>toucan</h1>
+        <h2>The Markdown-based <br>static site generator <br>written in Swift</h2>
+        <p>&nbsp;</p>
+        <p>Elevate your websites with Toucan, the brand new static site generator that turns Markdown into beautifully crafted sites using customizable themes.</p>
+        <p> And the best part? You can host it for free on GitHub Pages!</p>
+    </div>
+
+</div>
+
+<div class="grid grid-421">
+    
+    <div class="feature markdown">
+        <img src="./images/features/feature-markdown.png">
+        <h3>Markdown-based</h3>
+        
+        <p>Markdown is the perfect content writing tool because of its simplicity, readability, and lightweight nature, which ensure faster build times and consistent formatting. And there are excellent editors such as: Obsidian or Typora. </p>
+        <a href="/docs/content-management/">Create your content</a>
+    </div>
+
+    <div class="feature swift">
+        <img src="./images/features/feature-swift.png">
+        <h3>Built with Swift</h3>
+        <p>Swift, one of the most powerful and efficient programming languages available today. Swift's modern syntax and performance-oriented architecture enable our generator to create static sites with lightning speed and exceptional reliability and security.</p>
+        <a href="/docs/getting-started/">Quick-start in seconds</a>
+    </div>
+    
+    <div class="feature themes">
+        <img src="./images/features/feature-premium-themes.png">
+        
+        <h3>Premium themes</h3>
+        
+        <p>We created 3 different templates: Blog, One pager, Technical documentation. Explore these themes and find the one that will fit your needs and elevates your prupose to the next level.</p>
+        <a href="/docs/deployment/">Templates</a>
+    </div>
+    
+    <div class="feature hosting">
+        <img src="./images/features/feature-free-hosting.png">
+        
+        <h3>No hosting fees</h3>
+        
+        <p>GitHub hosting provides a completely hosting-free solution. By using GitHub's robust infrastructure, you can effortlessly deploy and manage your websites with zero hosting fees, ensuring a cost-effective and efficient web development experience.
+            </p>
+        <a href="/docs/deployment/">Check out hosting guide</a>
+    </div>
+    
+</div>
+<div>
+<h2>Quick start</h2>
+
+<p>Convert your Markdown into a static website using the power of Swift and host it for free.</p>
+
+<pre>
+brew install binarybirds/toucan
+toucan create mysite.com
+toucan serve
+</pre>
+
+<p>Toucan, our lightweight static site generator written in Swift, will give your websites wings by utilizing Markdown through customizable templates. Best of all, it can be hosted for free on GitHub Pages!</p>
+
+
+<br>
+
+<h2>Swift and Markdown</h2>
+<p>Discover the ultimate solution for your web development needs with Swift and Markdown-powered static site generators! Swift's unparalleled speed and modern syntax guarantee that your static sites are not only robust and secure but also lightning-fast to build and deploy. Say goodbye to slow build times and hello to a more responsive and efficient development process. Combined with the simplicity of Markdown, you can effortlessly create and manage content without the hassle of complex HTML coding. This powerful duo ensures that your websites are fast, secure, and easy to maintain. Elevate your web projects with Swift and Markdown – the perfect blend for top-notch performance and seamless content creation. Try it today and experience the difference!</p>
+</div>
 
 {{/main}}
 {{/html}}

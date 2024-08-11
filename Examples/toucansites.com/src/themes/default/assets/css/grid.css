@@ -26,7 +26,7 @@
     .grid.grid-311, .grid.grid-321 {
         grid-template-columns: repeat(3, 1fr);
     }
-    .grid.grid-411,.grid.grid-421 {
+    .grid.grid-411, .grid.grid-421 {
         grid-template-columns: repeat(4, 1fr);
     }
 }
