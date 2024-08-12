@@ -1,5 +1,5 @@
 {
-  "originHash" : "36ec23fca01b1c2e92bcbfe643407133ddc865f7a9501752e4cd12b59c9a4b7b",
+  "originHash" : "03678017c81d31c5da9112f357230a6edc76a22bac1bfb6342b5a0929d49f126",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird.git",
       "state" : {
-        "revision" : "50f887ff416593b468cf238b9536f671786a1507",
-        "version" : "2.0.0-rc.2"
+        "revision" : "a1028d2b3c74fbf6f537abca6022d7c0d54a5d24",
+        "version" : "2.0.0-rc.3"
       }
     },
     {
@@ -233,6 +233,15 @@
       "state" : {
         "revision" : "6a9e38e7bd22a3b8ba80bddf395623cf68f57807",
         "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "swiftsoup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scinfu/SwiftSoup",
+      "state" : {
+        "revision" : "e2d11208519549c2e5798d70190472045633f22f",
+        "version" : "2.7.3"
       }
     },
     {

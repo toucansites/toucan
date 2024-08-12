@@ -270,10 +270,16 @@ h1, h2, h3, h4, h5, h6 {
 /*    background: linear-gradient(340deg, rgba(0,221,82,1) 0%, rgba(0,184,13,1) 100%);*/
 }
 
-details {
+a.cta {
+    display: inline-block;
+    background: var(--primary-background-color);
+    color: var(--primary-text-color);
+    font-weight: bold;
+    padding: 16px 24px;
     border: 8px solid var(--primary-text-color);
-    margin-bottom: 8px;
 }
-details summary {
-    
+a.cta:hover {
+    background: var(--primary-text-color);
+    color: var(--primary-background-color);
 }
+

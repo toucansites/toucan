@@ -9,6 +9,7 @@ import Foundation
 import FileManagerKit
 import Yams
 
+/// A struct responsible for loading and managing content types.
 struct ContentTypeLoader {
 
     /// An enumeration representing possible errors that can occur while loading the configuration.
@@ -22,11 +23,17 @@ struct ContentTypeLoader {
 
     /// The URL of the source files.
     let sourceUrl: URL
-
+    
+    /// The configuration object that holds settings for the site.
     let config: Config
+    
     /// The file manager used for file operations.
     let fileManager: FileManager
-
+    
+    /// Loads and returns an array of content types.
+    ///
+    /// - Throws: An error if the content types could not be loaded.
+    /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
         let typesUrl = sourceUrl.appendingPathComponent(config.types.folder)
         let list = fileManager.listDirectory(at: typesUrl)

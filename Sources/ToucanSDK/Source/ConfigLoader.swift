@@ -25,6 +25,10 @@ struct ConfigLoader {
     /// The file manager used for file operations.
     let fileManager: FileManager
 
+    /// Loads the configuration.
+    ///
+    /// - Returns: A `Config` object.
+    /// - Throws: An error if the configuration fails to load.
     func load() throws -> Config {
         let configUrl = sourceUrl.appendingPathComponent("config")
 

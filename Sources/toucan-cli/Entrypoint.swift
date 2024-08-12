@@ -1,10 +1,12 @@
 import ArgumentParser
 import ToucanSDK
 
+/// The main entry point for the command-line tool.
 @main
 struct Entrypoint: ParsableCommand {
 
-    static var configuration = CommandConfiguration(
+  /// Configuration for the command-line tool.
+  static var configuration = CommandConfiguration(
         commandName: "toucan",
         abstract: """
             Toucan
