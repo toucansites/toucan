@@ -1,10 +1,13 @@
 ---
-title: My custom page
-description: This is my custom page... 
+title: Support
+description: Reach out to us if you have any questions about Toucan, the markdown-based static site generator. 
 ---
 
 
 # Support
 
-If there is any question or issue please get in touch with us: [support@binarybirds.com](mailto:support@binarybirds.com)
+Reach out to us if you have any questions about Toucan, the markdown-based static site generator.
+
+<a href="mailto:support@binarybirds.com" class="cta">Contact us</a>
+
 

@@ -13,5 +13,5 @@ func main() {
 }
 ```
 
-ouch Something went wrong...
+Ouch something went wrong...
 

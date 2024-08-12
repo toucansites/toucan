@@ -1,12 +1,12 @@
 ---
 title: FAQ
-description: Frequently Asked Questions 
+description: Frequently Asked Questions about Static Site Generators for complete beginners.
 ---
 
 
 # FAQ 
 
-This page is dedicated to gather questions that were frequently asked
+Frequently Asked Questions about Static Site Generators for complete beginners.
 
 
 ## General questions
@@ -16,7 +16,7 @@ This page is dedicated to gather questions that were frequently asked
         <h3>What is a static site generator?</h3>
     </summary>
     <div>
-        A static site generator (SSG) is a tool that generates static HTML pages from templates or components, typically using content written in markdown or other markup languages.
+        A Static Site Generator (SSG) is a tool that generates static HTML pages from templates or components, typically using content written in markdown or other markup languages.
     </div>
 </details>
 
@@ -25,7 +25,7 @@ This page is dedicated to gather questions that were frequently asked
         <h3>How does a static site generator differ from a traditional CMS?</h3>
     </summary>
     <div>
-        Unlike traditional content management systems (CMS) that generate pages dynamically on the server for each request, SSGs generate all the pages at build time, resulting in faster load times and increased security.
+        Unlike traditional Content Management Systems (CMS) that generate pages dynamically on the server for each request, SSGs generate all the pages at build time. The static HTML can then be served by a simple file server, resulting in faster load times and increased security.
     </div>
 </details>
 
@@ -34,10 +34,10 @@ This page is dedicated to gather questions that were frequently asked
 
 <details>
     <summary>
-        <h3>How do I install the static site generator?</h3>
+        <h3>How do I install a static site generator?</h3>
     </summary>
     <div>
-        Installation instructions typically vary by SSG, but most can be installed using package managers like npm (Node.js) or gem (Ruby). Detailed instructions are usually provided in the documentation.
+        Installation instructions typically vary by SSG, but most can be installed using package managers like npm (Node.js) or gem (Ruby). Detailed instructions are usually provided in the documentation. <!--If you are looking for the Toucan installation instructions, please visit our corresponding [docs](/docs/) section.-->
     </div>
 </details>
 
@@ -46,7 +46,7 @@ This page is dedicated to gather questions that were frequently asked
         <h3>What are the system requirements for running a static site generator?</h3>
     </summary>
     <div>
-        Most SSGs require a modern operating system and a working installation of Node.js, Ruby, Python, or another relevant programming environment.
+        Most SSGs require a modern operating system and a working installation of Node.js, Ruby, Python, or another relevant programming environment. <!-- However, since Toucan is distributed as an executable binary, there is no need to set up additional tools on your machine. -->
     </div>
 </details>
 
@@ -109,7 +109,7 @@ This page is dedicated to gather questions that were frequently asked
         <h3>How fast are static sites compared to dynamic sites?</h3>
     </summary>
     <div>
-        Static sites are generally faster because they serve pre-built HTML files, reducing the need for server-side processing and database queries.
+        Static sites are generally faster because they consist of pre-built HTML files, which reduces the need for server-side processing and database queries.
     </div>
 </details>
 
@@ -153,10 +153,10 @@ This page is dedicated to gather questions that were frequently asked
 
 <details>
     <summary>
-        <h3>How do I handle SEO with a static site?</h3>
+        <h3>How can I enhance my site’s ranking (SEO) for a static site?</h3>
     </summary>
     <div>
-        Static sites can be optimized for SEO by including metadata, using clean URLs, and generating sitemaps. Many SSGs offer plugins or built-in features to help with SEO.
+        Static sites can be optimized for better ranking by including metadata, using clean URLs, and generating sitemaps. Many SSGs offer plugins or built-in features to help with SEO.
     </div>
 </details>
 
@@ -203,3 +203,6 @@ This page is dedicated to gather questions that were frequently asked
         Regularly update dependencies, backup your content and configuration, use version control (e.g., Git), and monitor performance. Additionally, keep your SSG and any integrated services up to date.
     </div>
 </details>
+
+<br><br>
+Don’t hesitate to [contact us](/support/) if you have further questions.

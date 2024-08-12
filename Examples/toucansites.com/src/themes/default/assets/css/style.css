@@ -7,12 +7,46 @@ footer {
     margin: 32px;
     padding-top: 16px;
     border-top: 8px solid var(--primary-text-color);
+    text-align: center;
+}
+@media screen and (min-width: 600px) {
+    footer {
+        text-align: left;
+    }
 }
 footer #logo-image {
-    height: 44px;
-/*    margin-bottom: 32px;*/
+    max-width: 256px;
 }
-
+footer ul {
+    margin: 0;
+    padding: 0;
+}
+footer li {
+    list-style-type: none;
+    margin-bottom: 8px;
+}
+footer a {
+    font-weight: bold;
+}
+footer .grid div {
+    padding: 16px;
+}
+footer h4 {
+    margin-top: 32px;
+}
+footer li a, footer li a:visited, footer li a:active, footer li a:link {
+    display: inline-block;
+    position: relative;
+    color: var(--primary-text-color);
+    padding: 8px;
+    border: 4px solid var(--primary-text-color);
+    color: var(--primary-text-color);
+    background: var(--primary-background-color);
+}
+footer li a:hover {
+    color: var(--primary-background-color);
+    background: var(--primary-text-color);
+}
 
 .selection-off {
     -webkit-touch-callout: none;
@@ -149,8 +183,8 @@ footer #logo-image {
 .card img {
     margin-bottom: 8px;
 }
-.tag-list a {
-    font-weight: bold;
+.tag-list {
+    display: none;
 }
 time {
     font-size: 14px;
@@ -159,13 +193,13 @@ time {
 }
 .card .featured {
     position: absolute;
-    top: 8px;
-    right: -8px;
-    background: #6600CC;
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 12px;
+    top: -4px;
+    right: -4px;
+    color: var(--primary-text-color);
+    background: var(--primary-background-color);
+    padding: 8px 16px;
+    border: 4px solid var(--primary-text-color);
+    font-size: 14px;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -217,12 +251,15 @@ article.post header {
 .pagination a {
     padding: 8px 16px;
     margin-right: 4px;
-    border: 1px solid var(--background-color-2);
+    border: 4px solid var(--primary-text-color);
+    background: var(--primary-background-color);
+    font-weight: bold;
+    color: var(--primary-text-color);
 }
 
 .pagination a:hover {
-    border: 1px solid var(--background-color-3);
-    background: var(--background-color-1);
+    background: var(--primary-text-color);
+    color: var(--primary-background-color);
 }
 
 .centered {
@@ -276,7 +313,7 @@ a.cta {
     color: var(--primary-text-color);
     font-weight: bold;
     padding: 16px 24px;
-    border: 8px solid var(--primary-text-color);
+    border: 4px solid var(--primary-text-color);
 }
 a.cta:hover {
     background: var(--primary-text-color);

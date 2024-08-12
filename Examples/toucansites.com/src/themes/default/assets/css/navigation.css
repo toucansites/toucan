@@ -23,6 +23,7 @@
 }
 #navigation #primary-menu-button {
     display: none;
+    
 }
 #navigation #primary-menu-button + label {
     margin: 0;
@@ -30,7 +31,10 @@
     top: 0px;
     left: 0px;
     line-height: 0;
-    padding: 12px;
+    padding: 8px;
+    border: 4px solid var(--primary-text-color);
+    color: var(--primary-background-color);
+    background: var(--primary-text-color);
 }
 #navigation #primary-menu-button + label:hover {
     cursor: pointer;
@@ -44,11 +48,15 @@
     display: block;
     color: var(--primary-text-color);
     padding: 16px;
-    border-top: 4px solid var(--primary-text-color);
+    border: 4px solid var(--primary-text-color);
+    border-bottom: none;
     z-index: 10;
+    color: var(--primary-text-color);
+    background: var(--primary-background-color);
 }
 #navigation .menu-items a:hover {
-    color: var(--link-color-hover)
+    color: var(--primary-background-color);
+    background: var(--primary-text-color);
 }
 #navigation input:checked ~ .menu-items {
     max-height: 999px;
@@ -85,11 +93,13 @@
         display: block;
         max-height: none;
         text-align: right;
-        padding: 8px;
+        padding: 0;
+        padding-bottom: 4px;
     }
     #navigation nav .menu-items a {
         padding: 8px;
         display: inline-block;
         border: none;
+        border: 4px solid var(--primary-text-color);
     }
 }

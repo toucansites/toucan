@@ -1,12 +1,12 @@
 ---
-title: My custom page
-description: This is my custom page... 
+title: Showcases
+description: Toucan is used by the following websites. Feel free to contact us if you’d like to feature your site. 
 ---
 
 
 # Showcases
 
-Toucan powers numerous websites; here are a few notable examples:
+Toucan is used by the following websites. Feel free to [contact us](/support/) if you’d like to feature your site.
 
 @Grid(
     desktop: 2,
@@ -15,12 +15,12 @@ Toucan powers numerous websites; here are a few notable examples:
 ) {
     @Column {
         [
-            ![Swift on Server](./assets/swiftonserver.png)
+            ![Swift on Server](./assets/swiftonserver.jpg)
         ](https://swiftonserver.com/)
     }
     @Column {
         [
-            ![The.Swift.Dev](./assets/theswiftdev.png)
+            ![The.Swift.Dev](./assets/theswiftdev.jpg)
         ](https://theswiftdev.com/)
     }
 }

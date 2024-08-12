@@ -1,9 +1,8 @@
 ---
 type: post
-title: Welcome
-description: Welcome
-image: ./assets/cover.jpg
-publication: 2024-07-10 12:00:00
+title: "Say hello to our brand new website."
+description: "Welcome to toucansites.com, it's really great to have you here."
+publication: 2024-08-12 12:00:00
 tags: 
     - news
 authors: 

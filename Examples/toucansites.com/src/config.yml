@@ -1,8 +1,8 @@
 site:
     baseUrl: http://localhost:3000/
     language: en-US
-    title: ToucanSites.com
-    description: This is a demo blog using completely fake content.
+    title: Toucan
+    description: The Markdown-based static site generator written in Swift
     dateFormat: "yyyy.MM.dd. HH:mm"
 
 themes:
