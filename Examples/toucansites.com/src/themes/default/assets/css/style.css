@@ -2,7 +2,7 @@
     padding: 32px;
 }
 
-footer {
+footer#site-footer {
     position: relative;
     margin: 32px;
     padding-top: 16px;
@@ -10,31 +10,31 @@ footer {
     text-align: center;
 }
 @media screen and (min-width: 600px) {
-    footer {
+    footer#site-footer {
         text-align: left;
     }
 }
-footer #logo-image {
+footer#site-footer #logo-image {
     max-width: 256px;
 }
-footer ul {
+footer#site-footer ul {
     margin: 0;
     padding: 0;
 }
-footer li {
+footer#site-footer li {
     list-style-type: none;
     margin-bottom: 8px;
 }
-footer a {
+footer#site-footer a {
     font-weight: bold;
 }
-footer .grid div {
+footer#site-footer .grid div {
     padding: 16px;
 }
-footer h4 {
+footer#site-footer h4 {
     margin-top: 32px;
 }
-footer li a, footer li a:visited, footer li a:active, footer li a:link {
+footer#site-footer li a, footer#site-footer li a:visited, footer#site-footer li a:active, footer#site-footer li a:link {
     display: inline-block;
     position: relative;
     color: var(--primary-text-color);
@@ -43,7 +43,7 @@ footer li a, footer li a:visited, footer li a:active, footer li a:link {
     color: var(--primary-text-color);
     background: var(--primary-background-color);
 }
-footer li a:hover {
+footer#site-footer li a:hover {
     color: var(--primary-background-color);
     background: var(--primary-text-color);
 }

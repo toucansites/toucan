@@ -10,6 +10,17 @@
         <hr>
         <p class="excerpt">{{page.description}}</p>
         
+        
+    </header>
+    
+
+    <section>
+    
+    {{& page.contents}}
+        
+    </section>
+    
+    <footer>
         <div class="author-list">
         {{#page.authors}}
             <a href="{{permalink}}">
@@ -22,14 +33,7 @@
             <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
         {{/page.tags}}
         </div>
-    </header>
-    
-
-    <section>
-    
-    {{& page.contents}}
-        
-    </section>
+    </footer>
     
     <section>
     <div class="grid grid-221">
