@@ -3,7 +3,7 @@ rss: true
 
 pagination:
     bundle: blog/articles/pagination
-    limit: 1
+    limit: 9
     sort: publication
     order: desc
 
