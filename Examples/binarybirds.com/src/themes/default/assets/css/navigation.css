@@ -1,92 +1,93 @@
 #navigation-container {
-    background: var(--background-color);
-    border-bottom: 0.5px solid var(--background-color-3);
+  background: var(--background-color);
 }
 #navigation {
-    overflow: hidden;
-    padding: 0 16px;
+  overflow: hidden;
+  min-height: 64px;
 }
 #navigation > a {
-    display: block;
-    line-height: 0;
-    padding: 12px 0;
-    text-align: center;
+  display: block;
+  line-height: 0;
+  padding: 12px 0;
+  text-align: center;
 }
 #navigation > a img {
-    height: 32px;
-    width: auto;
+  height: 32px;
+  width: auto;
 }
 #navigation nav svg {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 #navigation #primary-menu-button {
-    display: none;
+  display: none;
 }
 #navigation #primary-menu-button + label {
-    margin: 0;
-    position: absolute;
-    top: 4px;
-    left: 24px;
-    line-height: 0;
-    padding: 12px;
+  margin: 0;
+  position: absolute;
+  top: 4px;
+  left: 24px;
+  line-height: 0;
+  padding: 12px;
 }
 #navigation #primary-menu-button + label:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 #navigation .menu-items {
-    max-height: 0px;
-    transition: max-height .3s ease-in-out 0s;
+  max-height: 0px;
+  transition: max-height 0.3s ease-in-out 0s;
 }
 #navigation .menu-items a {
-    display: block;
-    color: var(--text-color);
-    padding: 16px;
-    border-top: 0.5px solid var(--bg-color-3);
+  display: block;
+  color: var(--text-color);
+  padding: 16px;
+  border-top: 0.5px solid var(--bg-color-3);
 }
 #navigation .menu-items a:hover {
-    color: var(--color-1)
+  color: var(--link-color);
 }
 #navigation input:checked ~ .menu-items {
-    max-height: 999px;
+  max-height: 999px;
 }
 #navigation line {
-    transition: transform .3s ease-in-out 0s;
-    transform-origin: 50% 50%;
+  transition: transform 0.3s ease-in-out 0s;
+  transform-origin: 50% 50%;
 }
 #navigation input:checked ~ label line:nth-child(1) {
-    transform: translateX(-50px);
+  transform: translateX(-50px);
 }
 #navigation input:checked ~ label line:nth-child(2) {
-    transform: rotate(45deg) translateY(6px);
+  transform: rotate(45deg) translateY(6px);
 }
 #navigation input:checked ~ label line:nth-child(3) {
-    transform: rotate(-45deg) translateY(-6px);
+  transform: rotate(-45deg) translateY(-6px);
 }
 @media screen and (min-width: 600px) {
-    #navigation {
-        display: grid;
-        grid-template-columns: auto 1fr;
-    }
-    #site-logo {
-        grid-column: span 1;
-    }
-    #navigation nav {
-        overflow: hidden;
-        grid-column: span 1;
-    }
-    #primary-menu-button ~ label {
-        display: none;
-    }
-    #navigation nav .menu-items {
-        display: block;
-        max-height: none;
-        text-align: right;
-        padding: 8px;
-    }
-    #navigation nav .menu-items a {
-        padding: 8px;
-        display: inline-block;
-        border: none;
-    }
+  #navigation {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+  #site-logo {
+    grid-column: span 1;
+  }
+  #navigation nav {
+    overflow: hidden;
+    grid-column: span 1;
+  }
+  #primary-menu-button ~ label {
+    display: none;
+  }
+  #navigation nav .menu-items {
+    display: block;
+    max-height: none;
+    text-align: right;
+    padding: 8px;
+  }
+  #navigation nav .menu-items a {
+    padding: 8px;
+    display: inline-block;
+    border: none;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
 }

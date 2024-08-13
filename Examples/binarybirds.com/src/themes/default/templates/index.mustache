@@ -3,22 +3,31 @@
 
 {{& page.contents}}
 
-<div id="home">
-    <header>
-        <div class="wrapper">
-            <h1>Server-side swift solutions from experts.<br />Secure, efficient, scalable solutions.</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vulputate rhoncus magna, ac aliquam massa venenatis vel. Quisque sit amet commodo erat, at eleifend odio.</p>
-            <a href="mailto:binarybirdsoffical@gmail.com" target="_blank">Get in touch</a>
-        </div>
-    </header>
+    <main id="main">
+      <!--* Hero Section -->
 
-      
-      
-      
-      
-      
-      
-      
+      <header class="heroSection">
+        <div class="heroContainer">
+          <div class="heroTitleContainer">
+            <h1 class="heroTitle">
+              Server-side swift solutions from experts.<br />
+              Secure, efficient, scalable solutions.
+            </h1>
+            <p class="heroSubtitle">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
+              vulputate rhoncus magna, ac aliquam massa venenatis vel. Quisque
+              sit amet commodo erat, at eleifend odio.
+            </p>
+            <button class="primaryButton">
+              <a href="/contact">Get in touch</a>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!--* Hero Section End -->
+
+      <!--* Services Section -->
       
       <section class="section sectionSecondary">
         <h1 class="sectionTitle">What we do</h1>
@@ -26,7 +35,7 @@
           We specialize in crafting robust server-side solutions using Swift,
           empowering businesses with efficient backend systems.
         </p>
-        <div class="grid grid-is-col-min-12 servicesContainer">
+        <div class="servicesContainer grid grid-221 grid-321">
           <div class="serviceCard card cell">
             <div class="serviceTitle">
               <svg
@@ -46,7 +55,7 @@
                   d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
                 ></path>
               </svg>
-              <h3>Backend Development</h3>
+              <h3>Backend</h3>
             </div>
             <p>
               Explore our expertise in server-side Swift, frameworks, and
@@ -72,7 +81,7 @@
                   d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
                 ></path>
               </svg>
-              <h3>Mobile App Development</h3>
+              <h3>Mobile Apps</h3>
             </div>
             <p>
               Discover our proficiency in crafting iOS and Android applications,
@@ -98,7 +107,7 @@
                   d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
                 ></path>
               </svg>
-              <h3>Web Development</h3>
+              <h3>Web Apps</h3>
             </div>
             <p>
               Unlock the power of web development with our skills in React,
@@ -193,7 +202,6 @@
       <!--* Book Section -->
 
       <section class="section sectionPrimary">
-            <h1 class="sectionTitle">What you can learn</h1>
         <div class="bookContainer">
           <div class="bookImageContainer">
             <picture>
@@ -210,6 +218,7 @@
             </picture>
           </div>
           <div class="bookContent">
+            <h1 id="bookSectionTitle" class="sectionTitle">What you can learn</h1>
             <h2 class="bookTitle">Practical Server-Side Swift</h2>
             <p class="bookSubtitle">
               Swift on the server is an amazing new opportunity to build fast,
@@ -242,10 +251,10 @@
           Our team of experts is dedicated to delivering high-quality solutions
           and services to our clients.
         </p>
-        <div class="teamContainer">
-          {{#page.authors}}
-          {{> _partials.member}}
-          {{/page.authors}}
+        <div class="teamContainer grid grid-521">
+          {{#site.context.authors}}
+          {{> blog.blocks.member}}
+          {{/site.context.authors}}
         </div>
       </section>
 
