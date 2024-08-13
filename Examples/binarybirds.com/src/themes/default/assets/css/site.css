@@ -229,19 +229,18 @@ article section p a:visited {
 }
 
 .serviceTitle {
-  display: flex;
   align-items: center;
   font-size: 16px;
   color: var(--primary-color-600);
 }
-
 .serviceTitle h3 {
   margin: 0;
+  display: block;
 }
 
 .serviceIcon {
   font-size: 30px;
-  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 /** Book section */
@@ -281,7 +280,7 @@ article section p a:visited {
 }
 
 .bookTitle {
-  font-size: 36px;
+  font-size: 26px;
   font-weight: bold;
   margin: 0;
 }
@@ -863,7 +862,7 @@ a.authorBadge:visited {
   }
 
   .bookTitle {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   /* .authorsContainer,

@@ -1,5 +1,5 @@
 #footer-container {
-  background: var(--secondary-color-800);
+  background: #222;
   color: var(--secondary-color-white);
 }
 #footer-container footer {
