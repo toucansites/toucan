@@ -1,7 +1,0 @@
-main .grid div img {
-    border: 8px solid var(--primary-text-color);
-}
-
-main .grid div img:hover {
-    border: 8px solid var(--primary-background-color);
-}
