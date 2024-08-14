@@ -32,12 +32,12 @@ context:
         posts:
             sort: publication
             order: desc
-            limit: 10
+            limit: 12
         
         featured:
             sort: publication
             order: desc
-            limit: 10
+            limit: 12
             filter:
                 field: featured
                 method: equals

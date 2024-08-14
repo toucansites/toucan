@@ -75,10 +75,16 @@ In order to update the street property we had to do quite a lot of work, first w
 This looks really bad, we've also caused quite a lot of mutation and now others can also change these variable properties, which we don't necessary want. Is there a better way? Well...
 
 ```swift
-let newSteveJobs = Person(name: steveJobs.name,
-                      company: Company(name: appleInc.name,
-                                       address: Address(street: "Apple Park Way",
-                                                        city: oneInfiniteLoop.city)))
+let newSteveJobs = Person(
+    name: steveJobs.name,
+    company: Company(
+        name: appleInc.name,
+        address: Address(
+            street: "Apple Park Way",
+            city: oneInfiniteLoop.city
+        )
+    )
+)
 ```
 
 Ok, this is ridiculous, can we actually do something better? 🙄

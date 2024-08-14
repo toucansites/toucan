@@ -122,17 +122,24 @@ img.large {
     margin: 0 auto;
 }
 .article-with-toc aside#toc ul {
-    margin: 16px 0;
+    margin-top: 0;
     padding: 0;
     list-style-type: none;
     font-size: 14px;
 }
 .article-with-toc aside#toc ul ul {
     margin-left: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
+    
 }
 .article-with-toc aside#toc ul, .article-with-toc aside#toc ul li {
-    margin-bottom: 16px;
+    margin-bottom: 0;
+}
+.article-with-toc aside#toc ul li.first-level {
+    margin-top: 8px;
+}
+.article-with-toc aside#toc ul li.first-level:first-child {
+    margin-top: 0;
 }
 .book {
     text-align: center;

@@ -13,9 +13,9 @@ I thought that I'd be nice to have a summarized comparison between all the facto
 
 ## Static factory
 
-    + no separate factory class
-    + named static method to initialize objects
-    + can have cache & can return subtypes
+- no separate factory class
+- named static method to initialize objects
+- can have cache & can return subtypes
 
 ```swift
 extension UIColor {
@@ -85,8 +85,8 @@ let secondary = secondaryColorFactory.create()
 
 ## Abstract factory
 
-    + combines simple factory with factory method
-    + has a global effect on the whole app
+- combines simple factory with factory method
+- has a global effect on the whole app
 
 ```swift
 // exact same factory method pattern from above
