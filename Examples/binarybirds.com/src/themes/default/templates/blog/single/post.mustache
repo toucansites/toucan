@@ -1,36 +1,40 @@
 {{<html}}
 {{$main}}
-<article class="post">
+<article class="wrapper">
     
     <header>
-        {{#page.imageUrl}}<img src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
-        <br><br>
-        <time datetime="{{page.date}}">{{page.date}}</time>
         <h1>{{page.title}}</h1>
-        <hr>
+        <div class="data">
+            <div class="author-list">
+            {{#page.authors}}
+                <a class="authorBadge" href="{{permalink}}">
+                <div class="midi">{{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}</div>
+                <div>{{title}}</div>
+                </a>
+            {{/page.authors}}
+            </div>
+            <div class="times">
+                <time datetime="{{page.publication.html}}">{{page.publication.html}}</time>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                </svg>
+                <span class="readingTime">{{page.readingTime}} min read</span>
+            </div>
+        </div>
         <p class="excerpt">{{page.description}}</p>
         
-        <div class="author-list">
-        {{#page.authors}}
-            <a href="{{permalink}}">
-            {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-            <span class="name">{{title}}</span>
-            </a>
-        {{/page.authors}}
-        </div>
-        <div class="tag-list">
-        {{#page.tags}}
-            <a href="{{permalink}}"><small>{{title}}</small></a>{{^last()}}<small>, </small>{{/last()}}
-        {{/page.tags}}
-        </div>
     </header>
     
 
     <section>
-    
-    {{& page.contents}}
-        
+        {{& page.contents}}
     </section>
+
+    <div class="meta">
+        {{#page.tags}}
+            {{> blog.blocks.postTag}}
+        {{/page.tags}}
+    </div>
     
     <section>
     <div class="grid grid-221">
@@ -86,10 +90,6 @@
     {{/empty(page.moreByAuthors)}}
 
 </article>
-
-<div class="fixed-toc">
-{{> blocks.toc }}
-</div>
 
 {{/main}}
 {{/html}}

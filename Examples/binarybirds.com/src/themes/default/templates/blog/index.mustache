@@ -13,6 +13,15 @@
 {{& page.contents}}
 
 <div id="blog" class="wrapper">
+        <header class="blogTitle">
+        <h1>Binary Birds Blog</h1>
+        <p>
+          Dive into the World of Full-Stack Swift Development with Us.
+          <br />
+          Discover Insights, Tips, and Tricks for Server-Side, Mobile, and Web
+          Apps.
+        </p>
+    </header>
     
     <h2>Featured posts</h2>
     {{#empty(site.context.featured)}}
@@ -47,7 +56,7 @@
     Empty.
     {{/empty(site.context.authors)}}
     {{^empty(site.context.authors)}}
-        <div class="grid grid-321">
+        <div class="grid grid-521">
     {{#site.context.authors}}
         {{> blog.blocks.author}}
     {{/site.context.authors}}
@@ -59,7 +68,7 @@
     Empty.
     {{/empty(site.context.tags)}}
     {{^empty(site.context.tags)}}
-        <div class="grid grid-321">
+        <div class="grid grid-521">
     {{#site.context.tags}}
         {{> blog.blocks.tag}}
     {{/site.context.tags}}

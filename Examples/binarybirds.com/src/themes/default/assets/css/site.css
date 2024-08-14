@@ -32,6 +32,11 @@ main {
 
 p {
   font-size: 20px;
+  line-height: 1.5;
+}
+
+article {
+  padding: 50px 0;
 }
 
 #home > header {
@@ -214,7 +219,7 @@ article section p a:visited {
   align-items: center;
 }
 
-/** Services section */
+/** MARK: Services section */
 
 .servicesContainer {
   margin: 0 auto;
@@ -243,7 +248,7 @@ article section p a:visited {
   margin-bottom: 10px;
 }
 
-/** Book section */
+/** MARK: Book section */
 
 .bookSection {
   width: 100%;
@@ -359,7 +364,7 @@ article section p a:visited {
   font-size: 24px;
 }
 
-/** Footer */
+/** MARK: Footer */
 
 .external {
   display: flex;
@@ -403,7 +408,7 @@ article section p a:visited {
   padding: 32px 0;
 }
 
-/** Development page */
+/** MARK: Development page */
 
 .developmentTitle {
   text-align: center;
@@ -422,7 +427,7 @@ article section p a:visited {
   object-fit: contain;
 }
 
-/** Posts page */
+/** MARK: Posts page */
 
 .blogTitle {
   text-align: center;
@@ -436,6 +441,7 @@ article section p a:visited {
 
 .post {
   background-color: #fafafd;
+  cursor: pointer;
 }
 
 .post:hover {
@@ -472,17 +478,32 @@ article section p a:visited {
 .content h3 {
   margin: 10px 0 0 0;
   font-size: 24px;
+  color: var(--primary-color-500);
 }
 
-.content time {
+#timeStamp {
+  font-size: 16px;
   font-style: italic;
-  color: var(--primary-color-600);
+  color: var(--primary-color-300);
+  margin: 10px 0;
+}
+
+.content p {
+  color: var(--secondary-color-900);
+}
+
+.featuredIcon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--primary-color-500);
 }
 
 .authors {
   display: flex;
   align-items: center;
-  gap: 10px;
   margin: 10px 0;
 }
 
@@ -530,28 +551,38 @@ article section p a:visited {
 .meta {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
+  margin-bottom: 50px;
 }
 
 .tagLink {
   display: flex;
-  gap: 3px;
+  gap: 5px;
+  border-radius: 17px;
+  background-color: var(--primary-color-50);
+  align-items: center;
+  padding: 5px 10px 5px 5px;
+  border: 1px solid var(--primary-color-100);
+}
+
+.tagLink:hover {
+  background-color: var(--primary-color-100);
 }
 
 a.tagLink,
 a.tagLink:hover,
 a.tagLink:visited {
-  color: var(--secondary-color-400);
+  color: var(--primary-color-500);
 }
 
-.tagLink figure {
+.tagLink img {
   width: 24px;
   height: 24px;
   border-radius: 50%;
   overflow: hidden;
 }
 
-/** Single post page */
+/** MARK: Single post page */
 
 #post-header {
   margin: 40px auto;
@@ -573,15 +604,8 @@ a.authorBadge:visited {
   align-items: center;
   justify-content: space-between;
   gap: 5px;
-}
-
-.times svg {
   color: var(--secondary-color-400);
-}
-
-#post-header time {
   font-style: italic;
-  color: var(--secondary-color-400);
 }
 
 .separator {
@@ -589,16 +613,11 @@ a.authorBadge:visited {
   align-items: center;
 }
 
-.readingTime {
-  font-size: 16px;
-  font-style: italic;
-  color: var(--secondary-color-400);
-}
-
 .data {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 20px 0;
 }
 
 .postTags {
@@ -654,19 +673,37 @@ a.authorBadge:visited {
   border-top: 1px solid var(--primary-color-400);
 }
 
-/** Tags, authors */
+/** MARK: Tags, authors */
+
+#tag,
+#author-page,
+#posts {
+  padding: 36px 0;
+}
 
 .header {
   padding: 64px 0;
   text-align: center;
 }
 
+.tag-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .profile-picture {
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
   border-radius: 50%;
   overflow: hidden;
-  margin: 0 auto;
+}
+
+.tag-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .description {
@@ -736,8 +773,27 @@ a.authorBadge:visited {
   color: var(--secondary-color-400);
 }
 
+/** MARK: Pagination */
+
+.pagination {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pagination a {
+  color: var(--secondary-color-900);
+}
+
+.pagination a:hover,
+a.current-page {
+  color: var(--primary-color-500);
+}
+
 /**-----------------------------------------------------------------------------
-** Media Queries
+** MARK: Media Queries
 **----------------------------------------------------------------------------*/
 
 @media (prefers-color-scheme: dark) {

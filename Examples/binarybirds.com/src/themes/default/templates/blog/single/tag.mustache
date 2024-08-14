@@ -1,11 +1,13 @@
 {{<html}}
 {{$main}}
 
-<div id="tag">
+<div id="tag" class="wrapper">
     
     <header>
-        {{#page.imageUrl}}<img class="medium" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}
-        <h1>{{page.title}}</h1>
+        <div class="tag-title">
+            <div class="tag-picture">{{#page.imageUrl}}<img class="medium" src="{{page.imageUrl}}" alt="{{page.title}}">{{/page.imageUrl}}</div>
+            <h1>{{page.title}}</h1>
+        </div>
         <hr>
         <p>{{page.description}}</p>
         <p>{{count(page.posts)}} posts</p>

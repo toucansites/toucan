@@ -36,6 +36,8 @@
   --background-color-3: #e0e0e0;
   --background-color-4: #afafaf;
 
+  --pre-background-color: #fff;
+
   --text-color: #333;
   --text-color-1: #000;
   --text-color-2: #666;
@@ -74,6 +76,8 @@
     --background-color-2: #262626;
     --background-color-3: #333333;
     --background-color-4: #606060;
+
+    --pre-background-color: #0d1117;
 
     --white-color: #ffffff;
     --black-color: #000000;

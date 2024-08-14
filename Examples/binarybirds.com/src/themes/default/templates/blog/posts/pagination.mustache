@@ -1,9 +1,10 @@
 {{<html}}
 {{$main}}
 
-{{& page.contents}}
 
 <div id="posts" class="wrapper">
+
+    {{& page.contents}}
 
     {{#empty(pagination.data.post)}}
     Empty.
