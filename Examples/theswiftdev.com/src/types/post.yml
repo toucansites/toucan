@@ -43,32 +43,13 @@ context:
                 method: equals
                 value: true
                 
-    local:
-        prev:
-            references: post
-            foreignKey: $prev
-            sort: order
-            order: asc
-
-        next:
-            references: post
-            foreignKey: $next
-            sort: order
-            order: asc
-            
+    local:            
         related:
             references: post
             foreignKey: $same.tags
             sort: order
             order: asc
-            limit: 6
+            limit: 4
 
-        moreByAuthors:
-            references: post
-            foreignKey: $same.authors
-            sort: order #TODO: $random
-            order: asc
-            limit: 6
-        
 
 template: blog.single.post

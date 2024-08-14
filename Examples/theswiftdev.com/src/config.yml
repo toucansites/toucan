@@ -3,7 +3,7 @@ site:
     language: en-US
     title: The.Swift.Dev.
     description: Articles about server-side Swift application development.
-    dateFormat: "yyyy.MM.dd. HH:mm"
+    dateFormat: "yyyy/MM/dd"
     noindex: false
 
 themes:

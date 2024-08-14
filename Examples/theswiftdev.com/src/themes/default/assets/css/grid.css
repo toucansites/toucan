@@ -5,11 +5,16 @@
     grid-column: span 1;
     grid-template-columns: repeat(1, 1fr);
 }
+.grid > * {
+    overflow: hidden;
+/*    white-space: nowrap;*/
+    text-overflow: ellipsis;
+}
 .grid.grid-2 {
     grid-template-columns: repeat(2, 1fr);
 }
 .grid.grid-3 {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .grid.grid-4 {
     grid-template-columns: repeat(4, 1fr);
@@ -21,7 +26,7 @@
 }
 @media screen and (min-width: 900px) {
     .grid.grid-211 {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
     .grid.grid-311, .grid.grid-321 {
         grid-template-columns: repeat(3, 1fr);

@@ -1,9 +1,10 @@
 ---
 title: Tags
-description: This is the tags page.
+description: Browse posts by tags.
 template: blog.tags.index
 ---
 
 # Tags
 ---
-This is the tags page
+
+Browse posts by tags.

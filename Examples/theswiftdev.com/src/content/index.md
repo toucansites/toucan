@@ -1,10 +1,9 @@
 ---
-title: Latest Swift articles
-description: Articles about server-side Swift application development.
-image: images/defaults/default.png
+title: Articles about application development 
+description: Articles about application development using the Swift programming language.
 template: index
 ---
 
-# Welcome
+# The.Swift.Dev.
 
-Home page content
+Articles about application development using the Swift programming language.

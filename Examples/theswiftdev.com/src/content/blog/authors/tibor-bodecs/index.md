@@ -1,8 +1,15 @@
 ---
 type: author
 title: "Tibor Bödecs"
-description: "The.Swift.Dev"
+description: "CEO @ Binary Birds"
 image: "./assets/tibor-bodecs.jpeg"
+
+companyName: "Binary Birds Kft."
+companyUrl: "https://binarybirds.com/"
+
+ctaLabel: "Get in touch with Tibor"
+ctaUrl: "mailto:mail.tib@gmail.com"
+
 ---
 
-Hello my name is Tib!
+Server side Swift enthusiast, book author, content creator.

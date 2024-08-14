@@ -1,10 +1,5 @@
-<div class="card">
-<a href="{{permalink}}">
-    <center>
-    {{#imageUrl}}<img class="medium" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-    <br><br>
-    <h2>{{title}}</h2>
+<div class="card tag">
+    {{#imageUrl}}<a href="{{permalink}}"><img class="medium" src="{{imageUrl}}" alt="{{title}}"></a>{{/imageUrl}}
+    <h2><a href="{{permalink}}">{{title}}</a></h2>
     <p>{{count(posts)}} posts</p>
-    </center>
-</a>
 </div>

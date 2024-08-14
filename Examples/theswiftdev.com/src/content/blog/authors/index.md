@@ -1,10 +1,9 @@
 ---
 title: Authors
-description: This is the authors page.
-image: ./assets/foo.jpg 
+description: Browse posts by authors.
 template: blog.authors.index
 ---
 
 # Authors
 ---
-This is the authors page.
+Browse posts by authors.

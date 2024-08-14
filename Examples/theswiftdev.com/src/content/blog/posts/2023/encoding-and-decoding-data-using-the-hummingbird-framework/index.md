@@ -6,10 +6,11 @@ description: URL encoded requests over multipart form data? Maybe JSON and raw H
 publication: 2023-03-22 16:20:00
 image: ./22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
 tags: 
-    - Swift
-    - Hummingbird
+    - swift
+    - hummingbird
 authors:
     - tibor-bodecs
+featured: true
 ---
 
 HTTP is all about sending and receiving data over the network. Originally it was only utilized to transfer HTML documents, but nowadays we use HTTP to transfer CSS, JavaScript, JSON and many other data types. According to the standards, the [Content-Type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type) and [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) headers can be used to have a better understanding about the data inside the body of the HTTP request.
