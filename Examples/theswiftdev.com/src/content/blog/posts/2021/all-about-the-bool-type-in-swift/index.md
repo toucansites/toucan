@@ -1,12 +1,12 @@
 ---
 type: post
-slug: all-about-the-bool-type-in-swift
 title: All about the Bool type in Swift
 description: Learn everything about logical types and the Boolean algebra using the Swift programming language and some basic math.
 publication: 2021-09-10 16:20:00
-tags: Swift, Booleans
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Booleans in the Swift language

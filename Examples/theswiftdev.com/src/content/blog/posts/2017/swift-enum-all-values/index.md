@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-enum-all-values
 title: Swift enum all values
 description: In this quick tutorial I'll show you how to get all the possible values for a Swift enum type with a generic solution written in Swift.
 publication: 2017-10-11 16:20:00

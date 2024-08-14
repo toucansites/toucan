@@ -113,7 +113,14 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
                 tag(
                     name: "code",
                     attributes: attributes,
-                    content: .value(codeBlock.code)
+                    content: .value(
+                        codeBlock.code.replacingOccurrences(
+                            [
+                                "<": "&lt;",
+                                ">": "&gt;",
+                            ]
+                        )
+                    )
                 )
             )
         )

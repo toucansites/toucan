@@ -1,12 +1,13 @@
 ---
 type: post
-slug: server-side-swift-projects-inside-docker-using-vapor-4
 title: Server side Swift projects inside Docker using Vapor 4
 description: Learn how to setup Vapor 4 projects inside a Docker container. Are you completely new to Docker? This article is just for you.
 publication: 2020-04-19 16:20:00
-tags: Vapor, Docker
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What the heck is Docker?

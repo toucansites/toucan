@@ -1,6 +1,5 @@
 ---
 type: post
-slug: self-sizing-cells-with-rotation-support
 title: Self sizing cells with rotation support
 description: How to make self sizing cells in Swift both for table & collection views supporting orientation changes and dynamic font types.
 publication: 2018-01-23 16:20:00

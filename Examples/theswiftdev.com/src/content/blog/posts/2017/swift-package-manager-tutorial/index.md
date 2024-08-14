@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-package-manager-tutorial
 title: Swift Package Manager tutorial
 description: Learn how to use the Swift Package Manager to handle external dependencies, create your library or app on macOS and Linux.
 publication: 2017-11-19 16:20:00

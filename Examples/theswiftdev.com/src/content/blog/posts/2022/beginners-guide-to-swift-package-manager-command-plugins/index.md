@@ -1,12 +1,12 @@
 ---
 type: post
-slug: beginners-guide-to-swift-package-manager-command-plugins
-title: Beginner's guide to Swift package manager command plugins
+title: "Beginner's guide to Swift package manager command plugins"
 description: Learn how to create command plugins for the Swift Package Manager to execute custom actions using SPM and other tools.
 publication: 2022-05-16 16:20:00
-tags: Swift, SPM
+tags: 
+    - swift-package-manager
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Introduction to Swift Package Manager plugins

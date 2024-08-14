@@ -1,10 +1,10 @@
 ---
 type: post
-slug: custom-views-input-forms-and-mistakes
 title: Custom views, input forms and mistakes
 description: Just a little advice about creating custom view programmatically and the truth about why form building with collection views sucks.
 publication: 2019-10-21 16:20:00
-tags: UIKit, iOS
+tags: 
+  - uikit
 authors:
   - tibor-bodecs
 ---

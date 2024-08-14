@@ -1,12 +1,13 @@
 ---
 type: post
-slug: top-20-ios-libraries-of-2019
 title: Top 20 iOS libraries written in Swift
 description: I gathered the best open source Swift frameworks on github that will help you to speed up mobile application development in 2019.
 publication: 2017-10-10 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 Sometimes it's just better to use a 3rd-party framework instead of reinventing the wheel, but there are some important questions that you should ask first:

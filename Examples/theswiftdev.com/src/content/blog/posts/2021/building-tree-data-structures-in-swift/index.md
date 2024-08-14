@@ -1,12 +1,12 @@
 ---
 type: post
-slug: building-tree-data-structures-in-swift
 title: Building tree data structures in Swift
 description: This tutorial is about showing the pros and cons of various Swift tree data structures using structs, enums and classes.
 publication: 2021-11-23 16:20:00
-tags: Swift, algorithms
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is a tree?

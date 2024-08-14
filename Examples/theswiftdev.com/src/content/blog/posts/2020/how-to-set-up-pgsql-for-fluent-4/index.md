@@ -1,12 +1,13 @@
 ---
 type: post
-slug: how-to-set-up-pgsql-for-fluent-4
 title: How to set up pgSQL for Fluent 4?
 description: This is a tutorial for beginners about using PostgreSQL. I'll show you how to automatically backup and restore the database.
 publication: 2020-02-25 16:20:00
-tags: Fluent, pgSQL
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 > NOTE: If you are already familiar with PostgreSQL, but you don't know much about how to use databases in Vapor, you should [read my other tutorial about Fluent for beginners](https://theswiftdev.com/a-tutorial-for-beginners-about-the-fluent-postgresql-driver-in-vapor-4/).

@@ -1,10 +1,11 @@
 ---
 type: post
-slug: uicollectionview-data-source-and-delegates-programmatically
 title: UICollectionView data source and delegates programmatically
 description: In this quick UIKit tutorial I'll show you how to create a simple UICollectionView without Interface Builder, but only using Swift.
 publication: 2018-06-26 16:20:00
-tags: UIKit, iOS, UICollectionView
+tags: 
+    - uikit
+    - ios
 authors:
   - tibor-bodecs
 ---

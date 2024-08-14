@@ -1,12 +1,12 @@
 ---
 type: post
-slug: logging-for-beginners-in-swift
 title: Logging for beginners in Swift
 description: Learn how to print variables to the debug console using different functions such as print, dump, NSLog and the unified os.log API.
 publication: 2020-09-30 16:20:00
-tags: Swift, loggging
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Basic output in Swift using print

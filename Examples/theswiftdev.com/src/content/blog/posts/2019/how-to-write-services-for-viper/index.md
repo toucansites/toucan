@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-write-services-for-viper
 title: How to write services for VIPER?
-description: Not everything is a VIPER module. In this article I'll show you how do I separate the service layer from the modules, using Swift.
+description: "Not everything is a VIPER module. In this article I'll show you how do I separate the service layer from the modules, using Swift."
 publication: 2019-09-25 16:20:00
-tags: VIPER
+tags: 
+    - viper 
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 I can imagine that you just started to write your [first VIPER module](https://theswiftdev.com/2018/03/12/the-ultimate-viper-architecture-tutorial/) and you might wonder: where should I put all my network communication, CoreLocation, CoreData or "whatever service" code, that's not related to the [user interface](https://theswiftdev.com/2019/03/11/viper-best-practices-for-ios-developers/) at all?

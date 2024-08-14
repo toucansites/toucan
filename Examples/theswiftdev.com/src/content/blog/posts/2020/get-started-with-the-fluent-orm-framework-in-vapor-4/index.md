@@ -1,12 +1,13 @@
 ---
 type: post
-slug: get-started-with-the-fluent-orm-framework-in-vapor-4
 title: Get started with the Fluent ORM framework in Vapor 4
 description: Learn how to use the Fluent ORM framework. Migrations, schemas, relations powered by PostgreSQL, written in Swift.
 publication: 2020-02-27 16:20:00
-tags: Vapor, Fluent
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 > NOTE: If you want to learn Fluent, but you don't have a working PostgreSQL installation, you should check my [tutorial about how to install and use pgSQL](https://theswiftdev.com/how-to-set-up-pgsql-for-fluent-4/) before you start reading this one.

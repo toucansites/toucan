@@ -1,12 +1,13 @@
 ---
 type: post
-slug: picking-and-playing-videos-in-swift
 title: Picking and playing videos in Swift
 description: Learn how to record or select a video file using a video picker controller and the AVPlayer class, written entirely in Swift 5.
 publication: 2019-08-28 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Let's pick some videos!

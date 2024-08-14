@@ -1,12 +1,13 @@
 ---
 type: post
-slug: the-future-of-server-side-swift
 title: The future of server side Swift
 description: What's going to happen with Swift on the Server in 2022? Distributed actors, Vapor 5, some predictions and wishes.
 publication: 2022-01-05 16:20:00
-tags: Vapor, Swift
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## The new Swift concurrency model

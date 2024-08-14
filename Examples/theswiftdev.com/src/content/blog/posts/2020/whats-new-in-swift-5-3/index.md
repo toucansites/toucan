@@ -1,12 +1,12 @@
 ---
 type: post
-slug: whats-new-in-swift-5-3
 title: What's new in Swift 5.3?
 description: Swift 5.3 is going to be an exciting new release. This post is a showcase of the latest Swift programming language features.
 publication: 2020-05-14 16:20:00
-tags: Swift
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 The [Swift 5.3 release process](https://swift.org/blog/5-3-release-process/) started in late March, there are lots of new features that are already implemented on the 5.3 branch. If you are curious what are those you can try it out by installing the latest snapshot using [swiftenv](https://github.com/kylef/swiftenv) for example, you can grab them from [swift.org](https://swift.org/download/).

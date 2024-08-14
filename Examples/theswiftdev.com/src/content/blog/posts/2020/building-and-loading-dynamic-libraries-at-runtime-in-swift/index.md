@@ -1,12 +1,12 @@
 ---
 type: post
-slug: building-and-loading-dynamic-libraries-at-runtime-in-swift
 title: Building and loading dynamic libraries at runtime in Swift
 description: Learn how to create a plugin system using dynamic libraries and the power of Swift, aka. modular frameworks on the server-side.
 publication: 2020-05-20 16:20:00
-tags: Swift, libraries, frameworks
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Why should we make a plugin system?

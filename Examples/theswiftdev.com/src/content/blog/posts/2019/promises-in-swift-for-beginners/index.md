@@ -1,12 +1,12 @@
 ---
 type: post
-slug: promises-in-swift-for-beginners
 title: Promises in Swift for beginners
 description: Everything you ever wanted to know about futures and promises. The beginner's guide about asynchronous programming in Swift.
 publication: 2019-05-28 16:20:00
-tags: Swift, Promises
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Sync vs async execution

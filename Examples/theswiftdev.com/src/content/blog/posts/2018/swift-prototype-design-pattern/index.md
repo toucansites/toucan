@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-prototype-design-pattern
 title: Swift prototype design pattern
 description: The prototype design pattern is used to create clones of a base object, so let's see some practical examples written in Swift.
 publication: 2018-06-08 16:20:00

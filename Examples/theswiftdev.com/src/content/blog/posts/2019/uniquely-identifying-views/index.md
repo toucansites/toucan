@@ -1,12 +1,13 @@
 ---
 type: post
-slug: uniquely-identifying-views
 title: Uniquely identifying views
 description: Learn how to use string based UIView identifiers instead of tags. If you are tired of tagging views, check out these alternative solutions.
 publication: 2019-04-02 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 

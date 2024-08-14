@@ -1,12 +1,13 @@
 ---
 type: post
-slug: hummingbird-routing-and-requests
 title: Hummingbird routing and requests
 description: Beginner's guide to learn all about routing and request handling using the Hummingbird server-side Swift framework.
 publication: 2023-03-17 16:20:00
-tags: Swift, Hummingbird
+tags: 
+    - hummingbird
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 Routing on the server side means the server is going to send a response based on the URL path that the client called when firing up the HTTP request. Of course the server can check additional parameters and headers to build the final response, but when we talk about routing in general, we usually refer to the path components. [Hummingbird](https://hummingbird-project.github.io/hummingbird-docs/documentation/hummingbird/router/) uses a [trie-based](https://en.wikipedia.org/wiki/Trie) router, which is a fast and efficient way of looking up routes. It's quite simple to respond to HTTP request using the built-in router, you can simply add your basic route handlers like this:

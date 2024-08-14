@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-singleton-design-pattern
 title: Swift singleton design pattern
 description: Singleton is the most criticized design pattern of all time. Learn the proper way of using Swift singleton classes inside iOS projects.
 publication: 2018-05-22 16:20:00

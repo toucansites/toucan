@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-command-design-pattern
 title: Swift command design pattern
 description: This time I'm going to show you a behavioral pattern. Here is a little example of the command design patten written in Swift.
 publication: 2018-06-13 16:20:00

@@ -1,10 +1,10 @@
 ---
 type: post
-slug: how-to-build-swiftui-apps-using-viper
-title: How to build SwiftUI apps using VIPER?
-description: In this tutorial I'll show you how to combine SwiftUI with the VIPER architecture in a real world iOS application example.
+title: "How to build SwiftUI apps using VIPER?"
+description: "In this tutorial I'll show you how to combine SwiftUI with the VIPER architecture in a real world iOS application example."
 publication: 2019-09-18 16:20:00
-tags: VIPER, SwiftUI
+tags: 
+    - viper
 authors:
   - tibor-bodecs
 ---

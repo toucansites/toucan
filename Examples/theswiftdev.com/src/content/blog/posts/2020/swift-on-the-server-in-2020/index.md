@@ -1,12 +1,13 @@
 ---
 type: post
-slug: swift-on-the-server-in-2020
 title: Swift on the Server in 2020
 description: Why choose Swift as a backend language in 2020? What are the available frameworks to build your server? Let me guide you.
 publication: 2020-08-28 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Swift is everywhere

@@ -1,12 +1,13 @@
 ---
 type: post
-slug: ajax-calls-using-vapor-4
 title: AJAX calls using Vapor 4
 description: Learn how to implement Asynchronous JavaScript and XML (AJAX) calls using Leaf templates and Vapor 4 as a server.
 publication: 2020-12-18 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is AJAX?

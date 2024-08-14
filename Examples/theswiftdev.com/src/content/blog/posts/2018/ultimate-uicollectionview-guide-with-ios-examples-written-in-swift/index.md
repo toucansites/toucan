@@ -1,6 +1,5 @@
 ---
 type: post
-slug: ultimate-uicollectionview-guide-with-ios-examples-written-in-swift
 title: Ultimate UICollectionView guide with iOS examples written in Swift
 description: Learn how to use UICollectionView, with highly reusable UIKit components and some MVVM pattern without the going nuts with index path calculations.
 publication: 2018-04-17 16:20:00

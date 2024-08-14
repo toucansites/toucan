@@ -1,12 +1,12 @@
 ---
 type: post
-slug: introduction-to-asyncawait-in-swift
 title: Introduction to async/await in Swift
 description: Beginners guide to the new async/await API's in Swift 5.5. Interacting with sync code, structured concurrency, async let.
 publication: 2021-05-25 16:20:00
-tags: Swift, Concurrency
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## The main project

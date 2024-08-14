@@ -1,12 +1,13 @@
 ---
 type: post
-slug: beginners-guide-to-server-side-swift-using-vapor-4
-title: Beginner's guide to Server side Swift using Vapor 4
-description: Learn how to build and host your very first backend application using Vapor 4 and the brief history of server side Swift.
+title: "Beginner's guide to Server side Swift using Vapor 4"
+description: "Learn how to build and host your very first backend application using Vapor 4 and the brief history of server side Swift."
 publication: 2020-01-13 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Brief history of my backend career

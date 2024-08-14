@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-build-better-command-line-apps-and-tools-using-swift
 title: How to build better command line apps and tools using Swift?
 description: These tips will help you to create amazing CLI tools, utility apps, server side projects or terminal scripts using the Swift language.
 publication: 2021-08-05 16:20:00
-tags: Swift, command line
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Running Swift files as scripts

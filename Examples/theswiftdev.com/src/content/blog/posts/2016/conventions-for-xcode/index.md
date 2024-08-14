@@ -1,19 +1,18 @@
 ---
 type: post
-slug: conventions-for-xcode
 title: Conventions for Xcode
 description: Learn how to organize your codebase. If you are struggling with Xcode project structure, files, naming conventions, read this.
 publication: 2016-07-06 16:20:00
 tags: 
     - xcode
-    - ios
+    - tooling
 authors:
     - tibor-bodecs
 ---
 
 Apple has so much frameworks and APIs that I don't even know many of them. We are also living in the age of [application extensions](https://developer.apple.com/app-extensions/). If you are trying to create a brand new [target in Xcode](https://developer.apple.com/library/archive/featuredarticles/XcodeConcepts/Concept-Targets.html), you might end up scratching your head. 🤔
 
-![Xcode targets](xcode-targets.jpg)
+![Xcode targets](./assets/xcode-targets.jpg)
 
 This is great for both for developers and end-users, but after creating a few targets and platforms (your project grows and) you might ask the question:
 
@@ -116,7 +115,7 @@ Under the Sources I always make more subfolders for individual VIPER modules, or
 
 Here is a quick example project in Xcode that uses my conventions.
 
-![Xcode naming conventions](xcode-naming-conventions.jpg)
+![Xcode naming conventions](./assets/xcode-naming-conventions.jpg)
 
 As you can see I followed the pattern from above. Let's assume that my project name is TheSwiftDev. Here is a quick overview of the full setup:
 

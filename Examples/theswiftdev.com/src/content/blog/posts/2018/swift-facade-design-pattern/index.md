@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-facade-design-pattern
 title: Swift facade design pattern
 description: The facade design pattern is a simplified interface over a complex subsystem. Let me show you a real quick example using Swift.
 publication: 2018-09-25 16:20:00

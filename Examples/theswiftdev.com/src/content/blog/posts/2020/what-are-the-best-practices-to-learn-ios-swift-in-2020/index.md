@@ -1,12 +1,12 @@
 ---
 type: post
-slug: what-are-the-best-practices-to-learn-ios-swift-in-2020
 title: What are the best practices to learn iOS / Swift in 2020?
 description: Are you learning iOS development? Looking for Swift best practices? This is the right place to start your journey as a mobile application developer.
 publication: 2020-01-06 16:20:00
-tags: Swift, iOS
+tags: 
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Hello Swift!

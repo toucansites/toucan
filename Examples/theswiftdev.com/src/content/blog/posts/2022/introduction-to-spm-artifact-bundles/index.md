@@ -1,12 +1,12 @@
 ---
 type: post
-slug: introduction-to-spm-artifact-bundles
 title: Introduction to SPM artifact bundles
 description: In this tutorial I'm going to show you how to use the new binary target related artifact bundle using the Swift package manager.
 publication: 2022-05-24 16:20:00
-tags: Swift, SPM
+tags: 
+    - swift-package-manager
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Binary targets and modern Swift packages

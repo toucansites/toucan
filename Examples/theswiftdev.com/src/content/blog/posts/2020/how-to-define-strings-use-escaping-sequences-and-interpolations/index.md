@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-define-strings-use-escaping-sequences-and-interpolations
 title: How to define strings, use escaping sequences and interpolations?
 description: As a beginner it can be hard to understand String interpolation and escaping sequences, in this tutorial I'll teach you the basics.
 publication: 2020-09-16 16:20:00
-tags: Swift, strings
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is a string?

@@ -1,12 +1,13 @@
 ---
 type: post
-slug: picking-images-with-uiimagepickercontroller-in-swift-5
 title: Picking images with UIImagePickerController in Swift 5
 description: Learn how to get an image from the photo library or directly from the camera by using the UIImagePickerController class in Swift 5.
 publication: 2019-01-30 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 > Are you looking for a video picker as well? 🍿 Check out my another post about [picking & playing video files in iOS](https://theswiftdev.com/2019/08/28/picking-and-playing-videos-in-swift/).

@@ -1,6 +1,5 @@
 ---
 type: post
-slug: custom-uiview-subclass-from-a-xib-file
 title: Custom UIView subclass from a xib file
 description: Do you want to learn how to load a xib file to create a custom view object? Well, this UIKit tutorial is just for you written in Swift.
 publication: 2018-10-16 16:20:00

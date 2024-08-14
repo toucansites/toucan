@@ -1,12 +1,13 @@
 ---
 type: post
-slug: building-a-global-storage-for-vapor
 title: Building a global storage for Vapor
 description: This tutorial is about a shared global storage that you can implement using a common design pattern in Vapor 4.
 publication: 2021-12-16 16:20:00
-tags: Vapor, storage
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## The problem with app services

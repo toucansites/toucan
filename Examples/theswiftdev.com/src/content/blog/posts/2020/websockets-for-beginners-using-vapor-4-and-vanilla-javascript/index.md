@@ -1,12 +1,13 @@
 ---
 type: post
-slug: websockets-for-beginners-using-vapor-4-and-vanilla-javascript
 title: Websockets for beginners using Vapor 4 and Vanilla JavaScript
 description: Learn how to create a websocket server using Swift & Vapor. Multiplayer game development using JavaScript in the browser.
 publication: 2020-05-28 16:20:00
-tags: Vapor, websocket
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What the heck is a websocket?

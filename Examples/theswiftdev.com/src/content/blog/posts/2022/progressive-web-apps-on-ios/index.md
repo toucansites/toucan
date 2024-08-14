@@ -1,12 +1,12 @@
 ---
 type: post
-slug: progressive-web-apps-on-ios
 title: Progressive Web Apps on iOS
 description: This is a beginner's guide about creating PWAs for iOS including custom icons, splash screens, safe area and dark mode support.
 publication: 2022-01-27 16:20:00
-tags: iOS, PWA
+tags: 
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## How to make a PWA for iOS?

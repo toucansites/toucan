@@ -1,12 +1,13 @@
 ---
 type: post
-slug: event-driven-generic-hooks-for-swift
 title: Event-driven generic hooks for Swift
 description: In this article I am going to show you how to implement a basic event processing system for your modular Swift application.
 publication: 2020-11-27 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Dependencies, protocols and types

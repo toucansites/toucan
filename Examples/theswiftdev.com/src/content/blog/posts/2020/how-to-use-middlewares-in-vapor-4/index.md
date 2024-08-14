@@ -1,12 +1,13 @@
 ---
 type: post
-slug: how-to-use-middlewares-in-vapor-4
 title: How to use middlewares in Vapor 4?
 description: Learn how to create middlewares for a Vapor based server side Swift application to handle common routing functionalities.
 publication: 2020-03-17 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is a middleware?

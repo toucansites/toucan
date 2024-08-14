@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-download-files-with-urlsession-using-combine-publishers-and-subscribers
 title: How to download files with URLSession using Combine Publishers and Subscribers?
 description: Learn how to load a remote image into an UIImageView asynchronously using URLSessionDownloadTask and the Combine framework in Swift.
 publication: 2020-01-28 16:20:00
-tags: URLSession, Combine
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## A simple image downloader

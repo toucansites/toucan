@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-create-reusable-views-for-modern-collection-views
 title: How to create reusable views for modern collection views?
 description: A quick intro to modern collection views using compositional layout, diffable data source and reusable view components.
 publication: 2017-10-10 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Reusable views inside a generic cell

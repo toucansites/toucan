@@ -1,6 +1,5 @@
 ---
 type: post
-slug: ios-custom-transition-tutorial-in-swift
 title: iOS custom transition tutorial in Swift
 description: In this tutorial, you'll learn how to replace the push, pop and modal animations with custom transitions & percent driven interactions.
 publication: 2018-04-26 16:20:00

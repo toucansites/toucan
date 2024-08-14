@@ -1,10 +1,11 @@
 ---
 type: post
-slug: a-simple-http2-server-using-vapor-4
 title: A simple HTTP/2 server using Vapor 4
 description: Get started with server-side Swift using the Vapor 4 framework. Learn how to build a really simple HTTP/2 backend server.
 publication: 2019-10-08 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
   - tibor-bodecs
 ---

@@ -1,12 +1,12 @@
 ---
 type: post
-slug: swift-init-patterns
 title: Swift init patterns
 description: The ultimate guide how to init your Swift data types, with the help of designated, convenience, failable intitializers and more.
 publication: 2019-08-25 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is initialization?

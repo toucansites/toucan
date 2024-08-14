@@ -1,12 +1,13 @@
 ---
 type: post
-slug: the-swift-compiler-for-beginners
 title: The Swift compiler for beginners
 description: Learn how to build executable files using the swiftc command, meet the build pipeline, compilers and linkers under the hood.
 publication: 2021-02-10 16:20:00
-tags: Swift, compiler
+tags: 
+    - swift
+    - tooling
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Compiling Swift source files

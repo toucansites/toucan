@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-use-the-result-type-to-handle-errors-in-swift
 title: How to use the result type to handle errors in Swift 5?
 description: From this tutorial you can learn how to utilize the do-try-catch syntax with the brand new result type to handle errors in Swift.
 publication: 2019-01-28 16:20:00
-tags: Swift, Result
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Error handling basics in Swift

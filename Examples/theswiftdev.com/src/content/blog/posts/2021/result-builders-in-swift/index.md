@@ -1,12 +1,12 @@
 ---
 type: post
-slug: result-builders-in-swift
 title: Result builders in Swift
 description: If you want to make a result builder in Swift, this article will help you to deal with the most common cases when creating a DSL.
 publication: 2017-10-10 16:20:00
-tags: UIKit, iOS
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Swift result builder basics

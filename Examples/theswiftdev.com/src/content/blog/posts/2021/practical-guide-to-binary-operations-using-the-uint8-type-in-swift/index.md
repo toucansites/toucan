@@ -1,12 +1,12 @@
 ---
 type: post
-slug: practical-guide-to-binary-operations-using-the-uint8-type-in-swift
 title: Practical guide to binary operations using the UInt8 type in Swift
 description: Introduction to the basics of signed number representation and some practical binary operation examples in Swift using UInt8.
 publication: 2021-09-16 16:20:00
-tags: Swift, UInt8
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Integer types in Swift

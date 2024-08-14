@@ -1,6 +1,5 @@
 ---
 type: post
-slug: how-to-parse-json-in-swift-using-codable-protocol/
 title: How to parse JSON in Swift using Codable protocol?
 description: In this Swift tutorial, I'd like to give you an example about getting and parsing JSON data using URLSession and Codable protocol.
 publication: 2018-01-29 16:20:00

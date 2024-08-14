@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-use-c-libraries-in-swift
 title: How to use C libraries in Swift?
 description: Learn how to use system libraries and call C code from Swift. Interoperability between the Swift language and C for beginners.
 publication: 2021-03-05 16:20:00
-tags: Swift, C
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Building a custom C library using SPM

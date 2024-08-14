@@ -1,12 +1,13 @@
 ---
 type: post
-slug: table-joins-in-fluent-4
 title: Table joins in Fluent 4
 description: In this quick tutorial I'm going to show you how to join and query database models using the Fluent ORM framework in Vapor 4.
 publication: 2020-06-11 16:20:00
-tags: Vapor, Fluent
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Database models

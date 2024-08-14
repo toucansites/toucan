@@ -1,10 +1,11 @@
 ---
 type: post
-slug: all-about-the-swift-package-manager-and-the-swift-toolchain
-title: All about the Swift Package Manager and the Swift toolchain
-description: Learn everything about the SPM architecture. I'll also teach you how to integrate your binary executable into the Swift toolchain.
+title: "All about the Swift Package Manager and the Swift toolchain"
+description: "Learn everything about the SPM architecture. I'll also teach you how to integrate your binary executable into the Swift toolchain."
 publication: 2019-01-14 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+     - ios
 authors:
   - tibor-bodecs
 ---

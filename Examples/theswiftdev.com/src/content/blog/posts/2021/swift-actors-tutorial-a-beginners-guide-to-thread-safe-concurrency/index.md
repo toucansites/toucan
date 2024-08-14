@@ -1,12 +1,12 @@
 ---
 type: post
-slug: swift-actors-tutorial-a-beginners-guide-to-thread-safe-concurrency
 title: Swift actors tutorial - a beginner's guide to thread safe concurrency
 description: Learn how to use the brand new actor model to protect your application from unwanted data-races and memory issues.
 publication: 2021-06-17 16:20:00
-tags: Swift, Concurrency
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Thread safety & data races

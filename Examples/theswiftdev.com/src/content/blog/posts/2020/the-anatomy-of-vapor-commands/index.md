@@ -1,12 +1,13 @@
 ---
 type: post
-slug: the-anatomy-of-vapor-commands
 title: The anatomy of Vapor commands
 description: Learn how to build and run your existing Vapor apps using various command line arguments, flags and environments.
 publication: 2020-03-25 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## The Vapor toolbox

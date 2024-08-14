@@ -1,12 +1,13 @@
 ---
 type: post
-slug: 10-short-advices-that-will-make-you-a-better-vapor-developer-right-away
 title: 10 short advices that will make you a better Vapor developer right away
-description: As a beginner server side Swift developer you'll face many obstackles. I'll show you how to avoid the most common ones.
+description: "As a beginner server side Swift developer you'll face many obstackles. I'll show you how to avoid the most common ones."
 publication: 2020-07-15 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Set a custom working directory in Xcode with just a few clicks

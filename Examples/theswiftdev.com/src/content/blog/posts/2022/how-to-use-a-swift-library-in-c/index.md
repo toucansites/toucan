@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-use-a-swift-library-in-c
 title: How to use a Swift library in C
 description: In this tutorial, we're going to build a C app by importing a Swift library and talk a bit about the Swift / C Interoperability in general.
 publication: 2022-02-23 16:20:00
-tags: Swift, C
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## How to build a C compatible Swift library?

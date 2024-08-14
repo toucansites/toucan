@@ -1,6 +1,5 @@
 ---
 type: post
-slug: ios-auto-layout-tutorial-programmatically
 title: iOS Auto Layout tutorial programmatically
 description: In this great iOS Auto Layout tutorial I'll teach you how to support rotation, use constraints, work with layers, animate corner radius.
 publication: 2017-10-31 16:20:00

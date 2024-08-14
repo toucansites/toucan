@@ -1,12 +1,12 @@
 ---
 type: post
-slug: uikit-loadview-vs-viewdidload
 title: UIKit - loadView vs viewDidLoad
 description: When to use these methods? Common questions and answers about the iOS view hierarchy including memory management.
 publication: 2022-02-09 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Weak, unowned or strong subviews?

@@ -1,12 +1,12 @@
 ---
 type: post
-slug: running-tasks-in-parallel
 title: Running tasks in parallel
 description: Learn how to run tasks in parallel using the old-school tools and frameworks plus the new structured concurrency API in Swift.
 publication: 2023-02-09 16:20:00
-tags: Swift, Concurrency
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 Being able to run tasks in parallel is nice, it can speed up things for sure when you can utilize multiple CPU cores, but how can we actually implement these kind of operations in Swift? 🤔
@@ -17,7 +17,7 @@ Imagine that you have a picture which is 50000 pixel wide and 20000 pixel long, 
 
 The Dispatch framework offers multiple ways to solve this issue. The first solution is to use the [concurrentPerform](https://developer.apple.com/documentation/dispatch/dispatchqueue/2016088-concurrentperform) function and specify some number of workers. For the sake of simplicity, I'm going to add up the numbers from zero to 1 billion using 8 workers. 💪
 
-```swift
+```
 import Dispatch
 
 let workers: Int = 8

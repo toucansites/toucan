@@ -1,12 +1,13 @@
 ---
 type: post
-slug: all-about-authentication-in-vapor-4
 title: All about authentication in Vapor 4
 description: Learn how to implement a user login mechanism with various auth methods using sessions, JWTs, written in Swift only.
 publication: 2020-04-07 16:20:00
-tags: Vapor, authentication
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Authentication, authorization, sessions, tokens what the f*** is this all about???

@@ -1,12 +1,12 @@
 ---
 type: post
-slug: urlsession-and-the-combine-framework
 title: URLSession and the Combine framework
 description: Learn how to make HTTP requests and parse the response using the brand new Combine framework with foundation networking.
 publication: 2019-08-15 16:20:00
-tags: UIKit, iOS
+tags: 
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 This is going to be a really short, but hopefully very useful tutorial about how I started to utilize the [Combine framework](https://heckj.github.io/swiftui-notes/) to slowly replace my [Promise](https://github.com/corekit/promises) library. 🤫

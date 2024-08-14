@@ -1,12 +1,12 @@
 ---
 type: post
-slug: unsafe-memory-pointers-in-swift
 title: Unsafe memory pointers in Swift
 description: Learn how to use raw pointer references, interact with unsafe pointers and manually manage memory addresses in Swift.
 publication: 2021-03-18 16:20:00
-tags: Swift, memory
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Pointers in Swift

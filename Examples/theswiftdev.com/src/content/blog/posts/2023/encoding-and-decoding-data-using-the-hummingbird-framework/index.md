@@ -1,13 +1,11 @@
 ---
 type: post
-slug: encoding-and-decoding-data-using-the-hummingbird-framework
 title: Encoding and decoding data using the Hummingbird framework
 description: URL encoded requests over multipart form data? Maybe JSON and raw HTTP post body types? Let me explain all of this.
 publication: 2023-03-22 16:20:00
-image: ./22-encoding-and-decoding-data-using-the-hummingbird-framework/cover.jpg
 tags: 
-    - swift
     - hummingbird
+    - server
 authors:
     - tibor-bodecs
 featured: true

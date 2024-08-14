@@ -1,12 +1,12 @@
 ---
 type: post
-slug: dynamic-libraries-and-code-replacements-in-swift
 title: Dynamic libraries and code replacements in Swift
 description: How to load a dynamic library and use native method swizzling in Swift? This article is all about the magic behind SwiftUI previews.
 publication: 2021-05-20 16:20:00
-tags: Swift, libraries
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Dynamic library packages

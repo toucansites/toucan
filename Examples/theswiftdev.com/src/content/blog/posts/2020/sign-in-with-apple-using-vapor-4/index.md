@@ -1,12 +1,13 @@
 ---
 type: post
-slug: sign-in-with-apple-using-vapor-4
 title: Sign in with Apple using Vapor 4
 description: A complete tutorial for beginners about how to implement the Sign in with Apple authentication service for your website.
 publication: 2020-04-30 16:20:00
-tags: Vapor, Sign in with Apple
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Apple developer portal setup

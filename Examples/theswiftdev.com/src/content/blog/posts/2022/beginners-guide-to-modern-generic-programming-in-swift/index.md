@@ -1,12 +1,12 @@
 ---
 type: post
-slug: beginners-guide-to-modern-generic-programming-in-swift
-title: Beginner's guide to modern generic programming in Swift
+title: "Beginner's guide to modern generic programming in Swift"
 description: Learn the very basics about protocols, existentials, opaque types and how they are related to generic programming in Swift.
 publication: 2022-06-28 16:20:00
-tags: Swift, generics
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Protocols (with associated types)

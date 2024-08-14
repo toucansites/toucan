@@ -1,12 +1,12 @@
 ---
 type: post
-slug: easy-multipart-file-upload-for-swift
 title: Easy multipart file upload for Swift
 description: Let me show you how to create HTTP requests using multipart (form data) body without a third party library. Simple solution.
 publication: 2023-01-17 16:20:00
-tags: Swift
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 I believe that you've already heard about the famous multipart-data upload technique that everyone loves to upload files and submit form data, but if not, hopefully this article will help you a little bit to understand these things better.

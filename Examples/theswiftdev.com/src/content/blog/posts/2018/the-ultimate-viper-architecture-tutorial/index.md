@@ -1,6 +1,5 @@
 ---
 type: post
-slug: the-ultimate-viper-architecture-tutorial
 title: The ultimate VIPER architecture tutorial
 description: Learn how to write scalable iOS code using the VIPER architecture with some MVVM and MVC tricks and coordinators in mind.
 publication: 2018-03-12 16:20:00

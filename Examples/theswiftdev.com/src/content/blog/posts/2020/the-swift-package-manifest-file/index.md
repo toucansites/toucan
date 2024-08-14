@@ -1,12 +1,12 @@
 ---
 type: post
-slug: the-swift-package-manifest-file
 title: The Swift package manifest file
 description: This article is a complete Swift Package Manager cheatsheet for the package manifest file, using the latest Swift 5.2 tools version.
 publication: 2020-04-24 16:20:00
-tags: Swift, SPM
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 > NOTE: If you want to learn [how to use the Swift Package Manager](https://theswiftdev.com/swift-package-manager-tutorial/) you should read my other article, because that is more like an introduction for those who have never worked with SPM yet.

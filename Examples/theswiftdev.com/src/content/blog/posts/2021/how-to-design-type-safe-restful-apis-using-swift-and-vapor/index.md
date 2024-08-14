@@ -1,12 +1,13 @@
 ---
 type: post
-slug: how-to-design-type-safe-restful-apis-using-swift-and-vapor
 title: How to design type safe RESTful APIs using Swift & Vapor?
 description: Learn to make proper data transfer objects for CRUD operations and integrate them both into the client and server side API layer.
 publication: 2021-04-29 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Full stack Swift & BFF

@@ -1,12 +1,13 @@
 ---
 type: post
-slug: declarative-unit-tests-for-vapor
 title: Declarative unit tests for Vapor
 description: Learn how to test your server side Swift backend app in a declarative style using a lightweight library called Spec.
 publication: 2021-05-04 16:20:00
-tags: Swift
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Writing tests using XCTVapor

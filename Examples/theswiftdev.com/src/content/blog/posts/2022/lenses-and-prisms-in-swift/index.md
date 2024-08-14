@@ -1,12 +1,12 @@
 ---
 type: post
-slug: lenses-and-prisms-in-swift
 title: Lenses and prisms in Swift
 description: Beginner's guide about optics in Swift. Learn how to use lenses and prisms to manipulate objects using a functional approach.
 publication: 2022-08-12 16:20:00
-tags: Swift, lenses, optics
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Understanding optics

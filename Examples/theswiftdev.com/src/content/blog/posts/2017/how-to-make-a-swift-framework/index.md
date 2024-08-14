@@ -1,6 +1,5 @@
 ---
 type: post
-slug: how-to-make-a-swift-framework
 title: How to make a Swift framework?
 description: Creating a Swift framework shouldn't be hard. This tutorial will help you making a universal framework for complex projects.
 publication: 2017-10-23 16:20:00

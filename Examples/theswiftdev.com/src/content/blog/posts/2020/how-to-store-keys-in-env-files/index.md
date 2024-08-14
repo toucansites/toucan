@@ -1,12 +1,14 @@
 ---
 type: post
-slug: how-to-store-keys-in-env-files
 title: How to store keys in env files?
 description: In this tutorial I'll show you how to save and load secret keys as base64 encoded strings using dotenv files in Vapor 4.
 publication: 2020-06-30 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
+    - tooling
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Using the Environment in Vapor 4

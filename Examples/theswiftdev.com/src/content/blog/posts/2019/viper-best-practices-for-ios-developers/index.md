@@ -1,12 +1,12 @@
 ---
 type: post
-slug: viper-best-practices-for-ios-developers
 title: VIPER best practices for iOS developers
-description: In this tutorial I'm going to show you a complete guide about how to build a VIPER based iOS application, written entirely in Swift.
+description: "In this tutorial I'm going to show you a complete guide about how to build a VIPER based iOS application, written entirely in Swift."
 publication: 2019-03-11 16:20:00
-tags: VIPER
+tags: 
+    - viper
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Getting started with VIPER

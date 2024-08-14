@@ -1,10 +1,10 @@
 ---
 type: post
-slug: beginners-guide-to-functional-swift
 title: Beginners guide to functional Swift
 description: "The one and only tutorial that you'll ever need to learn higher order functions like: map, flatMap, compactMap, reduce, filter and more."
 publication: 2019-02-05 16:20:00
-tags: Swift, functional programming
+tags: 
+    - swift
 authors:
   - tibor-bodecs
 ---

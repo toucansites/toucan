@@ -1,12 +1,12 @@
 ---
 type: post
-slug: beginners-guide-to-swift-arrays
-title: Beginner's guide to Swift arrays
+title: "Beginner's guide to Swift arrays"
 description: Learn how to manipulate arrays in Swift like a pro. This tutorial covers lots of useful array related methods, tips and tricks.
 publication: 2022-03-10 16:20:00
-tags: Swift, arrays
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 An [array](https://developer.apple.com/documentation/swift/array) can hold multiple elements of a given type. We can use them to store numbers, strings, classes, but in general elements can be anything. With the Any type you can actually express this and you can put anything into this random access collection. There are quite many ways to create an array in Swift. You can explicitly write the Array word, or use the [] shorthand format. 🤔

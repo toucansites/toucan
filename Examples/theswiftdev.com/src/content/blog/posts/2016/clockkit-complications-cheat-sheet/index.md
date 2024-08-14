@@ -1,9 +1,7 @@
 ---
 type: post
-slug: clockkit-complications-cheat-sheet
 title: ClockKit complications cheatsheet
 description: ClockKit families and templates, there are so many of them. It's a little bit time consuming if you are looking for the right one.
-image: ./images/clockkit-cheatsheet.jpg
 publication: 2016-04-28 16:20:00
 tags:
   - watchos
@@ -17,7 +15,7 @@ This cheatsheet supports watchOS 5. In order to get the template name you just h
 
 Swift sample code is below the cheatsheet, please scroll! 👇
 
-![ClockKit cheatsheet](./images/clockkit-cheatsheet.jpg)
+![ClockKit cheatsheet](./assets/clockkit-cheatsheet.jpg)
 
 Feel free to right click and download the cheatsheet image.
 

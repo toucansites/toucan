@@ -1,12 +1,13 @@
 ---
 type: post
-slug: the-abstract-vapor-service-factory-design-pattern
 title: The abstract Vapor service factory design pattern
 description: In this tutorial I'm going to show you how you can create an abstract driver-based component for the Vapor framework.
 publication: 2023-02-01 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 I've written several articles about factory design patterns on my blog and this time I'd like to talk about a special one, which you can encounter if you work with Vapor. Here's a little recap about my factory design pattern blog posts, all written in Swift:

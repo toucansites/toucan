@@ -1,12 +1,13 @@
 ---
 type: post
-slug: the-repository-pattern-for-vapor-4
 title: The repository pattern for Vapor 4
-description: In this article I'm going to talk about the repository design pattern and give you a few Fluent ORM tips for your Vapor 4 app.
+description: "In this article I'm going to talk about the repository design pattern and give you a few Fluent ORM tips for your Vapor 4 app."
 publication: 2022-03-03 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Fluent is essentially broken

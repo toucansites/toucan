@@ -1,12 +1,13 @@
 ---
 type: post
-slug: a-generic-crud-solution-for-vapor-4
 title: A generic CRUD solution for Vapor 4
 description: Learn how to build a controller component that can serve models as JSON objects through a RESTful API written in Swift.
 publication: 2020-04-01 16:20:00
-tags: Vapor, CRUD
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## CRUD ~ Create, Read, Update and Delete

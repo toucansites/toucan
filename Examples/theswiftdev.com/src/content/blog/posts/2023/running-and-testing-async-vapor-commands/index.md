@@ -1,12 +1,13 @@
 ---
 type: post
-slug: running-and-testing-async-vapor-commands
 title: Running and testing async Vapor commands
 description: In this article I'll show you how to build asynchronous Vapor commands and how to test them using ConsoleKit.
 publication: 2023-02-23 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## How to run async commands in Vapor?

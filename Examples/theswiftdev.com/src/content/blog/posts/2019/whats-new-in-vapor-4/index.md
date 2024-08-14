@@ -1,12 +1,13 @@
 ---
 type: post
-slug: whats-new-in-vapor-4
-title: What's new in Vapor 4?
-description: Vapor is the most popular server side Swift web application framework. This time we'll cover what's new in Vapor 4.
+title: "What's new in Vapor 4?"
+description: "Vapor is the most popular server side Swift web application framework. This time we'll cover what's new in Vapor 4."
 publication: 2019-08-26 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Swift 5.1

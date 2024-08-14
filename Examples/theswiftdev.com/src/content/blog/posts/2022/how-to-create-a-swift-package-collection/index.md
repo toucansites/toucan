@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-create-a-swift-package-collection
 title: How to create a Swift package collection?
 description: In this tutorial I'm going to show you how to create your own package collection from your favorite Swift libraries.
 publication: 2022-01-20 16:20:00
-tags: Swift, SPM
+tags: 
+    - swift-package-manager
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is a Swift package collection?

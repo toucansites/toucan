@@ -1,12 +1,12 @@
 ---
 type: post
-slug: working-with-diffable-data-sources-and-table-views-using-uikit
 title: Working with diffable data sources and table views using UIKit
 description: In this tutorial we're going to build a screen to allow single and multiple selections using diffable data source and a table view.
 publication: 2022-03-24 16:20:00
-tags: UIKit, iOS, UITableView
+tags: 
+    - uikit
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Project setup

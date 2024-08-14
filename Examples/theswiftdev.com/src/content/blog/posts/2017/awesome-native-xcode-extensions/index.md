@@ -1,6 +1,5 @@
 ---
 type: post
-slug: awesome-native-xcode-extensions
 title: Awesome native Xcode extensions
 description: This is the biggest and the best collection of the currently available natively created source editor extensions for Xcode.
 publication: 2017-10-04 16:20:00

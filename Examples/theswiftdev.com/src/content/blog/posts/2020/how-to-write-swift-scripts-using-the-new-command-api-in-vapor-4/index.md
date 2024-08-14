@@ -1,12 +1,13 @@
 ---
 type: post
-slug: how-to-write-swift-scripts-using-the-new-command-api-in-vapor-4
 title: How to write Swift scripts using the new Command API in Vapor 4?
 description: Shell scripts are essentials on the server side. Learn how to build Swift scripts for your backend apps using property wrappers.
 publication: 2020-03-03 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Swift Argument Parser vs Vapor Commands

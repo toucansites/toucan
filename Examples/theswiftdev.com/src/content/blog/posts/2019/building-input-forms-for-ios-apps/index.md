@@ -1,10 +1,10 @@
 ---
 type: post
-slug: building-input-forms-for-ios-apps
 title: Building input forms for iOS apps
 description: Learn how to build complex forms with my updated collection view view-model framework without the struggle using Swift.
 publication: 2019-05-23 16:20:00
-tags: UIKit, iOS
+tags: 
+  - uikit
 authors:
   - tibor-bodecs
 ---

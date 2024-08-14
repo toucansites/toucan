@@ -1,6 +1,5 @@
 ---
 type: post
-slug: mastering-ios-auto-layout-anchors-programmatically-from-swift
 title: Mastering iOS auto layout anchors programmatically from Swift
 description: Looking for best practices of using layout anchors? Let's learn how to use the iOS autolayout system in the proper way using Swift.
 publication: 2018-06-14 16:20:00

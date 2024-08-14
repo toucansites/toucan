@@ -1,6 +1,5 @@
 ---
 type: post
-slug: lazy-initialization-in-swift
 title: Lazy initialization in Swift
 description: Learn how to use lazy properties in Swift to improve performance, avoid optionals or just to make the init process more clean.
 publication: 2018-12-17 16:20:00

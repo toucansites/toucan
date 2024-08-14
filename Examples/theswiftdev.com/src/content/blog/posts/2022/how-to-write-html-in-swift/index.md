@@ -1,12 +1,13 @@
 ---
 type: post
-slug: how-to-write-html-in-swift
 title: How to write HTML in Swift?
 description: This tutorial is all about rendering HTML docs using a brand new DSL library called SwiftHtml and the Vapor web framework.
 publication: 2022-01-12 16:20:00
-tags: Swift, HTML
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Introducing SwiftHtml

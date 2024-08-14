@@ -1,12 +1,12 @@
 ---
 type: post
-slug: modules-and-hooks-in-swift
 title: Modules and hooks in Swift
 description: Learn how to extend your application with new functionalities using a loosely coupled modular plugin system written in Swift.
 publication: 2020-04-16 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## How do modules (plugins) work?

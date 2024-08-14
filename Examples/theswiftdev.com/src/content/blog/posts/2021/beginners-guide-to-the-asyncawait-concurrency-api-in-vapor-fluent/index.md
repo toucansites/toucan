@@ -1,12 +1,13 @@
 ---
 type: post
-slug: beginners-guide-to-the-asyncawait-concurrency-api-in-vapor-fluent
-title: Beginner's guide to the async/await concurrency API in Vapor & Fluent
+title: "Beginner's guide to the async/await concurrency API in Vapor & Fluent"
 description: Learn how to convert your existing EventLoopFuture based Vapor server app using the new async/await Swift feature.
 publication: 2021-06-03 16:20:00
-tags: Vapor, Concurrency
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Is async/await going to improve Vapor?

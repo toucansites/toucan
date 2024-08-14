@@ -1,12 +1,13 @@
 ---
 type: post
-slug: beginners-guide-to-server-side-swift-using-the-hummingbird-framework
-title: Beginner's guide to server-side Swift using the Hummingbird framework
+title: "Beginner's guide to server-side Swift using the Hummingbird framework"
 description: "Learn about Swift on the server by creating a simple application using the brand new HTTP server library called: Hummingbird."
 publication: 2023-03-08 16:20:00
-tags: Swift, Hummingbird
+tags: 
+    - hummingbird
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Swift on the Server in 2023

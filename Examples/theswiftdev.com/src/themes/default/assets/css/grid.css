@@ -7,14 +7,12 @@
 }
 .grid > * {
     overflow: hidden;
-/*    white-space: nowrap;*/
-    text-overflow: ellipsis;
 }
 .grid.grid-2 {
     grid-template-columns: repeat(2, 1fr);
 }
 .grid.grid-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, 1fr);
 }
 .grid.grid-4 {
     grid-template-columns: repeat(4, 1fr);

@@ -1,12 +1,13 @@
 ---
 type: post
-slug: asynchronous-validation-for-vapor
 title: Asynchronous validation for Vapor
 description: Learn how to validate input data using an async technique. Unified request validation API for your server side Swift app.
 publication: 2017-10-10 16:20:00
-tags: UIKit, iOS
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Vapor's validation API

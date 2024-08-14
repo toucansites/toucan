@@ -1,12 +1,12 @@
 ---
 type: post
-slug: swift-structured-concurrency-tutorial
 title: Swift structured concurrency tutorial
 description: Learn how to work with the Task object to perform asynchronous operations in a safe way using the new concurrency APIs in Swift.
 publication: 2021-06-30 16:20:00
-tags: Swift, Concurrency
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Introducing structured concurrency in Swift

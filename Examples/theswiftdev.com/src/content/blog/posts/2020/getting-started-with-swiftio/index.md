@@ -1,12 +1,12 @@
 ---
 type: post
-slug: getting-started-with-swiftio
 title: Getting started with SwiftIO
 description: SwiftIO is an electronic circuit board that runs Swift on the bare metal. It can control sensors, displays, lights, motors and more.
 publication: 2020-11-12 16:20:00
-tags: Swift, MadMachine
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## The SwiftIO board

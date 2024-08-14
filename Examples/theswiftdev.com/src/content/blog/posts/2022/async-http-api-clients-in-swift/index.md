@@ -1,12 +1,12 @@
 ---
 type: post
-slug: async-http-api-clients-in-swift
 title: Async HTTP API clients in Swift
 description: Learn how to communicate with API endpoints using the brand new SwiftHttp library, including async / await support.
 publication: 2022-03-18 16:20:00
-tags: Swift, networking, HTTP
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Introducing SwiftHttp

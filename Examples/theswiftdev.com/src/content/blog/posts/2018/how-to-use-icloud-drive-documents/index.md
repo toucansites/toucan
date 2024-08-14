@@ -1,6 +1,5 @@
 ---
 type: post
-slug: how-to-use-icloud-drive-documents
 title: How to use iCloud drive documents?
 description: Learn how to sync files and data through a shared iCloud drive folder using the latest version of Swift programming language.
 publication: 2018-05-17 16:20:00

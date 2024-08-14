@@ -1,12 +1,12 @@
 ---
 type: post
-slug: utilizing-makefiles-for-swift-projects
 title: Utilizing Makefiles for Swift projects
 description: In this tutorial I'll show you how to use Makefiles for server-side Swift projects to help running utility tasks in a more simple way.
 publication: 2023-01-10 16:20:00
-tags: Swift, Makefile
+tags: 
+    - tooling
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 [Make](https://en.wikipedia.org/wiki/Make_(software)) is a build automation software that you can use to automatically run various commands. If you want to run something, you have to specify your commands (more precisely: build targets) through Makefiles. In this quick tutorial I'll show you some of my best practices for Swift projects. 😉

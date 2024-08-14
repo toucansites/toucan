@@ -1,12 +1,12 @@
 ---
 type: post
-slug: swift-visitor-design-pattern
 title: Swift visitor design pattern
 description: The visitor design pattern in Swift allows us to add new features to an existing group of objects without altering the original code.
 publication: 2022-04-06 16:20:00
-tags: Swift, iOS, design patterns
+tags: 
+    - design-pattern
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## A basic visitor example

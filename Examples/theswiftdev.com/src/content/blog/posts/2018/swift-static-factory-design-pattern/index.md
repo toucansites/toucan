@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-static-factory-design-pattern
 title: Swift static factory design pattern
 description: In this article I'll teach you about the static factory design pattern and show some use cases using the Swift programming language.
 publication: 2018-05-28 16:20:00

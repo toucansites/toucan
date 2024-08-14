@@ -1,12 +1,13 @@
 ---
 type: post
-slug: file-upload-api-server-in-vapor-4
 title: File upload API server in Vapor 4
 description: Learn how to build a very simple file upload API server using Vapor 4 and URLSession upload task on the client side.
 publication: 2020-12-30 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## A simple file upload server written in Swift

@@ -1,12 +1,12 @@
 ---
 type: post
-slug: how-to-build-macos-apps-using-only-the-swift-package-manager
 title: How to build macOS apps using only the Swift Package Manager?
 description: In this article we're going to create a macOS application without ever touching an Xcode project file, but only working with SPM.
 publication: 2020-10-26 16:20:00
-tags: Swift, macOS
+tags: 
+    - macos
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Swift scripts and macOS apps

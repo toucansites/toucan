@@ -1,12 +1,13 @@
 ---
 type: post
-slug: custom-working-directory-in-xcode
 title: Custom working directory in Xcode
 description: Learn how to set a custom working directory in Xcode to solve one of the most common beginner issue when using Vapor.
 publication: 2021-01-07 16:20:00
-tags: Xcode
+tags: 
+    - xcode
+    - tooling
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is a custom working directory?

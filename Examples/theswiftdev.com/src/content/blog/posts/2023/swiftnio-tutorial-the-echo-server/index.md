@@ -1,12 +1,12 @@
 ---
 type: post
-slug: swiftnio-tutorial-the-echo-server
 title: SwiftNIO tutorial - The echo server
 description: This is a beginner's guide to learn the basics of the SwiftNIO network app framework by building a basic TCP echo server.
 publication: 2023-01-26 16:20:00
-tags: Swift, SwiftNIO
+tags: 
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Intoducing SwiftNIO

@@ -1,12 +1,13 @@
 ---
 type: post
-slug: file-upload-using-vapor-4
 title: File upload using Vapor 4
 description: Learn how to implement a basic HTML file upload form using the Leaf template engine and Vapor, all written in Swift of course.
 publication: 2020-12-10 16:20:00
-tags: Vapor
+tags: 
+    - vapor
+    - server
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Building a file upload form

@@ -1,12 +1,13 @@
 ---
 type: post
-slug: styling-by-subclassing
 title: Styling by subclassing
 description: Learn how to design and build reusable user interface elements by using custom view subclasses from the UIKit framework in Swift.
 publication: 2019-02-19 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## The problem: UI, UX, design

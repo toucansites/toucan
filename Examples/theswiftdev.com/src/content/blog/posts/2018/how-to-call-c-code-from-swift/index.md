@@ -1,6 +1,5 @@
 ---
 type: post
-slug: how-to-call-c-code-from-swift
 title: How to call C code from Swift
 description: Interacting with C libraries from the Swift language is really amazing, from this post can learn the most of C interoperability.
 publication: 2018-01-15 16:20:00

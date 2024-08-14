@@ -1,12 +1,12 @@
 ---
 type: post
-slug: building-static-and-dynamic-swift-libraries-using-the-swift-compiler
 title: Building static and dynamic Swift libraries using the Swift compiler
 description: This tutorial is all about emitting various Swift binaries without the Swift package manager, but only using the Swift compiler.
 publication: 2021-02-16 16:20:00
-tags: Swift, compiler
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What the heck is a library?

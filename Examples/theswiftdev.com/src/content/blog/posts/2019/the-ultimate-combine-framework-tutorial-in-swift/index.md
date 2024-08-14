@@ -1,12 +1,13 @@
 ---
 type: post
-slug: the-ultimate-combine-framework-tutorial-in-swift
 title: The ultimate Combine framework tutorial in Swift
 description: Get started with the brand new declarative Combine framework in practice using Swift. I'll teach you all the goodies from zero to hero.
 publication: 2017-10-10 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
+    - ios
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## What is Combine?

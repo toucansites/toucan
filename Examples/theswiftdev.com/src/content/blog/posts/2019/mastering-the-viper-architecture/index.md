@@ -1,12 +1,12 @@
 ---
 type: post
-slug: mastering-the-viper-architecture
 title: Mastering the VIPER architecture
 description: Learn how to master the VIPER architectural design pattern, with some protocol oriented programming techniques using Swift.
 publication: 2019-03-19 16:20:00
-tags: UIKit, iOS
+tags: 
+   - viper
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 After writing [my best practices article about VIPER](https://theswiftdev.com/2019/03/11/viper-best-practices-for-ios-developers/), I've made a few changes to the codebase. I was playing with these ideas in my mind already, but never had enough time to implement them properly. Let's me show you the changes...

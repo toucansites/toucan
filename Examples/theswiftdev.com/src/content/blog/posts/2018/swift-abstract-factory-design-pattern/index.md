@@ -1,6 +1,5 @@
 ---
 type: post
-slug: swift-abstract-factory-design-pattern
 title: Swift abstract factory design pattern
 description: "Let's combine factory method with simple factory voilá: here is the abstract factory design pattern written in Swift language!"
 publication: 2018-06-03 16:20:00

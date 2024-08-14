@@ -1,12 +1,12 @@
 ---
 type: post
-slug: memory-layout-in-swift
 title: Memory layout in Swift
 description: Start learning about how Swift manages, stores and references various data types and objects using a memory safe approach.
 publication: 2021-03-08 16:20:00
-tags: Swift, memory layout
+tags: 
+    - swift
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Memory layout of value types in Swift

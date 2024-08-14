@@ -1,12 +1,12 @@
 ---
 type: post
-slug: 10-little-uikit-tips-you-should-know
 title: 10 little UIKit tips you should know
 description: In this article I've gathered my top 10 favorite modern UIKit tips that I'd definitely want to know before I start my next project.
 publication: 2022-02-03 16:20:00
-tags: UIKit, iOS
+tags: 
+    - uikit
 authors:
-  - tibor-bodecs
+    - tibor-bodecs
 ---
 
 ## Custom UIColor with dark mode support
