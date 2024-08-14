@@ -393,6 +393,16 @@ article section p a:visited {
   margin-right: 10px;
 }
 
+.footerNav {
+  display: flex;
+  justify-content: space-between;
+  border-top: 0.5px solid var(--secondary-color-700);
+}
+
+#copyright {
+  padding: 32px 0;
+}
+
 /** Development page */
 
 .developmentTitle {
@@ -849,6 +859,15 @@ a.authorBadge:visited {
 
   #bookSectionTitle {
     text-align: center;
+  }
+
+  .contact a,
+  .external {
+    justify-content: center;
+  }
+
+  .footerNav {
+    flex-direction: column;
   }
 }
 

@@ -9,9 +9,9 @@
 #footer-container footer picture img {
   width: 64px;
 }
-#footer-container footer nav {
+/* #footer-container footer nav {
   border-top: 0.5px solid var(--secondary-color-700);
-}
+} */
 #footer-container footer nav ul {
   margin: 0;
   padding: 0;
@@ -21,6 +21,10 @@
   padding: 32px 0;
   margin: 0;
   margin-right: 32px;
+}
+
+#footer-container footer nav li:last-child {
+  margin-right: 0;
 }
 
 #footer-container footer nav li a,
