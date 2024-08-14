@@ -14,7 +14,7 @@ authors:
 
 Achieving the goal is relatively easy, but if you don't know what's going on in the background it's going to be harder than you would think first. So let's create a new project add a storyboard with a `UICollectionViewController`, drag a `UIImageView` inside the cell, resize it, add some constraints, set the cell identifier.
 
-![Image view](imageview.png)
+![Image view](./assets/imageview.png)
 
 It should look something like the image above. Nothing special just a simple UI for our example application. Now search for some random image, add it to the project and let's do some real coding. First I'll show you the little trick inside of the cell subclass.
 
@@ -134,7 +134,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
 If you are familiar with collection views, you might ask why am I doing this tutorial? It's so simple. It just works, right? No, actually without the overridden bounds property the example would look something like this on the left side. 😢
 
-![Circular images](circles.jpg)
+![Circular images](./assets/circles.jpg)
 
 Funny, huh? The image on the right side is the actual result with the overridden bounds, that's the expected behavior. Scrolling and rotation is going to be really strange if you don't override bounds and you don't reset the cornerRadius property for the visible views. You might ask: but why? 🤔
 

@@ -18,7 +18,7 @@ Vapor is using a place called working directory to set the current environment, 
 
 If you run your backend application without explicitly setting a custom working directory, you should see a warning message in Xcode's console. If you are using [Feather CMS](https://github.com/feathercms/feather/), the app will crash without a custom working directory set, because it is required to provide a working environment. 🙃
 
-![No custom working directory](warning-no-custom-working-directory-set.png)
+![No custom working directory](./assets/warning-no-custom-working-directory-set.png)
 
  
 If you don't specify this custom work dir, Xcode will try to look for the resources under a random, but uniquely created place somewhere under the `DerivedData` directory.
@@ -33,16 +33,16 @@ First of all, open your project in Xcode by double clicking the Package.swift ma
 
 ✅ I repeat: always open SPM projects through the `Package.swift` file.
 
-![Target](target.png)
+![Target](./assets/target.png)
 
  
 Wait until the IDE loads the required Swift packages. After the dependencies are loaded, click on the target next to the stop button. The executable target is marked with a little terminal-like icon. 💡
 
-![Edit scheme](edit-scheme.png)
+![Edit scheme](./assets/edit-scheme.png)
 
 Select the "Edit Scheme..." option from the available menu items, this should open a new modal window on top of Xcode.
 
-![Custom working directory](custom-working-directory.png)
+![Custom working directory](./assets/custom-working-directory.png)
  
 Make sure that the Run configuration is selected on the left side of the pane. Click on the "Options" tab, and then look for the "Working directory" settings. Check the "Use custom working directory:" toggle, this will enable the input field underneath, then finally click on the little folder icon on the top right side (of the input field) and look for your desired directory using the interface. 🔍
 

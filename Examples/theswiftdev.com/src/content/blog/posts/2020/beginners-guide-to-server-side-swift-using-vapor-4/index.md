@@ -163,7 +163,7 @@ Let's write some server side Swift code, shall we? Well, let me show you some be
 
 If you run your project through Xcode, you might want to setup a custom working directory, otherwise your application will look for assets from a cursed place called [DerivedData](https://stackoverflow.com/questions/13761934/xcode-derived-data-location). This can cause some issues if you are using a templating engine or the public file middleware with the default config, since the system won't find proper routes. In order to fix this you just click your target name next to the stop button and select the Edit Scheme... menu item. Select Run and click on the Options tab.
 
-![Xcode custom working directory](xcode-custom-working-directory.png)
+![Xcode custom working directory](./assets/xcode-custom-working-directory.png)
 
  
 Here is the [original issue on GitHub](https://github.com/vapor/core/issues/207).
@@ -225,7 +225,7 @@ vapor build && vapor run serve --env production
 
 You can also set custom environment variables and launch arguments if you edit your scheme in Xcode. It's called Arguments right next to the Options tab inside the scheme editor popup.
 
-![Xcode environment](xcode-environment.png)
+![Xcode environment](./assets/xcode-environment.png)
 
 ### Change port number and hostname
 

@@ -13,7 +13,7 @@ authors:
 
 If you're not familiar with [UICollectionView](https://developer.apple.com/documentation/uikit/uicollectionview), I'd suggest to get familiar with this class immediately. They're the basic building blocks for many apps provided by Apple and other third party developers. It's like UITableView on steroids. Here is a quick intro about how to work with them through IB and Swift code. 💻
 
-![Layout](layout.png)
+![Layout](./assets/layout.png)
 
 You might have noticed that I have a love for metal music. In this tutorial we're going to build an Apple Music catalog like look from ground zero using only the mighty `UICollectionView` class. Headers, horizontal and vertical scrolling, circular images, so basically almost everything that you'll ever need to build great user interfaces. 🤘🏻
 
@@ -23,7 +23,7 @@ You might have noticed that I have a love for metal music. In this tutorial we'r
 
 If you still want to use IB, here is a real quick tutorial for absolutely beginners:
 
-![Section](section.png)
+![Section](./assets/section.png)
 
 The main steps of creating your first UICollectionView based screen are these:
 
@@ -292,7 +292,7 @@ So in this section I'm going to both use storyboards, nibs and some Swift code. 
 
 You can create section footers exactly the same way as you do headers, so that's why this time I'm only going to focus on headers, because literally you only have to change one word in order to use footers. ⚽️
 
-![Cell](cell.png)
+![Cell](./assets/cell.png)
 
 You just have to create two xib files, one for the cell and one for the header. Please note that you could use the exact same collection view cell to display content in the section header, but this is a demo so let's just go with two distinct items. You don't even have to set the reuse identifier from IB, because we have to register our reusable views inside the source code, so just set the cell class and connect your outlets.
 

@@ -79,7 +79,7 @@ class CustomView: View {
 ```
 So the initialize method here is just loading the nib file with the owner of self. After the loading process finished, your outlet pointers are going to be filled with proper values from the xib file. There is one last thing that we need to do. Even the views from the xib file are "programmatically" connected to our [custom view](https://medium.com/swift2go/swift-custom-uiview-with-xib-file-211bb8bbd6eb) object, but visually they aren't. So we have to add our container view into the view hierarchy. 🤐
 
-![IB](ib.png)
+![IB](./assets/ib.png)
 
 If you want to use your custom view object, you just have to create a new instance from it - inside a view controller - and finally feel free to add it as a subview!
 
@@ -116,7 +116,7 @@ That's it, now you have a completely working custom UIView object that loads a x
 
 One more extra thing. If you don't like to handle views programmatically or you simply don't want to mess around with the `loadView` method, just remove it entirely. Next put the `@IBOutlet` keyword right before your custom view class variable. Open your storyboard using IB, then drag & drop a new UIView element to your controller and connect the custom view outlet. It should work like magic. 💫
 
-![Storyboard](storyboard.png)
+![Storyboard](./assets/storyboard.png)
 
 I promised outlets and actions in the heading of this section, so let's talk a little bit about IBActions. They work exactly the same as you'd expect them with controllers. You can simply hook-up a button to your custom view and delegate the action to the custom view class. If you want to forward touches or specific actions to a controller, you should use the [delegate pattern](https://theswiftdev.com/2018/06/27/swift-delegate-design-pattern/) or go with a simple block. 😎
 
@@ -163,7 +163,7 @@ class CustomView: UIView {
 
 Just like with table or collection view cells this time you have to set your custom view class on the view object, instead of the File's Owner. You have to connect your outlets and basically you're done with everything. 🤞
 
-![ownership](ownership.jpg)
+![ownership](./assets/ownership.jpg)
 
 From now on you should ALWAYS use the instantiate method on your custom view object. The good news is that the function is generic, returns the proper instance type and it's highly reusable. Oh, btw. I already mentioned the bad news... 🤪
 

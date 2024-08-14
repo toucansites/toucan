@@ -26,19 +26,19 @@ You also have to code sign your application with your Developer ID, otherwise it
 
 Create a new target inside your current project. Name this new target for example LauncherApplication. Enable sandbox and code signing for both targets (main and launcher apps) under the Signing & Capabilities tab. For the LauncherApplication target in the build settings set skip install to yes.
 
-![Skip install](skip-install.png)
+![Skip install](./assets/skip-install.png)
 
 For the launcher app add a new entry to the Info.plist file: Application is background only with the value: yes. This will set your application as a background app, we don't really need user interface for a launcher tool, right?
 
-![Background only](background-only.png)
+![Background only](./assets/background-only.png)
 
 Add a new copy file build phase to your main application target to copy your launcher application into the bundle. The destination should be wrapper and the subpath should be `Contents/Library/LoginItems`.
 
-![Copy files](copy-files.png)
+![Copy files](./assets/copy-files.png)
 
 Link the `ServiceManagement.framework` to your main application and double check that the launcher app is embedded into your main application.
 
-![Frameworks](frameworks.png)
+![Frameworks](./assets/frameworks.png)
 
 From the `LauncherApplication`'s storyboard file delete your window and your view controller, also you can remove the `ViewController.swift` file from this target. This is a background app after all, so we don't need these stupid things to lay around.
 

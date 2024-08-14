@@ -13,14 +13,14 @@ authors:
 
 Let's start by creating a new project for iOS. You can select the single view application template, don't worry too much about document based apps, because in this tutorial we're not going to touch the `UIDocument` class at all. 🤷‍♂️
 
-![Capabilities](capabilities.png)
+![Capabilities](./assets/capabilities.png)
 
 
 The first step is to enable iCloud capabilities, which will generate a new entitlements file for you. Also you'll have to enable the iCloud application service for the app id on the [Apple developer](https://developer.apple.com/account/ios/identifier/bundle) portal. You should also assign the iCloud container that's going to be used to store data. Just a few clicks, but you have to do this manually. 💩
 
 > NOTE: You need a valid Apple Developer Program membership in order to set [advanced app capabilities](https://developer.apple.com/support/app-capabilities/) like iCloud support. So you have to pay $99/year. #greed 🤑
 
-![iCloud](icloud.png)
+![iCloud](./assets/icloud.png)
 
 So I believe that now you have a proper iOS app identifier with iCloud capabilities and application services enabled. One last step is ahead, you have to add these few lines to your `Info.plist` file in order to define the [iCloud drive](https://medium.com/ios-os-x-development/icloud-drive-documents-1a46b5706fe1) container (folder name) that you're going to use. Note that you can have multiple containers for one app.
 
@@ -154,7 +154,7 @@ brctl log --wait --shorten
 
 The output will tell you what's actually happening during the sync.
 
-![Debug](debug.png)
+![Debug](./assets/debug.png)
 
 I encourage you to check the manual entry for the `brctl` command, because there are a few more flags that can make troubleshooting more easy. 🤐
 

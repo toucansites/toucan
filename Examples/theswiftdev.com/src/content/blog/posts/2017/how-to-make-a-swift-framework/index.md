@@ -45,7 +45,7 @@ Back to Xcode:
 
 The goal is to achieve a structure somewhat like this:
 
-![Xcode project framework setup](xcode-project-framework-setup.png)
+![Xcode project framework setup](./assets/xcode-project-framework-setup.png)
 
 
 Project settings:

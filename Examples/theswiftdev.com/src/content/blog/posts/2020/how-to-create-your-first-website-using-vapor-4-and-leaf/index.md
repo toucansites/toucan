@@ -190,7 +190,7 @@ The first parameter of the render method is the name of the template file (witho
 
 When you run the app using Xcode, don't forget to set a custom working directory, otherwise Leaf won't find your templates. You can also run the server using the command line: `swift run Run`.
 
-![Xcode custom working directory](xcode-custom-working-directory.png)
+![Xcode custom working directory](./assets/xcode-custom-working-directory.png)
  
 Congratulations! You just made your very first webpage. 🎉
 

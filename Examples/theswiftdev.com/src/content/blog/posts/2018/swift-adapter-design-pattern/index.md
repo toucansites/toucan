@@ -10,7 +10,8 @@ authors:
 ---
 
 Fist of all let me emphasize that, this is the real world representation of what we're going to build in this little Swift adapter pattern tutorial:
-![Picture of a USB Adapter](usb-adapter.jpg)
+
+![Picture of a USB Adapter](./assets/usb-adapter.jpg)
 
 [Adapter](https://en.wikipedia.org/wiki/Adapter_pattern) is a structural design pattern that allows objects with incompatible interfaces to work together. In other words, it transforms the interface of an object to adapt it to a different object.
 

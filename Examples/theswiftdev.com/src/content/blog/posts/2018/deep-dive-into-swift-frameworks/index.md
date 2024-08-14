@@ -60,7 +60,7 @@ Linking is just combining all your object files into an executable and resolving
 
 The source code of the library is literally going to be copied into the application's source. This will result in a big executable, it'll take more time to load, so the binary will have a slower startup time. Oh, did I mention that if you are trying to link the same library more than once, the process will fail because of duplicated symbols?
 
-![Static linking](static-linking.png)
+![Static linking](./assets/static-linking.png)
 
 This method has advantages as well, for example the executable will always contain the correct version of the library, and only those parts will be copied into the main application that are really used, so you don't have to load the whole stuff, but it seems like dynamic linking is going to be better in some cases.
 
@@ -68,7 +68,7 @@ This method has advantages as well, for example the executable will always conta
 
 Dynamic libraries are not embedded into the source of the binary, they are loaded at runtime. This means that apps can be smaller and startup time can significantly be faster because of the lightweight binary files. As a gratis dynamic libraries can be shared with multiple executables so they can have lower memory footprints. That's why sometimes they're being referred as shared libraries.
 
-![Dynamic linking](dynamic-linking.png)
+![Dynamic linking](./assets/dynamic-linking.png)
 
 Of course if the dynamic library is not available - or it's available but their version is incompatible - your application won't run or it'll crash. On the other hand this can be an advantage, because the author of the dynamic library can ship fixes and your app can benefit from these, without recompilation.
 
@@ -341,7 +341,7 @@ lipo -info Console.framework/Console
 
 You just have to embed your brand new framework into the project that you'd like to use and set some [paths](http://www.dribin.org/dave/blog/archives/2009/11/15/rpath/). That's it. Almost...
 
-![Build settings](build-settings.png)
+![Build settings](./assets/build-settings.png)
 
 
 ### Shipping to the App Store

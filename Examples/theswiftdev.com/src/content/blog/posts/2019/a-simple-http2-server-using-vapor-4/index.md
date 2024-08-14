@@ -122,6 +122,6 @@ First you have to load your certificate chain with the corresponding private key
 
 If you run the project and accept the self-signed certificate you should see in the inspector that the protocol is `h2`, which means HTTP/2 is alive. Congratulations! 🎉
 
-![Vapor HTTP/2 response](vapor-http-2-response.jpg)
+![Vapor HTTP/2 response](./assets/vapor-http-2-response.jpg)
 
 As you can see this article is more like a quick starting point to get HTTP/2 up and running in Vapor 4. Please share the article if you liked it & subscribe to my monthly newsletter below. Thanks for your help, bye! 🙏

@@ -14,7 +14,7 @@ authors:
 
 So let's start with a standard single-view template for iOS. Name the project, and go straight to the `Main.storyboard` file. Select your view controller, delete it and create a new `UITableViewController` scene.
 
-![Main storyboard](storyboard.jpg)
+![Main storyboard](./assets/storyboard.jpg)
 
 Set the table view controller scene as initial view controller and create a `TableViewController.swift` file with the corresponding class.
 
@@ -72,7 +72,7 @@ class TableViewCell: UITableViewCell {
 
 First, create the class itself, then with interface builder select the table view controller scene and drag a label to the prototype cell. Set the class of the prototype cell to `TableViewCell`. The reusable identifier can be simply `"Cell"`. Connect the dynamicLabel outlet to the view. Give the label top, bottom, leading, trailing constraints to the superview with the default value of 8. Select the label, set the font to body style and the lines property to zero. That's how simple it is. 😂
 
-![Table view cell](tableviewcell.jpg)
+![Table view cell](./assets/tableviewcell.jpg)
 
 Now you are almost ready. You just need to set the estimated row height on the table view. Inside the TableViewController class change the `viewDidLoad` method like this:
 
@@ -106,7 +106,7 @@ So we've finished the easy part. Now let's try to achieve the [same functionalit
 
 Before we start, we can still play with IB a little bit. Create a new collection view controller scene, and drag a push segue from the previous table view cell to this new controller. Finally embed the whole thing in a navigation controller.
 
-![Collection view](collectionview.jpg)
+![Collection view](./assets/collectionview.jpg)
 
 The cell is going to be the exact same as we used for the table view, but it's a subclass of `UICollectionViewCell`, and we are going to construct the layout directly from code.
 

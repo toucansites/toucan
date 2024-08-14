@@ -13,7 +13,7 @@ authors:
 
 [MadMachine](https://www.madmachine.io/)'s SwiftIO board is an Arduino-like system, but it can run Swift code natively on the hardware. [Swift](https://swift.org/) is a great programming language for education purposes, it is a modern language with a JavaScript-like syntax that is easy to learn and understand. Swift is safe and efficient, this combination makes it a perfect candidate for embedded systems. The SwiftIO board enables us regular Swift / iOS developers to build IoT projects using our favorite programming language.
 
-![SwiftIO board](board.png)
+![SwiftIO board](./assets/board.png)
  
 The board itself has a small footprint, it's just about 1,57" x 2,36" (4cm x 6cm) big.
 
@@ -44,7 +44,7 @@ The board initially went on sale in July, 2020 and many people brought it from a
 
 You can connect the SwiftIO board to your computer via a USB connector, the two devices can communicate through a serial port. The USB cable will provide the necessary power support, but alternatively you can use an adapter or an external battery through a shield.
 
-![SwiftIO ports](ports.png)
+![SwiftIO ports](./assets/ports.png)
  
 You can wire up additional components using the General Purpose Input/Output pins ([GPIO](https://en.wikipedia.org/wiki/General-purpose_input/output)). You can see the exact specification on the picture above, but honestly I barely understand this diagram.
 
@@ -54,7 +54,7 @@ The board can be used with a shield and fortunately the MakersKit arrives with a
 
 So what's actually under the hood? How can I build & run applications for SwiftIO?
 
-![SwiftIO architecture](architecture.jpg)
+![SwiftIO architecture](./assets/architecture.jpg)
 
 The gray area is the hardware itself, on top of that in the pink-ish/purple boxes there is this Zephyr layer which I've never heard before. I'm just scratching the surface here, but that's fine, since as a Swift developer we only care about the orange stuff. Long story short, there is a custom built Swift toolchain for this device that allows us to build and run Swift applications on the board. 😅
 
@@ -201,6 +201,6 @@ For me, the SwiftIO board was a pleasant surprise. I always wanted to play with 
 
 The promise of MadMachine is that you can easily use Swift on such a device and I believe that [Andy Liu](https://x.com/madmachineio) created something that can have a bright future on the long term. I felt in love with SwiftIO right after I've assembled my first circuit and deployed my very first Swift source. It was a seamless (pain free) experience and I believe that's a really important factor for developers who never used such devices before. This can be the beginning and the future of Swift on embedded systems. 😍
 
-![SwiftIO](swift-io.jpg)
+![SwiftIO](./assets/swift-io.jpg)
  
 You can build some really fun stuff with SwiftIO, it's a perfect tool for learning how electric circuits work. I can't wait to see more and more sensors and libraries available for MadMachine. If you have an idea or a question feel free to join the official [Discord](https://discord.com/invite/zZ9bFHK) server.
