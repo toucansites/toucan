@@ -25,6 +25,11 @@
     <meta name="twitter:description" content="{{page.description}}">
     {{#page.imageUrl}}<meta name="twitter:image" content="{{.}}">{{/page.imageUrl}}
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
     <link rel="stylesheet" href="{{site.baseUrl}}css/modern-normalize.css">
     <link rel="stylesheet" href="{{site.baseUrl}}css/modern-base.css">
     <link rel="stylesheet" href="{{site.baseUrl}}css/variables.css">
@@ -32,9 +37,7 @@
     <link rel="stylesheet" href="{{site.baseUrl}}css/grid.css">
     <link rel="stylesheet" href="{{site.baseUrl}}css/navigation.css">
     <link rel="stylesheet" href="{{site.baseUrl}}css/footer.css">
-    <link rel="stylesheet" href="{{site.baseUrl}}css/site.css">
-
-    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <link rel="stylesheet" href="{{site.baseUrl}}css/style.css">
 
     {{#page.css}}<link rel="stylesheet" href="{{.}}">{{/page.css}}
     
@@ -56,20 +59,19 @@
 </head>
 
 <body>
+
+    {{> blocks.navigation}}
     
-        {{> blocks.navigation}}
-
-        <main>
+    <main>
         {{$main}}
-            <p>No content.</p>
+        <p>No content.</p>
         {{/main}}
-        </main>
-
-        {{> blocks.footer}}
+    </main>
+    
+    {{> blocks.footer}}
 
     
     {{#page.js}}<script src="{{.}}" async></script>{{/page.js}}
-</body>
     <script src="/js/favicon.js"></script>
-    <script src="/js/copyright.js"></script>
+</body>
 </html>

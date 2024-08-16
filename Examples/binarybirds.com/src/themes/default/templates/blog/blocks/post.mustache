@@ -1,30 +1,27 @@
-    <div class="post card">
-<a href="{{permalink}}">
-        <div class="content">
-            {{#featured}}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="featuredIcon">
-                <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" />
-            </svg>
-            {{/featured}}
-            <div class="authors">
-                {{#authors}}
-                <div class="authorBadge">
-                    <div class="mini">{{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}</div>
-                    <span class="name">{{title}}</span>
-                </div>
-                {{/authors}}
-            </div>
-            <h3 class="title">{{title}}</h3>
-            <p id="timeStamp"><time datetime="{{publication.html}}">{{publication.html}}</time>                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
-                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-            </svg> {{readingTime}} min read</p>
-            <hr>
-            <p>{{description}}</p>
-            <div class="tags">
-                {{#tags}}
-                    <span class="tag">{{title}}</span>
-                {{/tags}}
-            </div>
-        </div>
-</a>
+<div class="card post">
+    {{#featured}}
+    <span class="featured">featured</span>
+    {{/featured}}
+    <div class="author-list">
+        {{#authors}}
+            <a href="{{permalink}}">
+            {{#imageUrl}}<img class="small rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
+            </a>
+        {{/authors}}
     </div>
+
+    <div class="meta">
+        <time datetime="{{publication.html}}">{{publication.html}}</time>
+        {{#readingTime}} &middot; <span class="reading-time">{{readingTime}} min read</span>{{/readingTime}}
+    </div>
+    
+    <h3><a href="{{permalink}}">{{title}}</a></h3>
+    <p>{{description}}</p>
+    
+    
+    <div class="tag-list">
+        {{#tags}}
+            <a href="{{permalink}}"><small>{{title}}</small></a>
+        {{/tags}}
+    </div>
+</div>

@@ -1,21 +1,5 @@
-<div class="teamMember">
-    <a href="{{permalink}}" class="teamMemberLink">
-        <div class="teamMemberImageContainer">
-        {{#imageUrl}}<img class="teamMemberImage" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
-        </div>
-        <div class="teamMemberDetails">
-            <h2>{{title}}</h2>
-            <p>{{description}}</p>
-              {{! <div class="iconContainer">
-                <i class="devicon-github-original colored"></i>
-                <a
-                  href="https://www.swift.org/sswg/"
-                  target="_blank"
-                  rel="noopener"
-                  ><i class="devicon-swift-plain colored"></i
-                ></a>
-                <i class="devicon-linkedin-plain colored"></i>
-              </div> }}
-            </div>
-    </a>
+<div class="card member">
+    {{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}" class="large rounded">{{/imageUrl}}
+    <h3><a href="{{permalink}}">{{title}}</a></h3>
+    <p>{{description}}</p>
 </div>

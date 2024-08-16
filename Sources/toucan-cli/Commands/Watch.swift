@@ -4,6 +4,7 @@ import Dispatch
 import EonilFSEvents
 import ToucanSDK
 
+fileprivate var lastGenerationTime: Date?
 extension Entrypoint {
 
     struct Watch: ParsableCommand {
@@ -19,7 +20,7 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
 
-        func run() throws {
+        mutating func run() throws {
             let toucan = Toucan(
                 input: input,
                 output: output,
@@ -36,9 +37,18 @@ extension Entrypoint {
                     guard let flag = event.flag, flag == [] else {
                         return
                     }
+                    let now = Date()
+                    let last = lastGenerationTime ?? now
+                    let diff = abs(last.timeIntervalSince(now))
+                    // 3 sec delay
+                    guard (diff == 0) || (diff > 3) else {
+                        return
+                    }
+                    
                     print("Generating site...")
                     do {
                         try toucan.generate()
+                        lastGenerationTime = now
                     }
                     catch {
                         print("\(error)")

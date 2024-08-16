@@ -6,10 +6,10 @@
 <div id="authors" class="wrapper">
 
     {{#empty(site.context.authors)}}
-    Empty.
+        Empty.
     {{/empty(site.context.authors)}}
     {{^empty(site.context.authors)}}
-    <div class="grid grid-421">
+    <div class="grid grid-321">
     {{#site.context.authors}}
         {{> blog.blocks.author}}
     {{/site.context.authors}}

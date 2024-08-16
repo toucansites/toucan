@@ -7,7 +7,3 @@ description: Posts page - {{number}} / {{total}}
 image: images/defaults/default.png
 template: blog.posts.pagination
 ---
-
-# Posts
-
-Browse all articles.

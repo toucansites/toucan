@@ -1,95 +1,66 @@
 {{<html}}
 {{$main}}
-<article class="wrapper">
-    
-    <header>
-        <h1>{{page.title}}</h1>
-        <div class="data">
-            <div class="author-list">
+<div class="wrapper">
+<div class="article-with-toc">
+    <div>
+        <article>
+            <header>
+
+                <div class="meta">
+                    <time datetime="{{page.publication.html}}">{{page.publication.html}}</time>
+                    {{#page.readingTime}} &middot; <span class="reading-time">{{page.readingTime}} min read</span>{{/page.readingTime}}
+                </div>
+                
+                <h1>{{page.title}}</h1>
+                <p>{{page.description}}</p>
+            </header>
+
+            <section>
+                {{& page.contents}}
+            </section>
+            
+            
+        </article>
+    </div>
+    <div>
+        <aside>
+        {{#page.featured}}
+        <span class="featured">featured</span>
+        {{/page.featured}}
+
+        <div class="author-list">
             {{#page.authors}}
-                <a class="authorBadge" href="{{permalink}}">
-                <div class="midi">{{#imageUrl}}<img src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}</div>
-                <div>{{title}}</div>
+                <a href="{{permalink}}">
+                {{#imageUrl}}<img class="large rounded" src="{{imageUrl}}" alt="{{title}}">{{/imageUrl}}
                 </a>
             {{/page.authors}}
-            </div>
-            <div class="times">
-                <time datetime="{{page.publication.html}}">{{page.publication.html}}</time>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
-                <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-                </svg>
-                <span class="readingTime">{{page.readingTime}} min read</span>
-            </div>
         </div>
-        <p class="excerpt">{{page.description}}</p>
-        
-    </header>
-    
+        <div class="tag-list">
+            {{#page.tags}}
+                <a href="{{permalink}}"><small>{{title}}</small></a>
+            {{/page.tags}}
+        </div>
+        {{> blocks.toc}}
+        </aside>
+    </div>
+</div>
+</div>
 
-    <section>
-        {{& page.contents}}
-    </section>
-
-    <div class="meta">
-        {{#page.tags}}
-            {{> blog.blocks.postTag}}
-        {{/page.tags}}
+<section class="primary">
+    <div class="wrapper">
+        {{#empty(page.related)}}
+        {{/empty(page.related)}}
+        {{^empty(page.related)}}
+        <h2>Related posts</h2>
+        <hr>
+        <div class="grid grid-221">
+            {{#page.related}}
+                {{> blog.blocks.post}}
+            {{/page.related}}
+        </div>
+        {{/empty(page.related)}}
     </div>
-    
-    <section>
-    <div class="grid grid-221">
-    {{^page.prev}}
-    <div></div>
-    {{/page.prev}}
-    {{#page.prev}}
-    <div>
-        <h4>&larr; Prev post</h4>
-        <hr class="spacer">
-        {{> blog.blocks.post}}
-    </div>
-    {{/page.prev}}
-    
-    {{^page.next}}
-    <div></div>
-    {{/page.next}}
-    {{#page.next}}
-    <div>
-        <h4 style="text-align: right;">Next post &rarr;</h4>
-        <hr class="spacer">
-        {{> blog.blocks.post}}
-    </div>
-    {{/page.next}}
-    </div>
-    </section>
-    
-    <section>
-    {{#empty(page.related)}}
-    {{/empty(page.related)}}
-    {{^empty(page.related)}}
-    <h4>Related posts</h4>
-    <hr class="spacer">
-    <div class="grid grid-221">
-    {{#page.related}}
-        {{> blog.blocks.post}}
-    {{/page.related}}
-    </div>
-    {{/empty(page.related)}}
-    </section>
-    
-    
-    {{#empty(page.moreByAuthors)}}
-    {{/empty(page.moreByAuthors)}}
-    {{^empty(page.moreByAuthors)}}
-    <h4>More posts by the author(s)</h4>
-    <hr class="spacer">
-    <div class="grid grid-221">
-    {{#page.moreByAuthors}}
-        {{> blog.blocks.post}}
-    {{/page.moreByAuthors}}
-    </div>
-    {{/empty(page.moreByAuthors)}}
-
-</article>
+</section>
 
 {{/main}}
 {{/html}}
