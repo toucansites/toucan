@@ -258,17 +258,18 @@ main > section header p {
     
     .article-with-toc {
         display: grid;
-        grid-column-gap: 32px;
-        grid-template-columns: 1fr auto;
+        grid-column-gap: 30px;
+        grid-template-columns: 1fr minmax(auto, 300px);
     }
 
     .article-with-toc > div > aside {
         position: -webkit-sticky;
         position: sticky;
-        top: 16px;
-        border-radius: 32px;
-        background: var(--background-color-1);
-        padding: 16px 32px;
+        margin-top: 15px;
+        top: 15px;
+        border-radius: 10px;
+        background: var(--background-color);
+        padding: 15px 30px;
         font-weight: bold;
         line-height: 1.5rem;
     }
