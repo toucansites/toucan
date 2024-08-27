@@ -771,14 +771,14 @@ extension [PageBundle] {
                 // TODO: proper case insensitive compare
                 switch order {
                 case .asc:
-//                    switch l.caseInsensitiveCompare(r) {
-//                    case .orderedAscending:
-//                        return true
-//                    case .orderedDescending:
-//                        return false
-//                    case .orderedSame:
-//                        return false
-//                    }
+                    //                    switch l.caseInsensitiveCompare(r) {
+                    //                    case .orderedAscending:
+                    //                        return true
+                    //                    case .orderedDescending:
+                    //                        return false
+                    //                    case .orderedSame:
+                    //                        return false
+                    //                    }
                     return l.lowercased() < r.lowercased()
                 case .desc:
                     return l.lowercased() > r.lowercased()

@@ -23,21 +23,22 @@ struct ContentTypeLoader {
 
     /// The URL of the source files.
     let sourceUrl: URL
-    
+
     /// The configuration object that holds settings for the site.
     let config: Config
-    
+
     /// The file manager used for file operations.
     let fileManager: FileManager
-    
+
     /// Loads and returns an array of content types.
     ///
     /// - Throws: An error if the content types could not be loaded.
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
+        // TODO: use yaml loader
         let typesUrl = sourceUrl.appendingPathComponent(config.types.folder)
         let list = fileManager.listDirectory(at: typesUrl)
-            .filter { $0.hasSuffix(".yml") }
+            .filter { $0.hasSuffix(".yml") || $0.hasSuffix(".yaml") }
 
         var types: [ContentType] = []
         var useDefaultContentType = true

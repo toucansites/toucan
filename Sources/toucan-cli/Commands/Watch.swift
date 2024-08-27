@@ -4,7 +4,7 @@ import Dispatch
 import EonilFSEvents
 import ToucanSDK
 
-fileprivate var lastGenerationTime: Date?
+private var lastGenerationTime: Date?
 extension Entrypoint {
 
     struct Watch: ParsableCommand {
@@ -44,7 +44,7 @@ extension Entrypoint {
                     guard (diff == 0) || (diff > 3) else {
                         return
                     }
-                    
+
                     print("Generating site...")
                     do {
                         try toucan.generate()

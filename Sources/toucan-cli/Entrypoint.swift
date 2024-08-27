@@ -5,8 +5,8 @@ import ToucanSDK
 @main
 struct Entrypoint: ParsableCommand {
 
-  /// Configuration for the command-line tool.
-  static var configuration = CommandConfiguration(
+    /// Configuration for the command-line tool.
+    static var configuration = CommandConfiguration(
         commandName: "toucan",
         abstract: """
             Toucan
