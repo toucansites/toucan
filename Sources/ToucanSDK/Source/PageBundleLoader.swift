@@ -379,14 +379,17 @@ struct PageBundleLoader {
             //            print(assetsUrl.path())
             //            print(assets.joined(separator: "\n"))
 
-            let assetsPrefix = "./\(assetsPath)/"
             /// resolve imageUrl for the page bundle
+            let assetsPrefix = "./\(assetsPath)/"
             var imageUrl: String? = nil
             if let image,
                 image.hasPrefix(assetsPrefix),
                 assets.contains(String(image.dropFirst(assetsPrefix.count)))
             {
                 imageUrl = image.finalAssetUrl(in: assetsPath, slug: slug)
+            }
+            else {
+                imageUrl = image
             }
 
             /// inject style.css if exists, resolve js paths for css assets
@@ -462,6 +465,10 @@ extension String {
             return self
         }
         let path = String(dropFirst(prefix.count))
+        // TODO: not sure if this is the correct way of handling index assets
+        if slug.isEmpty {
+            return "/" + path
+        }
         return "/assets/" + slug + "/" + path
     }
 }
