@@ -3,7 +3,7 @@ import ToucanSDK
 
 /// The main entry point for the command-line tool.
 @main
-struct Entrypoint: ParsableCommand {
+struct Entrypoint: AsyncParsableCommand {
 
     /// Configuration for the command-line tool.
     static var configuration = CommandConfiguration(

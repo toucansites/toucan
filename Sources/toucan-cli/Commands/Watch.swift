@@ -7,7 +7,7 @@ import ToucanSDK
 private var lastGenerationTime: Date?
 extension Entrypoint {
 
-    struct Watch: ParsableCommand {
+    struct Watch: AsyncParsableCommand {
 
         static var _commandName: String = "watch"
 
@@ -20,7 +20,7 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
 
-        mutating func run() throws {
+        mutating func run() async throws {
             let toucan = Toucan(
                 input: input,
                 output: output,

@@ -1,29 +1,52 @@
 import Foundation
 import ArgumentParser
 import ToucanSDK
+import Hummingbird
+import Logging
 
 extension Entrypoint {
 
-    struct Serve: ParsableCommand {
+    struct Serve: AsyncParsableCommand {
 
         static var _commandName: String = "serve"
 
-        @Argument(help: "The input directory (default: src).")
-        var input: String = "./src"
+        @Argument(help: "The root directory (default: docs).")
+        var root: String = "./docs"
+        
+        @Option(name: .shortAndLong)
+        var hostname: String = "127.0.0.1"
 
-        @Argument(help: "The output directory (default: docs).")
-        var output: String = "./docs"
+        @Option(name: .shortAndLong)
+        var port: Int = 3000
 
-        @Option(name: .shortAndLong, help: "The base url to use.")
-        var baseUrl: String? = nil
+        func run() async throws {
 
-        func run() throws {
-            let generator = Toucan(
-                input: input,
-                output: output,
-                baseUrl: baseUrl
+            let home = FileManager.default.homeDirectoryForCurrentUser.path
+            var rootPath = root.replacingOccurrences(of: "~", with: home)
+            if rootPath.hasPrefix(".") {
+                rootPath = FileManager.default.currentDirectoryPath + "/" + rootPath
+            }
+
+            let router = Router()
+            var logger = Logger(label: "Toucan")
+            logger.logLevel = .warning
+
+            router.add(
+                middleware: FileMiddleware(
+                    rootPath,
+                    searchForIndexHtml: true,
+                    logger: logger
+                )
             )
-            try generator.generate()
+            let app = Application(
+                router: router,
+                configuration: .init(
+                    address: .hostname(hostname, port: port),
+                    serverName: "Toucan server"
+                ),
+                logger: logger
+            )
+            try await app.runService()
         }
     }
 }

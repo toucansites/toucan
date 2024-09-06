@@ -4,7 +4,7 @@ import ToucanSDK
 
 extension Entrypoint {
 
-    struct Generate: ParsableCommand {
+    struct Generate: AsyncParsableCommand {
 
         @Argument(help: "The input directory (default: src).")
         var input: String = "./src"
@@ -15,7 +15,7 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
 
-        func run() throws {
+        func run() async throws {
             let generator = Toucan(
                 input: input,
                 output: output,
