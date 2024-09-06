@@ -4,7 +4,14 @@ import Dispatch
 import EonilFSEvents
 import ToucanSDK
 
+// TODO: use async sequence for file watcher + Linux support
+let semaphore = DispatchSemaphore(value: 0)
 private var lastGenerationTime: Date?
+
+func waitForever() {
+    semaphore.wait()
+}
+
 extension Entrypoint {
 
     struct Watch: AsyncParsableCommand {
@@ -61,7 +68,8 @@ extension Entrypoint {
 
             try eventStream.start()
             print("👀 Watching: `\(input)` -> \(output).")
-            dispatchMain()
+
+            waitForever()
         }
     }
 }
