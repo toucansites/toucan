@@ -531,9 +531,9 @@ struct SiteRenderer {
             guard pageBundle.type != ContentType.pagination.id else {
                 continue
             }
-//            if pageBundle.context.slug == "" {
-//                print(pageBundle.context)
-//            }
+            //            if pageBundle.context.slug == "" {
+            //                print(pageBundle.context)
+            //            }
             try renderHTML(
                 pageBundle: pageBundle,
                 globalContext: globalContext,

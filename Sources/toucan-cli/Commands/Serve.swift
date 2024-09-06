@@ -12,7 +12,7 @@ extension Entrypoint {
 
         @Argument(help: "The root directory (default: docs).")
         var root: String = "./docs"
-        
+
         @Option(name: .shortAndLong)
         var hostname: String = "127.0.0.1"
 
@@ -24,7 +24,8 @@ extension Entrypoint {
             let home = FileManager.default.homeDirectoryForCurrentUser.path
             var rootPath = root.replacingOccurrences(of: "~", with: home)
             if rootPath.hasPrefix(".") {
-                rootPath = FileManager.default.currentDirectoryPath + "/" + rootPath
+                rootPath =
+                    FileManager.default.currentDirectoryPath + "/" + rootPath
             }
 
             let router = Router()

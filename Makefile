@@ -20,3 +20,10 @@ check:
 
 format:
 	./scripts/run-swift-format.sh --fix
+
+install:
+	./scripts/install-toucan.sh
+
+uninstall:
+	./scripts/uninstall-toucan.sh
+
