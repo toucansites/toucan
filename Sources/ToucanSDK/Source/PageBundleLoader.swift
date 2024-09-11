@@ -227,9 +227,8 @@ struct PageBundleLoader {
             .safeSlug(prefix: nil)
     }
 
-    func type(frontMatter: [String: Any]) -> String {
+    func contentType(frontMatter: [String: Any]) -> String? {
         frontMatter.string(Keys.type.rawValue).emptyToNil
-            ?? ContentType.default.id
     }
 
     func title(frontMatter: [String: Any]) -> String {
@@ -348,11 +347,30 @@ struct PageBundleLoader {
             }
 
             let slug = slug(frontMatter: frontMatter, fallback: location.slug)
-            let type = type(frontMatter: frontMatter)
+            
+
+            var assumedType: String?
+            for contentType in contentTypes {
+                guard
+                    let locPrefix = contentType.location, !locPrefix.isEmpty
+                else {
+                    continue
+                }
+                if location.path.hasPrefix(locPrefix) {
+                    assumedType = contentType.id
+                }
+            }
+
+            if let explicitType = contentType(frontMatter: frontMatter) {
+                assumedType = explicitType
+            }
+            
+            let type = assumedType ?? ContentType.default.id
 
             let contentType = contentTypes.first { $0.id == type }
             guard let contentType else {
                 // TODO: fatal or log invalid content type
+                print("invalid content type")
                 return nil
             }
 
