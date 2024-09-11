@@ -104,7 +104,7 @@ struct SiteRenderer {
     // MARK: - context related
 
     func readingTime(_ value: String) -> Int {
-        value.split(separator: " ").count / 238
+        max(value.split(separator: " ").count / 238, 1)
     }
 
     func relations(
@@ -441,7 +441,10 @@ struct SiteRenderer {
                 with: properties
             )
             .recursivelyMerged(
-                with: relations.mapValues { $0.map(\.context.dict) }
+                with: relations
+                    // TODO: fix this, it can lead to a recursive call!!!
+                    .mapValues { $0.map { getContext(pageBundle: $0) } }
+//                    .mapValues { $0.map(\.context.dict) }
             )
             .recursivelyMerged(
                 with: localContext.mapValues {
