@@ -31,6 +31,13 @@ private enum Contents {
     case children(MarkupChildren)
 }
 
+private extension [DirectiveArgument] {
+
+    func getFirstValueBy(key name: String) -> String? {
+        first(where: { $0.name == name })?.value
+    }
+}
+
 struct MarkupToHTMLVisitor: MarkupVisitor {
 
     typealias Result = String
@@ -197,6 +204,8 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         }
         return tag(name: "p", content: .children(paragraph.children))
     }
+    
+    
 
     mutating func visitBlockDirective(
         _ blockDirective: BlockDirective
@@ -213,14 +222,22 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             return ""
         }
 
-        //        print(blockName, "-----------------------")
         switch blockName {
+        case "section":
+            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
+            return tag(
+                name: "section",
+                attributes: [
+                    .init(key: "class", value: cssClass)
+                ],
+                content: .children(blockDirective.children)
+            )
         case "grid":
-            var cssClass = "grid grid-"
-            for argument in arguments {
-                //                print(argument.name, argument.value)
-                cssClass += argument.value
-            }
+            let desktop = arguments.getFirstValueBy(key: "desktop") ?? "2"
+            let tablet = arguments.getFirstValueBy(key: "tablet") ?? "2"
+            let mobile = arguments.getFirstValueBy(key: "mobile") ?? "1"
+            
+            let cssClass = "grid grid-\(desktop)\(tablet)\(mobile)"
             return tag(
                 name: "div",
                 attributes: [
