@@ -347,7 +347,6 @@ struct PageBundleLoader {
             }
 
             let slug = slug(frontMatter: frontMatter, fallback: location.slug)
-            
 
             var assumedType: String?
             for contentType in contentTypes {
@@ -364,7 +363,7 @@ struct PageBundleLoader {
             if let explicitType = contentType(frontMatter: frontMatter) {
                 assumedType = explicitType
             }
-            
+
             let type = assumedType ?? ContentType.default.id
 
             let contentType = contentTypes.first { $0.id == type }

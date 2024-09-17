@@ -20,9 +20,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
         .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
         .package(url: "https://github.com/binarybirds/shell-kit", from: "1.0.0"),
-        .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.2"),
+        .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.3"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.0.0"),
-        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0-rc.5"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.6.0"),
 
         .package(url: "https://github.com/eonil/FSEvents", branch: "master"),

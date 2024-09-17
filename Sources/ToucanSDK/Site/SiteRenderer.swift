@@ -441,10 +441,11 @@ struct SiteRenderer {
                 with: properties
             )
             .recursivelyMerged(
-                with: relations
+                with:
+                    relations
                     // TODO: fix this, it can lead to a recursive call!!!
                     .mapValues { $0.map { getContext(pageBundle: $0) } }
-//                    .mapValues { $0.map(\.context.dict) }
+                //                    .mapValues { $0.map(\.context.dict) }
             )
             .recursivelyMerged(
                 with: localContext.mapValues {
@@ -501,8 +502,9 @@ struct SiteRenderer {
                     }
                 ),
                 page: getContext(pageBundle: pageBundle),
-                userDefined: pageBundle.userDefined,
-                // TODO: merge with site
+                userDefined: pageBundle.userDefined
+                    .recursivelyMerged(with: source.config.site.userDefined)
+                    .sanitized(),
                 data: pageBundle.data,
                 pagination: .init(
                     links: paginationContext,

@@ -94,7 +94,6 @@ public struct Toucan {
         // TODO: output url is completely wiped, check if it's safe to delete everything
         try resetOutputDirectory()
 
-        
         let themeUrl: URL
         if source.config.themes.folder.hasPrefix("/") {
             themeUrl = URL(fileURLWithPath: source.config.themes.folder)

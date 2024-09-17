@@ -1,5 +1,46 @@
 import Foundation
 
+extension Dictionary where Key == String, Value == Any {
+
+    func sanitized() -> [String: Any] {
+        var result: [String: Any] = [:]
+
+        for (key, value) in self {
+            if let nestedDict = value as? [String: Any] {
+                result[key] = nestedDict.sanitized()
+            }
+            else if let arrayValue = value as? [Any] {
+                result[key] = arrayValue.sanitized()
+            }
+            else if let anyHashableValue = value as? AnyHashable {
+                result[key] = anyHashableValue.base
+            }
+            else {
+                result[key] = value
+            }
+        }
+        return result
+    }
+}
+
+extension Array where Element == Any {
+
+    func sanitized() -> [Any] {
+        map { element in
+            if let nestedDict = element as? [String: Any] {
+                return nestedDict.sanitized()
+            }
+            if let anyHashableValue = element as? AnyHashable {
+                return anyHashableValue.base
+            }
+            if let arrayValue = element as? [Any] {
+                return arrayValue.sanitized()
+            }
+            return element
+        }
+    }
+}
+
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
 extension Dictionary where Key == String, Value == Any {
 

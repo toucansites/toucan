@@ -5,15 +5,13 @@
 //  Created by Tibor Bodecs on 27/06/2024.
 //
 
-import Foundation
+struct Config {
 
-struct Config: Codable {
-
-    struct Location: Codable {
+    struct Location {
         let folder: String
     }
 
-    struct Site: Codable {
+    struct Site {
 
         struct Hreflang: Codable {
             let lang: String
@@ -27,10 +25,10 @@ struct Config: Codable {
         let dateFormat: String?
         let noindex: Bool?
         let hreflang: [Hreflang]?
-
+        let userDefined: [String: Any]
     }
 
-    struct Themes: Codable {
+    struct Themes {
         let use: String
         let folder: String
         let templates: Location
@@ -38,13 +36,17 @@ struct Config: Codable {
         let overrides: Location
     }
 
-    struct Content: Codable {
+    struct Content {
         let folder: String
         let assets: Location
     }
 
+    struct Types {
+        let folder: String
+    }
+
     var site: Site
     let themes: Themes
-    let types: Location
+    let types: Types
     let content: Content
 }
