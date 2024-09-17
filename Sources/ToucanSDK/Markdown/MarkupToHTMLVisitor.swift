@@ -13,7 +13,7 @@ private extension Markup {
 
     var isInsideList: Bool {
         self is ListItemContainer || parent?.isInsideList == true
-    }
+    }    
 }
 
 private enum TagType {
@@ -194,7 +194,19 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     mutating func visitParagraph(
         _ paragraph: Paragraph
     ) -> Result {
-        // NOTE: this is a bad workaround.
+        // NOTE: this is a bad workaround, but it works for now...
+        /// if the parent is a link block directive
+        if
+            let block = paragraph.parent as? BlockDirective,
+            block.name.lowercased() == "link"
+        {
+            var result = ""
+            for child in paragraph.children {
+                result += visit(child)
+            }
+            return result
+        }
+        /// if the parent is a list element, we don't need to render the p tag
         if paragraph.isInsideList {
             var result = ""
             for child in paragraph.children {
@@ -202,6 +214,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             }
             return result
         }
+        
         return tag(name: "p", content: .children(paragraph.children))
     }
     
@@ -223,12 +236,32 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         }
 
         switch blockName {
+        case "link":
+            let url = arguments.getFirstValueBy(key: "url") ?? ""
+            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
+            return tag(
+                name: "a",
+                attributes: [
+                    .init(key: "href", value: url),
+                    .init(key: "class", value: cssClass),
+                ],
+                content: .children(blockDirective.children)
+            )
+        case "button":
+            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
+            return tag(
+                name: "section",
+                attributes: [
+                    .init(key: "class", value: cssClass),
+                ],
+                content: .children(blockDirective.children)
+            )
         case "section":
             let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
             return tag(
                 name: "section",
                 attributes: [
-                    .init(key: "class", value: cssClass)
+                    .init(key: "class", value: cssClass),
                 ],
                 content: .children(blockDirective.children)
             )
@@ -241,7 +274,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             return tag(
                 name: "div",
                 attributes: [
-                    .init(key: "class", value: cssClass)
+                    .init(key: "class", value: cssClass),
                 ],
                 content: .children(blockDirective.children)
             )
@@ -249,7 +282,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             return tag(
                 name: "div",
                 attributes: [
-                    .init(key: "class", value: "column")
+                    .init(key: "class", value: "column"),
                 ],
                 content: .children(blockDirective.children)
             )

@@ -38,7 +38,9 @@ struct HTMLRendererDelegate: MarkdownRenderer.Delegate {
 
         let src = String(source.dropFirst(prefix.count))
 
-        let url = "/assets/" + pageBundle.context.slug + "/" + src
+        // TODO: better asset management for index page bundle
+        let assetsDir = pageBundle.context.slug.isEmpty ? "" : "/assets/"
+        let url = assetsDir + pageBundle.context.slug + "/" + src
 
         var title = ""
         if let ttl = image.title {
