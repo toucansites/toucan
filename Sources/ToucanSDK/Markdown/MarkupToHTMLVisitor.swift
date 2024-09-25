@@ -198,7 +198,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         /// if the parent is a link block directive
         if
             let block = paragraph.parent as? BlockDirective,
-            block.name.lowercased() == "link"
+            ["link", "question"].contains(block.name.lowercased())
         {
             var result = ""
             for child in paragraph.children {
@@ -217,8 +217,6 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         
         return tag(name: "p", content: .children(paragraph.children))
     }
-    
-    
 
     mutating func visitBlockDirective(
         _ blockDirective: BlockDirective
@@ -236,6 +234,33 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         }
 
         switch blockName {
+        case "faq":
+            return tag(
+                name: "details",
+                content: .children(blockDirective.children)
+            )
+        case "question":
+            return tag(
+                name: "summary",
+                content: .children(blockDirective.children)
+            )
+        case "answer":
+            return tag(
+                name: "div",
+                content: .children(blockDirective.children)
+            )
+//        case "svg":
+//            let src = arguments.getFirstValueBy(key: "src") ?? ""
+//            print(src)
+////            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
+//            return tag(
+//                name: "svg",
+//                attributes: [
+////                    .init(key: "href", value: url),
+////                    .init(key: "class", value: cssClass),
+//                ],
+//                content: .children(blockDirective.children)
+//            )
         case "link":
             let url = arguments.getFirstValueBy(key: "url") ?? ""
             let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
@@ -269,8 +294,9 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             let desktop = arguments.getFirstValueBy(key: "desktop") ?? "2"
             let tablet = arguments.getFirstValueBy(key: "tablet") ?? "2"
             let mobile = arguments.getFirstValueBy(key: "mobile") ?? "1"
+            let extraClass = arguments.getFirstValueBy(key: "class") ?? ""
             
-            let cssClass = "grid grid-\(desktop)\(tablet)\(mobile)"
+            let cssClass = "grid grid-\(desktop)\(tablet)\(mobile) \(extraClass)"
             return tag(
                 name: "div",
                 attributes: [
@@ -279,10 +305,11 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
                 content: .children(blockDirective.children)
             )
         case "column":
+            let extraClass = arguments.getFirstValueBy(key: "class") ?? ""
             return tag(
                 name: "div",
                 attributes: [
-                    .init(key: "class", value: "column"),
+                    .init(key: "class", value: "column \(extraClass)"),
                 ],
                 content: .children(blockDirective.children)
             )

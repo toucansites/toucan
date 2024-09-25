@@ -1,4 +1,0 @@
-site:
-    baseUrl: http://localhost:3000/
-    title: Minimal example
-    description: This is a minimal toucan example
