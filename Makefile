@@ -1,8 +1,7 @@
+SHELL=/bin/bash
+
 build:
 	swift build
-
-update:
-	swift package update
 
 release:
 	swift build -c release
@@ -10,17 +9,21 @@ release:
 test:
 	swift test --parallel
 
+test-with-coverage:
+	swift test --parallel --enable-code-coverage
+
 clean:
 	rm -rf .build
 
-install: release
-	install ./.build/release/toucan /usr/local/bin/toucan
-
-uninstall:
-	rm /usr/local/bin/toucan
+check:
+	./scripts/run-checks.sh
 
 format:
-	swift-format -i -r ./Sources && swift-format -i -r ./Tests
+	./scripts/run-swift-format.sh --fix
 
-lint:
-	swift-format lint -r ./Sources && swift-format lint -r ./Tests
+install:
+	./scripts/install-toucan.sh
+
+uninstall:
+	./scripts/uninstall-toucan.sh
+

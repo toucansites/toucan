@@ -2,3 +2,8 @@
 .swiftpm
 .build
 .vscode
+.obsidian
+**/dist
+**/docs
+Tests/sites/benchmark/
+Examples/try-o/
