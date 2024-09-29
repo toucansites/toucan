@@ -30,6 +30,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-algorithms", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
+        .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
         .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
         .package(url: "https://github.com/binarybirds/shell-kit", from: "1.0.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-beta.3"),
@@ -43,7 +44,6 @@ let package = Package(
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Hummingbird", package: "hummingbird"),
-                .product(name: "ShellKit", package: "shell-kit"),
                 .target(name: "ToucanSDK"),
             ] + tdeps
         ),
@@ -52,6 +52,8 @@ let package = Package(
             dependencies: [
                 .product(name: "Algorithms", package: "swift-algorithms"),
                 .product(name: "Markdown", package: "swift-markdown"),
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "ShellKit", package: "shell-kit"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
