@@ -28,7 +28,7 @@ jobs:
       matrix:
         image:
           - 'swift:5.10'
-          - 'swift:6'
+          - 'swift:6.0'
     container:
       image: ${{ matrix.image }}
     steps:
