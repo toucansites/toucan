@@ -272,4 +272,12 @@ extension String {
     //    ) -> Self {
     //        block(self)
     //    }
+    
+    
+    func ensureTrailingSlash() -> String {
+        if hasSuffix("/") {
+            return self
+        }
+        return self + "/"
+    }
 }

@@ -18,12 +18,10 @@ struct SourceLoader {
 
         let configLoader = ConfigLoader(
             sourceUrl: sourceUrl,
-            fileManager: fileManager
+            fileManager: fileManager,
+            baseUrl: baseUrl
         )
-        var config = try configLoader.load()
-        if let baseUrl {
-            config.site.baseUrl = baseUrl
-        }
+        let config = try configLoader.load()
 
         let contentTypeLoader = ContentTypeLoader(
             sourceUrl: sourceUrl,
