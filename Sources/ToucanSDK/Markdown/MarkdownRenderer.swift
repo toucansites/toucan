@@ -52,6 +52,7 @@ public struct MarkdownRenderer {
         return htmlVisitor.visitDocument(document)
     }
 
+    /// Render a Table of Contents
     public func renderToC(
         markdown: String
     ) -> [ToC] {

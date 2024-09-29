@@ -12,22 +12,15 @@ on:
 
 jobs:
   
-  macOS-tests:
-    runs-on: self-hosted
-    steps:
+  # macOS-tests:
+  #   runs-on: self-hosted
+  #   steps:
     
-    - name: Checkout
-      uses: actions/checkout@v4
-    
-    # - name: Cache
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: server/.build
-    #     key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-    #     restore-keys: ${{ runner.os }}-spm-
-    
-    - name: Test
-      run: swift test --parallel --enable-code-coverage
+  #   - name: Checkout
+  #     uses: actions/checkout@v4
+
+  #   - name: Test
+  #     run: swift test --parallel --enable-code-coverage
   
   linux-tests:
     runs-on: ubuntu-latest
@@ -35,6 +28,7 @@ jobs:
       matrix:
         image:
           - 'swift:5.10'
+          - 'swift:6'
     container:
       image: ${{ matrix.image }}
     steps:
@@ -42,13 +36,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     
-    # - name: Cache
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: server/.build
-    #     key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-    #     restore-keys: ${{ runner.os }}-spm-
-
     - name: Swift version
       run: swift --version
 

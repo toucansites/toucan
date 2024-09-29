@@ -13,16 +13,6 @@ struct MarkupToHXVisitor: MarkupVisitor {
         let level: Int
         let text: String
         let fragment: String
-
-        init(
-            level: Int,
-            text: String,
-            fragment: String
-        ) {
-            self.level = level
-            self.text = text
-            self.fragment = fragment
-        }
     }
 
     typealias Result = [HX]

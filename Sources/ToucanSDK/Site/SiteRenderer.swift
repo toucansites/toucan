@@ -444,7 +444,7 @@ struct SiteRenderer {
                 with:
                     relations
                     // TODO: fix this, it can lead to a recursive call!!!
-//                    .mapValues { $0.map { getContext(pageBundle: $0) } }
+                    //                    .mapValues { $0.map { getContext(pageBundle: $0) } }
                     .mapValues { $0.map(\.context.dict) }
             )
             .recursivelyMerged(

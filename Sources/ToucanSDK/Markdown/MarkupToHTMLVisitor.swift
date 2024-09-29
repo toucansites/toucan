@@ -13,7 +13,7 @@ private extension Markup {
 
     var isInsideList: Bool {
         self is ListItemContainer || parent?.isInsideList == true
-    }    
+    }
 }
 
 private enum TagType {
@@ -196,8 +196,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     ) -> Result {
         // NOTE: this is a bad workaround, but it works for now...
         /// if the parent is a link block directive
-        if
-            let block = paragraph.parent as? BlockDirective,
+        if let block = paragraph.parent as? BlockDirective,
             ["link", "question"].contains(block.name.lowercased())
         {
             var result = ""
@@ -214,7 +213,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             }
             return result
         }
-        
+
         return tag(name: "p", content: .children(paragraph.children))
     }
 
@@ -249,18 +248,18 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
                 name: "div",
                 content: .children(blockDirective.children)
             )
-//        case "svg":
-//            let src = arguments.getFirstValueBy(key: "src") ?? ""
-//            print(src)
-////            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
-//            return tag(
-//                name: "svg",
-//                attributes: [
-////                    .init(key: "href", value: url),
-////                    .init(key: "class", value: cssClass),
-//                ],
-//                content: .children(blockDirective.children)
-//            )
+        //        case "svg":
+        //            let src = arguments.getFirstValueBy(key: "src") ?? ""
+        //            print(src)
+        ////            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
+        //            return tag(
+        //                name: "svg",
+        //                attributes: [
+        ////                    .init(key: "href", value: url),
+        ////                    .init(key: "class", value: cssClass),
+        //                ],
+        //                content: .children(blockDirective.children)
+        //            )
         case "link":
             let url = arguments.getFirstValueBy(key: "url") ?? ""
             let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
@@ -277,7 +276,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             return tag(
                 name: "section",
                 attributes: [
-                    .init(key: "class", value: cssClass),
+                    .init(key: "class", value: cssClass)
                 ],
                 content: .children(blockDirective.children)
             )
@@ -286,7 +285,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             return tag(
                 name: "section",
                 attributes: [
-                    .init(key: "class", value: cssClass),
+                    .init(key: "class", value: cssClass)
                 ],
                 content: .children(blockDirective.children)
             )
@@ -295,12 +294,13 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             let tablet = arguments.getFirstValueBy(key: "tablet") ?? "2"
             let mobile = arguments.getFirstValueBy(key: "mobile") ?? "1"
             let extraClass = arguments.getFirstValueBy(key: "class") ?? ""
-            
-            let cssClass = "grid grid-\(desktop)\(tablet)\(mobile) \(extraClass)"
+
+            let cssClass =
+                "grid grid-\(desktop)\(tablet)\(mobile) \(extraClass)"
             return tag(
                 name: "div",
                 attributes: [
-                    .init(key: "class", value: cssClass),
+                    .init(key: "class", value: cssClass)
                 ],
                 content: .children(blockDirective.children)
             )
@@ -309,7 +309,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             return tag(
                 name: "div",
                 attributes: [
-                    .init(key: "class", value: "column \(extraClass)"),
+                    .init(key: "class", value: "column \(extraClass)")
                 ],
                 content: .children(blockDirective.children)
             )

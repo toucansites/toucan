@@ -59,7 +59,7 @@ extension String {
     /// is provided or the prefix is empty, it returns the string itself transformed into
     /// a slug. If a prefix is provided, it appends the prefix to the slug.
     ///
-    /// - Parameters:
+    /// - Parameter:
     ///   - prefix: An optional prefix to prepend to the slug. If `nil` or empty, the prefix is ignored.
     /// - Returns: A slug version of the string, optionally prefixed.
     ///
@@ -272,8 +272,7 @@ extension String {
     //    ) -> Self {
     //        block(self)
     //    }
-    
-    
+
     func ensureTrailingSlash() -> String {
         if hasSuffix("/") {
             return self

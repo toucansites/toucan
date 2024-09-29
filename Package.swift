@@ -24,7 +24,6 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams", from: "5.0.0"),
         .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.6.0"),
-
         .package(url: "https://github.com/eonil/FSEvents", branch: "master"),
     ],
     targets: [

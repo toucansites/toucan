@@ -75,6 +75,7 @@ struct PageBundleLoader {
         sourceUrl.appendingPathComponent(config.content.folder)
     }
 
+    /// Loads all the page bundles.
     public func load() throws -> [PageBundle] {
         try loadBundleLocations()
             .sorted { $0.path < $1.path }
