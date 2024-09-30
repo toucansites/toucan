@@ -18,7 +18,7 @@ struct Config {
             let url: String
         }
 
-        var baseUrl: String
+        let baseUrl: String
         let title: String
         let description: String
         let language: String?

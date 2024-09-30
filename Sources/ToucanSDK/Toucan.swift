@@ -50,6 +50,7 @@ public struct Toucan {
     /// - Parameters:
     ///   - input: The input url as a path string.
     ///   - output: The output url as a path string.
+    ///   - baseUrl: An optional baseUrl to override the config value.
     public init(
         input: String,
         output: String,

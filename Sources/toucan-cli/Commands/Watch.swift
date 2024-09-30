@@ -1,9 +1,10 @@
 import Foundation
 import ArgumentParser
-import Dispatch
-import EonilFSEvents
 import ToucanSDK
 
+#if os(macOS)
+import Dispatch
+import EonilFSEvents
 // TODO: use async sequence for file watcher + Linux support
 let semaphore = DispatchSemaphore(value: 0)
 private var lastGenerationTime: Date?
@@ -11,6 +12,7 @@ private var lastGenerationTime: Date?
 func waitForever() {
     semaphore.wait()
 }
+#endif
 
 extension Entrypoint {
 
@@ -35,6 +37,7 @@ extension Entrypoint {
             )
             try toucan.generate()
 
+            #if os(macOS)
             let eventStream = try EonilFSEventStream(
                 pathsToWatch: [input],
                 sinceWhen: .now,
@@ -70,6 +73,9 @@ extension Entrypoint {
             print("👀 Watching: `\(input)` -> \(output).")
 
             waitForever()
+            #else
+            print("👀 This is a macOS only feature for now.")
+            #endif
         }
     }
 }

@@ -100,6 +100,8 @@ struct ConfigLoader {
     let sourceUrl: URL
     /// The file manager used for file operations.
     let fileManager: FileManager
+    /// The base URL to use for the configuration.
+    let baseUrl: String?
 
     /// Loads the configuration.
     ///
@@ -141,9 +143,16 @@ struct ConfigLoader {
         // MARK: - site
         let site = yaml.dict(Config.Keys.site)
 
-        let baseUrl =
-            site.string(Config.Site.Keys.baseUrl.rawValue)
-            ?? Config.Site.Defaults.baseUrl
+        /// set base url to default value
+        var baseUrl = Config.Site.Defaults.baseUrl.ensureTrailingSlash()
+        /// load base url from YAML
+        if let value = site.string(Config.Site.Keys.baseUrl.rawValue) {
+            baseUrl = value.ensureTrailingSlash()
+        }
+        /// override base url with input
+        if let value = self.baseUrl {
+            baseUrl = value.ensureTrailingSlash()
+        }
 
         let title =
             site.string(Config.Site.Keys.title.rawValue)

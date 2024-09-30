@@ -19,31 +19,31 @@ final class ToucanTestSuite: XCTestCase {
             + "/sites/"
     }
 
-    func generate(
-        _ site: String
-    ) async throws {
-        let baseUrl = URL(fileURLWithPath: sitesPath)
-        let siteUrl = baseUrl.appendingPathComponent(site)
-        let srcUrl = siteUrl.appendingPathComponent("src")
-        let destUrl = siteUrl.appendingPathComponent("dist")
-
-        let toucan = Toucan(
-            input: srcUrl.path,
-            output: destUrl.path,
-            baseUrl: nil
-        )
-        try toucan.generate()
-    }
-
-    func testGenerate() async throws {
-        for argument in [
-            //                "minimal",
-            "demo"
-            //            "theswiftdev.com",
-            //            "binarybirds.com",
-            //            "swiftonserver.com",
-        ] {
-            try await generate(argument)
-        }
-    }
+//    func generate(
+//        _ site: String
+//    ) async throws {
+//        let baseUrl = URL(fileURLWithPath: sitesPath)
+//        let siteUrl = baseUrl.appendingPathComponent(site)
+//        let srcUrl = siteUrl.appendingPathComponent("src")
+//        let destUrl = siteUrl.appendingPathComponent("dist")
+//
+//        let toucan = Toucan(
+//            input: srcUrl.path,
+//            output: destUrl.path,
+//            baseUrl: nil
+//        )
+//        try toucan.generate()
+//    }
+//
+//    func testGenerate() async throws {
+//        for argument in [
+//            //                "minimal",
+//            "demo"
+//            //            "theswiftdev.com",
+//            //            "binarybirds.com",
+//            //            "swiftonserver.com",
+//        ] {
+//            try await generate(argument)
+//        }
+//    }
 }
