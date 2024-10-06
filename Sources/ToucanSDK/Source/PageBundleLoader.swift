@@ -213,14 +213,22 @@ struct PageBundleLoader {
     }
 
     func publication(frontMatter: [String: Any]) -> Date {
-        guard let date = frontMatter.date(Keys.publication.rawValue) else {
+        guard
+            let date = frontMatter.date(
+                Keys.publication.rawValue,
+                format: config.content.dateFormat
+            )
+        else {
             return now
         }
         return date
     }
 
     func expiration(frontMatter: [String: Any]) -> Date? {
-        frontMatter.date(Keys.expiration.rawValue)
+        frontMatter.date(
+            Keys.expiration.rawValue,
+            format: config.content.dateFormat
+        )
     }
 
     func slug(frontMatter: [String: Any], fallback: String) -> String {
@@ -313,6 +321,7 @@ struct PageBundleLoader {
         at location: PageBundleLocation
     ) throws -> PageBundle? {
         let dirUrl = contentUrl.appendingPathComponent(location.path)
+
         guard fileManager.directoryExists(at: dirUrl) else {
             return nil
         }
@@ -338,6 +347,7 @@ struct PageBundleLoader {
             }
             /// filter out unpublished
             let publication = publication(frontMatter: frontMatter)
+
             if publication > now {
                 return nil
             }

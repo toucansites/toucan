@@ -124,11 +124,12 @@ extension Dictionary where Key == String, Value == Any {
         value(keyPath, as: Bool.self)
     }
 
-    func date(_ keyPath: String) -> Date? {
+    func date(_ keyPath: String, format: String) -> Date? {
         guard let rawDate = value(keyPath, as: String.self) else {
             return nil
         }
-        let formatter = DateFormatters.contentLoader
+        let formatter = DateFormatters.baseFormatter
+        formatter.dateFormat = format
         return formatter.date(from: rawDate)
     }
 

@@ -16,12 +16,6 @@ struct DateFormatters {
         return formatter
     }
 
-    static var contentLoader: DateFormatter {
-        let formatter = baseFormatter
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter
-    }
-
     static var rss: DateFormatter {
         let formatter = baseFormatter
         formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"

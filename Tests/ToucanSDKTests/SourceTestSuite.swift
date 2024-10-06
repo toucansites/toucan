@@ -19,58 +19,58 @@ final class SourceTestSuite: XCTestCase {
             + "/sites/"
     }
 
-//    func loadConfig(
-//        _ site: String
-//    ) async throws {
-//        let baseUrl = URL(fileURLWithPath: sitesPath)
-//        let siteUrl = baseUrl.appendingPathComponent(site)
-//        let srcUrl = siteUrl.appendingPathComponent("src")
-//        
-//        let configLoader = ConfigLoader(
-//            sourceUrl: srcUrl,
-//            fileManager: .default,
-//            baseUrl: nil
-//        )
-//        _ = try configLoader.load()
-//    }
-//
-//    func testLoadConfig() async throws {
-//        for argument in [
-//            "demo"
-//            //            "theswiftdev.com",
-//            //            "binarybirds.com",
-//            //            "swiftonserver.com",
-//        ] {
-//            try await loadConfig(argument)
-//        }
-//
-//    }
-//
-//    func loadContents(
-//        _ site: String
-//    ) async throws {
-//        let baseUrl = URL(fileURLWithPath: sitesPath)
-//        let siteUrl = baseUrl.appendingPathComponent(site)
-//        let srcUrl = siteUrl.appendingPathComponent("src")
-//        let configLoader = ConfigLoader(
-//            sourceUrl: srcUrl,
-//            fileManager: .default,
-//            baseUrl: nil
-//        )
-//        let _ = try configLoader.load()
-//    }
-//
-//    func testLoadContents() async throws {
-//        for argument in [
-//            "demo"
-//            //            "theswiftdev.com",
-//            //            "binarybirds.com",
-//            //            "swiftonserver.com",
-//        ] {
-//            try await loadContents(argument)
-//        }
-//
-//    }
+    //    func loadConfig(
+    //        _ site: String
+    //    ) async throws {
+    //        let baseUrl = URL(fileURLWithPath: sitesPath)
+    //        let siteUrl = baseUrl.appendingPathComponent(site)
+    //        let srcUrl = siteUrl.appendingPathComponent("src")
+    //
+    //        let configLoader = ConfigLoader(
+    //            sourceUrl: srcUrl,
+    //            fileManager: .default,
+    //            baseUrl: nil
+    //        )
+    //        _ = try configLoader.load()
+    //    }
+    //
+    //    func testLoadConfig() async throws {
+    //        for argument in [
+    //            "demo"
+    //            //            "theswiftdev.com",
+    //            //            "binarybirds.com",
+    //            //            "swiftonserver.com",
+    //        ] {
+    //            try await loadConfig(argument)
+    //        }
+    //
+    //    }
+    //
+    //    func loadContents(
+    //        _ site: String
+    //    ) async throws {
+    //        let baseUrl = URL(fileURLWithPath: sitesPath)
+    //        let siteUrl = baseUrl.appendingPathComponent(site)
+    //        let srcUrl = siteUrl.appendingPathComponent("src")
+    //        let configLoader = ConfigLoader(
+    //            sourceUrl: srcUrl,
+    //            fileManager: .default,
+    //            baseUrl: nil
+    //        )
+    //        let _ = try configLoader.load()
+    //    }
+    //
+    //    func testLoadContents() async throws {
+    //        for argument in [
+    //            "demo"
+    //            //            "theswiftdev.com",
+    //            //            "binarybirds.com",
+    //            //            "swiftonserver.com",
+    //        ] {
+    //            try await loadContents(argument)
+    //        }
+    //
+    //    }
 
     //    func testUserDefined() async throws {
     //
