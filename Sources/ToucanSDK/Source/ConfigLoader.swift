@@ -76,10 +76,12 @@ private extension Config.Types {
 private extension Config.Content {
 
     enum Keys {
+        static let dateFormat = "dateFormat"
         static let assets = "assets"
     }
 
     enum Defaults {
+        static let dateFormat = "yyyy-MM-dd HH:mm:ss"
         static let contentFolder = "content"
         static let assetsFolder = "assets"
     }
@@ -221,6 +223,10 @@ struct ConfigLoader {
             content.string(Config.Location.Keys.folder)
             ?? Config.Content.Defaults.contentFolder
 
+        let contentDateFormat =
+            content.string(Config.Content.Keys.dateFormat)
+            ?? Config.Content.Defaults.dateFormat
+
         let contentAssets = content.dict(Config.Content.Keys.assets)
         let contentAssetsFolder =
             contentAssets
@@ -250,6 +256,7 @@ struct ConfigLoader {
             types: .init(folder: typesFolder),
             content: .init(
                 folder: contentFolder,
+                dateFormat: contentDateFormat,
                 assets: .init(folder: contentAssetsFolder)
             )
         )

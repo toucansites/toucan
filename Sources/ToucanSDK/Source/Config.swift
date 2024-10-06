@@ -38,6 +38,7 @@ struct Config {
 
     struct Content {
         let folder: String
+        let dateFormat: String
         let assets: Location
     }
 
