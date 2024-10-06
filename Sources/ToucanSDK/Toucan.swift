@@ -62,7 +62,8 @@ public struct Toucan {
             baseUrl: baseUrl,
             sourceUrl: inputUrl,
             fileManager: fileManager,
-            frontMatterParser: .init()
+            frontMatterParser: .init(),
+            logger: logger
         )
         let source = try loader.load()
         try source.validateSlugs()

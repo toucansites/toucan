@@ -6,12 +6,15 @@
 //
 
 import Foundation
+import Logging
 
 struct SourceLoader {
+    
     let baseUrl: String?
     let sourceUrl: URL
     let fileManager: FileManager
     let frontMatterParser: FrontMatterParser
+    let logger: Logger
 
     /// load the configuration & the contents of the site source
     func load() throws -> Source {
@@ -35,7 +38,8 @@ struct SourceLoader {
             config: config,
             contentTypes: contentTypes,
             fileManager: fileManager,
-            frontMatterParser: frontMatterParser
+            frontMatterParser: frontMatterParser,
+            logger: logger
         )
         let pageBundles = try pageBundleLoader.load()
 

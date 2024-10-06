@@ -38,6 +38,8 @@ extension Entrypoint {
             var logger = Logger(label: "toucan")
             logger.logLevel = logLevel
             
+            logger.info("👀 Watching: `\(input)` -> \(output).")
+            
             let toucan = Toucan(
                 input: input,
                 output: output,
@@ -79,8 +81,6 @@ extension Entrypoint {
             eventStream.setDispatchQueue(DispatchQueue.main)
 
             try eventStream.start()
-            logger.info("👀 Watching: `\(input)` -> \(output).")
-
             waitForever()
             #else
             logger.info("👀 This is a macOS only feature for now.")

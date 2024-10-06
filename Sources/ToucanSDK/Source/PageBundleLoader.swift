@@ -7,6 +7,7 @@
 
 import Foundation
 import FileManagerKit
+import Logging
 import Yams
 
 struct PageBundleLocation {
@@ -58,6 +59,8 @@ struct PageBundleLoader {
     /// The front matter parser used for parsing markdown files.
     let frontMatterParser: FrontMatterParser
 
+    let logger: Logger
+    
     /// The current date.
     let now: Date = .init()
 
@@ -322,6 +325,8 @@ struct PageBundleLoader {
     ) throws -> PageBundle? {
         let dirUrl = contentUrl.appendingPathComponent(location.path)
 
+        logger.debug("Loading: \(dirUrl.path())")
+        
         guard fileManager.directoryExists(at: dirUrl) else {
             return nil
         }
