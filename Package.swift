@@ -43,6 +43,7 @@ let package = Package(
             name: "toucan-cli",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
                 .target(name: "ToucanSDK"),
             ] + tdeps

@@ -7,35 +7,7 @@
 
 import Foundation
 import FileManagerKit
-
-extension FileManager {
-
-    func copyRecursively(
-        from inputURL: URL,
-        to outputURL: URL
-    ) throws {
-        guard directoryExists(at: inputURL) else {
-            return
-        }
-        if !directoryExists(at: outputURL) {
-            try createDirectory(at: outputURL)
-        }
-
-        for item in listDirectory(at: inputURL) {
-            let itemSourceUrl = inputURL.appendingPathComponent(item)
-            let itemDestinationUrl = outputURL.appendingPathComponent(item)
-            if fileExists(at: itemSourceUrl) {
-                if fileExists(at: itemDestinationUrl) {
-                    try delete(at: itemDestinationUrl)
-                }
-                try copy(from: itemSourceUrl, to: itemDestinationUrl)
-            }
-            else {
-                try copyRecursively(from: itemSourceUrl, to: itemDestinationUrl)
-            }
-        }
-    }
-}
+import Logging
 
 /// A static site generator.
 public struct Toucan {
@@ -45,6 +17,7 @@ public struct Toucan {
     let inputUrl: URL
     let outputUrl: URL
     let baseUrl: String?
+    let logger: Logger
 
     /// Initialize a new instance.
     /// - Parameters:
@@ -54,7 +27,8 @@ public struct Toucan {
     public init(
         input: String,
         output: String,
-        baseUrl: String?
+        baseUrl: String?,
+        logger: Logger = .init(label: "toucan")
     ) {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         func getSafeUrl(_ path: String, home: String) -> URL {
@@ -66,6 +40,7 @@ public struct Toucan {
         self.inputUrl = getSafeUrl(input, home: home)
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
+        self.logger = logger
     }
 
     // MARK: - file management

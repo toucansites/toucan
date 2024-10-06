@@ -18,6 +18,10 @@ extension Entrypoint {
 
         @Option(name: .shortAndLong)
         var port: Int = 3000
+        
+        @Option(name: .shortAndLong, help: "The log level to use.")
+        var logLevel: Logger.Level = .info
+
 
         func run() async throws {
 
@@ -29,8 +33,8 @@ extension Entrypoint {
             }
 
             let router = Router()
-            var logger = Logger(label: "Toucan")
-            logger.logLevel = .warning
+            var logger = Logger(label: "toucan-server")
+            logger.logLevel = logLevel
 
             router.add(
                 middleware: FileMiddleware(
@@ -43,7 +47,7 @@ extension Entrypoint {
                 router: router,
                 configuration: .init(
                     address: .hostname(hostname, port: port),
-                    serverName: "Toucan server"
+                    serverName: "toucan-server"
                 ),
                 logger: logger
             )
