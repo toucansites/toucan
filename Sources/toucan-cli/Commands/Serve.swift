@@ -5,7 +5,7 @@ import Hummingbird
 import Logging
 
 struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
-    
+
     func handle(
         _ request: Request,
         context: Context,
@@ -22,7 +22,7 @@ struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
                 return Response(
                     status: .seeOther,
                     headers: [
-                        .location: "/404.html",
+                        .location: "/404.html"
                     ]
                 )
             }
@@ -45,7 +45,7 @@ extension Entrypoint {
 
         @Option(name: .shortAndLong)
         var port: Int = 3000
-        
+
         @Option(name: .shortAndLong, help: "The log level to use.")
         var logLevel: Logger.Level = .info
 
@@ -70,7 +70,7 @@ extension Entrypoint {
                     logger: logger
                 )
             }
-            
+
             let app = Application(
                 router: router,
                 configuration: .init(
@@ -83,4 +83,3 @@ extension Entrypoint {
         }
     }
 }
-

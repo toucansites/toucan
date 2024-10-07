@@ -62,7 +62,7 @@ public struct PageBundleLoader {
 
     /// An enumeration representing possible errors that can occur while loading the content.
     public enum Error: Swift.Error {
-//        case indexFileNotExists
+        //        case indexFileNotExists
         /// Indicates an error related to a content.
         case pageBundle(Swift.Error)
     }
@@ -79,7 +79,7 @@ public struct PageBundleLoader {
     let frontMatterParser: FrontMatterParser
 
     let logger: Logger
-    
+
     /// The current date.
     let now: Date = .init()
 
@@ -346,10 +346,16 @@ public struct PageBundleLoader {
             "slug": "\(location.slug)"
         ]
 
-        logger.debug("Loading page bundle at: `\(location.path)`", metadata: metadata)
-        
+        logger.debug(
+            "Loading page bundle at: `\(location.path)`",
+            metadata: metadata
+        )
+
         guard fileManager.directoryExists(at: dirUrl) else {
-            logger.debug("Page bundle directory does not exists.", metadata: metadata)
+            logger.debug(
+                "Page bundle directory does not exists.",
+                metadata: metadata
+            )
             return nil
         }
         do {
@@ -377,13 +383,19 @@ public struct PageBundleLoader {
             let publication = publication(frontMatter: frontMatter)
 
             if publication > now {
-                logger.debug("Page bundle is not published yet.", metadata: metadata)
+                logger.debug(
+                    "Page bundle is not published yet.",
+                    metadata: metadata
+                )
                 return nil
             }
             /// filter out expired
             let expiration = expiration(frontMatter: frontMatter)
             if let expiration, expiration < now {
-                logger.debug("Page bundle is already expired.", metadata: metadata)
+                logger.debug(
+                    "Page bundle is already expired.",
+                    metadata: metadata
+                )
                 return nil
             }
 
@@ -484,7 +496,7 @@ public struct PageBundleLoader {
             )
 
             logger.debug("Page bundle is loaded.", metadata: metadata)
-            
+
             return .init(
                 id: location.path,
                 url: dirUrl,
@@ -508,4 +520,3 @@ public struct PageBundleLoader {
         }
     }
 }
-

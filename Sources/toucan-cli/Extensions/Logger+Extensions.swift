@@ -9,5 +9,5 @@ import Logging
 import ArgumentParser
 
 extension Logger.Level: @retroactive ExpressibleByArgument {
-    
+
 }

@@ -124,7 +124,9 @@ public struct ConfigLoader {
                 continue
             }
             do {
-                logger.debug("Loading config file: `\(yamlConfigUrl.absoluteString)`.")
+                logger.debug(
+                    "Loading config file: `\(yamlConfigUrl.absoluteString)`."
+                )
                 let rawYaml = try String(
                     contentsOf: yamlConfigUrl,
                     encoding: .utf8

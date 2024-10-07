@@ -15,7 +15,7 @@ extension Entrypoint {
 
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
-        
+
         @Option(name: .shortAndLong, help: "The log level to use.")
         var logLevel: Logger.Level = .info
 

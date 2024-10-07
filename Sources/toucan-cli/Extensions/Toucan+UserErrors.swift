@@ -17,17 +17,25 @@ extension Toucan {
         catch let error as ConfigLoader.Error {
             switch error {
             case .missing(let url):
-                logger.error("Missing `config.yml` file at: `\(url.absoluteString)`.")
+                logger.error(
+                    "Missing `config.yml` file at: `\(url.absoluteString)`."
+                )
             case .file(let error):
-                logger.error("Config file error: `\(error.localizedDescription)`")
+                logger.error(
+                    "Config file error: `\(error.localizedDescription)`"
+                )
             case .yaml(let error):
-                logger.error("Config YAML error: `\(error.localizedDescription)`")
+                logger.error(
+                    "Config YAML error: `\(error.localizedDescription)`"
+                )
             }
         }
         catch let error as PageBundleLoader.Error {
             switch error {
             case .pageBundle(let error):
-                logger.error("Page bundle error: `\(error.localizedDescription)`")
+                logger.error(
+                    "Page bundle error: `\(error.localizedDescription)`"
+                )
             }
         }
         catch {
@@ -35,4 +43,3 @@ extension Toucan {
         }
     }
 }
- 

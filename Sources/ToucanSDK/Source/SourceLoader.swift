@@ -9,7 +9,7 @@ import Foundation
 import Logging
 
 struct SourceLoader {
-    
+
     let baseUrl: String?
     let sourceUrl: URL
     let fileManager: FileManager

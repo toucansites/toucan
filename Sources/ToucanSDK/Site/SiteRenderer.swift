@@ -401,7 +401,7 @@ struct SiteRenderer {
         if let res = cache.get(key: pageBundle.context.slug) as? [String: Any] {
             return res
         }
-        
+
         let metadata: Logger.Metadata = [
             "type": "\(pageBundle.type)",
             "slug": "\(pageBundle.context.slug)",
@@ -523,7 +523,6 @@ struct SiteRenderer {
 
     func render() throws {
         let globalContext = globalContext()
-
 
         logger.trace("global context:")
         for (key, values) in globalContext {
