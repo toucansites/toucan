@@ -10,12 +10,31 @@ import FileManagerKit
 import Logging
 import Yams
 
+extension String {
+
+    func finalAssetUrl(
+        in path: String,
+        slug: String
+    ) -> String {
+        let prefix = "./\(path)/"
+        guard hasPrefix(prefix) else {
+            return self
+        }
+        let path = String(dropFirst(prefix.count))
+        // TODO: not sure if this is the correct way of handling index assets
+        if slug.isEmpty {
+            return "/" + path
+        }
+        return "/assets/" + slug + "/" + path
+    }
+}
+
 struct PageBundleLocation {
     let slug: String
     let path: String
 }
 
-struct PageBundleLoader {
+public struct PageBundleLoader {
 
     public enum Keys: String, CaseIterable {
         case draft
@@ -42,8 +61,8 @@ struct PageBundleLoader {
     }
 
     /// An enumeration representing possible errors that can occur while loading the content.
-    enum Error: Swift.Error {
-        case indexFileNotExists
+    public enum Error: Swift.Error {
+//        case indexFileNotExists
         /// Indicates an error related to a content.
         case pageBundle(Swift.Error)
     }
@@ -79,12 +98,10 @@ struct PageBundleLoader {
     }
 
     /// Loads all the page bundles.
-    public func load() throws -> [PageBundle] {
+    func load() throws -> [PageBundle] {
         try loadBundleLocations()
             .sorted { $0.path < $1.path }
-            .compactMap {
-                return try? loadPageBundle(at: $0)
-            }
+            .compactMap { try loadPageBundle(at: $0) }
             .sorted { $0.context.slug < $1.context.slug }
     }
 
@@ -325,9 +342,14 @@ struct PageBundleLoader {
     ) throws -> PageBundle? {
         let dirUrl = contentUrl.appendingPathComponent(location.path)
 
-        logger.debug("Loading: \(dirUrl.path())")
+        let metadata: Logger.Metadata = [
+            "slug": "\(location.slug)"
+        ]
+
+        logger.debug("Loading page bundle at: `\(location.path)`", metadata: metadata)
         
         guard fileManager.directoryExists(at: dirUrl) else {
+            logger.debug("Page bundle directory does not exists.", metadata: metadata)
             return nil
         }
         do {
@@ -348,17 +370,20 @@ struct PageBundleLoader {
 
             /// filter out drafts
             if draft(frontMatter: frontMatter) {
+                logger.debug("Page bundle is a draft.", metadata: metadata)
                 return nil
             }
             /// filter out unpublished
             let publication = publication(frontMatter: frontMatter)
 
             if publication > now {
+                logger.debug("Page bundle is not published yet.", metadata: metadata)
                 return nil
             }
             /// filter out expired
             let expiration = expiration(frontMatter: frontMatter)
             if let expiration, expiration < now {
+                logger.debug("Page bundle is already expired.", metadata: metadata)
                 return nil
             }
 
@@ -384,8 +409,7 @@ struct PageBundleLoader {
 
             let contentType = contentTypes.first { $0.id == type }
             guard let contentType else {
-                // TODO: fatal or log invalid content type
-                print("invalid content type")
+                logger.error("Invalid content type.", metadata: metadata)
                 return nil
             }
 
@@ -407,10 +431,6 @@ struct PageBundleLoader {
             let canonical = canonical(frontMatter: frontMatter)
             let hreflang = hreflang(frontMatter: frontMatter)
             let redirects = redirects(frontMatter: frontMatter)
-
-            //            print("-------------------")
-            //            print(assetsUrl.path())
-            //            print(assets.joined(separator: "\n"))
 
             /// resolve imageUrl for the page bundle
             let assetsPrefix = "./\(assetsPath)/"
@@ -463,6 +483,8 @@ struct PageBundleLoader {
                 js: js
             )
 
+            logger.debug("Page bundle is loaded.", metadata: metadata)
+            
             return .init(
                 id: location.path,
                 url: dirUrl,
@@ -487,21 +509,3 @@ struct PageBundleLoader {
     }
 }
 
-extension String {
-
-    func finalAssetUrl(
-        in path: String,
-        slug: String
-    ) -> String {
-        let prefix = "./\(path)/"
-        guard hasPrefix(prefix) else {
-            return self
-        }
-        let path = String(dropFirst(prefix.count))
-        // TODO: not sure if this is the correct way of handling index assets
-        if slug.isEmpty {
-            return "/" + path
-        }
-        return "/assets/" + slug + "/" + path
-    }
-}

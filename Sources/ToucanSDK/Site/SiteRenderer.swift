@@ -72,12 +72,14 @@ struct SiteRenderer {
         source: Source,
         templatesUrl: URL,
         overridesUrl: URL,
-        destinationUrl: URL
+        destinationUrl: URL,
+        logger: Logger
     ) throws {
         self.source = source
         self.templatesUrl = templatesUrl
         self.overridesUrl = overridesUrl
         self.destinationUrl = destinationUrl
+        self.logger = logger
 
         let calendar = Calendar(identifier: .gregorian)
         self.currentYear = calendar.component(.year, from: .init())
@@ -86,12 +88,6 @@ struct SiteRenderer {
         self.dateFormatter.dateFormat = source.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
         self.sitemapDateFormatter = DateFormatters.sitemap
-
-        self.logger = {
-            var logger = Logger(label: "SiteRenderer")
-            logger.logLevel = .debug
-            return logger
-        }()
 
         self.templateRenderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl,
@@ -405,9 +401,13 @@ struct SiteRenderer {
         if let res = cache.get(key: pageBundle.context.slug) as? [String: Any] {
             return res
         }
+        
+        let metadata: Logger.Metadata = [
+            "type": "\(pageBundle.type)",
+            "slug": "\(pageBundle.context.slug)",
+        ]
 
-        logger.trace("slug: \(pageBundle.context.slug)")
-        logger.trace("type: \(pageBundle.type)")
+        logger.trace("Generating context", metadata: metadata)
 
         let contentType = source.contentType(for: pageBundle)
 
@@ -419,20 +419,20 @@ struct SiteRenderer {
 
         let relations = relations(for: pageBundle)
 
-        logger.trace("relations:")
+        logger.trace("relations:", metadata: metadata)
         for (key, values) in relations {
             logger.trace("\t\(key):")
             for item in values {
-                logger.trace("\t - \(item.context.slug)")
+                logger.trace("\t - \(item.context.slug)", metadata: metadata)
             }
         }
 
         let localContext = localContext(for: pageBundle)
-        logger.trace("local context:")
+        logger.trace("local context:", metadata: metadata)
         for (key, values) in localContext {
-            logger.trace("\t\(key):")
+            logger.trace("\t\(key):", metadata: metadata)
             for item in values {
-                logger.trace("\t - \(item.context.slug)")
+                logger.trace("\t - \(item.context.slug)", metadata: metadata)
             }
         }
 
@@ -523,6 +523,7 @@ struct SiteRenderer {
 
     func render() throws {
         let globalContext = globalContext()
+
 
         logger.trace("global context:")
         for (key, values) in globalContext {

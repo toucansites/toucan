@@ -49,7 +49,6 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The log level to use.")
         var logLevel: Logger.Level = .info
 
-
         func run() async throws {
 
             let home = FileManager.default.homeDirectoryForCurrentUser.path

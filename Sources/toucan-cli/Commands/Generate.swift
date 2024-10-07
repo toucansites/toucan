@@ -30,7 +30,7 @@ extension Entrypoint {
                 baseUrl: baseUrl,
                 logger: logger
             )
-            try generator.generate()
+            generator.generateAndLogErrors(logger)
         }
     }
 }

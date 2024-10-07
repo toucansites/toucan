@@ -40,13 +40,13 @@ extension Entrypoint {
             
             logger.info("👀 Watching: `\(input)` -> \(output).")
             
-            let toucan = Toucan(
+            let generator = Toucan(
                 input: input,
                 output: output,
                 baseUrl: baseUrl,
                 logger: logger
             )
-            try toucan.generate()
+            generator.generateAndLogErrors(logger)
 
             #if os(macOS)
             let eventStream = try EonilFSEventStream(
@@ -67,13 +67,7 @@ extension Entrypoint {
                     }
 
                     logger.info("Generating site...")
-                    do {
-                        try toucan.generate()
-                        lastGenerationTime = now
-                    }
-                    catch {
-                        logger.error("\(error)")
-                    }
+                    generator.generateAndLogErrors(logger)
                     logger.info("Site re-generated.")
                 }
             )

@@ -148,7 +148,8 @@ public struct Toucan {
             source: source,
             templatesUrl: themeTemplatesUrl,
             overridesUrl: themeOverrideTemplatesUrl,
-            destinationUrl: outputUrl
+            destinationUrl: outputUrl,
+            logger: logger
         )
 
         try renderer.render()

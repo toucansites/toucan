@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A page bundle representing a subpage for a website.
 struct PageBundle {
 
     struct Redirect {

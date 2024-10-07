@@ -22,7 +22,8 @@ struct SourceLoader {
         let configLoader = ConfigLoader(
             sourceUrl: sourceUrl,
             fileManager: fileManager,
-            baseUrl: baseUrl
+            baseUrl: baseUrl,
+            logger: logger
         )
         let config = try configLoader.load()
 
