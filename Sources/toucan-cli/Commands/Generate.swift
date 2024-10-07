@@ -1,6 +1,7 @@
 import Foundation
 import ArgumentParser
 import ToucanSDK
+import Logging
 
 extension Entrypoint {
 
@@ -15,13 +16,21 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
 
+        @Option(name: .shortAndLong, help: "The log level to use.")
+        var logLevel: Logger.Level = .info
+
         func run() async throws {
+
+            var logger = Logger(label: "toucan")
+            logger.logLevel = logLevel
+
             let generator = Toucan(
                 input: input,
                 output: output,
-                baseUrl: baseUrl
+                baseUrl: baseUrl,
+                logger: logger
             )
-            try generator.generate()
+            generator.generateAndLogErrors(logger)
         }
     }
 }
