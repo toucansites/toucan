@@ -4,6 +4,33 @@ import ToucanSDK
 import Hummingbird
 import Logging
 
+struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
+    
+    func handle(
+        _ request: Request,
+        context: Context,
+        next: (
+            Request,
+            Context
+        ) async throws -> Response
+    ) async throws -> Response {
+        do {
+            return try await next(request, context)
+        }
+        catch let error as HTTPError {
+            if error.status == .notFound {
+                return Response(
+                    status: .seeOther,
+                    headers: [
+                        .location: "/404.html",
+                    ]
+                )
+            }
+            throw error
+        }
+    }
+}
+
 extension Entrypoint {
 
     struct Serve: AsyncParsableCommand {
@@ -36,13 +63,15 @@ extension Entrypoint {
             var logger = Logger(label: "toucan-server")
             logger.logLevel = logLevel
 
-            router.add(
-                middleware: FileMiddleware(
+            router.addMiddleware {
+                NotFoundMiddleware()
+                FileMiddleware(
                     rootPath,
                     searchForIndexHtml: true,
                     logger: logger
                 )
-            )
+            }
+            
             let app = Application(
                 router: router,
                 configuration: .init(
@@ -55,3 +84,4 @@ extension Entrypoint {
         }
     }
 }
+
