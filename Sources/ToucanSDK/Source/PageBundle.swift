@@ -97,7 +97,6 @@ struct PageBundle {
     let redirects: [Redirect]
 
     let userDefined: [String: Any]
-    let data: [[String: Any]]
 
     let context: Context
 

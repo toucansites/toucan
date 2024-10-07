@@ -8,7 +8,6 @@
 import Foundation
 import FileManagerKit
 import Logging
-import Yams
 
 extension String {
 
@@ -199,18 +198,6 @@ public struct PageBundleLoader {
         return frontMatter.recursivelyMerged(with: overrides)
     }
 
-    func loadData(
-        id: String,
-        dirUrl: URL
-    ) throws -> [[String: Any]] {
-        /// load additional data files for data definitions
-        try Yaml.load(
-            at: dirUrl,
-            name: "\(id).data",
-            fileManager: fileManager
-        )
-    }
-
     func convert(
         date: Date
     ) -> PageBundle.Context.DateValue {
@@ -369,11 +356,6 @@ public struct PageBundleLoader {
                 rawMarkdown: rawMarkdown
             )
 
-            let data = try loadData(
-                id: indexName,
-                dirUrl: dirUrl
-            )
-
             /// filter out drafts
             if draft(frontMatter: frontMatter) {
                 logger.debug("Page bundle is a draft.", metadata: metadata)
@@ -513,7 +495,6 @@ public struct PageBundleLoader {
                 assets: .init(path: assetsPath),
                 redirects: redirects,
                 userDefined: userDefined,
-                data: data,
                 context: context
             )
         }
@@ -530,23 +511,26 @@ extension PageBundleLoader {
         for contentType: ContentType,
         at slug: String
     ) {
+        let metadata: Logger.Metadata = [
+            "slug": "\(slug)"
+        ]
         // properties
         for property in contentType.properties ?? [:] {
             if frontMatter[property.key] == nil {
-                logger.warning("Missing content type property", metadata: [
-                    "content": "\(slug)",
-                    "property": "\(property.key)"
-                ])
+                logger.warning(
+                    "Missing content type property: `\(property.key)`",
+                    metadata: metadata
+                )
             }
         }
 
         // relations
         for relation in contentType.relations ?? [:] {
             if frontMatter[relation.key] == nil {
-                logger.warning("Missing content type relation", metadata: [
-                    "content": "\(slug)",
-                    "relation": "\(relation.key)"
-                ])
+                logger.warning(
+                    "Missing content type relation: `\(relation.key)`",
+                    metadata: metadata
+                )
             }
         }
     }

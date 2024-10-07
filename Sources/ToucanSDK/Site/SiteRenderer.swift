@@ -505,7 +505,6 @@ struct SiteRenderer {
                 userDefined: pageBundle.userDefined
                     .recursivelyMerged(with: source.config.site.userDefined)
                     .sanitized(),
-                data: pageBundle.data,
                 pagination: .init(
                     links: paginationContext,
                     data: paginationData.mapValues {
@@ -513,10 +512,10 @@ struct SiteRenderer {
                     }
                 ),
                 year: currentYear
-            ),
+            )
+            .context,
             to: fileUrl
         )
-
     }
 
     // MARK: - render related methods
@@ -624,7 +623,6 @@ struct SiteRenderer {
                         assets: pageBundle.assets,
                         redirects: pageBundle.redirects,
                         userDefined: pageBundle.userDefined,
-                        data: pageBundle.data,
                         context: .init(
                             slug: finalSlug,
                             permalink: finalPermalink,
