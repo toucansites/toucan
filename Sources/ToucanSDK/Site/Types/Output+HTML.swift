@@ -25,12 +25,6 @@ struct Context {
             let isCurrent: Bool
         }
 
-        //        let home: Link?
-        //        let first: Link?
-        //        let prev: Link?
-        //        let next: Link?
-        //        let last: Link?
-
         let links: [String: [Link]]
         let data: [String: Any]
     }
@@ -41,7 +35,17 @@ struct HTML: Output {
     let site: Context.Site
     let page: [String: Any]
     let userDefined: [String: Any]
-    let data: [[String: Any]]
     let pagination: Context.Pagination
     let year: Int
+
+    var context: [String: Any] {
+        userDefined.recursivelyMerged(
+            with: [
+                "site": site,
+                "page": page,
+                "pagination": pagination,
+            ]
+        )
+        .sanitized()
+    }
 }

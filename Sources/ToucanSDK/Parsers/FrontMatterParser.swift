@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 03/05/2024.
 //
 
-import Yams
-
 struct FrontMatterParser {
 
     func parse(
