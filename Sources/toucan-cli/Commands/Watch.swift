@@ -1,6 +1,7 @@
 import Foundation
 import ArgumentParser
 import ToucanSDK
+import Logging
 
 #if os(macOS)
 import Dispatch
@@ -29,13 +30,22 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The base url to use.")
         var baseUrl: String? = nil
 
+        @Option(name: .shortAndLong, help: "The log level to use.")
+        var logLevel: Logger.Level = .info
+
         mutating func run() async throws {
-            let toucan = Toucan(
+            var logger = Logger(label: "toucan")
+            logger.logLevel = logLevel
+
+            logger.info("👀 Watching: `\(input)` -> \(output).")
+
+            let generator = Toucan(
                 input: input,
                 output: output,
-                baseUrl: baseUrl
+                baseUrl: baseUrl,
+                logger: logger
             )
-            try toucan.generate()
+            generator.generateAndLogErrors(logger)
 
             #if os(macOS)
             let eventStream = try EonilFSEventStream(
@@ -55,26 +65,18 @@ extension Entrypoint {
                         return
                     }
 
-                    print("Generating site...")
-                    do {
-                        try toucan.generate()
-                        lastGenerationTime = now
-                    }
-                    catch {
-                        print("\(error)")
-                    }
-                    print("Site re-generated.")
+                    logger.info("Generating site...")
+                    generator.generateAndLogErrors(logger)
+                    logger.info("Site re-generated.")
                 }
             )
 
             eventStream.setDispatchQueue(DispatchQueue.main)
 
             try eventStream.start()
-            print("👀 Watching: `\(input)` -> \(output).")
-
             waitForever()
             #else
-            print("👀 This is a macOS only feature for now.")
+            logger.info("👀 This is a macOS only feature for now.")
             #endif
         }
     }

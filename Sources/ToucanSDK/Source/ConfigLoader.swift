@@ -8,6 +8,7 @@
 import Foundation
 import FileManagerKit
 import Yams
+import Logging
 
 private extension Config {
 
@@ -87,11 +88,11 @@ private extension Config.Content {
     }
 }
 
-struct ConfigLoader {
+public struct ConfigLoader {
 
     /// An enumeration representing possible errors that can occur while loading the configuration.
-    enum Error: Swift.Error {
-        case missing
+    public enum Error: Swift.Error {
+        case missing(URL)
         /// Indicates an error related to file operations.
         case file(Swift.Error)
         /// Indicates an error related to parsing YAML.
@@ -104,6 +105,8 @@ struct ConfigLoader {
     let fileManager: FileManager
     /// The base URL to use for the configuration.
     let baseUrl: String?
+    /// The logger instance
+    let logger: Logger
 
     /// Loads the configuration.
     ///
@@ -121,6 +124,9 @@ struct ConfigLoader {
                 continue
             }
             do {
+                logger.debug(
+                    "Loading config file: `\(yamlConfigUrl.absoluteString)`."
+                )
                 let rawYaml = try String(
                     contentsOf: yamlConfigUrl,
                     encoding: .utf8
@@ -136,7 +142,7 @@ struct ConfigLoader {
                 throw Error.file(error)
             }
         }
-        throw Error.missing
+        throw Error.missing(sourceUrl)
     }
 
     func dictToConfig(
