@@ -111,44 +111,7 @@ extension ContentType {
         location: nil,
         template: "pages.single.page",
         pagination: nil,
-        properties: [
-            :
-            //            "type": .init(
-            //                type: .string
-            //            ),
-            //            "slug": .init(
-            //                type: .string
-            //            ),
-            //            "title": .init(
-            //                type: .string
-            //            ),
-            //            "description": .init(
-            //                type: .string
-            //            ),
-            //            "image": .init(
-            //                type: .string
-            //            ),
-            //            "draft": .init(
-            //                type: .bool
-            //            ),
-            //            "publication": .init(
-            //                type: .date
-            //            ),
-            //            "expiration": .init(
-            //                type: .date
-            //            ),
-            //case template
-            //case output
-            //case assets
-            //case redirects
-            //
-            //case noindex
-            //case canonical
-            //case hreflang
-            //case css
-            //case js
-
-        ],
+        properties: [:],
         relations: nil,
         context: .init(
             site: [

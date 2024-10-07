@@ -491,13 +491,6 @@ extension PageBundleLoader {
         for contentType: ContentType,
         at slug: String
     ) {
-        guard
-            let frontMatterType = frontMatter.value("type", as: String.self),
-            frontMatterType == contentType.id
-        else {
-            return
-        }
-
         // properties
         for property in contentType.properties ?? [:] {
             if frontMatter[property.key] == nil {
