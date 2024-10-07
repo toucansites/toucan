@@ -337,11 +337,11 @@ struct SiteRenderer {
                     //                    print(cmd)
                     let log = try shell.run(cmd)
                     if !log.isEmpty {
-                        print(log)
+                        logger.debug("\(log)")
                     }
                 }
                 catch {
-                    print("\(error)")
+                    logger.error("\(error.localizedDescription)")
                 }
             }
             contents = try! String(contentsOf: fileURL, encoding: .utf8)
@@ -375,10 +375,10 @@ struct SiteRenderer {
 
             }
             catch Exception.Error(_, let message) {
-                print(message)
+                logger.error("\(message)")
             }
             catch {
-                print("error")
+                logger.error("\(error.localizedDescription)")
             }
         }
 
