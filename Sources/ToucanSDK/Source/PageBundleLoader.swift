@@ -522,7 +522,6 @@ public struct PageBundleLoader {
         }
     }
 }
-<<<<<<< HEAD
 
 extension PageBundleLoader {
 
@@ -534,40 +533,21 @@ extension PageBundleLoader {
         // properties
         for property in contentType.properties ?? [:] {
             if frontMatter[property.key] == nil {
-                print(
-                    "Content type property `\(property.key)` is missing for content: \(slug)"
-                )
+                logger.warning("Missing content type property", metadata: [
+                    "content": "\(slug)",
+                    "property": "\(property.key)"
+                ])
             }
         }
 
         // relations
         for relation in contentType.relations ?? [:] {
             if frontMatter[relation.key] == nil {
-                print(
-                    "Content type relation `\(relation.key)` is missing for content: \(slug)"
-                )
+                logger.warning("Missing content type relation", metadata: [
+                    "content": "\(slug)",
+                    "relation": "\(relation.key)"
+                ])
             }
         }
     }
 }
-
-extension String {
-
-    func finalAssetUrl(
-        in path: String,
-        slug: String
-    ) -> String {
-        let prefix = "./\(path)/"
-        guard hasPrefix(prefix) else {
-            return self
-        }
-        let path = String(dropFirst(prefix.count))
-        // TODO: not sure if this is the correct way of handling index assets
-        if slug.isEmpty {
-            return "/" + path
-        }
-        return "/assets/" + slug + "/" + path
-    }
-}
-=======
->>>>>>> main
