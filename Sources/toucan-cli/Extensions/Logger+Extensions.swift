@@ -8,6 +8,8 @@
 import Logging
 import ArgumentParser
 
-extension Logger.Level: @retroactive ExpressibleByArgument {
-
-}
+#if compiler(>=6.0)
+extension Logger.Level: @retroactive ExpressibleByArgument {}
+#else
+extension Logger.Level: ExpressibleByArgument {}
+#endif
