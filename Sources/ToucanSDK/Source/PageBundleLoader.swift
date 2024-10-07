@@ -384,6 +384,8 @@ struct PageBundleLoader {
                 return nil
             }
 
+            validateFrontMatter(frontMatter, for: contentType, at: slug)
+
             let title = title(frontMatter: frontMatter)
             let description = description(frontMatter: frontMatter)
             let image = image(frontMatter: frontMatter)
@@ -478,6 +480,40 @@ struct PageBundleLoader {
         }
         catch {
             throw Error.pageBundle(error)
+        }
+    }
+}
+
+extension PageBundleLoader {
+
+    func validateFrontMatter(
+        _ frontMatter: [String: Any],
+        for contentType: ContentType,
+        at slug: String
+    ) {
+        guard
+            let frontMatterType = frontMatter.value("type", as: String.self),
+            frontMatterType == contentType.id
+        else {
+            return
+        }
+
+        // properties
+        for property in contentType.properties ?? [:] {
+            if frontMatter[property.key] == nil {
+                print(
+                    "Content type property `\(property.key)` is missing for content: \(slug)"
+                )
+            }
+        }
+
+        // relations
+        for relation in contentType.relations ?? [:] {
+            if frontMatter[relation.key] == nil {
+                print(
+                    "Content type relation `\(relation.key)` is missing for content: \(slug)"
+                )
+            }
         }
     }
 }

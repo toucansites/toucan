@@ -38,7 +38,6 @@ struct ContentType: Codable {
         }
 
         let type: DataType
-        let required: Bool
     }
 
     struct Relation: Codable {
@@ -115,36 +114,28 @@ extension ContentType {
         properties: [
             :
             //            "type": .init(
-            //                type: .string,
-            //                required: false
+            //                type: .string
             //            ),
             //            "slug": .init(
-            //                type: .string,
-            //                required: false
+            //                type: .string
             //            ),
             //            "title": .init(
-            //                type: .string,
-            //                required: false
+            //                type: .string
             //            ),
             //            "description": .init(
-            //                type: .string,
-            //                required: false
+            //                type: .string
             //            ),
             //            "image": .init(
-            //                type: .string,
-            //                required: false
+            //                type: .string
             //            ),
             //            "draft": .init(
-            //                type: .bool,
-            //                required: false
+            //                type: .bool
             //            ),
             //            "publication": .init(
-            //                type: .date,
-            //                required: false
+            //                type: .date
             //            ),
             //            "expiration": .init(
-            //                type: .date,
-            //                required: false
+            //                type: .date
             //            ),
             //case template
             //case output
