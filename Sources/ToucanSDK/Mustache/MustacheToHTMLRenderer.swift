@@ -7,6 +7,7 @@
 
 import Foundation
 import Mustache
+import Logging
 
 extension String {
 
@@ -15,9 +16,9 @@ extension String {
     }
 }
 
-struct MustacheToHTMLRenderer {
+public struct MustacheToHTMLRenderer {
 
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case missingTemplate(String)
     }
 
@@ -26,7 +27,8 @@ struct MustacheToHTMLRenderer {
 
     init(
         templatesUrl: URL,
-        overridesUrl: URL
+        overridesUrl: URL,
+        logger: Logger
     ) throws {
         var templates: [String: MustacheTemplate] = [:]
         for (id, template) in try Self.loadTemplates(at: templatesUrl) {
@@ -39,11 +41,11 @@ struct MustacheToHTMLRenderer {
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
 
-        //        print("---")
-        //        print(templatesUrl.path())
-        //        print(overridesUrl.path())
-        //        print(self.ids)
-        //        print("---")
+        logger.trace("Templates url: `\(templatesUrl.absoluteString)`")
+        logger.trace("Template overrides url: `\(overridesUrl.absoluteString)`")
+        logger.trace(
+            "Available templates: \(ids.map { "`\($0)`" }.joined(separator: ", "))"
+        )
     }
 
     // MARK: -

@@ -91,7 +91,8 @@ struct SiteRenderer {
 
         self.templateRenderer = try MustacheToHTMLRenderer(
             templatesUrl: templatesUrl,
-            overridesUrl: overridesUrl
+            overridesUrl: overridesUrl,
+            logger: logger
         )
 
         self.cache = .init()
@@ -735,7 +736,7 @@ struct SiteRenderer {
     }
 }
 
-// NOTE: this is a complete hack for now...
+// TODO: better sort algorithm using data types
 extension [PageBundle] {
 
     func sorted(
@@ -813,42 +814,3 @@ extension [PageBundle] {
         }
     }
 }
-
-// TODO: this is tricky, next / prev over refs, using a generic approach...
-//func prev(_ guide: Guide) -> Guide? {
-//            let guides = guides(category: guide.category)
-//            guard
-//                let index = guideIndex(for: guide, in: guides),
-//                index > 0
-//            else {
-//                if
-//                    let categoryIndex = categoryIndex(for: guide.category),
-//                    categoryIndex > 0
-//                {
-//                    let nextIndex = categoryIndex - 1
-//                    let category = categories[nextIndex]
-//                    return self.guides(category: category).last
-//                }
-//                return nil
-//            }
-//            return guides[index - 1]
-//        }
-//
-//        func next(_ guide: Guide) -> Guide? {
-//            let guides = guides(category: guide.category)
-//            guard
-//                let index = guideIndex(for: guide, in: guides),
-//                index < guides.count - 1
-//            else {
-//                if
-//                    let categoryIndex = categoryIndex(for: guide.category),
-//                    categoryIndex < categories.count - 1
-//                {
-//                    let nextIndex = categoryIndex + 1
-//                    let category = categories[nextIndex]
-//                    return self.guides(category: category).first
-//                }
-//                return nil
-//            }
-//            return guides[index + 1]
-//        }

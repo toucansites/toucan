@@ -38,6 +38,14 @@ extension Toucan {
                 )
             }
         }
+        catch let error as MustacheToHTMLRenderer.Error {
+            switch error {
+            case .missingTemplate(let value):
+                logger.error(
+                    "Missing template file: `\(value)`"
+                )
+            }
+        }
         catch {
             logger.error("\(error.localizedDescription)")
         }
