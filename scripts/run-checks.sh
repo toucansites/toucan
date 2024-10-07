@@ -28,7 +28,7 @@ for SCRIPT_PATH in "${SCRIPT_PATHS[@]}"; do
     ((NUM_CHECKS_FAILED+=1))
   fi
 done
-# TODO: re-enable format...
+# TODO: make swift-format work on CI
 # log "Running swift-format..."
 # bash "${CURRENT_SCRIPT_DIR}"/run-swift-format.sh $FIX_FORMAT > /dev/null
 # FORMAT_EXIT_CODE=$?

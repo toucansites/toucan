@@ -104,32 +104,6 @@ struct PageBundle {
 
 extension PageBundle {
 
-    //    var context: [String: Any] {
-    //        var result: [String: Any] = [:]
-    ////        var result: [String: Any] = frontMatter
-    //        result["slug"] = slug
-    //        result["permalink"] = permalink
-    //        result["title"] = title
-    //        result["description"] = description
-    //        result["imageUrl"] = image  // imageUrl() vs frontMatter["image"] ?
-    //        if image == nil {
-    //            result["imageUrl"] = false
-    //        }
-    //        // TODO: date format
-    //        result["publication"] = publication
-    //        result["expiration"] = expiration
-    //        result["lastModification"] = lastModification
-    //        result["css"] = cssUrls()
-    //        result["js"] = jsUrls()
-    //        result["noindex"] = noindex
-    //        result["canonical"] = canonical
-    //        result["hreflang"] = hreflang
-    //        // TODO: better user defaults
-    //        return
-    //            result
-    //            .recursivelyMerged(with: userDefined)
-    //    }
-
     /// Returns the context aware identifier, the last component of the slug
     ///
     /// Can be used when referencing contents, e.g.
