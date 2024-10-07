@@ -38,7 +38,6 @@ struct ContentType: Codable {
         }
 
         let type: DataType
-        let required: Bool
     }
 
     struct Relation: Codable {
@@ -112,52 +111,7 @@ extension ContentType {
         location: nil,
         template: "pages.single.page",
         pagination: nil,
-        properties: [
-            :
-            //            "type": .init(
-            //                type: .string,
-            //                required: false
-            //            ),
-            //            "slug": .init(
-            //                type: .string,
-            //                required: false
-            //            ),
-            //            "title": .init(
-            //                type: .string,
-            //                required: false
-            //            ),
-            //            "description": .init(
-            //                type: .string,
-            //                required: false
-            //            ),
-            //            "image": .init(
-            //                type: .string,
-            //                required: false
-            //            ),
-            //            "draft": .init(
-            //                type: .bool,
-            //                required: false
-            //            ),
-            //            "publication": .init(
-            //                type: .date,
-            //                required: false
-            //            ),
-            //            "expiration": .init(
-            //                type: .date,
-            //                required: false
-            //            ),
-            //case template
-            //case output
-            //case assets
-            //case redirects
-            //
-            //case noindex
-            //case canonical
-            //case hreflang
-            //case css
-            //case js
-
-        ],
+        properties: [:],
         relations: nil,
         context: .init(
             site: [
