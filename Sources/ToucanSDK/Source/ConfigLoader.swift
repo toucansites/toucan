@@ -61,10 +61,10 @@ private extension Config.Themes {
     enum Defaults {
         static let use = "default"
         static let folder = "themes"
-        static let templatesFolder = "templates"
         static let assetsFolder = "assets"
-        static let overridesFolder = "template_overrides"
+        static let templatesFolder = "templates"
         static let typesFolder = "types"
+        static let overridesFolder = "overrides"
     }
 }
 
