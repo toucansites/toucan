@@ -10,7 +10,6 @@ import FileManagerKit
 import Yams
 import Logging
 
-
 public struct ConfigLoader {
 
     /// An enumeration representing possible errors that can occur while loading the configuration.

@@ -6,7 +6,7 @@
 //
 
 struct Config {
-    
+
     struct Location {
 
         enum Keys {
@@ -14,7 +14,7 @@ struct Config {
         }
 
         let folder: String
-        
+
         init(folder: String) {
             self.folder = folder
         }
@@ -26,7 +26,7 @@ struct Config {
             self.folder = folder
         }
     }
-    
+
     // MARK: -
 
     struct Site {
@@ -39,7 +39,7 @@ struct Config {
             static let dateFormat = "dateFormat"
             static let noindex = "noindex"
             static let hreflang = "hreflang"
-            
+
             static let allKeys: [String] = [
                 Keys.baseUrl,
                 Keys.title,
@@ -47,10 +47,10 @@ struct Config {
                 Keys.language,
                 Keys.dateFormat,
                 Keys.noindex,
-                Keys.hreflang
+                Keys.hreflang,
             ]
         }
-        
+
         struct Hreflang: Codable {
             let lang: String
             let url: String
@@ -64,7 +64,7 @@ struct Config {
         let noindex: Bool
         let hreflang: [Hreflang]
         let userDefined: [String: Any]
-        
+
         init(
             baseUrl: String,
             title: String,
@@ -73,7 +73,7 @@ struct Config {
             dateFormat: String,
             noindex: Bool,
             hreflang: [Hreflang],
-            userDefined: [String : Any]
+            userDefined: [String: Any]
         ) {
             self.baseUrl = baseUrl
             self.title = title
@@ -86,29 +86,33 @@ struct Config {
         }
 
         init(_ dict: [String: Any]) {
-            self.baseUrl = dict.string(Keys.baseUrl) ??
-                Config.defaults.site.baseUrl
+            self.baseUrl =
+                dict.string(Keys.baseUrl)
+                ?? Config.defaults.site.baseUrl
 
-            self.title = dict.string(Keys.title) ??
-                Config.defaults.site.title
+            self.title =
+                dict.string(Keys.title)
+                ?? Config.defaults.site.title
 
-            self.description = dict.string(Keys.description)
+            self.description =
+                dict.string(Keys.description)
                 ?? Config.defaults.site.description
 
             self.language = dict.string(Keys.language)
 
-            self.dateFormat = dict.string(Keys.dateFormat) ??
-                Config.defaults.site.dateFormat
+            self.dateFormat =
+                dict.string(Keys.dateFormat)
+                ?? Config.defaults.site.dateFormat
 
-            self.noindex = dict.bool(Keys.noindex) ??
-                Config.defaults.site.noindex
+            self.noindex =
+                dict.bool(Keys.noindex)
+                ?? Config.defaults.site.noindex
 
             self.hreflang = dict.array(Keys.hreflang, as: Hreflang.self)
-
             self.userDefined = dict.filter { !Keys.allKeys.contains($0.key) }
         }
     }
-    
+
     // MARK: -
 
     struct Themes {
@@ -127,7 +131,7 @@ struct Config {
         let templates: Location
         let types: Location
         let overrides: Location
-        
+
         init(
             use: String,
             folder: String,
@@ -143,34 +147,40 @@ struct Config {
             self.types = types
             self.overrides = overrides
         }
-        
+
         init(_ dict: [String: Any]) {
-            self.use = dict.string(Keys.use) ??
-                Config.defaults.themes.use
+            self.use =
+                dict.string(Keys.use)
+                ?? Config.defaults.themes.use
 
-            self.folder = dict.string(Location.Keys.folder) ??
-                Config.defaults.themes.folder
+            self.folder =
+                dict.string(Location.Keys.folder)
+                ?? Config.defaults.themes.folder
 
-            let assets = dict.dict(Keys.assets)            
-            self.assets = Location(assets) ??
-                Config.defaults.themes.assets
+            let assets = dict.dict(Keys.assets)
+            self.assets =
+                Location(assets)
+                ?? Config.defaults.themes.assets
 
             let templates = dict.dict(Keys.templates)
-            self.templates = Location(templates) ??
-                Config.defaults.themes.templates
-            
+            self.templates =
+                Location(templates)
+                ?? Config.defaults.themes.templates
+
             let overrides = dict.dict(Keys.overrides)
-            self.overrides = Location(overrides) ??
-                Config.defaults.themes.overrides
+            self.overrides =
+                Location(overrides)
+                ?? Config.defaults.themes.overrides
 
             let types = dict.dict(Keys.types)
-            self.types = Location(types) ??
-                Config.defaults.themes.types
+            self.types =
+                Location(types)
+                ?? Config.defaults.themes.types
         }
     }
 
     // MARK: -
-    
+
     struct Contents {
 
         enum Keys {
@@ -181,7 +191,7 @@ struct Config {
         let folder: String
         let dateFormat: String
         let assets: Location
-        
+
         init(
             folder: String,
             dateFormat: String,
@@ -191,24 +201,25 @@ struct Config {
             self.dateFormat = dateFormat
             self.assets = assets
         }
-        
+
         init(_ dict: [String: Any]) {
-            self.folder = dict.string(Location.Keys.folder) ??
-                Config.defaults.contents.folder
-            
-            self.dateFormat = dict.string(Keys.dateFormat) ??
-                Config.defaults.contents.dateFormat
-            
+            self.folder =
+                dict.string(Location.Keys.folder)
+                ?? Config.defaults.contents.folder
+
+            self.dateFormat =
+                dict.string(Keys.dateFormat)
+                ?? Config.defaults.contents.dateFormat
+
             let assets = dict.dict(Keys.assets)
-            self.assets = Location(assets) ??
-                Config.defaults.themes.assets
+            self.assets = Location(assets) ?? Config.defaults.themes.assets
         }
     }
-    
+
     // MARK: -
-    
+
     struct Transformers {
-        
+
         enum Keys {
             static let pipelines = "pipelines"
         }
@@ -221,7 +232,7 @@ struct Config {
 
         let folder: String
         let pipelines: [Pipeline]
-        
+
         init(
             folder: String,
             pipelines: [Pipeline]
@@ -229,10 +240,11 @@ struct Config {
             self.folder = folder
             self.pipelines = pipelines
         }
-        
+
         init(_ dict: [String: Any]) {
-            self.folder = dict.string(Location.Keys.folder) ??
-                Config.defaults.transformers.folder
+            self.folder =
+                dict.string(Location.Keys.folder)
+                ?? Config.defaults.transformers.folder
 
             self.pipelines = dict.array(Keys.pipelines, as: Pipeline.self)
         }
@@ -251,7 +263,7 @@ struct Config {
     let themes: Themes
     let contents: Contents
     let transformers: Transformers
-    
+
     init(
         site: Site,
         themes: Themes,
@@ -263,7 +275,7 @@ struct Config {
         self.contents = contents
         self.transformers = transformers
     }
-    
+
     init(_ dict: [String: Any]) {
         self.site = .init(dict.dict(Keys.site))
         self.themes = .init(dict.dict(Keys.themes))
@@ -273,7 +285,7 @@ struct Config {
 }
 
 extension Config {
-    
+
     static let `defaults` = Config(
         site: .init(
             baseUrl: "http://localhost:3000/",

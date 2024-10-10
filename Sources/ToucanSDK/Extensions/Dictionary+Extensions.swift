@@ -114,8 +114,6 @@ extension Dictionary where Key == String, Value == Any {
         }
         return result.emptyToNil
     }
-    
-    
 
     /// Retrieves the integer associated with the given key path.
     ///
