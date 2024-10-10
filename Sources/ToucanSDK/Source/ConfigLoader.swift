@@ -15,8 +15,7 @@ private extension Config {
     enum Keys {
         static let site = "site"
         static let themes = "themes"
-        static let content = "content"
-        static let types = "types"
+        static let contents = "contents"
     }
 
 }
@@ -53,8 +52,9 @@ private extension Config.Themes {
 
     enum Keys {
         static let use = "use"
-        static let templates = "templates"
         static let assets = "assets"
+        static let templates = "templates"
+        static let types = "types"
         static let overrides = "overrides"
     }
 
@@ -64,17 +64,11 @@ private extension Config.Themes {
         static let templatesFolder = "templates"
         static let assetsFolder = "assets"
         static let overridesFolder = "template_overrides"
-    }
-}
-
-private extension Config.Types {
-
-    enum Defaults {
         static let typesFolder = "types"
     }
 }
 
-private extension Config.Content {
+private extension Config.Contents {
 
     enum Keys {
         static let dateFormat = "dateFormat"
@@ -83,7 +77,7 @@ private extension Config.Content {
 
     enum Defaults {
         static let dateFormat = "yyyy-MM-dd HH:mm:ss"
-        static let contentFolder = "content"
+        static let contentsFolder = "contents"
         static let assetsFolder = "assets"
     }
 }
@@ -217,27 +211,27 @@ public struct ConfigLoader {
 
         // MARK: - types
 
-        let types = yaml.dict(Config.Keys.types)
+        let types = themes.dict(Config.Themes.Keys.types)
         let typesFolder =
             types.string(Config.Location.Keys.folder)
-            ?? Config.Types.Defaults.typesFolder
+            ?? Config.Themes.Defaults.typesFolder
 
         // MARK: - content
 
-        let content = yaml.dict(Config.Keys.content)
-        let contentFolder =
-            content.string(Config.Location.Keys.folder)
-            ?? Config.Content.Defaults.contentFolder
+        let contents = yaml.dict(Config.Keys.contents)
+        let contentsFolder =
+            contents.string(Config.Location.Keys.folder)
+            ?? Config.Contents.Defaults.contentsFolder
 
-        let contentDateFormat =
-            content.string(Config.Content.Keys.dateFormat)
-            ?? Config.Content.Defaults.dateFormat
+        let contentsDateFormat =
+            contents.string(Config.Contents.Keys.dateFormat)
+            ?? Config.Contents.Defaults.dateFormat
 
-        let contentAssets = content.dict(Config.Content.Keys.assets)
-        let contentAssetsFolder =
-            contentAssets
+        let contentsAssets = contents.dict(Config.Contents.Keys.assets)
+        let contentsAssetsFolder =
+            contentsAssets
             .string(Config.Location.Keys.folder)
-            ?? Config.Content.Defaults.assetsFolder
+            ?? Config.Contents.Defaults.assetsFolder
 
         // MARK: - config
 
@@ -255,15 +249,15 @@ public struct ConfigLoader {
             themes: .init(
                 use: use,
                 folder: folder,
-                templates: .init(folder: templatesFolder),
                 assets: .init(folder: assetsFolder),
+                templates: .init(folder: templatesFolder),
+                types: .init(folder: typesFolder),
                 overrides: .init(folder: overridesFolder)
             ),
-            types: .init(folder: typesFolder),
-            content: .init(
-                folder: contentFolder,
-                dateFormat: contentDateFormat,
-                assets: .init(folder: contentAssetsFolder)
+            contents: .init(
+                folder: contentsFolder,
+                dateFormat: contentsDateFormat,
+                assets: .init(folder: contentsAssetsFolder)
             )
         )
     }

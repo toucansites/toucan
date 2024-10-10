@@ -36,7 +36,11 @@ struct ContentTypeLoader {
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
         // TODO: use yaml loader
-        let typesUrl = sourceUrl.appendingPathComponent(config.types.folder)
+        let typesUrl = sourceUrl
+            .appendingPathComponent(config.themes.folder)
+            .appendingPathComponent(config.themes.use)
+            .appendingPathComponent(config.themes.types.folder)
+        
         let list = fileManager.listDirectory(at: typesUrl)
             .filter { $0.hasSuffix(".yml") || $0.hasSuffix(".yaml") }
 

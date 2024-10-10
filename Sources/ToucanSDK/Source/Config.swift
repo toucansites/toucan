@@ -31,23 +31,19 @@ struct Config {
     struct Themes {
         let use: String
         let folder: String
-        let templates: Location
         let assets: Location
+        let templates: Location
+        let types: Location
         let overrides: Location
     }
 
-    struct Content {
+    struct Contents {
         let folder: String
         let dateFormat: String
         let assets: Location
     }
 
-    struct Types {
-        let folder: String
-    }
-
     var site: Site
     let themes: Themes
-    let types: Types
-    let content: Content
+    let contents: Contents
 }

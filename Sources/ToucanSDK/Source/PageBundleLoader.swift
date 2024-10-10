@@ -92,8 +92,8 @@ public struct PageBundleLoader {
     }
 
     /// helper
-    private var contentUrl: URL {
-        sourceUrl.appendingPathComponent(config.content.folder)
+    private var contentsUrl: URL {
+        sourceUrl.appendingPathComponent(config.contents.folder)
     }
 
     /// Loads all the page bundles.
@@ -113,7 +113,7 @@ public struct PageBundleLoader {
         var result: [PageBundleLocation] = []
 
         let p = path.joined(separator: "/")
-        let url = contentUrl.appendingPathComponent(p)
+        let url = contentsUrl.appendingPathComponent(p)
 
         if containsIndexFile(name: indexName, at: url) {
             result.append(
@@ -223,7 +223,7 @@ public struct PageBundleLoader {
         guard
             let date = frontMatter.date(
                 Keys.publication.rawValue,
-                format: config.content.dateFormat
+                format: config.contents.dateFormat
             )
         else {
             return now
@@ -234,7 +234,7 @@ public struct PageBundleLoader {
     func expiration(frontMatter: [String: Any]) -> Date? {
         frontMatter.date(
             Keys.expiration.rawValue,
-            format: config.content.dateFormat
+            format: config.contents.dateFormat
         )
     }
 
@@ -264,7 +264,7 @@ public struct PageBundleLoader {
         contentType: ContentType
     ) -> String {
         frontMatter.string(Keys.template.rawValue).emptyToNil ?? contentType
-            .template ?? ContentType.default.template ?? "pages.single.page"
+            .template ?? ContentType.default.template ?? "pages.default"
     }
 
     func output(frontMatter: [String: Any]) -> String? {
@@ -327,7 +327,7 @@ public struct PageBundleLoader {
     func loadPageBundle(
         at location: PageBundleLocation
     ) throws -> PageBundle? {
-        let dirUrl = contentUrl.appendingPathComponent(location.path)
+        let dirUrl = contentsUrl.appendingPathComponent(location.path)
 
         let metadata: Logger.Metadata = [
             "slug": "\(location.slug)"
