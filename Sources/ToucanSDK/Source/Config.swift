@@ -212,7 +212,9 @@ struct Config {
                 ?? Config.defaults.contents.dateFormat
 
             let assets = dict.dict(Keys.assets)
-            self.assets = Location(assets) ?? Config.defaults.themes.assets
+            self.assets =
+                Location(assets)
+                ?? Config.defaults.themes.assets
         }
     }
 
