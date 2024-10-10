@@ -15,7 +15,7 @@ make install
 which toucan
 ```
 
-NOTE: version 1.0.0-alpha.1 only supports macOS, Linux support is coming soon.
+NOTE: version 1.0.0-alpha.2 only supports macOS, Linux support is coming soon.
 
 ## Available commands
 
