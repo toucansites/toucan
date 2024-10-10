@@ -41,10 +41,8 @@ public struct MustacheToHTMLRenderer {
         self.library = MustacheLibrary(templates: templates)
         self.ids = Array(templates.keys)
 
-        logger.trace("Templates url: `\(templatesUrl.absoluteString)`")
-        logger.trace("Template overrides url: `\(overridesUrl.absoluteString)`")
         logger.trace(
-            "Available templates: \(ids.map { "`\($0)`" }.joined(separator: ", "))"
+            "Available templates: \(ids.sorted().map { "`\($0)`" }.joined(separator: ", "))"
         )
     }
 

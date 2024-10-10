@@ -44,7 +44,7 @@ struct HTML: Output {
                 "site": site,
                 "page": page,
                 "pagination": pagination,
-                "year": year
+                "year": year,
             ]
         )
         .sanitized()
