@@ -179,6 +179,7 @@ public struct PageBundleLoader {
                 imageUrl = config.image
             }
 
+            // TODO: use updated CSS + JS
             /// inject style.css if exists, resolve js paths for css assets
             var css = config.css
             if assets.contains("style.css") {
