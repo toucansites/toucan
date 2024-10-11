@@ -14,27 +14,50 @@ extension Toucan {
         do {
             try generate()
         }
+        catch let error as FileLoader.Error {
+            switch error {
+            case .missing(let url):
+                logger.error(
+                    "Missing file at: `\(url.absoluteString)`."
+                )
+            case .file(let error, let url):
+                let message = "File error at: `\(url.absoluteString)`."
+                let metadata: Logger.Metadata = [
+                    "description": "\(String(describing: error))"
+                ]
+                logger.error(.init(stringLiteral: message), metadata: metadata)
+            }
+        }
         catch let error as ConfigLoader.Error {
             switch error {
             case .missing(let url):
                 logger.error(
                     "Missing `config.yml` file at: `\(url.absoluteString)`."
                 )
-            case .file(let error):
-                logger.error(
-                    "Config file error: `\(error.localizedDescription)`"
-                )
-            case .yaml(let error):
-                logger.error(
-                    "Config YAML error: `\(error.localizedDescription)`"
-                )
+            }
+        }
+        catch let error as YamlParser.Error {
+            switch error {
+            case .yaml(let value):
+                logger.error("YAML parser error: `\(value)`")
+            }
+        }
+        catch let error as DecodingError {
+            switch error {
+            case .dataCorrupted(let context):
+                let underlyingError = context.underlyingError ?? error
+                let description = String(describing: underlyingError)
+                let message = "YAML corrupted: `\(description)`"
+                logger.error(.init(stringLiteral: message))
+            default:
+                logger.error("\(String(describing: error))")
             }
         }
         catch let error as PageBundleLoader.Error {
             switch error {
             case .pageBundle(let error):
                 logger.error(
-                    "Page bundle error: `\(error.localizedDescription)`"
+                    "Page bundle error: `\(String(describing: error))`"
                 )
             }
         }
@@ -47,7 +70,7 @@ extension Toucan {
             }
         }
         catch {
-            logger.error("\(error.localizedDescription)")
+            logger.error("\(String(describing: error))")
         }
     }
 }

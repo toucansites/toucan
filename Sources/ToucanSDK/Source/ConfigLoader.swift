@@ -7,7 +7,6 @@
 
 import Foundation
 import FileManagerKit
-import Yams
 import Logging
 
 private extension Config {
@@ -92,17 +91,14 @@ public struct ConfigLoader {
 
     /// An enumeration representing possible errors that can occur while loading the configuration.
     public enum Error: Swift.Error {
+        /// Indicates that a required configuration file is missing at the specified URL.
         case missing(URL)
-        /// Indicates an error related to file operations.
-        case file(Swift.Error)
-        /// Indicates an error related to parsing YAML.
-        case yaml(YamlError)
     }
 
     /// The URL of the source files.
     let sourceUrl: URL
-    /// The file manager used for file operations.
-    let fileManager: FileManager
+    /// A file loader used for loading files.
+    let fileLoader: FileLoader
     /// The base URL to use for the configuration.
     let baseUrl: String?
     /// The logger instance
@@ -110,44 +106,30 @@ public struct ConfigLoader {
 
     /// Loads the configuration.
     ///
-    /// - Returns: A `Config` object.
-    /// - Throws: An error if the configuration fails to load.
+    /// This function attempts to load a configuration file from a specified URL, parses the file contents,
+    /// and returns a `Config` object based on the file's data. If the file is missing or cannot be parsed,
+    /// an appropriate error is thrown.
+    ///
+    /// - Returns: A `Config` object representing the loaded configuration.
+    /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> Config {
         let configUrl = sourceUrl.appendingPathComponent("config")
 
-        let yamlConfigUrls = [
-            configUrl.appendingPathExtension("yaml"),
-            configUrl.appendingPathExtension("yml"),
-        ]
-        for yamlConfigUrl in yamlConfigUrls {
-            guard fileManager.fileExists(at: yamlConfigUrl) else {
-                continue
-            }
-            do {
-                logger.debug(
-                    "Loading config file: `\(yamlConfigUrl.absoluteString)`."
-                )
-                let rawYaml = try String(
-                    contentsOf: yamlConfigUrl,
-                    encoding: .utf8
-                )
-                let dict = try Yams.load(yaml: rawYaml) as? [String: Any] ?? [:]
-                let config = try dictToConfig(dict)
-                return config
-            }
-            catch let error as YamlError {
-                throw Error.yaml(error)
-            }
-            catch {
-                throw Error.file(error)
-            }
+        logger.debug("Loading config file: `\(configUrl.absoluteString)`.")
+
+        do {
+            let contents = try FileLoader.yaml.loadContents(at: configUrl)
+            let yaml = try contents.decodeYaml()
+            return dictToConfig(yaml)
         }
-        throw Error.missing(sourceUrl)
+        catch FileLoader.Error.missing(let url) {
+            throw Error.missing(url)
+        }
     }
 
     func dictToConfig(
         _ yaml: [String: Any]
-    ) throws -> Config {
+    ) -> Config {
         // MARK: - site
         let site = yaml.dict(Config.Keys.site)
 
