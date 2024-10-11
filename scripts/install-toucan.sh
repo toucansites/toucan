@@ -7,4 +7,4 @@ fatal() { error "$@"; exit 1; }
 
 
 swift build -c release
-install .build/release/toucan-cli /usr/local/bin/toucan
+install -d .build/release/toucan-cli /usr/local/bin/toucan
