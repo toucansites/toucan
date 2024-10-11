@@ -597,9 +597,6 @@ struct SiteRenderer {
                         number: number,
                         total: total
                     )
-                    let finalPermalink = finalSlug.permalink(
-                        baseUrl: source.sourceConfig.config.site.baseUrl
-                    )
                     let finalTitle = replace(
                         in: pageBundle.title,
                         number: number,
@@ -623,6 +620,7 @@ struct SiteRenderer {
                         permalink: finalSlug.permalink(baseUrl: source.sourceConfig.config.site.baseUrl),
                         title: finalTitle,
                         description: finalDescription,
+                        imageUrl: pageBundle.imageUrl,
                         publication: pageBundle.publication,
                         contentType: pageBundle.contentType,
                         lastModification: pageBundle.lastModification,

@@ -23,6 +23,7 @@ struct PageBundle {
     let permalink: String
     let title: String
     let description: String
+    let imageUrl: String?
     let publication: Date
 
     let contentType: ContentType
@@ -34,7 +35,30 @@ struct PageBundle {
     let markdown: String
     
     
-    var dict: [String: Any] { [:] }
+    var dict: [String: Any] {
+        config.userDefined
+        .recursivelyMerged(
+            with: [
+                "slug": slug,
+                "permalink": permalink,
+                "title": title,
+                "description": description,
+                "imageUrl": imageUrl ?? false,
+                "date": DateValue(
+                    html: "TODO",
+                    rss: "TODO",
+                    sitemap: "TODO"
+                ),
+            ]
+        )
+        .recursivelyMerged(
+            with: properties
+        )
+        .recursivelyMerged(
+            with: relations
+        )
+        .sanitized()
+    }
 }
 
 extension PageBundle {

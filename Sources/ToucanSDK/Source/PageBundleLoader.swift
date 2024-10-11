@@ -111,6 +111,7 @@ public struct PageBundleLoader {
                 return nil
             }
             
+            // check for publication date
             let formatter = DateFormatters.baseFormatter
             formatter.dateFormat = sourceConfig.config.contents.dateFormat
             var publicationDate = now
@@ -126,29 +127,32 @@ public struct PageBundleLoader {
                     metadata: metadata
                 )
             }
+            if publicationDate > now {
+                logger.debug(
+                    "Page bundle is not published yet.",
+                    metadata: metadata
+                )
+                return nil
+            }
+
+            // check for expiration date
+            if
+                let exp = config.expiration,
+                let expiration = formatter.date(from: exp),
+                expiration < now
+            {
+                logger.debug(
+                    "Page bundle is already expired.",
+                    metadata: metadata
+                )
+                return nil
+            }
             
-            
-//            if context.publication > now {
-//                logger.debug(
-//                    "Page bundle is not published yet.",
-//                    metadata: metadata
-//                )
-//                return nil
-//            }
-//            
-//            if let expiration = context.expiration, expiration < now {
-//                logger.debug(
-//                    "Page bundle is already expired.",
-//                    metadata: metadata
-//                )
-//                return nil
-//            }
-            
+            // check for valid content type
             let contentType = getContentType(
                 for: location,
                 explicitType: config.type
             )
-            
             guard let contentType else {
                 logger.debug(
                     "Page bundle has invalid content type.",
@@ -159,8 +163,6 @@ public struct PageBundleLoader {
             
             
             let slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
-
-            
 
             let assetsPath = config.assets.folder
             let assetsUrl = dirUrl.appendingPathComponent(assetsPath)
@@ -178,7 +180,7 @@ public struct PageBundleLoader {
             else {
                 imageUrl = config.image
             }
-
+            
             /// inject style.css if exists, resolve js paths for css assets
             var css = config.css
             if assets.contains("style.css") {
@@ -193,11 +195,11 @@ public struct PageBundleLoader {
             }
             js = js.map { $0.finalAssetUrl(in: assetsPath, slug: slug) }
 
-            let propertyKeys = contentType.properties?.keys.sorted() ?? []
-            let relationKeys = contentType.relations?.keys.sorted() ?? []
-            let userDefined = config.userDefined.filter { element in
-                    propertyKeys.contains(element.key)
-                    && !relationKeys.contains(element.key)
+            let properties = config.userDefined.filter {
+                contentType.propertyKeys.contains($0.key)
+            }
+            let relations = config.userDefined.filter {
+                contentType.relationKeys.contains($0.key)
             }
 
             logger.debug("Page bundle is loaded.", metadata: metadata)
@@ -209,13 +211,14 @@ public struct PageBundleLoader {
                 permalink: slug.permalink(baseUrl: sourceConfig.config.site.baseUrl),
                 title: config.title.nilToEmpty,
                 description: config.description.nilToEmpty,
-                publication: .init(), // TODO: fixme
+                imageUrl: imageUrl,
+                publication: publicationDate,
                 contentType: contentType,
                 lastModification: lastModification,
                 config: config,
                 frontMatter: frontMatter,
-                properties: [:],
-                relations: [:],
+                properties: properties,
+                relations: relations,
                 markdown: markdown
             )
         }
