@@ -28,7 +28,6 @@ extension String {
     }
 }
 
-
 public struct PageBundleLoader {
 
     /// An enumeration representing possible errors that can occur while loading the content.
@@ -75,7 +74,9 @@ public struct PageBundleLoader {
     func loadPageBundle(
         at location: PageBundleLocation
     ) throws -> PageBundle? {
-        let dirUrl = sourceConfig.contentsUrl.appendingPathComponent(location.path)
+        let dirUrl = sourceConfig.contentsUrl.appendingPathComponent(
+            location.path
+        )
 
         let metadata: Logger.Metadata = [
             "path": "\(location.path)"
@@ -102,7 +103,7 @@ public struct PageBundleLoader {
                 dirUrl: dirUrl,
                 rawMarkdown: rawMarkdown
             )
-            
+
             let config = PageBundle.Config(frontMatter)
 
             /// filter out drafts
@@ -110,13 +111,12 @@ public struct PageBundleLoader {
                 logger.debug("Page bundle is a draft.", metadata: metadata)
                 return nil
             }
-            
+
             // check for publication date
             let formatter = DateFormatters.baseFormatter
             formatter.dateFormat = sourceConfig.config.contents.dateFormat
             var publicationDate = now
-            if
-                let pub = config.publication,
+            if let pub = config.publication,
                 let date = formatter.date(from: pub)
             {
                 publicationDate = date
@@ -136,8 +136,7 @@ public struct PageBundleLoader {
             }
 
             // check for expiration date
-            if
-                let exp = config.expiration,
+            if let exp = config.expiration,
                 let expiration = formatter.date(from: exp),
                 expiration < now
             {
@@ -147,7 +146,7 @@ public struct PageBundleLoader {
                 )
                 return nil
             }
-            
+
             // check for valid content type
             let contentType = getContentType(
                 for: location,
@@ -160,8 +159,7 @@ public struct PageBundleLoader {
                 )
                 return nil
             }
-            
-            
+
             let slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
 
             let assetsPath = config.assets.folder
@@ -180,7 +178,7 @@ public struct PageBundleLoader {
             else {
                 imageUrl = config.image
             }
-            
+
             /// inject style.css if exists, resolve js paths for css assets
             var css = config.css
             if assets.contains("style.css") {
@@ -208,12 +206,15 @@ public struct PageBundleLoader {
                 id: location.path,
                 url: dirUrl,
                 slug: slug,
-                permalink: slug.permalink(baseUrl: sourceConfig.config.site.baseUrl),
+                permalink: slug.permalink(
+                    baseUrl: sourceConfig.config.site.baseUrl
+                ),
                 title: config.title.nilToEmpty,
                 description: config.description.nilToEmpty,
                 imageUrl: imageUrl,
-                publication: publicationDate,
+                date: convert(date: publicationDate),
                 contentType: contentType,
+                publication: publicationDate,
                 lastModification: lastModification,
                 config: config,
                 frontMatter: frontMatter,
@@ -229,7 +230,22 @@ public struct PageBundleLoader {
 }
 
 extension PageBundleLoader {
-    
+
+    func convert(
+        date: Date
+    ) -> PageBundle.DateValue {
+        let html = DateFormatters.baseFormatter
+        html.dateFormat = sourceConfig.config.site.dateFormat
+        let rss = DateFormatters.rss
+        let sitemap = DateFormatters.sitemap
+
+        return .init(
+            html: html.string(from: date),
+            rss: rss.string(from: date),
+            sitemap: sitemap.string(from: date)
+        )
+    }
+
     func getContentType(
         for location: PageBundleLocation,
         explicitType: String?
@@ -253,7 +269,6 @@ extension PageBundleLoader {
         return contentTypes.first { $0.id == type }
     }
 
-    
 }
 
 // MARK: - helpers to get page bundle contents

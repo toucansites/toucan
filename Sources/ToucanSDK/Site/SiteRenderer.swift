@@ -85,7 +85,8 @@ struct SiteRenderer {
         self.currentYear = calendar.component(.year, from: .init())
 
         self.dateFormatter = DateFormatters.baseFormatter
-        self.dateFormatter.dateFormat = source.sourceConfig.config.site.dateFormat
+        self.dateFormatter.dateFormat =
+            source.sourceConfig.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
         self.sitemapDateFormatter = DateFormatters.sitemap
 
@@ -154,7 +155,8 @@ struct SiteRenderer {
         for contentType in source.contentTypes {
             guard let pagination = contentType.pagination else { continue }
             let paginationBundle = source.pageBundles.first { pageBundle in
-                guard pageBundle.contentType.id == ContentType.pagination.id else {
+                guard pageBundle.contentType.id == ContentType.pagination.id
+                else {
                     return false
                 }
                 guard pageBundle.id == pagination.bundle else { return false }
@@ -287,7 +289,8 @@ struct SiteRenderer {
         )
 
         // TODO: check if transformer exists
-        let transformersUrl = source.sourceConfig.sourceUrl.appendingPathComponent("transformers")
+        let transformersUrl = source.sourceConfig.sourceUrl
+            .appendingPathComponent("transformers")
         let availableTransformers =
             fileManager
             .listDirectory(at: transformersUrl)
@@ -295,12 +298,14 @@ struct SiteRenderer {
             .sorted()
 
         let contentType = source.contentType(for: pageBundle)
-        
+
         // TODO: handle multiple pipeline for same content type
-        let pipeline = source.sourceConfig.config.transformers.pipelines.filter { p in
-            p.types.contains(contentType.id)
-        }.first
-        
+        let pipeline = source.sourceConfig.config.transformers.pipelines
+            .filter { p in
+                p.types.contains(contentType.id)
+            }
+            .first
+
         let run = pipeline?.run ?? []
         let renderFallback = pipeline?.render ?? true
 
@@ -510,7 +515,9 @@ struct SiteRenderer {
                 ),
                 page: getContext(pageBundle: pageBundle),
                 userDefined: pageBundle.config.userDefined
-                    .recursivelyMerged(with: source.sourceConfig.config.site.userDefined)
+                    .recursivelyMerged(
+                        with: source.sourceConfig.config.site.userDefined
+                    )
                     .sanitized(),
                 pagination: .init(
                     links: paginationContext,
@@ -557,7 +564,8 @@ struct SiteRenderer {
             guard let pagination = contentType.pagination else { continue }
 
             for pageBundle in source.pageBundles {
-                guard pageBundle.contentType.id == ContentType.pagination.id else {
+                guard pageBundle.contentType.id == ContentType.pagination.id
+                else {
                     continue
                 }
                 guard pageBundle.id == pagination.bundle else { continue }
@@ -617,12 +625,15 @@ struct SiteRenderer {
                         id: pageBundle.id,
                         url: pageBundle.url,
                         slug: finalSlug,
-                        permalink: finalSlug.permalink(baseUrl: source.sourceConfig.config.site.baseUrl),
+                        permalink: finalSlug.permalink(
+                            baseUrl: source.sourceConfig.config.site.baseUrl
+                        ),
                         title: finalTitle,
                         description: finalDescription,
                         imageUrl: pageBundle.imageUrl,
-                        publication: pageBundle.publication,
+                        date: pageBundle.date,
                         contentType: pageBundle.contentType,
+                        publication: pageBundle.publication,
                         lastModification: pageBundle.lastModification,
                         config: pageBundle.config,
                         frontMatter: pageBundle.frontMatter,
@@ -653,9 +664,7 @@ struct SiteRenderer {
                     permalink: item.permalink,
                     title: item.title,
                     description: item.description,
-                    publicationDate: rssDateFormatter.string(
-                        from: item.publication
-                    )
+                    publicationDate: item.date.rss
                 )
             }
 

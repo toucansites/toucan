@@ -14,12 +14,12 @@ struct Source {
     let contentTypes: [ContentType]
     let pageBundles: [PageBundle]
     let logger: Logger
-    
+
     func validate() {
         validateSlugs()
         validateFrontMatters()
     }
-    
+
     // MARK: -
 
     func validateSlugs() {
@@ -44,7 +44,7 @@ struct Source {
             }
         }
     }
-    
+
     func validateFrontMatters() {
         for pageBundle in pageBundles {
             validateFrontMatter(
@@ -54,9 +54,9 @@ struct Source {
             )
         }
     }
-    
-    // MARK: - 
-    
+
+    // MARK: -
+
     func validateFrontMatter(
         _ frontMatter: [String: Any],
         for contentType: ContentType,
@@ -85,11 +85,12 @@ struct Source {
             }
         }
     }
-    
-    // MARK: - 
+
+    // MARK: -
 
     func contentType(for pageBundle: PageBundle) -> ContentType {
-        contentTypes.first { $0.id == pageBundle.contentType.id } ?? ContentType.default
+        contentTypes.first { $0.id == pageBundle.contentType.id }
+            ?? ContentType.default
     }
 
     func pageBundles(by contentType: String) -> [PageBundle] {

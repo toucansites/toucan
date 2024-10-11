@@ -15,10 +15,10 @@ struct PageBundleLocation {
 }
 
 struct PageBundleLocator {
-    
+
     let fileManager: FileManager
     let contentsUrl: URL
-    
+
     init(
         fileManager: FileManager,
         contentsUrl: URL
@@ -26,7 +26,7 @@ struct PageBundleLocator {
         self.fileManager = fileManager
         self.contentsUrl = contentsUrl
     }
-    
+
     private let indexName = "index"
     private let noindexName = "noindex"
     private let mdExtensions = ["md", "markdown"]
@@ -35,12 +35,12 @@ struct PageBundleLocator {
     private var extensions: [String] {
         mdExtensions + yamlExtensions
     }
-    
+
     func locate() throws -> [PageBundleLocation] {
         try loadBundleLocations()
             .sorted { $0.path < $1.path }
     }
-    
+
     private func containsIndexFile(
         name: String,
         at url: URL

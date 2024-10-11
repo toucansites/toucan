@@ -11,19 +11,19 @@ struct SourceConfig {
 
     let sourceUrl: URL
     let config: Config
-    
+
     var contentsUrl: URL {
         sourceUrl
             .appendingPathComponent(config.contents.folder)
     }
-    
+
     var themesUrl: URL {
         sourceUrl
             .appendingPathComponent(config.themes.folder)
     }
 
     // MARK: - theme
-    
+
     var currentThemeUrl: URL {
         themesUrl
             .appendingPathComponent(config.themes.use)
@@ -38,7 +38,7 @@ struct SourceConfig {
         currentThemeUrl
             .appendingPathComponent(config.themes.templates.folder)
     }
-    
+
     var currentThemeTypesUrl: URL {
         currentThemeUrl
             .appendingPathComponent(config.themes.types.folder)
@@ -60,7 +60,7 @@ struct SourceConfig {
         currentThemeOverrideUrl
             .appendingPathComponent(config.themes.templates.folder)
     }
-    
+
     var currentThemeOverrideTypesUrl: URL {
         currentThemeOverrideUrl
             .appendingPathComponent(config.themes.types.folder)

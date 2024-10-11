@@ -92,18 +92,18 @@ struct ContentType: Codable {
 }
 
 extension ContentType {
-    
+
     var propertyKeys: [String] {
         properties?.keys.sorted() ?? []
     }
-    
+
     var relationKeys: [String] {
         relations?.keys.sorted() ?? []
     }
 }
 
 extension ContentType {
-    
+
     static let `default` = ContentType(
         id: "page",
         rss: nil,

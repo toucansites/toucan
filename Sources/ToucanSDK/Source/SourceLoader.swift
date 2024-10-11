@@ -31,7 +31,7 @@ struct SourceLoader {
             sourceUrl: sourceUrl,
             config: config
         )
-        
+
         logger.trace(
             "Themes location url: `\(sourceConfig.themesUrl.absoluteString)`"
         )

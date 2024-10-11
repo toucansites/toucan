@@ -15,49 +15,46 @@ struct PageBundle {
         let rss: String
         let sitemap: String
     }
-    
+
     let id: String
     let url: URL
 
     let slug: String
     let permalink: String
+
     let title: String
     let description: String
     let imageUrl: String?
-    let publication: Date
+    let date: DateValue
 
     let contentType: ContentType
+    let publication: Date
     let lastModification: Date
     let config: Config
     let frontMatter: [String: Any]
     let properties: [String: Any]
     let relations: [String: Any]
     let markdown: String
-    
-    
+
     var dict: [String: Any] {
         config.userDefined
-        .recursivelyMerged(
-            with: [
-                "slug": slug,
-                "permalink": permalink,
-                "title": title,
-                "description": description,
-                "imageUrl": imageUrl ?? false,
-                "date": DateValue(
-                    html: "TODO",
-                    rss: "TODO",
-                    sitemap: "TODO"
-                ),
-            ]
-        )
-        .recursivelyMerged(
-            with: properties
-        )
-        .recursivelyMerged(
-            with: relations
-        )
-        .sanitized()
+            .recursivelyMerged(
+                with: [
+                    "slug": slug,
+                    "permalink": permalink,
+                    "title": title,
+                    "description": description,
+                    "imageUrl": imageUrl ?? false,
+                    "publication": date,
+                ]
+            )
+            .recursivelyMerged(
+                with: properties
+            )
+            .recursivelyMerged(
+                with: relations
+            )
+            .sanitized()
     }
 }
 
@@ -74,21 +71,6 @@ extension PageBundle {
         .init(slug.split(separator: "/").last ?? "")
     }
 
-    func convert(
-        date: Date
-    ) -> PageBundle.DateValue {
-        let html = DateFormatters.baseFormatter
-        //html.dateFormat = sourceConfig.config.site.dateFormat
-        let rss = DateFormatters.rss
-        let sitemap = DateFormatters.sitemap
-
-        return .init(
-            html: html.string(from: date),
-            rss: rss.string(from: date),
-            sitemap: sitemap.string(from: date)
-        )
-    }
-    
     func referenceIdentifiers(
         for key: String
     ) -> [String] {
