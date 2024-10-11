@@ -50,7 +50,6 @@ extension Entrypoint {
         var logLevel: Logger.Level = .info
 
         func run() async throws {
-
             let home = FileManager.default.homeDirectoryForCurrentUser.path
             var rootPath = root.replacingOccurrences(of: "~", with: home)
             if rootPath.hasPrefix(".") {

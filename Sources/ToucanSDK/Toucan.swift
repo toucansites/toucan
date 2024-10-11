@@ -61,6 +61,7 @@ public struct Toucan {
         let loader = SourceLoader(
             baseUrl: baseUrl,
             sourceUrl: inputUrl,
+            yamlFileLoader: .yaml,
             fileManager: fileManager,
             frontMatterParser: .init(),
             logger: logger

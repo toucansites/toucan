@@ -6,20 +6,10 @@
 //
 
 import Foundation
-import FileManagerKit
-import Yams
+import Logging
 
 /// A struct responsible for loading and managing content types.
 struct ContentTypeLoader {
-
-    /// An enumeration representing possible errors that can occur while loading the configuration.
-    enum Error: Swift.Error {
-        case missing
-        /// Indicates an error related to file operations.
-        case file(Swift.Error)
-        /// Indicates an error related to parsing YAML.
-        case yaml(YamlError)
-    }
 
     /// The URL of the source files.
     let sourceUrl: URL
@@ -27,8 +17,11 @@ struct ContentTypeLoader {
     /// The configuration object that holds settings for the site.
     let config: Config
 
-    /// The file manager used for file operations.
-    let fileManager: FileManager
+    let fileLoader: FileLoader
+    let yamlParser: YamlParser
+
+    /// The logger instance
+    let logger: Logger
 
     /// Loads and returns an array of content types.
     ///
@@ -36,32 +29,25 @@ struct ContentTypeLoader {
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
         // TODO: use theme override url to load additional / updated types
-        // TODO: use yaml loader
         let typesUrl =
             sourceUrl
             .appendingPathComponent(config.themes.folder)
             .appendingPathComponent(config.themes.use)
             .appendingPathComponent(config.themes.types.folder)
+        
+        let contents = try fileLoader.findContents(at: typesUrl)
 
-        let list = fileManager.listDirectory(at: typesUrl)
-            .filter { $0.hasSuffix(".yml") || $0.hasSuffix(".yaml") }
+        logger.debug("Loading content type: `\(sourceUrl.absoluteString)`.")
 
-        var types: [ContentType] = []
-        var useDefaultContentType = true
-        for file in list {
-            let decoder = YAMLDecoder()
-            let data = try Data(
-                contentsOf: typesUrl.appendingPathComponent(file)
-            )
-            let type = try decoder.decode(ContentType.self, from: data)
-            types.append(type)
-            if type.id == ContentType.default.id {
-                useDefaultContentType = false
-            }
+        var types = try contents.map {
+            try yamlParser.decode($0, as: ContentType.self)
         }
-        if useDefaultContentType {
-            types.append(.default)
+
+        // Adding the default content type if not present
+        types.appendIfNot(.default) {
+            $0.id == ContentType.default.id
         }
+
         // TODO: pagination type is not allowed
         types = types.filter { $0.id != ContentType.pagination.id }
         types.append(.pagination)
