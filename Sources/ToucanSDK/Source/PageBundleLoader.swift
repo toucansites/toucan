@@ -197,7 +197,7 @@ public struct PageBundleLoader {
                 .decodeYaml()
             return frontMatter.recursivelyMerged(with: overrides)
         }
-        catch FileLoader.Error.missing(let url) {
+        catch FileLoader.Error.missing {
             return frontMatter
         }
     }

@@ -12,6 +12,7 @@ struct SourceLoader {
 
     let baseUrl: String?
     let sourceUrl: URL
+    let yamlFileLoader: FileLoader
     let fileManager: FileManager
     let frontMatterParser: FrontMatterParser
     let logger: Logger
@@ -21,7 +22,7 @@ struct SourceLoader {
 
         let configLoader = ConfigLoader(
             sourceUrl: sourceUrl,
-            fileManager: fileManager,
+            fileLoader: yamlFileLoader,
             baseUrl: baseUrl,
             logger: logger
         )
