@@ -31,6 +31,35 @@ struct SourceLoader {
             sourceUrl: sourceUrl,
             config: config
         )
+        
+        logger.trace(
+            "Themes location url: `\(sourceConfig.themesUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme url: `\(sourceConfig.currentThemeUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme assets url: `\(sourceConfig.currentThemeAssetsUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme templates url: `\(sourceConfig.currentThemeTemplatesUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme types url: `\(sourceConfig.currentThemeTypesUrl.absoluteString)`"
+        )
+
+        logger.trace(
+            "Theme override url: `\(sourceConfig.currentThemeOverrideUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Theme override assets url: `\(sourceConfig.currentThemeOverrideAssetsUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Theme override templates url: `\(sourceConfig.currentThemeOverrideTemplatesUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Theme override types url: `\(sourceConfig.currentThemeOverrideTypesUrl.absoluteString)`"
+        )
 
         let contentTypeLoader = ContentTypeLoader(
             sourceConfig: sourceConfig,
@@ -50,10 +79,10 @@ struct SourceLoader {
         let pageBundles = try pageBundleLoader.load()
 
         return .init(
-            url: sourceUrl,
-            config: config,
+            sourceConfig: sourceConfig,
             contentTypes: contentTypes,
-            pageBundles: pageBundles
+            pageBundles: pageBundles,
+            logger: logger
         )
     }
 }

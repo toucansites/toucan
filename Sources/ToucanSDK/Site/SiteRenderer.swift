@@ -85,7 +85,7 @@ struct SiteRenderer {
         self.currentYear = calendar.component(.year, from: .init())
 
         self.dateFormatter = DateFormatters.baseFormatter
-        self.dateFormatter.dateFormat = source.config.site.dateFormat
+        self.dateFormatter.dateFormat = source.sourceConfig.config.site.dateFormat
         self.rssDateFormatter = DateFormatters.rss
         self.sitemapDateFormatter = DateFormatters.sitemap
 
@@ -182,7 +182,7 @@ struct SiteRenderer {
                     "{{total}}": String(total),
                 ])
                 let permalink = slug.permalink(
-                    baseUrl: source.config.site.baseUrl
+                    baseUrl: source.sourceConfig.config.site.baseUrl
                 )
                 let isCurrent = pageBundle.slug == slug
                 ctx.append(
@@ -281,13 +281,13 @@ struct SiteRenderer {
     ) -> [String: Any] {
         let renderer = MarkdownRenderer(
             delegate: HTMLRendererDelegate(
-                config: source.config,
+                config: source.sourceConfig.config,
                 pageBundle: pageBundle
             )
         )
 
         // TODO: check if transformer exists
-        let transformersUrl = source.url.appendingPathComponent("transformers")
+        let transformersUrl = source.sourceConfig.sourceUrl.appendingPathComponent("transformers")
         let availableTransformers =
             fileManager
             .listDirectory(at: transformersUrl)
@@ -297,7 +297,7 @@ struct SiteRenderer {
         let contentType = source.contentType(for: pageBundle)
         
         // TODO: handle multiple pipeline for same content type
-        let pipeline = source.config.transformers.pipelines.filter { p in
+        let pipeline = source.sourceConfig.config.transformers.pipelines.filter { p in
             p.types.contains(contentType.id)
         }.first
         
@@ -500,17 +500,17 @@ struct SiteRenderer {
             template: pageBundle.config.template ?? "pages.default",
             with: HTML(
                 site: .init(
-                    baseUrl: source.config.site.baseUrl,
-                    title: source.config.site.title,
-                    description: source.config.site.description,
-                    language: source.config.site.language,
+                    baseUrl: source.sourceConfig.config.site.baseUrl,
+                    title: source.sourceConfig.config.site.title,
+                    description: source.sourceConfig.config.site.description,
+                    language: source.sourceConfig.config.site.language,
                     context: globalContext.mapValues {
                         $0.map { getContext(pageBundle: $0) }
                     }
                 ),
                 page: getContext(pageBundle: pageBundle),
                 userDefined: pageBundle.config.userDefined
-                    .recursivelyMerged(with: source.config.site.userDefined)
+                    .recursivelyMerged(with: source.sourceConfig.config.site.userDefined)
                     .sanitized(),
                 pagination: .init(
                     links: paginationContext,
@@ -598,7 +598,7 @@ struct SiteRenderer {
                         total: total
                     )
                     let finalPermalink = finalSlug.permalink(
-                        baseUrl: source.config.site.baseUrl
+                        baseUrl: source.sourceConfig.config.site.baseUrl
                     )
                     let finalTitle = replace(
                         in: pageBundle.title,
@@ -620,7 +620,7 @@ struct SiteRenderer {
                         id: pageBundle.id,
                         url: pageBundle.url,
                         slug: finalSlug,
-                        permalink: finalSlug.permalink(baseUrl: source.config.site.baseUrl),
+                        permalink: finalSlug.permalink(baseUrl: source.sourceConfig.config.site.baseUrl),
                         title: finalTitle,
                         description: finalDescription,
                         publication: pageBundle.publication,
@@ -666,10 +666,10 @@ struct SiteRenderer {
             ?? rssDateFormatter.string(from: .init())
 
         let context = RSS(
-            title: source.config.site.title,
-            description: source.config.site.description,
-            baseUrl: source.config.site.baseUrl,
-            language: source.config.site.language,
+            title: source.sourceConfig.config.site.title,
+            description: source.sourceConfig.config.site.description,
+            baseUrl: source.sourceConfig.config.site.baseUrl,
+            language: source.sourceConfig.config.site.language,
             lastBuildDate: rssDateFormatter.string(from: .init()),
             publicationDate: publicationDate,
             items: items

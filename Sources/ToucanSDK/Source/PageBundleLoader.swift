@@ -160,7 +160,7 @@ public struct PageBundleLoader {
             
             let slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
 
-            validateFrontMatter(frontMatter, for: contentType, at: slug)
+            
 
             let assetsPath = config.assets.folder
             let assetsUrl = dirUrl.appendingPathComponent(assetsPath)
@@ -250,34 +250,7 @@ extension PageBundleLoader {
         return contentTypes.first { $0.id == type }
     }
 
-    func validateFrontMatter(
-        _ frontMatter: [String: Any],
-        for contentType: ContentType,
-        at slug: String
-    ) {
-        let metadata: Logger.Metadata = [
-            "slug": "\(slug)"
-        ]
-        // properties
-        for property in contentType.properties ?? [:] {
-            if frontMatter[property.key] == nil {
-                logger.warning(
-                    "Missing content type property: `\(property.key)`",
-                    metadata: metadata
-                )
-            }
-        }
-
-        // relations
-        for relation in contentType.relations ?? [:] {
-            if frontMatter[relation.key] == nil {
-                logger.warning(
-                    "Missing content type relation: `\(relation.key)`",
-                    metadata: metadata
-                )
-            }
-        }
-    }
+    
 }
 
 // MARK: - helpers to get page bundle contents
