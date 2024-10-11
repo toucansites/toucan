@@ -190,12 +190,16 @@ public struct PageBundleLoader {
         let frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
 
         /// load additional yaml files for meta data overrides
-        let overrides: [String: Any] = try Yaml.load(
-            at: dirUrl,
-            name: id,
-            fileManager: fileManager
-        )
-        return frontMatter.recursivelyMerged(with: overrides)
+        let url = dirUrl.appendingPathComponent(id)
+        do {
+            let overrides = try FileLoader.yaml
+                .loadContents(at: url)
+                .decodeYaml()
+            return frontMatter.recursivelyMerged(with: overrides)
+        }
+        catch FileLoader.Error.missing(let url) {
+            return frontMatter
+        }
     }
 
     func convert(

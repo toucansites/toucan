@@ -20,7 +20,6 @@ extension Entrypoint {
         var logLevel: Logger.Level = .info
 
         func run() async throws {
-
             var logger = Logger(label: "toucan")
             logger.logLevel = logLevel
 
@@ -31,6 +30,13 @@ extension Entrypoint {
                 logger: logger
             )
             generator.generateAndLogErrors(logger)
+
+            let metadata: Logger.Metadata = [
+                "input": "\(input)",
+                "output": "\(output)",
+                "baseUrl": "\(String(describing: baseUrl?.description))",
+            ]
+            logger.info("Site generated successfully.", metadata: metadata)
         }
     }
 }

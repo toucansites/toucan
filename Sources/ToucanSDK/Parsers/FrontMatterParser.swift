@@ -7,9 +7,11 @@
 
 struct FrontMatterParser {
 
-    func parse(
-        markdown: String
-    ) throws -> [String: Any] {
+    /// Parses a given markdown string to extract metadata as a dictionary.
+    /// - Parameter markdown: The markdown content containing metadata enclosed within "---".
+    /// - Throws: An error if the YAML decoding fails.
+    /// - Returns: A dictionary containing the parsed metadata if available, otherwise an empty dictionary.
+    func parse(markdown: String) throws -> [String: Any] {
         guard markdown.starts(with: "---") else {
             return [:]
         }
@@ -23,6 +25,7 @@ struct FrontMatterParser {
         guard let rawMetadata = parts.first else {
             return [:]
         }
-        return try Yaml.parse(yaml: String(rawMetadata))
+
+        return try String(rawMetadata).decodeYaml() ?? [:]
     }
 }

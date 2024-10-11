@@ -30,7 +30,9 @@ struct SourceLoader {
         let contentTypeLoader = ContentTypeLoader(
             sourceUrl: sourceUrl,
             config: config,
-            fileManager: fileManager
+            fileLoader: .yaml,
+            yamlParser: .init(),
+            logger: logger
         )
         let contentTypes = try contentTypeLoader.load()
 
