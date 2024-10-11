@@ -72,6 +72,7 @@ public struct Toucan {
         // TODO: output url is completely wiped, check if it's safe to delete everything
         try resetOutputDirectory()
 
+        /// not sure if we still need absolute url support...
         let themeUrl: URL
         if source.config.themes.folder.hasPrefix("/") {
             themeUrl = URL(fileURLWithPath: source.config.themes.folder)
@@ -81,21 +82,23 @@ public struct Toucan {
             themeUrl =
                 inputUrl
                 .appendingPathComponent(source.config.themes.folder)
-                .appendingPathComponent(source.config.themes.use)
         }
 
-        let themeAssetsUrl =
+        let currentThemeUrl =
             themeUrl
+            .appendingPathComponent(source.config.themes.use)
+
+        let themeAssetsUrl =
+            currentThemeUrl
             .appendingPathComponent(source.config.themes.assets.folder)
 
         let themeTemplatesUrl =
-            themeUrl
+            currentThemeUrl
             .appendingPathComponent(source.config.themes.templates.folder)
 
         let themeOverrideUrl =
-            inputUrl
+            themeUrl
             .appendingPathComponent(source.config.themes.overrides.folder)
-            .appendingPathComponent(source.config.themes.use)
 
         let themeOverrideAssetsUrl =
             themeOverrideUrl
@@ -104,6 +107,29 @@ public struct Toucan {
         let themeOverrideTemplatesUrl =
             themeOverrideUrl
             .appendingPathComponent(source.config.themes.templates.folder)
+
+        logger.trace(
+            "Themes location url: `\(themeUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme url: `\(currentThemeUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme assets url: `\(themeAssetsUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current theme templates url: `\(themeTemplatesUrl.absoluteString)`"
+        )
+
+        logger.trace(
+            "Theme override url: `\(themeOverrideUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Theme override assets url: `\(themeOverrideAssetsUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Theme override templates url: `\(themeOverrideTemplatesUrl.absoluteString)`"
+        )
 
         // theme assets
         try fileManager.copyRecursively(

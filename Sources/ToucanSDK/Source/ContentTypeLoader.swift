@@ -28,7 +28,13 @@ struct ContentTypeLoader {
     /// - Throws: An error if the content types could not be loaded.
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
-        let typesUrl = sourceUrl.appendingPathComponent(config.types.folder)
+        // TODO: use theme override url to load additional / updated types
+        let typesUrl =
+            sourceUrl
+            .appendingPathComponent(config.themes.folder)
+            .appendingPathComponent(config.themes.use)
+            .appendingPathComponent(config.themes.types.folder)
+        
         let contents = try fileLoader.findContents(at: typesUrl)
 
         logger.debug("Loading content type: `\(sourceUrl.absoluteString)`.")
