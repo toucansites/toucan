@@ -58,6 +58,7 @@ public struct Toucan {
 
     /// generates the static site
     public func generate() throws {
+
         let loader = SourceLoader(
             baseUrl: baseUrl,
             sourceUrl: inputUrl,
@@ -146,7 +147,7 @@ public struct Toucan {
 
         for pageBundle in source.pageBundles {
             let assetsUrl = pageBundle.url
-                .appendingPathComponent(pageBundle.assets.path)
+                .appendingPathComponent(pageBundle.config.assets.folder)
 
             guard
                 fileManager.directoryExists(at: assetsUrl),
@@ -158,9 +159,9 @@ public struct Toucan {
             let outputUrl =
                 outputUrl
                 .appendingPathComponent(
-                    pageBundle.context.slug.isEmpty ? "" : "assets"
+                    pageBundle.slug.isEmpty ? "" : "assets"
                 )
-                .appendingPathComponent(pageBundle.context.slug)
+                .appendingPathComponent(pageBundle.slug)
 
             //            print("-------------")
             //            print(assetsUrl.path)

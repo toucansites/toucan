@@ -15,7 +15,7 @@ struct Source {
     let pageBundles: [PageBundle]
 
     func validateSlugs() throws {
-        let slugs = pageBundles.map(\.context.slug)
+        let slugs = pageBundles.map(\.slug)
         let uniqueSlugs = Set(slugs)
         guard slugs.count == uniqueSlugs.count else {
             var seenSlugs = Set<String>()
@@ -38,11 +38,11 @@ struct Source {
     }
 
     func contentType(for pageBundle: PageBundle) -> ContentType {
-        contentTypes.first { $0.id == pageBundle.type } ?? ContentType.default
+        contentTypes.first { $0.id == pageBundle.contentType.id } ?? ContentType.default
     }
 
     func pageBundles(by contentType: String) -> [PageBundle] {
-        pageBundles.filter { $0.type == contentType }
+        pageBundles.filter { $0.contentType.id == contentType }
     }
 
     func rssPageBundles() -> [PageBundle] {
@@ -57,7 +57,7 @@ struct Source {
 
     func sitemapPageBundles() -> [PageBundle] {
         pageBundles
-            .filter { $0.type != ContentType.pagination.id }
+            .filter { $0.contentType.id != ContentType.pagination.id }
             .filter { $0.id != "404" }
             .sorted { $0.publication > $1.publication }
     }

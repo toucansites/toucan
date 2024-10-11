@@ -11,11 +11,7 @@ import Logging
 /// A struct responsible for loading and managing content types.
 struct ContentTypeLoader {
 
-    /// The URL of the source files.
-    let sourceUrl: URL
-
-    /// The configuration object that holds settings for the site.
-    let config: Config
+    let sourceConfig: SourceConfig
 
     let fileLoader: FileLoader
     let yamlParser: YamlParser
@@ -29,15 +25,11 @@ struct ContentTypeLoader {
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
         // TODO: use theme override url to load additional / updated types
-        let typesUrl =
-            sourceUrl
-            .appendingPathComponent(config.themes.folder)
-            .appendingPathComponent(config.themes.use)
-            .appendingPathComponent(config.themes.types.folder)
-        
+        let typesUrl = sourceConfig.currentThemeTypesUrl
+
         let contents = try fileLoader.findContents(at: typesUrl)
 
-        logger.debug("Loading content type: `\(sourceUrl.absoluteString)`.")
+        logger.debug("Loading content types: `\(typesUrl.absoluteString)`.")
 
         var types = try contents.map {
             try yamlParser.decode($0, as: ContentType.self)

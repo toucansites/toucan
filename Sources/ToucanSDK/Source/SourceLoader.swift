@@ -27,10 +27,13 @@ struct SourceLoader {
             logger: logger
         )
         let config = try configLoader.load()
+        let sourceConfig = SourceConfig(
+            sourceUrl: sourceUrl,
+            config: config
+        )
 
         let contentTypeLoader = ContentTypeLoader(
-            sourceUrl: sourceUrl,
-            config: config,
+            sourceConfig: sourceConfig,
             fileLoader: .yaml,
             yamlParser: .init(),
             logger: logger
@@ -38,8 +41,7 @@ struct SourceLoader {
         let contentTypes = try contentTypeLoader.load()
 
         let pageBundleLoader = PageBundleLoader(
-            sourceUrl: sourceUrl,
-            config: config,
+            sourceConfig: sourceConfig,
             contentTypes: contentTypes,
             fileManager: fileManager,
             frontMatterParser: frontMatterParser,

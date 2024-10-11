@@ -154,11 +154,11 @@ struct SiteRenderer {
         for contentType in source.contentTypes {
             guard let pagination = contentType.pagination else { continue }
             let paginationBundle = source.pageBundles.first { pageBundle in
-                guard pageBundle.type == ContentType.pagination.id else {
+                guard pageBundle.contentType.id == ContentType.pagination.id else {
                     return false
                 }
                 guard pageBundle.id == pagination.bundle else { return false }
-                guard pageBundle.context.slug.contains("{{number}}") else {
+                guard pageBundle.slug.contains("{{number}}") else {
                     return false
                 }
                 return true
@@ -177,14 +177,14 @@ struct SiteRenderer {
             var ctx: [Context.Pagination.Link] = []
             for (index, _) in pages.enumerated() {
                 let number = index + 1
-                let slug = paginationBundle.context.slug.replacingOccurrences([
+                let slug = paginationBundle.slug.replacingOccurrences([
                     "{{number}}": String(number),
                     "{{total}}": String(total),
                 ])
                 let permalink = slug.permalink(
                     baseUrl: source.config.site.baseUrl
                 )
-                let isCurrent = pageBundle.context.slug == slug
+                let isCurrent = pageBundle.slug == slug
                 ctx.append(
                     .init(
                         number: number,
@@ -224,7 +224,7 @@ struct SiteRenderer {
 
                 guard
                     let idx = refs.firstIndex(where: {
-                        $0.context.slug == pageBundle.context.slug
+                        $0.slug == pageBundle.slug
                     })
                 else {
                     continue
@@ -248,7 +248,7 @@ struct SiteRenderer {
                     let ids = Set(pageBundle.referenceIdentifiers(for: arg))
                     localContext[key] =
                         refs.filter { pb in
-                            if pb.context.slug == pageBundle.context.slug {
+                            if pb.slug == pageBundle.slug {
                                 return false
                             }
                             let pbIds = Set(pb.referenceIdentifiers(for: arg))
@@ -295,8 +295,14 @@ struct SiteRenderer {
             .sorted()
 
         let contentType = source.contentType(for: pageBundle)
-        let run = contentType.transformers?.run ?? []
-        let renderFallback = contentType.transformers?.render ?? true
+        
+        // TODO: handle multiple pipeline for same content type
+        let pipeline = source.config.transformers.pipelines.filter { p in
+            p.types.contains(contentType.id)
+        }.first
+        
+        let run = pipeline?.run ?? []
+        let renderFallback = pipeline?.render ?? true
 
         //        let transformers = pageBundle.frontMatter.dict("transformers")
         //        let renderFallback = transformers.bool("render")
@@ -318,16 +324,16 @@ struct SiteRenderer {
             try! markdown.write(to: fileURL, atomically: true, encoding: .utf8)
 
             for r in run {
-                guard availableTransformers.contains(r.name) else {
+                guard availableTransformers.contains(r) else {
                     continue
                 }
-                var rawOptions = r.options ?? [:]
+                var rawOptions: [String: String] = [:]
                 rawOptions["file"] = fileURL.path
                 // TODO: this is not necessary the right way...
                 rawOptions["id"] = pageBundle.contextAwareIdentifier
-                rawOptions["slug"] = pageBundle.context.slug
+                rawOptions["slug"] = pageBundle.slug
 
-                let bin = transformersUrl.appendingPathComponent(r.name).path
+                let bin = transformersUrl.appendingPathComponent(r).path
                 let options =
                     rawOptions
                     .map { #"--\#($0) "\#($1)""# }
@@ -399,13 +405,13 @@ struct SiteRenderer {
         pageBundle: PageBundle
     ) -> [String: Any] {
 
-        if let res = cache.get(key: pageBundle.context.slug) as? [String: Any] {
+        if let res = cache.get(key: pageBundle.slug) as? [String: Any] {
             return res
         }
 
         let metadata: Logger.Metadata = [
-            "type": "\(pageBundle.type)",
-            "slug": "\(pageBundle.context.slug)",
+            "type": "\(pageBundle.contentType.id)",
+            "slug": "\(pageBundle.slug)",
         ]
 
         logger.trace("Generating context", metadata: metadata)
@@ -424,7 +430,7 @@ struct SiteRenderer {
         for (key, values) in relations {
             logger.trace("\t\(key):")
             for item in values {
-                logger.trace("\t - \(item.context.slug)", metadata: metadata)
+                logger.trace("\t - \(item.slug)", metadata: metadata)
             }
         }
 
@@ -433,11 +439,11 @@ struct SiteRenderer {
         for (key, values) in localContext {
             logger.trace("\t\(key):", metadata: metadata)
             for item in values {
-                logger.trace("\t - \(item.context.slug)", metadata: metadata)
+                logger.trace("\t - \(item.slug)", metadata: metadata)
             }
         }
 
-        let res = pageBundle.context.dict
+        let res = pageBundle.dict
             .recursivelyMerged(
                 with: properties
             )
@@ -446,16 +452,16 @@ struct SiteRenderer {
                     relations
                     // TODO: fix this, it can lead to a recursive call!!!
                     //                    .mapValues { $0.map { getContext(pageBundle: $0) } }
-                    .mapValues { $0.map(\.context.dict) }
+                    .mapValues { $0.map(\.dict) }
             )
             .recursivelyMerged(
                 with: localContext.mapValues {
-                    $0.map(\.context.dict)
+                    $0.map(\.dict)
                 }
             )
             .recursivelyMerged(with: contentContext(for: pageBundle))
 
-        cache.set(key: pageBundle.context.slug, value: res)
+        cache.set(key: pageBundle.slug, value: res)
 
         return res
     }
@@ -471,16 +477,16 @@ struct SiteRenderer {
 
         var fileUrl =
             destinationUrl
-            .appendingPathComponent(pageBundle.context.slug)
+            .appendingPathComponent(pageBundle.slug)
             .appendingPathComponent(Files.index)
 
-        if pageBundle.context.slug == "404" {
+        if pageBundle.slug == "404" {
             fileUrl =
                 destinationUrl
                 .appendingPathComponent(Files.notFound)
         }
 
-        if let output = pageBundle.output {
+        if let output = pageBundle.config.output {
             fileUrl =
                 destinationUrl
                 .appendingPathComponent(output)
@@ -491,7 +497,7 @@ struct SiteRenderer {
         )
 
         try templateRenderer.render(
-            template: pageBundle.template,
+            template: pageBundle.config.template ?? "pages.default",
             with: HTML(
                 site: .init(
                     baseUrl: source.config.site.baseUrl,
@@ -503,7 +509,7 @@ struct SiteRenderer {
                     }
                 ),
                 page: getContext(pageBundle: pageBundle),
-                userDefined: pageBundle.userDefined
+                userDefined: pageBundle.config.userDefined
                     .recursivelyMerged(with: source.config.site.userDefined)
                     .sanitized(),
                 pagination: .init(
@@ -528,12 +534,12 @@ struct SiteRenderer {
         for (key, values) in globalContext {
             logger.trace("\t\(key):")
             for item in values {
-                logger.trace("\t - \(item.context.slug)")
+                logger.trace("\t - \(item.slug)")
             }
         }
 
         for pageBundle in source.pageBundles {
-            guard pageBundle.type != ContentType.pagination.id else {
+            guard pageBundle.contentType.id != ContentType.pagination.id else {
                 continue
             }
             //            if pageBundle.context.slug == "" {
@@ -551,11 +557,11 @@ struct SiteRenderer {
             guard let pagination = contentType.pagination else { continue }
 
             for pageBundle in source.pageBundles {
-                guard pageBundle.type == ContentType.pagination.id else {
+                guard pageBundle.contentType.id == ContentType.pagination.id else {
                     continue
                 }
                 guard pageBundle.id == pagination.bundle else { continue }
-                guard pageBundle.context.slug.contains("{{number}}") else {
+                guard pageBundle.slug.contains("{{number}}") else {
                     continue
                 }
 
@@ -587,7 +593,7 @@ struct SiteRenderer {
                 for (index, current) in pages.enumerated() {
                     let number = index + 1
                     let finalSlug = replace(
-                        in: pageBundle.context.slug,
+                        in: pageBundle.slug,
                         number: number,
                         total: total
                     )
@@ -595,12 +601,12 @@ struct SiteRenderer {
                         baseUrl: source.config.site.baseUrl
                     )
                     let finalTitle = replace(
-                        in: pageBundle.context.title,
+                        in: pageBundle.title,
                         number: number,
                         total: total
                     )
                     let finalDescription = replace(
-                        in: pageBundle.context.description,
+                        in: pageBundle.description,
                         number: number,
                         total: total
                     )
@@ -613,33 +619,18 @@ struct SiteRenderer {
                     let finalBundle = PageBundle(
                         id: pageBundle.id,
                         url: pageBundle.url,
-                        frontMatter: pageBundle.frontMatter,
-                        markdown: finalMarkdown,
-                        type: pageBundle.type,
-                        lastModification: pageBundle.lastModification,
+                        slug: finalSlug,
+                        permalink: finalSlug.permalink(baseUrl: source.config.site.baseUrl),
+                        title: finalTitle,
+                        description: finalDescription,
                         publication: pageBundle.publication,
-                        expiration: pageBundle.expiration,
-                        template: pageBundle.template,
-                        output: pageBundle.output,
-                        assets: pageBundle.assets,
-                        redirects: pageBundle.redirects,
-                        userDefined: pageBundle.userDefined,
-                        context: .init(
-                            slug: finalSlug,
-                            permalink: finalPermalink,
-                            title: finalTitle,
-                            description: finalDescription,
-                            imageUrl: pageBundle.context.imageUrl,
-                            lastModification: pageBundle.context
-                                .lastModification,
-                            publication: pageBundle.context.publication,
-                            expiration: pageBundle.context.expiration,
-                            noindex: pageBundle.context.noindex,
-                            canonical: pageBundle.context.canonical,
-                            hreflang: pageBundle.context.hreflang,
-                            css: pageBundle.context.css,
-                            js: pageBundle.context.js
-                        )
+                        contentType: pageBundle.contentType,
+                        lastModification: pageBundle.lastModification,
+                        config: pageBundle.config,
+                        frontMatter: pageBundle.frontMatter,
+                        properties: pageBundle.properties,
+                        relations: pageBundle.relations,
+                        markdown: finalMarkdown
                     )
 
                     try renderHTML(
@@ -661,9 +652,9 @@ struct SiteRenderer {
         let items: [RSS.Item] = source.rssPageBundles()
             .map { item in
                 .init(
-                    permalink: item.context.permalink,
-                    title: item.context.title,
-                    description: item.context.description,
+                    permalink: item.permalink,
+                    title: item.title,
+                    description: item.description,
                     publicationDate: rssDateFormatter.string(
                         from: item.publication
                     )
@@ -696,7 +687,7 @@ struct SiteRenderer {
             urls: source.sitemapPageBundles()
                 .map {
                     .init(
-                        location: $0.context.permalink,
+                        location: $0.permalink,
                         lastModification: sitemapDateFormatter.string(
                             from: $0.lastModification
                         )
@@ -712,7 +703,7 @@ struct SiteRenderer {
 
     func renderRedirects() throws {
         for pageBundle in source.pageBundles {
-            for redirect in pageBundle.redirects {
+            for redirect in pageBundle.config.redirects {
 
                 let fileUrl =
                     destinationUrl
@@ -726,7 +717,7 @@ struct SiteRenderer {
                 try templateRenderer.render(
                     template: "redirect",
                     with: Redirect(
-                        url: pageBundle.context.permalink,
+                        url: pageBundle.permalink,
                         code: redirect.code.rawValue
                     ),
                     to: fileUrl

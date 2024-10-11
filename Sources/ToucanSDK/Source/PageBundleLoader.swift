@@ -28,36 +28,8 @@ extension String {
     }
 }
 
-struct PageBundleLocation {
-    let slug: String
-    let path: String
-}
 
 public struct PageBundleLoader {
-
-    public enum Keys: String, CaseIterable {
-        case draft
-        case publication
-        case expiration
-
-        case slug
-        case type
-
-        case title
-        case description
-        case image
-
-        case template
-        case output
-        case assets
-        case redirects
-
-        case noindex
-        case canonical
-        case hreflang
-        case css
-        case js
-    }
 
     /// An enumeration representing possible errors that can occur while loading the content.
     public enum Error: Swift.Error {
@@ -66,10 +38,7 @@ public struct PageBundleLoader {
         case pageBundle(Swift.Error)
     }
 
-    let sourceUrl: URL
-    /// The configuration for loading contents.
-    let config: Config
-
+    let sourceConfig: SourceConfig
     let contentTypes: [ContentType]
 
     /// The file manager used for file operations.
@@ -82,248 +51,23 @@ public struct PageBundleLoader {
     /// The current date.
     let now: Date = .init()
 
-    let indexName = "index"
-    let noindexName = "noindex"
-    let mdExtensions = ["md", "markdown"]
-    let yamlExtensions = ["yaml", "yml"]
+    private let indexName = "index"
+    private let mdExtensions = ["md", "markdown"]
+    private let yamlExtensions = ["yaml", "yml"]
 
-    var extensions: [String] {
+    private var extensions: [String] {
         mdExtensions + yamlExtensions
-    }
-
-    /// helper
-    private var contentsUrl: URL {
-        sourceUrl.appendingPathComponent(config.contents.folder)
     }
 
     /// Loads all the page bundles.
     func load() throws -> [PageBundle] {
-        try loadBundleLocations()
-            .sorted { $0.path < $1.path }
-            .compactMap { try loadPageBundle(at: $0) }
-            .sorted { $0.context.slug < $1.context.slug }
-    }
-
-    // MARK: - load helpers
-
-    func loadBundleLocations(
-        slug: [String] = [],
-        path: [String] = []
-    ) throws -> [PageBundleLocation] {
-        var result: [PageBundleLocation] = []
-
-        let p = path.joined(separator: "/")
-        let url = contentsUrl.appendingPathComponent(p)
-
-        if containsIndexFile(name: indexName, at: url) {
-            result.append(
-                .init(
-                    slug: slug.joined(separator: "/"),
-                    path: p
-                )
-            )
-        }
-
-        let list = fileManager.listDirectory(at: url)
-        for item in list {
-            var newSlug = slug
-            let childUrl = url.appendingPathComponent(item)
-            if !containsIndexFile(name: noindexName, at: childUrl) {
-                newSlug += [item]
-            }
-            let newPath = path + [item]
-            result += try loadBundleLocations(slug: newSlug, path: newPath)
-        }
-
-        return result
-    }
-
-    func containsIndexFile(
-        name: String,
-        at url: URL
-    ) -> Bool {
-        for ext in extensions {
-            let fileUrl = url.appendingPathComponent("\(name).\(ext)")
-            if fileManager.fileExists(at: fileUrl) {
-                return true
-            }
-        }
-        return false
-    }
-
-    func loadLastModificationDate(
-        at url: URL
-    ) throws -> Date {
-        var date: Date?
-        for ext in extensions {
-            let fileUrl = url.appendingPathComponent("\(indexName).\(ext)")
-            guard fileManager.fileExists(at: fileUrl) else {
-                continue
-            }
-            let fileDate = try fileManager.modificationDate(at: fileUrl)
-            if date == nil || date! < fileDate {
-                date = fileDate
-            }
-        }
-        precondition(date != nil, "Last modification date is nil.")
-        return date!
-    }
-
-    func loadRawMarkdown(
-        at url: URL
-    ) throws -> String {
-        for ext in mdExtensions {
-            let fileUrl = url.appendingPathComponent("\(indexName).\(ext)")
-            if fileManager.fileExists(at: fileUrl) {
-                return try String(contentsOf: fileUrl, encoding: .utf8)
-            }
-        }
-        return ""
-    }
-
-    func loadFrontMatter(
-        id: String,
-        dirUrl: URL,
-        rawMarkdown: String
-    ) throws -> [String: Any] {
-        /// use front matter from the markdown file
-        let frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
-
-        /// load additional yaml files for meta data overrides
-        let url = dirUrl.appendingPathComponent(id)
-        do {
-            let overrides = try FileLoader.yaml
-                .loadContents(at: url)
-                .decodeYaml()
-            return frontMatter.recursivelyMerged(with: overrides)
-        }
-        catch FileLoader.Error.missing {
-            return frontMatter
-        }
-    }
-
-    func convert(
-        date: Date
-    ) -> PageBundle.Context.DateValue {
-        let html = DateFormatters.baseFormatter
-        html.dateFormat = config.site.dateFormat
-        let rss = DateFormatters.rss
-        let sitemap = DateFormatters.sitemap
-
-        return .init(
-            html: html.string(from: date),
-            rss: rss.string(from: date),
-            sitemap: sitemap.string(from: date)
+        try PageBundleLocator(
+            fileManager: fileManager,
+            contentsUrl: sourceConfig.contentsUrl
         )
-    }
-
-    // MARK: - fields
-
-    func draft(frontMatter: [String: Any]) -> Bool {
-        frontMatter.bool(Keys.draft.rawValue) ?? false
-    }
-
-    func publication(frontMatter: [String: Any]) -> Date {
-        guard
-            let date = frontMatter.date(
-                Keys.publication.rawValue,
-                format: config.contents.dateFormat
-            )
-        else {
-            return now
-        }
-        return date
-    }
-
-    func expiration(frontMatter: [String: Any]) -> Date? {
-        frontMatter.date(
-            Keys.expiration.rawValue,
-            format: config.contents.dateFormat
-        )
-    }
-
-    func slug(frontMatter: [String: Any], fallback: String) -> String {
-        (frontMatter.string(Keys.slug.rawValue).emptyToNil ?? fallback)
-            .safeSlug(prefix: nil)
-    }
-
-    func contentType(frontMatter: [String: Any]) -> String? {
-        frontMatter.string(Keys.type.rawValue).emptyToNil
-    }
-
-    func title(frontMatter: [String: Any]) -> String {
-        frontMatter.string(Keys.title.rawValue).nilToEmpty
-    }
-
-    func description(frontMatter: [String: Any]) -> String {
-        frontMatter.string(Keys.description.rawValue).nilToEmpty
-    }
-
-    func image(frontMatter: [String: Any]) -> String? {
-        frontMatter.string(Keys.image.rawValue).emptyToNil
-    }
-
-    func template(
-        frontMatter: [String: Any],
-        contentType: ContentType
-    ) -> String {
-        frontMatter.string(Keys.template.rawValue).emptyToNil ?? contentType
-            .template ?? ContentType.default.template ?? "pages.default"
-    }
-
-    func output(frontMatter: [String: Any]) -> String? {
-        frontMatter.string(Keys.output.rawValue).emptyToNil
-    }
-
-    func assets(frontMatter: [String: Any]) -> String {
-        frontMatter.string(Keys.assets.rawValue + ".path").emptyToNil
-            ?? "assets"
-    }
-
-    func noindex(frontMatter: [String: Any]) -> Bool {
-        frontMatter.bool(Keys.noindex.rawValue) ?? false
-    }
-
-    func canonical(frontMatter: [String: Any]) -> String? {
-        frontMatter.string(Keys.canonical.rawValue).emptyToNil
-    }
-
-    func hreflang(frontMatter: [String: Any]) -> [PageBundle.Context.Hreflang] {
-        frontMatter
-            .array(Keys.hreflang.rawValue, as: [String: String].self)
-            .compactMap { dict in
-                guard
-                    let lang = dict["lang"].emptyToNil,
-                    let url = dict["url"].emptyToNil
-                else {
-                    return nil
-                }
-                return .init(lang: lang, url: url)
-            }
-    }
-
-    func redirects(frontMatter: [String: Any]) -> [PageBundle.Redirect] {
-        frontMatter
-            .array(Keys.redirects.rawValue, as: [String: String].self)
-            .compactMap { dict -> PageBundle.Redirect? in
-                guard let from = dict["from"].emptyToNil else {
-                    return nil
-                }
-                let code =
-                    dict["code"]
-                    .flatMap { Int($0) }
-                    .flatMap { PageBundle.Redirect.Code(rawValue: $0) }
-                    ?? .movedPermanently
-                return .init(from: from, code: code)
-            }
-    }
-
-    func css(frontMatter: [String: Any]) -> [String] {
-        frontMatter.array(Keys.css.rawValue, as: String.self)
-    }
-
-    func js(frontMatter: [String: Any]) -> [String] {
-        frontMatter.array(Keys.js.rawValue, as: String.self)
+        .locate()
+        .compactMap { try loadPageBundle(at: $0) }
+        .sorted { $0.slug < $1.slug }
     }
 
     // MARK: - loading
@@ -331,14 +75,14 @@ public struct PageBundleLoader {
     func loadPageBundle(
         at location: PageBundleLocation
     ) throws -> PageBundle? {
-        let dirUrl = contentsUrl.appendingPathComponent(location.path)
+        let dirUrl = sourceConfig.contentsUrl.appendingPathComponent(location.path)
 
         let metadata: Logger.Metadata = [
-            "slug": "\(location.slug)"
+            "path": "\(location.path)"
         ]
 
         logger.debug(
-            "Loading page bundle at: `\(location.path)`",
+            "Loading page bundle.",
             metadata: metadata
         )
 
@@ -350,110 +94,100 @@ public struct PageBundleLoader {
             return nil
         }
         do {
-            let lastModification = try loadLastModificationDate(at: dirUrl)
-            let rawMarkdown = try loadRawMarkdown(at: dirUrl)
+            let lastModification = try getLastModificationDate(at: dirUrl)
+            let rawMarkdown = try getRawMarkdown(at: dirUrl)
             let markdown = rawMarkdown.dropFrontMatter()
-
-            let frontMatter = try loadFrontMatter(
+            let frontMatter = try getFrontMatter(
                 id: indexName,
                 dirUrl: dirUrl,
                 rawMarkdown: rawMarkdown
             )
+            
+            let config = PageBundle.Config(frontMatter)
 
             /// filter out drafts
-            if draft(frontMatter: frontMatter) {
+            if config.draft {
                 logger.debug("Page bundle is a draft.", metadata: metadata)
                 return nil
             }
-            /// filter out unpublished
-            let publication = publication(frontMatter: frontMatter)
-
-            if publication > now {
-                logger.debug(
-                    "Page bundle is not published yet.",
+            
+            let formatter = DateFormatters.baseFormatter
+            formatter.dateFormat = sourceConfig.config.contents.dateFormat
+            var publicationDate = now
+            if
+                let pub = config.publication,
+                let date = formatter.date(from: pub)
+            {
+                publicationDate = date
+            }
+            else {
+                logger.warning(
+                    "Invalid or missing publication date.",
                     metadata: metadata
                 )
-                return nil
             }
-            /// filter out expired
-            let expiration = expiration(frontMatter: frontMatter)
-            if let expiration, expiration < now {
-                logger.debug(
-                    "Page bundle is already expired.",
-                    metadata: metadata
-                )
-                return nil
-            }
-
-            let slug = slug(frontMatter: frontMatter, fallback: location.slug)
-
-            var assumedType: String?
-            for contentType in contentTypes {
-                guard
-                    let locPrefix = contentType.location, !locPrefix.isEmpty
-                else {
-                    continue
-                }
-                if location.path.hasPrefix(locPrefix) {
-                    assumedType = contentType.id
-                }
-            }
-
-            if let explicitType = contentType(frontMatter: frontMatter) {
-                assumedType = explicitType
-            }
-
-            let type = assumedType ?? ContentType.default.id
-
-            let contentType = contentTypes.first { $0.id == type }
+            
+            
+//            if context.publication > now {
+//                logger.debug(
+//                    "Page bundle is not published yet.",
+//                    metadata: metadata
+//                )
+//                return nil
+//            }
+//            
+//            if let expiration = context.expiration, expiration < now {
+//                logger.debug(
+//                    "Page bundle is already expired.",
+//                    metadata: metadata
+//                )
+//                return nil
+//            }
+            
+            let contentType = getContentType(
+                for: location,
+                explicitType: config.type
+            )
+            
             guard let contentType else {
-                logger.error("Invalid content type.", metadata: metadata)
+                logger.debug(
+                    "Page bundle has invalid content type.",
+                    metadata: metadata
+                )
                 return nil
             }
+            
+            
+            let slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
 
             validateFrontMatter(frontMatter, for: contentType, at: slug)
 
-            let title = title(frontMatter: frontMatter)
-            let description = description(frontMatter: frontMatter)
-            let image = image(frontMatter: frontMatter)
-
-            let template = template(
-                frontMatter: frontMatter,
-                contentType: contentType
-            )
-            let output = output(frontMatter: frontMatter)
-
-            let assetsPath = assets(frontMatter: frontMatter)
+            let assetsPath = config.assets.folder
             let assetsUrl = dirUrl.appendingPathComponent(assetsPath)
             let assets = fileManager.recursivelyListDirectory(at: assetsUrl)
-
-            let noindex = noindex(frontMatter: frontMatter)
-            let canonical = canonical(frontMatter: frontMatter)
-            let hreflang = hreflang(frontMatter: frontMatter)
-            let redirects = redirects(frontMatter: frontMatter)
 
             /// resolve imageUrl for the page bundle
             let assetsPrefix = "./\(assetsPath)/"
             var imageUrl: String? = nil
-            if let image,
+            if let image = config.image,
                 image.hasPrefix(assetsPrefix),
                 assets.contains(String(image.dropFirst(assetsPrefix.count)))
             {
                 imageUrl = image.finalAssetUrl(in: assetsPath, slug: slug)
             }
             else {
-                imageUrl = image
+                imageUrl = config.image
             }
 
             /// inject style.css if exists, resolve js paths for css assets
-            var css = css(frontMatter: frontMatter)
+            var css = config.css
             if assets.contains("style.css") {
                 css.append("./\(assetsPath)/style.css")
             }
             css = css.map { $0.finalAssetUrl(in: assetsPath, slug: slug) }
 
             /// inject main.js if exists, resolve js paths for js assets
-            var js = js(frontMatter: frontMatter)
+            var js = config.js
             if assets.contains("main.js") {
                 js.append("./\(assetsPath)/main.js")
             }
@@ -461,45 +195,28 @@ public struct PageBundleLoader {
 
             let propertyKeys = contentType.properties?.keys.sorted() ?? []
             let relationKeys = contentType.relations?.keys.sorted() ?? []
-            let userDefined = frontMatter.filter { element in
-                !Keys.allCases.map(\.rawValue).contains(element.key)
-                    && !propertyKeys.contains(element.key)
+            let userDefined = config.userDefined.filter { element in
+                    propertyKeys.contains(element.key)
                     && !relationKeys.contains(element.key)
             }
-
-            let context = PageBundle.Context(
-                slug: slug,
-                permalink: slug.permalink(baseUrl: config.site.baseUrl),
-                title: title,
-                description: description,
-                imageUrl: imageUrl,
-                lastModification: convert(date: lastModification),
-                publication: convert(date: publication),
-                expiration: expiration.map { convert(date: $0) },
-                noindex: noindex,
-                canonical: canonical,
-                hreflang: hreflang,
-                css: css,
-                js: js
-            )
 
             logger.debug("Page bundle is loaded.", metadata: metadata)
 
             return .init(
                 id: location.path,
                 url: dirUrl,
-                frontMatter: frontMatter,
-                markdown: markdown,
-                type: type,
+                slug: slug,
+                permalink: slug.permalink(baseUrl: sourceConfig.config.site.baseUrl),
+                title: config.title.nilToEmpty,
+                description: config.description.nilToEmpty,
+                publication: .init(), // TODO: fixme
+                contentType: contentType,
                 lastModification: lastModification,
-                publication: publication,
-                expiration: expiration,
-                template: template,
-                output: output,
-                assets: .init(path: assetsPath),
-                redirects: redirects,
-                userDefined: userDefined,
-                context: context
+                config: config,
+                frontMatter: frontMatter,
+                properties: [:],
+                relations: [:],
+                markdown: markdown
             )
         }
         catch {
@@ -509,6 +226,29 @@ public struct PageBundleLoader {
 }
 
 extension PageBundleLoader {
+    
+    func getContentType(
+        for location: PageBundleLocation,
+        explicitType: String?
+    ) -> ContentType? {
+        var assumedType: String?
+        for contentType in contentTypes {
+            guard
+                let locPrefix = contentType.location, !locPrefix.isEmpty
+            else {
+                continue
+            }
+            if location.path.hasPrefix(locPrefix) {
+                assumedType = contentType.id
+            }
+        }
+
+        if let explicitType {
+            assumedType = explicitType
+        }
+        let type = assumedType ?? ContentType.default.id
+        return contentTypes.first { $0.id == type }
+    }
 
     func validateFrontMatter(
         _ frontMatter: [String: Any],
@@ -536,6 +276,62 @@ extension PageBundleLoader {
                     metadata: metadata
                 )
             }
+        }
+    }
+}
+
+// MARK: - helpers to get page bundle contents
+
+extension PageBundleLoader {
+
+    func getLastModificationDate(
+        at url: URL
+    ) throws -> Date {
+        var date: Date?
+        for ext in extensions {
+            let fileUrl = url.appendingPathComponent("\(indexName).\(ext)")
+            guard fileManager.fileExists(at: fileUrl) else {
+                continue
+            }
+            let fileDate = try fileManager.modificationDate(at: fileUrl)
+            if date == nil || date! < fileDate {
+                date = fileDate
+            }
+        }
+        precondition(date != nil, "Last modification date is nil.")
+        return date!
+    }
+
+    func getRawMarkdown(
+        at url: URL
+    ) throws -> String {
+        for ext in mdExtensions {
+            let fileUrl = url.appendingPathComponent("\(indexName).\(ext)")
+            if fileManager.fileExists(at: fileUrl) {
+                return try String(contentsOf: fileUrl, encoding: .utf8)
+            }
+        }
+        return ""
+    }
+
+    func getFrontMatter(
+        id: String,
+        dirUrl: URL,
+        rawMarkdown: String
+    ) throws -> [String: Any] {
+        /// use front matter from the markdown file
+        let frontMatter = try frontMatterParser.parse(markdown: rawMarkdown)
+
+        /// load additional yaml files for meta data overrides
+        let url = dirUrl.appendingPathComponent(id)
+        do {
+            let overrides = try FileLoader.yaml
+                .loadContents(at: url)
+                .decodeYaml()
+            return frontMatter.recursivelyMerged(with: overrides)
+        }
+        catch FileLoader.Error.missing {
+            return frontMatter
         }
     }
 }
