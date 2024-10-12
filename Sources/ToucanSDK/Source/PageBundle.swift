@@ -10,96 +10,52 @@ import Foundation
 /// A page bundle representing a subpage for a website.
 struct PageBundle {
 
-    struct Redirect {
-
-        enum Code: Int, CaseIterable {
-            case movedPermanently = 301
-            case seeOther = 303
-            case permanentRedirect = 308
-        }
-
-        let from: String
-        let code: Code
+    struct DateValue {
+        let html: String
+        let rss: String
+        let sitemap: String
     }
 
-    struct Assets {
-        let path: String
-    }
-
-    struct Context {
-
-        struct Hreflang {
-            let lang: String
-            let url: String
-        }
-
-        struct DateValue {
-            let html: String
-            let rss: String
-            let sitemap: String
-        }
-
-        let slug: String
-        let permalink: String
-        let title: String
-        let description: String
-        let imageUrl: String?
-
-        let lastModification: DateValue
-        let publication: DateValue
-        let expiration: DateValue?
-
-        // head
-        let noindex: Bool
-        let canonical: String?
-        let hreflang: [Hreflang]
-        let css: [String]
-        let js: [String]
-
-        var dict: [String: Any] {
-            var result: [String: Any] = [:]
-
-            result["slug"] = slug
-            result["permalink"] = permalink
-            result["title"] = title
-            result["description"] = description
-            result["imageUrl"] = imageUrl ?? false
-
-            result["lastModification"] = lastModification
-            result["publication"] = publication
-            result["expiration"] = expiration ?? false
-
-            result["noindex"] = noindex
-            result["canonical"] = canonical ?? permalink
-            result["hreflang"] = hreflang
-            result["css"] = css
-            result["js"] = js
-
-            return result
-        }
-    }
-
-    /// The url of the page bundle.
-
-    /// the location of the page bundle
     let id: String
     let url: URL
+
+    let slug: String
+    let permalink: String
+
+    let title: String
+    let description: String
+    let imageUrl: String?
+    let date: DateValue
+
+    let contentType: ContentType
+    let publication: Date
+    let lastModification: Date
+    let config: Config
     let frontMatter: [String: Any]
+    let properties: [String: Any]
+    let relations: [String: Any]
     let markdown: String
 
-    let type: String
-    let lastModification: Date
-    let publication: Date
-    let expiration: Date?
-    let template: String
-    let output: String?
-    let assets: Assets
-    let redirects: [Redirect]
-
-    let userDefined: [String: Any]
-
-    let context: Context
-
+    var dict: [String: Any] {
+        config.userDefined
+            .recursivelyMerged(
+                with: [
+                    "slug": slug,
+                    "permalink": permalink,
+                    "title": title,
+                    "description": description,
+                    "imageUrl": imageUrl ?? false,
+                    "publication": date,
+                ]
+            )
+            .recursivelyMerged(
+                with: properties
+            )
+            .recursivelyMerged(
+                with: relations
+            )
+            .sanitized()
+    }
 }
 
 extension PageBundle {
@@ -112,7 +68,7 @@ extension PageBundle {
     /// contextAwareIdentifier: installation
     /// This way content can be identified, when knowing the type & id
     var contextAwareIdentifier: String {
-        .init(context.slug.split(separator: "/").last ?? "")
+        .init(slug.split(separator: "/").last ?? "")
     }
 
     func referenceIdentifiers(
