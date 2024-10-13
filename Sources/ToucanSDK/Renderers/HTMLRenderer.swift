@@ -256,10 +256,6 @@ struct HTMLRenderer {
         let run = pipeline?.run ?? []
         let renderFallback = pipeline?.render ?? true
 
-        //        let transformers = pageBundle.frontMatter.dict("transformers")
-        //        let renderFallback = transformers.bool("render")
-        //        let run = transformers.array("run", as: [String: Any].self)
-
         let markdown = pageBundle.markdown.dropFrontMatter()
         var toc: [ToC]? = nil
         var time: Int? = nil
@@ -496,9 +492,7 @@ struct HTMLRenderer {
             guard pageBundle.contentType.id != ContentType.pagination.id else {
                 continue
             }
-            //            if pageBundle.context.slug == "" {
-            //                print(pageBundle.context)
-            //            }
+
             try renderHTML(
                 pageBundle: pageBundle,
                 globalContext: globalContext,
@@ -598,10 +592,6 @@ struct HTMLRenderer {
                 }
             }
         }
-
-        //        try? renderRSS()
-        //        try? renderSitemap()
-        //        try? renderRedirects()
     }
 }
 

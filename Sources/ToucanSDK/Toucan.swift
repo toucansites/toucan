@@ -141,13 +141,13 @@ public struct Toucan {
         )
         try rssRenderer.render()
 
-        let renderer = try HTMLRenderer(
+        let htmlRenderer = try HTMLRenderer(
             source: source,
             destinationUrl: outputUrl,
             templateRenderer: templateRenderer,
             logger: logger
         )
 
-        try renderer.render()
+        try htmlRenderer.render()
     }
 }
