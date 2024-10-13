@@ -12,89 +12,36 @@ import ShellKit
 import Algorithms
 import SwiftSoup
 
-// TODO: use actor & modern concurrency
-final class Cache {
-
-    let q = DispatchQueue(
-        label: "com.binarybirds.toucan.cache",
-        attributes: .concurrent
-    )
-
-    var storage: [String: Any]
-
-    init() {
-        self.storage = [:]
-    }
-
-    func set(key: String, value: Any) {
-        q.async(flags: .barrier) {
-            self.storage[key] = value
-        }
-
-    }
-
-    func get(key: String) -> Any? {
-        q.sync {
-            self.storage[key]
-        }
-    }
-}
-
 /// Responsible to build renderable files using the site context & templates.
-struct SiteRenderer {
+struct HTMLRenderer {
 
     public enum Files {
         static let index = "index.html"
         static let notFound = "404.html"
-        static let rss = "rss.xml"
-        static let sitemap = "sitemap.xml"
     }
 
     let source: Source
-
-    let currentYear: Int
-    let dateFormatter: DateFormatter
-    let rssDateFormatter: DateFormatter
-    let sitemapDateFormatter: DateFormatter
-
-    let templatesUrl: URL
-    let overridesUrl: URL
     let destinationUrl: URL
-
-    let fileManager: FileManager = .default
-    let logger: Logger
-
     let templateRenderer: MustacheToHTMLRenderer
-
+    let logger: Logger
+    
+    let fileManager: FileManager = .default
+    let currentYear: Int
     var cache: Cache
 
     init(
         source: Source,
-        templatesUrl: URL,
-        overridesUrl: URL,
         destinationUrl: URL,
+        templateRenderer: MustacheToHTMLRenderer,
         logger: Logger
     ) throws {
         self.source = source
-        self.templatesUrl = templatesUrl
-        self.overridesUrl = overridesUrl
         self.destinationUrl = destinationUrl
+        self.templateRenderer = templateRenderer
         self.logger = logger
 
         let calendar = Calendar(identifier: .gregorian)
         self.currentYear = calendar.component(.year, from: .init())
-
-        self.dateFormatter = DateFormatters.baseFormatter
-        self.dateFormatter.dateFormat =
-            source.sourceConfig.config.site.dateFormat
-        self.rssDateFormatter = DateFormatters.rss
-        self.sitemapDateFormatter = DateFormatters.sitemap
-
-        self.templateRenderer = try MustacheToHTMLRenderer(
-            templatesUrl: templatesUrl,
-            overridesUrl: overridesUrl,
-            logger: logger
-        )
 
         self.cache = .init()
     }
@@ -652,85 +599,9 @@ struct SiteRenderer {
             }
         }
 
-        try? renderRSS()
-        try? renderSitemap()
-        try? renderRedirects()
-    }
-
-    func renderRSS() throws {
-        let items: [RSS.Item] = source.rssPageBundles()
-            .map { item in
-                .init(
-                    permalink: item.permalink,
-                    title: item.title,
-                    description: item.description,
-                    publicationDate: item.date.rss
-                )
-            }
-
-        let publicationDate =
-            items.first?.publicationDate
-            ?? rssDateFormatter.string(from: .init())
-
-        let context = RSS(
-            title: source.sourceConfig.config.site.title,
-            description: source.sourceConfig.config.site.description,
-            baseUrl: source.sourceConfig.config.site.baseUrl,
-            language: source.sourceConfig.config.site.language,
-            lastBuildDate: rssDateFormatter.string(from: .init()),
-            publicationDate: publicationDate,
-            items: items
-        )
-
-        try templateRenderer.render(
-            template: "rss",
-            with: context,
-            to: destinationUrl.appendingPathComponent(Files.rss)
-        )
-    }
-
-    func renderSitemap() throws {
-        let context = Sitemap(
-            urls: source.sitemapPageBundles()
-                .map {
-                    .init(
-                        location: $0.permalink,
-                        lastModification: sitemapDateFormatter.string(
-                            from: $0.lastModification
-                        )
-                    )
-                }
-        )
-        try templateRenderer.render(
-            template: "sitemap",
-            with: context,
-            to: destinationUrl.appendingPathComponent(Files.sitemap)
-        )
-    }
-
-    func renderRedirects() throws {
-        for pageBundle in source.pageBundles {
-            for redirect in pageBundle.config.redirects {
-
-                let fileUrl =
-                    destinationUrl
-                    .appendingPathComponent(redirect.from)
-                    .appendingPathComponent(Files.index)
-
-                try fileManager.createParentFolderIfNeeded(
-                    for: fileUrl
-                )
-
-                try templateRenderer.render(
-                    template: "redirect",
-                    with: Redirect(
-                        url: pageBundle.permalink,
-                        code: redirect.code.rawValue
-                    ),
-                    to: fileUrl
-                )
-            }
-        }
+//        try? renderRSS()
+//        try? renderSitemap()
+//        try? renderRedirects()
     }
 }
 

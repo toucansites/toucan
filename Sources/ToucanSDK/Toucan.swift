@@ -110,11 +110,16 @@ public struct Toucan {
             )
         }
 
-        let renderer = try SiteRenderer(
-            source: source,
+        let tempalteRenderer = try MustacheToHTMLRenderer(
             templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
             overridesUrl: source.sourceConfig.currentThemeOverrideTemplatesUrl,
+            logger: logger
+        )
+        
+        let renderer = try HTMLRenderer(
+            source: source,
             destinationUrl: outputUrl,
+            templateRenderer: tempalteRenderer,
             logger: logger
         )
 
