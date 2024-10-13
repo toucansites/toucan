@@ -8,7 +8,7 @@
 import Foundation
 
 struct SitemapRenderer {
-    
+
     public enum Files {
         static let sitemap = "sitemap.xml"
     }
@@ -18,10 +18,11 @@ struct SitemapRenderer {
     let templateRenderer: MustacheToHTMLRenderer
     let pageBundles: [PageBundle]
 
-    func renderSitemap() throws {
+    func render() throws {
         let sitemapDateFormatter = DateFormatters.sitemap
         let context = SitemapContext(
-            urls: pageBundles
+            urls:
+                pageBundles
                 .map {
                     .init(
                         location: $0.permalink,
@@ -37,5 +38,5 @@ struct SitemapRenderer {
             to: destinationUrl.appendingPathComponent(Files.sitemap)
         )
     }
-    
+
 }

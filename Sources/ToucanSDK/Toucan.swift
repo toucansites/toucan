@@ -110,16 +110,41 @@ public struct Toucan {
             )
         }
 
-        let tempalteRenderer = try MustacheToHTMLRenderer(
+        let templateRenderer = try MustacheToHTMLRenderer(
             templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
             overridesUrl: source.sourceConfig.currentThemeOverrideTemplatesUrl,
             logger: logger
         )
-        
+
+        let redirectRenderer = RedirectRenderer(
+            destinationUrl: outputUrl,
+            fileManager: .default,
+            templateRenderer: templateRenderer,
+            pageBundles: source.pageBundles
+        )
+        try redirectRenderer.render()
+
+        let sitemapRenderer = SitemapRenderer(
+            destinationUrl: outputUrl,
+            fileManager: .default,
+            templateRenderer: templateRenderer,
+            pageBundles: source.sitemapPageBundles()
+        )
+        try sitemapRenderer.render()
+
+        let rssRenderer = RSSRenderer(
+            config: source.sourceConfig.config,
+            destinationUrl: outputUrl,
+            fileManager: .default,
+            templateRenderer: templateRenderer,
+            pageBundles: source.rssPageBundles()
+        )
+        try rssRenderer.render()
+
         let renderer = try HTMLRenderer(
             source: source,
             destinationUrl: outputUrl,
-            templateRenderer: tempalteRenderer,
+            templateRenderer: templateRenderer,
             logger: logger
         )
 

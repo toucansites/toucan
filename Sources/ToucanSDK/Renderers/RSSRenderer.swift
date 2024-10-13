@@ -8,11 +8,11 @@
 import Foundation
 
 struct RSSRenderer {
-    
+
     public enum Files {
         static let rss = "rss.xml"
     }
-    
+
     let config: Config
     let destinationUrl: URL
     let fileManager: FileManager
@@ -20,7 +20,8 @@ struct RSSRenderer {
     let pageBundles: [PageBundle]
 
     func render() throws {
-        let items: [RSSContext.Item] = pageBundles
+        let items: [RSSContext.Item] =
+            pageBundles
             .map { item in
                 .init(
                     permalink: item.permalink,
@@ -29,7 +30,7 @@ struct RSSRenderer {
                     publicationDate: item.date.rss
                 )
             }
-        
+
         let rssDateFormatter = DateFormatters.rss
 
         let publicationDate =

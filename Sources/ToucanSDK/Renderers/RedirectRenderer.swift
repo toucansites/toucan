@@ -12,12 +12,11 @@ struct RedirectRenderer {
     public enum Files {
         static let index = "index.html"
     }
-    
+
     let destinationUrl: URL
     let fileManager: FileManager
     let templateRenderer: MustacheToHTMLRenderer
     let pageBundles: [PageBundle]
-
 
     func render() throws {
         for pageBundle in pageBundles {

@@ -24,7 +24,7 @@ struct HTMLRenderer {
     let destinationUrl: URL
     let templateRenderer: MustacheToHTMLRenderer
     let logger: Logger
-    
+
     let fileManager: FileManager = .default
     let currentYear: Int
     var cache: Cache
@@ -599,9 +599,9 @@ struct HTMLRenderer {
             }
         }
 
-//        try? renderRSS()
-//        try? renderSitemap()
-//        try? renderRedirects()
+        //        try? renderRSS()
+        //        try? renderSitemap()
+        //        try? renderRedirects()
     }
 }
 
