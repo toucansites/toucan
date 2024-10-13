@@ -166,8 +166,7 @@ extension PageBundle {
             self.description = dict.string(Keys.description)
             self.image = dict.string(Keys.image)
 
-            self.template =
-                dict.string(Keys.template) ?? ContentType.default.template
+            self.template = dict.string(Keys.template)
 
             self.output = dict.string(Keys.output)
 

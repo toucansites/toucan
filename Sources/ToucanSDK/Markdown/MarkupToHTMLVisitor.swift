@@ -250,7 +250,6 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             )
         //        case "svg":
         //            let src = arguments.getFirstValueBy(key: "src") ?? ""
-        //            print(src)
         ////            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
         //            return tag(
         //                name: "svg",

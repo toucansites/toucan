@@ -67,19 +67,19 @@ extension String {
     /// ```swift
     /// let text1 = "home"
     /// let result1 = text1.safeSlug(prefix: nil)
-    /// print(result1) // Output: ""
+    /// ""
     ///
     /// let text2 = "about/us"
     /// let result2 = text2.safeSlug(prefix: nil)
-    /// print(result2) // Output: "about/us"
+    /// "about/us"
     ///
     /// let text3 = "contact"
     /// let result3 = text3.safeSlug(prefix: "pages")
-    /// print(result3) // Output: "pages/contact"
+    /// "pages/contact"
     ///
     /// let text4 = "contact"
     /// let result4 = text4.safeSlug(prefix: nil)
-    /// print(result4) // Output: "contact"
+    /// "contact"
     /// ```
     func safeSlug(
         prefix: String?
@@ -115,7 +115,7 @@ extension String {
     /// Content goes here.
     /// """
     /// let result = text.dropFrontMatter()
-    /// print(result) // Output: "\nContent goes here."
+    /// "\nContent goes here."
     /// ```
     func dropFrontMatter() -> String {
         if starts(with: "---") {
@@ -142,7 +142,7 @@ extension String {
     /// ```swift
     /// let text = "Hello [world]!"
     /// if let result = text.slice(from: "[", to: "]") {
-    ///     print(result) // Output: world
+    ///     world
     /// }
     /// ```
     func slice(
@@ -171,8 +171,8 @@ extension String {
     /// let testString1 = "2023-06-13-example"
     /// let testString2 = "13-06-2023-example"
     ///
-    /// print(testString1.hasDatePrefix()) // true
-    /// print(testString2.hasDatePrefix()) // false
+    /// testString1.hasDatePrefix() // true
+    /// testString2.hasDatePrefix() // false
     /// ```
     func hasDatePrefix() -> Bool {
         /// Length of "yyyy-mm-dd-"

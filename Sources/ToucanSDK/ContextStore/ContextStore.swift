@@ -7,13 +7,97 @@
 
 import Foundation
 import Logging
+import ShellKit
+import Markdown
+import SwiftSoup
 
-actor ContextStore {
+// TODO: better sort algorithm using data types
+extension [PageBundle] {
+
+    func sorted(
+        key: String?,
+        order: ContentType.Order?
+    ) -> [PageBundle] {
+        guard let key, let order else {
+            return self
+        }
+        switch key {
+        case "publication":
+            return sorted { lhs, rhs in
+                switch order {
+                case .asc:
+                    return lhs.publication < rhs.publication
+                case .desc:
+                    return lhs.publication > rhs.publication
+                }
+            }
+        default:
+            return sorted { lhs, rhs in
+                guard
+                    let l = lhs.frontMatter[key] as? String,
+                    let r = rhs.frontMatter[key] as? String
+                else {
+                    guard
+                        let l = lhs.frontMatter[key] as? Int,
+                        let r = rhs.frontMatter[key] as? Int
+                    else {
+                        return false
+                    }
+                    switch order {
+                    case .asc:
+                        return l < r
+                    case .desc:
+                        return l > r
+                    }
+                }
+                // TODO: proper case insensitive compare
+                switch order {
+                case .asc:
+                    //                    switch l.caseInsensitiveCompare(r) {
+                    //                    case .orderedAscending:
+                    //                        return true
+                    //                    case .orderedDescending:
+                    //                        return false
+                    //                    case .orderedSame:
+                    //                        return false
+                    //                    }
+                    return l.lowercased() < r.lowercased()
+                case .desc:
+                    return l.lowercased() > r.lowercased()
+                }
+            }
+        }
+    }
+
+    func limited(_ value: Int?) -> [PageBundle] {
+        Array(prefix(value ?? Int.max))
+    }
+
+    func filtered(_ filter: ContentType.Filter?) -> [PageBundle] {
+        guard let filter else {
+            return self
+        }
+        return self.filter { pageBundle in
+            guard let field = pageBundle.frontMatter[filter.field] else {
+                return false
+            }
+            switch filter.method {
+            case .equals:
+                // this is horrible... 😱
+                return String(describing: field) == filter.value
+            }
+        }
+    }
+}
+
+struct ContextStore {
 
     let sourceConfig: SourceConfig
     let contentTypes: [ContentType]
     let pageBundles: [PageBundle]
     let logger: Logger
+    
+    let fileManager = FileManager.default
 
     init(
         sourceConfig: SourceConfig,
@@ -29,8 +113,12 @@ actor ContextStore {
 
     func build() {
         for pageBundle in pageBundles {
-            _ = fullContext(pageBundle: pageBundle)
+            _ = fullContext(for: pageBundle)
         }
+    }
+    
+    private func readingTime(_ value: String) -> Int {
+        max(value.split(separator: " ").count / 238, 1)
     }
 
     private func baseContext(
@@ -39,7 +127,7 @@ actor ContextStore {
         pageBundle.dict
     }
 
-    func properties(
+    private func properties(
         for pageBundle: PageBundle
     ) -> [String: Any] {
         var properties: [String: Any] = [:]
@@ -51,15 +139,138 @@ actor ContextStore {
     }
 
     /// can be resolved without joining any relations.
-    func standardContext(
+    private func standardContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
         let _baseContext = baseContext(for: pageBundle)
         let _properties = properties(for: pageBundle)
         return _baseContext.recursivelyMerged(with: _properties)
     }
+    
+    private func contentContext(
+        for pageBundle: PageBundle
+    ) -> [String: Any] {
+        let renderer = MarkdownRenderer(
+            delegate: HTMLRendererDelegate(
+                config: sourceConfig.config,
+                pageBundle: pageBundle
+            )
+        )
 
-    func relations(
+        // TODO: check if transformer exists
+        let transformersUrl = sourceConfig.sourceUrl
+            .appendingPathComponent("transformers")
+        let availableTransformers =
+            fileManager
+            .listDirectory(at: transformersUrl)
+            .filter { !$0.hasPrefix(".") }
+            .sorted()
+
+        let contentType = pageBundle.contentType
+
+        // TODO: handle multiple pipeline for same content type
+        let pipeline = sourceConfig.config.transformers.pipelines
+            .filter { p in
+                p.types.contains(contentType.id)
+            }
+            .first
+
+        let run = pipeline?.run ?? []
+        let renderFallback = pipeline?.render ?? true
+
+        let markdown = pageBundle.markdown.dropFrontMatter()
+        var toc: [ToC]? = nil
+        var time: Int? = nil
+        var contents = ""
+
+        // TODO: better transformers settings merge with page bundle
+        if !run.isEmpty {
+            let shell = Shell(env: ProcessInfo.processInfo.environment)
+
+            // Create a temporary directory URL
+            let tempDirectoryURL = FileManager.default.temporaryDirectory
+            let fileName = UUID().uuidString
+            let fileURL = tempDirectoryURL.appendingPathComponent(fileName)
+            try! markdown.write(to: fileURL, atomically: true, encoding: .utf8)
+
+            for r in run {
+                guard availableTransformers.contains(r) else {
+                    continue
+                }
+                var rawOptions: [String: String] = [:]
+                rawOptions["file"] = fileURL.path
+                // TODO: this is not necessary the right way...
+                rawOptions["id"] = pageBundle.contextAwareIdentifier
+                rawOptions["slug"] = pageBundle.slug
+
+                let bin = transformersUrl.appendingPathComponent(r).path
+                let options =
+                    rawOptions
+                    .map { #"--\#($0) "\#($1)""# }
+                    .joined(separator: " ")
+
+                do {
+                    let cmd = #"\#(bin) \#(options)"#
+                    let log = try shell.run(cmd)
+                    if !log.isEmpty {
+                        logger.debug("\(log)")
+                    }
+                }
+                catch {
+                    logger.error("\(error.localizedDescription)")
+                }
+            }
+            contents = try! String(contentsOf: fileURL, encoding: .utf8)
+            try? fileManager.delete(at: fileURL)
+
+            time = readingTime(contents)
+
+            do {
+                let doc = try SwiftSoup.parse(contents)
+
+                var tocList: [MarkupToHXVisitor.HX] = []
+                let headings = try doc.select("h2, h3")
+                for h in headings {
+                    let n = h.nodeName()
+                    let attr = try h.attr("id")
+                    guard !attr.isEmpty else { continue }
+                    let val = try h.text()
+
+                    let level = n.hasSuffix("2") ? 2 : 3
+
+                    tocList.append(
+                        .init(
+                            level: level,
+                            text: val,
+                            fragment: attr
+                        )
+                    )
+                }
+
+                toc = MarkdownRenderer.buildToC(tocList)
+
+            }
+            catch Exception.Error(_, let message) {
+                logger.error("\(message)")
+            }
+            catch {
+                logger.error("\(error.localizedDescription)")
+            }
+        }
+
+        if renderFallback {
+            contents = renderer.renderHTML(markdown: markdown)
+        }
+
+        var context: [String: Any] = [:]
+        context["readingTime"] = time ?? readingTime(markdown)
+        context["toc"] = toc ?? renderer.renderToC(markdown: markdown)
+        context["contents"] = contents
+
+        return context
+    }
+
+    private func relations(
         for pageBundle: PageBundle
     ) -> [String: [PageBundle]] {
         var result: [String: [PageBundle]] = [:]
@@ -83,7 +294,7 @@ actor ContextStore {
         return result
     }
 
-    func localContext(
+    private func localContext(
         for pageBundle: PageBundle
     ) -> [String: [PageBundle]] {
         let id = pageBundle.contextAwareIdentifier
@@ -160,7 +371,7 @@ actor ContextStore {
     }
 
     func fullContext(
-        pageBundle: PageBundle
+        for pageBundle: PageBundle
     ) -> [String: Any] {
 
         let metadata: Logger.Metadata = [
@@ -171,21 +382,22 @@ actor ContextStore {
         logger.trace("Generating context", metadata: metadata)
 
         let _baseContext = baseContext(for: pageBundle)
+        let _contentContext = contentContext(for: pageBundle)
         let _properties = properties(for: pageBundle)
         let _relations = relations(for: pageBundle)
             .mapValues { $0.map { standardContext(for: $0) } }
         let _localContext = localContext(for: pageBundle)
-            .mapValues { $0.map { standardContext(for: $0) } }
+            .mapValues { $0.map { standardContext(for: $0) } } // TODO: 2nd iteration
 
         // TODO: check merge order
         let context =
             _baseContext
+            .recursivelyMerged(with: _contentContext)
             .recursivelyMerged(with: _properties)
             .recursivelyMerged(with: _relations)
             .recursivelyMerged(with: _localContext)
             .sanitized()
-        print(pageBundle.slug, context.keys.sorted())
-        print(context["posts"] ?? "n/a")
+
         return context
     }
 

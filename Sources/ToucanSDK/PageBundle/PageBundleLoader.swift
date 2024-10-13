@@ -122,7 +122,7 @@ public struct PageBundleLoader {
                 publicationDate = date
             }
             else {
-                logger.warning(
+                logger.trace(
                     "Invalid or missing publication date.",
                     metadata: metadata
                 )
