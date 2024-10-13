@@ -11,22 +11,25 @@ import Logging
 actor ContextStore {
 
     let sourceConfig: SourceConfig
+    let contentTypes: [ContentType]
     let pageBundles: [PageBundle]
     let logger: Logger
 
     init(
         sourceConfig: SourceConfig,
+        contentTypes: [ContentType],
         pageBundles: [PageBundle],
         logger: Logger
     ) {
         self.sourceConfig = sourceConfig
+        self.contentTypes = contentTypes
         self.pageBundles = pageBundles
         self.logger = logger
     }
 
     func build() {
         for pageBundle in pageBundles {
-            let context = fullContext(pageBundle: pageBundle)
+            _ = fullContext(pageBundle: pageBundle)
         }
     }
 
@@ -156,7 +159,7 @@ actor ContextStore {
         return localContext
     }
 
-    private func fullContext(
+    func fullContext(
         pageBundle: PageBundle
     ) -> [String: Any] {
 
@@ -184,6 +187,22 @@ actor ContextStore {
         print(pageBundle.slug, context.keys.sorted())
         print(context["posts"] ?? "n/a")
         return context
+    }
+
+    func getPageBundlesForSiteContext() -> [String: [PageBundle]] {
+        var result: [String: [PageBundle]] = [:]
+        for contentType in contentTypes {
+            for (key, value) in contentType.context?.site ?? [:] {
+                result[key] =
+                    pageBundles
+                    .filter { $0.contentType.id == contentType.id }
+                    .sorted(key: value.sort, order: value.order)
+                    .filtered(value.filter)
+                    // TODO: proper pagination
+                    .limited(value.limit)
+            }
+        }
+        return result
     }
 
 }

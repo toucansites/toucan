@@ -19,6 +19,11 @@ final class ContextStoreTests: XCTestCase {
                 sourceUrl: URL(fileURLWithPath: "/"),
                 config: .defaults
             ),
+            contentTypes: [
+                .default,
+                .author,
+                .post,
+            ],
             pageBundles: [
                 .post1,
                 .author1,
