@@ -24,8 +24,7 @@ struct HTMLRenderer {
 
     let fileManager: FileManager = .default
     let currentYear: Int
-    var cache: Cache
-    
+
     let contextStore: ContextStore
 
     init(
@@ -42,13 +41,12 @@ struct HTMLRenderer {
         let calendar = Calendar(identifier: .gregorian)
         self.currentYear = calendar.component(.year, from: .init())
 
-        self.cache = .init()
         self.contextStore = .init(
             sourceConfig: source.sourceConfig,
             contentTypes: source.contentTypes,
             pageBundles: source.pageBundles,
             logger: logger
-        )        
+        )
     }
 
     // TODO: optimize & merge with data?
@@ -135,9 +133,10 @@ struct HTMLRenderer {
         try fileManager.createParentFolderIfNeeded(
             for: fileUrl
         )
-        
+
         try templateRenderer.render(
-            template: pageBundle.config.template ?? pageBundle.contentType.template ?? "pages.default",
+            template: pageBundle.config.template ?? pageBundle.contentType
+                .template ?? "pages.default",
             with: HTML(
                 site: .init(
                     baseUrl: source.sourceConfig.config.site.baseUrl,
@@ -169,7 +168,7 @@ struct HTMLRenderer {
 
     func render() throws {
         let globalContext = contextStore.getPageBundlesForSiteContext()
-        
+
         let siteContext = globalContext.mapValues {
             $0.map { contextStore.fullContext(for: $0) }
         }
@@ -191,7 +190,7 @@ struct HTMLRenderer {
             guard let pagination = contentType.pagination else { continue }
 
             for pageBundle in source.pageBundles {
-                
+
                 guard pageBundle.contentType.id == ContentType.pagination.id
                 else {
                     continue
@@ -260,7 +259,9 @@ struct HTMLRenderer {
                         frontMatter: pageBundle.frontMatter,
                         properties: pageBundle.properties,
                         relations: pageBundle.relations,
-                        markdown: finalMarkdown
+                        markdown: finalMarkdown,
+                        css: pageBundle.css,
+                        js: pageBundle.js
                     )
 
                     try renderHTML(
@@ -274,4 +275,3 @@ struct HTMLRenderer {
         }
     }
 }
-

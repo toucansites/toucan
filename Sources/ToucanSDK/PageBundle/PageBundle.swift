@@ -35,6 +35,8 @@ struct PageBundle {
     let properties: [String: Any]
     let relations: [String: Any]
     let markdown: String
+    let css: [String]
+    let js: [String]
 
     var dict: [String: Any] {
         config.userDefined
@@ -46,6 +48,8 @@ struct PageBundle {
                     "description": description,
                     "imageUrl": imageUrl ?? false,
                     "publication": date,
+                    "css": css,
+                    "js": js,
                 ]
             )
             .recursivelyMerged(

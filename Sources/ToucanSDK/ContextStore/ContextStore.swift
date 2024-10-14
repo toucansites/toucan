@@ -101,7 +101,7 @@ struct ContextStore {
     let contentTypes: [ContentType]
     let pageBundles: [PageBundle]
     let logger: Logger
-    
+
     let fileManager = FileManager.default
     let htmlToCParser: HTMLToCParser
     let markdownToCParser: MarkdownToCParser
@@ -116,23 +116,23 @@ struct ContextStore {
         self.contentTypes = contentTypes
         self.pageBundles = pageBundles
         self.logger = logger
-        
+
         self.htmlToCParser = .init(logger: logger)
         self.markdownToCParser = .init()
     }
 
-    func build() {
-        for pageBundle in pageBundles {
-            let ctx = standardContext(for: pageBundle)
-            print("------------------------------------")
-            print(pageBundle.slug)
-            print(ctx.keys)
-            if pageBundle.slug == "introducing-toucan-a-new-markdown-based-static-site-generator" {
-                print(ctx["authors"])
-            }
-        }
-    }
-    
+    //    func build() {
+    //        for pageBundle in pageBundles {
+    //            let ctx = standardContext(for: pageBundle)
+    //            print("------------------------------------")
+    //            print(pageBundle.slug)
+    //            print(ctx.keys)
+    //            if pageBundle.slug == "introducing-toucan-a-new-markdown-based-static-site-generator" {
+    //                print(ctx["authors"])
+    //            }
+    //        }
+    //    }
+
     private func readingTime(_ value: String) -> Int {
         max(value.split(separator: " ").count / 238, 1)
     }
@@ -153,7 +153,7 @@ struct ContextStore {
         }
         return properties
     }
-    
+
     private func contentContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
@@ -240,7 +240,8 @@ struct ContextStore {
 
         var context: [String: Any] = [:]
         context["readingTime"] = time ?? readingTime(markdown)
-        context["toc"] = toc ?? markdownToCParser.parse(from: markdown)?.buildToCTree()
+        context["toc"] =
+            toc ?? markdownToCParser.parse(from: markdown)?.buildToCTree()
         context["contents"] = contents
 
         return context
@@ -269,9 +270,9 @@ struct ContextStore {
         }
         return result
     }
-    
+
     // MARK: -
-    
+
     /// can be resolved without joining any relations.
     private func standardContext(
         for pageBundle: PageBundle
@@ -282,17 +283,15 @@ struct ContextStore {
         let _relations = relations(for: pageBundle)
             .mapValues { $0.map { standardContext(for: $0) } }
 
-        // TODO: check merge order
         let context =
             _baseContext
             .recursivelyMerged(with: _contentContext)
             .recursivelyMerged(with: _properties)
             .recursivelyMerged(with: _relations)
-            .sanitized()
 
         return context
     }
-    
+
     // MARK: -
 
     private func localContext(
@@ -384,17 +383,15 @@ struct ContextStore {
 
         let _standardContext = standardContext(for: pageBundle)
         let _localContext = localContext(for: pageBundle)
-            .mapValues { $0.map { standardContext(for: $0) } } // TODO: 2nd iteration
+            .mapValues { $0.map { standardContext(for: $0) } }
 
-        // TODO: check merge order
         let context =
             _standardContext
             .recursivelyMerged(with: _localContext)
-            .sanitized()
 
         return context
     }
-    
+
     // MARK: -
 
     func getPageBundlesForSiteContext() -> [String: [PageBundle]] {
