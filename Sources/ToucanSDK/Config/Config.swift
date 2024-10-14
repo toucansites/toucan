@@ -97,23 +97,41 @@ struct Config {
 
     struct Contents {
 
+        struct Page {
+            enum Keys {
+                static let slug = "slug"
+                static let template = "template"
+            }
+
+            let slug: String
+            let template: String
+        }
+
         enum Keys {
             static let dateFormat = "dateFormat"
             static let assets = "assets"
+            static let home = "home"
+            static let notFound = "notFound"
         }
 
         let folder: String
         let dateFormat: String
         let assets: Location
+        let home: Page
+        let notFound: Page
 
         init(
             folder: String,
             dateFormat: String,
-            assets: Config.Location
+            assets: Config.Location,
+            home: Page,
+            notFound: Page
         ) {
             self.folder = folder
             self.dateFormat = dateFormat
             self.assets = assets
+            self.home = home
+            self.notFound = notFound
         }
 
         init(_ dict: [String: Any]) {
@@ -129,6 +147,22 @@ struct Config {
             self.assets =
                 Location(assets)
                 ?? Config.defaults.themes.assets
+
+            let home = dict.dict(Keys.home)
+            self.home = .init(
+                slug: home.string(Page.Keys.slug)
+                    ?? Config.defaults.contents.home.slug,
+                template: home.string(Page.Keys.template)
+                    ?? Config.defaults.contents.home.template
+            )
+
+            let notFound = dict.dict(Keys.notFound)
+            self.notFound = .init(
+                slug: notFound.string(Page.Keys.slug)
+                    ?? Config.defaults.contents.notFound.slug,
+                template: notFound.string(Page.Keys.template)
+                    ?? Config.defaults.contents.notFound.template
+            )
         }
     }
 
@@ -210,7 +244,15 @@ extension Config {
         contents: .init(
             folder: "contents",
             dateFormat: "yyyy-MM-dd HH:mm:ss",
-            assets: .init(folder: "assets")
+            assets: .init(folder: "assets"),
+            home: .init(
+                slug: "home",
+                template: "pages.home"
+            ),
+            notFound: .init(
+                slug: "404",
+                template: "pages.404"
+            )
         ),
         transformers: .init(
             folder: "transformers",

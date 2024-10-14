@@ -118,10 +118,27 @@ struct HTMLRenderer {
             .appendingPathComponent(pageBundle.slug)
             .appendingPathComponent(Files.index)
 
-        if pageBundle.slug == "404" {
+        var template =
+            pageBundle.config.template
+            ?? pageBundle.contentType.template
+
+        if pageBundle.slug == source.sourceConfig.config.contents.home.slug {
+            fileUrl =
+                destinationUrl
+                .appendingPathComponent(Files.index)
+            template =
+                pageBundle.config.template
+                ?? source.sourceConfig.config.contents.home.template
+        }
+
+        if pageBundle.slug == source.sourceConfig.config.contents.notFound.slug
+        {
             fileUrl =
                 destinationUrl
                 .appendingPathComponent(Files.notFound)
+            template =
+                pageBundle.config.template
+                ?? source.sourceConfig.config.contents.notFound.template
         }
 
         if let output = pageBundle.config.output {
@@ -135,8 +152,7 @@ struct HTMLRenderer {
         )
 
         try templateRenderer.render(
-            template: pageBundle.config.template ?? pageBundle.contentType
-                .template ?? "pages.default",
+            template: template ?? "pages.default",
             with: HTML(
                 site: .init(
                     baseUrl: source.sourceConfig.site.baseUrl,

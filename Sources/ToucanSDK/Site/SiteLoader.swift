@@ -28,11 +28,12 @@ public struct SiteLoader {
     /// The logger instance
     let logger: Logger
 
-    
     func load() throws -> Site {
-        let siteUrl = sourceUrl
+        let siteUrl =
+            sourceUrl
             .appendingPathComponent(config.contents.folder)
-        let siteFileUrl = siteUrl
+        let siteFileUrl =
+            siteUrl
             .appendingPathComponent("index")
 
         logger.debug("Loading site file from: `\(siteUrl.absoluteString)`.")

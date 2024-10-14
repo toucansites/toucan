@@ -27,7 +27,7 @@ struct SourceLoader {
             logger: logger
         )
         let config = try configLoader.load()
-        
+
         let siteLoader = SiteLoader(
             sourceUrl: sourceUrl,
             config: config,
@@ -36,7 +36,7 @@ struct SourceLoader {
             logger: logger
         )
         let site = try siteLoader.load()
-        
+
         let sourceConfig = SourceConfig(
             sourceUrl: sourceUrl,
             config: config,
