@@ -62,6 +62,10 @@ struct SiteRenderer {
     let destinationUrl: URL
 
     let fileManager: FileManager = .default
+    
+    let htmlToCParser: HTMLToCParser
+    let markdownToCParser: MarkdownToCParser
+    
     let logger: Logger
 
     let templateRenderer: MustacheToHTMLRenderer
@@ -79,6 +83,8 @@ struct SiteRenderer {
         self.templatesUrl = templatesUrl
         self.overridesUrl = overridesUrl
         self.destinationUrl = destinationUrl
+        self.htmlToCParser = .init(logger: logger)
+        self.markdownToCParser = .init()
         self.logger = logger
 
         let calendar = Calendar(identifier: .gregorian)
@@ -303,7 +309,7 @@ struct SiteRenderer {
         //        let run = transformers.array("run", as: [String: Any].self)
 
         let markdown = pageBundle.markdown.dropFrontMatter()
-        var toc: [ToC]? = nil
+        var toc: [ToCNode]? = nil
         var time: Int? = nil
         var contents = ""
 
@@ -349,38 +355,7 @@ struct SiteRenderer {
             try? fileManager.delete(at: fileURL)
 
             time = readingTime(contents)
-
-            do {
-                let doc: Document = try SwiftSoup.parse(contents)
-
-                var tocList: [MarkupToHXVisitor.HX] = []
-                let headings = try doc.select("h2, h3")
-                for h in headings {
-                    let n = h.nodeName()
-                    let attr = try h.attr("id")
-                    guard !attr.isEmpty else { continue }
-                    let val = try h.text()
-
-                    let level = n.hasSuffix("2") ? 2 : 3
-
-                    tocList.append(
-                        .init(
-                            level: level,
-                            text: val,
-                            fragment: attr
-                        )
-                    )
-                }
-
-                toc = MarkdownRenderer.buildToC(tocList)
-
-            }
-            catch Exception.Error(_, let message) {
-                logger.error("\(message)")
-            }
-            catch {
-                logger.error("\(error.localizedDescription)")
-            }
+            toc = htmlToCParser.parse(from: contents)?.buildToCTree()
         }
 
         if renderFallback {
@@ -389,7 +364,7 @@ struct SiteRenderer {
 
         var context: [String: Any] = [:]
         context["readingTime"] = time ?? readingTime(markdown)
-        context["toc"] = toc ?? renderer.renderToC(markdown: markdown)
+        context["toc"] = toc ?? markdownToCParser.parse(from: markdown)?.buildToCTree()
         context["contents"] = contents
 
         return context
