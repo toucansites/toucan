@@ -122,7 +122,7 @@ public struct PageBundleLoader {
                 publicationDate = date
             }
             else {
-                logger.warning(
+                logger.trace(
                     "Invalid or missing publication date.",
                     metadata: metadata
                 )
@@ -179,7 +179,6 @@ public struct PageBundleLoader {
                 imageUrl = config.image
             }
 
-            // TODO: use updated CSS + JS
             /// inject style.css if exists, resolve js paths for css assets
             var css = config.css
             if assets.contains("style.css") {
@@ -221,7 +220,9 @@ public struct PageBundleLoader {
                 frontMatter: frontMatter,
                 properties: properties,
                 relations: relations,
-                markdown: markdown
+                markdown: markdown,
+                css: css,
+                js: js
             )
         }
         catch {

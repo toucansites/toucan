@@ -30,7 +30,7 @@ struct Context {
     }
 }
 
-struct HTML: Output {
+struct HTML {
 
     let site: Context.Site
     let page: [String: Any]

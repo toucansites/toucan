@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 14/05/2024.
 //
 
-struct RSS: Output {
+struct RSSContext {
 
     struct Item {
         let permalink: String

@@ -117,6 +117,46 @@ extension PageBundle {
         let userDefined: [String: Any]
 
         init(
+            slug: String?,
+            type: String?,
+            title: String?,
+            description: String?,
+            image: String?,
+            assets: PageBundle.Config.Assets,
+            template: String?,
+            output: String?,
+            draft: Bool,
+            publication: String?,
+            expiration: String?,
+            noindex: Bool,
+            canonical: String?,
+            hreflang: [PageBundle.Config.Hreflang],
+            redirects: [PageBundle.Config.Redirect],
+            css: [String],
+            js: [String],
+            userDefined: [String: Any]
+        ) {
+            self.slug = slug
+            self.type = type
+            self.title = title
+            self.description = description
+            self.image = image
+            self.assets = assets
+            self.template = template
+            self.output = output
+            self.draft = draft
+            self.publication = publication
+            self.expiration = expiration
+            self.noindex = noindex
+            self.canonical = canonical
+            self.hreflang = hreflang
+            self.redirects = redirects
+            self.css = css
+            self.js = js
+            self.userDefined = userDefined
+        }
+
+        init(
             _ dict: [String: Any]
         ) {
             self.slug = dict.string(Keys.slug)
@@ -126,8 +166,7 @@ extension PageBundle {
             self.description = dict.string(Keys.description)
             self.image = dict.string(Keys.image)
 
-            self.template =
-                dict.string(Keys.template) ?? ContentType.default.template
+            self.template = dict.string(Keys.template)
 
             self.output = dict.string(Keys.output)
 
