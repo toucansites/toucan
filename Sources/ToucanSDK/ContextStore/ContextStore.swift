@@ -182,6 +182,10 @@ struct ContextStore {
             }
             .first
 
+        //        if pipeline != nil {
+        //            print("--------------")
+        //        }
+
         let run = pipeline?.run ?? []
         let renderFallback = pipeline?.render ?? true
 
