@@ -26,12 +26,21 @@ struct SourceLoader {
             baseUrl: baseUrl,
             logger: logger
         )
-        #warning("load site stuff")
         let config = try configLoader.load()
+        
+        let siteLoader = SiteLoader(
+            sourceUrl: sourceUrl,
+            config: config,
+            fileLoader: .yaml,
+            baseUrl: baseUrl,
+            logger: logger
+        )
+        let site = try siteLoader.load()
+        
         let sourceConfig = SourceConfig(
             sourceUrl: sourceUrl,
             config: config,
-            site: .defaults
+            site: site
         )
 
         logger.trace(

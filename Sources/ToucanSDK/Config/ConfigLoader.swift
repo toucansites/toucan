@@ -35,9 +35,9 @@ public struct ConfigLoader {
     /// - Returns: A `Config` object representing the loaded configuration.
     /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> Config {
-        let configUrl = sourceUrl.appendingPathComponent("config")
+        logger.debug("Loading config files from: `\(sourceUrl.absoluteString)`.")
 
-        logger.debug("Loading config file: `\(configUrl.absoluteString)`.")
+        let configUrl = sourceUrl.appendingPathComponent("config")
 
         do {
             let contents = try fileLoader.loadContents(at: configUrl)
@@ -57,7 +57,9 @@ public struct ConfigLoader {
             return .init(yaml)
         }
         catch FileLoader.Error.missing(let url) {
-            throw Error.missing(url)
+//            throw Error.missing(url)
+            logger.debug("Using default config.")
+            return .defaults
         }
     }
 }

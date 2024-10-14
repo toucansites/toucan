@@ -19,6 +19,8 @@ public struct SiteLoader {
 
     /// The URL of the source files.
     let sourceUrl: URL
+    /// The configuration.
+    let config: Config
     /// A file loader used for loading files.
     let fileLoader: FileLoader
     /// The base URL to use for the configuration.
@@ -28,30 +30,33 @@ public struct SiteLoader {
 
     
     func load() throws -> Site {
-        fatalError()
-//        let configUrl = sourceUrl.appendingPathComponent("config")
-//
-//        logger.debug("Loading config file: `\(configUrl.absoluteString)`.")
-//
-//        do {
-//            let contents = try fileLoader.loadContents(at: configUrl)
-//            let yaml = try contents.decodeYaml()
-//            if let baseUrl, !baseUrl.isEmpty {
-//                return .init(
-//                    yaml
-//                        .recursivelyMerged(
-//                            with: [
-//                                "site": [
-//                                    "baseUrl": baseUrl
-//                                ]
-//                            ]
-//                        )
-//                )
-//            }
-//            return .init(yaml)
-//        }
-//        catch FileLoader.Error.missing(let url) {
-//            throw Error.missing(url)
-//        }
+        let siteUrl = sourceUrl
+            .appendingPathComponent(config.contents.folder)
+        let siteFileUrl = siteUrl
+            .appendingPathComponent("index")
+
+        logger.debug("Loading site file from: `\(siteUrl.absoluteString)`.")
+
+        do {
+            let contents = try fileLoader.loadContents(at: siteFileUrl)
+
+            let yaml = try contents.decodeYaml()
+            if let baseUrl, !baseUrl.isEmpty {
+                return .init(
+                    yaml
+                        .recursivelyMerged(
+                            with: [
+                                "site": [
+                                    "baseUrl": baseUrl
+                                ]
+                            ]
+                        )
+                )
+            }
+            return .init(yaml)
+        }
+        catch FileLoader.Error.missing(let url) {
+            throw Error.missing(url)
+        }
     }
 }
