@@ -34,7 +34,7 @@ struct ContentTypeLoader {
             .appendingPathComponent(config.themes.folder)
             .appendingPathComponent(config.themes.use)
             .appendingPathComponent(config.themes.types.folder)
-        
+
         let contents = try fileLoader.findContents(at: typesUrl)
 
         logger.debug("Loading content type: `\(sourceUrl.absoluteString)`.")

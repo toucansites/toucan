@@ -10,7 +10,7 @@ import Markdown
 
 /// A parser that extracts table of contents elements from a Markdown document.
 struct MarkdownToCParser: ToCElementParser {
-    
+
     /// Parses a string containing Markdown content and returns an array of `TocElement` objects.
     ///
     /// - Parameter value: A string containing Markdown content.
@@ -23,7 +23,7 @@ struct MarkdownToCParser: ToCElementParser {
 }
 
 extension TocElement {
-    
+
     /// Initializes a `TocElement` from a `Markdown.Heading`.
     ///
     /// - Parameter element: A `Markdown.Heading` from which to initialize the `TocElement`.

@@ -12,12 +12,12 @@ import SwiftSoup
 /// A struct that parses HTML content to extract table of contents (ToC) elements from heading tags.
 /// This struct conforms to the `ToCElementParser` protocol.
 struct HTMLToCParser: ToCElementParser {
-    
+
     /// Logger instance used to log errors encountered during parsing.
     let logger: Logger
-    
+
     /// Parses the provided HTML string and extracts table of contents elements from `<h2>` and `<h3>` tags.
-    /// 
+    ///
     /// - Parameter value: The HTML string to parse.
     /// - Returns: An array of `TocElement` objects or `nil` if an error occurs during parsing.
     func parse(from value: String) -> [TocElement]? {
@@ -38,7 +38,7 @@ struct HTMLToCParser: ToCElementParser {
 }
 
 extension TocElement {
-    
+
     /// Initializes a new instance with the provided SwiftSoup.Element.
     /// Attempts to extract text, level, and fragment from the element.
     /// If the fragment attribute is empty or an error occurs during extraction, initialization fails.
@@ -51,7 +51,8 @@ extension TocElement {
             guard !fragment.isEmpty else {
                 return nil
             }
-        } catch {
+        }
+        catch {
             return nil
         }
     }

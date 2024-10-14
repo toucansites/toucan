@@ -62,10 +62,10 @@ struct SiteRenderer {
     let destinationUrl: URL
 
     let fileManager: FileManager = .default
-    
+
     let htmlToCParser: HTMLToCParser
     let markdownToCParser: MarkdownToCParser
-    
+
     let logger: Logger
 
     let templateRenderer: MustacheToHTMLRenderer
@@ -364,7 +364,8 @@ struct SiteRenderer {
 
         var context: [String: Any] = [:]
         context["readingTime"] = time ?? readingTime(markdown)
-        context["toc"] = toc ?? markdownToCParser.parse(from: markdown)?.buildToCTree()
+        context["toc"] =
+            toc ?? markdownToCParser.parse(from: markdown)?.buildToCTree()
         context["contents"] = contents
 
         return context

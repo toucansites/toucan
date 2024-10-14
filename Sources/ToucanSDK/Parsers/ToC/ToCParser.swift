@@ -9,7 +9,7 @@ import Foundation
 
 /// A protocol that defines a method for parsing table of contents elements from a string value.
 protocol ToCElementParser {
-    
+
     /// Parses the given string value into an array of `TocElement` objects.
     ///
     /// - Parameter value: The string representation of the table of contents elements.
