@@ -28,7 +28,7 @@ struct HTMLRendererDelegate: MarkdownRenderer.Delegate {
     }
 
     func imageOverride(_ image: Image) -> String? {
-        let prefix = "./\(pageBundle.assets.path)/"
+        let prefix = "./\(pageBundle.config.assets.folder)/"
         guard
             let source = image.source,
             source.hasPrefix(prefix)
@@ -39,8 +39,8 @@ struct HTMLRendererDelegate: MarkdownRenderer.Delegate {
         let src = String(source.dropFirst(prefix.count))
 
         // TODO: better asset management for index page bundle
-        let assetsDir = pageBundle.context.slug.isEmpty ? "" : "/assets/"
-        let url = assetsDir + pageBundle.context.slug + "/" + src
+        let assetsDir = pageBundle.slug.isEmpty ? "" : "/assets/"
+        let url = assetsDir + pageBundle.slug + "/" + src
 
         var title = ""
         if let ttl = image.title {

@@ -40,7 +40,7 @@ public struct ConfigLoader {
         logger.debug("Loading config file: `\(configUrl.absoluteString)`.")
 
         do {
-            let contents = try FileLoader.yaml.loadContents(at: configUrl)
+            let contents = try fileLoader.loadContents(at: configUrl)
             let yaml = try contents.decodeYaml()
             return .init(yaml)
         }

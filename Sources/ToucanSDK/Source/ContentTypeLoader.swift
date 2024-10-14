@@ -11,11 +11,7 @@ import Logging
 /// A struct responsible for loading and managing content types.
 struct ContentTypeLoader {
 
-    /// The URL of the source files.
-    let sourceUrl: URL
-
-    /// The configuration object that holds settings for the site.
-    let config: Config
+    let sourceConfig: SourceConfig
 
     let fileLoader: FileLoader
     let yamlParser: YamlParser
@@ -28,30 +24,39 @@ struct ContentTypeLoader {
     /// - Throws: An error if the content types could not be loaded.
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
-        // TODO: use theme override url to load additional / updated types
-        let typesUrl =
-            sourceUrl
-            .appendingPathComponent(config.themes.folder)
-            .appendingPathComponent(config.themes.use)
-            .appendingPathComponent(config.themes.types.folder)
 
+        let typesUrl = sourceConfig.currentThemeTypesUrl
+        let overrideTypesUrl = sourceConfig.currentThemeOverrideTypesUrl
         let contents = try fileLoader.findContents(at: typesUrl)
+        let overrideContents = try fileLoader.findContents(at: overrideTypesUrl)
 
-        logger.debug("Loading content type: `\(sourceUrl.absoluteString)`.")
-
-        var types = try contents.map {
+        let types = try contents.map {
+            try yamlParser.decode($0, as: ContentType.self)
+        }
+        let overrideTypes = try overrideContents.map {
             try yamlParser.decode($0, as: ContentType.self)
         }
 
-        // Adding the default content type if not present
-        types.appendIfNot(.default) {
-            $0.id == ContentType.default.id
+        var finalTypes: [ContentType] = overrideTypes
+        for type in types {
+            if !finalTypes.contains(where: { $0.id == type.id }) {
+                finalTypes.append(type)
+            }
         }
 
-        // TODO: pagination type is not allowed
-        types = types.filter { $0.id != ContentType.pagination.id }
-        types.append(.pagination)
+        // Adding the default content type if not present
+        if !finalTypes.contains(where: { $0.id == ContentType.default.id }) {
+            finalTypes.append(.default)
+        }
 
-        return types
+        // NOTE: pagination type is not allowed
+        finalTypes = finalTypes.filter { $0.id != ContentType.pagination.id }
+        finalTypes.append(.pagination)
+
+        logger.debug(
+            "Available content types: `\(finalTypes.map(\.id).joined(separator: ", "))`."
+        )
+
+        return finalTypes
     }
 }
