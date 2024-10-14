@@ -53,7 +53,9 @@ extension PageBundle {
         ],
         properties: [:],
         relations: [:],
-        markdown: ""
+        markdown: "",
+        css: [],
+        js: []
     )
 
     static let author1 = PageBundle(
@@ -95,7 +97,9 @@ extension PageBundle {
         frontMatter: [:],
         properties: [:],
         relations: [:],
-        markdown: ""
+        markdown: "",
+        css: [],
+        js: []
     )
 
     static let page1 = PageBundle(
@@ -118,6 +122,8 @@ extension PageBundle {
         frontMatter: [:],
         properties: [:],
         relations: [:],
-        markdown: ""
+        markdown: "",
+        css: [],
+        js: []
     )
 }

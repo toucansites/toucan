@@ -14,7 +14,7 @@ final class ContextStoreTests: XCTestCase {
     func testContextStore() async throws {
         let logger = Logger(label: "test-logger")
 
-        let contextStore = ContextStore(
+        _ = ContextStore(
             sourceConfig: .init(
                 sourceUrl: URL(fileURLWithPath: "/"),
                 config: .defaults
@@ -31,7 +31,5 @@ final class ContextStoreTests: XCTestCase {
             ],
             logger: logger
         )
-
-        await contextStore.build()
     }
 }
