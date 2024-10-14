@@ -7,10 +7,7 @@
 
 import Foundation
 import Logging
-import Dispatch
-import ShellKit
 import Algorithms
-import SwiftSoup
 
 /// Responsible to build renderable files using the site context & templates.
 struct HTMLRenderer {
@@ -30,7 +27,6 @@ struct HTMLRenderer {
     var cache: Cache
     
     let contextStore: ContextStore
-    
 
     init(
         source: Source,
@@ -53,6 +49,8 @@ struct HTMLRenderer {
             pageBundles: source.pageBundles,
             logger: logger
         )
+        
+        contextStore.build()
         
         
     }

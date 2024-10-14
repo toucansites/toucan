@@ -42,6 +42,18 @@ public struct ConfigLoader {
         do {
             let contents = try fileLoader.loadContents(at: configUrl)
             let yaml = try contents.decodeYaml()
+            if let baseUrl, !baseUrl.isEmpty {
+                return .init(
+                    yaml
+                        .recursivelyMerged(
+                            with: [
+                                "site": [
+                                    "baseUrl": baseUrl
+                                ]
+                            ]
+                        )
+                )
+            }
             return .init(yaml)
         }
         catch FileLoader.Error.missing(let url) {

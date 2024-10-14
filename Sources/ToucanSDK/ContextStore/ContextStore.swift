@@ -118,7 +118,13 @@ struct ContextStore {
 
     func build() {
         for pageBundle in pageBundles {
-            _ = fullContext(for: pageBundle)
+            let ctx = standardContext(for: pageBundle)
+            print("------------------------------------")
+            print(pageBundle.slug)
+            print(ctx.keys)
+            if pageBundle.slug == "introducing-toucan-a-new-markdown-based-static-site-generator" {
+                print(ctx["authors"])
+            }
         }
     }
     
@@ -141,15 +147,6 @@ struct ContextStore {
             properties[key] = value
         }
         return properties
-    }
-
-    /// can be resolved without joining any relations.
-    private func standardContext(
-        for pageBundle: PageBundle
-    ) -> [String: Any] {
-        let _baseContext = baseContext(for: pageBundle)
-        let _properties = properties(for: pageBundle)
-        return _baseContext.recursivelyMerged(with: _properties)
     }
     
     private func contentContext(
@@ -267,6 +264,31 @@ struct ContextStore {
         }
         return result
     }
+    
+    // MARK: -
+    
+    /// can be resolved without joining any relations.
+    private func standardContext(
+        for pageBundle: PageBundle
+    ) -> [String: Any] {
+        let _baseContext = baseContext(for: pageBundle)
+        let _contentContext = contentContext(for: pageBundle)
+        let _properties = properties(for: pageBundle)
+        let _relations = relations(for: pageBundle)
+            .mapValues { $0.map { standardContext(for: $0) } }
+
+        // TODO: check merge order
+        let context =
+            _baseContext
+            .recursivelyMerged(with: _contentContext)
+            .recursivelyMerged(with: _properties)
+            .recursivelyMerged(with: _relations)
+            .sanitized()
+
+        return context
+    }
+    
+    // MARK: -
 
     private func localContext(
         for pageBundle: PageBundle
@@ -374,6 +396,8 @@ struct ContextStore {
 
         return context
     }
+    
+    // MARK: -
 
     func getPageBundlesForSiteContext() -> [String: [PageBundle]] {
         var result: [String: [PageBundle]] = [:]
