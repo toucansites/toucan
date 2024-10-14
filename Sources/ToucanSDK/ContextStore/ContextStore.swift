@@ -159,7 +159,7 @@ struct ContextStore {
     ) -> [String: Any] {
         let renderer = MarkdownRenderer(
             delegate: HTMLRendererDelegate(
-                config: sourceConfig.config,
+                site: sourceConfig.site,
                 pageBundle: pageBundle
             )
         )

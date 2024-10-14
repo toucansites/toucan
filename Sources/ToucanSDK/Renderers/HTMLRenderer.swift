@@ -86,7 +86,7 @@ struct HTMLRenderer {
                     "{{total}}": String(total),
                 ])
                 let permalink = slug.permalink(
-                    baseUrl: source.sourceConfig.config.site.baseUrl
+                    baseUrl: source.sourceConfig.site.baseUrl
                 )
                 let isCurrent = pageBundle.slug == slug
                 ctx.append(
@@ -139,16 +139,16 @@ struct HTMLRenderer {
                 .template ?? "pages.default",
             with: HTML(
                 site: .init(
-                    baseUrl: source.sourceConfig.config.site.baseUrl,
-                    title: source.sourceConfig.config.site.title,
-                    description: source.sourceConfig.config.site.description,
-                    language: source.sourceConfig.config.site.language,
+                    baseUrl: source.sourceConfig.site.baseUrl,
+                    title: source.sourceConfig.site.title,
+                    description: source.sourceConfig.site.description,
+                    language: source.sourceConfig.site.language,
                     context: globalContext
                 ),
                 page: contextStore.fullContext(for: pageBundle),
                 userDefined: pageBundle.config.userDefined
                     .recursivelyMerged(
-                        with: source.sourceConfig.config.site.userDefined
+                        with: source.sourceConfig.site.userDefined
                     )
                     .sanitized(),
                 pagination: .init(
@@ -246,7 +246,7 @@ struct HTMLRenderer {
                         url: pageBundle.url,
                         slug: finalSlug,
                         permalink: finalSlug.permalink(
-                            baseUrl: source.sourceConfig.config.site.baseUrl
+                            baseUrl: source.sourceConfig.site.baseUrl
                         ),
                         title: finalTitle,
                         description: finalDescription,

@@ -29,92 +29,6 @@ struct Config {
 
     // MARK: -
 
-    struct Site {
-
-        enum Keys {
-            static let baseUrl = "baseUrl"
-            static let title = "title"
-            static let description = "description"
-            static let language = "language"
-            static let dateFormat = "dateFormat"
-            static let noindex = "noindex"
-            static let hreflang = "hreflang"
-
-            static let allKeys: [String] = [
-                Keys.baseUrl,
-                Keys.title,
-                Keys.description,
-                Keys.language,
-                Keys.dateFormat,
-                Keys.noindex,
-                Keys.hreflang,
-            ]
-        }
-
-        struct Hreflang: Codable {
-            let lang: String
-            let url: String
-        }
-
-        let baseUrl: String
-        let title: String
-        let description: String
-        let language: String?
-        let dateFormat: String
-        let noindex: Bool
-        let hreflang: [Hreflang]
-        let userDefined: [String: Any]
-
-        init(
-            baseUrl: String,
-            title: String,
-            description: String,
-            language: String?,
-            dateFormat: String,
-            noindex: Bool,
-            hreflang: [Hreflang],
-            userDefined: [String: Any]
-        ) {
-            self.baseUrl = baseUrl
-            self.title = title
-            self.description = description
-            self.language = language
-            self.dateFormat = dateFormat
-            self.noindex = noindex
-            self.hreflang = hreflang
-            self.userDefined = userDefined
-        }
-
-        init(_ dict: [String: Any]) {
-            self.baseUrl =
-                dict.string(Keys.baseUrl)
-                ?? Config.defaults.site.baseUrl
-
-            self.title =
-                dict.string(Keys.title)
-                ?? Config.defaults.site.title
-
-            self.description =
-                dict.string(Keys.description)
-                ?? Config.defaults.site.description
-
-            self.language = dict.string(Keys.language)
-
-            self.dateFormat =
-                dict.string(Keys.dateFormat)
-                ?? Config.defaults.site.dateFormat
-
-            self.noindex =
-                dict.bool(Keys.noindex)
-                ?? Config.defaults.site.noindex
-
-            self.hreflang = dict.array(Keys.hreflang, as: Hreflang.self)
-            self.userDefined = dict.filter { !Keys.allKeys.contains($0.key) }
-        }
-    }
-
-    // MARK: -
-
     struct Themes {
 
         enum Keys {
@@ -261,25 +175,21 @@ struct Config {
         static let transformers = "transformers"
     }
 
-    let site: Site
     let themes: Themes
     let contents: Contents
     let transformers: Transformers
 
     init(
-        site: Site,
         themes: Themes,
         contents: Contents,
         transformers: Transformers
     ) {
-        self.site = site
         self.themes = themes
         self.contents = contents
         self.transformers = transformers
     }
 
     init(_ dict: [String: Any]) {
-        self.site = .init(dict.dict(Keys.site))
         self.themes = .init(dict.dict(Keys.themes))
         self.contents = .init(dict.dict(Keys.contents))
         self.transformers = .init(dict.dict(Keys.transformers))
@@ -289,16 +199,6 @@ struct Config {
 extension Config {
 
     static let `defaults` = Config(
-        site: .init(
-            baseUrl: "http://localhost:3000/",
-            title: "",
-            description: "",
-            language: nil,
-            dateFormat: "MMMM dd, yyyy",
-            noindex: false,
-            hreflang: [],
-            userDefined: [:]
-        ),
         themes: .init(
             use: "default",
             folder: "themes",

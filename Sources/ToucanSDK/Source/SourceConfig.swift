@@ -11,6 +11,7 @@ struct SourceConfig {
 
     let sourceUrl: URL
     let config: Config
+    let site: Site
 
     var contentsUrl: URL {
         sourceUrl

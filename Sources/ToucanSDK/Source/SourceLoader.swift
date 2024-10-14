@@ -26,10 +26,12 @@ struct SourceLoader {
             baseUrl: baseUrl,
             logger: logger
         )
+        #warning("load site stuff")
         let config = try configLoader.load()
         let sourceConfig = SourceConfig(
             sourceUrl: sourceUrl,
-            config: config
+            config: config,
+            site: .defaults
         )
 
         logger.trace(

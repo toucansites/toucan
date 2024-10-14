@@ -13,7 +13,7 @@ struct RSSRenderer {
         static let rss = "rss.xml"
     }
 
-    let config: Config
+    let site: Site
     let destinationUrl: URL
     let fileManager: FileManager
     let templateRenderer: MustacheToHTMLRenderer
@@ -38,10 +38,10 @@ struct RSSRenderer {
             ?? rssDateFormatter.string(from: .init())
 
         let context = RSSContext(
-            title: config.site.title,
-            description: config.site.description,
-            baseUrl: config.site.baseUrl,
-            language: config.site.language,
+            title: site.title,
+            description: site.description,
+            baseUrl: site.baseUrl,
+            language: site.language,
             lastBuildDate: rssDateFormatter.string(from: .init()),
             publicationDate: publicationDate,
             items: items

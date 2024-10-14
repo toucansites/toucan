@@ -207,7 +207,7 @@ public struct PageBundleLoader {
                 url: dirUrl,
                 slug: slug,
                 permalink: slug.permalink(
-                    baseUrl: sourceConfig.config.site.baseUrl
+                    baseUrl: sourceConfig.site.baseUrl
                 ),
                 title: config.title.nilToEmpty,
                 description: config.description.nilToEmpty,
@@ -237,7 +237,7 @@ extension PageBundleLoader {
         date: Date
     ) -> PageBundle.DateValue {
         let html = DateFormatters.baseFormatter
-        html.dateFormat = sourceConfig.config.site.dateFormat
+        html.dateFormat = sourceConfig.site.dateFormat
         let rss = DateFormatters.rss
         let sitemap = DateFormatters.sitemap
 
