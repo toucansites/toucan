@@ -48,11 +48,7 @@ struct HTMLRenderer {
             contentTypes: source.contentTypes,
             pageBundles: source.pageBundles,
             logger: logger
-        )
-        
-        contextStore.build()
-        
-        
+        )        
     }
 
     // TODO: optimize & merge with data?

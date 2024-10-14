@@ -90,6 +90,11 @@ extension [PageBundle] {
     }
 }
 
+struct PageBundleContext {
+    let pageBundle: PageBundle
+    let context: [String: Any]
+}
+
 struct ContextStore {
 
     let sourceConfig: SourceConfig
@@ -377,20 +382,13 @@ struct ContextStore {
 
         logger.trace("Generating context", metadata: metadata)
 
-        let _baseContext = baseContext(for: pageBundle)
-        let _contentContext = contentContext(for: pageBundle)
-        let _properties = properties(for: pageBundle)
-        let _relations = relations(for: pageBundle)
-            .mapValues { $0.map { standardContext(for: $0) } }
+        let _standardContext = standardContext(for: pageBundle)
         let _localContext = localContext(for: pageBundle)
             .mapValues { $0.map { standardContext(for: $0) } } // TODO: 2nd iteration
 
         // TODO: check merge order
         let context =
-            _baseContext
-            .recursivelyMerged(with: _contentContext)
-            .recursivelyMerged(with: _properties)
-            .recursivelyMerged(with: _relations)
+            _standardContext
             .recursivelyMerged(with: _localContext)
             .sanitized()
 
