@@ -24,9 +24,9 @@ struct ContentTypeLoader {
     /// - Throws: An error if the content types could not be loaded.
     /// - Returns: An array of `ContentType` objects.
     func load() throws -> [ContentType] {
+
         let typesUrl = sourceConfig.currentThemeTypesUrl
         let overrideTypesUrl = sourceConfig.currentThemeOverrideTypesUrl
-
         let contents = try fileLoader.findContents(at: typesUrl)
         let overrideContents = try fileLoader.findContents(at: overrideTypesUrl)
 

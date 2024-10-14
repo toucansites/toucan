@@ -30,6 +30,7 @@ struct HTMLRenderer {
     var cache: Cache
     
     let contextStore: ContextStore
+    
 
     init(
         source: Source,
@@ -52,6 +53,8 @@ struct HTMLRenderer {
             pageBundles: source.pageBundles,
             logger: logger
         )
+        
+        
     }
 
     // TODO: optimize & merge with data?

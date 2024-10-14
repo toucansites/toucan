@@ -8,15 +8,15 @@
 import Foundation
 
 /// Represents a Table of Contents object
-public struct ToC {
+public struct ToCNode {
     /// The level of the ToC
     public let level: Int
-    /// The of the ToC.
+    /// The name of the ToC item
     public let text: String
     /// The fragment link for the ToC
     public let fragment: String
     /// Child elements for the ToC.
-    public var children: [ToC]
+    public var children: [ToCNode]
 
     /// Initializes a new instance of `ToC`.
     ///
@@ -29,7 +29,7 @@ public struct ToC {
         level: Int,
         text: String,
         fragment: String,
-        children: [ToC] = []
+        children: [ToCNode] = []
     ) {
         self.level = level
         self.text = text
