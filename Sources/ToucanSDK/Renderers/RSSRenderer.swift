@@ -20,6 +20,10 @@ struct RSSRenderer {
     let pageBundles: [PageBundle]
 
     func render() throws {
+        guard !pageBundles.isEmpty else {
+            return
+        }
+
         let items: [RSSContext.Item] =
             pageBundles
             .map { item in
@@ -46,7 +50,6 @@ struct RSSRenderer {
             publicationDate: publicationDate,
             items: items
         )
-
         try templateRenderer.render(
             template: "rss",
             with: context,
