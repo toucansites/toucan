@@ -58,7 +58,6 @@ public struct Toucan {
 
     /// generates the static site
     public func generate() throws {
-
         let loader = SourceLoader(
             baseUrl: baseUrl,
             sourceUrl: inputUrl,

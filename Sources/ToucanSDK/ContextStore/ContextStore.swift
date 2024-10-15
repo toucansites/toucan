@@ -7,9 +7,6 @@
 
 import Foundation
 import Logging
-import ShellKit
-import Markdown
-import SwiftSoup
 
 // TODO: better sort algorithm using data types
 extension [PageBundle] {
@@ -90,21 +87,19 @@ extension [PageBundle] {
     }
 }
 
-struct PageBundleContext {
-    let pageBundle: PageBundle
-    let context: [String: Any]
-}
-
 struct ContextStore {
 
     let sourceConfig: SourceConfig
     let contentTypes: [ContentType]
     let pageBundles: [PageBundle]
+
     let logger: Logger
 
     let fileManager = FileManager.default
     let htmlToCParser: HTMLToCParser
     let markdownToCParser: MarkdownToCParser
+
+    private var contentContextCache: ContentContextCache
 
     init(
         sourceConfig: SourceConfig,
@@ -115,6 +110,7 @@ struct ContextStore {
         self.sourceConfig = sourceConfig
         self.contentTypes = contentTypes
         self.pageBundles = pageBundles
+        self.contentContextCache = .init()
         self.logger = logger
 
         self.htmlToCParser = .init(logger: logger)
@@ -132,10 +128,6 @@ struct ContextStore {
     //            }
     //        }
     //    }
-
-    private func readingTime(_ value: String) -> Int {
-        max(value.split(separator: " ").count / 238, 1)
-    }
 
     private func baseContext(
         for pageBundle: PageBundle
@@ -157,98 +149,54 @@ struct ContextStore {
     private func contentContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
-        let renderer = MarkdownRenderer(
+        var contents = pageBundle.markdown.dropFrontMatter()
+        let markdownRenderer = MarkdownRenderer(
             delegate: HTMLRendererDelegate(
                 config: sourceConfig.config,
                 pageBundle: pageBundle
             )
         )
-
-        // TODO: check if transformer exists
-        let transformersUrl = sourceConfig.sourceUrl
-            .appendingPathComponent("transformers")
-        let availableTransformers =
-            fileManager
-            .listDirectory(at: transformersUrl)
-            .filter { !$0.hasPrefix(".") }
-            .sorted()
-
-        let contentType = pageBundle.contentType
-
-        // TODO: handle multiple pipeline for same content type
-        let pipeline = sourceConfig.config.transformers.pipelines
-            .filter { p in
-                p.types.contains(contentType.id)
-            }
-            .first
-
-        //        if pipeline != nil {
-        //            print("--------------")
-        //        }
-
-        let run = pipeline?.run ?? []
-        let renderFallback = pipeline?.render ?? true
-
-        let markdown = pageBundle.markdown.dropFrontMatter()
-        var toc: [ToCNode]? = nil
-        var time: Int? = nil
-        var contents = ""
-
-        // TODO: better transformers settings merge with page bundle
-        if !run.isEmpty {
-            let shell = Shell(env: ProcessInfo.processInfo.environment)
-
-            // Create a temporary directory URL
-            let tempDirectoryURL = FileManager.default.temporaryDirectory
-            let fileName = UUID().uuidString
-            let fileURL = tempDirectoryURL.appendingPathComponent(fileName)
-            try! markdown.write(to: fileURL, atomically: true, encoding: .utf8)
-
-            for r in run {
-                guard availableTransformers.contains(r) else {
-                    continue
-                }
-                var rawOptions: [String: String] = [:]
-                rawOptions["file"] = fileURL.path
-                // TODO: this is not necessary the right way...
-                rawOptions["id"] = pageBundle.contextAwareIdentifier
-                rawOptions["slug"] = pageBundle.slug
-
-                let bin = transformersUrl.appendingPathComponent(r).path
-                let options =
-                    rawOptions
-                    .map { #"--\#($0) "\#($1)""# }
-                    .joined(separator: " ")
-
-                do {
-                    let cmd = #"\#(bin) \#(options)"#
-                    let log = try shell.run(cmd)
-                    if !log.isEmpty {
-                        logger.debug("\(log)")
-                    }
-                }
-                catch {
-                    logger.error("\(error.localizedDescription)")
-                }
-            }
-            contents = try! String(contentsOf: fileURL, encoding: .utf8)
-            try? fileManager.delete(at: fileURL)
-
-            time = readingTime(contents)
-            toc = htmlToCParser.parse(from: contents)?.buildToCTree()
+        let pipelines = sourceConfig.config.transformers.pipelines.filter {
+            $0.types.contains(pageBundle.contentType.id) && !$0.run.isEmpty
         }
 
-        if renderFallback {
-            contents = renderer.renderHTML(markdown: markdown)
+        for pipeline in pipelines {
+            let executor = PipelineExecutor(
+                pipeline: pipeline,
+                pageBundle: pageBundle,
+                sourceConfig: sourceConfig,
+                markdownRenderer: markdownRenderer,
+                fileManager: fileManager,
+                logger: logger
+            )
+            do {
+                contents = try executor.execute()
+            }
+            catch {
+                logger.error("\(String(describing: error))")
+            }
         }
 
-        var context: [String: Any] = [:]
-        context["readingTime"] = time ?? readingTime(markdown)
-        context["toc"] =
-            toc ?? markdownToCParser.parse(from: markdown)?.buildToCTree()
-        context["contents"] = contents
+        let didRenderHTML = pipelines.map { $0.render }.contains(true)
 
-        return context
+        if didRenderHTML {
+            let tocElements = htmlToCParser.parse(from: contents) ?? []
+            return [
+                "contents": contents,
+                "readingTime": contents.readingTime(),
+                "toc": tocElements.buildToCTree(),
+            ]
+        }
+        else {
+            let tocElements = markdownToCParser.parse(from: contents) ?? []
+            let readingTime = contents.readingTime()
+            contents = markdownRenderer.renderHTML(markdown: contents)
+            return [
+                "contents": contents,
+                "readingTime": readingTime,
+                "toc": tocElements.buildToCTree(),
+            ]
+        }
     }
 
     private func relations(
@@ -282,7 +230,7 @@ struct ContextStore {
         for pageBundle: PageBundle
     ) -> [String: Any] {
         let _baseContext = baseContext(for: pageBundle)
-        let _contentContext = contentContext(for: pageBundle)
+        let _contentContext = ensureContentContext(for: pageBundle)
         let _properties = properties(for: pageBundle)
         let _relations = relations(for: pageBundle)
             .mapValues { $0.map { standardContext(for: $0) } }
@@ -294,6 +242,25 @@ struct ContextStore {
             .recursivelyMerged(with: _relations)
 
         return context
+    }
+
+    /// Ensures that the content context for the given page bundle is retrieved from cache or generated if not present.
+    ///
+    /// - Parameters:
+    ///   - pageBundle: The bundle containing the page data for which the content context is being requested.
+    /// - Returns:
+    ///   A dictionary representing the content context for the specified page bundle.
+    private func ensureContentContext(
+        for pageBundle: PageBundle
+    ) -> [String: Any] {
+        if let context = contentContextCache.getItem(forKey: pageBundle.slug) {
+            return context
+        }
+
+        let newContext = contentContext(for: pageBundle)
+        contentContextCache.addItem(newContext, forKey: pageBundle.slug)
+
+        return newContext
     }
 
     // MARK: -

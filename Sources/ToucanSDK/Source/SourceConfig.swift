@@ -13,56 +13,56 @@ struct SourceConfig {
     let config: Config
 
     var contentsUrl: URL {
-        sourceUrl
-            .appendingPathComponent(config.contents.folder)
+        sourceUrl.appendingPathComponent(config.contents.folder)
     }
 
     var themesUrl: URL {
-        sourceUrl
-            .appendingPathComponent(config.themes.folder)
+        sourceUrl.appendingPathComponent(config.themes.folder)
+    }
+
+    var transformersUrl: URL {
+        sourceUrl.appendingPathComponent(config.transformers.folder)
     }
 
     // MARK: - theme
 
     var currentThemeUrl: URL {
-        themesUrl
-            .appendingPathComponent(config.themes.use)
+        themesUrl.appendingPathComponent(config.themes.use)
     }
 
     var currentThemeAssetsUrl: URL {
-        currentThemeUrl
-            .appendingPathComponent(config.themes.assets.folder)
+        currentThemeUrl.appendingPathComponent(config.themes.assets.folder)
     }
 
     var currentThemeTemplatesUrl: URL {
-        currentThemeUrl
-            .appendingPathComponent(config.themes.templates.folder)
+        currentThemeUrl.appendingPathComponent(config.themes.templates.folder)
     }
 
     var currentThemeTypesUrl: URL {
-        currentThemeUrl
-            .appendingPathComponent(config.themes.types.folder)
+        currentThemeUrl.appendingPathComponent(config.themes.types.folder)
     }
 
     // MARK: - theme overrides
 
     var currentThemeOverrideUrl: URL {
-        themesUrl
-            .appendingPathComponent(config.themes.overrides.folder)
+        themesUrl.appendingPathComponent(config.themes.overrides.folder)
     }
 
     var currentThemeOverrideAssetsUrl: URL {
-        currentThemeOverrideUrl
-            .appendingPathComponent(config.themes.assets.folder)
+        currentThemeOverrideUrl.appendingPathComponent(
+            config.themes.assets.folder
+        )
     }
 
     var currentThemeOverrideTemplatesUrl: URL {
-        currentThemeOverrideUrl
-            .appendingPathComponent(config.themes.templates.folder)
+        currentThemeOverrideUrl.appendingPathComponent(
+            config.themes.templates.folder
+        )
     }
 
     var currentThemeOverrideTypesUrl: URL {
-        currentThemeOverrideUrl
-            .appendingPathComponent(config.themes.types.folder)
+        currentThemeOverrideUrl.appendingPathComponent(
+            config.themes.types.folder
+        )
     }
 }
