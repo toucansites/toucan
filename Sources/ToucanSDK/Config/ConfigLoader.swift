@@ -44,8 +44,7 @@ public struct ConfigLoader {
             let yaml = try contents.decodeYaml()
             return .init(yaml)
         }
-        catch FileLoader.Error.missing(let url) {
-            //            throw Error.missing(url)
+        catch FileLoader.Error.missing(_) {
             logger.debug("Using default config.")
             return .defaults
         }

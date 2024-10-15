@@ -18,7 +18,6 @@ extension PageBundle {
         permalink: "post-1",
         title: "Post 1",
         description: "Post 1 description",
-        imageUrl: nil,
         date: .init(
             html: "",
             rss: "",
@@ -54,8 +53,7 @@ extension PageBundle {
         properties: [:],
         relations: [:],
         markdown: "",
-        css: [],
-        js: []
+        assets: []
     )
 
     static let author1 = PageBundle(
@@ -65,7 +63,6 @@ extension PageBundle {
         permalink: "author-1",
         title: "Author 1",
         description: "Author 1 description",
-        imageUrl: nil,
         date: .init(
             html: "",
             rss: "",
@@ -98,8 +95,7 @@ extension PageBundle {
         properties: [:],
         relations: [:],
         markdown: "",
-        css: [],
-        js: []
+        assets: []
     )
 
     static let page1 = PageBundle(
@@ -109,7 +105,6 @@ extension PageBundle {
         permalink: "page-1",
         title: "Page 1",
         description: "Page 1 description",
-        imageUrl: nil,
         date: .init(
             html: "",
             rss: "",
@@ -123,7 +118,6 @@ extension PageBundle {
         properties: [:],
         relations: [:],
         markdown: "",
-        css: [],
-        js: []
+        assets: []
     )
 }
