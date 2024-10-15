@@ -78,8 +78,9 @@ public struct PageBundleLoader {
             location.path
         )
 
+        let id = location.path
         let metadata: Logger.Metadata = [
-            "path": "\(location.path)"
+            "id": "\(id)"
         ]
 
         logger.debug(
@@ -160,7 +161,11 @@ public struct PageBundleLoader {
                 return nil
             }
 
-            let slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
+            var slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
+            // set empty slug for home page
+            if id == sourceConfig.config.contents.home.id {
+                slug = ""
+            }
 
             let assetsPath = config.assets.folder
             let assetsUrl = dirUrl.appendingPathComponent(assetsPath)

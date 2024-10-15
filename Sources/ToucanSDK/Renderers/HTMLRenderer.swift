@@ -122,7 +122,7 @@ struct HTMLRenderer {
             pageBundle.config.template
             ?? pageBundle.contentType.template
 
-        if pageBundle.slug == source.sourceConfig.config.contents.home.slug {
+        if pageBundle.id == source.sourceConfig.config.contents.home.id {
             fileUrl =
                 destinationUrl
                 .appendingPathComponent(Files.index)
@@ -131,8 +131,7 @@ struct HTMLRenderer {
                 ?? source.sourceConfig.config.contents.home.template
         }
 
-        if pageBundle.slug == source.sourceConfig.config.contents.notFound.slug
-        {
+        if pageBundle.id == source.sourceConfig.config.contents.notFound.id {
             fileUrl =
                 destinationUrl
                 .appendingPathComponent(Files.notFound)

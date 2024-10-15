@@ -83,6 +83,11 @@ public struct Toucan {
             from: source.sourceConfig.currentThemeOverrideAssetsUrl,
             to: outputUrl
         )
+        // copy global site assets
+        try fileManager.copyRecursively(
+            from: source.sourceConfig.assetsUrl,
+            to: outputUrl
+        )
 
         // MARK: copy assets
 
@@ -99,10 +104,8 @@ public struct Toucan {
 
             let outputUrl =
                 outputUrl
-                .appendingPathComponent(
-                    pageBundle.slug.isEmpty ? "" : "assets"
-                )
-                .appendingPathComponent(pageBundle.slug)
+                .appendingPathComponent("assets")
+                .appendingPathComponent(pageBundle.assetsLocation)
 
             try fileManager.copyRecursively(
                 from: assetsUrl,

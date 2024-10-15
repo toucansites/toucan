@@ -88,11 +88,6 @@ struct Source {
 
     // MARK: -
 
-    func contentType(for pageBundle: PageBundle) -> ContentType {
-        contentTypes.first { $0.id == pageBundle.contentType.id }
-            ?? ContentType.default
-    }
-
     func pageBundles(by contentType: String) -> [PageBundle] {
         pageBundles.filter { $0.contentType.id == contentType }
     }
@@ -110,7 +105,7 @@ struct Source {
     func sitemapPageBundles() -> [PageBundle] {
         pageBundles
             .filter { $0.contentType.id != ContentType.pagination.id }
-            .filter { $0.id != "404" }
+            .filter { $0.id != sourceConfig.config.contents.notFound.id }
             .sorted { $0.publication > $1.publication }
     }
 }

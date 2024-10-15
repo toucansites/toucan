@@ -18,6 +18,12 @@ struct SourceConfig {
             .appendingPathComponent(config.contents.folder)
     }
 
+    /// Global site assets.
+    var assetsUrl: URL {
+        contentsUrl
+            .appendingPathComponent(config.contents.assets.folder)
+    }
+
     var themesUrl: URL {
         sourceUrl
             .appendingPathComponent(config.themes.folder)

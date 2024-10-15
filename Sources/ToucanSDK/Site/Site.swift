@@ -65,8 +65,9 @@ struct Site {
 
     init(_ dict: [String: Any]) {
         self.baseUrl =
-            dict.string(Keys.baseUrl)
-            ?? Self.defaults.baseUrl
+            (dict.string(Keys.baseUrl)
+            ?? Self.defaults.baseUrl)
+            .ensureTrailingSlash()
 
         self.title =
             dict.string(Keys.title)

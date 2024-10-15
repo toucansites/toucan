@@ -52,7 +52,6 @@ public struct SiteLoader {
                         )
                 )
             }
-            print(yaml)
             return .init(yaml)
         }
         catch FileLoader.Error.missing(let url) {

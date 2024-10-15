@@ -21,8 +21,6 @@ public struct ConfigLoader {
     let sourceUrl: URL
     /// A file loader used for loading files.
     let fileLoader: FileLoader
-    /// The base URL to use for the configuration.
-    let baseUrl: String?
     /// The logger instance
     let logger: Logger
 
@@ -44,18 +42,6 @@ public struct ConfigLoader {
         do {
             let contents = try fileLoader.loadContents(at: configUrl)
             let yaml = try contents.decodeYaml()
-            if let baseUrl, !baseUrl.isEmpty {
-                return .init(
-                    yaml
-                        .recursivelyMerged(
-                            with: [
-                                "site": [
-                                    "baseUrl": baseUrl
-                                ]
-                            ]
-                        )
-                )
-            }
             return .init(yaml)
         }
         catch FileLoader.Error.missing(let url) {

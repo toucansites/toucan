@@ -38,6 +38,12 @@ struct PageBundle {
     let css: [String]
     let js: [String]
 
+    // MARK: -
+
+    var assetsLocation: String {
+        slug.isEmpty ? "home" : slug
+    }
+
     var dict: [String: Any] {
         config.userDefined
             .recursivelyMerged(

@@ -99,11 +99,11 @@ struct Config {
 
         struct Page {
             enum Keys {
-                static let slug = "slug"
+                static let id = "id"
                 static let template = "template"
             }
 
-            let slug: String
+            let id: String
             let template: String
         }
 
@@ -150,16 +150,16 @@ struct Config {
 
             let home = dict.dict(Keys.home)
             self.home = .init(
-                slug: home.string(Page.Keys.slug)
-                    ?? Config.defaults.contents.home.slug,
+                id: home.string(Page.Keys.id)
+                    ?? Config.defaults.contents.home.id,
                 template: home.string(Page.Keys.template)
                     ?? Config.defaults.contents.home.template
             )
 
             let notFound = dict.dict(Keys.notFound)
             self.notFound = .init(
-                slug: notFound.string(Page.Keys.slug)
-                    ?? Config.defaults.contents.notFound.slug,
+                id: notFound.string(Page.Keys.id)
+                    ?? Config.defaults.contents.notFound.id,
                 template: notFound.string(Page.Keys.template)
                     ?? Config.defaults.contents.notFound.template
             )
@@ -246,11 +246,11 @@ extension Config {
             dateFormat: "yyyy-MM-dd HH:mm:ss",
             assets: .init(folder: "assets"),
             home: .init(
-                slug: "home",
+                id: "home",
                 template: "pages.home"
             ),
             notFound: .init(
-                slug: "404",
+                id: "404",
                 template: "pages.404"
             )
         ),

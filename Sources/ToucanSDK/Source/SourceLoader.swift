@@ -23,7 +23,6 @@ struct SourceLoader {
         let configLoader = ConfigLoader(
             sourceUrl: sourceUrl,
             fileLoader: yamlFileLoader,
-            baseUrl: baseUrl,
             logger: logger
         )
         let config = try configLoader.load()
