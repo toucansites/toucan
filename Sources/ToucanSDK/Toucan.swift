@@ -104,7 +104,7 @@ public struct Toucan {
 
             let outputUrl =
                 outputUrl
-                .appendingPathComponent("assets")
+                .appendingPathComponent(pageBundle.config.assets.folder)
                 .appendingPathComponent(pageBundle.assetsLocation)
 
             try fileManager.copyRecursively(

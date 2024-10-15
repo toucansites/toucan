@@ -265,7 +265,6 @@ struct HTMLRenderer {
                         ),
                         title: finalTitle,
                         description: finalDescription,
-                        imageUrl: pageBundle.imageUrl,
                         date: pageBundle.date,
                         contentType: pageBundle.contentType,
                         publication: pageBundle.publication,
@@ -275,8 +274,7 @@ struct HTMLRenderer {
                         properties: pageBundle.properties,
                         relations: pageBundle.relations,
                         markdown: finalMarkdown,
-                        css: pageBundle.css,
-                        js: pageBundle.js
+                        assets: pageBundle.assets
                     )
 
                     try renderHTML(

@@ -140,7 +140,7 @@ struct ContextStore {
     private func baseContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
-        pageBundle.dict
+        pageBundle.baseContext
     }
 
     private func properties(
