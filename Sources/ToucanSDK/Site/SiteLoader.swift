@@ -47,13 +47,12 @@ public struct SiteLoader {
                     yaml
                         .recursivelyMerged(
                             with: [
-                                "site": [
-                                    "baseUrl": baseUrl
-                                ]
+                                "baseUrl": baseUrl
                             ]
                         )
                 )
             }
+            print(yaml)
             return .init(yaml)
         }
         catch FileLoader.Error.missing(let url) {
