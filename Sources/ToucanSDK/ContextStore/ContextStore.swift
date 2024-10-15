@@ -156,11 +156,12 @@ struct ContextStore {
                 pageBundle: pageBundle
             )
         )
-        let pipelines = sourceConfig.config.transformers.pipelines.filter {
-            $0.types.contains(pageBundle.contentType.id) && !$0.run.isEmpty
-        }
-
-        for pipeline in pipelines {
+        
+        let pipelines = sourceConfig.config.transformers.pipelines
+        let pipeline = pipelines[pageBundle.contentType.id]
+        var didRenderHTML = false
+        
+        if let pipeline, !pipeline.run.isEmpty {
             let executor = PipelineExecutor(
                 pipeline: pipeline,
                 pageBundle: pageBundle,
@@ -171,14 +172,13 @@ struct ContextStore {
             )
             do {
                 contents = try executor.execute()
+                didRenderHTML = true
             }
             catch {
                 logger.error("\(String(describing: error))")
             }
         }
-
-        let didRenderHTML = pipelines.map { $0.render }.contains(true)
-
+        
         if didRenderHTML {
             let tocElements = htmlToCParser.parse(from: contents) ?? []
             return [

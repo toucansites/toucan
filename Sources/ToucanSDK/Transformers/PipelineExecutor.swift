@@ -36,9 +36,7 @@ struct PipelineExecutor {
 
         for run in pipeline.run {
             let runUrl = sourceConfig.transformersUrl
-                .appendingPathComponent(
-                    run
-                )
+                .appendingPathComponent(run.name)
             guard fileManager.fileExists(at: runUrl) else {
                 continue
             }

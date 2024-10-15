@@ -175,23 +175,45 @@ struct Config {
         }
 
         struct Pipeline {
-            let types: [String]
-            let run: [String]
+            
+            enum Keys {
+                static let run = "run"
+                static let render = "render"
+            }
+            
+            struct Run {
+                
+                enum Keys {
+                    static let name = "name"
+                }
+                
+                let name: String
+                
+                init?(_ dict: [String: Any]) {
+                    guard let name = dict.string(Keys.name) else {
+                        return nil
+                    }
+                    self.name = name
+                }
+            }
+            
+            let run: [Run]
             let render: Bool
 
             init(_ dict: [String: Any]) {
-                self.types = dict.array("types", as: String.self)
-                self.run = dict.array("run", as: String.self)
-                self.render = dict.bool("render") ?? false
+                self.run = dict
+                    .array(Keys.run, as: [String: Any].self)
+                    .map { Run($0)! }
+                self.render = dict.bool(Keys.render) ?? true
             }
         }
 
         let folder: String
-        let pipelines: [Pipeline]
+        let pipelines: [String: Pipeline]
 
         init(
             folder: String,
-            pipelines: [Pipeline]
+            pipelines: [String: Pipeline]
         ) {
             self.folder = folder
             self.pipelines = pipelines
@@ -201,9 +223,14 @@ struct Config {
             self.folder =
                 dict.string(Location.Keys.folder)
                 ?? Config.defaults.transformers.folder
-
-            self.pipelines = dict.array(Keys.pipelines, as: [String: Any].self)
-                .map { .init($0) }
+            self.pipelines = dict
+                .dict(Keys.pipelines)
+                .compactMapValues { (item: Any) -> Pipeline? in
+                    guard let dict = item as? [String: Any] else {
+                        return nil
+                    }
+                    return Pipeline(dict)
+                }
         }
     }
 
@@ -263,7 +290,7 @@ extension Config {
         ),
         transformers: .init(
             folder: "transformers",
-            pipelines: []
+            pipelines: [:]
         )
     )
 }

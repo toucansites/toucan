@@ -46,7 +46,7 @@ extension Entrypoint {
                 logger: logger
             )
             generator.generateAndLogErrors(logger)
-
+            
             #if os(macOS)
             let eventStream = try EonilFSEventStream(
                 pathsToWatch: [input],
@@ -66,8 +66,11 @@ extension Entrypoint {
                     }
 
                     logger.info("Generating site...")
-                    generator.generateAndLogErrors(logger)
-                    logger.info("Site re-generated.")
+                    if generator.generateAndLogErrors(logger) {
+                        logger.info("Site re-generated.")
+                    } else {
+                        logger.info("Site generation failed.")
+                    }
                 }
             )
 

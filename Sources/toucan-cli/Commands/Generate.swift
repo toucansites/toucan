@@ -29,14 +29,15 @@ extension Entrypoint {
                 baseUrl: baseUrl,
                 logger: logger
             )
-            generator.generateAndLogErrors(logger)
-
-            let metadata: Logger.Metadata = [
-                "input": "\(input)",
-                "output": "\(output)",
-                "baseUrl": "\(String(describing: baseUrl?.description))",
-            ]
-            logger.info("Site generated successfully.", metadata: metadata)
+            
+            if generator.generateAndLogErrors(logger) {
+                let metadata: Logger.Metadata = [
+                    "input": "\(input)",
+                    "output": "\(output)",
+                    "baseUrl": "\(String(describing: baseUrl?.description))",
+                ]
+                logger.info("Site generated successfully.", metadata: metadata)
+            }
         }
     }
 }
