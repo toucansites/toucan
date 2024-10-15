@@ -21,8 +21,6 @@ public struct ConfigLoader {
     let sourceUrl: URL
     /// A file loader used for loading files.
     let fileLoader: FileLoader
-    /// The base URL to use for the configuration.
-    let baseUrl: String?
     /// The logger instance
     let logger: Logger
 
@@ -35,29 +33,20 @@ public struct ConfigLoader {
     /// - Returns: A `Config` object representing the loaded configuration.
     /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> Config {
-        let configUrl = sourceUrl.appendingPathComponent("config")
+        logger.debug(
+            "Loading config files from: `\(sourceUrl.absoluteString)`."
+        )
 
-        logger.debug("Loading config file: `\(configUrl.absoluteString)`.")
+        let configUrl = sourceUrl.appendingPathComponent("config")
 
         do {
             let contents = try fileLoader.loadContents(at: configUrl)
             let yaml = try contents.decodeYaml()
-            if let baseUrl, !baseUrl.isEmpty {
-                return .init(
-                    yaml
-                        .recursivelyMerged(
-                            with: [
-                                "site": [
-                                    "baseUrl": baseUrl
-                                ]
-                            ]
-                        )
-                )
-            }
             return .init(yaml)
         }
-        catch FileLoader.Error.missing(let url) {
-            throw Error.missing(url)
+        catch FileLoader.Error.missing(_) {
+            logger.debug("Using default config.")
+            return .defaults
         }
     }
 }

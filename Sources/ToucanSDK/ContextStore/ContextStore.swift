@@ -132,7 +132,7 @@ struct ContextStore {
     private func baseContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
-        pageBundle.dict
+        pageBundle.baseContext
     }
 
     private func properties(
@@ -152,7 +152,7 @@ struct ContextStore {
         var contents = pageBundle.markdown.dropFrontMatter()
         let markdownRenderer = MarkdownRenderer(
             delegate: HTMLRendererDelegate(
-                config: sourceConfig.config,
+                site: sourceConfig.site,
                 pageBundle: pageBundle
             )
         )

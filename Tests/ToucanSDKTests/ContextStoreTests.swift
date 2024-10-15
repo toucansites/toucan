@@ -17,7 +17,8 @@ final class ContextStoreTests: XCTestCase {
         _ = ContextStore(
             sourceConfig: .init(
                 sourceUrl: URL(fileURLWithPath: "/"),
-                config: .defaults
+                config: .defaults,
+                site: .defaults
             ),
             contentTypes: [
                 .default,

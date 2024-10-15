@@ -86,7 +86,7 @@ struct HTMLRenderer {
                     "{{total}}": String(total),
                 ])
                 let permalink = slug.permalink(
-                    baseUrl: source.sourceConfig.config.site.baseUrl
+                    baseUrl: source.sourceConfig.site.baseUrl
                 )
                 let isCurrent = pageBundle.slug == slug
                 ctx.append(
@@ -118,10 +118,26 @@ struct HTMLRenderer {
             .appendingPathComponent(pageBundle.slug)
             .appendingPathComponent(Files.index)
 
-        if pageBundle.slug == "404" {
+        var template =
+            pageBundle.config.template
+            ?? pageBundle.contentType.template
+
+        if pageBundle.id == source.sourceConfig.config.contents.home.id {
+            fileUrl =
+                destinationUrl
+                .appendingPathComponent(Files.index)
+            template =
+                pageBundle.config.template
+                ?? source.sourceConfig.config.contents.home.template
+        }
+
+        if pageBundle.id == source.sourceConfig.config.contents.notFound.id {
             fileUrl =
                 destinationUrl
                 .appendingPathComponent(Files.notFound)
+            template =
+                pageBundle.config.template
+                ?? source.sourceConfig.config.contents.notFound.template
         }
 
         if let output = pageBundle.config.output {
@@ -135,20 +151,19 @@ struct HTMLRenderer {
         )
 
         try templateRenderer.render(
-            template: pageBundle.config.template ?? pageBundle.contentType
-                .template ?? "pages.default",
+            template: template ?? "pages.default",
             with: HTML(
                 site: .init(
-                    baseUrl: source.sourceConfig.config.site.baseUrl,
-                    title: source.sourceConfig.config.site.title,
-                    description: source.sourceConfig.config.site.description,
-                    language: source.sourceConfig.config.site.language,
+                    baseUrl: source.sourceConfig.site.baseUrl,
+                    title: source.sourceConfig.site.title,
+                    description: source.sourceConfig.site.description,
+                    language: source.sourceConfig.site.language,
                     context: globalContext
                 ),
                 page: contextStore.fullContext(for: pageBundle),
                 userDefined: pageBundle.config.userDefined
                     .recursivelyMerged(
-                        with: source.sourceConfig.config.site.userDefined
+                        with: source.sourceConfig.site.userDefined
                     )
                     .sanitized(),
                 pagination: .init(
@@ -246,11 +261,10 @@ struct HTMLRenderer {
                         url: pageBundle.url,
                         slug: finalSlug,
                         permalink: finalSlug.permalink(
-                            baseUrl: source.sourceConfig.config.site.baseUrl
+                            baseUrl: source.sourceConfig.site.baseUrl
                         ),
                         title: finalTitle,
                         description: finalDescription,
-                        imageUrl: pageBundle.imageUrl,
                         date: pageBundle.date,
                         contentType: pageBundle.contentType,
                         publication: pageBundle.publication,
@@ -260,8 +274,7 @@ struct HTMLRenderer {
                         properties: pageBundle.properties,
                         relations: pageBundle.relations,
                         markdown: finalMarkdown,
-                        css: pageBundle.css,
-                        js: pageBundle.js
+                        assets: pageBundle.assets
                     )
 
                     try renderHTML(

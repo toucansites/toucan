@@ -11,9 +11,16 @@ struct SourceConfig {
 
     let sourceUrl: URL
     let config: Config
+    let site: Site
 
     var contentsUrl: URL {
         sourceUrl.appendingPathComponent(config.contents.folder)
+    }
+
+    /// Global site assets.
+    var assetsUrl: URL {
+        contentsUrl
+            .appendingPathComponent(config.contents.assets.folder)
     }
 
     var themesUrl: URL {

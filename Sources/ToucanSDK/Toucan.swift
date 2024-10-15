@@ -82,6 +82,11 @@ public struct Toucan {
             from: source.sourceConfig.currentThemeOverrideAssetsUrl,
             to: outputUrl
         )
+        // copy global site assets
+        try fileManager.copyRecursively(
+            from: source.sourceConfig.assetsUrl,
+            to: outputUrl
+        )
 
         // MARK: copy assets
 
@@ -98,10 +103,8 @@ public struct Toucan {
 
             let outputUrl =
                 outputUrl
-                .appendingPathComponent(
-                    pageBundle.slug.isEmpty ? "" : "assets"
-                )
-                .appendingPathComponent(pageBundle.slug)
+                .appendingPathComponent(pageBundle.config.assets.folder)
+                .appendingPathComponent(pageBundle.assetsLocation)
 
             try fileManager.copyRecursively(
                 from: assetsUrl,
@@ -132,7 +135,7 @@ public struct Toucan {
         try sitemapRenderer.render()
 
         let rssRenderer = RSSRenderer(
-            config: source.sourceConfig.config,
+            site: source.sourceConfig.site,
             destinationUrl: outputUrl,
             fileManager: .default,
             templateRenderer: templateRenderer,

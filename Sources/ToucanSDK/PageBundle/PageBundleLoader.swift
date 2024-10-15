@@ -9,25 +9,6 @@ import Foundation
 import FileManagerKit
 import Logging
 
-extension String {
-
-    func finalAssetUrl(
-        in path: String,
-        slug: String
-    ) -> String {
-        let prefix = "./\(path)/"
-        guard hasPrefix(prefix) else {
-            return self
-        }
-        let path = String(dropFirst(prefix.count))
-        // TODO: not sure if this is the correct way of handling index assets
-        if slug.isEmpty {
-            return "/" + path
-        }
-        return "/assets/" + slug + "/" + path
-    }
-}
-
 public struct PageBundleLoader {
 
     /// An enumeration representing possible errors that can occur while loading the content.
@@ -78,8 +59,9 @@ public struct PageBundleLoader {
             location.path
         )
 
+        let id = location.path
         let metadata: Logger.Metadata = [
-            "path": "\(location.path)"
+            "id": "\(id)"
         ]
 
         logger.debug(
@@ -121,12 +103,7 @@ public struct PageBundleLoader {
             {
                 publicationDate = date
             }
-            else {
-                logger.trace(
-                    "Invalid or missing publication date.",
-                    metadata: metadata
-                )
-            }
+
             if publicationDate > now {
                 logger.debug(
                     "Page bundle is not published yet.",
@@ -160,38 +137,16 @@ public struct PageBundleLoader {
                 return nil
             }
 
-            let slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
+            // create safe slug, set empty slug for home page if needed
+            var slug = (config.slug ?? location.slug).safeSlug(prefix: nil)
+            if id == sourceConfig.config.contents.home.id {
+                slug = ""
+            }
 
             let assetsPath = config.assets.folder
             let assetsUrl = dirUrl.appendingPathComponent(assetsPath)
             let assets = fileManager.recursivelyListDirectory(at: assetsUrl)
-
-            /// resolve imageUrl for the page bundle
-            let assetsPrefix = "./\(assetsPath)/"
-            var imageUrl: String? = nil
-            if let image = config.image,
-                image.hasPrefix(assetsPrefix),
-                assets.contains(String(image.dropFirst(assetsPrefix.count)))
-            {
-                imageUrl = image.finalAssetUrl(in: assetsPath, slug: slug)
-            }
-            else {
-                imageUrl = config.image
-            }
-
-            /// inject style.css if exists, resolve js paths for css assets
-            var css = config.css
-            if assets.contains("style.css") {
-                css.append("./\(assetsPath)/style.css")
-            }
-            css = css.map { $0.finalAssetUrl(in: assetsPath, slug: slug) }
-
-            /// inject main.js if exists, resolve js paths for js assets
-            var js = config.js
-            if assets.contains("main.js") {
-                js.append("./\(assetsPath)/main.js")
-            }
-            js = js.map { $0.finalAssetUrl(in: assetsPath, slug: slug) }
+                .filter { !$0.hasPrefix(".") }
 
             let properties = config.userDefined.filter {
                 contentType.propertyKeys.contains($0.key)
@@ -200,18 +155,20 @@ public struct PageBundleLoader {
                 contentType.relationKeys.contains($0.key)
             }
 
-            logger.debug("Page bundle is loaded.", metadata: metadata)
+            logger.debug(
+                "Page bundle is loaded.",
+                metadata: metadata
+            )
 
             return .init(
-                id: location.path,
+                id: id,
                 url: dirUrl,
                 slug: slug,
                 permalink: slug.permalink(
-                    baseUrl: sourceConfig.config.site.baseUrl
+                    baseUrl: sourceConfig.site.baseUrl
                 ),
                 title: config.title.nilToEmpty,
                 description: config.description.nilToEmpty,
-                imageUrl: imageUrl,
                 date: convert(date: publicationDate),
                 contentType: contentType,
                 publication: publicationDate,
@@ -221,8 +178,7 @@ public struct PageBundleLoader {
                 properties: properties,
                 relations: relations,
                 markdown: markdown,
-                css: css,
-                js: js
+                assets: assets
             )
         }
         catch {
@@ -237,7 +193,7 @@ extension PageBundleLoader {
         date: Date
     ) -> PageBundle.DateValue {
         let html = DateFormatters.baseFormatter
-        html.dateFormat = sourceConfig.config.site.dateFormat
+        html.dateFormat = sourceConfig.site.dateFormat
         let rss = DateFormatters.rss
         let sitemap = DateFormatters.sitemap
 

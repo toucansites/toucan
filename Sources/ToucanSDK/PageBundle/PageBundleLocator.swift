@@ -8,10 +8,10 @@
 import Foundation
 
 struct PageBundleLocation {
+    /// The original path of the page bundle directory, also serves as the page bundle identifier.
+    let path: String
     /// The slug, derermined by the path and noindex files.
     let slug: String
-    /// The original path of the page bundle directory.
-    let path: String
 }
 
 struct PageBundleLocator {
@@ -66,8 +66,8 @@ struct PageBundleLocator {
         if containsIndexFile(name: indexName, at: url) {
             result.append(
                 .init(
-                    slug: slug.joined(separator: "/"),
-                    path: p
+                    path: p,
+                    slug: slug.joined(separator: "/")
                 )
             )
         }
@@ -83,6 +83,7 @@ struct PageBundleLocator {
             result += try loadBundleLocations(slug: newSlug, path: newPath)
         }
 
-        return result
+        // filter out site bundle
+        return result.filter { !$0.slug.isEmpty }
     }
 }
