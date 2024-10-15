@@ -88,6 +88,7 @@ struct PageBundle {
                 with: [
                     "slug": slug,
                     "permalink": permalink,
+                    "canonical": config.canonical ?? permalink,
                     "title": title,
                     "description": description,
                     "imageUrl": imageUrl ?? false,
