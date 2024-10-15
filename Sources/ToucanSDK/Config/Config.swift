@@ -230,6 +230,12 @@ struct Config {
             let types: [String]
             let run: [String]
             let render: Bool
+
+            init(_ dict: [String: Any]) {
+                self.types = dict.array("types", as: String.self)
+                self.run = dict.array("run", as: String.self)
+                self.render = dict.bool("render") ?? false
+            }
         }
 
         let folder: String
@@ -248,7 +254,8 @@ struct Config {
                 dict.string(Location.Keys.folder)
                 ?? Config.defaults.transformers.folder
 
-            self.pipelines = dict.array(Keys.pipelines, as: Pipeline.self)
+            self.pipelines = dict.array(Keys.pipelines, as: [String: Any].self)
+                .map { .init($0) }
         }
     }
 
