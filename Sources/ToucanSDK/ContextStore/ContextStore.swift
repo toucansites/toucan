@@ -117,18 +117,6 @@ struct ContextStore {
         self.markdownToCParser = .init()
     }
 
-    //    func build() {
-    //        for pageBundle in pageBundles {
-    //            let ctx = standardContext(for: pageBundle)
-    //            print("------------------------------------")
-    //            print(pageBundle.slug)
-    //            print(ctx.keys)
-    //            if pageBundle.slug == "introducing-toucan-a-new-markdown-based-static-site-generator" {
-    //                print(ctx["authors"])
-    //            }
-    //        }
-    //    }
-
     private func baseContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
@@ -156,11 +144,11 @@ struct ContextStore {
                 pageBundle: pageBundle
             )
         )
-        
+
         let pipelines = sourceConfig.config.transformers.pipelines
         let pipeline = pipelines[pageBundle.contentType.id]
-        var didRenderHTML = false
-        
+        let shouldRenderMarkdown = pipeline?.render ?? true
+
         if let pipeline, !pipeline.run.isEmpty {
             let executor = PipelineExecutor(
                 pipeline: pipeline,
@@ -172,31 +160,25 @@ struct ContextStore {
             )
             do {
                 contents = try executor.execute()
-                didRenderHTML = true
             }
             catch {
                 logger.error("\(String(describing: error))")
             }
         }
-        
-        if didRenderHTML {
-            let tocElements = htmlToCParser.parse(from: contents) ?? []
-            return [
-                "contents": contents,
-                "readingTime": contents.readingTime(),
-                "toc": tocElements.buildToCTree(),
-            ]
+
+        let tocElements: [TocElement]
+        if shouldRenderMarkdown {
+            tocElements = markdownToCParser.parse(from: contents) ?? []
+            contents = markdownRenderer.renderHTML(markdown: contents)
         }
         else {
-            let tocElements = markdownToCParser.parse(from: contents) ?? []
-            let readingTime = contents.readingTime()
-            contents = markdownRenderer.renderHTML(markdown: contents)
-            return [
-                "contents": contents,
-                "readingTime": readingTime,
-                "toc": tocElements.buildToCTree(),
-            ]
+            tocElements = htmlToCParser.parse(from: contents) ?? []
         }
+        return [
+            "contents": contents,
+            "readingTime": contents.readingTime(),
+            "toc": tocElements.buildToCTree(),
+        ]
     }
 
     private func relations(

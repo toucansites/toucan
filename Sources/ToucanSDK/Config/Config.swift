@@ -175,20 +175,20 @@ struct Config {
         }
 
         struct Pipeline {
-            
+
             enum Keys {
                 static let run = "run"
                 static let render = "render"
             }
-            
+
             struct Run {
-                
+
                 enum Keys {
                     static let name = "name"
                 }
-                
+
                 let name: String
-                
+
                 init?(_ dict: [String: Any]) {
                     guard let name = dict.string(Keys.name) else {
                         return nil
@@ -196,12 +196,13 @@ struct Config {
                     self.name = name
                 }
             }
-            
+
             let run: [Run]
             let render: Bool
 
             init(_ dict: [String: Any]) {
-                self.run = dict
+                self.run =
+                    dict
                     .array(Keys.run, as: [String: Any].self)
                     .map { Run($0)! }
                 self.render = dict.bool(Keys.render) ?? true
@@ -223,7 +224,8 @@ struct Config {
             self.folder =
                 dict.string(Location.Keys.folder)
                 ?? Config.defaults.transformers.folder
-            self.pipelines = dict
+            self.pipelines =
+                dict
                 .dict(Keys.pipelines)
                 .compactMapValues { (item: Any) -> Pipeline? in
                     guard let dict = item as? [String: Any] else {

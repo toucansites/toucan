@@ -29,7 +29,7 @@ extension Entrypoint {
                 baseUrl: baseUrl,
                 logger: logger
             )
-            
+
             if generator.generateAndLogErrors(logger) {
                 let metadata: Logger.Metadata = [
                     "input": "\(input)",

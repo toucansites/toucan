@@ -82,7 +82,7 @@ extension Toucan {
         catch {
             logger.error("\(String(describing: error))")
         }
-        
+
         return false
     }
 }
