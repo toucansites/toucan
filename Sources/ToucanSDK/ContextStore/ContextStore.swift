@@ -147,22 +147,27 @@ struct ContextStore {
 
         let pipelines = sourceConfig.config.transformers.pipelines
         let pipeline = pipelines[pageBundle.contentType.id]
-        let shouldRenderMarkdown = pipeline?.render ?? true
+        var shouldRenderMarkdown = true
 
-        if let pipeline, !pipeline.run.isEmpty {
-            let executor = PipelineExecutor(
-                pipeline: pipeline,
-                pageBundle: pageBundle,
-                sourceConfig: sourceConfig,
-                markdownRenderer: markdownRenderer,
-                fileManager: fileManager,
-                logger: logger
-            )
-            do {
-                contents = try executor.execute()
+        if let pipeline {
+            if !pipeline.run.isEmpty {
+                shouldRenderMarkdown = pipeline.isMarkdownResult
+                let executor = PipelineExecutor(
+                    pipeline: pipeline,
+                    pageBundle: pageBundle,
+                    sourceConfig: sourceConfig,
+                    fileManager: fileManager,
+                    logger: logger
+                )
+                do {
+                    contents = try executor.execute()
+                }
+                catch {
+                    logger.error("\(String(describing: error))")
+                }
             }
-            catch {
-                logger.error("\(String(describing: error))")
+            else {
+                logger.warning("Empty transformer pipeline.")
             }
         }
 

@@ -178,7 +178,7 @@ struct Config {
 
             enum Keys {
                 static let run = "run"
-                static let render = "render"
+                static let isMarkdownResult = "isMarkdownResult"
             }
 
             struct Run {
@@ -198,14 +198,14 @@ struct Config {
             }
 
             let run: [Run]
-            let render: Bool
+            let isMarkdownResult: Bool
 
             init(_ dict: [String: Any]) {
                 self.run =
                     dict
                     .array(Keys.run, as: [String: Any].self)
                     .map { Run($0)! }
-                self.render = dict.bool(Keys.render) ?? true
+                self.isMarkdownResult = dict.bool(Keys.isMarkdownResult) ?? true
             }
         }
 
