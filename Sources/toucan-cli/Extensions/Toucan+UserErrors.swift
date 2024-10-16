@@ -10,9 +10,11 @@ import Logging
 
 extension Toucan {
 
-    func generateAndLogErrors(_ logger: Logger) {
+    @discardableResult
+    func generateAndLogErrors(_ logger: Logger) -> Bool {
         do {
             try generate()
+            return true
         }
         catch let error as FileLoader.Error {
             switch error {
@@ -69,8 +71,18 @@ extension Toucan {
                 )
             }
         }
+        catch let error as SiteLoader.Error {
+            switch error {
+            case .missing(let url):
+                logger.error(
+                    "Missing site file at: `\(url.absoluteString)`."
+                )
+            }
+        }
         catch {
             logger.error("\(String(describing: error))")
         }
+
+        return false
     }
 }

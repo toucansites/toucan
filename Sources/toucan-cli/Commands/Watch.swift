@@ -66,8 +66,12 @@ extension Entrypoint {
                     }
 
                     logger.info("Generating site...")
-                    generator.generateAndLogErrors(logger)
-                    logger.info("Site re-generated.")
+                    if generator.generateAndLogErrors(logger) {
+                        logger.info("Site re-generated.")
+                    }
+                    else {
+                        logger.info("Site generation failed.")
+                    }
                 }
             )
 

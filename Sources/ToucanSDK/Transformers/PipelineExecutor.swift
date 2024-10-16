@@ -18,7 +18,6 @@ struct PipelineExecutor {
     let pipeline: Config.Transformers.Pipeline
     let pageBundle: PageBundle
     let sourceConfig: SourceConfig
-    let markdownRenderer: MarkdownRenderer
     let fileManager: FileManager
     let logger: Logger
 
@@ -36,9 +35,7 @@ struct PipelineExecutor {
 
         for run in pipeline.run {
             let runUrl = sourceConfig.transformersUrl
-                .appendingPathComponent(
-                    run
-                )
+                .appendingPathComponent(run.name)
             guard fileManager.fileExists(at: runUrl) else {
                 continue
             }
@@ -66,11 +63,6 @@ struct PipelineExecutor {
 
         contents = try String(contentsOf: fileURL, encoding: .utf8)
         try fileManager.delete(at: fileURL)
-
-        if pipeline.render {
-            contents = markdownRenderer.renderHTML(markdown: contents)
-        }
-
         return contents
     }
 }

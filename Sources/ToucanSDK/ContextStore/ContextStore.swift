@@ -117,18 +117,6 @@ struct ContextStore {
         self.markdownToCParser = .init()
     }
 
-    //    func build() {
-    //        for pageBundle in pageBundles {
-    //            let ctx = standardContext(for: pageBundle)
-    //            print("------------------------------------")
-    //            print(pageBundle.slug)
-    //            print(ctx.keys)
-    //            if pageBundle.slug == "introducing-toucan-a-new-markdown-based-static-site-generator" {
-    //                print(ctx["authors"])
-    //            }
-    //        }
-    //    }
-
     private func baseContext(
         for pageBundle: PageBundle
     ) -> [String: Any] {
@@ -156,47 +144,46 @@ struct ContextStore {
                 pageBundle: pageBundle
             )
         )
-        let pipelines = sourceConfig.config.transformers.pipelines.filter {
-            $0.types.contains(pageBundle.contentType.id) && !$0.run.isEmpty
+
+        let pipelines = sourceConfig.config.transformers.pipelines
+        let pipeline = pipelines[pageBundle.contentType.id]
+        var shouldRenderMarkdown = true
+
+        if let pipeline {
+            if !pipeline.run.isEmpty {
+                shouldRenderMarkdown = pipeline.isMarkdownResult
+                let executor = PipelineExecutor(
+                    pipeline: pipeline,
+                    pageBundle: pageBundle,
+                    sourceConfig: sourceConfig,
+                    fileManager: fileManager,
+                    logger: logger
+                )
+                do {
+                    contents = try executor.execute()
+                }
+                catch {
+                    logger.error("\(String(describing: error))")
+                }
+            }
+            else {
+                logger.warning("Empty transformer pipeline.")
+            }
         }
 
-        for pipeline in pipelines {
-            let executor = PipelineExecutor(
-                pipeline: pipeline,
-                pageBundle: pageBundle,
-                sourceConfig: sourceConfig,
-                markdownRenderer: markdownRenderer,
-                fileManager: fileManager,
-                logger: logger
-            )
-            do {
-                contents = try executor.execute()
-            }
-            catch {
-                logger.error("\(String(describing: error))")
-            }
-        }
-
-        let didRenderHTML = pipelines.map { $0.render }.contains(true)
-
-        if didRenderHTML {
-            let tocElements = htmlToCParser.parse(from: contents) ?? []
-            return [
-                "contents": contents,
-                "readingTime": contents.readingTime(),
-                "toc": tocElements.buildToCTree(),
-            ]
+        let tocElements: [TocElement]
+        if shouldRenderMarkdown {
+            tocElements = markdownToCParser.parse(from: contents) ?? []
+            contents = markdownRenderer.renderHTML(markdown: contents)
         }
         else {
-            let tocElements = markdownToCParser.parse(from: contents) ?? []
-            let readingTime = contents.readingTime()
-            contents = markdownRenderer.renderHTML(markdown: contents)
-            return [
-                "contents": contents,
-                "readingTime": readingTime,
-                "toc": tocElements.buildToCTree(),
-            ]
+            tocElements = htmlToCParser.parse(from: contents) ?? []
         }
+        return [
+            "contents": contents,
+            "readingTime": contents.readingTime(),
+            "toc": tocElements.buildToCTree(),
+        ]
     }
 
     private func relations(
