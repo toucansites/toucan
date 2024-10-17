@@ -77,6 +77,7 @@ struct SourceLoader {
             yamlParser: .init(),
             logger: logger
         )
+
         let contentTypes = try contentTypeLoader.load()
 
         let pageBundleLoader = PageBundleLoader(

@@ -8,85 +8,6 @@
 import Foundation
 import Logging
 
-// TODO: better sort algorithm using data types
-extension [PageBundle] {
-
-    func sorted(
-        key: String?,
-        order: ContentType.Order?
-    ) -> [PageBundle] {
-        guard let key, let order else {
-            return self
-        }
-        switch key {
-        case "publication":
-            return sorted { lhs, rhs in
-                switch order {
-                case .asc:
-                    return lhs.publication < rhs.publication
-                case .desc:
-                    return lhs.publication > rhs.publication
-                }
-            }
-        default:
-            return sorted { lhs, rhs in
-                guard
-                    let l = lhs.frontMatter[key] as? String,
-                    let r = rhs.frontMatter[key] as? String
-                else {
-                    guard
-                        let l = lhs.frontMatter[key] as? Int,
-                        let r = rhs.frontMatter[key] as? Int
-                    else {
-                        return false
-                    }
-                    switch order {
-                    case .asc:
-                        return l < r
-                    case .desc:
-                        return l > r
-                    }
-                }
-                // TODO: proper case insensitive compare
-                switch order {
-                case .asc:
-                    //                    switch l.caseInsensitiveCompare(r) {
-                    //                    case .orderedAscending:
-                    //                        return true
-                    //                    case .orderedDescending:
-                    //                        return false
-                    //                    case .orderedSame:
-                    //                        return false
-                    //                    }
-                    return l.lowercased() < r.lowercased()
-                case .desc:
-                    return l.lowercased() > r.lowercased()
-                }
-            }
-        }
-    }
-
-    func limited(_ value: Int?) -> [PageBundle] {
-        Array(prefix(value ?? Int.max))
-    }
-
-    func filtered(_ filter: ContentType.Filter?) -> [PageBundle] {
-        guard let filter else {
-            return self
-        }
-        return self.filter { pageBundle in
-            guard let field = pageBundle.frontMatter[filter.field] else {
-                return false
-            }
-            switch filter.method {
-            case .equals:
-                // this is horrible... 😱
-                return String(describing: field) == filter.value
-            }
-        }
-    }
-}
-
 struct ContextStore {
 
     let sourceConfig: SourceConfig
@@ -202,7 +123,7 @@ struct ContextStore {
                 .filter { item in
                     refIds.contains(item.contextAwareIdentifier)
                 }
-                .sorted(key: value.sort, order: value.order)
+                .sorted(frontMatterKey: value.sort, order: value.order)
                 .limited(value.limit)
 
             result[key] = refs
@@ -272,7 +193,7 @@ struct ContextStore {
                 let refs =
                     pageBundles
                     .filter { $0.contentType.id == value.references }
-                    .sorted(key: value.sort, order: value.order)
+                    .sorted(frontMatterKey: value.sort, order: value.order)
 
                 guard
                     let idx = refs.firstIndex(where: {
@@ -321,7 +242,7 @@ struct ContextStore {
                         )
                         .contains(id)
                     }
-                    .sorted(key: value.sort, order: value.order)
+                    .sorted(frontMatterKey: value.sort, order: value.order)
                     .limited(value.limit)
             }
         }
@@ -354,18 +275,19 @@ struct ContextStore {
 
     func getPageBundlesForSiteContext() -> [String: [PageBundle]] {
         var result: [String: [PageBundle]] = [:]
+        let dateFormatter = DateFormatters.baseFormatter
+
         for contentType in contentTypes {
             for (key, value) in contentType.context?.site ?? [:] {
                 result[key] =
                     pageBundles
                     .filter { $0.contentType.id == contentType.id }
-                    .sorted(key: value.sort, order: value.order)
-                    .filtered(value.filter)
-                    // TODO: proper pagination
+                    .sorted(frontMatterKey: value.sort, order: value.order)
+                    .filtered(value.filter, dateFormatter: dateFormatter)
                     .limited(value.limit)
             }
         }
+
         return result
     }
-
 }

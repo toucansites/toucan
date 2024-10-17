@@ -33,8 +33,6 @@ struct ContentType: Codable {
             case double
             case bool
             case date
-            case array
-            case object
         }
 
         let type: DataType
