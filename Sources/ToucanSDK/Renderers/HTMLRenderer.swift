@@ -72,7 +72,10 @@ struct HTMLRenderer {
             }
 
             let pageBundles = source.pageBundles(by: contentType.id)
-                .sorted(key: pagination.sort, order: pagination.order)
+                .sorted(
+                    frontMatterKey: pagination.sort,
+                    order: pagination.order
+                )
 
             let limit = pagination.limit
             let pages = pageBundles.chunks(ofCount: limit)
@@ -216,7 +219,10 @@ struct HTMLRenderer {
                 }
 
                 let pageBundles = source.pageBundles(by: contentType.id)
-                    .sorted(key: pagination.sort, order: pagination.order)
+                    .sorted(
+                        frontMatterKey: pagination.sort,
+                        order: pagination.order
+                    )
 
                 let limit = pagination.limit
                 let pages = pageBundles.chunks(ofCount: limit)

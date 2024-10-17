@@ -51,6 +51,11 @@ extension Toucan {
                 let description = String(describing: underlyingError)
                 let message = "YAML corrupted: `\(description)`"
                 logger.error(.init(stringLiteral: message))
+            case .typeMismatch(_, let context):
+                let underlyingError = context.underlyingError ?? error
+                let description = String(describing: underlyingError)
+                let message = "YAML type mismatch: `\(description)`"
+                logger.error(.init(stringLiteral: message))
             default:
                 logger.error("\(String(describing: error))")
             }
