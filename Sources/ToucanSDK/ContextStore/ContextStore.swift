@@ -12,6 +12,7 @@ struct ContextStore {
 
     let sourceConfig: SourceConfig
     let contentTypes: [ContentType]
+    let blockDirectives: [Block]
     let pageBundles: [PageBundle]
 
     let logger: Logger
@@ -26,12 +27,14 @@ struct ContextStore {
         sourceConfig: SourceConfig,
         contentTypes: [ContentType],
         pageBundles: [PageBundle],
+        blockDirectives: [Block],
         logger: Logger
     ) {
         self.sourceConfig = sourceConfig
         self.contentTypes = contentTypes
         self.pageBundles = pageBundles
         self.contentContextCache = .init()
+        self.blockDirectives = blockDirectives
         self.logger = logger
 
         self.htmlToCParser = .init(logger: logger)
@@ -60,10 +63,12 @@ struct ContextStore {
     ) -> [String: Any] {
         var contents = pageBundle.markdown.dropFrontMatter()
         let markdownRenderer = MarkdownRenderer(
+            blockDirectives: blockDirectives,
             delegate: HTMLRendererDelegate(
                 site: sourceConfig.site,
                 pageBundle: pageBundle
-            )
+            ),
+            logger: logger
         )
 
         let pipelines = sourceConfig.config.transformers.pipelines

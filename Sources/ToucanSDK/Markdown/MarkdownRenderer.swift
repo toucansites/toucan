@@ -6,6 +6,7 @@
 //
 
 import Markdown
+import Logging
 
 extension MarkdownRenderer.Delegate {
 
@@ -19,23 +20,29 @@ extension MarkdownRenderer.Delegate {
 }
 
 /// A HTML renderer for Markdown documents.
-public struct MarkdownRenderer {
+struct MarkdownRenderer {
 
     /// A delegate for the HTML renderer.
-    public protocol Delegate {
+    protocol Delegate {
         /// Override an image tag.
         func imageOverride(_ image: Image) -> String?
         /// Provide attributes for a link.
         func linkAttributes(_ link: String?) -> [String: String]
     }
 
+    let blockDirectives: [Block]
     let delegate: Delegate?
+    let logger: Logger
 
     /// Public init.
-    public init(
-        delegate: Delegate? = nil
+    init(
+        blockDirectives: [Block],
+        delegate: Delegate?,
+        logger: Logger
     ) {
+        self.blockDirectives = blockDirectives
         self.delegate = delegate
+        self.logger = logger
     }
 
     // MARK: - render api
@@ -48,7 +55,11 @@ public struct MarkdownRenderer {
             parsing: markdown,
             options: .parseBlockDirectives
         )
-        var htmlVisitor = MarkupToHTMLVisitor(delegate: delegate)
+        var htmlVisitor = MarkupToHTMLVisitor(
+            blockDirectives: blockDirectives,
+            delegate: delegate,
+            logger: logger
+        )
         return htmlVisitor.visitDocument(document)
     }
 }

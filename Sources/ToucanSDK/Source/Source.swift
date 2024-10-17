@@ -12,6 +12,7 @@ struct Source {
 
     let sourceConfig: SourceConfig
     let contentTypes: [ContentType]
+    let blockDirectives: [Block]
     let pageBundles: [PageBundle]
     let logger: Logger
 

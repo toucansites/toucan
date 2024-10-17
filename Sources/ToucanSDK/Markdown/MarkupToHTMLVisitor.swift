@@ -6,6 +6,7 @@
 //
 
 import Markdown
+import Logging
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
@@ -42,12 +43,18 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
 
     typealias Result = String
 
+    let blockDirectives: [Block]
     let delegate: MarkdownRenderer.Delegate?
+    let logger: Logger
 
     init(
-        delegate: MarkdownRenderer.Delegate? = nil
+        blockDirectives: [Block],
+        delegate: MarkdownRenderer.Delegate?,
+        logger: Logger
     ) {
+        self.blockDirectives = blockDirectives
         self.delegate = delegate
+        self.logger = logger
     }
 
     // MARK: - private functions
@@ -101,7 +108,48 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     //        }
 
     mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> Result {
-        tag(name: "blockquote", content: .children(blockQuote.children))
+
+        var paragraphCount = 0
+        var otherCount = 0
+
+        var type: String?
+        for i in blockQuote.children {
+            if let p = i as? Paragraph {
+                paragraphCount += 1
+                let text = p.plainText.lowercased()
+                if text.hasPrefix("note:") {
+                    type = "note"
+                }
+                if text.hasPrefix("warn:") || text.hasPrefix("warning:") {
+                    type = "warning"
+                }
+                if text.hasPrefix("tip:") {
+                    type = "tip"
+                }
+                if text.hasPrefix("important:") {
+                    type = "important"
+                }
+                if text.hasPrefix("error:") || text.hasPrefix("caution:") {
+                    type = "error"
+                }
+            }
+            else {
+                otherCount += 1
+            }
+        }
+        guard let type, otherCount == 0, paragraphCount == 1 else {
+            return tag(
+                name: "blockquote",
+                content: .children(blockQuote.children)
+            )
+        }
+        return tag(
+            name: "blockquote",
+            attributes: [
+                .init(key: "class", value: type)
+            ],
+            content: .children(blockQuote.children)
+        )
     }
 
     mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> Result {
@@ -229,92 +277,80 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
             )
         }
         guard parseErrors.isEmpty else {
+            let errors =
+                parseErrors
+                .map { String(describing: $0) }
+                .joined(separator: ", ")
+            logger.warning("\(errors)")
             return ""
         }
 
-        switch blockName {
-        case "faq":
-            return tag(
-                name: "details",
-                content: .children(blockDirective.children)
+        let block = blockDirectives.first {
+            $0.name.lowercased() == blockName.lowercased()
+        }
+        guard let block else {
+            logger.warning(
+                "Unrecognized block directive: `\(blockName)`"
             )
-        case "question":
-            return tag(
-                name: "summary",
-                content: .children(blockDirective.children)
-            )
-        case "answer":
-            return tag(
-                name: "div",
-                content: .children(blockDirective.children)
-            )
-        //        case "svg":
-        //            let src = arguments.getFirstValueBy(key: "src") ?? ""
-        ////            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
-        //            return tag(
-        //                name: "svg",
-        //                attributes: [
-        ////                    .init(key: "href", value: url),
-        ////                    .init(key: "class", value: cssClass),
-        //                ],
-        //                content: .children(blockDirective.children)
-        //            )
-        case "link":
-            let url = arguments.getFirstValueBy(key: "url") ?? ""
-            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
-            return tag(
-                name: "a",
-                attributes: [
-                    .init(key: "href", value: url),
-                    .init(key: "class", value: cssClass),
-                ],
-                content: .children(blockDirective.children)
-            )
-        case "button":
-            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
-            return tag(
-                name: "section",
-                attributes: [
-                    .init(key: "class", value: cssClass)
-                ],
-                content: .children(blockDirective.children)
-            )
-        case "section":
-            let cssClass = arguments.getFirstValueBy(key: "class") ?? ""
-            return tag(
-                name: "section",
-                attributes: [
-                    .init(key: "class", value: cssClass)
-                ],
-                content: .children(blockDirective.children)
-            )
-        case "grid":
-            let desktop = arguments.getFirstValueBy(key: "desktop") ?? "2"
-            let tablet = arguments.getFirstValueBy(key: "tablet") ?? "2"
-            let mobile = arguments.getFirstValueBy(key: "mobile") ?? "1"
-            let extraClass = arguments.getFirstValueBy(key: "class") ?? ""
-
-            let cssClass =
-                "grid grid-\(desktop)\(tablet)\(mobile) \(extraClass)"
-            return tag(
-                name: "div",
-                attributes: [
-                    .init(key: "class", value: cssClass)
-                ],
-                content: .children(blockDirective.children)
-            )
-        case "column":
-            let extraClass = arguments.getFirstValueBy(key: "class") ?? ""
-            return tag(
-                name: "div",
-                attributes: [
-                    .init(key: "class", value: "column \(extraClass)")
-                ],
-                content: .children(blockDirective.children)
-            )
-        default:
             return ""
         }
+
+        var parameters: [String: String] = [:]
+        for p in block.params ?? [] {
+            if p.required ?? false {
+                if let v = arguments.getFirstValueBy(key: p.label) {
+                    parameters[p.label] = v
+                }
+                else {
+                    logger.warning(
+                        "Parameter `\(p.label)` for `\(block.name)` is required."
+                    )
+                }
+            }
+            else {
+                let v =
+                    arguments.getFirstValueBy(key: p.label) ?? p.default ?? ""
+                parameters[p.label] = v
+            }
+        }
+
+        let templateParams = parameters.mapKeys { "{{\($0)}}" }
+
+        if let parent = block.requiresParentDirective, !parent.isEmpty {
+
+            guard
+                let p = blockDirective.parent as? BlockDirective,
+                p.name.lowercased() == parent.lowercased()
+            else {
+                logger.warning(
+                    "Block directive `\(block.name)` requires parent block `\(parent)`."
+                )
+                return ""
+            }
+        }
+
+        if let output = block.output {
+            return output.replacingOccurrences(templateParams)
+        }
+
+        if let name = block.tag {
+
+            let attributes: [Attribute] =
+                block.attributes?
+                .map { a in
+                    .init(
+                        key: a.name,
+                        value: a.value.replacingOccurrences(templateParams)
+                    )
+                } ?? []
+
+            return tag(
+                name: name,
+                attributes: attributes,
+                content: .children(blockDirective.children)
+            )
+        }
+        return ""
     }
 
     mutating func visitInlineCode(_ inlineCode: InlineCode) -> Result {
@@ -452,26 +488,6 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
 //                    of: "\">",
 //                    with: "\" target=\"_blank\">"
 //                )
-//            }
-//            return html
-//        }
-//
-//        let bqModifier = Modifier(target: .blockquotes) { html, markdown in
-//            if markdown.hasPrefix("> NOTE: ") {
-//                return html.replacingOccurrences([
-//                    "NOTE: ": "",
-//                    "<p>": "<p class=\"note\">",
-//                    "<blockquote>": "",
-//                    "</blockquote>": "",
-//                ])
-//            }
-//            if markdown.hasPrefix("> WARN: ") {
-//                return html.replacingOccurrences([
-//                    "WARN: ": "",
-//                    "<p>": "<p class=\"warning\">",
-//                    "<blockquote>": "",
-//                    "</blockquote>": "",
-//                ])
 //            }
 //            return html
 //        }

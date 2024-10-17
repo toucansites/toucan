@@ -80,6 +80,15 @@ struct SourceLoader {
 
         let contentTypes = try contentTypeLoader.load()
 
+        let blockDirectiveLoader = BlockDirectiveLoader(
+            sourceConfig: sourceConfig,
+            fileLoader: .yaml,
+            yamlParser: .init(),
+            logger: logger
+        )
+
+        let blockDirectives = try blockDirectiveLoader.load()
+
         let pageBundleLoader = PageBundleLoader(
             sourceConfig: sourceConfig,
             contentTypes: contentTypes,
@@ -92,6 +101,7 @@ struct SourceLoader {
         return .init(
             sourceConfig: sourceConfig,
             contentTypes: contentTypes,
+            blockDirectives: blockDirectives,
             pageBundles: pageBundles,
             logger: logger
         )
