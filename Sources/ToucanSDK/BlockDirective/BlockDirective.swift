@@ -14,7 +14,7 @@ struct Block: Codable {
         let required: Bool?
         let `default`: String?
     }
-    
+
     struct Attribute: Codable {
         let name: String
         let value: String
@@ -23,8 +23,8 @@ struct Block: Codable {
     let name: String
     let params: [Param]?
     let requiresParentDirective: String?
+    let removesChildParagraph: Bool?
     let tag: String?
     let attributes: [Attribute]?
     let output: String?
 }
-

@@ -103,12 +103,7 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
 
     // MARK: - elements
 
-    //        mutating func visit(_ markup: Markup) -> Result {
-    //            fatalError()
-    //        }
-
     mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> Result {
-
         var paragraphCount = 0
         var otherCount = 0
 
@@ -181,16 +176,6 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         )
     }
 
-    //    mutating func visitCustomBlock(
-    //        _ customBlock: CustomBlock
-    //    ) -> Result {
-    //        fatalError()
-    //    }
-
-    //    mutating func visitDocument(_ document: Document) -> Result {
-    //        fatalError()
-    //    }
-
     mutating func visitHeading(
         _ heading: Heading
     ) -> Result {
@@ -242,10 +227,12 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     mutating func visitParagraph(
         _ paragraph: Paragraph
     ) -> Result {
-        // NOTE: this is a bad workaround, but it works for now...
-        /// if the parent is a link block directive
+        let filterBlocks =
+            blockDirectives
+            .filter { $0.removesChildParagraph ?? false }
+            .map(\.name)
         if let block = paragraph.parent as? BlockDirective,
-            ["link", "question"].contains(block.name.lowercased())
+            filterBlocks.contains(block.name.lowercased())
         {
             var result = ""
             for child in paragraph.children {
@@ -357,10 +344,6 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         tag(name: "code", content: .value(inlineCode.code))
     }
 
-    //    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
-    //        fatalError()
-    //    }
-
     mutating func visitEmphasis(_ emphasis: Emphasis) -> Result {
         tag(name: "em", content: .children(emphasis.children))
     }
@@ -436,6 +419,21 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     }
 
     // NOTE: not supported yet...
+    //
+    //    mutating func visit(_ markup: Markup) -> Result {
+    //          fatalError()
+    //    }
+    //    mutating func visitCustomBlock(
+    //        _ customBlock: CustomBlock
+    //    ) -> Result {
+    //        fatalError()
+    //    }
+    //    mutating func visitDocument(_ document: Document) -> Result {
+    //        fatalError()
+    //    }
+    //    mutating func visitCustomInline(_ customInline: CustomInline) -> Result {
+    //        fatalError()
+    //    }
     //    mutating func visitTable(_ table: Table) -> Result {
     //        fatalError()
     //    }
@@ -481,13 +479,3 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
     //    }
 
 }
-
-//        let linkModifier = Modifier(target: .links) { html, markdown in
-//            if !html.contains(baseUrl) {
-//                return html.replacingOccurrences(
-//                    of: "\">",
-//                    with: "\" target=\"_blank\">"
-//                )
-//            }
-//            return html
-//        }

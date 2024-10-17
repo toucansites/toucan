@@ -18,17 +18,17 @@ struct BlockDirectiveLoader {
     /// The logger instance
     let logger: Logger
 
-
     func load() throws -> [Block] {
 
         let blocksUrl = sourceConfig.currentThemeUrl
             .appendingPathComponent("blocks")
         let overrideBlocksUrl = sourceConfig.currentThemeOverrideUrl
             .appendingPathComponent("blocks")
-        
-        
+
         let contents = try fileLoader.findContents(at: blocksUrl)
-        let overrideContents = try fileLoader.findContents(at: overrideBlocksUrl)
+        let overrideContents = try fileLoader.findContents(
+            at: overrideBlocksUrl
+        )
 
         let blocks = try contents.map {
             try yamlParser.decode($0, as: Block.self)
