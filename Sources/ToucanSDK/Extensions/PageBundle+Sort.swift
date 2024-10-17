@@ -8,7 +8,7 @@
 import Foundation
 
 extension PageBundle {
-    
+
     /// Compares two `PageBundle` instances for sorting based on a specified front matter key and order.
     ///
     /// - Parameters:
@@ -27,7 +27,7 @@ extension PageBundle {
         else {
             return false
         }
-        
+
         switch order {
         case .asc:
             return compareValuesAscending(lhsField, rhsField)

@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    
+
     /// Converts the string into a value of the specified data type.
     ///
     /// - Parameters:
@@ -35,7 +35,7 @@ extension String {
 }
 
 extension PageBundle {
-    
+
     /// Checks if a filter is satisfied based on the current page's front matter.
     ///
     /// - Parameters:
@@ -56,7 +56,7 @@ extension PageBundle {
         else {
             return false
         }
-        
+
         switch filter.method {
         case .equals:
             return areValuesEqual(field, filterValue)
@@ -92,7 +92,7 @@ func areValuesEqual(_ lhs: Any, _ rhs: Any) -> Bool {
 }
 
 extension Dictionary where Key == String, Value == Any {
-    
+
     /// Compares two dictionaries for equality by checking their keys and values.
     ///
     /// - Parameters:

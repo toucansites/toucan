@@ -9,7 +9,7 @@ import Foundation
 import Yams
 
 extension [PageBundle] {
-    
+
     /// Sorts an array of PageBundle objects based on the given key and order.
     ///
     /// - Parameters:
@@ -35,7 +35,7 @@ extension [PageBundle] {
             )
         }
     }
-    
+
     /// Limits the number of elements in the collection to the specified value if provided.
     /// If no value is provided, returns the entire collection.
     ///
@@ -44,30 +44,30 @@ extension [PageBundle] {
     ///
     /// - Returns: An array containing up to the specified number of elements, or the entire collection if no value is provided.
     func limited(_ value: Int?) -> [PageBundle] {
-            guard let value else {
-                return self
-            }
-            return Array(prefix(value))
+        guard let value else {
+            return self
         }
-    
+        return Array(prefix(value))
+    }
+
     /// Filters an array of `PageBundle` objects based on the provided filter and date formatter.
-    /// 
-    /// - Parameters: 
+    ///
+    /// - Parameters:
     ///   - filter: An optional `ContentType.Filter` to apply. If `nil`, the original array is returned.
     ///   - dateFormatter: A `DateFormatter` used for date-based filtering.
-    /// 
+    ///
     /// - Returns: A filtered array of `PageBundle` objects. If no filter is provided, the original array is returned.
     func filtered(
-            _ filter: ContentType.Filter?,
-            dateFormatter: DateFormatter
-        ) -> [PageBundle] {
-            guard let filter else {
-                return self
-            }
-            
-            let result = self.filter {
-                $0.checkFilter(filter, dateFormatter: dateFormatter)
-            }
-            return result
+        _ filter: ContentType.Filter?,
+        dateFormatter: DateFormatter
+    ) -> [PageBundle] {
+        guard let filter else {
+            return self
         }
+
+        let result = self.filter {
+            $0.checkFilter(filter, dateFormatter: dateFormatter)
+        }
+        return result
+    }
 }
