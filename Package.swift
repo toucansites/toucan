@@ -28,14 +28,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
-        .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
         .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
+        .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
         .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
         .package(url: "https://github.com/binarybirds/shell-kit", from: "1.0.0"),
-        .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0-rc.1"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.2.0"),
+        .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
-        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.1.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
     ] + deps,
     targets: [
