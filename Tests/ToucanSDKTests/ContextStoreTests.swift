@@ -30,6 +30,7 @@ final class ContextStoreTests: XCTestCase {
                 .author1,
                 .page1,
             ],
+            blockDirectives: [],
             logger: logger
         )
     }

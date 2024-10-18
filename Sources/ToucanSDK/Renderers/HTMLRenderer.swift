@@ -45,6 +45,7 @@ struct HTMLRenderer {
             sourceConfig: source.sourceConfig,
             contentTypes: source.contentTypes,
             pageBundles: source.pageBundles,
+            blockDirectives: source.blockDirectives,
             logger: logger
         )
     }

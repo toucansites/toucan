@@ -8,6 +8,17 @@
 import XCTest
 @testable import ToucanSDK
 
+extension MarkdownRenderer {
+
+    static var test = MarkdownRenderer(
+        blockDirectives: [],
+        delegate: nil,
+        logger: .init(
+            label: "test"
+        )
+    )
+}
+
 final class MarkdownToHTMLRendererTestSuite: XCTestCase {
 
     // MARK: - standard elements
@@ -18,7 +29,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -35,7 +46,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             And this is the second line.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -57,7 +68,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -73,7 +84,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             Lorem **ipsum** dolor __sit__ amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -89,7 +100,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             > Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -107,7 +118,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             >> dolor __sit__ amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -123,7 +134,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             Lorem *ipsum* dolor _sit_ amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -141,7 +152,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             # Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -157,7 +168,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ## Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -173,7 +184,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ### Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -189,7 +200,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             #### Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -205,7 +216,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ##### Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -221,7 +232,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ###### Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -238,7 +249,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ####### Lorem ipsum dolor sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -258,7 +269,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             - baz
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -276,7 +287,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             3. baz
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -294,7 +305,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             - baz
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -312,7 +323,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             Lorem `ipsum dolor` sit amet.
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -334,7 +345,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ```
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -355,7 +366,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             ![Lorem](lorem.jpg)
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -371,7 +382,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             [Swift](https://swift.org/)
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -387,7 +398,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <b>https://swift.org</b>
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
@@ -404,7 +415,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             b
             """#
 
-        let renderer = MarkdownRenderer()
+        let renderer = MarkdownRenderer.test
         let output = renderer.renderHTML(markdown: input)
 
         let expectation = #"""
