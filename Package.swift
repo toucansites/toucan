@@ -37,8 +37,6 @@ let package = Package(
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
-        .package(url: "https://github.com/weichsel/ZIPFoundation.git", from: "0.9.0"),
-        .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.23.1"),
     ] + deps,
     targets: [
         .executableTarget(
@@ -47,8 +45,6 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
-                .product(name: "ZIPFoundation", package: "ZIPFoundation"),
-                .product(name: "AsyncHTTPClient", package: "async-http-client"),
                 .target(name: "ToucanSDK"),
             ] + tdeps
         ),

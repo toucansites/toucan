@@ -3,9 +3,7 @@ import ArgumentParser
 import ToucanSDK
 import Logging
 import FileManagerKit
-import ZIPFoundation
-import AsyncHTTPClient
-import NIOFoundationCompat
+import ShellKit
 
 extension Entrypoint {
 
@@ -40,10 +38,13 @@ extension Entrypoint {
                     fileManager: fileManager
                 )
 
+                logger.info("Preparing source files.")
                 try await source.resolve()
+
+                logger.info("Preparing theme files.")
                 try await theme.resolve()
 
-                logger.info("'\(siteDirectory)' was created successfully.")
+                logger.info("'\(siteDirectory)' was prepared successfully.")
             }
             catch {
                 logger.error("\(String(describing: error))")
@@ -101,27 +102,15 @@ extension Entrypoint.Init {
         }
 
         func resolve() async throws {
+            let shell = Shell()
+
             /// Downloading the ZIP file into a temporary directory.
-            let client = HTTPClient(eventLoopGroupProvider: .singleton)
-            defer { _ = client.shutdown() }
-
-            let request = try HTTPClient.Request(
-                url: sourceUrl.absoluteString,
-                method: .GET
+            try shell.run(
+                #"curl -L -o \#(zipUrl.path) \#(sourceUrl.absoluteString)"#
             )
-            let response = try await client.execute(request: request).get()
-
-            guard
-                var body = response.body,
-                let data = body.readData(length: body.readableBytes)
-            else {
-                throw URLError(.badServerResponse)
-            }
-
-            try data.write(to: zipUrl)
 
             /// Unzipping the file to a temporary directory.
-            try fileManager.unzipItem(at: zipUrl, to: url)
+            try shell.run(#"unzip \#(zipUrl.path) -d \#(url.path)"#)
 
             /// Emptying the target directory. Git submodules can cause issues.
             try? fileManager.removeItem(at: targetDirUrl)
