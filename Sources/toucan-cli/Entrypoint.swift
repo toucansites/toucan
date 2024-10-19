@@ -19,6 +19,7 @@ struct Entrypoint: AsyncParsableCommand {
             Generate.self,
             Serve.self,
             Watch.self,
+            Init.self,
         ]
     )
 }
