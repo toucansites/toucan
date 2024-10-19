@@ -62,7 +62,7 @@ extension Entrypoint.Init {
     }
 
     var siteDirUrl: URL {
-        currentDirUrl.appending(path: siteDirectory)
+        currentDirUrl.appendingPathComponent(siteDirectory)
     }
 
     var exampleSourceUrl: URL {
@@ -80,7 +80,7 @@ extension Entrypoint.Init {
     }
 
     var themesDefaultDirUrl: URL {
-        siteDirUrl.appending(path: "src/themes/default")
+        siteDirUrl.appendingPathComponent("src/themes/default")
     }
 }
 
@@ -94,7 +94,7 @@ extension Entrypoint.Init {
         let fileManager: FileManager
 
         private var url: URL {
-            fileManager.temporaryDirectory.appending(path: id)
+            fileManager.temporaryDirectory.appendingPathComponent(id)
         }
 
         private var zipUrl: URL {
@@ -120,7 +120,7 @@ extension Entrypoint.Init {
             guard let rootDirName = items.first else {
                 throw URLError(.cannotParseResponse)
             }
-            let rootDirUrl = url.appending(path: rootDirName)
+            let rootDirUrl = url.appendingPathComponent(rootDirName)
 
             /// Moving files to the target directory.
             try fileManager.moveItem(at: rootDirUrl, to: targetDirUrl)
