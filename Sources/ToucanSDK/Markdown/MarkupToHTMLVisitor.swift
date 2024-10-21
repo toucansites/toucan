@@ -317,7 +317,15 @@ struct MarkupToHTMLVisitor: MarkupVisitor {
         }
 
         if let output = block.output {
-            return output.replacingOccurrences(templateParams)
+            var contents = ""
+            for child in blockDirective.children {
+                contents += visit(child)
+            }
+
+            var params = templateParams
+            params["{{contents}}"] = contents
+
+            return output.replacingOccurrences(params)
         }
 
         if let name = block.tag {
