@@ -74,6 +74,7 @@ struct PageBundle {
         if assets.contains("style.css") {
             css.append(resolveAsset(path: assetsPrefix + "style.css"))
         }
+        css += contentType.css ?? []
         css = Array(Set(css))
 
         // resolve js context
@@ -81,6 +82,7 @@ struct PageBundle {
         if assets.contains("main.js") {
             js.append(resolveAsset(path: assetsPrefix + "main.js"))
         }
+        js += contentType.js ?? []
         js = Array(Set(js))
 
         return config.userDefined

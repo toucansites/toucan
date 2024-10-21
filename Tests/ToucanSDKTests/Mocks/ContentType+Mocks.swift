@@ -14,6 +14,8 @@ extension ContentType {
         rss: true,
         location: nil,
         template: "post.default",
+        css: nil,
+        js: nil,
         pagination: .init(
             bundle: "post.pagination",
             limit: 10,
@@ -60,6 +62,8 @@ extension ContentType {
         rss: false,
         location: nil,
         template: "author.default",
+        css: nil,
+        js: nil,
         pagination: nil,
         properties: [:],
         relations: [:],

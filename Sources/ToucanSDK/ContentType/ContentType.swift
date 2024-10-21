@@ -83,6 +83,8 @@ struct ContentType: Codable {
     let rss: Bool?
     let location: String?
     let template: String?
+    let css: [String]?
+    let js: [String]?
     let pagination: Pagination?
     let properties: [String: Property]?
     let relations: [String: Relation]?
@@ -107,6 +109,8 @@ extension ContentType {
         rss: nil,
         location: nil,
         template: "pages.default",
+        css: nil,
+        js: nil,
         pagination: nil,
         properties: [:],
         relations: nil,
@@ -128,6 +132,8 @@ extension ContentType {
         rss: nil,
         location: nil,
         template: "pages.default",
+        css: nil,
+        js: nil,
         pagination: nil,
         properties: nil,
         relations: nil,
