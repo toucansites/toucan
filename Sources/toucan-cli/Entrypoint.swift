@@ -14,7 +14,7 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
-        version: "1.0.0-alpha.3",
+        version: "1.0.0-beta.1",
         subcommands: [
             Generate.self,
             Serve.self,
