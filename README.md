@@ -13,7 +13,9 @@ Clone or download the repository & run:
 # clone the repository & install toucan
 git clone https://github.com/toucansites/toucan.git
 cd toucan
-sudo make install
+make install
+# alternatively, if you encounter permission errors:
+# sudo !!
 # verify installation
 which toucan
 ```
