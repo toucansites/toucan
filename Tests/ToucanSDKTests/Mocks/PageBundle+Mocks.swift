@@ -14,6 +14,7 @@ extension PageBundle {
     static let post1 = PageBundle(
         id: "post-1",
         url: URL(fileURLWithPath: "/"),
+        baseUrl: "http://localhost:3000/",
         slug: "post-1",
         permalink: "post-1",
         title: "Post 1",
@@ -59,6 +60,7 @@ extension PageBundle {
     static let author1 = PageBundle(
         id: "author-1",
         url: URL(fileURLWithPath: "/"),
+        baseUrl: "http://localhost:3000/",
         slug: "author-1",
         permalink: "author-1",
         title: "Author 1",
@@ -101,6 +103,7 @@ extension PageBundle {
     static let page1 = PageBundle(
         id: "page-1",
         url: URL(fileURLWithPath: "/"),
+        baseUrl: "http://localhost:3000/",
         slug: "page-1",
         permalink: "page-1",
         title: "Page 1",
