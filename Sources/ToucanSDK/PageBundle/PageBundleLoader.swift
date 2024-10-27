@@ -163,6 +163,7 @@ public struct PageBundleLoader {
             return .init(
                 id: id,
                 url: dirUrl,
+                baseUrl: sourceConfig.site.baseUrl,
                 slug: slug,
                 permalink: slug.permalink(
                     baseUrl: sourceConfig.site.baseUrl

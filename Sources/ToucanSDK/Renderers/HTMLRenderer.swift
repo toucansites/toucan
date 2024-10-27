@@ -266,6 +266,7 @@ struct HTMLRenderer {
                     let finalBundle = PageBundle(
                         id: pageBundle.id,
                         url: pageBundle.url,
+                        baseUrl: source.sourceConfig.site.baseUrl,
                         slug: finalSlug,
                         permalink: finalSlug.permalink(
                             baseUrl: source.sourceConfig.site.baseUrl
