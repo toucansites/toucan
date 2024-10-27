@@ -18,6 +18,7 @@ struct PageBundle {
 
     let id: String
     let url: URL
+    let baseUrl: String
 
     let slug: String
     let permalink: String
@@ -48,7 +49,7 @@ struct PageBundle {
             return path
         }
         let src = String(path.dropFirst(prefix.count))
-        return "/" + config.assets.folder + "/" + assetsLocation + "/" + src
+        return baseUrl + config.assets.folder + "/" + assetsLocation + "/" + src
     }
 
     // MARK: -
