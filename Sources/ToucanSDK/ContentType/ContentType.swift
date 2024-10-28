@@ -36,6 +36,7 @@ struct ContentType: Codable {
         }
 
         let type: DataType
+        let defaultValue: String?
     }
 
     struct Relation: Codable {

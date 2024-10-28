@@ -16,9 +16,9 @@ struct Source {
     let pageBundles: [PageBundle]
     let logger: Logger
 
-    func validate() {
+    func validate(dateFormatter: DateFormatter) {
         validateSlugs()
-        validateFrontMatters()
+        validateFrontMatters(dateFormatter: dateFormatter)
     }
 
     // MARK: -
@@ -46,12 +46,13 @@ struct Source {
         }
     }
 
-    func validateFrontMatters() {
+    func validateFrontMatters(dateFormatter: DateFormatter) {
         for pageBundle in pageBundles {
             validateFrontMatter(
                 pageBundle.frontMatter,
                 for: pageBundle.contentType,
-                at: pageBundle.slug
+                at: pageBundle.slug,
+                dateFormatter: dateFormatter
             )
         }
     }
@@ -61,14 +62,24 @@ struct Source {
     func validateFrontMatter(
         _ frontMatter: [String: Any],
         for contentType: ContentType,
-        at slug: String
+        at slug: String,
+        dateFormatter: DateFormatter
     ) {
         let metadata: Logger.Metadata = [
             "slug": "\(slug)"
         ]
+
         // properties
         for property in contentType.properties ?? [:] {
-            if frontMatter[property.key] == nil {
+            let hasValue = frontMatter[property.key] != nil
+            let defaultValue: Any? = property.value.defaultValue?
+                .value(
+                    for: property.value.type,
+                    dateFormatter: dateFormatter
+                )
+            let hasDefaultValue = defaultValue != nil
+
+            if !hasValue && !hasDefaultValue {
                 logger.warning(
                     "Missing content type property: `\(property.key)`",
                     metadata: metadata

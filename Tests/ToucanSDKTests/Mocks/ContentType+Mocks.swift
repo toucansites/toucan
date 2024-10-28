@@ -24,7 +24,8 @@ extension ContentType {
         ),
         properties: [
             "featured": .init(
-                type: .bool
+                type: .bool,
+                defaultValue: nil
             )
         ],
         relations: [
