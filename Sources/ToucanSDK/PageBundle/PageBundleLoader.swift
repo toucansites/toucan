@@ -160,7 +160,7 @@ public struct PageBundleLoader {
                 metadata: metadata
             )
 
-            return .init(
+            let pageBundle = PageBundle(
                 id: id,
                 url: dirUrl,
                 baseUrl: sourceConfig.site.baseUrl,
@@ -181,6 +181,9 @@ public struct PageBundleLoader {
                 markdown: markdown,
                 assets: assets
             )
+            let seoValidator = SEOValidator(logger: logger)
+            seoValidator.validate(pageBundle: pageBundle)
+            return pageBundle
         }
         catch {
             throw Error.pageBundle(error)
