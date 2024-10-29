@@ -67,7 +67,7 @@ public struct Toucan {
             logger: logger
         )
         let source = try loader.load()
-        source.validate()
+        source.validate(dateFormatter: DateFormatters.baseFormatter)
 
         // TODO: output url is completely wiped, check if it's safe to delete everything
         try resetOutputDirectory()
