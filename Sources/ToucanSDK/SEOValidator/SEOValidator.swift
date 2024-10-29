@@ -7,10 +7,36 @@
 
 import Foundation
 import Logging
+import SwiftSoup
 
 struct SEOValidator {
 
     let logger: Logger
+
+    func validate(
+        html: String,
+        using pageBundle: PageBundle
+    ) {
+        do {
+            let document: SwiftSoup.Document = try SwiftSoup.parse(html)
+            let htmlTag = try document.select("html")
+            //            print(htmlTag.first()?.nodeName())
+            //            let headings = try document.select("h1, h2, h3, h4, h5, h6")
+            //            print("---------------------------")
+            //            for element in headings {
+            //                print(element.nodeName())
+            //                let text = try element.text()
+            //                let level = element.nodeName().hasSuffix("2") ? 2 : 3
+            //                let fragment = try element.attr("id")
+            //            }
+        }
+        catch Exception.Error(_, let message) {
+            logger.error("\(message)")
+        }
+        catch {
+            logger.error("\(error.localizedDescription)")
+        }
+    }
 
     func validate(
         pageBundle: PageBundle

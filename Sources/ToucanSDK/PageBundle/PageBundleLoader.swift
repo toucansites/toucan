@@ -181,8 +181,6 @@ public struct PageBundleLoader {
                 markdown: markdown,
                 assets: assets
             )
-            let seoValidator = SEOValidator(logger: logger)
-            seoValidator.validate(pageBundle: pageBundle)
             return pageBundle
         }
         catch {

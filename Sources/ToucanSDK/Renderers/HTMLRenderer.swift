@@ -154,33 +154,49 @@ struct HTMLRenderer {
             for: fileUrl
         )
 
-        try templateRenderer.render(
-            template: template ?? "pages.default",
-            with: HTML(
-                site: .init(
-                    baseUrl: source.sourceConfig.site.baseUrl,
-                    title: source.sourceConfig.site.title,
-                    description: source.sourceConfig.site.description,
-                    language: source.sourceConfig.site.language,
-                    context: globalContext
-                ),
-                page: contextStore.fullContext(for: pageBundle),
-                userDefined: pageBundle.config.userDefined
-                    .recursivelyMerged(
-                        with: source.sourceConfig.site.userDefined
-                    )
-                    .sanitized(),
-                pagination: .init(
-                    links: paginationContext,
-                    data: paginationData.mapValues {
-                        $0.map { contextStore.fullContext(for: $0) }
-                    }
-                ),
-                year: currentYear
-            )
-            .context,
-            to: fileUrl
+        let context = HTML(
+            site: .init(
+                baseUrl: source.sourceConfig.site.baseUrl,
+                title: source.sourceConfig.site.title,
+                description: source.sourceConfig.site.description,
+                language: source.sourceConfig.site.language,
+                context: globalContext
+            ),
+            page: contextStore.fullContext(for: pageBundle),
+            userDefined: pageBundle.config.userDefined
+                .recursivelyMerged(
+                    with: source.sourceConfig.site.userDefined
+                )
+                .sanitized(),
+            pagination: .init(
+                links: paginationContext,
+                data: paginationData.mapValues {
+                    $0.map { contextStore.fullContext(for: $0) }
+                }
+            ),
+            year: currentYear
         )
+        .context
+
+        let metadata: Logger.Metadata = [
+            "type": "\(pageBundle.contentType.id)",
+            "slug": "\(pageBundle.slug)",
+        ]
+
+        guard
+            let html = try templateRenderer.render(
+                template: template ?? "pages.default",
+                with: context
+            )
+        else {
+            logger.error("Missing HTML contents.", metadata: metadata)
+            return
+        }
+        // TODO: add option to enable/disable validator...
+        let seoValidator = SEOValidator(logger: logger)
+        seoValidator.validate(html: html, using: pageBundle)
+
+        try html.write(to: fileUrl, atomically: true, encoding: .utf8)
     }
 
     // MARK: - render related methods
