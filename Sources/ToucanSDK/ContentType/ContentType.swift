@@ -81,6 +81,7 @@ struct ContentType: Codable {
     }
 
     let id: String
+    let api: String?
     let rss: Bool?
     let location: String?
     let template: String?
@@ -107,6 +108,7 @@ extension ContentType {
 
     static let `default` = ContentType(
         id: "page",
+        api: "pages",
         rss: nil,
         location: nil,
         template: "pages.default",
@@ -130,6 +132,7 @@ extension ContentType {
 
     static let pagination = ContentType(
         id: "pagination",
+        api: nil,
         rss: nil,
         location: nil,
         template: "pages.default",

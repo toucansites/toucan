@@ -151,7 +151,7 @@ public struct Toucan {
         )
 
         try htmlRenderer.render()
-        
+
         let apiRenderer = try APIRenderer(
             source: source,
             destinationUrl: outputUrl,

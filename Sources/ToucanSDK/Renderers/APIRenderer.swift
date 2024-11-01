@@ -47,39 +47,39 @@ struct APIRenderer {
         // TODO: check if exists
         try fileManager.createDirectory(at: apiUrl)
 
-        let globalContext = contextStore.getPageBundlesForSiteContext()
+        //        let globalContext = contextStore.getPageBundlesForSiteContext()
 
-        let siteContext = globalContext.mapValues {
-            $0.map { contextStore.fullContext(for: $0) }
-        }
-        
-        let x: [String: Any] = [:]
+        //        let siteContext = globalContext.mapValues {
+        //            $0.map { contextStore.fullContext(for: $0) }
+        //        }
+
+        //        let x: [String: Any] = [:]
         let encoder = JSONEncoder()
         encoder.outputFormatting = [
             .prettyPrinted,
             .sortedKeys,
-            .withoutEscapingSlashes
+            .withoutEscapingSlashes,
         ]
         for contentType in source.contentTypes {
-            guard contentType.id != ContentType.pagination.id else {
+            guard let api = contentType.api, !api.isEmpty else {
                 continue
             }
-            let url = apiUrl
-                .appendingPathComponent(contentType.id)
+            let url =
+                apiUrl
+                .appendingPathComponent(api)
                 .appendingPathExtension("json")
-            
-            
-            print(url)
-//            print(contentType.id)
+
+            //            print(url)
+            //            print(contentType.id)
 
             let bundles = source.pageBundles
                 .filter { $0.contentType.id == contentType.id }
-//                .map { $0.baseContext }
+                //                .map { $0.baseContext }
                 .map { contextStore.fullContext(for: $0) }
                 .map { $0.mapValues { JSON(value: $0) } }
-            
+
             let data = try encoder.encode(bundles)
-//            print(String(data: data, encoding: .utf8)!)
+            //            print(String(data: data, encoding: .utf8)!)
             try data.write(to: url)
         }
     }
