@@ -10,7 +10,7 @@ import Foundation
 /// A page bundle representing a subpage for a website.
 struct PageBundle {
 
-    struct DateValue {
+    struct DateValue: Codable {
         let html: String
         let rss: String
         let sitemap: String
@@ -95,7 +95,9 @@ struct PageBundle {
                     "title": title,
                     "description": description,
                     "imageUrl": imageUrl ?? false,
+                    // TODO: fix this hack, publication will be nil for API...
                     "publication": date,
+                    "pubDate": publication,
                     "css": css,
                     "js": js,
                 ]

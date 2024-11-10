@@ -11,6 +11,7 @@ func decode(
     fromObject container: KeyedDecodingContainer<JSONCodingKeys>
 ) -> [String: Any] {
     var result: [String: Any] = [:]
+    let formatter = DateFormatters.iso8601
 
     for key in container.allKeys {
         if let val = try? container.decode(Int.self, forKey: key) {
@@ -21,6 +22,9 @@ func decode(
         }
         else if let val = try? container.decode(String.self, forKey: key) {
             result[key.stringValue] = val
+            if let date = formatter.date(from: val) {
+                result[key.stringValue] = date
+            }
         }
         else if let val = try? container.decode(Bool.self, forKey: key) {
             result[key.stringValue] = val
@@ -40,16 +44,21 @@ func decode(
             result.updateValue(Any?(nil) as Any, forKey: key.stringValue)
         }
     }
-
     return result
 }
 
 func decode(fromArray container: inout UnkeyedDecodingContainer) -> [Any] {
     var result: [Any] = []
-
+    let formatter = DateFormatters.iso8601
+    
     while !container.isAtEnd {
         if let value = try? container.decode(String.self) {
-            result.append(value)
+            if let date = formatter.date(from: value) {
+                result.append(date)
+            }
+            else {
+                result.append(value)
+            }
         }
         else if let value = try? container.decode(Int.self) {
             result.append(value)
@@ -80,6 +89,8 @@ func encodeValue(
     fromObjectContainer container: inout KeyedEncodingContainer<JSONCodingKeys>,
     map: [String: Any]
 ) throws {
+    let formatter = DateFormatters.iso8601
+
     for k in map.keys {
         let value = map[k]
         let encodingKey = JSONCodingKeys(stringValue: k)
@@ -95,6 +106,10 @@ func encodeValue(
         }
         else if let value = value as? Bool {
             try container.encode(value, forKey: encodingKey)
+        }
+        else if let value = value as? Date {
+            let date = formatter.string(from: value)
+            try container.encode(date, forKey: encodingKey)
         }
         else if let value = value as? [String: Any] {
             var keyedContainer = container.nestedContainer(
@@ -119,6 +134,7 @@ func encodeValue(
     fromArrayContainer container: inout UnkeyedEncodingContainer,
     arr: [Any]
 ) throws {
+    let formatter = DateFormatters.iso8601
     for value in arr {
         if let value = value as? String {
             try container.encode(value)
@@ -131,6 +147,10 @@ func encodeValue(
         }
         else if let value = value as? Bool {
             try container.encode(value)
+        }
+        else if let value = value as? Date {
+            let date = formatter.string(from: value)
+            try container.encode(date)
         }
         else if let value = value as? [String: Any] {
             var keyedContainer = container.nestedContainer(
@@ -169,7 +189,9 @@ struct JSON: Codable {
     init(value: Any?) {
         self.value = value
     }
+
     init(from decoder: Decoder) throws {
+        let formatter = DateFormatters.iso8601
         if let container = try? decoder.container(keyedBy: JSONCodingKeys.self)
         {
             self.value = decode(fromObject: container)
@@ -189,16 +211,23 @@ struct JSON: Codable {
                     self.value = result
                 }
                 if let result = try? value.decode(String.self) {
-                    self.value = result
+                    if let date = formatter.date(from: result) {
+                        self.value = date
+                    }
+                    else {
+                        self.value = result
+                    }
                 }
                 if let result = try? value.decode(Bool.self) {
                     self.value = result
                 }
+                
             }
         }
     }
 
     func encode(to encoder: Encoder) throws {
+        let formatter = DateFormatters.iso8601
         if let map = self.value as? [String: Any] {
             var container = encoder.container(keyedBy: JSONCodingKeys.self)
             try encodeValue(fromObjectContainer: &container, map: map)
@@ -211,92 +240,24 @@ struct JSON: Codable {
             var container = encoder.singleValueContainer()
 
             if let value = self.value as? String {
-                try! container.encode(value)
+                try container.encode(value)
             }
             else if let value = self.value as? Int {
-                try! container.encode(value)
+                try container.encode(value)
             }
             else if let value = self.value as? Double {
-                try! container.encode(value)
+                try container.encode(value)
             }
             else if let value = self.value as? Bool {
-                try! container.encode(value)
+                try container.encode(value)
+            }
+            else if let value = self.value as? Date {
+                let result = formatter.string(from: value)
+                try container.encode(result)
             }
             else {
-                try! container.encodeNil()
+                try container.encodeNil()
             }
         }
     }
 }
-
-//struct ThingWithJson: Codable {
-//    let intVal: Int
-//    let stringVal: String
-//    let json: JSON
-//}
-//
-//
-func runEncode(_ movie: [[String: JSON]]) {
-    let encoder = JSONEncoder()
-    if let result = try? encoder.encode(movie) {
-        let json = String(data: result, encoding: .utf8)!
-        print(json, "\n")
-    }
-}
-
-//func runDecode(_ json: String) -> ThingWithJson? {
-//    let decoder = JSONDecoder()
-//    let data = json.data(using: .utf8)!
-//
-//    return try? decoder.decode(ThingWithJson.self, from: data)
-//}
-//
-//runEncode(ThingWithJson(intVal: 1, stringVal: "String - yo", json: JSON(value: "Yo")))
-//
-//runEncode(ThingWithJson(intVal: 2, stringVal: "Object / Map", json: JSON(value: ["a": 12, "b": "Hi"])))
-//
-//runEncode(ThingWithJson(intVal: 3, stringVal: "null", json: JSON(value: nil)))
-//
-//runEncode(ThingWithJson(intVal: 4, stringVal: "nested object", json: JSON(value: ["a": 12, "o": ["b": 2, "c": "hi"]])))
-//
-//runEncode(ThingWithJson(intVal: 5, stringVal: "array", json: JSON(value: [1, [2, nil, [ "str": "string", "nil": nil, "arr": ["a", ["b"]] ]], 3])))
-//
-//
-//print("\n\ntrying object")
-//let resultObject = runDecode("""
-//{"intVal": 12, "stringVal": "Yo", "json": { "num": 12, "null": null, "nullArr": [1, null, { "a": "a", "null": null }], "str": "Hi", "dbl": 1.2, "arr": [1, 2, 3], "obj": { "int": 1, "o2": { "a": 88, "b": "b" } } } }
-//""")
-//
-//print("\n", resultObject!, "\n")
-//
-//if let map = resultObject?.json.value as? [String: Any] {
-//    print("got object")
-//    print(map["num"]!, map["dbl"]!)
-//    print("null", map["null"] ?? "<null>")
-//    print("nullArr", map["nullArr"]!)
-//
-//    let nullarr = map["nullArr"] as! [Any]
-//    if let secondVal = nullarr[1] as Any? {
-//        print("SECOND VAL", secondVal)
-//    }
-//
-//
-//    if let nullMap = nullarr[2] as? [String: Any] {
-//        print("null map", nullMap)
-//
-//        print("Keys")
-//        for k in nullMap.keys {
-//            print(k, nullMap[k]!)
-//        }
-//        print("End keys")
-//    }
-//
-//    if let nestedMap = map["obj"] as? [String: Any] {
-//        print("Got nested object")
-//        print(nestedMap["int"]!)
-//        if let nestedMap2 = nestedMap["o2"] as? [String: Any] {
-//            print("Got nested object 2")
-//            print(nestedMap2["a"]!)
-//        }
-//    }
-//}
