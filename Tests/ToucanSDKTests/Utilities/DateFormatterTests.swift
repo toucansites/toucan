@@ -17,10 +17,10 @@ final class DateFormatterTests: XCTestCase {
         guard let date = formatter.date(from: dateString) else {
             return XCTFail("Could not decode date.")
         }
-        
+
         let expectation = 1700446289.158
         XCTAssertEqual(date.timeIntervalSince1970, expectation)
-        
+
         let formattedString = formatter.string(from: date)
         XCTAssertEqual(formattedString, dateString)
     }

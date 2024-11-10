@@ -50,7 +50,7 @@ func decode(
 func decode(fromArray container: inout UnkeyedDecodingContainer) -> [Any] {
     var result: [Any] = []
     let formatter = DateFormatters.iso8601
-    
+
     while !container.isAtEnd {
         if let value = try? container.decode(String.self) {
             if let date = formatter.date(from: value) {
@@ -221,7 +221,7 @@ struct JSON: Codable {
                 if let result = try? value.decode(Bool.self) {
                     self.value = result
                 }
-                
+
             }
         }
     }
