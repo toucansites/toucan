@@ -95,9 +95,7 @@ struct PageBundle {
                     "title": title,
                     "description": description,
                     "imageUrl": imageUrl ?? false,
-                    // TODO: fix this hack, publication will be nil for API...
                     "publication": date,
-                    "pubDate": publication,
                     "css": css,
                     "js": js,
                 ]
