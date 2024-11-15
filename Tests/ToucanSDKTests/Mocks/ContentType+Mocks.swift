@@ -11,6 +11,7 @@ extension ContentType {
 
     static let post = ContentType(
         id: "post",
+        api: nil,
         rss: true,
         location: nil,
         template: "post.default",
@@ -60,6 +61,7 @@ extension ContentType {
 
     static let author = ContentType(
         id: "author",
+        api: nil,
         rss: false,
         location: nil,
         template: "author.default",

@@ -10,7 +10,7 @@ import Foundation
 /// A page bundle representing a subpage for a website.
 struct PageBundle {
 
-    struct DateValue {
+    struct DateValue: Codable {
         let html: String
         let rss: String
         let sitemap: String

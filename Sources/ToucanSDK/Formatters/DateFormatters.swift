@@ -27,4 +27,10 @@ struct DateFormatters {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }
+
+    static var iso8601: DateFormatter {
+        let formatter = baseFormatter
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        return formatter
+    }
 }
