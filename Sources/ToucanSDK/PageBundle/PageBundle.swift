@@ -43,13 +43,31 @@ struct PageBundle {
         slug.isEmpty ? "home" : slug
     }
 
+    /// Resolves the full asset URL by replacing the base URL placeholder or constructing the URL based on the asset folder configuration.
+    ///
+    /// - Parameters:
+    ///   - path: The relative or placeholder-based asset path.
+    /// - Returns: The resolved asset URL as a string.
     func resolveAsset(path: String) -> String {
+        if path.contains("{{baseUrl}}") {
+            return path.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
+        }
+
         let prefix = "./\(config.assets.folder)/"
+        
         guard path.hasPrefix(prefix) else {
             return path
         }
+        
         let src = String(path.dropFirst(prefix.count))
-        return baseUrl + config.assets.folder + "/" + assetsLocation + "/" + src
+        
+        return [
+            baseUrl,
+            config.assets.folder,
+            assetsLocation,
+            src,
+        ]
+        .joined(separator: "/")
     }
 
     // MARK: -

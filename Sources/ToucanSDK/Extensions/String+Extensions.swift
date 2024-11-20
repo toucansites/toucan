@@ -262,21 +262,15 @@ extension String {
             return baseUrl
         }
         if components.last?.split(separator: ".").count ?? 0 > 1 {
-            return baseUrl + components.joined(separator: "/")
+            return ([baseUrl] + components).joined(separator: "/")
         }
-        return baseUrl + components.joined(separator: "/") + "/"
+        return ([baseUrl] + components).joined(separator: "/") + "/"
     }
 
-    //    public func transform(
-    //        _ block: (Self) -> Self
-    //    ) -> Self {
-    //        block(self)
-    //    }
-
-    func ensureTrailingSlash() -> String {
+    func dropTrailingSlash() -> String {
         if hasSuffix("/") {
-            return self
+            return String(dropLast())
         }
-        return self + "/"
+        return self
     }
 }
