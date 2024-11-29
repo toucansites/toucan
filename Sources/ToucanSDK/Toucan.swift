@@ -30,13 +30,17 @@ public struct Toucan {
         baseUrl: String?,
         logger: Logger = .init(label: "toucan")
     ) {
-        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        self.fileManager = FileManager.default
+
+        let home = fileManager.homeDirectoryForCurrentUser.path
+
         func getSafeUrl(_ path: String, home: String) -> URL {
             .init(
                 fileURLWithPath: path.replacingOccurrences(["~": home])
             )
             .standardized
         }
+
         self.inputUrl = getSafeUrl(input, home: home)
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
@@ -45,118 +49,138 @@ public struct Toucan {
 
     // MARK: - file management
 
-    let fileManager = FileManager.default
+    let fileManager: FileManager
 
     // MARK: - directory management
 
-    func resetOutputDirectory() throws {
-        if fileManager.exists(at: outputUrl) {
-            try fileManager.delete(at: outputUrl)
+    func resetDirectory(at url: URL) throws {
+        if fileManager.exists(at: url) {
+            try fileManager.delete(at: url)
         }
-        try fileManager.createDirectory(at: outputUrl)
+        try fileManager.createDirectory(at: url)
     }
 
     /// generates the static site
     public func generate() throws {
-        let loader = SourceLoader(
-            baseUrl: baseUrl,
-            sourceUrl: inputUrl,
-            yamlFileLoader: .yaml,
-            fileManager: fileManager,
-            frontMatterParser: .init(),
-            logger: logger
-        )
-        let source = try loader.load()
-        source.validate(dateFormatter: DateFormatters.baseFormatter)
+        let processId = UUID()
+        let workDirUrl = fileManager
+            .temporaryDirectory
+            .appendingPathComponent("toucan")
+            .appendingPathComponent(processId.uuidString)
 
-        // TODO: output url is completely wiped, check if it's safe to delete everything
-        try resetOutputDirectory()
+        try resetDirectory(at: workDirUrl)
 
-        // theme assets
-        try fileManager.copyRecursively(
-            from: source.sourceConfig.currentThemeAssetsUrl,
-            to: outputUrl
-        )
-        // theme override assets
-        try fileManager.copyRecursively(
-            from: source.sourceConfig.currentThemeOverrideAssetsUrl,
-            to: outputUrl
-        )
-        // copy global site assets
-        try fileManager.copyRecursively(
-            from: source.sourceConfig.assetsUrl,
-            to: outputUrl
-        )
+        logger.debug("Working at: `\(workDirUrl.absoluteString)`.")
 
-        // MARK: copy assets
+        do {
+            let loader = SourceLoader(
+                baseUrl: baseUrl,
+                sourceUrl: inputUrl,
+                yamlFileLoader: .yaml,
+                fileManager: fileManager,
+                frontMatterParser: .init(),
+                logger: logger
+            )
+            let source = try loader.load()
+            source.validate(dateFormatter: DateFormatters.baseFormatter)
 
-        for pageBundle in source.pageBundles {
-            let assetsUrl = pageBundle.url
-                .appendingPathComponent(pageBundle.config.assets.folder)
+            // theme assets
+            try fileManager.copyRecursively(
+                from: source.sourceConfig.currentThemeAssetsUrl,
+                to: workDirUrl
+            )
+            // theme override assets
+            try fileManager.copyRecursively(
+                from: source.sourceConfig.currentThemeOverrideAssetsUrl,
+                to: workDirUrl
+            )
+            // copy global site assets
+            try fileManager.copyRecursively(
+                from: source.sourceConfig.assetsUrl,
+                to: workDirUrl
+            )
 
-            guard
-                fileManager.directoryExists(at: assetsUrl),
-                !fileManager.listDirectory(at: assetsUrl).isEmpty
-            else {
-                continue
+            // MARK: copy assets
+
+            for pageBundle in source.pageBundles {
+                let assetsUrl = pageBundle.url
+                    .appendingPathComponent(pageBundle.config.assets.folder)
+
+                guard
+                    fileManager.directoryExists(at: assetsUrl),
+                    !fileManager.listDirectory(at: assetsUrl).isEmpty
+                else {
+                    continue
+                }
+
+                let workDirUrl =
+                    workDirUrl
+                    .appendingPathComponent(pageBundle.config.assets.folder)
+                    .appendingPathComponent(pageBundle.assetsLocation)
+
+                try fileManager.copyRecursively(
+                    from: assetsUrl,
+                    to: workDirUrl
+                )
             }
 
-            let outputUrl =
-                outputUrl
-                .appendingPathComponent(pageBundle.config.assets.folder)
-                .appendingPathComponent(pageBundle.assetsLocation)
-
-            try fileManager.copyRecursively(
-                from: assetsUrl,
-                to: outputUrl
+            let templateRenderer = try MustacheToHTMLRenderer(
+                templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
+                overridesUrl: source
+                    .sourceConfig
+                    .currentThemeOverrideTemplatesUrl,
+                logger: logger
             )
+
+            let redirectRenderer = RedirectRenderer(
+                destinationUrl: workDirUrl,
+                fileManager: .default,
+                templateRenderer: templateRenderer,
+                pageBundles: source.pageBundles
+            )
+            try redirectRenderer.render()
+
+            let sitemapRenderer = SitemapRenderer(
+                destinationUrl: workDirUrl,
+                fileManager: .default,
+                templateRenderer: templateRenderer,
+                pageBundles: source.sitemapPageBundles()
+            )
+            try sitemapRenderer.render()
+
+            let rssRenderer = RSSRenderer(
+                site: source.sourceConfig.site,
+                destinationUrl: workDirUrl,
+                fileManager: .default,
+                templateRenderer: templateRenderer,
+                pageBundles: source.rssPageBundles()
+            )
+            try rssRenderer.render()
+
+            let htmlRenderer = try HTMLRenderer(
+                source: source,
+                destinationUrl: workDirUrl,
+                templateRenderer: templateRenderer,
+                logger: logger
+            )
+
+            try htmlRenderer.render()
+
+            let apiRenderer = try APIRenderer(
+                source: source,
+                destinationUrl: workDirUrl,
+                logger: logger
+            )
+            try apiRenderer.render()
+            
+            try resetDirectory(at: outputUrl)
+            try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
+
+            try? fileManager.removeItem(at: workDirUrl)
         }
-
-        let templateRenderer = try MustacheToHTMLRenderer(
-            templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
-            overridesUrl: source.sourceConfig.currentThemeOverrideTemplatesUrl,
-            logger: logger
-        )
-
-        let redirectRenderer = RedirectRenderer(
-            destinationUrl: outputUrl,
-            fileManager: .default,
-            templateRenderer: templateRenderer,
-            pageBundles: source.pageBundles
-        )
-        try redirectRenderer.render()
-
-        let sitemapRenderer = SitemapRenderer(
-            destinationUrl: outputUrl,
-            fileManager: .default,
-            templateRenderer: templateRenderer,
-            pageBundles: source.sitemapPageBundles()
-        )
-        try sitemapRenderer.render()
-
-        let rssRenderer = RSSRenderer(
-            site: source.sourceConfig.site,
-            destinationUrl: outputUrl,
-            fileManager: .default,
-            templateRenderer: templateRenderer,
-            pageBundles: source.rssPageBundles()
-        )
-        try rssRenderer.render()
-
-        let htmlRenderer = try HTMLRenderer(
-            source: source,
-            destinationUrl: outputUrl,
-            templateRenderer: templateRenderer,
-            logger: logger
-        )
-
-        try htmlRenderer.render()
-
-        let apiRenderer = try APIRenderer(
-            source: source,
-            destinationUrl: outputUrl,
-            logger: logger
-        )
-        try apiRenderer.render()
+        catch {
+            try? fileManager.removeItem(at: workDirUrl)
+            throw error
+        }
     }
 }
