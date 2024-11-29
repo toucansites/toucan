@@ -64,28 +64,20 @@ struct Site {
     }
 
     init(_ dict: [String: Any]) {
-        self.baseUrl =
-            (dict.string(Keys.baseUrl)
-            ?? Self.defaults.baseUrl)
-            .ensureTrailingSlash()
+        self.baseUrl = (dict.string(Keys.baseUrl) ?? Self.defaults.baseUrl)
+            .dropTrailingSlash()
 
-        self.title =
-            dict.string(Keys.title)
-            ?? Self.defaults.title
+        self.title = dict.string(Keys.title) ?? Self.defaults.title
 
         self.description =
-            dict.string(Keys.description)
-            ?? Self.defaults.description
+            dict.string(Keys.description) ?? Self.defaults.description
 
         self.language = dict.string(Keys.language)
 
         self.dateFormat =
-            dict.string(Keys.dateFormat)
-            ?? Self.defaults.dateFormat
+            dict.string(Keys.dateFormat) ?? Self.defaults.dateFormat
 
-        self.noindex =
-            dict.bool(Keys.noindex)
-            ?? Self.defaults.noindex
+        self.noindex = dict.bool(Keys.noindex) ?? Self.defaults.noindex
 
         self.hreflang = dict.array(Keys.hreflang, as: Hreflang.self)
         self.userDefined = dict.filter { !Keys.allKeys.contains($0.key) }
@@ -95,7 +87,7 @@ struct Site {
 extension Site {
 
     static let `defaults` = Site(
-        baseUrl: "http://localhost:3000/",
+        baseUrl: "http://localhost:3000",
         title: "",
         description: "",
         language: nil,
