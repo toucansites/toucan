@@ -18,7 +18,7 @@ extension SwiftSoup.Document {
     func getTitle() throws -> String? {
         try selectFirst("title")?.text()
     }
-    
+
     func getDescription() throws -> String? {
         let metas = try select("meta")
         for meta in metas {
@@ -65,7 +65,7 @@ public struct SEOValidator {
             var metadata = metadata
             metadata["title"] = "`\(title)`"
             metadata["count"] = "\(title.count)"
-            
+
             if title.count < 55 {
                 logger.warning(
                     "Title is too short, use minimum 55 characters.",
@@ -84,7 +84,7 @@ public struct SEOValidator {
                     metadata: metadata
                 )
             }
-            
+
             let metas = try document.select("meta")
             for meta in metas {
                 let name = try meta.attr("name")
@@ -93,7 +93,7 @@ public struct SEOValidator {
                     print(content)
                 }
             }
-            
+
             guard let description = try document.getDescription() else {
                 throw Error.validation("Description not found")
             }

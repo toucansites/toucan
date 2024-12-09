@@ -17,6 +17,7 @@ public struct Toucan {
     let inputUrl: URL
     let outputUrl: URL
     let baseUrl: String?
+    let seoChecks: Bool
     let logger: Logger
 
     /// Initialize a new instance.
@@ -28,6 +29,7 @@ public struct Toucan {
         input: String,
         output: String,
         baseUrl: String?,
+        seoChecks: Bool,
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
@@ -44,6 +46,7 @@ public struct Toucan {
         self.inputUrl = getSafeUrl(input, home: home)
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
+        self.seoChecks = seoChecks
         self.logger = logger
     }
 
@@ -161,6 +164,7 @@ public struct Toucan {
                 source: source,
                 destinationUrl: workDirUrl,
                 templateRenderer: templateRenderer,
+                seoChecks: seoChecks,
                 logger: logger
             )
 
@@ -172,7 +176,7 @@ public struct Toucan {
                 logger: logger
             )
             try apiRenderer.render()
-            
+
             try resetDirectory(at: outputUrl)
             try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
 

@@ -26,16 +26,19 @@ struct HTMLRenderer {
     let currentYear: Int
 
     let contextStore: ContextStore
+    let seoChecks: Bool
 
     init(
         source: Source,
         destinationUrl: URL,
         templateRenderer: MustacheToHTMLRenderer,
+        seoChecks: Bool,
         logger: Logger
     ) throws {
         self.source = source
         self.destinationUrl = destinationUrl
         self.templateRenderer = templateRenderer
+        self.seoChecks = seoChecks
         self.logger = logger
 
         let calendar = Calendar(identifier: .gregorian)
@@ -192,9 +195,11 @@ struct HTMLRenderer {
             logger.error("Missing HTML contents.", metadata: metadata)
             return
         }
-        // TODO: add option to enable/disable validator...
-        let seoValidator = SEOValidator(logger: logger)
-        seoValidator.validate(html: html, using: pageBundle)
+
+        if seoChecks {
+            let seoValidator = SEOValidator(logger: logger)
+            seoValidator.validate(html: html, using: pageBundle)
+        }
 
         try html.write(to: fileUrl, atomically: true, encoding: .utf8)
     }
