@@ -64,7 +64,7 @@ public struct SEOValidator {
         html: String,
         using pageBundle: PageBundle
     ) {
-        let metadata: Logger.Metadata = [
+        var metadata: Logger.Metadata = [
             "type": "\(pageBundle.contentType.id)",
             "slug": "\(pageBundle.slug)",
         ]
@@ -82,16 +82,7 @@ public struct SEOValidator {
             guard let title = try document.getTitle() else {
                 throw Error.validation("Title not found")
             }
-            var metadata = metadata
 
-            //            if title.count < 15 {
-            //                metadata["title"] = "`\(title)`"
-            //                metadata["count"] = "\(title.count)"
-            //                logger.warning(
-            //                    "Title is too short, use minimum 15 characters.",
-            //                    metadata: metadata
-            //                )
-            //            }
             if title.count > 65 {
                 metadata["title"] = "`\(title)`"
                 metadata["count"] = "\(title.count)"
