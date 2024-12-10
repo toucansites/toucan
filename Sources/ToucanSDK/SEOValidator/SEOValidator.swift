@@ -71,6 +71,14 @@ public struct SEOValidator {
 
         do {
             let document: SwiftSoup.Document = try SwiftSoup.parse(html)
+
+            if try document.getCanonicalLink() == nil {
+                logger.warning(
+                    "Canonical link not present",
+                    metadata: metadata
+                )
+            }
+
             guard let title = try document.getTitle() else {
                 throw Error.validation("Title not found")
             }
@@ -130,6 +138,22 @@ public struct SEOValidator {
                 )
             }
 
+            let headings = try document.select("h1")
+            guard let h1tag = headings.first, headings.count == 1 else {
+                throw Error.validation(
+                    "Invalid number of H1 tags (missing or multiple)"
+                )
+            }
+            let h1 = try h1tag.text()
+            if h1.count > 80 {
+                metadata["h1"] = "`\(h1)`"
+                metadata["count"] = "\(h1.count)"
+                logger.warning(
+                    "Heading 1 should be 80 characters or less.",
+                    metadata: metadata
+                )
+            }
+
             // check keyword
             if let keyword = pageBundle.frontMatter.string("keyword") {
                 if !title.contains(keyword) {
@@ -148,46 +172,15 @@ public struct SEOValidator {
                         metadata: metadata
                     )
                 }
+                if !h1.contains(keyword) {
+                    metadata["h1"] = "`\(h1)`"
+                    metadata["keyword"] = "`\(keyword)`"
+                    logger.warning(
+                        "H1 does not contain keyword: `\(keyword)`.",
+                        metadata: metadata
+                    )
+                }
             }
-
-            if try document.getCanonicalLink() == nil {
-                logger.warning(
-                    "Canonical link not present",
-                    metadata: metadata
-                )
-            }
-
-            //            let headings = try document.select("h1, h2, h3, h4, h5, h6")
-            //            var currentLevel = 1
-            //
-            //            for element in headings {
-            //                guard let level = Int(element.nodeName().dropFirst()) else {
-            //                    logger.error(
-            //                        "Invalid heading level.",
-            //                        metadata: metadata
-            //                    )
-            //                    continue
-            //                }
-            //                let text = try element.text()
-            //                if level == 1 {
-            //                    if text.count > 80 {
-            //                        logger.warning(
-            //                            "Heading 1 should be 80 characters or less.",
-            //                            metadata: metadata
-            //                        )
-            //                    }
-            //                }
-            //
-            //                if level > currentLevel + 1 {
-            //                    logger.warning(
-            //                        "Missing heading level \(currentLevel + 1).",
-            //                        metadata: metadata
-            //                    )
-            //                }
-            //                currentLevel = level
-            //
-            //                print(text)
-            //            }
         }
         catch Exception.Error(_, let message) {
             logger.error(
