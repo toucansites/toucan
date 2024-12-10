@@ -31,6 +31,18 @@ extension SwiftSoup.Document {
         return nil
     }
 
+    func getCanonicalLink() throws -> String? {
+        let links = try select("link")
+        for link in links {
+            let rel = try link.attr("rel")
+            if rel == "canonical" {
+                let content = try link.attr("href")
+                return content
+            }
+        }
+        return nil
+    }
+
     //    func getAttribute(_ key: String) throws -> String? {
     //        try attr(key)
     //    }
@@ -63,35 +75,30 @@ public struct SEOValidator {
                 throw Error.validation("Title not found")
             }
             var metadata = metadata
-            metadata["title"] = "`\(title)`"
-            metadata["count"] = "\(title.count)"
 
-            if title.count < 55 {
-                logger.warning(
-                    "Title is too short, use minimum 55 characters.",
-                    metadata: metadata
-                )
-            }
+            //            if title.count < 15 {
+            //                metadata["title"] = "`\(title)`"
+            //                metadata["count"] = "\(title.count)"
+            //                logger.warning(
+            //                    "Title is too short, use minimum 15 characters.",
+            //                    metadata: metadata
+            //                )
+            //            }
             if title.count > 65 {
+                metadata["title"] = "`\(title)`"
+                metadata["count"] = "\(title.count)"
                 logger.warning(
                     "Title is too long, use maximum 65 characters.",
                     metadata: metadata
                 )
             }
-            if title.count > 70 {
+            else if title.count > 70 {
+                metadata["title"] = "`\(title)`"
+                metadata["count"] = "\(title.count)"
                 logger.error(
                     "Title is way too long, use maximum 70 characters.",
                     metadata: metadata
                 )
-            }
-
-            let metas = try document.select("meta")
-            for meta in metas {
-                let name = try meta.attr("name")
-                if name == "description" {
-                    let content = try meta.attr("content")
-                    print(content)
-                }
             }
 
             guard let description = try document.getDescription() else {
@@ -99,20 +106,26 @@ public struct SEOValidator {
             }
 
             if description.count < 50 {
+                metadata["description"] = "`\(description)`"
+                metadata["count"] = "\(description.count)"
                 logger.warning(
-                    "Description is too short, use minimum 55 characters.",
+                    "Description is too short, use minimum 50 characters.",
                     metadata: metadata
                 )
             }
             if description.count > 160 {
+                metadata["description"] = "`\(description)`"
+                metadata["count"] = "\(description.count)"
                 logger.warning(
-                    "Description is too long, use maximum 65 characters.",
+                    "Description is too long, use maximum 160 characters.",
                     metadata: metadata
                 )
             }
-            if description.count > 165 {
+            else if description.count > 165 {
+                metadata["description"] = "`\(description)`"
+                metadata["count"] = "\(description.count)"
                 logger.error(
-                    "Description is way too long, use maximum 70 characters.",
+                    "Description is way too long, use maximum 165 characters.",
                     metadata: metadata
                 )
             }
@@ -120,12 +133,16 @@ public struct SEOValidator {
             // check keyword
             if let keyword = pageBundle.frontMatter.string("keyword") {
                 if !title.contains(keyword) {
+                    metadata["title"] = "`\(title)`"
+                    metadata["keyword"] = "`\(keyword)`"
                     logger.warning(
                         "Title does not contain keyword: `\(keyword)`.",
                         metadata: metadata
                     )
                 }
                 if !description.contains(keyword) {
+                    metadata["description"] = "`\(description)`"
+                    metadata["keyword"] = "`\(keyword)`"
                     logger.warning(
                         "Description does not contain keyword: `\(keyword)`.",
                         metadata: metadata
@@ -133,61 +150,44 @@ public struct SEOValidator {
                 }
             }
 
-            var isCanonicalLinkPresent = false
-            let links = try document.select("link")
-            for link in links {
-                let rel = try link.attr("rel")
-                if rel == "canonical" {
-                    isCanonicalLinkPresent = true
-                }
-            }
-            if !isCanonicalLinkPresent {
+            if try document.getCanonicalLink() == nil {
                 logger.warning(
                     "Canonical link not present",
                     metadata: metadata
                 )
             }
 
-            if let keyword = pageBundle.frontMatter.string("keyword") {
-                if !title.contains(keyword) {
-                    logger.warning(
-                        "Title does not contain keyword: `\(keyword)`.",
-                        metadata: metadata
-                    )
-                }
-            }
-
-            let headings = try document.select("h1, h2, h3, h4, h5, h6")
+            //            let headings = try document.select("h1, h2, h3, h4, h5, h6")
             //            var currentLevel = 1
-
-            for element in headings {
-                guard let level = Int(element.nodeName().dropFirst()) else {
-                    logger.error(
-                        "Invalid heading level.",
-                        metadata: metadata
-                    )
-                    continue
-                }
-                let text = try element.text()
-                if level == 1 {
-                    if text.count > 80 {
-                        logger.warning(
-                            "Heading 1 should be 80 characters or less.",
-                            metadata: metadata
-                        )
-                    }
-                }
-
-                //                if level > currentLevel + 1 {
-                //                    logger.warning(
-                //                        "Missing heading level \(currentLevel + 1).",
-                //                        metadata: metadata
-                //                    )
-                //                }
-                //                currentLevel = level
-
-                //                print(text)
-            }
+            //
+            //            for element in headings {
+            //                guard let level = Int(element.nodeName().dropFirst()) else {
+            //                    logger.error(
+            //                        "Invalid heading level.",
+            //                        metadata: metadata
+            //                    )
+            //                    continue
+            //                }
+            //                let text = try element.text()
+            //                if level == 1 {
+            //                    if text.count > 80 {
+            //                        logger.warning(
+            //                            "Heading 1 should be 80 characters or less.",
+            //                            metadata: metadata
+            //                        )
+            //                    }
+            //                }
+            //
+            //                if level > currentLevel + 1 {
+            //                    logger.warning(
+            //                        "Missing heading level \(currentLevel + 1).",
+            //                        metadata: metadata
+            //                    )
+            //                }
+            //                currentLevel = level
+            //
+            //                print(text)
+            //            }
         }
         catch Exception.Error(_, let message) {
             logger.error(
