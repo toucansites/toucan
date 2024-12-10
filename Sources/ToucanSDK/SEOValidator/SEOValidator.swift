@@ -83,18 +83,10 @@ public struct SEOValidator {
                 throw Error.validation("Title not found")
             }
 
-            if title.count > 65 {
+            if title.count > 70 {
                 metadata["title"] = "`\(title)`"
                 metadata["count"] = "\(title.count)"
                 logger.warning(
-                    "Title is too long, use maximum 65 characters.",
-                    metadata: metadata
-                )
-            }
-            else if title.count > 70 {
-                metadata["title"] = "`\(title)`"
-                metadata["count"] = "\(title.count)"
-                logger.error(
                     "Title is way too long, use maximum 70 characters.",
                     metadata: metadata
                 )
@@ -120,14 +112,6 @@ public struct SEOValidator {
                     metadata: metadata
                 )
             }
-            else if description.count > 165 {
-                metadata["description"] = "`\(description)`"
-                metadata["count"] = "\(description.count)"
-                logger.error(
-                    "Description is way too long, use maximum 165 characters.",
-                    metadata: metadata
-                )
-            }
 
             let headings = try document.select("h1")
             guard let h1tag = headings.first, headings.count == 1 else {
@@ -147,6 +131,10 @@ public struct SEOValidator {
 
             // check keyword
             if let keyword = pageBundle.frontMatter.string("keyword") {
+                metadata["title"] = nil
+                metadata["description"] = nil
+                metadata["h1"] = nil
+                metadata["count"] = nil
                 if !title.contains(keyword) {
                     metadata["title"] = "`\(title)`"
                     metadata["keyword"] = "`\(keyword)`"
@@ -172,6 +160,12 @@ public struct SEOValidator {
                     )
                 }
             }
+        }
+        catch Error.validation(let message) {
+            logger.error(
+                "\(message)",
+                metadata: metadata
+            )
         }
         catch Exception.Error(_, let message) {
             logger.error(
