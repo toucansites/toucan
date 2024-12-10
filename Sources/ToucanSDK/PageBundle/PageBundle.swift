@@ -54,13 +54,13 @@ struct PageBundle {
         }
 
         let prefix = "./\(config.assets.folder)/"
-        
+
         guard path.hasPrefix(prefix) else {
             return path
         }
-        
+
         let src = String(path.dropFirst(prefix.count))
-        
+
         return [
             baseUrl,
             config.assets.folder,

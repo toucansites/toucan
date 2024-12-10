@@ -160,7 +160,7 @@ public struct PageBundleLoader {
                 metadata: metadata
             )
 
-            return .init(
+            let pageBundle = PageBundle(
                 id: id,
                 url: dirUrl,
                 baseUrl: sourceConfig.site.baseUrl,
@@ -181,6 +181,7 @@ public struct PageBundleLoader {
                 markdown: markdown,
                 assets: assets
             )
+            return pageBundle
         }
         catch {
             throw Error.pageBundle(error)

@@ -94,18 +94,11 @@ public struct MustacheToHTMLRenderer {
         with object: Any,
         to destination: URL
     ) throws {
-        guard ids.contains(template) else {
-            throw Error.missingTemplate(template)
-        }
-        try library.render(
-            object,
-            withTemplate: template
-        )?
-        .minifyHTML()
-        .write(
-            to: destination,
-            atomically: true,
-            encoding: .utf8
-        )
+        try render(template: template, with: object)?
+            .write(
+                to: destination,
+                atomically: true,
+                encoding: .utf8
+            )
     }
 }

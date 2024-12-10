@@ -19,6 +19,9 @@ extension Entrypoint {
         @Option(name: .shortAndLong, help: "The log level to use.")
         var logLevel: Logger.Level = .info
 
+        @Flag(name: .shortAndLong, help: "SEO checks")
+        var seoChecks = false
+
         func run() async throws {
             var logger = Logger(label: "toucan")
             logger.logLevel = logLevel
@@ -27,6 +30,7 @@ extension Entrypoint {
                 input: input,
                 output: output,
                 baseUrl: baseUrl,
+                seoChecks: seoChecks,
                 logger: logger
             )
 
