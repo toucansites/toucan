@@ -43,12 +43,20 @@ struct APIRenderer {
     // MARK: - render related methods
 
     func render() throws {
+        let hasAPIOutput = !source.contentTypes
+            .compactMap { $0.api }
+            .filter { !$0.isEmpty }
+            .isEmpty
+
+        guard hasAPIOutput else {
+            return
+        }
         let apiUrl = destinationUrl.appendingPathComponent("api")
-        // TODO: check if exists
-        try fileManager.createDirectory(at: apiUrl)
+        if !fileManager.directoryExists(at: apiUrl) {
+            try fileManager.createDirectory(at: apiUrl)
+        }
 
         //        let globalContext = contextStore.getPageBundlesForSiteContext()
-
         //        let siteContext = globalContext.mapValues {
         //            $0.map { contextStore.fullContext(for: $0) }
         //        }
@@ -68,9 +76,6 @@ struct APIRenderer {
                 apiUrl
                 .appendingPathComponent(api)
                 .appendingPathExtension("json")
-
-            //            print(url)
-            //            print(contentType.id)
 
             let bundles = source.pageBundles
                 .filter { $0.contentType.id == contentType.id }
