@@ -9,11 +9,7 @@ import Foundation
 
 struct RSSRenderer {
 
-    public enum Files {
-        static let rss = "rss.xml"
-    }
-
-    let site: Site
+    let sourceConfig: SourceConfig
     let destinationUrl: URL
     let fileManager: FileManager
     let templateRenderer: MustacheToHTMLRenderer
@@ -42,10 +38,10 @@ struct RSSRenderer {
             ?? rssDateFormatter.string(from: .init())
 
         let context = RSSContext(
-            title: site.title,
-            description: site.description,
-            baseUrl: site.baseUrl,
-            language: site.language,
+            title: sourceConfig.site.title,
+            description: sourceConfig.site.description,
+            baseUrl: sourceConfig.site.baseUrl,
+            language: sourceConfig.site.language,
             lastBuildDate: rssDateFormatter.string(from: .init()),
             publicationDate: publicationDate,
             items: items
@@ -53,7 +49,9 @@ struct RSSRenderer {
         try templateRenderer.render(
             template: "rss",
             with: context,
-            to: destinationUrl.appendingPathComponent(Files.rss)
+            to:
+                destinationUrl
+                .appendingPathComponent(sourceConfig.config.contents.rss.output)
         )
     }
 }
