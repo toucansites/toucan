@@ -108,7 +108,7 @@ extension ContentType {
 
     static let `default` = ContentType(
         id: "page",
-        api: "pages",
+        api: nil,
         rss: nil,
         location: nil,
         template: "pages.default",

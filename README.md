@@ -38,7 +38,7 @@ Watch the source folder to any changes, to automatically re-generate the site.
 toucan watch ./src ./docs --base-url http://localhost:3000/
 ```
 
-NOTE: version 1.0.0-beta.1 watch command only supports macOS, Linux support is coming soon.
+NOTE: version 1.0.0-beta.2 watch command only supports macOS, Linux support is coming soon.
 
 ### serve
 
