@@ -152,7 +152,7 @@ public struct Toucan {
             try sitemapRenderer.render()
 
             let rssRenderer = RSSRenderer(
-                site: source.sourceConfig.site,
+                sourceConfig: source.sourceConfig,
                 destinationUrl: workDirUrl,
                 fileManager: .default,
                 templateRenderer: templateRenderer,

@@ -107,11 +107,19 @@ struct Config {
             let template: String
         }
 
+        struct RSS {
+            enum Keys {
+                static let output = "output"
+            }
+            let output: String
+        }
+
         enum Keys {
             static let dateFormat = "dateFormat"
             static let assets = "assets"
             static let home = "home"
             static let notFound = "notFound"
+            static let rss = "rss"
         }
 
         let folder: String
@@ -119,19 +127,22 @@ struct Config {
         let assets: Location
         let home: Page
         let notFound: Page
+        let rss: RSS
 
         init(
             folder: String,
             dateFormat: String,
             assets: Config.Location,
             home: Page,
-            notFound: Page
+            notFound: Page,
+            rss: RSS
         ) {
             self.folder = folder
             self.dateFormat = dateFormat
             self.assets = assets
             self.home = home
             self.notFound = notFound
+            self.rss = rss
         }
 
         init(_ dict: [String: Any]) {
@@ -162,6 +173,12 @@ struct Config {
                     ?? Config.defaults.contents.notFound.id,
                 template: notFound.string(Page.Keys.template)
                     ?? Config.defaults.contents.notFound.template
+            )
+
+            let rss = dict.dict(Keys.rss)
+            self.rss = .init(
+                output: rss.string(RSS.Keys.output)
+                    ?? Config.defaults.contents.rss.output
             )
         }
     }
@@ -288,6 +305,9 @@ extension Config {
             notFound: .init(
                 id: "404",
                 template: "pages.404"
+            ),
+            rss: .init(
+                output: "rss.xml"
             )
         ),
         transformers: .init(
