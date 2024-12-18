@@ -27,7 +27,8 @@ struct RSSRenderer {
                     permalink: item.permalink,
                     title: item.title,
                     description: item.description,
-                    publicationDate: item.date.rss
+                    publicationDate: item.date.rss,
+                    userDefined: item.baseContext
                 )
             }
 
@@ -37,18 +38,20 @@ struct RSSRenderer {
             items.first?.publicationDate
             ?? rssDateFormatter.string(from: .init())
 
-        let context = RSSContext(
+        let rssCtx = RSSContext(
             title: sourceConfig.site.title,
             description: sourceConfig.site.description,
             baseUrl: sourceConfig.site.baseUrl,
             language: sourceConfig.site.language,
             lastBuildDate: rssDateFormatter.string(from: .init()),
             publicationDate: publicationDate,
-            items: items
+            items: items,
+            userDefined: sourceConfig.site.userDefined
         )
+
         try templateRenderer.render(
             template: "rss",
-            with: context,
+            with: rssCtx.context,
             to:
                 destinationUrl
                 .appendingPathComponent(sourceConfig.config.contents.rss.output)
