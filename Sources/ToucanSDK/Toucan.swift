@@ -152,11 +152,12 @@ public struct Toucan {
             try sitemapRenderer.render()
 
             let rssRenderer = RSSRenderer(
-                sourceConfig: source.sourceConfig,
+                source: source,
                 destinationUrl: workDirUrl,
                 fileManager: .default,
                 templateRenderer: templateRenderer,
-                pageBundles: source.rssPageBundles()
+                pageBundles: source.rssPageBundles(),
+                logger: logger
             )
             try rssRenderer.render()
 

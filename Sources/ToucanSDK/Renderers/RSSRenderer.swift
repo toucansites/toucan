@@ -6,14 +6,42 @@
 //
 
 import Foundation
+import Logging
 
 struct RSSRenderer {
 
-    let sourceConfig: SourceConfig
+    let source: Source
     let destinationUrl: URL
     let fileManager: FileManager
     let templateRenderer: MustacheToHTMLRenderer
     let pageBundles: [PageBundle]
+    let logger: Logger
+
+    let contextStore: ContextStore
+
+    init(
+        source: Source,
+        destinationUrl: URL,
+        fileManager: FileManager,
+        templateRenderer: MustacheToHTMLRenderer,
+        pageBundles: [PageBundle],
+        logger: Logger
+    ) {
+        self.source = source
+        self.destinationUrl = destinationUrl
+        self.fileManager = fileManager
+        self.templateRenderer = templateRenderer
+        self.pageBundles = pageBundles
+        self.logger = logger
+
+        self.contextStore = .init(
+            sourceConfig: source.sourceConfig,
+            contentTypes: source.contentTypes,
+            pageBundles: source.pageBundles,
+            blockDirectives: source.blockDirectives,
+            logger: logger
+        )
+    }
 
     func render() throws {
         guard !pageBundles.isEmpty else {
@@ -28,7 +56,7 @@ struct RSSRenderer {
                     title: item.title,
                     description: item.description,
                     publicationDate: item.date.rss,
-                    userDefined: item.baseContext
+                    userDefined: contextStore.fullContext(for: item)
                 )
             }
 
@@ -39,14 +67,14 @@ struct RSSRenderer {
             ?? rssDateFormatter.string(from: .init())
 
         let rssCtx = RSSContext(
-            title: sourceConfig.site.title,
-            description: sourceConfig.site.description,
-            baseUrl: sourceConfig.site.baseUrl,
-            language: sourceConfig.site.language,
+            title: source.sourceConfig.site.title,
+            description: source.sourceConfig.site.description,
+            baseUrl: source.sourceConfig.site.baseUrl,
+            language: source.sourceConfig.site.language,
             lastBuildDate: rssDateFormatter.string(from: .init()),
             publicationDate: publicationDate,
             items: items,
-            userDefined: sourceConfig.site.userDefined
+            userDefined: source.sourceConfig.site.userDefined
         )
 
         try templateRenderer.render(
@@ -54,7 +82,9 @@ struct RSSRenderer {
             with: rssCtx.context,
             to:
                 destinationUrl
-                .appendingPathComponent(sourceConfig.config.contents.rss.output)
+                .appendingPathComponent(
+                    source.sourceConfig.config.contents.rss.output
+                )
         )
     }
 }
