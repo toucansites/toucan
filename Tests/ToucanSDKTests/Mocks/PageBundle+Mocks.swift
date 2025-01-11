@@ -24,6 +24,11 @@ extension PageBundle {
             rss: "",
             sitemap: ""
         ),
+        lastMod: .init(
+            html: "",
+            rss: "",
+            sitemap: ""
+        ),
         contentType: .post,
         publication: .init(),
         lastModification: .init(),
@@ -70,6 +75,11 @@ extension PageBundle {
             rss: "",
             sitemap: ""
         ),
+        lastMod: .init(
+            html: "",
+            rss: "",
+            sitemap: ""
+        ),
         contentType: .author,
         publication: .init(),
         lastModification: .init(),
@@ -109,6 +119,11 @@ extension PageBundle {
         title: "Page 1",
         description: "Page 1 description",
         date: .init(
+            html: "",
+            rss: "",
+            sitemap: ""
+        ),
+        lastMod: .init(
             html: "",
             rss: "",
             sitemap: ""
