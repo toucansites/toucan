@@ -295,6 +295,7 @@ struct HTMLRenderer {
                         title: finalTitle,
                         description: finalDescription,
                         date: pageBundle.date,
+                        lastMod: pageBundle.lastMod,
                         contentType: pageBundle.contentType,
                         publication: pageBundle.publication,
                         lastModification: pageBundle.lastModification,

@@ -171,6 +171,7 @@ public struct PageBundleLoader {
                 title: config.title.nilToEmpty,
                 description: config.description.nilToEmpty,
                 date: convert(date: publicationDate),
+                lastMod: convert(date: lastModification),
                 contentType: contentType,
                 publication: publicationDate,
                 lastModification: lastModification,
