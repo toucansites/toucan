@@ -26,6 +26,7 @@ struct PageBundle {
     let title: String
     let description: String
     let date: DateValue
+    let lastMod: DateValue
 
     let contentType: ContentType
     let publication: Date
@@ -114,6 +115,7 @@ struct PageBundle {
                     "description": description,
                     "imageUrl": imageUrl ?? false,
                     "publication": date,
+                    "lastModification": lastMod,
                     "css": css,
                     "js": js,
                 ]
