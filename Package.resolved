@@ -1,5 +1,5 @@
 {
-  "originHash" : "0d221128da17c85390a02b1bd85d463806d537b671cd23cadad8713557a21f98",
+  "originHash" : "db335897166c556a02f011588fbacf8d48d853cf8392311d101f01cd2f586f0b",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "3469a9b2d3204a78136e51557e684bccd3ad03e9",
         "version" : "0.1.0"
-      }
-    },
-    {
-      "identity" : "fsevents",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eonil/FSEvents",
-      "state" : {
-        "branch" : "master",
-        "revision" : "a54369c44ab9caabf611d01080e64fe30608d83f"
       }
     },
     {

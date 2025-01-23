@@ -1,17 +1,17 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 import PackageDescription
 
-#if os(macOS)
-let deps: [Package.Dependency] = [
-    .package(url: "https://github.com/eonil/FSEvents", branch: "master"),
-]
-let tdeps: [Target.Dependency] = [
-    .product(name: "EonilFSEvents", package: "FSEvents"),
-]
-#else
-let deps: [Package.Dependency] = []
-let tdeps: [Target.Dependency] = []
-#endif
+// GIT_VERSION=1.2.2 swift run toucan-serve --version
+var gitVersion: String {
+    if let version = Context.environment["GIT_VERSION"] {
+        return version
+    }
+    guard let gitInfo = Context.gitInformation else {
+        return "(untracked)"
+    }
+    let base = gitInfo.currentTag ?? gitInfo.currentCommit
+    return gitInfo.hasUncommittedChanges ? "\(base) (modified)" : base
+}
 
 let package = Package(
     name: "toucan",
@@ -23,8 +23,12 @@ let package = Package(
         .visionOS(.v1),
     ],
     products: [
-        .executable(name: "toucan-cli", targets: ["toucan-cli"]),
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
+        .executable(name: "toucan-cli", targets: ["toucan-cli"]),
+        .executable(name: "toucan-generate", targets: ["toucan-generate"]),
+        .executable(name: "toucan-init", targets: ["toucan-init"]),
+        .executable(name: "toucan-serve", targets: ["toucan-serve"]),
+        .executable(name: "toucan-watch", targets: ["toucan-watch"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
@@ -37,16 +41,20 @@ let package = Package(
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
-    ] + deps,
+    ],
     targets: [
-        .executableTarget(
-            name: "toucan-cli",
+        // MARK: - libraries
+        .target(
+            name: "libgitversion",
+            cSettings: [
+                .define("GIT_VERSION", to: #""\#(gitVersion)""#),
+            ]
+        ),
+        .target(
+            name: "GitVersion",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "Hummingbird", package: "hummingbird"),
-                .target(name: "ToucanSDK"),
-            ] + tdeps
+                .target(name: "libgitversion"),
+            ]
         ),
         .target(
             name: "ToucanSDK",
@@ -61,6 +69,51 @@ let package = Package(
                 .product(name: "Yams", package: "yams"),
             ]
         ),
+        // MARK: - executables
+        .executableTarget(
+            name: "toucan-cli",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Logging", package: "swift-log"),
+                .target(name: "ToucanSDK"),
+            ]
+        ),
+        .executableTarget(
+            name: "toucan-generate",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Logging", package: "swift-log"),
+                .target(name: "ToucanSDK"),
+            ]
+        ),
+        .executableTarget(
+            name: "toucan-init",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Logging", package: "swift-log"),
+                .target(name: "ToucanSDK"),
+            ]
+        ),
+        .executableTarget(
+            name: "toucan-serve",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "Hummingbird", package: "hummingbird"),
+                .target(name: "ToucanSDK"),
+                .target(name: "GitVersion"),
+            ]
+        ),
+        .executableTarget(
+            name: "toucan-watch",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "ShellKit", package: "shell-kit"),
+                .target(name: "ToucanSDK"),
+            ]
+        ),
+        // MARK: - tests
         .testTarget(
             name: "ToucanSDKTests",
             dependencies: [

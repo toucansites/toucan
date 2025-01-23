@@ -6,7 +6,7 @@ import ToucanSDK
 struct Entrypoint: AsyncParsableCommand {
 
     /// Configuration for the command-line tool.
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "toucan",
         abstract: """
             Toucan
@@ -14,12 +14,6 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
-        version: "1.0.0-beta.2",
-        subcommands: [
-            Generate.self,
-            Serve.self,
-            Watch.self,
-            Init.self,
-        ]
+        version: "1.0.0-beta.2"
     )
 }
