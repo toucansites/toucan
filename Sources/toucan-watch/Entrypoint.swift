@@ -2,6 +2,8 @@ import ArgumentParser
 import ToucanSDK
 import Logging
 import ShellKit
+import FileMonitor
+import Foundation
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
@@ -38,10 +40,21 @@ struct Entrypoint: AsyncParsableCommand {
     func run() async throws {
         let shell = Shell()
 
-        /// Downloading the ZIP file into a temporary directory.
-        try shell.run(
-            #"echo ok"#
-        )
+        let dir = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Downloads")
+        let monitor = try FileMonitor(directory: dir)
+        try monitor.start()
+        for await _ in monitor.stream {
+            let output = try shell.run(
+                #"/usr/local/bin/toucan --version"#
+            )
+            print(output)
+//            switch event {
+//            case .added(let file):
+//                print("New file \(file.path)")
+//            default:
+//                print("\(event)")
+//            }
+        }   
     }
 }
 

@@ -41,6 +41,7 @@ let package = Package(
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.1.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
+        .package(url: "https://github.com/aus-der-Technik/FileMonitor", from: "1.0.0")
     ],
     targets: [
         // MARK: - libraries
@@ -110,6 +111,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "ShellKit", package: "shell-kit"),
+                .product(name: "FileMonitor", package: "FileMonitor"),
                 .target(name: "ToucanSDK"),
             ]
         ),
