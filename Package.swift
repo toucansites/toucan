@@ -24,7 +24,7 @@ let package = Package(
     ],
     products: [
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
-        .executable(name: "toucan-cli", targets: ["toucan-cli"]),
+        .executable(name: "toucan", targets: ["toucan"]),
         .executable(name: "toucan-generate", targets: ["toucan-generate"]),
         .executable(name: "toucan-init", targets: ["toucan-init"]),
         .executable(name: "toucan-serve", targets: ["toucan-serve"]),
@@ -72,11 +72,10 @@ let package = Package(
         ),
         // MARK: - executables
         .executableTarget(
-            name: "toucan-cli",
+            name: "toucan",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
-                .target(name: "ToucanSDK"),
+                .product(name: "ShellKit", package: "shell-kit"),
             ]
         ),
         .executableTarget(
@@ -92,7 +91,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
-                .target(name: "ToucanSDK"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .product(name: "ShellKit", package: "shell-kit"),
             ]
         ),
         .executableTarget(
@@ -101,7 +101,6 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
-                .target(name: "ToucanSDK"),
                 .target(name: "GitVersion"),
             ]
         ),
@@ -112,7 +111,6 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "ShellKit", package: "shell-kit"),
                 .product(name: "FileMonitor", package: "FileMonitor"),
-                .target(name: "ToucanSDK"),
             ]
         ),
         // MARK: - tests
