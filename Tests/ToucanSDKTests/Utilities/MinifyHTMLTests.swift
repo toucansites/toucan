@@ -1,21 +1,16 @@
-//
-//  File.swift
-//
-//
-//  Created by Tibor Bodecs on 13/05/2024.
-//
-
-import XCTest
+import Testing
 @testable import ToucanSDK
 
-final class MinifyHTMLTests: XCTestCase {
+@Suite
+struct MinifyHTMLTestSuite {
 
-    func testMinify() throws {
+    @Test
+    func minify() throws {
 
         let html =
             "<html>   <body>   <h1>Hello, world!</h1>   </body>   </html>"
         let minifiedHTML = html.minifyHTML()
-        XCTAssert(!minifiedHTML.isEmpty)
+        #expect(minifiedHTML.isEmpty == false)
     }
 
 }

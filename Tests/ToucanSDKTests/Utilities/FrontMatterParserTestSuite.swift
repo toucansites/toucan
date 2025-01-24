@@ -1,16 +1,11 @@
-//
-//  File.swift
-//
-//
-//  Created by Tibor Bodecs on 03/05/2024.
-//
-
-import XCTest
+import Testing
 @testable import ToucanSDK
 
-final class FrontMatterParserTests: XCTestCase {
+@Suite
+struct FrontMatterParserTestSuite {
 
-    func testBasics() throws {
+    @Test
+    func basicParserLogic() throws {
 
         let input = #"""
             ---
@@ -31,7 +26,7 @@ final class FrontMatterParserTests: XCTestCase {
             "tags": "foo, bar, baz",
         ]
 
-        XCTAssert(metadata == expectation)
+        #expect(metadata == expectation)
     }
 
 }

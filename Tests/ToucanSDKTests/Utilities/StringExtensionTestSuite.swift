@@ -1,52 +1,54 @@
-//
-//  File.swift
-//
-//
-//  Created by Tibor Bodecs on 13/06/2024.
-//
-
-import XCTest
+import Testing
 @testable import ToucanSDK
 
-final class StringExtensionTestSuite: XCTestCase {
+@Suite
+struct StringExtensionTestSuite {
 
-    func testValidDatePrefix() {
+    @Test
+    func validDatePrefix() {
         let validString = "2023-06-13-example"
-        XCTAssert(validString.hasDatePrefix())
+        #expect(validString.hasDatePrefix())
     }
 
-    func testInvalidDatePrefixWrongFormat() {
+    @Test
+    func invalidDatePrefixWrongFormat() {
         let invalidString = "13-06-2023-example"
-        XCTAssert(invalidString.hasDatePrefix() == false)
+        #expect(invalidString.hasDatePrefix() == false)
     }
 
-    func testInvalidDatePrefixNonNumeric() {
+    @Test
+    func invalidDatePrefixNonNumeric() {
         let invalidString = "2023-06-aa-example"
-        XCTAssert(invalidString.hasDatePrefix() == false)
+        #expect(invalidString.hasDatePrefix() == false)
     }
 
-    func testInvalidDatePrefixShortString() {
+    @Test
+    func invalidDatePrefixShortString() {
         let shortString = "2023-06-1"
-        XCTAssert(shortString.hasDatePrefix() == false)
+        #expect(shortString.hasDatePrefix() == false)
     }
 
-    func testEmptyString() {
+    @Test
+    func emptyString() {
         let emptyString = ""
-        XCTAssert(emptyString.hasDatePrefix() == false)
+        #expect(emptyString.hasDatePrefix() == false)
     }
 
-    func testNoHyphenSuffix() {
+    @Test
+    func noHyphenSuffix() {
         let noHyphenString = "2023-06-13example"
-        XCTAssert(noHyphenString.hasDatePrefix() == false)
+        #expect(noHyphenString.hasDatePrefix() == false)
     }
 
-    func testValidDatePrefixWithDifferentContent() {
+    @Test
+    func validDatePrefixWithDifferentContent() {
         let validString = "2023-06-13-12345"
-        XCTAssert(validString.hasDatePrefix())
+        #expect(validString.hasDatePrefix())
     }
 
-    func testValidDatePrefixAtStartOfString() {
+    @Test
+    func validDatePrefixAtStartOfString() {
         let validString = "2023-06-13-"
-        XCTAssert(validString.hasDatePrefix())
+        #expect(validString.hasDatePrefix())
     }
 }

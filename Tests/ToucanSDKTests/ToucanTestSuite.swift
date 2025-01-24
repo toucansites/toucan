@@ -1,14 +1,8 @@
-//
-//  File.swift
-//
-//
-//  Created by Tibor Bodecs on 03/05/2024.
-//
-
-import XCTest
+import Testing
 @testable import ToucanSDK
 
-final class ToucanTestSuite: XCTestCase {
+@Suite("Toucan test suite")
+struct ToucanTestSuite {
 
     var sitesPath: String {
         "/"
@@ -17,6 +11,11 @@ final class ToucanTestSuite: XCTestCase {
             .dropLast(3)
             .joined(separator: "/")
             + "/sites/"
+    }
+
+    @Test("Example test case")
+    func example() async throws {
+        #expect(true)
     }
 
     //    func generate(

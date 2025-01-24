@@ -1,29 +1,26 @@
-//
-//  File.swift
-//
-//
-//  Created by Tibor Bodecs on 03/05/2024.
-//
-
-import XCTest
+import Testing
 @testable import ToucanSDK
 
-extension MarkdownRenderer {
+fileprivate extension MarkdownRenderer {
 
-    static var test = MarkdownRenderer(
-        blockDirectives: [],
-        delegate: nil,
-        logger: .init(
-            label: "test"
+    static var test: MarkdownRenderer {
+        .init(
+            blockDirectives: [],
+            delegate: nil,
+            logger: .init(
+                label: "test"
+            )
         )
-    )
+    }
 }
 
-final class MarkdownToHTMLRendererTestSuite: XCTestCase {
+@Suite
+struct MarkdownRendererTestSuite {
 
     // MARK: - standard elements
 
-    func testParagraphElement() throws {
+    @Test
+    func paragraphElement() throws {
 
         let input = #"""
             Lorem ipsum dolor sit amet.
@@ -36,10 +33,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>Lorem ipsum dolor sit amet.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testLineBreakElement() throws {
+    @Test
+    func lineBreakElement() throws {
 
         let input = #"""
             This is the first line.
@@ -53,10 +51,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>This is the first line.<br>And this is the second line.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testHorizontalRuleElement() throws {
+    @Test
+    func horizontalRuleElement() throws {
 
         let input = #"""
             Lorem ipsum
@@ -75,10 +74,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>Lorem ipsum</p><hr><h2 id="dolor">dolor</h2><p>sit</p><hr><p>amet.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testStrongElement() throws {
+    @Test
+    func strongElement() throws {
 
         let input = #"""
             Lorem **ipsum** dolor __sit__ amet.
@@ -91,10 +91,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>Lorem <strong>ipsum</strong> dolor <strong>sit</strong> amet.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testBlockquoteElement() throws {
+    @Test
+    func blockquoteElement() throws {
 
         let input = #"""
             > Lorem ipsum dolor sit amet.
@@ -107,10 +108,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <blockquote><p>Lorem ipsum dolor sit amet.</p></blockquote>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testNestedBlockquoteElement() throws {
+    @Test
+    func nestedBlockquoteElement() throws {
 
         let input = #"""
             > Lorem ipsum
@@ -125,10 +127,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <blockquote><p>Lorem ipsum</p><blockquote><p>dolor <strong>sit</strong> amet.</p></blockquote></blockquote>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testEmphasisElement() throws {
+    @Test
+    func emphasisElement() throws {
 
         let input = #"""
             Lorem *ipsum* dolor _sit_ amet.
@@ -141,12 +144,13 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>Lorem <em>ipsum</em> dolor <em>sit</em> amet.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
     // MARK: - headings
 
-    func testH1Element() throws {
+    @Test
+    func h1Element() throws {
 
         let input = #"""
             # Lorem ipsum dolor sit amet.
@@ -159,10 +163,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <h1>Lorem ipsum dolor sit amet.</h1>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testH2Element() throws {
+    @Test
+    func h2Element() throws {
 
         let input = #"""
             ## Lorem ipsum dolor sit amet.
@@ -175,10 +180,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <h2 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h2>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testH3Element() throws {
+    @Test
+    func h3Element() throws {
 
         let input = #"""
             ### Lorem ipsum dolor sit amet.
@@ -191,10 +197,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <h3 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h3>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testH4Element() throws {
+    @Test
+    func h4Element() throws {
 
         let input = #"""
             #### Lorem ipsum dolor sit amet.
@@ -207,10 +214,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <h4>Lorem ipsum dolor sit amet.</h4>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testH5Element() throws {
+    @Test
+    func h5Element() throws {
 
         let input = #"""
             ##### Lorem ipsum dolor sit amet.
@@ -223,10 +231,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <h5>Lorem ipsum dolor sit amet.</h5>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testH6Element() throws {
+    @Test
+    func h6Element() throws {
 
         let input = #"""
             ###### Lorem ipsum dolor sit amet.
@@ -239,10 +248,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <h6>Lorem ipsum dolor sit amet.</h6>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testInvalidHeadingElement() throws {
+    @Test
+    func invalidHeadingElement() throws {
 
         /// NOTE: this should be treated as a paragraph
         let input = #"""
@@ -256,12 +266,13 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>####### Lorem ipsum dolor sit amet.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
     // MARK: - lists
 
-    func testUnorderedList() throws {
+    @Test
+    func unorderedList() throws {
 
         let input = #"""
             - foo
@@ -276,10 +287,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <ul><li>foo</li><li>bar</li><li>baz</li></ul>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testOrderedList() throws {
+    @Test
+    func orderedList() throws {
 
         let input = #"""
             1. foo
@@ -294,10 +306,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <ol><li>foo</li><li>bar</li><li>baz</li></ol>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testListWithCode() throws {
+    @Test
+    func listWithCode() throws {
 
         let input = #"""
             - foo `aaa`
@@ -312,12 +325,13 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <ul><li>foo <code>aaa</code></li><li>bar</li><li>baz</li></ul>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
     // MARK: - other elements
 
-    func testInlineCode() throws {
+    @Test
+    func inlineCode() throws {
 
         let input = #"""
             Lorem `ipsum dolor` sit amet.
@@ -330,10 +344,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>Lorem <code>ipsum dolor</code> sit amet.</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testCodeBlockElement() throws {
+    @Test
+    func codeBlockElement() throws {
 
         let input = #"""
             ```js
@@ -357,10 +372,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             </code></pre>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testImageElement() throws {
+    @Test
+    func imageElement() throws {
 
         let input = #"""
             ![Lorem](lorem.jpg)
@@ -373,10 +389,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p><img src="lorem.jpg" alt="Lorem"></p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testLinkElement() throws {
+    @Test
+    func linkElement() throws {
 
         let input = #"""
             [Swift](https://swift.org/)
@@ -389,10 +406,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p><a href="https://swift.org/">Swift</a></p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testInlineHTML() throws {
+    @Test
+    func inlineHTML() throws {
 
         let input = #"""
             <b>https://swift.org</b>
@@ -405,10 +423,11 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p><b>https://swift.org</b></p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
-    func testLineBreak() throws {
+    @Test
+    func lineBreak() throws {
 
         let input = #"""
             a\
@@ -422,7 +441,7 @@ final class MarkdownToHTMLRendererTestSuite: XCTestCase {
             <p>a<br>b</p>
             """#
 
-        XCTAssert(output == expectation)
+        #expect(output == expectation)
     }
 
 }
