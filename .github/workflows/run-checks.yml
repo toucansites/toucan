@@ -8,7 +8,6 @@ on:
 jobs:
   
   run-checks:
-    # runs-on: macOS-latest
     # runs-on: self-hosted
     runs-on: ubuntu-latest
     steps:
@@ -18,10 +17,5 @@ jobs:
       with:
         fetch-depth: 1
     
-    # - name: Install Dependencies
-    #   run: |
-    #     brew install mint
-    #     mint install NickLockwood/SwiftFormat@0.53.4 --no-link
-
     - name: run script
       run: ./scripts/run-checks.sh
