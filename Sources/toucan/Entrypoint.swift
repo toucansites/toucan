@@ -11,10 +11,10 @@ extension Array {
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint {
-    
+
     static func main() async throws {
         var args = CommandLine.arguments
-        
+
         guard
             args.count > 1,
             let path = args.popFirst(),
@@ -27,7 +27,6 @@ struct Entrypoint {
         let base = URL(fileURLWithPath: path).lastPathComponent
         let cmd = base + "-" + subcommand
         let shellCommand = cmd + " " + argString
-        
 
         do {
             let shell = Shell(env: ProcessInfo.processInfo.environment)

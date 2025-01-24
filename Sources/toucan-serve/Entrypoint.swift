@@ -1,5 +1,4 @@
 import ArgumentParser
-import ToucanSDK
 import Logging
 import GitVersion
 import Hummingbird

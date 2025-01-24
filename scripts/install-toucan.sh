@@ -12,4 +12,8 @@ if [ ! -d "/usr/local/bin" ]; then
 fi
 
 swift build -c release
-install .build/release/toucan-cli /usr/local/bin/toucan
+install .build/release/toucan /usr/local/bin/toucan
+install .build/release/toucan-generate /usr/local/bin/toucan-generate
+install .build/release/toucan-init /usr/local/bin/toucan-init
+install .build/release/toucan-serve /usr/local/bin/toucan-serve
+install .build/release/toucan-watch /usr/local/bin/toucan-watch
