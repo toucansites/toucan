@@ -65,16 +65,16 @@ struct Site {
 
     init(_ dict: [String: Any]) {
         let `defaults` = Site(
-           baseUrl: "http://localhost:3000",
-           title: "",
-           description: "",
-           language: nil,
-           dateFormat: "MMMM dd, yyyy",
-           noindex: false,
-           hreflang: [],
-           userDefined: [:]
-       )
-        
+            baseUrl: "http://localhost:3000",
+            title: "",
+            description: "",
+            language: nil,
+            dateFormat: "MMMM dd, yyyy",
+            noindex: false,
+            hreflang: [],
+            userDefined: [:]
+        )
+
         self.baseUrl = (dict.string(Keys.baseUrl) ?? defaults.baseUrl)
             .dropTrailingSlash()
 

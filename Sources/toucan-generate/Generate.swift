@@ -5,7 +5,7 @@ import Logging
 
 extension Entrypoint {
 
-//    struct Generate: AsyncParsableCommand {
-//
+    //    struct Generate: AsyncParsableCommand {
+    //
 
 }

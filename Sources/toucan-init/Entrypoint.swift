@@ -21,28 +21,28 @@ struct Entrypoint: AsyncParsableCommand {
             """,
         version: "1.0.0-beta.2"
     )
-    
+
     // MARK: - arguments
-    
+
     @Argument(help: "The name of the site directory (default: site).")
     var siteDirectory: String = "site"
-    
+
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
-    
+
     // MARK: - run
-    
+
     func run() async throws {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
-        
+
         let siteExists = fileManager.directoryExists(at: siteDirUrl)
-        
+
         guard !siteExists else {
             logger.error("Folder already exists: \(siteDirUrl)")
             return
         }
-        
+
         do {
             let source = Download(
                 sourceUrl: exampleSourceUrl,
@@ -54,13 +54,13 @@ struct Entrypoint: AsyncParsableCommand {
                 targetDirUrl: themesDefaultDirUrl,
                 fileManager: fileManager
             )
-            
+
             logger.info("Preparing source files.")
             try await source.resolve()
-            
+
             logger.info("Preparing theme files.")
             try await theme.resolve()
-            
+
             logger.info("'\(siteDirectory)' was prepared successfully.")
         }
         catch {

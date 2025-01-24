@@ -4,7 +4,7 @@ import Logging
 import GitVersion
 import Hummingbird
 import Foundation
-    
+
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
@@ -23,9 +23,9 @@ struct Entrypoint: AsyncParsableCommand {
         version: "1.0.0-beta.2",
         subcommands: []
     )
-    
+
     // MARK: - arguments
-    
+
     @Argument(help: "The root directory (default: docs).")
     var root: String = "./docs"
 
@@ -40,7 +40,7 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Flag(name: .shortAndLong, help: "Version information.")
     var version: Bool = false
-    
+
     // MARK: - run
 
     func run() async throws {
@@ -52,13 +52,13 @@ struct Entrypoint: AsyncParsableCommand {
         var rootPath = root.replacingOccurrences(of: "~", with: home)
         if rootPath.hasPrefix(".") {
             rootPath =
-            FileManager.default.currentDirectoryPath + "/" + rootPath
+                FileManager.default.currentDirectoryPath + "/" + rootPath
         }
-        
+
         let router = Router()
         var logger = Logger(label: "toucan-server")
         logger.logLevel = logLevel
-        
+
         router.addMiddleware {
             NotFoundMiddleware()
             FileMiddleware(
@@ -67,7 +67,7 @@ struct Entrypoint: AsyncParsableCommand {
                 logger: logger
             )
         }
-        
+
         let app = Application(
             router: router,
             configuration: .init(
