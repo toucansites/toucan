@@ -44,7 +44,6 @@ struct Entrypoint: AsyncParsableCommand {
             input: input,
             output: output,
             baseUrl: baseUrl,
-            seoChecks: false,
             logger: logger
         )
 

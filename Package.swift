@@ -13,6 +13,11 @@ var gitVersion: String {
     return gitInfo.hasUncommittedChanges ? "\(base) (modified)" : base
 }
 
+let swiftSettings: [SwiftSetting] = [
+    .enableExperimentalFeature("StrictConcurrency=complete")
+]
+
+
 let package = Package(
     name: "toucan",
     platforms: [
@@ -68,7 +73,8 @@ let package = Package(
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "Yams", package: "yams"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         // MARK: - executables
         .executableTarget(
@@ -76,7 +82,8 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "ShellKit", package: "shell-kit"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .executableTarget(
             name: "toucan-generate",
@@ -84,7 +91,8 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .target(name: "ToucanSDK"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .executableTarget(
             name: "toucan-init",
@@ -93,7 +101,8 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "ShellKit", package: "shell-kit"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .executableTarget(
             name: "toucan-serve",
@@ -102,7 +111,8 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
                 .target(name: "GitVersion"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         .executableTarget(
             name: "toucan-watch",
@@ -111,7 +121,8 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "ShellKit", package: "shell-kit"),
                 .product(name: "FileMonitor", package: "FileMonitor"),
-            ]
+            ],
+            swiftSettings: swiftSettings
         ),
         // MARK: - tests
         .testTarget(
