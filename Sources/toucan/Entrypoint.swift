@@ -30,16 +30,20 @@ struct Entrypoint {
         guard let exe = Command.findInPath(withName: toucanCmd) else {
             fatalError("Command not found (\(toucanCmd)).")
         }
-        let cmd = exe
+        let cmd =
+            exe
             .addArguments(args)
             .setStdin(.pipe(closeImplicitly: false))
             .setStdout(.inherit)
             .setStderr(.inherit)
-        
+
         let subprocess = try cmd.spawn()
 
-        let signalSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
-        signal(SIGINT, SIG_IGN) // Ignore default SIGINT behavior
+        let signalSource = DispatchSource.makeSignalSource(
+            signal: SIGINT,
+            queue: .main
+        )
+        signal(SIGINT, SIG_IGN)  // Ignore default SIGINT behavior
 
         signalSource.setEventHandler {
             if subprocess.isRunning {
@@ -47,7 +51,7 @@ struct Entrypoint {
             }
         }
         signalSource.resume()
-       
+
         try subprocess.wait()
     }
 }

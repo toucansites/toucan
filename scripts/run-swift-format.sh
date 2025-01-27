@@ -15,12 +15,11 @@ for arg in "$@"; do
   fi
 done
 
-SWIFTFORMAT_BIN=${SWIFTFORMAT_BIN:-$(command -v swift-format)} || fatal "❌ SWIFTFORMAT_BIN unset and no swift-format on PATH"
 
 git -C "${REPO_ROOT}" ls-files -z '*.swift' \
     | grep -z -v \
     -e 'Package.swift' \
-  | xargs -0 "${SWIFTFORMAT_BIN}" "${FORMAT_COMMAND[@]}" --parallel \
+  | xargs -0 swift format "${FORMAT_COMMAND[@]}" --parallel \
   && SWIFT_FORMAT_RC=$? || SWIFT_FORMAT_RC=$?
 
 if [ "${SWIFT_FORMAT_RC}" -ne 0 ]; then

@@ -6,7 +6,6 @@ sane
 sanity
 insane
 insanity
-kill
 killed
 killing
 hang
