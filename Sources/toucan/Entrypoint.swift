@@ -1,6 +1,6 @@
 import Foundation
 import Dispatch
-import ShellKit
+import SwiftCommand
 
 extension Array {
 
@@ -24,48 +24,30 @@ struct Entrypoint {
             fatalError("argument error")
         }
 
-        let argString = args.map { "\"" + $0 + "\"" }.joined(separator: " ")
         let base = URL(fileURLWithPath: path).lastPathComponent
-        let cmd = base + "-" + subcommand
-        let shellCommand = "/usr/local/bin/" + cmd + " " + argString
+        let toucanCmd = base + "-" + subcommand
+
+        guard let exe = Command.findInPath(withName: toucanCmd) else {
+            fatalError("Command not found (\(toucanCmd)).")
+        }
+        let cmd = exe
+            .addArguments(args)
+            .setStdin(.pipe(closeImplicitly: false))
+            .setStdout(.inherit)
+            .setStderr(.inherit)
         
-        print(shellCommand)
+        let subprocess = try cmd.spawn()
 
-        do {
-            let shell = Shell(env: ProcessInfo.processInfo.environment)
-            
-            // Set up signal handler for SIGINT
-            let signalSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
-            signal(SIGINT, SIG_IGN) // Ignore default SIGINT behavior
-            
+        let signalSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
+        signal(SIGINT, SIG_IGN) // Ignore default SIGINT behavior
 
-            signalSource.setEventHandler {
-                print("sigint")
-                // Forward SIGINT to the subprocess
-//                if process.isRunning {
-//                    kill(process.processIdentifier, SIGINT)
-//                }
-            }
-            signalSource.resume()
-            
-            
-            let res = try shell.run(shellCommand)
-            print(res)
-        }
-        catch let error as ShellKit.Shell.Error {
-            switch error {
-            case .outputData:
-                print(error.localizedDescription)
-            case let .generic(code, message):
-                if code == 127 {
-                    print("Missing subcommand: \(cmd)")
-                    return
-                }
-                print(message)
+        signalSource.setEventHandler {
+            if subprocess.isRunning {
+                kill(subprocess.identifier, SIGINT)
             }
         }
-        catch {
-            print(error)
-        }
+        signalSource.resume()
+       
+        try subprocess.wait()
     }
 }

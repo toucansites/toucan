@@ -1,5 +1,5 @@
 {
-  "originHash" : "6f87b247d1be2550696eb17e3ae4c31765810dfb27fb75e4fe43cb51f4777585",
+  "originHash" : "d16c3e8c8a7eb0272fdb027de5fe17007996d71671c0440d40058838bef6b4d0",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -233,6 +233,15 @@
       "state" : {
         "revision" : "c8a44d836fe7913603e246acab7c528c2e780168",
         "version" : "1.4.0"
+      }
+    },
+    {
+      "identity" : "swiftcommand",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Zollerboy1/SwiftCommand",
+      "state" : {
+        "revision" : "4a0ea7695a17c4e4053e15814110b5086c3c2ceb",
+        "version" : "1.4.1"
       }
     },
     {
