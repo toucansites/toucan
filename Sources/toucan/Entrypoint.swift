@@ -1,4 +1,5 @@
 import Foundation
+import Dispatch
 import ShellKit
 
 extension Array {
@@ -26,10 +27,28 @@ struct Entrypoint {
         let argString = args.map { "\"" + $0 + "\"" }.joined(separator: " ")
         let base = URL(fileURLWithPath: path).lastPathComponent
         let cmd = base + "-" + subcommand
-        let shellCommand = cmd + " " + argString
+        let shellCommand = "/usr/local/bin/" + cmd + " " + argString
+        
+        print(shellCommand)
 
         do {
             let shell = Shell(env: ProcessInfo.processInfo.environment)
+            
+            // Set up signal handler for SIGINT
+            let signalSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main)
+            signal(SIGINT, SIG_IGN) // Ignore default SIGINT behavior
+            
+
+            signalSource.setEventHandler {
+                print("sigint")
+                // Forward SIGINT to the subprocess
+//                if process.isRunning {
+//                    kill(process.processIdentifier, SIGINT)
+//                }
+            }
+            signalSource.resume()
+            
+            
             let res = try shell.run(shellCommand)
             print(res)
         }
