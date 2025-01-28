@@ -47,7 +47,7 @@ struct Entrypoint {
 
         signalSource.setEventHandler {
             if subprocess.isRunning {
-                kill(subprocess.identifier, SIGINT)
+                subprocess.interrupt()
             }
         }
         signalSource.resume()
