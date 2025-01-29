@@ -167,6 +167,7 @@ let package = Package(
             name: "ToucanModelsTests",
             dependencies: [
                 .target(name: "ToucanModels"),
+                .target(name: "ToucanDecoder"),
             ]
         ),
         .testTarget(
