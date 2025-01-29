@@ -94,6 +94,13 @@ let package = Package(
             ],
             swiftSettings: swiftSettings
         ),
+        .target(
+            name: "ToucanDecoder",
+            dependencies: [
+                .product(name: "Yams", package: "yams"),
+            ],
+            swiftSettings: swiftSettings
+        ),
         // MARK: - executables
         .executableTarget(
             name: "toucan",
@@ -160,6 +167,12 @@ let package = Package(
             name: "ToucanModelsTests",
             dependencies: [
                 .target(name: "ToucanModels"),
+            ]
+        ),
+        .testTarget(
+            name: "ToucanDecoderTests",
+            dependencies: [
+                .target(name: "ToucanDecoder"),
             ]
         ),
     ]
