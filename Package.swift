@@ -80,6 +80,13 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .target(
+            name: "ToucanModels",
+            dependencies: [
+                
+            ],
+            swiftSettings: swiftSettings
+        ),
+        .target(
             name: "ToucanFileSystem",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
@@ -147,6 +154,12 @@ let package = Package(
             name: "ToucanFileSystemTests",
             dependencies: [
                 .target(name: "ToucanFileSystem"),
+            ]
+        ),
+        .testTarget(
+            name: "ToucanModelsTests",
+            dependencies: [
+                .target(name: "ToucanModels"),
             ]
         ),
     ]
