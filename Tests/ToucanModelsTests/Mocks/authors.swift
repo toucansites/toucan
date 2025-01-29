@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-
 @testable import ToucanModels
 
 extension ContentBundle {
@@ -36,12 +35,17 @@ extension ContentBundle {
                         scope: "list",
                         limit: 100,
                         offset: 0,
-                        filter: .field(key: "authors", operator: .contains, value: "{{id}}"),
+                        filter: .field(
+                            key: "authors",
+                            operator: .contains,
+                            value: "{{id}}"
+                        ),
                         orderBy: [.init(key: "publication", direction: .desc)]
-                    ),
+                    )
                 ]
             ),
-            pageBundles: (1...9).map { i in
+            pageBundles: (1...9)
+                .map { i in
                     .init(
                         frontMatter: [
                             "id": "author-\(i)",
@@ -52,7 +56,7 @@ extension ContentBundle {
                         ],
                         properties: [:]
                     )
-            }
+                }
         )
     }
 }

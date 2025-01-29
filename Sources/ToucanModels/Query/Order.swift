@@ -9,7 +9,7 @@ public struct Order {
 
     public let key: String
     public let direction: Direction
-    
+
     public init(
         key: String,
         direction: Direction

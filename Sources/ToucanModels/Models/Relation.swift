@@ -12,7 +12,7 @@ public struct Relation {
     public let references: String
     public let type: RelationType
     public let order: Order?
-    
+
     public init(
         key: String,
         references: String,

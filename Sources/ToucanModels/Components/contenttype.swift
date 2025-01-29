@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-
-
 struct ContentType {
 
     let id: String
@@ -16,5 +14,3 @@ struct ContentType {
     let relations: [Relation]
     let queries: [String: Query]
 }
-
-

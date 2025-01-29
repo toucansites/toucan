@@ -14,7 +14,7 @@ public indirect enum TypeWrapper {
     case string(String)
     case date(Double)
     case array([TypeWrapper])
-    
+
     public init?(_ value: Any) {
         switch value {
         case let boolValue as Bool:
@@ -59,7 +59,7 @@ extension TypeWrapper: Equatable {
 }
 
 extension TypeWrapper: Comparable {
-    
+
     public static func < (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         // FIXME: should we always return false in this case...? 🤔
@@ -79,7 +79,7 @@ extension TypeWrapper: Comparable {
             return order(lhs) < order(rhs)
         }
     }
-    
+
     private static func order(_ type: Self) -> Int {
         switch type {
         case .bool: return 0

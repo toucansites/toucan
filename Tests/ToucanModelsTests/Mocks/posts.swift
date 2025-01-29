@@ -5,13 +5,12 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-
 @testable import ToucanModels
 
 extension ContentBundle {
-    
+
     static var posts: ContentBundle {
-        
+
         .init(
             contentType: .init(
                 id: "post",
@@ -48,7 +47,7 @@ extension ContentBundle {
                         references: "tag",
                         type: .many,
                         order: .init(key: "title", direction: .asc)
-                    )
+                    ),
                 ],
                 queries: [
                     "related": .init(
@@ -56,12 +55,17 @@ extension ContentBundle {
                         scope: "list",
                         limit: 4,
                         offset: 0,
-                        filter: .field(key: "tags", operator: .in, value: "{{tags}}"),
+                        filter: .field(
+                            key: "tags",
+                            operator: .in,
+                            value: "{{tags}}"
+                        ),
                         orderBy: []
-                    ),
+                    )
                 ]
             ),
-            pageBundles: (0...9).map { i in
+            pageBundles: (0...9)
+                .map { i in
                     .init(
                         frontMatter: [
                             "id": "post-\(i)",
@@ -69,12 +73,16 @@ extension ContentBundle {
                             "name": "Post \(i)",
                             "date": "2022-01-31T02:22:40+00:00",
                             "featured": Bool.random(),
-                            "authors": (0...9).shuffled().prefix((1...4).randomElement()!).map { "author-\($0)" },
-                            "tags": (0...9).shuffled().prefix((1...4).randomElement()!).map { "tag-\($0)" },
+                            "authors": (0...9).shuffled()
+                                .prefix((1...4).randomElement()!)
+                                .map { "author-\($0)" },
+                            "tags": (0...9).shuffled()
+                                .prefix((1...4).randomElement()!)
+                                .map { "tag-\($0)" },
                         ],
                         properties: [:]
                     )
-            }
+                }
         )
     }
 }

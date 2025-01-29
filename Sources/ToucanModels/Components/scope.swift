@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-
-
 //struct Scope {
 //
 //    struct CodingStrategy {

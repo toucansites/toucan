@@ -11,7 +11,7 @@ public struct Property {
     public let type: DataType
     public let required: Bool
     public let `default`: Any?
-    
+
     public init(
         key: String,
         type: DataType,

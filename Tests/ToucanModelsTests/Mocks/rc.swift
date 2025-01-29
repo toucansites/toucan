@@ -5,13 +5,12 @@
 //  Created by Tibor Bodecs on 2025. 01. 19..
 //
 
-
 @testable import ToucanModels
 
 extension RendererConfig {
-    
+
     static var mock: RendererConfig {
-        
+
         .init(
             queries: [
                 "posts": .init(
@@ -27,7 +26,11 @@ extension RendererConfig {
                     scope: "list",
                     limit: nil,
                     offset: nil,
-                    filter: .field(key: "featured", operator: .equals, value: true),
+                    filter: .field(
+                        key: "featured",
+                        operator: .equals,
+                        value: true
+                    ),
                     orderBy: [
                         .init(key: "date", direction: .desc)
                     ]
@@ -36,16 +39,16 @@ extension RendererConfig {
             ],
             renders: .pageBundle,
             template: .init(
-                engine: "mustache", // mustache|json|swift|...
-                options: [ //mustache-renderer-config
+                engine: "mustache",  // mustache|json|swift|...
+                options: [  //mustache-renderer-config
                     "dataTypes": [
                         "date": [
                             "formats": [
                                 "full": "...",
                                 "medium": "...",
-                                //                        "iso886"
-                                //                        "rss"
-                                //                        "sitemap"
+                                    //                        "iso886"
+                                    //                        "rss"
+                                    //                        "sitemap"
                             ]
                         ]
                     ],
@@ -59,15 +62,17 @@ extension RendererConfig {
                                     ]
                                 ]
                             ],
-                            "scopes": [ // views?
+                            "scopes": [  // views?
                                 //...
                                 "reference": ["id", "title"],
-                                "list": ["id", "title", "description", "authors"],
+                                "list": [
+                                    "id", "title", "description", "authors",
+                                ],
                                 "detail": ["*"],
-                                      ]
+                            ],
                         ]
-                    ]
-                         ],
+                    ],
+                ],
                 output: "{{slug}}/index.html"
             )
         )

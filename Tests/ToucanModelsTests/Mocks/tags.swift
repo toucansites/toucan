@@ -5,11 +5,10 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-
 @testable import ToucanModels
 
 extension ContentBundle {
-    
+
     static var tags: ContentBundle {
         .init(
             contentType: .init(
@@ -21,7 +20,7 @@ extension ContentBundle {
                         type: .string,
                         required: true,
                         default: nil
-                    ),
+                    )
                 ],
                 relations: [],
                 queries: [
@@ -30,12 +29,17 @@ extension ContentBundle {
                         scope: "???",
                         limit: 100,
                         offset: 0,
-                        filter: .field(key: "tags", operator: .contains, value: "{{id}}"),
+                        filter: .field(
+                            key: "tags",
+                            operator: .contains,
+                            value: "{{id}}"
+                        ),
                         orderBy: [.init(key: "publication", direction: .desc)]
-                    ),
+                    )
                 ]
             ),
-            pageBundles: (0...9).map { i in
+            pageBundles: (0...9)
+                .map { i in
                     .init(
                         frontMatter: [
                             "id": "tags-\(i)",
@@ -43,8 +47,8 @@ extension ContentBundle {
                         ],
                         properties: [:]
                     )
-            }
-            
+                }
+
         )
     }
 }

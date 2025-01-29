@@ -14,20 +14,23 @@ import ToucanDecoder
 struct ConfigModelTestSuite {
 
     // MARK: -
-    
+
     @Test
     func testDecodingThemeConfig() throws {
-        
+
         let themeConfigData = """
-        """.data(using: .utf8)!
-        
+            """
+            .data(using: .utf8)!
+
         let decoer = ToucanYAMLDecoder()
 
-        let themeConfig = try decoer.decode(HTMLRendererConfig.Themes.self, from: themeConfigData)
+        let themeConfig = try decoer.decode(
+            HTMLRendererConfig.Themes.self,
+            from: themeConfigData
+        )
 
-        
         print(themeConfig)
-        
-//        #expect(jsonString == #"{"type":"bool"}"#)
+
+        //        #expect(jsonString == #"{"type":"bool"}"#)
     }
 }

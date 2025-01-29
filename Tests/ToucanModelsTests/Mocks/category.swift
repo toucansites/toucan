@@ -5,13 +5,12 @@
 //  Created by Tibor Bodecs on 2025. 01. 19..
 //
 
-
 @testable import ToucanModels
 
 extension ContentBundle {
-    
+
     static var categories: ContentBundle {
-        
+
         .init(
             contentType: .init(
                 id: "category",
@@ -37,12 +36,17 @@ extension ContentBundle {
                         scope: "???",
                         limit: 100,
                         offset: 0,
-                        filter: .field(key: "category", operator: .equals, value: "{{id}}"),
+                        filter: .field(
+                            key: "category",
+                            operator: .equals,
+                            value: "{{id}}"
+                        ),
                         orderBy: [.init(key: "order", direction: .desc)]
-                    ),
+                    )
                 ]
             ),
-            pageBundles: (1...9).map { i in
+            pageBundles: (1...9)
+                .map { i in
                     .init(
                         frontMatter: [
                             "id": "category-\(i)",
@@ -53,7 +57,7 @@ extension ContentBundle {
                         ],
                         properties: [:]
                     )
-            }
+                }
         )
     }
 }

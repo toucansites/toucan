@@ -13,7 +13,7 @@ public struct Query {
     public let offset: Int?
     public let filter: Condition?
     public let orderBy: [Order]
-    
+
     public init(
         contentType: String,
         scope: String,
@@ -43,13 +43,13 @@ public struct Query {
     {{id}} -> identifier of the current item
     {{property}} -> any base property of self?
         (maybe relations, like author ids?)
- 
- 
+
+
      @Asdf(
         param: "...?",
      ) {
-        
+
      }
- 
+
      @
  */

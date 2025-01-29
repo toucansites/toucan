@@ -6,32 +6,33 @@
 //
 
 extension ContentBundle {
-    
+
     func query(
         _ query: Query
     ) -> [PageBundle] {
         var filteredPageBundles = pageBundles.filter { element in
             evaluate(condition: query.filter, with: element.properties)
         }
-    
+
         for order in query.orderBy.reversed() {
             filteredPageBundles.sort { a, b in
                 guard
                     let valueA = a.properties[order.key],
                     let valueB = b.properties[order.key]
                 else { return false }
-                return order.direction == .asc ? (valueA < valueB) : (valueA > valueB)
+                return order.direction == .asc
+                    ? (valueA < valueB) : (valueA > valueB)
             }
         }
-        
+
         if let offset = query.offset {
             filteredPageBundles = Array(filteredPageBundles.dropFirst(offset))
         }
-        
+
         if let limit = query.limit {
             filteredPageBundles = Array(filteredPageBundles.prefix(limit))
         }
-        
+
         return filteredPageBundles
     }
 
@@ -51,15 +52,17 @@ extension ContentBundle {
                 operator: `operator`,
                 value: typedValue
             )
-            
+
         case .and(let conditions):
-            return conditions.allSatisfy { evaluate(condition: $0, with: props) }
-            
+            return conditions.allSatisfy {
+                evaluate(condition: $0, with: props)
+            }
+
         case .or(let conditions):
             return conditions.contains { evaluate(condition: $0, with: props) }
         }
     }
-    
+
     func evaluateField(
         fieldValue: TypeWrapper,
         operator: Operator,
@@ -79,14 +82,18 @@ extension ContentBundle {
         case .greaterThanOrEquals:
             return fieldValue >= value
         case .like:
-            guard case let .string(fieldString) = fieldValue else { return false }
+            guard case let .string(fieldString) = fieldValue else {
+                return false
+            }
             guard case let .string(valueString) = value else { return false }
             return fieldString.contains(valueString)
         case .caseInsensitiveLike:
-            guard case let .string(fieldString) = fieldValue else { return false }
+            guard case let .string(fieldString) = fieldValue else {
+                return false
+            }
             guard case let .string(valueString) = value else { return false }
             return fieldString.lowercased().contains(valueString.lowercased())
-            // FIXME: double check if in & contains are ok like this or not...
+        // FIXME: double check if in & contains are ok like this or not...
         case .in:
             guard case let .array(valueArray) = value else { return false }
             return valueArray.contains(fieldValue)

@@ -9,7 +9,7 @@ public struct Group {
 
     public let key: String
     public let order: Order
-    
+
     public init(
         key: String,
         order: Order

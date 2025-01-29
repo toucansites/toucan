@@ -3,7 +3,7 @@ import Foundation
 public struct ToucanJSONDecoder: ToucanDecoder {
 
     public init() {
-        
+
     }
 
     public func decode<T: Decodable>(
