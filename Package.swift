@@ -29,6 +29,7 @@ let package = Package(
     ],
     products: [
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
+        .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
         .executable(name: "toucan", targets: ["toucan"]),
         .executable(name: "toucan-generate", targets: ["toucan-generate"]),
         .executable(name: "toucan-init", targets: ["toucan-init"]),
@@ -40,7 +41,8 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
         .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
         .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.0"),
-        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
+//        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.1.0"),
+        .package(url: "https://github.com/binarybirds/file-manager-kit", branch: "tib/features"),
         .package(url: "https://github.com/binarybirds/shell-kit", from: "1.0.0"),
         .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.2.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
@@ -74,6 +76,14 @@ let package = Package(
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "Yams", package: "yams"),
+            ],
+            swiftSettings: swiftSettings
+        ),
+        .target(
+            name: "ToucanFileSystem",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -132,6 +142,12 @@ let package = Package(
             dependencies: [
                 .target(name: "ToucanSDK"),
             ]
-        )
+        ),
+        .testTarget(
+            name: "ToucanFileSystemTests",
+            dependencies: [
+                .target(name: "ToucanFileSystem"),
+            ]
+        ),
     ]
 )

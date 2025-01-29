@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FileManagerKit
 
 struct PageBundleLocation {
     /// The original path of the page bundle directory, also serves as the page bundle identifier.
@@ -16,11 +17,11 @@ struct PageBundleLocation {
 
 struct PageBundleLocator {
 
-    let fileManager: FileManager
+    let fileManager: FileManagerKit
     let contentsUrl: URL
 
     init(
-        fileManager: FileManager,
+        fileManager: FileManagerKit,
         contentsUrl: URL
     ) {
         self.fileManager = fileManager
