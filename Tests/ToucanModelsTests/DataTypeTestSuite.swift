@@ -30,7 +30,7 @@ struct DataTypeTestSuite {
 
     @Test
     func testEncodingBool() throws {
-        let dataType: DataType = .bool
+        let dataType: ProperyType = .bool
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -40,14 +40,17 @@ struct DataTypeTestSuite {
     @Test
     func testDecodingBool() throws {
         let jsonData = #"{"type":"bool"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(DataType.self, from: jsonData)
+        let decodedDataType = try decoder.decode(
+            ProperyType.self,
+            from: jsonData
+        )
 
         #expect(decodedDataType == .bool)
     }
 
     @Test
     func testEncodingInt() throws {
-        let dataType: DataType = .int
+        let dataType: ProperyType = .int
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -57,14 +60,17 @@ struct DataTypeTestSuite {
     @Test
     func testDecodingInt() throws {
         let jsonData = #"{"type":"int"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(DataType.self, from: jsonData)
+        let decodedDataType = try decoder.decode(
+            ProperyType.self,
+            from: jsonData
+        )
 
         #expect(decodedDataType == .int)
     }
 
     @Test
     func testEncodingDate() throws {
-        let dataType: DataType = .date(format: "y.m.d")
+        let dataType: ProperyType = .date(format: "y.m.d")
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -74,14 +80,17 @@ struct DataTypeTestSuite {
     @Test
     func testDecodingDate() throws {
         let jsonData = #"{"format":"y.m.d","type":"date"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(DataType.self, from: jsonData)
+        let decodedDataType = try decoder.decode(
+            ProperyType.self,
+            from: jsonData
+        )
 
         #expect(decodedDataType == .date(format: "y.m.d"))
     }
 
     @Test
     func testEncodingString() throws {
-        let dataType: DataType = .string
+        let dataType: ProperyType = .string
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -91,7 +100,10 @@ struct DataTypeTestSuite {
     @Test
     func testDecodingString() throws {
         let jsonData = #"{"type":"string"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(DataType.self, from: jsonData)
+        let decodedDataType = try decoder.decode(
+            ProperyType.self,
+            from: jsonData
+        )
 
         #expect(decodedDataType == .string)
     }

@@ -4,10 +4,8 @@ import Testing
 @Suite
 struct PageBundleLocatorTestSuite {
 
+    @Test
     func example() async throws {
 
-        let mockConfig = """
-            """
-        #expect(true)
     }
 }

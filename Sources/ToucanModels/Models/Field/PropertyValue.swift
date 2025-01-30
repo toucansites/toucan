@@ -7,13 +7,13 @@
 
 import Foundation
 
-public indirect enum TypeWrapper {
+public indirect enum PropertyValue {
     case bool(Bool)
     case int(Int)
     case double(Double)
     case string(String)
     case date(Double)
-    case array([TypeWrapper])
+    case array([PropertyValue])
 
     public init?(_ value: Any) {
         switch value {
@@ -29,14 +29,14 @@ public indirect enum TypeWrapper {
             self = .date(dateValue.timeIntervalSince1970)
         case let arrayValue as [Any]:
             // FIXME: log a warning if there was a value drop for the type.
-            self = .array(arrayValue.compactMap { TypeWrapper($0) })
+            self = .array(arrayValue.compactMap { PropertyValue($0) })
         default:
             return nil
         }
     }
 }
 
-extension TypeWrapper: Equatable {
+extension PropertyValue: Equatable {
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
@@ -58,7 +58,7 @@ extension TypeWrapper: Equatable {
     }
 }
 
-extension TypeWrapper: Comparable {
+extension PropertyValue: Comparable {
 
     public static func < (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {

@@ -4,10 +4,8 @@ import Testing
 @Suite
 struct ConfigLoaderTestSuite {
 
+    @Test
     func example() async throws {
 
-        let mockConfig = """
-            """
-        #expect(true)
     }
 }

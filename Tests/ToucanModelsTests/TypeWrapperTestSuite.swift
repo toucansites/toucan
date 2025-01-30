@@ -13,56 +13,58 @@ struct TypeWrapperTestSuite {
 
     @Test
     func testEquality() {
-        #expect(TypeWrapper.bool(true) == TypeWrapper.bool(true))
-        #expect(TypeWrapper.bool(true) != TypeWrapper.bool(false))
+        #expect(PropertyValue.bool(true) == PropertyValue.bool(true))
+        #expect(PropertyValue.bool(true) != PropertyValue.bool(false))
 
-        #expect(TypeWrapper.int(5) == TypeWrapper.int(5))
-        #expect(TypeWrapper.int(5) != TypeWrapper.int(10))
+        #expect(PropertyValue.int(5) == PropertyValue.int(5))
+        #expect(PropertyValue.int(5) != PropertyValue.int(10))
 
-        #expect(TypeWrapper.double(5.5) == TypeWrapper.double(5.5))
-        #expect(TypeWrapper.double(5.5) != TypeWrapper.double(10.0))
+        #expect(PropertyValue.double(5.5) == PropertyValue.double(5.5))
+        #expect(PropertyValue.double(5.5) != PropertyValue.double(10.0))
 
-        #expect(TypeWrapper.string("test") == TypeWrapper.string("test"))
-        #expect(TypeWrapper.string("test") != TypeWrapper.string("other"))
+        #expect(PropertyValue.string("test") == PropertyValue.string("test"))
+        #expect(PropertyValue.string("test") != PropertyValue.string("other"))
 
-        #expect(TypeWrapper.date(0) == TypeWrapper.date(0))
-        #expect(TypeWrapper.date(0) != TypeWrapper.date(100))
+        #expect(PropertyValue.date(0) == PropertyValue.date(0))
+        #expect(PropertyValue.date(0) != PropertyValue.date(100))
     }
 
     @Test
     func testLessThan() {
-        #expect(TypeWrapper.bool(false) < TypeWrapper.bool(true))
-        #expect(!(TypeWrapper.bool(true) < TypeWrapper.bool(false)))
+        #expect(PropertyValue.bool(false) < PropertyValue.bool(true))
+        #expect(!(PropertyValue.bool(true) < PropertyValue.bool(false)))
 
-        #expect(TypeWrapper.int(5) < TypeWrapper.int(10))
-        #expect(!(TypeWrapper.int(10) < TypeWrapper.int(5)))
+        #expect(PropertyValue.int(5) < PropertyValue.int(10))
+        #expect(!(PropertyValue.int(10) < PropertyValue.int(5)))
 
-        #expect(TypeWrapper.double(5.5) < TypeWrapper.double(10.0))
-        #expect(!(TypeWrapper.double(10.0) < TypeWrapper.double(5.5)))
+        #expect(PropertyValue.double(5.5) < PropertyValue.double(10.0))
+        #expect(!(PropertyValue.double(10.0) < PropertyValue.double(5.5)))
 
-        #expect(TypeWrapper.string("apple") < TypeWrapper.string("banana"))
-        #expect(!(TypeWrapper.string("banana") < TypeWrapper.string("apple")))
+        #expect(PropertyValue.string("apple") < PropertyValue.string("banana"))
+        #expect(
+            !(PropertyValue.string("banana") < PropertyValue.string("apple"))
+        )
 
-        #expect(TypeWrapper.date(0) < TypeWrapper.date(100))
-        #expect(!(TypeWrapper.date(100) < TypeWrapper.date(0)))
+        #expect(PropertyValue.date(0) < PropertyValue.date(100))
+        #expect(!(PropertyValue.date(100) < PropertyValue.date(0)))
     }
 
     @Test
     func testDefaultOrderForDifferentCases() {
-        #expect(TypeWrapper.bool(false) < TypeWrapper.int(0))
-        #expect(TypeWrapper.int(0) < TypeWrapper.double(0.0))
-        #expect(TypeWrapper.double(0.0) < TypeWrapper.string(""))
-        #expect(TypeWrapper.string("") < TypeWrapper.date(0))
+        #expect(PropertyValue.bool(false) < PropertyValue.int(0))
+        #expect(PropertyValue.int(0) < PropertyValue.double(0.0))
+        #expect(PropertyValue.double(0.0) < PropertyValue.string(""))
+        #expect(PropertyValue.string("") < PropertyValue.date(0))
 
-        #expect(!(TypeWrapper.date(0) < TypeWrapper.string("")))
-        #expect(!(TypeWrapper.string("") < TypeWrapper.double(0.0)))
-        #expect(!(TypeWrapper.double(0.0) < TypeWrapper.int(0)))
-        #expect(!(TypeWrapper.int(0) < TypeWrapper.bool(false)))
+        #expect(!(PropertyValue.date(0) < PropertyValue.string("")))
+        #expect(!(PropertyValue.string("") < PropertyValue.double(0.0)))
+        #expect(!(PropertyValue.double(0.0) < PropertyValue.int(0)))
+        #expect(!(PropertyValue.int(0) < PropertyValue.bool(false)))
     }
 
     @Test
     func testSorting() {
-        let unsorted: [TypeWrapper] = [
+        let unsorted: [PropertyValue] = [
             .string("banana"),
             .int(10),
             .bool(true),
@@ -73,7 +75,7 @@ struct TypeWrapperTestSuite {
         ]
 
         let sorted = unsorted.sorted()
-        let expected: [TypeWrapper] = [
+        let expected: [PropertyValue] = [
             .bool(false),
             .bool(true),
             .int(5),

@@ -30,6 +30,8 @@ let package = Package(
     products: [
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
         .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
+        .library(name: "ToucanModels", targets: ["ToucanModels"]),
+        .library(name: "ToucanDecoder", targets: ["ToucanDecoder"]),
         .executable(name: "toucan", targets: ["toucan"]),
         .executable(name: "toucan-generate", targets: ["toucan-generate"]),
         .executable(name: "toucan-init", targets: ["toucan-init"]),

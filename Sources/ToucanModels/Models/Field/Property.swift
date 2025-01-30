@@ -8,13 +8,13 @@
 public struct Property {
 
     public let key: String
-    public let type: DataType
+    public let type: ProperyType
     public let required: Bool
     public let `default`: Any?
 
     public init(
         key: String,
-        type: DataType,
+        type: ProperyType,
         required: Bool,
         `default`: Any? = nil
     ) {
