@@ -9,20 +9,18 @@ extension ContentDefinition.Mocks {
                 "pages"
             ],
             properties: [
-                .init(
-                    key: "title",
+                "title": .init(
                     type: .string,
                     required: true,
                     default: nil
                 ),
-                .init(
-                    key: "description",
+                "description": .init(
                     type: .string,
                     required: true,
                     default: nil
                 ),
             ],
-            relations: [],
+            relations: [:],
             queries: [:]
         )
     }

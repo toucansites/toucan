@@ -10,6 +10,7 @@ import Foundation
 extension Property {
 
     func convert(
+        key: String,
         rawValue: Any?,
         using formatter: DateFormatter
     ) -> PropertyValue? {
@@ -82,10 +83,14 @@ extension ContentDefinition {
     ) -> Content {
 
         var properties: [String: PropertyValue] = [:]
-        for property in self.properties {
-            let rawValue = rawContent.frontMatter[property.key]
-            let value = property.convert(rawValue: rawValue, using: formatter)
-            properties[property.key] = value
+        for (key, property) in self.properties {
+            let rawValue = rawContent.frontMatter[key]
+            let value = property.convert(
+                key: key,  // TODO: key is only used for logging.
+                rawValue: rawValue,
+                using: formatter
+            )
+            properties[key] = value
         }
 
         return .init(

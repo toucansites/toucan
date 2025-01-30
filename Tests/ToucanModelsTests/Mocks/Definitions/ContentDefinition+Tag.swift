@@ -9,14 +9,13 @@ extension ContentDefinition.Mocks {
                 "blog/tags"
             ],
             properties: [
-                .init(
-                    key: "name",
+                "name": .init(
                     type: .string,
                     required: true,
                     default: nil
                 )
             ],
-            relations: [],
+            relations: [:],
             queries: [
                 "posts": .init(
                     contentType: "post",

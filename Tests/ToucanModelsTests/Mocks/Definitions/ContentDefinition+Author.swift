@@ -9,20 +9,18 @@ extension ContentDefinition.Mocks {
                 "blog/authors"
             ],
             properties: [
-                .init(
-                    key: "name",
+                "name": .init(
                     type: .string,
                     required: true,
                     default: nil
                 ),
-                .init(
-                    key: "description",
+                "description": .init(
                     type: .string,
                     required: false,
                     default: nil
                 ),
             ],
-            relations: [],
+            relations: [:],
             queries: [
                 "posts": .init(
                     contentType: "post",

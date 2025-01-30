@@ -9,34 +9,29 @@ extension ContentDefinition.Mocks {
                 "blog/posts"
             ],
             properties: [
-                .init(
-                    key: "name",
+                "name": .init(
                     type: .string,
                     required: true,
                     default: nil
                 ),
-                .init(
-                    key: "date",
+                "date": .init(
                     type: .date(format: "yyyy-MM-dd'T'HH:mm:ssZ"),
                     required: true,
                     default: nil
                 ),
-                .init(
-                    key: "featured",
+                "featured": .init(
                     type: .bool,
                     required: true,
                     default: false
                 ),
             ],
             relations: [
-                .init(
-                    key: "authors",
+                "authors": .init(
                     references: "author",
                     type: .many,
                     order: .init(key: "title", direction: .asc)
                 ),
-                .init(
-                    key: "tags",
+                "tags": .init(
                     references: "tag",
                     type: .many,
                     order: .init(key: "title", direction: .asc)

@@ -9,20 +9,18 @@ extension ContentDefinition.Mocks {
                 "docs/categories"
             ],
             properties: [
-                .init(
-                    key: "name",
+                "name": .init(
                     type: .string,
                     required: true,
                     default: nil
                 ),
-                .init(
-                    key: "order",
+                "order": .init(
                     type: .int,
                     required: false,
                     default: 100
                 ),
             ],
-            relations: [],
+            relations: [:],
             queries: [
                 "guides": .init(
                     contentType: "guide",

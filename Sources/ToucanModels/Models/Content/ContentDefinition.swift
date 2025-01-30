@@ -12,15 +12,15 @@ public struct ContentDefinition {
     /// paths to lookup for contents
     public var paths: [String]
 
-    public var properties: [Property]
-    public var relations: [Relation]
+    public var properties: [String: Property]
+    public var relations: [String: Relation]
     public var queries: [String: Query]
 
     public init(
         type: String,
         paths: [String],
-        properties: [Property],
-        relations: [Relation],
+        properties: [String: Property],
+        relations: [String: Relation],
         queries: [String: Query]
     ) {
         self.type = type
