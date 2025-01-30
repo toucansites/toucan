@@ -9,15 +9,15 @@ public struct RelationValue {
 
     public var contentType: String
     public var type: RelationType
-    public var values: [PropertyValue]
+    public var identifiers: [String]
 
     public init(
         contentType: String,
         type: RelationType,
-        values: [PropertyValue]
+        identifiers: [String]
     ) {
         self.contentType = contentType
         self.type = type
-        self.values = values
+        self.identifiers = identifiers
     }
 }

@@ -15,6 +15,9 @@ extension RawContent.Mocks {
                 frontMatter: [
                     "title": "Home",
                     "description": "Home description",
+                    "foo": [
+                        "bar": "baz"
+                    ],
                 ],
                 markdown: """
                     # Home

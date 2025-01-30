@@ -3,25 +3,24 @@ import ToucanModels
 
 extension RawContent.Mocks {
 
-    static func posts(
+    static func guides(
         max: Int = 10
     ) -> [RawContent] {
         (1...max)
             .map { i in
                 .init(
                     origin: .init(
-                        path: "docs/categories/category-\(i)",
-                        slug: "docs/categories/category-\(i)"
+                        path: "docs/guides/guide-\(i)",
+                        slug: "docs/guides/guide-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Post \(i)",
-                        "date": "2022-01-31T02:22:40+00:00",
-                        "featured": (i % 2 == 0),
-                        "authors": [(i / 2)].map { "author-\($0)" },
-                        "tags": [(i / 2)].map { "tag-\($0)" },
+                        //"id": "guide-\(i)",
+                        "name": "Guide \(i)",
+                        "category": "category-\(i)",
+                        "order": i,
                     ],
                     markdown: """
-                        # Post #\(i)
+                        # Guide #\(i)
 
                         Lorem ipsum dolor sit amet
                         """,

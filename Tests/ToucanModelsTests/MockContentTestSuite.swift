@@ -58,7 +58,7 @@ struct MockContentTestSuite {
             .init(definition: postDefinition, contents: postContents),
         ]
 
-        dump(contentBundles)
+        //        dump(contentBundles)
 
         #expect(!contentBundles.isEmpty)
     }

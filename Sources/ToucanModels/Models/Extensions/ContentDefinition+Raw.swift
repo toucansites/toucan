@@ -93,11 +93,44 @@ extension ContentDefinition {
             properties[key] = value
         }
 
+        var relations: [String: RelationValue] = [:]
+        for (key, relation) in self.relations {
+            let rawValue = rawContent.frontMatter[key]
+
+            var identifiers: [String] = []
+            switch relation.type {
+            case .one:
+                if let id = rawValue as? String {
+                    identifiers.append(id)
+                }
+            case .many:
+                if let ids = rawValue as? [String] {
+                    identifiers.append(contentsOf: ids)
+                }
+            }
+
+            relations[key] = .init(
+                contentType: relation.references,
+                type: relation.type,
+                identifiers: identifiers
+            )
+        }
+
+        let keysToRemove =
+            ["id", "type", "slug"]
+            + self.properties.keys
+            + self.relations.keys
+
+        var userDefined = rawContent.frontMatter
+        for key in keysToRemove {
+            userDefined.removeValue(forKey: key)
+        }
+
         return .init(
             rawValue: rawContent,
             properties: properties,
-            relations: [:],
-            userDefined: [:]
+            relations: relations,
+            userDefined: userDefined
         )
     }
 }
