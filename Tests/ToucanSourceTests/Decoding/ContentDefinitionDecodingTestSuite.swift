@@ -56,7 +56,10 @@ struct ContentDefinitionDecodingTestSuite {
                         key: publication
                         operator: lessThan
                         value: "{{publication}}"
-                
+                    orderBy:
+                        - key: publication
+                          direction: desc
+
                 next:
                     contentType: post
                     limit: 1
@@ -64,6 +67,9 @@ struct ContentDefinitionDecodingTestSuite {
                         key: publication
                         operator: greaterThan
                         value: "{{publication}}"
+                    orderBy:
+                        - key: publication
+                          direction: asc
 
                 related:
                     contentType: post
@@ -77,6 +83,7 @@ struct ContentDefinitionDecodingTestSuite {
                             - key: id
                               operator: notEquals
                               value: "{{id}}"
+
                 similar:
                     contentType: post
                     limit: 4
