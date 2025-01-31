@@ -21,37 +21,8 @@ struct SourceBundleTestSuite {
 
 //                engine: "mustache",  // mustache|json|swift|...
 //                options: [  //mustache-renderer-config
-//                    "dataTypes": [
-//                        "date": [
-//                            "formats": [
-//                                "full": "...",
-//                                "medium": "...",
-//                                    //                        "iso886"
-//                                    //                        "rss"
-//                                    //                        "sitemap"
-//                            ]
-//                        ]
-//                    ],
-//                    "contentTypes": [
-//                        "post": [
-//                            "template": "post.default.template",
-//                            "properties": [
-//                                "date": [
-//                                    "formats": [
-//                                        "custom": "y.md."
-//                                    ]
-//                                ]
-//                            ],
-//                            "scopes": [  // views?
-//                                //...
-//                                "reference": ["id", "title"],
-//                                "list": [
-//                                    "id", "title", "description", "authors",
-//                                ],
-//                                "detail": ["*"],
-//                            ],
-//                        ]
-//                    ],
+
+//
 //                ],
 //                output: "{{slug}}/index.html"
 
@@ -63,7 +34,31 @@ extension SourceBundle {
 
             var rawContext: [String: [Content]] = [:]
             for (key, query) in pipeline.queries {
+                let results = self.run(query: query)
                 rawContext[key] = self.run(query: query)
+
+                if let scope = pipeline.scopes[query.contentType]?
+                    .first(where: { $0.id == query.scope })
+                {
+
+                    if scope.context.contains(.properties) {
+                        //                        for content in results {
+                        //                            for (k, v) in content.properties {
+                        //                                v
+                        //                            }
+                        //                        }
+                        print("properties")
+                    }
+                    if scope.context.contains(.relations) {
+                        print("relations")
+                    }
+                    if scope.context.contains(.contents) {
+                        print("contents")
+                    }
+                    if scope.context.contains(.queries) {
+                        print("queries")
+                    }
+                }
             }
 
             // TODO: rawContext to real scoped context
@@ -71,9 +66,18 @@ extension SourceBundle {
             switch pipeline.engine.id {
             case "test":
 
+                let opt =
+                    pipeline.engine.options?.value as? [String: Any] ?? [:]
+                let ct = opt.dict("contentTypes")
+
                 var outputs: [MockOutput] = []
 
                 for contentBundle in self.contentBundles {
+                    // content pipeline settings
+                    let cps = ct.dict(contentBundle.definition.type)
+                    print(contentBundle.definition.type)
+                    print(cps)
+
                     if pipeline.contentType.contains(.bundle) {
                         //                        print("render content bundle...")
                         //                        print(contentBundle.definition.type)
