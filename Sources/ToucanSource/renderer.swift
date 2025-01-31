@@ -15,21 +15,6 @@
 //        contentBundles: [ContentBundle]
 //    ) {
 //
-//        let cbs = contentBundles.map { cb in
-//            var cb = cb
-//            cb.pageBundles = cb.pageBundles.map {
-//                cb.loadFields(pageBundle: $0)
-//            }
-//            return cb
-//        }
-//
-//        for contentBundle in cbs {
-//            for pageBundle in contentBundle.pageBundles {
-//                print(pageBundle.properties)
-//            }
-//        }
-//
-//        return
 //
 //        var context: [String: Any] = [:]
 //
@@ -93,14 +78,3 @@
 //        print(context)
 //    }
 //}
-//
-////extension [PageBundle] {
-////
-////    func list(
-////        contentType: ContentType,
-////        sortKey: String?,
-////        order: Order
-////    ) -> [PageBundle] {
-////        self
-////    }
-////}

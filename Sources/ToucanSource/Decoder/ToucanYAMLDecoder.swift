@@ -21,16 +21,4 @@ public struct ToucanYAMLDecoder: ToucanDecoder {
         }
     }
 
-    //    init(resolver: Resolver = .default.removing(.timestamp)) {
-    //        self.resolver = resolver
-    //    }
-    //
-    //    func parse<T>(_ yaml: String, as: T.Type) throws -> T? {
-    //        do {
-    //            return try Yams.load(yaml: yaml, resolver) as? T
-    //        }
-    //        catch {
-    //            throw ToucanDecoderError.decoding(error)
-    //        }
-    //    }
 }

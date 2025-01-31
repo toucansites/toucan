@@ -1,5 +1,5 @@
 {
-  "originHash" : "4ac53bb84de99ca8175e8d3022c031524bf1e1ff0c44f0678084be3eb7bbfd38",
+  "originHash" : "b96d3acb6fb4c187d65b24fbbb906ea47f4413bd700e479c4fc003c1e839b54b",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/binarybirds/file-manager-kit",
       "state" : {
         "branch" : "tib/features",
-        "revision" : "b3218af8d038ad15d9d75e3558e2b4401579e42c"
+        "revision" : "66e599e39019b8b4f091ea719385edf5c2222f0e"
       }
     },
     {

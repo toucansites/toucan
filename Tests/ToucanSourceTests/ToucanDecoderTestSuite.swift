@@ -1,5 +1,5 @@
 import Testing
-@testable import ToucanDecoder
+@testable import ToucanSource
 
 @Suite
 struct ToucanDecoderTestSuite {

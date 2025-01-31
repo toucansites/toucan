@@ -23,5 +23,4 @@ public struct Content {
         self.relations = relations
         self.userDefined = userDefined
     }
-
 }

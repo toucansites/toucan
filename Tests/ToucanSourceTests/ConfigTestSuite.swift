@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-import ToucanDecoder
+import ToucanSource
 @testable import ToucanModels
 
 @Suite
