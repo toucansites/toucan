@@ -5,18 +5,37 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum Operator {
-    case equals  // int, double, bool, string
-    case notEquals  // int, double, bool, string
+public enum Operator: String {
 
-    case lessThan  // int, double
-    case greaterThan  // int, double
-    case lessThanOrEquals  // int, double
-    case greaterThanOrEquals  // int, double
+    // int, double, bool, string
+    case equals
 
-    case like  // string
-    case caseInsensitiveLike  // string
+    // int, double, bool, string
+    case notEquals = "not-equals"
 
-    case `in`  // array of anything // field is a single value check is in array of values
-    case contains  // single value // field is an array check contains single value
+    // int, double
+    case lessThan = "less-than"
+
+    // int, double
+    case lessThanOrEquals = "less-than-or-equals"
+
+    // int, double
+    case greaterThan = "greater-than"
+
+    // int, double
+    case greaterThanOrEquals = "greater-than-or-equals"
+
+    // string
+    case like
+
+    // string
+    case caseInsensitiveLike = "case-insensitive-like"
+
+    // field is a single value check is in array of values
+    // array of anything
+    case `in`
+
+    // field is an array check contains single value
+    // single value
+    case contains
 }

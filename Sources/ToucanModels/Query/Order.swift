@@ -7,8 +7,8 @@
 
 public struct Order {
 
-    public let key: String
-    public let direction: Direction
+    public var key: String
+    public var direction: Direction
 
     public init(
         key: String,
