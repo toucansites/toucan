@@ -21,65 +21,30 @@ extension Condition: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let key = try? container.decode(String.self, forKey: .key),
-            let op = try? container.decode(Operator.self, forKey: .operator)
+            let op = try? container.decode(Operator.self, forKey: .operator),
+            let anyValue = try? container.decode(AnyValue.self, forKey: .value)
         {
-            let value: Any
-
-            if let intValue = try? container.decode(Int.self, forKey: .value) {
-                value = intValue
-            }
-            else if let doubleValue = try? container.decode(
-                Double.self,
-                forKey: .value
-            ) {
-                value = doubleValue
-            }
-            else if let boolValue = try? container.decode(
-                Bool.self,
-                forKey: .value
-            ) {
-                value = boolValue
-            }
-            else if let stringValue = try? container.decode(
-                String.self,
-                forKey: .value
-            ) {
-                value = stringValue
-            }
-            // TODO: consider int, double, other type array support?
-            else if let arrayValue = try? container.decode(
-                [String].self,
-                forKey: .value
-            ) {
-                value = arrayValue
-            }
-            else {
-                throw DecodingError.dataCorruptedError(
-                    forKey: .value,
-                    in: container,
-                    debugDescription: "Unsupported value type"
-                )
-            }
-
-            self = .field(key: key, operator: op, value: value)
-            return
+            self = .field(key: key, operator: op, value: anyValue.value)
         }
-
-        if let values = try? container.decode([Condition].self, forKey: .and) {
+        else if let values = try? container.decode(
+            [Condition].self,
+            forKey: .and
+        ) {
             self = .and(values)
-            return
         }
-
-        if let values = try? container.decode([Condition].self, forKey: .or) {
+        else if let values = try? container.decode(
+            [Condition].self,
+            forKey: .or
+        ) {
             self = .or(values)
-            return
         }
-
-        throw DecodingError.dataCorrupted(
-            .init(
-                codingPath: [],
-                debugDescription: "Invalid JSON structure for Condition"
+        else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Invalid data for the Condition type."
+                )
             )
-        )
+        }
     }
 }

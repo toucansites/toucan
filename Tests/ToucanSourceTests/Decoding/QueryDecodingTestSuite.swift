@@ -6,7 +6,46 @@ import ToucanSource
 @Suite
 struct QueryDecodingTestSuite {
 
-    // MARK: -
+    // MARK: - order
+
+    @Test
+    func orderDefaultSortDirection() throws {
+        let data = """
+            key: name
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Order.self,
+            from: data
+        )
+
+        #expect(result.key == "name")
+        #expect(result.direction == .asc)
+    }
+
+    @Test
+    func orderCustomSortDirection() throws {
+        let data = """
+            key: name
+            direction: desc
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Order.self,
+            from: data
+        )
+
+        #expect(result.key == "name")
+        #expect(result.direction == .desc)
+    }
+
+    // MARK: - condition
 
     @Test
     func simpleCondition() throws {
@@ -213,5 +252,77 @@ struct QueryDecodingTestSuite {
         #expect(key == "likes")
         #expect(op == .greaterThan)
         #expect(value as? Int == 100)
+    }
+
+    // MARK: - query
+
+    @Test
+    func minimalQuery() throws {
+
+        let data = """
+            contentType: post
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Query.self,
+            from: data
+        )
+
+        #expect(result.contentType == "post")
+        #expect(result.scope == nil)
+        #expect(result.limit == nil)
+        #expect(result.offset == nil)
+        #expect(result.filter == nil)
+        #expect(result.orderBy.isEmpty)
+    }
+
+    @Test
+    func simpleQuery() throws {
+
+        let data = """
+            contentType: post
+            scope: list
+            limit: 1
+            offset: 0
+            filter:
+                key: name
+                operator: equals
+                value: hello
+            orderBy:
+                - key: name
+                - key: other
+                  direction: desc
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Query.self,
+            from: data
+        )
+
+        #expect(result.contentType == "post")
+        #expect(result.scope == "list")
+        #expect(result.limit == 1)
+        #expect(result.offset == 0)
+
+        guard case let .field(key, op, value) = result.filter else {
+            Issue.record("Result is not a field case.")
+            return
+        }
+
+        #expect(key == "name")
+        #expect(op == .equals)
+        #expect(value as? String == "hello")
+
+        try #require(result.orderBy.count == 2)
+        #expect(result.orderBy[0].key == "name")
+        #expect(result.orderBy[0].direction == .asc)
+        #expect(result.orderBy[1].key == "other")
+        #expect(result.orderBy[1].direction == .desc)
     }
 }
