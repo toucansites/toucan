@@ -1,22 +1,15 @@
-//
-//  File 2.swift
-//  toucan
-//
-//  Created by Tibor Bodecs on 2025. 01. 29..
-//
-
 import Foundation
 import Testing
 import ToucanDecoder
 @testable import ToucanModels
 
 @Suite
-struct ConfigModelTestSuite {
+struct ConfigTestSuite {
 
     // MARK: -
 
     @Test
-    func testDecodingThemeConfig() throws {
+    func decodingThemeConfig() throws {
 
         let themeConfigData = """
             """

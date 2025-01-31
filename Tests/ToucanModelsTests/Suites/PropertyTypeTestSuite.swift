@@ -1,16 +1,9 @@
-//
-//  File.swift
-//  ToucanV2
-//
-//  Created by Tibor Bodecs on 2025. 01. 21..
-//
-
 import Foundation
 import Testing
 @testable import ToucanModels
 
 @Suite
-struct DataTypeTestSuite {
+struct PropertyTypeTestSuite {
 
     private let encoder: JSONEncoder = {
         let encoder = JSONEncoder()

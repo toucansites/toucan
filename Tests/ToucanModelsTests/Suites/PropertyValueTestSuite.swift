@@ -1,18 +1,11 @@
-//
-//  File.swift
-//  ToucanV2
-//
-//  Created by Tibor Bodecs on 2025. 01. 21..
-//
-
 import Testing
 @testable import ToucanModels
 
 @Suite
-struct TypeWrapperTestSuite {
+struct PropetyValueTestSuite {
 
     @Test
-    func testEquality() {
+    func equality() {
         #expect(PropertyValue.bool(true) == PropertyValue.bool(true))
         #expect(PropertyValue.bool(true) != PropertyValue.bool(false))
 
@@ -30,7 +23,7 @@ struct TypeWrapperTestSuite {
     }
 
     @Test
-    func testLessThan() {
+    func lessThan() {
         #expect(PropertyValue.bool(false) < PropertyValue.bool(true))
         #expect(!(PropertyValue.bool(true) < PropertyValue.bool(false)))
 
@@ -50,7 +43,7 @@ struct TypeWrapperTestSuite {
     }
 
     @Test
-    func testDefaultOrderForDifferentCases() {
+    func defaultOrderForDifferentCases() {
         #expect(PropertyValue.bool(false) < PropertyValue.int(0))
         #expect(PropertyValue.int(0) < PropertyValue.double(0.0))
         #expect(PropertyValue.double(0.0) < PropertyValue.string(""))
@@ -63,7 +56,7 @@ struct TypeWrapperTestSuite {
     }
 
     @Test
-    func testSorting() {
+    func sorting() {
         let unsorted: [PropertyValue] = [
             .string("banana"),
             .int(10),
