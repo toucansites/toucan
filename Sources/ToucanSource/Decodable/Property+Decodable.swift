@@ -7,41 +7,30 @@
 
 import ToucanModels
 
-public struct Property {
-
-    public let type: PropertyType
-    public let required: Bool
-    public let `default`: Any?
-
-    public init(
-        type: PropertyType,
-        required: Bool,
-        `default`: Any? = nil
-    ) {
-        self.type = type
-        self.required = required
-        self.`default` = `default`
-    }
-}
-
 extension Property: Decodable {
 
     enum CodingKeys: CodingKey {
-        case `type`
         case `required`
         case `default`
     }
 
     public init(from decoder: any Decoder) throws {
+        let type = try decoder.singleValueContainer().decode(PropertyType.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(PropertyType.self, forKey: .type)
+
+        // TODO: decide if required is true or false by default
         let required =
             try container.decodeIfPresent(Bool.self, forKey: .required) ?? true
+        let anyValue = try container.decodeIfPresent(
+            AnyValue.self,
+            forKey: .default
+        )
 
         self.init(
             type: type,
             required: required,
-            default: nil
+            default: anyValue?.value
         )
     }
 }

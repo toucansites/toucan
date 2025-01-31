@@ -37,7 +37,10 @@ extension PropertyType: Decodable {
         case .string:
             self = .string
         case .date:
-            let format = try container.decode(String.self, forKey: .format)
+            let format = try container.decodeIfPresent(
+                String.self,
+                forKey: .format
+            )
             self = .date(format: format)
         }
     }

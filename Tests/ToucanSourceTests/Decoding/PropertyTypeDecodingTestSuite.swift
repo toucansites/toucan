@@ -13,21 +13,14 @@ import ToucanModels
 @Suite
 struct PropertyTypeDecodingTestSuite {
 
-    private var decoder: JSONDecoder {
-        let decoder = JSONDecoder()
-
-        return decoder
-    }
-
-    // MARK: -
-
     @Test
     func decodingBool() throws {
         let jsonData = #"{"type":"bool"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(
-            PropertyType.self,
-            from: jsonData
-        )
+        let decodedDataType = try JSONDecoder()
+            .decode(
+                PropertyType.self,
+                from: jsonData
+            )
 
         #expect(decodedDataType == .bool)
     }
@@ -35,10 +28,11 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingInt() throws {
         let jsonData = #"{"type":"int"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(
-            PropertyType.self,
-            from: jsonData
-        )
+        let decodedDataType = try JSONDecoder()
+            .decode(
+                PropertyType.self,
+                from: jsonData
+            )
 
         #expect(decodedDataType == .int)
     }
@@ -46,10 +40,11 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingDouble() throws {
         let jsonData = #"{"type":"double"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(
-            PropertyType.self,
-            from: jsonData
-        )
+        let decodedDataType = try JSONDecoder()
+            .decode(
+                PropertyType.self,
+                from: jsonData
+            )
 
         #expect(decodedDataType == .double)
     }
@@ -57,10 +52,11 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingDate() throws {
         let jsonData = #"{"format":"y.m.d","type":"date"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(
-            PropertyType.self,
-            from: jsonData
-        )
+        let decodedDataType = try JSONDecoder()
+            .decode(
+                PropertyType.self,
+                from: jsonData
+            )
 
         #expect(decodedDataType == .date(format: "y.m.d"))
     }
@@ -68,10 +64,11 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingString() throws {
         let jsonData = #"{"type":"string"}"#.data(using: .utf8)!
-        let decodedDataType = try decoder.decode(
-            PropertyType.self,
-            from: jsonData
-        )
+        let decodedDataType = try JSONDecoder()
+            .decode(
+                PropertyType.self,
+                from: jsonData
+            )
 
         #expect(decodedDataType == .string)
     }

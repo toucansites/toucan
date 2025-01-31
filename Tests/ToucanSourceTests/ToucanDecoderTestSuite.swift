@@ -65,19 +65,19 @@ struct ToucanDecoderTestSuite {
         #expect(config.name == "John Doe")
     }
 
-    @Test
-    func basicYAMLDateDecoding() async throws {
+    //    @Test
+    //    func basicYAMLDateDecoding() async throws {
+    //
+    //        let decoder = ToucanYAMLDecoder()
+    //        let data = """
+    //            # comment
+    //            name: "John Doe"
+    //            date: "2025-01-30T09:35:25Z"
+    //            """
+    //            .data(using: .utf8)!
 
-        let decoder = ToucanYAMLDecoder()
-        let data = """
-            # comment
-            name: "John Doe"
-            date: "2025-01-30T09:35:25Z"
-            """
-            .data(using: .utf8)!
-
-        //        let config = try decoder.decode([String: Any].self, from: data)
-        //        #expect(config.name == "John Doe")
-    }
+    //        let config = try decoder.decode([String: Any].self, from: data)
+    //        #expect(config.name == "John Doe")
+    //    }
 
 }
