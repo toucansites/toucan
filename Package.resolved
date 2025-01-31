@@ -1,13 +1,13 @@
 {
-  "originHash" : "b96d3acb6fb4c187d65b24fbbb906ea47f4413bd700e479c4fc003c1e839b54b",
+  "originHash" : "7649741ae90398391c207c4c8706a9c359f5dcf6cc58b34487488940d3250ec2",
   "pins" : [
     {
       "identity" : "async-http-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
       "state" : {
-        "revision" : "2119f0d9cc1b334e25447fe43d3693c0e60e6234",
-        "version" : "1.24.0"
+        "revision" : "60fa3dcfc52d09ed0411e9c4bc99928bf63656bd",
+        "version" : "1.24.2"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird",
       "state" : {
-        "revision" : "8015391e80cad107555b458344908b5ac558d294",
-        "version" : "2.7.0"
+        "revision" : "c1d175755fc4eaba84908d769fb83b6f94934691",
+        "version" : "2.8.0"
       }
     },
     {
@@ -133,7 +133,7 @@
       "location" : "https://github.com/apple/swift-markdown",
       "state" : {
         "branch" : "main",
-        "revision" : "3588f0449f1592a5c746079a5c7e6c8b62ba55eb"
+        "revision" : "e62a44fd1f2764ba8807db3b6f257627449bbb8c"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "ba72f31e11275fc5bf060c966cf6c1f36842a291",
-        "version" : "2.79.0"
+        "revision" : "dff45738d84a53dbc8ee899c306b3a7227f54f89",
+        "version" : "2.80.0"
       }
     },
     {

@@ -8,6 +8,7 @@
 import Foundation
 import FileManagerKit
 import Logging
+import ToucanFileSystem
 
 /// A static site generator.
 public struct Toucan {
@@ -18,6 +19,8 @@ public struct Toucan {
     let outputUrl: URL
     let baseUrl: String?
     let logger: Logger
+    
+    let fs: ToucanFileSystem
 
     /// Initialize a new instance.
     /// - Parameters:
@@ -45,6 +48,7 @@ public struct Toucan {
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
         self.logger = logger
+        self.fs = .init(fileManager: fileManager)
     }
 
     // MARK: - file management
