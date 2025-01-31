@@ -5,31 +5,32 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
+// TODO: maybe use =, !=, >, >=, <, <= values
 public enum Operator: String {
 
     // int, double, bool, string
     case equals
 
     // int, double, bool, string
-    case notEquals = "not-equals"
+    case notEquals
 
     // int, double
-    case lessThan = "less-than"
+    case lessThan
 
     // int, double
-    case lessThanOrEquals = "less-than-or-equals"
+    case lessThanOrEquals
 
     // int, double
-    case greaterThan = "greater-than"
+    case greaterThan
 
     // int, double
-    case greaterThanOrEquals = "greater-than-or-equals"
+    case greaterThanOrEquals
 
     // string
     case like
 
     // string
-    case caseInsensitiveLike = "case-insensitive-like"
+    case caseInsensitiveLike
 
     // field is a single value check is in array of values
     // array of anything

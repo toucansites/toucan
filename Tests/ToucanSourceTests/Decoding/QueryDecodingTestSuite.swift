@@ -202,7 +202,7 @@ struct QueryDecodingTestSuite {
                       value: false
 
                     - key: likes
-                      operator: greater-than
+                      operator: greaterThan
                       value: 100
             """
             .data(using: .utf8)!
