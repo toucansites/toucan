@@ -12,158 +12,129 @@ import Testing
 @Suite
 struct QueryTestSuite {
 
-    //    @Test
-    //    func filters() async throws {
-    //        var cb = ContentBundle.authors
-    //
-    //        cb.pageBundles = cb.pageBundles.map { cb.loadFields(pageBundle: $0) }
-    //
-    //        {
-    //            let pbs = cb.query(
-    //                .init(
-    //                    contentType: "authors",
-    //                    scope: "list",
-    //                    limit: 10,
-    //                    offset: 0,
-    //                    filter: .field(
-    //                        key: "name",
-    //                        operator: .equals,
-    //                        value: "Author 6"
-    //                    ),
-    //                    orderBy: []
-    //                )
-    //            )
-    //            #expect(pbs.count == 1)
-    //            #expect(pbs[0].properties["name"] == .string("Author 6"))
-    //        }()
-    //
-    //        {
-    //            let pbs = cb.query(
-    //                .init(
-    //                    contentType: "authors",
-    //                    scope: "list",
-    //                    limit: 10,
-    //                    offset: 0,
-    //                    filter: .or([
-    //                        .field(
-    //                            key: "name",
-    //                            operator: .equals,
-    //                            value: "Author 6"
-    //                        ),
-    //                        .field(
-    //                            key: "name",
-    //                            operator: .equals,
-    //                            value: "Author 4"
-    //                        ),
-    //                    ]),
-    //                    orderBy: [
-    //                        .init(key: "name", direction: .desc)
-    //                    ]
-    //                )
-    //            )
-    //            #expect(pbs.count == 2)
-    //            #expect(pbs[0].properties["name"] == .string("Author 6"))
-    //            #expect(pbs[1].properties["name"] == .string("Author 4"))
-    //        }()
-    //
-    //        {
-    //            let pbs = cb.query(
-    //                .init(
-    //                    contentType: "authors",
-    //                    scope: "list",
-    //                    limit: 10,
-    //                    offset: 0,
-    //                    filter: .and([
-    //                        .field(
-    //                            key: "name",
-    //                            operator: .equals,
-    //                            value: "Author 6"
-    //                        ),
-    //                        .field(
-    //                            key: "name",
-    //                            operator: .equals,
-    //                            value: "Author 4"
-    //                        ),
-    //                    ]),
-    //                    orderBy: [
-    //                        .init(key: "name", direction: .desc)
-    //                    ]
-    //                )
-    //            )
-    //            #expect(pbs.count == 0)
-    //        }()
-    //
-    //        {
-    //            let pbs = cb.query(
-    //                .init(
-    //                    contentType: "authors",
-    //                    scope: "list",
-    //                    limit: 10,
-    //                    offset: 0,
-    //                    filter: .and([
-    //                        .field(
-    //                            key: "name",
-    //                            operator: .equals,
-    //                            value: "Author 6"
-    //                        ),
-    //                        .field(
-    //                            key: "description",
-    //                            operator: .like,
-    //                            value: "Author description 6"
-    //                        ),
-    //                    ]),
-    //                    orderBy: [
-    //                        .init(key: "name", direction: .desc)
-    //                    ]
-    //                )
-    //            )
-    //            #expect(pbs.count == 1)
-    //            #expect(pbs[0].properties["name"] == .string("Author 6"))
-    //        }()
-    //
-    //        {
-    //            let pbs = cb.query(
-    //                .init(
-    //                    contentType: "authors",
-    //                    scope: "list",
-    //                    limit: 10,
-    //                    offset: 0,
-    //                    filter: .field(
-    //                        key: "name",
-    //                        operator: .in,
-    //                        value: ["Author 4", "Author 6"]
-    //                    ),
-    //                    orderBy: [
-    //                        .init(key: "name", direction: .desc)
-    //                    ]
-    //                )
-    //            )
-    //            #expect(pbs.count == 2)
-    //            #expect(pbs[0].properties["name"] == .string("Author 6"))
-    //            #expect(pbs[1].properties["name"] == .string("Author 4"))
-    //        }()
-    //
-    //        {
-    //            let pbs = cb.query(
-    //                .init(
-    //                    contentType: "authors",
-    //                    scope: "list",
-    //                    limit: 10,
-    //                    offset: 0,
-    //                    filter: .field(
-    //                        key: "name",
-    //                        operator: .in,
-    //                        value: ["Author 4", "Author 6"]
-    //                    ),
-    //                    orderBy: [
-    //                        .init(key: "name", direction: .desc)
-    //                    ]
-    //                )
-    //            )
-    //            #expect(pbs.count == 2)
-    //            #expect(pbs[0].properties["name"] == .string("Author 6"))
-    //            #expect(pbs[1].properties["name"] == .string("Author 4"))
-    //        }()
-    //
-    //    }
+    @Test
+    func equalsFilter() async throws {
+        let siteBundle = SiteBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "name",
+                operator: .equals,
+                value: "Author 6"
+            )
+        )
+
+        let result = siteBundle.run(query: query)
+        #expect(result.count == 1)
+        #expect(result[0].properties["name"] == .string("Author 6"))
+    }
+
+    @Test
+    func equalsFilterWithOrConditionAndOrderByDesc() async throws {
+        let siteBundle = SiteBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .or([
+                .field(
+                    key: "name",
+                    operator: .equals,
+                    value: "Author 6"
+                ),
+                .field(
+                    key: "name",
+                    operator: .equals,
+                    value: "Author 4"
+                ),
+            ]),
+            orderBy: [
+                .init(key: "name", direction: .desc)
+            ]
+        )
+
+        let result = siteBundle.run(query: query)
+        #expect(result.count == 2)
+        #expect(result[0].properties["name"] == .string("Author 6"))
+        #expect(result[1].properties["name"] == .string("Author 4"))
+    }
+
+    @Test
+    func equalsFilterWithAndConditionEmptyResult() async throws {
+        let siteBundle = SiteBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .and([
+                .field(
+                    key: "name",
+                    operator: .equals,
+                    value: "Author 6"
+                ),
+                .field(
+                    key: "name",
+                    operator: .equals,
+                    value: "Author 4"
+                ),
+            ]),
+            orderBy: [
+                .init(key: "name", direction: .desc)
+            ]
+        )
+
+        let result = siteBundle.run(query: query)
+        #expect(result.isEmpty)
+    }
+
+    @Test
+    func equalsFilterWithAndConditionMultipleProperties() async throws {
+        let siteBundle = SiteBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .and([
+                .field(
+                    key: "name",
+                    operator: .equals,
+                    value: "Author 6"
+                ),
+                .field(
+                    key: "description",
+                    operator: .like,
+                    value: "Author description 6"
+                ),
+            ]),
+            orderBy: [
+                .init(key: "name", direction: .desc)
+            ]
+        )
+
+        let result = siteBundle.run(query: query)
+        #expect(result.count == 1)
+        #expect(result[0].properties["name"] == .string("Author 6"))
+    }
+
+    @Test
+    func equalsFilterWithIn() async throws {
+        let siteBundle = SiteBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .and([
+                .field(
+                    key: "name",
+                    operator: .in,
+                    value: ["Author 6", "Author 4"]
+                )
+            ]),
+            orderBy: [
+                .init(key: "name")
+            ]
+        )
+
+        let result = siteBundle.run(query: query)
+        #expect(result.count == 2)
+        #expect(result[0].properties["name"] == .string("Author 4"))
+        #expect(result[1].properties["name"] == .string("Author 6"))
+    }
 }

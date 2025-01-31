@@ -12,7 +12,7 @@ public struct Order {
 
     public init(
         key: String,
-        direction: Direction
+        direction: Direction = .asc
     ) {
         self.key = key
         self.direction = direction

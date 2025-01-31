@@ -22,3 +22,7 @@ extension ContentDefinition {
 extension ContentBundle {
     enum Mocks {}
 }
+
+extension SiteBundle {
+    enum Mocks {}
+}

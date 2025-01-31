@@ -1,11 +1,10 @@
 import Foundation
-import Testing
-@testable import ToucanModels
+import ToucanModels
 
-struct MockContentTestSuite {
+extension SiteBundle.Mocks {
 
-    @Test
-    func mocks() async throws {
+    static func complete() -> SiteBundle {
+
         let formatter = DateFormatter()
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
@@ -58,8 +57,6 @@ struct MockContentTestSuite {
             .init(definition: postDefinition, contents: postContents),
         ]
 
-        //        dump(contentBundles)
-
-        #expect(!contentBundles.isEmpty)
+        return .init(contentBundles: contentBundles)
     }
 }

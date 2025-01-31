@@ -8,7 +8,7 @@
 public struct Query {
 
     public let contentType: String
-    public let scope: String
+    public let scope: String?
     public let limit: Int?
     public let offset: Int?
     public let filter: Condition?
@@ -16,7 +16,7 @@ public struct Query {
 
     public init(
         contentType: String,
-        scope: String,
+        scope: String? = nil,  // TODO ???
         limit: Int? = nil,
         offset: Int? = nil,
         filter: Condition? = nil,
