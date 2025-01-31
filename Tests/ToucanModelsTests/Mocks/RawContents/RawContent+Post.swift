@@ -6,16 +6,23 @@ extension RawContent.Mocks {
     static func posts(
         max: Int = 10
     ) -> [RawContent] {
-        (1...max)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let now = Date()
+
+        return (1...max)
             .map { i in
-                .init(
+                let diff = Double(max - i) * -86_400
+                let pastDate = now.addingTimeInterval(diff)
+                let date = formatter.string(from: pastDate)
+                return .init(
                     origin: .init(
                         path: "docs/categories/category-\(i)",
                         slug: "docs/categories/category-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Post \(i)",
-                        "date": "2022-01-31T02:22:40+00:00",
+                        "name": "Post #\(i)",
+                        "date": date,
                         "featured": (i % 2 == 0),
                         "authors": [i].map { "author-\($0)" },
                         "tags": [i].map { "tag-\($0)" },

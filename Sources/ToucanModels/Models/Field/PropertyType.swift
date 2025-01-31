@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum ProperyType {
+public enum PropertyType {
     case bool
     case int
     case double
@@ -13,7 +13,7 @@ public enum ProperyType {
     case date(format: String?)  // => fallback to global date format config
 }
 
-extension ProperyType: Equatable {
+extension PropertyType: Equatable {
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
@@ -28,7 +28,7 @@ extension ProperyType: Equatable {
     }
 }
 
-extension ProperyType: Codable {
+extension PropertyType: Codable {
 
     private enum CodingKeys: String, CodingKey {
         case type

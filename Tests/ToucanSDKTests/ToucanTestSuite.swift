@@ -34,7 +34,7 @@ struct ToucanTestSuite {
     //        try toucan.generate()
     //    }
     //
-    //    func testGenerate() async throws {
+    //    func generate() async throws {
     //        for argument in [
     //            //                "minimal",
     //            "demo"

@@ -70,8 +70,8 @@ extension RawContent.Mocks {
                         slug: "pages/page-\(i)"
                     ),
                     frontMatter: [
-                        "title": "Page \(i)",
-                        "description": "Page \(i) description",
+                        "title": "Page #\(i)",
+                        "description": "Page #\(i) description",
                     ],
                     markdown: """
                         # Page #\(i)

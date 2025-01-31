@@ -22,8 +22,22 @@ struct PropertyTypeTestSuite {
     // MARK: -
 
     @Test
-    func testEncodingBool() throws {
-        let dataType: ProperyType = .bool
+    func equality() throws {
+        #expect(PropertyType.bool == .bool)
+        #expect(PropertyType.bool != .int)
+        #expect(PropertyType.int == .int)
+        #expect(PropertyType.int != .double)
+        #expect(PropertyType.double == .double)
+        #expect(PropertyType.double != .string)
+        #expect(PropertyType.string == .string)
+        #expect(PropertyType.string != .date(format: nil))
+        #expect(PropertyType.date(format: nil) == .date(format: nil))
+        #expect(PropertyType.date(format: nil) != .date(format: "y.m.d"))
+    }
+
+    @Test
+    func encodingBool() throws {
+        let dataType: PropertyType = .bool
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -31,10 +45,10 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testDecodingBool() throws {
+    func decodingBool() throws {
         let jsonData = #"{"type":"bool"}"#.data(using: .utf8)!
         let decodedDataType = try decoder.decode(
-            ProperyType.self,
+            PropertyType.self,
             from: jsonData
         )
 
@@ -42,8 +56,8 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testEncodingInt() throws {
-        let dataType: ProperyType = .int
+    func encodingInt() throws {
+        let dataType: PropertyType = .int
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -51,10 +65,10 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testDecodingInt() throws {
+    func decodingInt() throws {
         let jsonData = #"{"type":"int"}"#.data(using: .utf8)!
         let decodedDataType = try decoder.decode(
-            ProperyType.self,
+            PropertyType.self,
             from: jsonData
         )
 
@@ -62,8 +76,28 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testEncodingDate() throws {
-        let dataType: ProperyType = .date(format: "y.m.d")
+    func encodingDouble() throws {
+        let dataType: PropertyType = .double
+        let encodedData = try encoder.encode(dataType)
+        let jsonString = String(data: encodedData, encoding: .utf8)
+
+        #expect(jsonString == #"{"type":"double"}"#)
+    }
+
+    @Test
+    func decodingDouble() throws {
+        let jsonData = #"{"type":"double"}"#.data(using: .utf8)!
+        let decodedDataType = try decoder.decode(
+            PropertyType.self,
+            from: jsonData
+        )
+
+        #expect(decodedDataType == .double)
+    }
+
+    @Test
+    func encodingDate() throws {
+        let dataType: PropertyType = .date(format: "y.m.d")
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -71,10 +105,10 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testDecodingDate() throws {
+    func decodingDate() throws {
         let jsonData = #"{"format":"y.m.d","type":"date"}"#.data(using: .utf8)!
         let decodedDataType = try decoder.decode(
-            ProperyType.self,
+            PropertyType.self,
             from: jsonData
         )
 
@@ -82,8 +116,8 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testEncodingString() throws {
-        let dataType: ProperyType = .string
+    func encodingString() throws {
+        let dataType: PropertyType = .string
         let encodedData = try encoder.encode(dataType)
         let jsonString = String(data: encodedData, encoding: .utf8)
 
@@ -91,10 +125,10 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
-    func testDecodingString() throws {
+    func decodingString() throws {
         let jsonData = #"{"type":"string"}"#.data(using: .utf8)!
         let decodedDataType = try decoder.decode(
-            ProperyType.self,
+            PropertyType.self,
             from: jsonData
         )
 

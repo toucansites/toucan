@@ -7,12 +7,12 @@
 
 public struct Property {
 
-    public let type: ProperyType
+    public let type: PropertyType
     public let required: Bool
     public let `default`: Any?
 
     public init(
-        type: ProperyType,
+        type: PropertyType,
         required: Bool,
         `default`: Any? = nil
     ) {

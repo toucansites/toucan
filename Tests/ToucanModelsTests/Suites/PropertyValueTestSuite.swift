@@ -1,8 +1,28 @@
+import Foundation
 import Testing
 @testable import ToucanModels
 
 @Suite
 struct PropetyValueTestSuite {
+
+    @Test
+    func initializers() {
+        #expect(PropertyValue(true) == .bool(true))
+        #expect(PropertyValue(42) == .int(42))
+        #expect(PropertyValue(3.14) == .double(3.14))
+        #expect(PropertyValue("Swift") == .string("Swift"))
+        #expect(PropertyValue(1000) != .date(1000))
+        #expect(PropertyValue(Set([1, 2, 3])) == nil)
+
+        let date = Date(timeIntervalSince1970: 1000)
+        #expect(PropertyValue(date) == .date(1000))
+
+        let array: [Any] = [true, 42, "Swift"]
+        let explicitArray: [PropertyValue] = [
+            .bool(true), .int(42), .string("Swift"),
+        ]
+        #expect(PropertyValue(array) == .array(explicitArray))
+    }
 
     @Test
     func equality() {
@@ -23,7 +43,7 @@ struct PropetyValueTestSuite {
     }
 
     @Test
-    func lessThan() {
+    func comparison() {
         #expect(PropertyValue.bool(false) < PropertyValue.bool(true))
         #expect(!(PropertyValue.bool(true) < PropertyValue.bool(false)))
 
@@ -40,6 +60,7 @@ struct PropetyValueTestSuite {
 
         #expect(PropertyValue.date(0) < PropertyValue.date(100))
         #expect(!(PropertyValue.date(100) < PropertyValue.date(0)))
+        #expect(!(PropertyValue.array([]) < PropertyValue.array([.int(0)])))
     }
 
     @Test
