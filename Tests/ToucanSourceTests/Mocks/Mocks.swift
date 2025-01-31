@@ -6,6 +6,7 @@
 //
 
 import ToucanModels
+import ToucanSource
 
 extension RawContent {
     enum Mocks {}
@@ -23,6 +24,10 @@ extension ContentBundle {
     enum Mocks {}
 }
 
-extension SiteBundle {
+extension SourceBundle {
+    enum Mocks {}
+}
+
+extension RenderPipeline {
     enum Mocks {}
 }

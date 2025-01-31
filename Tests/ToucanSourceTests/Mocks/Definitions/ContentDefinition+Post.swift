@@ -15,7 +15,7 @@ extension ContentDefinition.Mocks {
                     default: nil
                 ),
                 "date": .init(
-                    type: .date(format: "yyyy-MM-dd'T'HH:mm:ssZ"),
+                    type: .date(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
                     required: true,
                     default: nil
                 ),

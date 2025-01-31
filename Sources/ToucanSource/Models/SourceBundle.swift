@@ -10,24 +10,18 @@ import ToucanModels
 
 public struct SourceBundle {
 
-    public let location: URL
-    public let siteBundle: SiteBundle
+    public var location: URL
+    public var renderPipelines: [RenderPipeline]
+    public var contentBundles: [ContentBundle]
 
     public init(
         location: URL,
-        siteBundle: SiteBundle
+        renderPipelines: [RenderPipeline],
+        contentBundles: [ContentBundle]
     ) {
         self.location = location
-        self.siteBundle = siteBundle
+        self.renderPipelines = renderPipelines
+        self.contentBundles = contentBundles
     }
 
-    public func load(
-        url: URL
-    ) throws -> SourceBundle {
-
-        return .init(
-            location: url,
-            siteBundle: .init(contentBundles: [])
-        )
-    }
 }

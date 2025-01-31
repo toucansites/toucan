@@ -12,6 +12,14 @@ public struct RenderPipeline {
     public struct Engine {
         var id: String
         var options: [String: AnyValue]
+
+        public init(
+            id: String,
+            options: [String: AnyValue]
+        ) {
+            self.id = id
+            self.options = options
+        }
     }
 
     public struct ContentTypes: OptionSet {
@@ -32,4 +40,14 @@ public struct RenderPipeline {
     public var queries: [String: Query]
     public var contentType: ContentTypes
     public var engine: Engine
+
+    public init(
+        queries: [String: Query],
+        contentType: RenderPipeline.ContentTypes,
+        engine: RenderPipeline.Engine
+    ) {
+        self.queries = queries
+        self.contentType = contentType
+        self.engine = engine
+    }
 }

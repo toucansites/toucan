@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import ToucanModels
 
-extension SiteBundle {
+extension SourceBundle {
 
     public func run(query: Query) -> [Content] {
         let bundle = contentBundles.first {

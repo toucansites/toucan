@@ -1,9 +1,10 @@
 import Foundation
 import ToucanModels
+import ToucanSource
 
-extension SiteBundle.Mocks {
+extension SourceBundle.Mocks {
 
-    static func complete() -> SiteBundle {
+    static func complete() -> SourceBundle {
 
         let formatter = DateFormatter()
         // pages
@@ -57,6 +58,12 @@ extension SiteBundle.Mocks {
             .init(definition: postDefinition, contents: postContents),
         ]
 
-        return .init(contentBundles: contentBundles)
+        let pipelines = RenderPipeline.Mocks.defaults()
+
+        return .init(
+            location: .init(filePath: ""),
+            renderPipelines: pipelines,
+            contentBundles: contentBundles
+        )
     }
 }
