@@ -11,6 +11,10 @@ struct AnyValue: Decodable {
 
     let value: Any
 
+    init(value: Any) {
+        self.value = value
+    }
+
     init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
 

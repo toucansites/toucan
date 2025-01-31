@@ -13,19 +13,20 @@ struct ToucanFileSystemTests {
                 Directory("bar")
                 Directory("baz")
             }
-        }.test { fileManager in
+        }
+        .test { fileManager in
             let url = URL(fileURLWithPath: "./foo/bar/")
             let overrideUrl = URL(fileURLWithPath: "./foo/bar/")
             let fs = ToucanFileSystem(fileManager: fileManager)
-            
-            let pageBundles = fs.locatePageBundles(at: url)
+
+            let pageBundles = fs.locateRawContents(at: url)
             #expect(pageBundles.isEmpty)
-            
-            let contentTypes = fs.locateContentTypes(
+
+            let contentTypes = fs.locateContentDefinitions(
                 at: url,
                 overrides: overrideUrl
             )
-            
+
             let templates = fs.locateTemplates(at: url, overrides: overrideUrl)
             #expect(templates.isEmpty)
         }

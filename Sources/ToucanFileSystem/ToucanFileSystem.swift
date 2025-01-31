@@ -3,12 +3,12 @@ import FileManagerKit
 
 public struct ToucanFileSystem {
 
-    let pageBundleLocator: PageBundleLocator
+    let rawContentLocator: RawContentLocator
     let contentTypeLocator: OverrideFileLocator
     let templateLocator: OverrideFileLocator
 
     public init(fileManager: FileManagerKit) {
-        self.pageBundleLocator = PageBundleLocator(fileManager: fileManager)
+        self.rawContentLocator = RawContentLocator(fileManager: fileManager)
         self.contentTypeLocator = OverrideFileLocator(
             fileManager: fileManager,
             extensions: ["yaml", "yml"]
@@ -18,22 +18,24 @@ public struct ToucanFileSystem {
             extensions: ["mustache"]
         )
     }
-    
+
     func locateFiles() {
-        
+
     }
-    
-    func locatePageBundles(at url: URL) -> [PageBundleLocation] {
-        pageBundleLocator.locate(at: url)
+
+    func locateRawContents(
+        at url: URL
+    ) -> [RawContentLocation] {
+        rawContentLocator.locate(at: url)
     }
-    
-    func locateContentTypes(
+
+    func locateContentDefinitions(
         at url: URL,
         overrides overridesUrl: URL
     ) -> [OverrideFileLocation] {
         contentTypeLocator.locate(at: url, overrides: overridesUrl)
     }
-    
+
     func locateTemplates(
         at url: URL,
         overrides overridesUrl: URL

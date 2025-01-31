@@ -1,10 +1,10 @@
-////
-////  rc.swift
-////  TestApp
-////
-////  Created by Tibor Bodecs on 2025. 01. 19..
-////
 //
+//  rc.swift
+//  TestApp
+//
+//  Created by Tibor Bodecs on 2025. 01. 19..
+//
+
 //@testable import ToucanModels
 //
 //extension RendererConfig {

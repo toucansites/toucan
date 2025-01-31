@@ -1,14 +1,7 @@
 import Foundation
 import FileManagerKit
 
-public struct PageBundleLocation {
-    /// The original path of the page bundle directory, also serves as the page bundle identifier.
-    let path: String
-    /// The slug, derermined by the path and noindex files.
-    let slug: String
-}
-
-public struct PageBundleLocator {
+public struct RawContentLocator {
 
     private let fileManager: FileManagerKit
     private let indexFileLocator: FileLocator
@@ -18,7 +11,7 @@ public struct PageBundleLocator {
     private let noindexName = "noindex"
     private let mdExtensions = ["md", "markdown"]
     private let yamlExtensions = ["yaml", "yml"]
-    
+
     init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
         self.indexFileLocator = .init(
@@ -32,21 +25,21 @@ public struct PageBundleLocator {
             extensions: mdExtensions + yamlExtensions
         )
     }
-    
-    func locate(at url: URL) -> [PageBundleLocation] {
+
+    func locate(at url: URL) -> [RawContentLocation] {
         loadBundleLocations(at: url)
             .sorted { $0.path < $1.path }
     }
 }
 
-private extension PageBundleLocator {
+private extension RawContentLocator {
 
     func loadBundleLocations(
         at contentsUrl: URL,
         slug: [String] = [],
         path: [String] = []
-    ) -> [PageBundleLocation] {
-        var result: [PageBundleLocation] = []
+    ) -> [RawContentLocation] {
+        var result: [RawContentLocation] = []
 
         let p = path.joined(separator: "/")
         let url = contentsUrl.appendingPathComponent(p)
@@ -57,17 +50,17 @@ private extension PageBundleLocator {
                 .init(path: p, slug: slug.joined(separator: "/"))
             )
         }
-        
+
         let list = fileManager.listDirectory(at: url)
         for item in list {
             var newSlug = slug
             let childUrl = url.appendingPathComponent(item)
-            
+
             let noindexFilePaths = noindexFileLocator.locate(at: childUrl)
             if noindexFilePaths.isEmpty {
                 newSlug += [item]
             }
-            
+
             let newPath = path + [item]
             result += loadBundleLocations(
                 at: contentsUrl,

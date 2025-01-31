@@ -238,13 +238,11 @@ struct QueryTestSuite {
 
         let query = Query(
             contentType: "author",
-            filter: .and([
-                .field(
-                    key: "name",
-                    operator: .in,
-                    value: ["Author #6", "Author #4"]
-                )
-            ]),
+            filter: .field(
+                key: "name",
+                operator: .in,
+                value: ["Author #6", "Author #4"]
+            ),
             orderBy: [
                 .init(key: "name")
             ]
@@ -262,13 +260,11 @@ struct QueryTestSuite {
 
         let query = Query(
             contentType: "author",
-            filter: .and([
-                .field(
-                    key: "name",
-                    operator: .like,
-                    value: "Author #1"
-                )
-            ])
+            filter: .field(
+                key: "name",
+                operator: .like,
+                value: "Author #1"
+            )
         )
 
         let results = siteBundle.run(query: query)
@@ -283,13 +279,11 @@ struct QueryTestSuite {
 
         let query = Query(
             contentType: "author",
-            filter: .and([
-                .field(
-                    key: "name",
-                    operator: .caseInsensitiveLike,
-                    value: "author #1"
-                )
-            ])
+            filter: .field(
+                key: "name",
+                operator: .caseInsensitiveLike,
+                value: "author #1"
+            )
         )
 
         let results = siteBundle.run(query: query)
@@ -304,13 +298,11 @@ struct QueryTestSuite {
 
         let query = Query(
             contentType: "post",
-            filter: .and([
-                .field(
-                    key: "authors",
-                    operator: .contains,
-                    value: "author-1"
-                )
-            ])
+            filter: .field(
+                key: "authors",
+                operator: .contains,
+                value: "author-1"
+            )
         )
 
         let results = siteBundle.run(query: query)

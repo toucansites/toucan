@@ -77,7 +77,7 @@ struct ContentDefinitionDecodingTestSuite {
                     filter:
                         and:
                             - key: tags
-                              operator: in
+                              operator: matching
                               value: "{{tags}}"
                             
                             - key: id

@@ -126,6 +126,14 @@ extension SiteBundle {
                 return false
             }
             return fieldArray.contains(value)
+        case .matching:
+            guard case let .array(valueArray) = value else {
+                return false
+            }
+            guard case let .array(fieldArray) = fieldValue else {
+                return false
+            }
+            return !Set(fieldArray).intersection(valueArray).isEmpty
         }
     }
 

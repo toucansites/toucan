@@ -19,7 +19,7 @@ public struct Toucan {
     let outputUrl: URL
     let baseUrl: String?
     let logger: Logger
-    
+
     let fs: ToucanFileSystem
 
     /// Initialize a new instance.

@@ -36,6 +36,10 @@ public indirect enum PropertyValue {
     }
 }
 
+extension PropertyValue: Hashable {
+
+}
+
 extension PropertyValue: Equatable {
 
     public static func == (lhs: Self, rhs: Self) -> Bool {

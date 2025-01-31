@@ -1,17 +1,12 @@
 import Foundation
 import FileManagerKit
 
-public struct OverrideFileLocation: Equatable {
-    let path: String
-    let overridePath: String?
-}
-
 /// A structure for locating files from the filesystem.
 public struct OverrideFileLocator {
 
     private let fileManager: FileManagerKit
     private let fileLocator: FileLocator
-    
+
     init(
         fileManager: FileManagerKit,
         extensions: [String]? = nil
@@ -22,7 +17,7 @@ public struct OverrideFileLocator {
             extensions: extensions
         )
     }
-    
+
     func locate(
         at url: URL,
         overrides overridesUrl: URL
@@ -33,21 +28,14 @@ public struct OverrideFileLocator {
             grouping: overridesPaths,
             by: \.baseName
         )
-        
-        return typesPaths
+
+        return
+            typesPaths
             .map { path in
                 let overridePath = overridesPathsDict[path.baseName]?.first
                 return .init(path: path, overridePath: overridePath)
             }
             .sorted { $0.path < $1.path }
-    }
-}
-
-// TODO: move
-extension String {
-    
-    var baseName: String {
-        URL(fileURLWithPath: self).deletingPathExtension().lastPathComponent
     }
 }
 

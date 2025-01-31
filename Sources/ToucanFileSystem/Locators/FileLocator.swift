@@ -21,7 +21,7 @@ public struct FileLocator {
         self.name = name
         self.extensions = extensions
     }
-    
+
     /// Loads the contents of files at the specified URL.
     ///
     /// - Parameter url: The base URL to look for files.
@@ -33,7 +33,7 @@ public struct FileLocator {
                 let url = URL(fileURLWithPath: fileName)
                 let baseName = url.deletingPathExtension().lastPathComponent
                 let ext = url.pathExtension
-                
+
                 switch (name, extensions) {
                 case (nil, nil):
                     return true

@@ -5,7 +5,7 @@ import Foundation
 
 @Suite
 struct ContentTypeLocatorTestSuite {
-    
+
     @Test()
     func contentType() async throws {
         try FileManagerPlayground {
@@ -21,7 +21,8 @@ struct ContentTypeLocatorTestSuite {
                     "custom.yml"
                 }
             }
-        }.test { fileManager in
+        }
+        .test { fileManager in
             let typesUrl = URL(fileURLWithPath: "default/types/")
             let overridesUrl = URL(fileURLWithPath: "overrides/types/")
             let locator = OverrideFileLocator(fileManager: fileManager)
@@ -29,11 +30,13 @@ struct ContentTypeLocatorTestSuite {
                 at: typesUrl,
                 overrides: overridesUrl
             )
-            
-            #expect(locations == [
-                .init(path: "post.yaml", overridePath: "post.yml"),
-                .init(path: "tag.yml", overridePath: nil)
-            ])
+
+            #expect(
+                locations == [
+                    .init(path: "post.yaml", overridePath: "post.yml"),
+                    .init(path: "tag.yml", overridePath: nil),
+                ]
+            )
         }
     }
 }

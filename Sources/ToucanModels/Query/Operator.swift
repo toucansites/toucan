@@ -39,4 +39,9 @@ public enum Operator: String {
     // field is an array check contains single value
     // single value
     case contains
+
+    // field is an array check intersection with array value
+    // array values both
+    case matching
+
 }
