@@ -23,6 +23,10 @@ extension Content {
                 fields[key] = .init(relation.identifiers)
             }
         }
+
+        // add identifier & slug explicitly
+        fields["id"] = .string(id)
+        fields["slug"] = .string(slug)
         return fields
     }
 }

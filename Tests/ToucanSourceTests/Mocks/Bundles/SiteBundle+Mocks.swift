@@ -11,42 +11,66 @@ extension SourceBundle.Mocks {
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages()
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(rawContent: $0, using: formatter)
+            pageDefinition.convert(
+                rawContent: $0,
+                definition: pageDefinition,
+                using: formatter
+            )
         }
 
         // categories
         let categoryDefinition = ContentDefinition.Mocks.category()
         let rawCategoryContents = RawContent.Mocks.categories()
         let categoryContents = rawCategoryContents.map {
-            categoryDefinition.convert(rawContent: $0, using: formatter)
+            categoryDefinition.convert(
+                rawContent: $0,
+                definition: categoryDefinition,
+                using: formatter
+            )
         }
 
         // guides
         let guideDefinition = ContentDefinition.Mocks.guide()
         let rawGuideContents = RawContent.Mocks.guides()
         let guideContents = rawGuideContents.map {
-            guideDefinition.convert(rawContent: $0, using: formatter)
+            guideDefinition.convert(
+                rawContent: $0,
+                definition: guideDefinition,
+                using: formatter
+            )
         }
 
         // tags
         let tagDefinition = ContentDefinition.Mocks.tag()
         let rawTagContents = RawContent.Mocks.tags()
         let tagContents = rawTagContents.map {
-            tagDefinition.convert(rawContent: $0, using: formatter)
+            tagDefinition.convert(
+                rawContent: $0,
+                definition: tagDefinition,
+                using: formatter
+            )
         }
 
         // authors
         let authorDefinition = ContentDefinition.Mocks.author()
         let rawAuthorContents = RawContent.Mocks.authors()
         let authorContents = rawAuthorContents.map {
-            authorDefinition.convert(rawContent: $0, using: formatter)
+            authorDefinition.convert(
+                rawContent: $0,
+                definition: authorDefinition,
+                using: formatter
+            )
         }
 
         // posts
         let postDefinition = ContentDefinition.Mocks.post()
         let rawPostContents = RawContent.Mocks.posts()
         let postContents = rawPostContents.map {
-            postDefinition.convert(rawContent: $0, using: formatter)
+            postDefinition.convert(
+                rawContent: $0,
+                definition: postDefinition,
+                using: formatter
+            )
         }
 
         let contentBundles: [ContentBundle] = [

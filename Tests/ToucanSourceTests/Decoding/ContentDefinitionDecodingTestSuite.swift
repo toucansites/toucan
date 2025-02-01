@@ -76,9 +76,9 @@ struct ContentDefinitionDecodingTestSuite {
                     limit: 4
                     filter:
                         and:
-                            - key: tags
+                            - key: authors
                               operator: matching
-                              value: "{{tags}}"
+                              value: "{{authors}}"
                             
                             - key: id
                               operator: notEquals
@@ -90,7 +90,7 @@ struct ContentDefinitionDecodingTestSuite {
                     filter:
                         and:
                             - key: tags
-                              operator: in
+                              operator: matching
                               value: "{{tags}}"
                             
                             - key: id

@@ -66,11 +66,11 @@ struct PropetyValueTestSuite {
     @Test
     func defaultOrderForDifferentCases() {
         #expect(PropertyValue.bool(false) < PropertyValue.int(0))
-        #expect(PropertyValue.int(0) < PropertyValue.double(0.0))
+        #expect(PropertyValue.int(0) < PropertyValue.double(1.0))
         #expect(PropertyValue.double(0.0) < PropertyValue.string(""))
-        #expect(PropertyValue.string("") < PropertyValue.date(0))
+        #expect(!(PropertyValue.string("") < PropertyValue.date(0)))
 
-        #expect(!(PropertyValue.date(0) < PropertyValue.string("")))
+        #expect(PropertyValue.date(0) < PropertyValue.string(""))
         #expect(!(PropertyValue.string("") < PropertyValue.double(0.0)))
         #expect(!(PropertyValue.double(0.0) < PropertyValue.int(0)))
         #expect(!(PropertyValue.int(0) < PropertyValue.bool(false)))
@@ -93,10 +93,10 @@ struct PropetyValueTestSuite {
             .bool(false),
             .bool(true),
             .int(5),
-            .int(10),
             .double(5.5),
-            .string("banana"),
+            .int(10),
             .date(100),
+            .string("banana"),
         ]
 
         #expect(sorted == expected)

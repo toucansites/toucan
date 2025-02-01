@@ -15,17 +15,20 @@ extension RawContent.Mocks {
                 let diff = Double(max - i) * -86_400
                 let pastDate = now.addingTimeInterval(diff)
                 let date = formatter.string(from: pastDate)
+
                 return .init(
                     origin: .init(
-                        path: "docs/categories/category-\(i)",
-                        slug: "docs/categories/category-\(i)"
+                        path: "blog/posts/post-\(i)",
+                        slug: "blog/posts/post-\(i)"
                     ),
                     frontMatter: [
                         "name": "Post #\(i)",
-                        "date": date,
+                        "publication": date,
                         "featured": (i % 2 == 0),
-                        "authors": [i].map { "author-\($0)" },
-                        "tags": [i].map { "tag-\($0)" },
+                        "authors": (0...(i / 3)).map { "author-\($0)" },
+                        "tags": (0...(i / 3)).map { "tag-\($0)" },
+                        //                        "authors": (1...10).shuffled().prefix(Int.random(in: 0...3)).map { "author-\($0)" },
+                        //                        "tags": (1...10).shuffled().prefix(Int.random(in: 0...3)).map { "tag-\($0)" },
                     ],
                     markdown: """
                         # Post #\(i)

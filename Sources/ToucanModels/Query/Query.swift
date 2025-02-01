@@ -7,12 +7,12 @@
 
 public struct Query {
 
-    public let contentType: String
-    public let scope: String?
-    public let limit: Int?
-    public let offset: Int?
-    public let filter: Condition?
-    public let orderBy: [Order]
+    public var contentType: String
+    public var scope: String?
+    public var limit: Int?
+    public var offset: Int?
+    public var filter: Condition?
+    public var orderBy: [Order]
 
     public init(
         contentType: String,
@@ -28,6 +28,19 @@ public struct Query {
         self.offset = offset
         self.filter = filter
         self.orderBy = orderBy
+    }
+
+    public func resolveFilterParameters(
+        with parameters: [String: Any]
+    ) -> Self {
+        .init(
+            contentType: contentType,
+            scope: scope,
+            limit: limit,
+            offset: offset,
+            filter: filter?.resolve(with: parameters),
+            orderBy: orderBy
+        )
     }
 }
 

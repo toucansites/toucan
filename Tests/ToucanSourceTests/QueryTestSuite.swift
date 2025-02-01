@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 import ToucanModels
 @testable import ToucanSource
@@ -307,7 +308,61 @@ struct QueryTestSuite {
         )
 
         let results = sourceBundle.run(query: query)
+        try #require(results.count == 8)
+    }
+
+    @Test
+    func nextPost() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let now = Date()
+        let diff = Double(5) * -86_400
+        let pastDate = now.addingTimeInterval(diff)
+        //        let date = formatter.string(from: pastDate)
+
+        let query1 = Query(
+            contentType: "post",
+            filter: .field(
+                key: "publication",
+                operator: .greaterThan,
+                value: pastDate.timeIntervalSince1970
+            ),
+            orderBy: [
+                .init(
+                    key: "publication",
+                    direction: .asc
+                )
+            ]
+        )
+        let results1 = sourceBundle.run(query: query1)
+        try #require(results1.count == 5)
+        //        for result in results1 {
+        //            print((result.properties["publication"] as? PropertyValue)!.value)
+        //        }
+        //        print(pastDate.timeIntervalSince1970)
+        //        print(date)
+
+        let query = Query(
+            contentType: "post",
+            limit: 1,
+            filter: .field(
+                key: "publication",
+                operator: .greaterThan,
+                value: pastDate.timeIntervalSince1970
+            ),
+            orderBy: [
+                .init(
+                    key: "publication",
+                    direction: .asc
+                )
+            ]
+        )
+
+        let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
-        #expect(results[0].properties["name"] == .string("Post #1"))
+        #expect(results[0].properties["name"] == .string("Post #6"))
     }
 }
+
