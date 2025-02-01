@@ -35,6 +35,19 @@ public struct RenderPipeline {
         public init(rawValue: UInt) {
             self.rawValue = rawValue
         }
+
+        public init(stringValue: String) {
+            switch stringValue.lowercased() {
+            case "single":
+                self = .single
+            case "bundle":
+                self = .bundle
+            case "all":
+                self = .all
+            default:
+                self = []
+            }
+        }
     }
 
     public var scopes: [String: [Scope]]
@@ -75,6 +88,23 @@ extension RenderPipeline {
 
             public init(rawValue: UInt) {
                 self.rawValue = rawValue
+            }
+
+            public init(stringValue: String) {
+                switch stringValue.lowercased() {
+                case "properties":
+                    self = .properties
+                case "contents":
+                    self = .contents
+                case "relations":
+                    self = .relations
+                case "queries":
+                    self = .queries
+                case "all":
+                    self = .all
+                default:
+                    self = []
+                }
             }
         }
 
