@@ -8,7 +8,6 @@
 import Foundation
 import ToucanModels
 
-
 extension RenderPipeline: Decodable {
 
     enum CodingKeys: CodingKey {

@@ -16,7 +16,7 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingBool() throws {
         let jsonData = #"{"type":"bool"}"#.data(using: .utf8)!
-        let decodedDataType = try JSONDecoder()
+        let decodedDataType = try ToucanJSONDecoder()
             .decode(
                 PropertyType.self,
                 from: jsonData
@@ -28,7 +28,7 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingInt() throws {
         let jsonData = #"{"type":"int"}"#.data(using: .utf8)!
-        let decodedDataType = try JSONDecoder()
+        let decodedDataType = try ToucanJSONDecoder()
             .decode(
                 PropertyType.self,
                 from: jsonData
@@ -40,7 +40,7 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingDouble() throws {
         let jsonData = #"{"type":"double"}"#.data(using: .utf8)!
-        let decodedDataType = try JSONDecoder()
+        let decodedDataType = try ToucanJSONDecoder()
             .decode(
                 PropertyType.self,
                 from: jsonData
@@ -52,7 +52,7 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingDate() throws {
         let jsonData = #"{"format":"y.m.d","type":"date"}"#.data(using: .utf8)!
-        let decodedDataType = try JSONDecoder()
+        let decodedDataType = try ToucanJSONDecoder()
             .decode(
                 PropertyType.self,
                 from: jsonData
@@ -64,7 +64,7 @@ struct PropertyTypeDecodingTestSuite {
     @Test
     func decodingString() throws {
         let jsonData = #"{"type":"string"}"#.data(using: .utf8)!
-        let decodedDataType = try JSONDecoder()
+        let decodedDataType = try ToucanJSONDecoder()
             .decode(
                 PropertyType.self,
                 from: jsonData

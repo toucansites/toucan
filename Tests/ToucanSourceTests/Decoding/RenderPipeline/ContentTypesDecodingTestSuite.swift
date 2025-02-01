@@ -19,7 +19,7 @@ struct ContentTypesDecodingTestSuite {
     func decodingMultipleValues() throws {
         let json = #"["single", "bundle"]"#
         let data = json.data(using: .utf8)!
-        let result = try JSONDecoder()
+        let result = try ToucanJSONDecoder()
             .decode(RenderPipeline.ContentTypes.self, from: data)
 
         #expect(result.contains(.single))
@@ -31,7 +31,7 @@ struct ContentTypesDecodingTestSuite {
     func decodingSingleValue() throws {
         let json = #""single""#
         let data = json.data(using: .utf8)!
-        let result = try JSONDecoder()
+        let result = try ToucanJSONDecoder()
             .decode(RenderPipeline.ContentTypes.self, from: data)
 
         #expect(result.contains(.single))
@@ -43,7 +43,7 @@ struct ContentTypesDecodingTestSuite {
     func decodingSingleAllValue() throws {
         let json = #""all""#
         let data = json.data(using: .utf8)!
-        let result = try JSONDecoder()
+        let result = try ToucanJSONDecoder()
             .decode(RenderPipeline.ContentTypes.self, from: data)
 
         #expect(result.contains(.single))
