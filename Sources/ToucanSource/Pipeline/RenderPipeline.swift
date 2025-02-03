@@ -37,8 +37,8 @@ public struct RenderPipeline {
     }
 
     public func getScope(
-        for contentType: String,
-        key: String
+        keyedBy key: String,
+        for contentType: String
     ) -> Scope {
         let scopes = getScopes(for: contentType)
         // TODO: what should we return if there's no scope definition?

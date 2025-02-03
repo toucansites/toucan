@@ -39,20 +39,20 @@ extension RenderPipeline.Mocks {
                 scopes: [
                     "*": [
                         "reference": .init(
-                            context: [.properties],
+                            context: .reference,
                             fields: []
                         ),
                         "list": .init(
-                            context: [.properties, .relations],
+                            context: .list,
                             fields: []
                         ),
                         "detail": .init(
-                            context: .all,
+                            context: .detail,
                             fields: []
                         ),
                         "custom": .init(
                             context: .properties,
-                            fields: ["featured"]
+                            fields: ["id"]
                         ),
                     ]
                 ],

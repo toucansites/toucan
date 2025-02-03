@@ -16,7 +16,7 @@ public struct Query {
 
     public init(
         contentType: String,
-        scope: String? = nil,  // TODO ???
+        scope: String? = nil,
         limit: Int? = nil,
         offset: Int? = nil,
         filter: Condition? = nil,

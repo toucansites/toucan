@@ -10,39 +10,60 @@ struct SourceBundleTestSuite {
 
     @Test
     func decodingThemeConfig() throws {
-
         let sourceBundle = SourceBundle.Mocks.complete()
-
         try sourceBundle.renderTest()
-
-        //        #expect(jsonString == #"{"type":"bool"}"#)
     }
 }
 
-//                engine: "mustache",  // mustache|json|swift|...
-//                options: [  //mustache-renderer-config
-
-//
-//                ],
-//                output: "{{slug}}/index.html"
-
 extension SourceBundle {
 
-    func prettyPrint(_ dictionary: [String: Any]) {
-        if let data = try? JSONSerialization.data(
-            withJSONObject: dictionary,
-            options: [
-                .prettyPrinted,
-                .withoutEscapingSlashes,
-            ]
-        ),
-            let jsonString = String(data: data, encoding: .utf8)
-        {
-            print(jsonString)
+    func getDates(
+        for timeInterval: Double,
+        using formatter: DateFormatter,
+        formats: [String: String] = [:]
+    ) -> [String: Any] {
+        let date = Date(timeIntervalSince1970: timeInterval)
+
+        let styles: [(String, DateFormatter.Style)] = [
+            ("full", .full),
+            ("long", .long),
+            ("medium", .medium),
+            ("short", .short),
+        ]
+
+        var dateFormats: [String: String] = [:]
+        var timeFormats: [String: String] = [:]
+
+        for (key, style) in styles {
+            formatter.dateStyle = style
+            formatter.timeStyle = .none
+            dateFormats[key] = formatter.string(from: date)
+
+            formatter.dateStyle = .none
+            formatter.timeStyle = style
+            timeFormats[key] = formatter.string(from: date)
         }
+
+        let standard: [String: String] = [
+            "iso8601": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "rss": "EEE, dd MMM yyyy HH:mm:ss Z",
+            "sitemap": "yyyy-MM-dd",
+        ]
+        var custom: [String: String] = [:]
+        for (k, f) in formats.recursivelyMerged(with: standard) {
+            formatter.dateFormat = f
+            custom[k] = formatter.string(from: date)
+        }
+
+        return [
+            "timestamp": timeInterval,
+            "date": dateFormats,
+            "time": timeFormats,
+        ]
+        .recursivelyMerged(with: custom)
     }
 
-    func getContext(
+    func getContextObject(
         for content: Content,
         context: RenderPipeline.Scope.Context,
         using source: SourceBundle,
@@ -50,8 +71,17 @@ extension SourceBundle {
     ) -> [String: Any] {
         var result: [String: Any] = [:]
         if context.contains(.properties) {
+            let formatter = DateFormatter()
+            //            formatter.locale = .init(identifier: "hu_HU")
+            //            formatter.timeZone = .init(identifier: "Europe/Budapest")
+            formatter.locale = .init(identifier: "en_US_POSIX")
+            formatter.timeZone = .init(secondsFromGMT: 0)
+
             for (k, v) in content.properties {
                 result[k] = v.value
+                if case let .date(double) = v {
+                    result[k] = getDates(for: double, using: formatter)
+                }
             }
             result["slug"] = content.slug
             result["permalink"] = "TODO_DOMAIN/" + content.slug
@@ -76,7 +106,7 @@ extension SourceBundle {
                     )
                 )
                 result[key] = relationContents.map {
-                    getContext(
+                    getContextObject(
                         for: $0,
                         context: .properties,
                         using: self,
@@ -87,7 +117,8 @@ extension SourceBundle {
 
         }
         if context.contains(.contents) {
-            result["contents"] = "TODO"
+            // TODO: render using renderer.
+            result["contents"] = content.rawValue.markdown
         }
         if allowSubQueries, context.contains(.queries) {
             for (key, query) in content.definition.queries {
@@ -106,7 +137,7 @@ extension SourceBundle {
                 //                ).filter ?? "n/a")
                 //                print("-------------------------!!!!!!!!!!!!!!")
                 result[key] = queryContents.map {
-                    getContext(
+                    getContextObject(
                         for: $0,
                         context: .all,
                         using: self,
@@ -125,7 +156,7 @@ extension SourceBundle {
         let opt = pipeline.engine.options?.value as? [String: Any] ?? [:]
         let ct = opt.dict("contentTypes")
 
-        for contentBundle in self.contentBundles {
+        for contentBundle in contentBundles {
             // content pipeline settings
             let cps = ct.dict(contentBundle.definition.type)
             print(contentBundle.definition.type)
@@ -142,7 +173,7 @@ extension SourceBundle {
                 for content in contentBundle.contents {
                     let context = [
                         //                        "global": pipelineContext,
-                        "local": getContext(
+                        "local": getContextObject(
                             for: content,
                             context: .all,
                             using: self
@@ -156,19 +187,24 @@ extension SourceBundle {
 
     }
 
-    func getPipelineContext(for pipeline: RenderPipeline) -> [String: Any] {
+    func getPipelineContext(
+        for pipeline: RenderPipeline
+    ) -> [String: Any] {
         var rawContext: [String: Any] = [:]
         for (key, query) in pipeline.queries {
-            let results = self.run(query: query)
+            let results = run(query: query)
 
-            // TODO: list by default?
             let scope = pipeline.getScope(
-                for: query.contentType,
-                key: query.scope ?? "list"
+                keyedBy: query.scope ?? "list",  // TODO: list by default?
+                for: query.contentType
             )
 
             rawContext[key] = results.map {
-                getContext(for: $0, context: scope.context, using: self)
+                getContextObject(
+                    for: $0,
+                    context: scope.context,
+                    using: self
+                )
             }
         }
         return rawContext
@@ -176,7 +212,7 @@ extension SourceBundle {
 
     func renderTest() throws {
 
-        for pipeline in self.renderPipelines {
+        for pipeline in renderPipelines {
             let context = getPipelineContext(for: pipeline)
 
             switch pipeline.engine.id {
