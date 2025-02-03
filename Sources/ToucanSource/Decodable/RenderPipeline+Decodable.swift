@@ -20,11 +20,16 @@ extension RenderPipeline: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
+        let defaultScopes = Scope.default
+
         let scopes =
             try container.decodeIfPresent(
-                [String: [Scope]].self,
+                [String: [String: Scope]].self,
                 forKey: .scopes
             ) ?? [:]
+
+        let finalScopes = defaultScopes.recursivelyMerged(with: scopes)
+        print(finalScopes)
 
         let queries =
             try container.decodeIfPresent(
@@ -40,7 +45,7 @@ extension RenderPipeline: Decodable {
         let engine = try container.decode(Engine.self, forKey: .engine)
 
         self.init(
-            scopes: scopes,
+            scopes: finalScopes,
             queries: queries,
             contentType: contentType,
             engine: engine

@@ -19,7 +19,6 @@ extension RenderPipeline.Scope: Decodable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let id = try container.decode(String.self, forKey: .id)
         let context =
             try container.decodeIfPresent(
                 Context.self,
@@ -32,7 +31,6 @@ extension RenderPipeline.Scope: Decodable {
             ) ?? []
 
         self.init(
-            id: id,
             context: context,
             fields: fields
         )

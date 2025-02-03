@@ -11,7 +11,7 @@ struct ScopeDecodingTestSuite {
     @Test
     func minimal() throws {
         let data = """
-            id: list
+            context: all
             """
             .data(using: .utf8)!
 
@@ -22,7 +22,6 @@ struct ScopeDecodingTestSuite {
             from: data
         )
 
-        #expect(result.id == "list")
         #expect(result.context == .all)
         try #require(result.fields.count == 0)
         #expect(result.fields == [])
@@ -31,7 +30,6 @@ struct ScopeDecodingTestSuite {
     @Test
     func fields() throws {
         let data = """
-            id: list
             context: properties
             fields: 
                 - foo
@@ -46,7 +44,6 @@ struct ScopeDecodingTestSuite {
             from: data
         )
 
-        #expect(result.id == "list")
         #expect(result.context == .properties)
         try #require(result.fields.count == 2)
         #expect(result.fields == ["foo", "bar"])
@@ -55,7 +52,6 @@ struct ScopeDecodingTestSuite {
     @Test
     func context() throws {
         let data = """
-            id: list
             context: 
                 - contents
                 - relations
@@ -71,7 +67,6 @@ struct ScopeDecodingTestSuite {
             from: data
         )
 
-        #expect(result.id == "list")
         #expect(result.context == [.contents, .relations])
         try #require(result.fields.count == 1)
         #expect(result.fields == ["foo"])

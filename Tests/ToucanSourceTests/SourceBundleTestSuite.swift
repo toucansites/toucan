@@ -161,14 +161,14 @@ extension SourceBundle {
         for (key, query) in pipeline.queries {
             let results = self.run(query: query)
 
-            var context: RenderPipeline.Scope.Context = .all
-            if let scope = pipeline.scopes[query.contentType]?
-                .first(where: { $0.id == query.scope })
-            {
-                context = scope.context
-            }
+            // TODO: list by default?
+            let scope = pipeline.getScope(
+                for: query.contentType,
+                key: query.scope ?? "list"
+            )
+
             rawContext[key] = results.map {
-                getContext(for: $0, context: context, using: self)
+                getContext(for: $0, context: scope.context, using: self)
             }
         }
         return rawContext

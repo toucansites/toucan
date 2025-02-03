@@ -46,4 +46,42 @@ struct RenderPipelineDecodingTestSuite {
         let dict = try #require(result.engine.options?.value as? [String: Any])
         #expect(dict["foo"] as? String == "bar")
     }
+
+    @Test
+    func scopes() throws {
+        let data = """
+            scopes: 
+                post:
+                    list:
+                        context: 
+                            - all
+                        fields:
+            engine: 
+                id: test
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            RenderPipeline.self,
+            from: data
+        )
+
+        #expect(result.contentType == .single)
+        #expect(result.engine.id == "test")
+
+        let defaultScope = try #require(result.scopes["*"])
+        let defaultReferenceScope = try #require(defaultScope["reference"])
+        let defaultListScope = try #require(defaultScope["list"])
+        let defaultDetailScope = try #require(defaultScope["detail"])
+
+        #expect(defaultReferenceScope.context == .reference)
+        #expect(defaultListScope.context == .list)
+        #expect(defaultDetailScope.context == .detail)
+
+        let postScope = try #require(result.scopes["post"])
+        let postListScope = try #require(postScope["list"])
+        #expect(postListScope.context == .all)
+    }
 }

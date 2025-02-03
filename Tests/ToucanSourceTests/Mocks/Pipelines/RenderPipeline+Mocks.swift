@@ -38,23 +38,19 @@ extension RenderPipeline.Mocks {
             .init(
                 scopes: [
                     "*": [
-                        .init(
-                            id: "reference",
+                        "reference": .init(
                             context: [.properties],
                             fields: []
                         ),
-                        .init(
-                            id: "list",
+                        "list": .init(
                             context: [.properties, .relations],
                             fields: []
                         ),
-                        .init(
-                            id: "detail",
+                        "detail": .init(
                             context: .all,
                             fields: []
                         ),
-                        .init(
-                            id: "custom",
+                        "custom": .init(
                             context: .properties,
                             fields: ["featured"]
                         ),

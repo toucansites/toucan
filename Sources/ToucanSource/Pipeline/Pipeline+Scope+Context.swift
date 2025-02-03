@@ -17,6 +17,28 @@ extension RenderPipeline.Scope {
         public static var queries: Self { .init(rawValue: 1 << 3) }
         // TODO: separate userDefined?
 
+        public static var reference: Self {
+            [
+                .properties
+            ]
+        }
+
+        public static var list: Self {
+            [
+                .properties,
+                .relations,
+            ]
+        }
+
+        public static var detail: Self {
+            [
+                properties,
+                contents,
+                relations,
+                queries,
+            ]
+        }
+
         public static var all: Self {
             [
                 properties,
