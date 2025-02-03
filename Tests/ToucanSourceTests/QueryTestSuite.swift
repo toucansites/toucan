@@ -365,4 +365,3 @@ struct QueryTestSuite {
         #expect(results[0].properties["name"] == .string("Post #6"))
     }
 }
-

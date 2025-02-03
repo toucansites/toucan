@@ -23,10 +23,10 @@ public indirect enum PropertyValue {
             self = .int(intValue)
         case let doubleValue as Double:
             self = .double(doubleValue)
-        case let stringValue as String:
-            self = .string(stringValue)
         case let dateValue as Date:
             self = .date(dateValue.timeIntervalSince1970)
+        case let stringValue as String:
+            self = .string(stringValue)
         case let arrayValue as [Any]:
             // FIXME: log a warning if there was a value drop for the type.
             self = .array(arrayValue.compactMap { PropertyValue($0) })
@@ -43,9 +43,9 @@ public indirect enum PropertyValue {
             return value
         case .double(let value):
             return value
-        case .string(let value):
-            return value
         case .date(let value):
+            return value
+        case .string(let value):
             return value
         case .array(let values):
             return values.map { $0.value }
@@ -67,9 +67,9 @@ extension PropertyValue: Equatable {
             return lhsValue == rhsValue
         case let (.double(lhsValue), .double(rhsValue)):
             return lhsValue == rhsValue
-        case let (.string(lhsValue), .string(rhsValue)):
-            return lhsValue == rhsValue
         case let (.date(lhsValue), .date(rhsValue)):
+            return lhsValue == rhsValue
+        case let (.string(lhsValue), .string(rhsValue)):
             return lhsValue == rhsValue
         case let (.array(lhsValue), .array(rhsValue)):
             return lhsValue == rhsValue

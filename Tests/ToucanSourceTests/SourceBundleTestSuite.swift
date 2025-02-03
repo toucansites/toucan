@@ -125,8 +125,6 @@ extension SourceBundle {
         let opt = pipeline.engine.options?.value as? [String: Any] ?? [:]
         let ct = opt.dict("contentTypes")
 
-        var outputs: [MockOutput] = []
-
         for contentBundle in self.contentBundles {
             // content pipeline settings
             let cps = ct.dict(contentBundle.definition.type)
@@ -137,13 +135,6 @@ extension SourceBundle {
                 //                        print("render content bundle...")
                 //                        print(contentBundle.definition.type)
                 //                        print("--------------------------------------")
-                outputs.append(
-                    .init(
-                        template: contentBundle.definition.type,
-                        context: nil,
-                        url: "\(contentBundle.definition.type)s.json"
-                    )
-                )
             }
 
             if pipeline.contentType.contains(.single) {
@@ -159,14 +150,6 @@ extension SourceBundle {
                     ]
                     prettyPrint(context)
 
-                    outputs.append(
-                        .init(
-                            template: "",
-                            context: nil,
-                            url: "\(content.rawValue.origin.slug).html"
-                        )
-                    )
-                    //                            mustache.render(template, fullContext)
                 }
             }
         }
@@ -206,10 +189,4 @@ extension SourceBundle {
 
     }
 
-}
-
-struct MockOutput {
-    var template: String
-    var context: Any?
-    var url: String
 }

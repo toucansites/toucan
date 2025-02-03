@@ -16,6 +16,13 @@ extension RenderPipeline.Mocks {
             ],
             "contentTypes": [
                 "post": [
+                    // segments
+                    "iterators": [
+                        "list": [
+                            "limit": 10
+                                // FULL QUERY?
+                        ]
+                    ],
                     "template": "post.default.template",
                     // keep here or move up? :think:
                     "output": [
@@ -30,7 +37,12 @@ extension RenderPipeline.Mocks {
         return [
             .init(
                 scopes: [
-                    "post": [
+                    "*": [
+                        .init(
+                            id: "reference",
+                            context: [.properties],
+                            fields: []
+                        ),
                         .init(
                             id: "list",
                             context: [.properties, .relations],
@@ -40,6 +52,11 @@ extension RenderPipeline.Mocks {
                             id: "detail",
                             context: .all,
                             fields: []
+                        ),
+                        .init(
+                            id: "custom",
+                            context: .properties,
+                            fields: ["featured"]
                         ),
                     ]
                 ],
