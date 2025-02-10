@@ -12,7 +12,9 @@ struct SourceBundleTestSuite {
     func decodingThemeConfig() throws {
         let sourceBundle = SourceBundle.Mocks.complete()
         try sourceBundle.renderTest()
+        
     }
+    
 }
 
 extension SourceBundle {
@@ -69,13 +71,15 @@ extension SourceBundle {
         using source: SourceBundle,
         allowSubQueries: Bool = true  // allow top level queries only
     ) -> [String: Any] {
+        
         var result: [String: Any] = [:]
         if context.contains(.properties) {
+            
             let formatter = DateFormatter()
-            //            formatter.locale = .init(identifier: "hu_HU")
-            //            formatter.timeZone = .init(identifier: "Europe/Budapest")
-            formatter.locale = .init(identifier: "en_US_POSIX")
-            formatter.timeZone = .init(secondsFromGMT: 0)
+                        formatter.locale = .init(identifier: "hu_HU")
+                        formatter.timeZone = .init(identifier: "Europe/Budapest")
+//            formatter.locale = .init(identifier: "en_US_POSIX")
+//            formatter.timeZone = .init(secondsFromGMT: 0)
 
             for (k, v) in content.properties {
                 result[k] = v.value

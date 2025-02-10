@@ -74,6 +74,8 @@ extension HTMLRendererConfig {
         enum CodingKeys: CodingKey {
             case folder
             case assets
+            case locale
+            case timezone
             case dateFormats
             case home
             case notFound
@@ -87,18 +89,15 @@ extension HTMLRendererConfig {
         public struct DateFormats: Codable {
 
             enum CodingKeys: CodingKey {
-                case timeZone
                 case input
                 case output
             }
 
-            public var timeZone: String?
             public var input: String
             public var output: [String: String]
 
             public static var defaults: Self {
                 .init(
-                    timeZone: nil,
                     input: "yyyy-MM-dd HH:mm:ss",
                     output: [
                         "full": "yyyy-MM-dd HH:mm:ss"
@@ -107,11 +106,9 @@ extension HTMLRendererConfig {
             }
 
             public init(
-                timeZone: String? = nil,
                 input: String,
                 output: [String: String]
             ) {
-                self.timeZone = timeZone
                 self.input = input
                 self.output = output
             }
@@ -126,11 +123,6 @@ extension HTMLRendererConfig {
                     self = defaults
                     return
                 }
-                self.timeZone =
-                    try container.decodeIfPresent(
-                        String.self,
-                        forKey: .timeZone
-                    ) ?? defaults.timeZone
                 self.input =
                     try container.decodeIfPresent(String.self, forKey: .input)
                     ?? defaults.input
@@ -144,6 +136,8 @@ extension HTMLRendererConfig {
 
         public var folder: String
         public var assets: Location
+        public var locale: String?
+        public var timezone: String?
         public var dateFormats: DateFormats
         public var home: Page
         public var notFound: Page
@@ -151,6 +145,8 @@ extension HTMLRendererConfig {
         public init(
             folder: String,
             assets: Location,
+            locale: String?,
+            timezone: String?,
             dateFormats: DateFormats,
             home: Page,
             notFound: Page
@@ -168,6 +164,8 @@ extension HTMLRendererConfig {
                 assets: .init(
                     folder: "assets"
                 ),
+                locale: nil,
+                timezone: nil,
                 dateFormats: .defaults,
                 home: .init(
                     id: "home",
@@ -194,6 +192,19 @@ extension HTMLRendererConfig {
             self.assets =
                 try container.decodeIfPresent(Location.self, forKey: .assets)
                 ?? defaults.assets
+            
+            self.locale =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .locale
+                ) ?? defaults.locale
+            
+            self.timezone =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .timezone
+                ) ?? defaults.timezone
+            
             self.dateFormats =
                 try container.decodeIfPresent(
                     DateFormats.self,
