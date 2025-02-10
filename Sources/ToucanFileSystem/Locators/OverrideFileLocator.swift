@@ -22,15 +22,14 @@ public struct OverrideFileLocator {
         at url: URL,
         overrides overridesUrl: URL
     ) -> [OverrideFileLocation] {
-        let typesPaths = fileLocator.locate(at: url)
+        let paths = fileLocator.locate(at: url)
         let overridesPaths = fileLocator.locate(at: overridesUrl)
         let overridesPathsDict = Dictionary(
             grouping: overridesPaths,
             by: \.baseName
         )
 
-        return
-            typesPaths
+        return paths
             .map { path in
                 let overridePath = overridesPathsDict[path.baseName]?.first
                 return .init(path: path, overridePath: overridePath)

@@ -1,6 +1,7 @@
 import Foundation
 import FileManagerKit
 
+// TODO: dedicated tests, ToucanFileSystem tests have some related tests
 public struct RawContentLocator {
 
     private let fileManager: FileManagerKit
