@@ -89,7 +89,7 @@ extension ContentDefinition {
             let rawValue = rawContent.frontMatter[key]
             let value = property.convert(
                 key: key,  // TODO: key is only used for logging.
-                rawValue: rawValue,
+                rawValue: rawValue?.value,
                 using: formatter
             )
             properties[key] = value
@@ -102,11 +102,11 @@ extension ContentDefinition {
             var identifiers: [String] = []
             switch relation.type {
             case .one:
-                if let id = rawValue as? String {
+                if let id = rawValue?.value as? String {
                     identifiers.append(id)
                 }
             case .many:
-                if let ids = rawValue as? [String] {
+                if let ids = rawValue?.value as? [String] {
                     identifiers.append(contentsOf: ids)
                 }
             }
@@ -131,12 +131,14 @@ extension ContentDefinition {
         var id: String =
             rawContent.origin.path.split(separator: "/").last.map(String.init)
             ?? ""
-        if let rawId = rawContent.frontMatter["id"] as? String, !rawId.isEmpty {
+        if let rawId = rawContent.frontMatter["id"]?.value as? String,
+            !rawId.isEmpty
+        {
             id = rawId
         }
 
         var slug: String = rawContent.origin.slug
-        if let rawSlug = rawContent.frontMatter["slug"] as? String,
+        if let rawSlug = rawContent.frontMatter["slug"]?.value as? String,
             !rawSlug.isEmpty
         {
             slug = rawSlug

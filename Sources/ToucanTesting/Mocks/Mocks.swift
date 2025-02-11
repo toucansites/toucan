@@ -8,26 +8,30 @@
 import ToucanModels
 import ToucanSource
 
-extension RawContent {
+public extension RawContent {
     enum Mocks {}
 }
 
-extension Content {
+public extension Content {
     enum Mocks {}
 }
 
-extension ContentDefinition {
+public extension ContentDefinition {
     enum Mocks {}
 }
 
-extension ContentBundle {
+public extension ContentBundle {
     enum Mocks {}
 }
 
-extension SourceBundle {
+public extension SourceBundle {
     enum Mocks {}
 }
 
-extension RenderPipeline {
+public extension RenderPipeline {
+    enum Mocks {}
+}
+
+public extension Config {
     enum Mocks {}
 }

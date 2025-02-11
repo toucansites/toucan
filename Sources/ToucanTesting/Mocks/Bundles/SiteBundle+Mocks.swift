@@ -2,7 +2,7 @@ import Foundation
 import ToucanModels
 import ToucanSource
 
-extension SourceBundle.Mocks {
+public extension SourceBundle.Mocks {
 
     static func complete() -> SourceBundle {
 

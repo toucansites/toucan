@@ -1,7 +1,7 @@
 import Foundation
 import ToucanModels
 
-extension RawContent.Mocks {
+public extension RawContent.Mocks {
 
     static func pages(
         max: Int = 10
@@ -13,11 +13,17 @@ extension RawContent.Mocks {
                     slug: ""
                 ),
                 frontMatter: [
-                    "title": "Home",
-                    "description": "Home description",
-                    "foo": [
-                        "bar": "baz"
-                    ],
+                    "title": .init(
+                        value: "Home"
+                    ),
+                    "description": .init(
+                        value: "Home description"
+                    ),
+                    "foo": .init(
+                        value: [
+                            "bar": "baz"
+                        ]
+                    ),
                 ],
                 markdown: """
                     # Home
@@ -33,8 +39,12 @@ extension RawContent.Mocks {
                     slug: "404"
                 ),
                 frontMatter: [
-                    "title": "404",
-                    "description": "404 description",
+                    "title": .init(
+                        value: "404"
+                    ),
+                    "description": .init(
+                        value: "404 description"
+                    ),
                 ],
                 markdown: """
                     # 404
@@ -50,8 +60,12 @@ extension RawContent.Mocks {
                     slug: "about"
                 ),
                 frontMatter: [
-                    "title": "About",
-                    "description": "About description",
+                    "title": .init(
+                        value: "About"
+                    ),
+                    "description": .init(
+                        value: "About description"
+                    ),
                 ],
                 markdown: """
                     # About
@@ -70,8 +84,12 @@ extension RawContent.Mocks {
                         slug: "pages/page-\(i)"
                     ),
                     frontMatter: [
-                        "title": "Page #\(i)",
-                        "description": "Page #\(i) description",
+                        "title": .init(
+                            value: "Page #\(i)"
+                        ),
+                        "description": .init(
+                            value: "Page #\(i) description"
+                        ),
                     ],
                     markdown: """
                         # Page #\(i)

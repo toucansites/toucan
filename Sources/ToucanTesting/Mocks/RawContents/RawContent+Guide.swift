@@ -3,21 +3,23 @@ import ToucanModels
 
 extension RawContent.Mocks {
 
-    static func tags(
+    static func guides(
         max: Int = 10
     ) -> [RawContent] {
         (1...max)
             .map { i in
                 .init(
                     origin: .init(
-                        path: "blog/tags/tag-\(i)",
-                        slug: "blog/tags/tag-\(i)"
+                        path: "docs/guides/guide-\(i)",
+                        slug: "docs/guides/guide-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Tag \(i)"
+                        "name": .init(value: "Guide #\(i)"),
+                        "category": .init(value: "category-\(i)"),
+                        "order": .init(value: i),
                     ],
                     markdown: """
-                        # Tag #\(i)
+                        # Guide #\(i)
 
                         Lorem ipsum dolor sit amet
                         """,

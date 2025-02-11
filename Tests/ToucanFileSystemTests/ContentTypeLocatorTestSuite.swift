@@ -39,22 +39,23 @@ struct ContentTypeLocatorTestSuite {
             )
         }
     }
-    
+
     @Test()
     func contentType_empty() async throws {
-        try FileManagerPlayground ().test { fileManager in
-            let typesUrl = URL(fileURLWithPath: "default/types/")
-            let overridesUrl = URL(fileURLWithPath: "overrides/types/")
-            let locator = OverrideFileLocator(fileManager: fileManager)
-            let locations = locator.locate(
-                at: typesUrl,
-                overrides: overridesUrl
-            )
+        try FileManagerPlayground()
+            .test { fileManager in
+                let typesUrl = URL(fileURLWithPath: "default/types/")
+                let overridesUrl = URL(fileURLWithPath: "overrides/types/")
+                let locator = OverrideFileLocator(fileManager: fileManager)
+                let locations = locator.locate(
+                    at: typesUrl,
+                    overrides: overridesUrl
+                )
 
-            #expect(locations.isEmpty)
-        }
+                #expect(locations.isEmpty)
+            }
     }
-    
+
     @Test()
     func contentType_onlyOverride() async throws {
         try FileManagerPlayground {
@@ -77,7 +78,7 @@ struct ContentTypeLocatorTestSuite {
             #expect(locations.isEmpty)
         }
     }
-    
+
     @Test()
     func contentType_noOverrides() async throws {
         try FileManagerPlayground {

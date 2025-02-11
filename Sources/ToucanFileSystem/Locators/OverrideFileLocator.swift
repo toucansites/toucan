@@ -29,7 +29,8 @@ public struct OverrideFileLocator {
             by: \.baseName
         )
 
-        return paths
+        return
+            paths
             .map { path in
                 let overridePath = overridesPathsDict[path.baseName]?.first
                 return .init(path: path, overridePath: overridePath)

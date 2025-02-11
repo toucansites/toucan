@@ -9,15 +9,16 @@ import FileManagerKit
 import Foundation
 
 extension FileManagerKit {
-    
+
     func listDirectoryRecursively(at url: URL) -> [URL] {
         listDirectory(at: url)
             .reduce(into: [URL]()) { result, path in
                 let itemUrl = url.appendingPathComponent(path)
-                
+
                 if directoryExists(at: itemUrl) {
                     result += listDirectoryRecursively(at: itemUrl)
-                } else {
+                }
+                else {
                     result.append(itemUrl)
                 }
             }

@@ -5,175 +5,147 @@
 //  Created by Tibor Bodecs on 2025. 01. 29..
 //
 
-public struct HTMLRendererConfig: Codable {
+public struct Config: Codable {
 
     enum CodingKeys: CodingKey {
-        case themes
+        case pipelines
         case contents
-        case transformers
+        case dateFormats
     }
 
+    public var pipelines: Pipelines
     public var contents: Contents
-    public var themes: Themes
-    public var transformers: Transformers
+    public var dateFormats: DateFormats
 
     public static var defaults: Self {
         .init(
+            pipelines: .defaults,
             contents: .defaults,
-            themes: .defaults,
-            transformers: .defaults
+            dateFormats: .defaults
         )
     }
 
     public init(
+        pipelines: Pipelines,
         contents: Contents,
-        themes: Themes,
-        transformers: Transformers
+        dateFormats: DateFormats
     ) {
+        self.pipelines = pipelines
         self.contents = contents
-        self.themes = themes
-        self.transformers = transformers
+        self.dateFormats = dateFormats
     }
 
     public init(from decoder: any Decoder) throws {
         let defaults = Self.defaults
-        guard let container = try? decoder.container(keyedBy: CodingKeys.self)
+
+        guard
+            let container = try? decoder.container(
+                keyedBy: CodingKeys.self
+            )
         else {
             self = defaults
             return
         }
-        self.contents =
-            try container.decodeIfPresent(Contents.self, forKey: .contents)
-            ?? defaults.contents
-        self.themes =
-            try container.decodeIfPresent(Themes.self, forKey: .themes)
-            ?? defaults.themes
-        self.transformers =
+
+        self.pipelines =
             try container.decodeIfPresent(
-                Transformers.self,
-                forKey: .transformers
-            ) ?? defaults.transformers
+                Pipelines.self,
+                forKey: .pipelines
+            ) ?? defaults.pipelines
+
+        self.contents =
+            try container.decodeIfPresent(
+                Contents.self,
+                forKey: .contents
+            ) ?? defaults.contents
+
+        self.dateFormats =
+            try container.decodeIfPresent(
+                DateFormats.self,
+                forKey: .dateFormats
+            ) ?? defaults.dateFormats
     }
 }
 
 // MARK: -
 
-extension HTMLRendererConfig {
+extension Config {
 
     public struct Location: Codable {
-        public var folder: String
+        public var path: String
     }
 }
 
 // MARK: -
 
-extension HTMLRendererConfig {
+extension Config {
+
+    public struct Pipelines: Codable {
+
+        enum CodingKeys: CodingKey {
+            case path
+        }
+
+        public var path: String
+
+        public static var defaults: Self {
+            .init(
+                path: "pipelines"
+            )
+        }
+
+        public init(
+            path: String
+        ) {
+            self.path = path
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let defaults = Self.defaults
+            guard
+                let container = try? decoder.container(
+                    keyedBy: CodingKeys.self
+                )
+            else {
+                self = defaults
+                return
+            }
+            self.path =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .path
+                ) ?? defaults.path
+        }
+    }
+}
+
+// MARK: -
+
+extension Config {
 
     public struct Contents: Codable {
 
         enum CodingKeys: CodingKey {
-            case folder
+            case path
             case assets
-            case locale
-            case timezone
-            case dateFormats
-            case home
-            case notFound
         }
 
-        public struct Page: Codable {
-            public var id: String
-            public var template: String
-        }
-
-        public struct DateFormats: Codable {
-
-            enum CodingKeys: CodingKey {
-                case input
-                case output
-            }
-
-            public var input: String
-            public var output: [String: String]
-
-            public static var defaults: Self {
-                .init(
-                    input: "yyyy-MM-dd HH:mm:ss",
-                    output: [
-                        "full": "yyyy-MM-dd HH:mm:ss"
-                    ]
-                )
-            }
-
-            public init(
-                input: String,
-                output: [String: String]
-            ) {
-                self.input = input
-                self.output = output
-            }
-
-            public init(from decoder: any Decoder) throws {
-                let defaults = Self.defaults
-                guard
-                    let container = try? decoder.container(
-                        keyedBy: CodingKeys.self
-                    )
-                else {
-                    self = defaults
-                    return
-                }
-                self.input =
-                    try container.decodeIfPresent(String.self, forKey: .input)
-                    ?? defaults.input
-                self.output =
-                    try container.decodeIfPresent(
-                        [String: String].self,
-                        forKey: .output
-                    ) ?? defaults.output
-            }
-        }
-
-        public var folder: String
+        public var path: String
         public var assets: Location
-        public var locale: String?
-        public var timezone: String?
-        public var dateFormats: DateFormats
-        public var home: Page
-        public var notFound: Page
 
         public init(
-            folder: String,
-            assets: Location,
-            locale: String?,
-            timezone: String?,
-            dateFormats: DateFormats,
-            home: Page,
-            notFound: Page
+            path: String,
+            assets: Location
         ) {
-            self.folder = folder
+            self.path = path
             self.assets = assets
-            self.dateFormats = dateFormats
-            self.home = home
-            self.notFound = notFound
         }
 
         public static var defaults: Self {
             .init(
-                folder: "contents",
+                path: "contents",
                 assets: .init(
-                    folder: "assets"
-                ),
-                locale: nil,
-                timezone: nil,
-                dateFormats: .defaults,
-                home: .init(
-                    id: "home",
-                    template: "pages.home"
-                ),
-                notFound: .init(
-                    id: "404",
-                    template: "pages.404"
+                    path: "assets"
                 )
             )
         }
@@ -181,227 +153,80 @@ extension HTMLRendererConfig {
         public init(from decoder: any Decoder) throws {
             let defaults = Self.defaults
             guard
-                let container = try? decoder.container(keyedBy: CodingKeys.self)
+                let container = try? decoder.container(
+                    keyedBy: CodingKeys.self
+                )
             else {
                 self = defaults
                 return
             }
-            self.folder =
-                try container.decodeIfPresent(String.self, forKey: .folder)
-                ?? defaults.folder
+
+            self.path =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .path
+                ) ?? defaults.path
+
             self.assets =
-                try container.decodeIfPresent(Location.self, forKey: .assets)
-                ?? defaults.assets
-            
-            self.locale =
                 try container.decodeIfPresent(
-                    String.self,
-                    forKey: .locale
-                ) ?? defaults.locale
-            
-            self.timezone =
-                try container.decodeIfPresent(
-                    String.self,
-                    forKey: .timezone
-                ) ?? defaults.timezone
-            
-            self.dateFormats =
-                try container.decodeIfPresent(
-                    DateFormats.self,
-                    forKey: .dateFormats
-                ) ?? defaults.dateFormats
-            self.home =
-                try container.decodeIfPresent(Page.self, forKey: .home)
-                ?? defaults.home
-            self.notFound =
-                try container.decodeIfPresent(Page.self, forKey: .notFound)
-                ?? defaults.notFound
+                    Location.self,
+                    forKey: .assets
+                ) ?? defaults.assets
         }
     }
 }
 
 // MARK: -
 
-extension HTMLRendererConfig {
+extension Config {
 
-    public struct Themes: Codable {
+    public struct DateFormats: Codable {
 
         enum CodingKeys: CodingKey {
-            case use
-            case folder
-            case assets
-            case templates
-            case types
-            case overrides
+            case input
+            case output
         }
 
-        public var use: String
-        public var folder: String
-        public var assets: Location
-        public var templates: Location
-        public var types: Location
-        public var overrides: Location
+        public var input: String
+        public var output: [String: String]
 
         public static var defaults: Self {
             .init(
-                use: "default",
-                folder: "themes",
-                assets: .init(
-                    folder: "assets"
-                ),
-                templates: .init(
-                    folder: "templates"
-                ),
-                types: .init(
-                    folder: "types"
-                ),
-                overrides: .init(
-                    folder: "overrides"
-                )
+                input: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                output: [:]
             )
         }
 
         public init(
-            use: String,
-            folder: String,
-            assets: HTMLRendererConfig.Location,
-            templates: HTMLRendererConfig.Location,
-            types: HTMLRendererConfig.Location,
-            overrides: HTMLRendererConfig.Location
+            input: String,
+            output: [String: String]
         ) {
-            self.use = use
-            self.folder = folder
-            self.assets = assets
-            self.templates = templates
-            self.types = types
-            self.overrides = overrides
+            self.input = input
+            self.output = output
         }
 
         public init(from decoder: any Decoder) throws {
             let defaults = Self.defaults
             guard
-                let container = try? decoder.container(keyedBy: CodingKeys.self)
-            else {
-                self = defaults
-                return
-            }
-            self.use =
-                try container.decodeIfPresent(String.self, forKey: .use)
-                ?? defaults.use
-            self.folder =
-                try container.decodeIfPresent(String.self, forKey: .folder)
-                ?? defaults.folder
-            self.assets =
-                try container.decodeIfPresent(Location.self, forKey: .assets)
-                ?? defaults.assets
-            self.templates =
-                try container.decodeIfPresent(Location.self, forKey: .templates)
-                ?? defaults.templates
-            self.types =
-                try container.decodeIfPresent(Location.self, forKey: .types)
-                ?? defaults.types
-            self.overrides =
-                try container.decodeIfPresent(Location.self, forKey: .overrides)
-                ?? defaults.overrides
-        }
-    }
-}
-
-// MARK: -
-
-extension HTMLRendererConfig {
-
-    public struct Transformers: Codable {
-
-        public struct Pipeline: Codable {
-
-            public struct Run: Codable {
-                public var name: String
-            }
-
-            enum CodingKeys: CodingKey {
-                case run
-                case isMarkdownResult
-            }
-
-            public var run: [Run]
-            public var isMarkdownResult: Bool
-
-            public static var defaults: Self {
-                .init(
-                    run: [],
-                    isMarkdownResult: false
+                let container = try? decoder.container(
+                    keyedBy: CodingKeys.self
                 )
-            }
-
-            public init(
-                run: [Run],
-                isMarkdownResult: Bool
-            ) {
-                self.run = run
-                self.isMarkdownResult = isMarkdownResult
-            }
-
-            public init(from decoder: any Decoder) throws {
-                let defaults = Self.defaults
-                guard
-                    let container = try? decoder.container(
-                        keyedBy: CodingKeys.self
-                    )
-                else {
-                    self = defaults
-                    return
-                }
-                self.run =
-                    try container.decodeIfPresent([Run].self, forKey: .run)
-                    ?? defaults.run
-                self.isMarkdownResult =
-                    try container.decodeIfPresent(
-                        Bool.self,
-                        forKey: .isMarkdownResult
-                    ) ?? defaults.isMarkdownResult
-            }
-        }
-
-        enum CodingKeys: CodingKey {
-            case folder
-            case pipelines
-        }
-
-        public var folder: String
-        public var pipelines: [String: Pipeline]
-
-        public static var defaults: Self {
-            .init(
-                folder: "transformers",
-                pipelines: [:]
-            )
-        }
-
-        public init(
-            folder: String,
-            pipelines: [String: Pipeline]
-        ) {
-            self.folder = folder
-            self.pipelines = pipelines
-        }
-
-        public init(from decoder: any Decoder) throws {
-            let defaults = Self.defaults
-            guard
-                let container = try? decoder.container(keyedBy: CodingKeys.self)
             else {
                 self = defaults
                 return
             }
-            self.folder =
-                try container.decodeIfPresent(String.self, forKey: .folder)
-                ?? defaults.folder
-            self.pipelines =
+
+            self.input =
                 try container.decodeIfPresent(
-                    [String: Pipeline].self,
-                    forKey: .pipelines
-                ) ?? defaults.pipelines
+                    String.self,
+                    forKey: .input
+                ) ?? defaults.input
+
+            self.output =
+                try container.decodeIfPresent(
+                    [String: String].self,
+                    forKey: .output
+                ) ?? defaults.output
         }
     }
 

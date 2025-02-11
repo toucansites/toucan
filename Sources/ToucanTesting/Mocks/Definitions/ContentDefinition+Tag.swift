@@ -1,39 +1,34 @@
 import ToucanModels
 
-extension ContentDefinition.Mocks {
+public extension ContentDefinition.Mocks {
 
-    static func category() -> ContentDefinition {
+    static func tag() -> ContentDefinition {
         .init(
-            type: "category",
+            type: "tag",
             paths: [
-                "docs/categories"
+                "blog/tags"
             ],
             properties: [
                 "name": .init(
                     type: .string,
                     required: true,
                     default: nil
-                ),
-                "order": .init(
-                    type: .int,
-                    required: false,
-                    default: 100
-                ),
+                )
             ],
             relations: [:],
             queries: [
-                "guides": .init(
-                    contentType: "guide",
+                "posts": .init(
+                    contentType: "post",
                     scope: "???",
                     limit: 100,
                     offset: 0,
                     filter: .field(
-                        key: "category",
-                        operator: .equals,
+                        key: "tags",
+                        operator: .contains,
                         value: "{{id}}"
                     ),
                     orderBy: [
-                        .init(key: "order", direction: .desc)
+                        .init(key: "publication", direction: .desc)
                     ]
                 )
             ]

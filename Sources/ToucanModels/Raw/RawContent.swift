@@ -8,14 +8,14 @@
 public struct RawContent {
 
     public var origin: Origin
-    public var frontMatter: [String: Any]
+    public var frontMatter: [String: AnyValue]
     public var markdown: String
     public var lastModificationDate: Double
     public var assets: [String]
 
     public init(
         origin: Origin,
-        frontMatter: [String: Any],
+        frontMatter: [String: AnyValue],
         markdown: String,
         lastModificationDate: Double,
         assets: [String]

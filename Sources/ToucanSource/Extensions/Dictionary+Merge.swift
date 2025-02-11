@@ -8,7 +8,7 @@
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
 extension Dictionary where Key == String {
 
-    /// Recursively merges another `[String: Any]` dictionary into the current dictionary and returns a new dictionary.
+    /// Recursively merges another `[String: Value]` dictionary into the current dictionary and returns a new dictionary.
     ///
     /// - Parameter other: The dictionary to merge into the current dictionary.
     /// - Returns: A new dictionary with the merged contents.

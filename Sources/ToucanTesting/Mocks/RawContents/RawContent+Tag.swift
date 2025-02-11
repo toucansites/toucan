@@ -1,24 +1,25 @@
 import Foundation
 import ToucanModels
 
-extension RawContent.Mocks {
+public extension RawContent.Mocks {
 
-    static func categories(
+    static func tags(
         max: Int = 10
     ) -> [RawContent] {
         (1...max)
             .map { i in
                 .init(
                     origin: .init(
-                        path: "docs/categories/category-\(i)",
-                        slug: "docs/categories/category-\(i)"
+                        path: "blog/tags/tag-\(i)",
+                        slug: "blog/tags/tag-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Category #\(i)",
-                        "order": i,
+                        "name": .init(
+                            value: "Tag \(i)"
+                        )
                     ],
                     markdown: """
-                        # Category #\(i)
+                        # Tag #\(i)
 
                         Lorem ipsum dolor sit amet
                         """,

@@ -15,7 +15,7 @@ public struct Content {
     public var definition: ContentDefinition
     public var properties: [String: PropertyValue]
     public var relations: [String: RelationValue]
-    public var userDefined: [String: Any]
+    public var userDefined: [String: AnyValue]
 
     public init(
         id: String,
@@ -24,7 +24,7 @@ public struct Content {
         definition: ContentDefinition,
         properties: [String: PropertyValue],
         relations: [String: RelationValue],
-        userDefined: [String: Any]
+        userDefined: [String: AnyValue]
     ) {
         self.id = id
         self.slug = slug

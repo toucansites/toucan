@@ -1,7 +1,7 @@
 import Foundation
 import ToucanModels
 
-extension RawContent.Mocks {
+public extension RawContent.Mocks {
 
     static func posts(
         max: Int = 10
@@ -22,13 +22,21 @@ extension RawContent.Mocks {
                         slug: "blog/posts/post-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Post #\(i)",
-                        "publication": date,
-                        "featured": (i % 2 == 0),
-                        "authors": (0...(i / 3)).map { "author-\($0)" },
-                        "tags": (0...(i / 3)).map { "tag-\($0)" },
-                        //                        "authors": (1...10).shuffled().prefix(Int.random(in: 0...3)).map { "author-\($0)" },
-                        //                        "tags": (1...10).shuffled().prefix(Int.random(in: 0...3)).map { "tag-\($0)" },
+                        "name": .init(
+                            value: "Post #\(i)"
+                        ),
+                        "publication": .init(
+                            value: date
+                        ),
+                        "featured": .init(
+                            value: (i % 2 == 0)
+                        ),
+                        "authors": .init(
+                            value: (0...(i / 3)).map { "author-\($0)" }
+                        ),
+                        "tags": .init(
+                            value: (0...(i / 3)).map { "tag-\($0)" }
+                        ),
                     ],
                     markdown: """
                         # Post #\(i)

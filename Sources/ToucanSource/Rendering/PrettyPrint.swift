@@ -2,12 +2,12 @@
 //  File.swift
 //  toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 03..
+//  Created by Tibor Bodecs on 2025. 02. 11..
 //
 
 import Foundation
 
-func prettyPrint(_ object: Any) {
+public func prettyPrint(_ object: Any) {
     guard
         let data = try? JSONSerialization.data(
             withJSONObject: object,

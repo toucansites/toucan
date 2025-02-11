@@ -1,7 +1,7 @@
 import Foundation
 import ToucanModels
 
-extension RawContent.Mocks {
+public extension RawContent.Mocks {
 
     static func authors(
         max: Int = 10
@@ -14,8 +14,12 @@ extension RawContent.Mocks {
                         slug: "blog/authors/author-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Author #\(i)",
-                        "description": "Author #\(i) description",
+                        "name": .init(
+                            value: "Author #\(i)"
+                        ),
+                        "description": .init(
+                            value: "Author #\(i) description"
+                        ),
                     ],
                     markdown: """
                         # Author #\(i)

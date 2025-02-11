@@ -1,6 +1,6 @@
 import ToucanModels
 
-extension ContentDefinition.Mocks {
+public extension ContentDefinition.Mocks {
 
     static func guide() -> ContentDefinition {
         .init(

@@ -21,7 +21,11 @@ extension Property: Decodable {
 
         // TODO: decide if required is true or false by default
         let required =
-            try container.decodeIfPresent(Bool.self, forKey: .required) ?? true
+            try container.decodeIfPresent(
+                Bool.self,
+                forKey: .required
+            ) ?? true
+
         let anyValue = try container.decodeIfPresent(
             AnyValue.self,
             forKey: .default

@@ -1,7 +1,7 @@
 import ToucanModels
 import ToucanSource
 
-extension RenderPipeline.Mocks {
+public extension RenderPipeline.Mocks {
 
     static func defaults() -> [RenderPipeline] {
 

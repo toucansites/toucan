@@ -1,12 +1,12 @@
 import ToucanModels
 
-extension ContentDefinition.Mocks {
+public extension ContentDefinition.Mocks {
 
-    static func author() -> ContentDefinition {
+    static func category() -> ContentDefinition {
         .init(
-            type: "author",
+            type: "category",
             paths: [
-                "blog/authors"
+                "docs/categories"
             ],
             properties: [
                 "name": .init(
@@ -14,26 +14,26 @@ extension ContentDefinition.Mocks {
                     required: true,
                     default: nil
                 ),
-                "description": .init(
-                    type: .string,
+                "order": .init(
+                    type: .int,
                     required: false,
-                    default: nil
+                    default: 100
                 ),
             ],
             relations: [:],
             queries: [
-                "posts": .init(
-                    contentType: "post",
-                    scope: "list",
+                "guides": .init(
+                    contentType: "guide",
+                    scope: "???",
                     limit: 100,
                     offset: 0,
                     filter: .field(
-                        key: "authors",
-                        operator: .contains,
+                        key: "category",
+                        operator: .equals,
                         value: "{{id}}"
                     ),
                     orderBy: [
-                        .init(key: "publication", direction: .desc)
+                        .init(key: "order", direction: .desc)
                     ]
                 )
             ]

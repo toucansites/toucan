@@ -6,14 +6,17 @@
 //
 
 public struct OverrideFileLocation: Equatable, Comparable {
-    
-    public static func < (lhs: OverrideFileLocation, rhs: OverrideFileLocation) -> Bool {
+
+    public static func < (
+        lhs: OverrideFileLocation,
+        rhs: OverrideFileLocation
+    ) -> Bool {
         lhs.path < rhs.path
     }
-    
+
     let path: String
     let overridePath: String?
-    
+
     public init(path: String, overridePath: String? = nil) {
         self.path = path
         self.overridePath = overridePath

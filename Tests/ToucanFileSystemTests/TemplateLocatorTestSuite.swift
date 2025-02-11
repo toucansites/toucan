@@ -30,7 +30,9 @@ struct TemplateLocatorTestSuite {
         }
         .test { fileManager in
             let url = URL(fileURLWithPath: "themes/default/templates/")
-            let overridesUrl = URL(fileURLWithPath: "themes/overrides/templates/")
+            let overridesUrl = URL(
+                fileURLWithPath: "themes/overrides/templates/"
+            )
             let locator = TemplateLocator(fileManager: fileManager)
             let result = locator.locate(at: url, overridesUrl: overridesUrl)
             #expect(

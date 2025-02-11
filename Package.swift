@@ -32,6 +32,7 @@ let package = Package(
         .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
         .library(name: "ToucanModels", targets: ["ToucanModels"]),
         .library(name: "ToucanSource", targets: ["ToucanSource"]),
+        .library(name: "ToucanTesting", targets: ["ToucanTesting"]),
         .executable(name: "toucan", targets: ["toucan"]),
         .executable(name: "toucan-generate", targets: ["toucan-generate"]),
         .executable(name: "toucan-init", targets: ["toucan-init"]),
@@ -102,6 +103,14 @@ let package = Package(
             dependencies: [
                 .product(name: "Yams", package: "yams"),
                 .target(name: "ToucanModels"),
+            ],
+            swiftSettings: swiftSettings
+        ),
+        .target(
+            name: "ToucanTesting",
+            dependencies: [
+                .target(name: "ToucanModels"),
+                .target(name: "ToucanSource"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -178,6 +187,7 @@ let package = Package(
             name: "ToucanSourceTests",
             dependencies: [
                 .target(name: "ToucanSource"),
+                .target(name: "ToucanTesting"),
             ]
         ),
     ]
