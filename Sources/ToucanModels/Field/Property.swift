@@ -9,7 +9,7 @@ public struct Property {
 
     public let type: PropertyType
     public let required: Bool
-    public let `default`: Any?
+    public let `default`: Any?  // TODO: eliminate any property value vs any value
 
     public init(
         type: PropertyType,

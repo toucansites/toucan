@@ -25,7 +25,7 @@ struct ConfigDecodingTestSuite {
         #expect(result.dateFormats.input == "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         #expect(result.dateFormats.output.isEmpty)
     }
-    
+
     @Test
     func full() throws {
         let data = """

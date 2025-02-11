@@ -26,10 +26,12 @@ struct SettingsDecodingTestSuite {
         )
 
         #expect(result.userDefined["name"] == nil)
-        let foo = try #require(result.userDefined["foo"]?.value as? [String: String])
+        let foo = try #require(
+            result.userDefined["foo"]?.value as? [String: String]
+        )
         #expect(foo["bar"] == "baz")
     }
-    
+
     @Test
     func full() throws {
         let data = """

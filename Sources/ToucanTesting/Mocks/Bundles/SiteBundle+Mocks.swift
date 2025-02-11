@@ -86,6 +86,8 @@ public extension SourceBundle.Mocks {
 
         return .init(
             location: .init(filePath: ""),
+            config: .defaults,
+            settings: .defaults,
             renderPipelines: pipelines,
             contentBundles: contentBundles
         )
