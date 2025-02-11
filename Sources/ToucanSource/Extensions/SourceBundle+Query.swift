@@ -21,6 +21,42 @@ extension SourceBundle {
         return filter(contents: bundle.contents, using: query)
     }
 
+    private func compare(
+        _ valueA: AnyValue,
+        _ valueB: AnyValue,
+        ascending: Bool,
+        isInclusive: Bool = false
+    ) -> Bool {
+        if let a = valueA.value(as: Int.self),
+            let b = valueB.value(as: Int.self)
+        {
+            if isInclusive {
+                return ascending ? a <= b : a >= b
+            }
+            return ascending ? a < b : a > b
+        }
+
+        if let a = valueA.value(as: Double.self),
+            let b = valueB.value(as: Double.self)
+        {
+            if isInclusive {
+                return ascending ? a <= b : a >= b
+            }
+            return ascending ? a < b : a > b
+        }
+
+        if let a = valueA.value(as: String.self),
+            let b = valueB.value(as: String.self)
+        {
+            if isInclusive {
+                return ascending ? a <= b : a >= b
+            }
+            return ascending ? a < b : a > b
+        }
+
+        return false
+    }
+
     private func filter(
         contents: [Content],
         using query: Query
@@ -30,17 +66,20 @@ extension SourceBundle {
         }
 
         for order in query.orderBy.reversed() {
-            filteredContents.sort { a, b in
+            filteredContents.sort {
+                a,
+                b in
                 guard
                     let valueA = a.properties[order.key],
                     let valueB = b.properties[order.key]
                 else {
                     return false
                 }
-                if order.direction == .asc {
-                    return valueA < valueB
-                }
-                return valueA > valueB
+                return compare(
+                    valueA,
+                    valueB,
+                    ascending: order.direction == .asc
+                )
             }
         }
 
@@ -56,7 +95,7 @@ extension SourceBundle {
 
     private func evaluate(
         condition: Condition?,
-        with props: [String: PropertyValue]
+        with props: [String: AnyValue]
     ) -> Bool {
         guard let condition else {
             return true
@@ -64,11 +103,10 @@ extension SourceBundle {
         switch condition {
         case .field(let key, let `operator`, let value):
             guard let fieldValue = props[key] else { return false }
-            guard let typedValue = PropertyValue(value) else { return false }
             return evaluateField(
                 fieldValue: fieldValue,
                 operator: `operator`,
-                value: typedValue
+                value: value
             )
 
         case .and(let conditions):
@@ -83,55 +121,103 @@ extension SourceBundle {
         }
     }
 
+    private func equals(
+        _ valueA: AnyValue,
+        _ valueB: AnyValue
+    ) -> Bool {
+        if let a = valueA.value(as: Bool.self),
+            let b = valueB.value(as: Bool.self)
+        {
+            return a == b
+        }
+
+        if let a = valueA.value(as: Int.self),
+            let b = valueB.value(as: Int.self)
+        {
+            return a == b
+        }
+
+        if let a = valueA.value(as: Double.self),
+            let b = valueB.value(as: Double.self)
+        {
+            return a == b
+        }
+
+        if let a = valueA.value(as: String.self),
+            let b = valueB.value(as: String.self)
+        {
+            return a == b
+        }
+
+        return false
+    }
+
     private func evaluateField(
-        fieldValue: PropertyValue,
+        fieldValue: AnyValue,
         operator: Operator,
-        value: PropertyValue
+        value: AnyValue
     ) -> Bool {
         switch `operator` {
         case .equals:
-            return fieldValue == value
+            return equals(fieldValue, value)
         case .notEquals:
-            return fieldValue != value
+            return !equals(fieldValue, value)
         case .lessThan:
-            return fieldValue < value
+            return compare(fieldValue, value, ascending: true)
         case .greaterThan:
-            return fieldValue > value
+            return compare(fieldValue, value, ascending: false)
         case .lessThanOrEquals:
-            return fieldValue <= value
+            return compare(
+                fieldValue,
+                value,
+                ascending: true,
+                isInclusive: true
+            )
         case .greaterThanOrEquals:
-            return fieldValue >= value
+            return compare(
+                fieldValue,
+                value,
+                ascending: false,
+                isInclusive: true
+            )
         case .like:
-            guard case let .string(fieldString) = fieldValue else {
-                return false
-            }
-            guard case let .string(valueString) = value else {
+            guard
+                let fieldString = fieldValue.value(as: String.self),
+                let valueString = value.value(as: String.self)
+            else {
                 return false
             }
             return fieldString.contains(valueString)
         case .caseInsensitiveLike:
-            guard case let .string(fieldString) = fieldValue else {
-                return false
-            }
-            guard case let .string(valueString) = value else {
+            guard
+                let fieldString = fieldValue.value(as: String.self),
+                let valueString = value.value(as: String.self)
+            else {
                 return false
             }
             return fieldString.lowercased().contains(valueString.lowercased())
         case .in:
-            guard case let .array(valueArray) = value else {
+            // TODO: int, double
+            guard
+                let fieldValue = fieldValue.value(as: String.self),
+                let valueArray = value.value(as: [String].self)
+            else {
                 return false
             }
             return valueArray.contains(fieldValue)
         case .contains:
-            guard case let .array(fieldArray) = fieldValue else {
+            guard
+                let fieldArray = fieldValue.value(as: [String].self),
+                let value = value.value(as: String.self)
+            else {
                 return false
             }
             return fieldArray.contains(value)
         case .matching:
-            guard case let .array(valueArray) = value else {
-                return false
-            }
-            guard case let .array(fieldArray) = fieldValue else {
+            guard
+                let fieldArray = fieldValue.value(as: [String].self),
+                let valueArray = value.value(as: [String].self)
+            else {
                 return false
             }
             return !Set(fieldArray).intersection(valueArray).isEmpty

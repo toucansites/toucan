@@ -18,7 +18,9 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
-        #expect(results[0].properties["name"] == .string("Author #2"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #2"
+        )
     }
 
     @Test
@@ -33,7 +35,9 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Author #4"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #4"
+        )
     }
 
     @Test
@@ -45,13 +49,15 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .equals,
-                value: "Author #6"
+                value: .init(value: "Author #6")
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
-        #expect(results[0].properties["name"] == .string("Author #6"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #6"
+        )
     }
 
     @Test
@@ -63,13 +69,15 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .notEquals,
-                value: "Author #1"
+                value: .init(value: "Author #1")
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 9)
-        #expect(results[0].properties["name"] == .string("Author #2"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #2"
+        )
     }
 
     @Test
@@ -81,14 +89,20 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .lessThan,
-                value: 3
+                value: .init(value: 3)
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Category #1"))
-        #expect(results[1].properties["name"] == .string("Category #2"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Category #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Category #2"
+        )
     }
 
     @Test
@@ -100,15 +114,24 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .lessThanOrEquals,
-                value: 3
+                value: .init(value: 3)
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 3)
-        #expect(results[0].properties["name"] == .string("Category #1"))
-        #expect(results[1].properties["name"] == .string("Category #2"))
-        #expect(results[2].properties["name"] == .string("Category #3"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Category #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Category #2"
+        )
+        #expect(
+            results[2].properties["name"]?.value(as: String.self)
+                == "Category #3"
+        )
     }
 
     @Test
@@ -120,14 +143,20 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .greaterThan,
-                value: 8
+                value: .init(value: 8)
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Category #9"))
-        #expect(results[1].properties["name"] == .string("Category #10"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Category #9"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Category #10"
+        )
     }
 
     @Test
@@ -139,15 +168,25 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .greaterThanOrEquals,
-                value: 8
+                value: .init(value: 8)
             )
         )
 
         let results = sourceBundle.run(query: query)
+        print(results.map(\.slug))
         try #require(results.count == 3)
-        #expect(results[0].properties["name"] == .string("Category #8"))
-        #expect(results[1].properties["name"] == .string("Category #9"))
-        #expect(results[2].properties["name"] == .string("Category #10"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Category #8"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Category #9"
+        )
+        #expect(
+            results[2].properties["name"]?.value(as: String.self)
+                == "Category #10"
+        )
     }
 
     @Test
@@ -160,12 +199,12 @@ struct QueryTestSuite {
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: "Author #6"
+                    value: .init(value: "Author #6")
                 ),
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: "Author #4"
+                    value: .init(value: "Author #4")
                 ),
             ]),
             orderBy: [
@@ -175,8 +214,12 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Author #6"))
-        #expect(results[1].properties["name"] == .string("Author #4"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #6"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self) == "Author #4"
+        )
     }
 
     @Test
@@ -189,12 +232,12 @@ struct QueryTestSuite {
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: "Author 6"
+                    value: .init(value: "Author 6")
                 ),
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: "Author 4"
+                    value: .init(value: "Author 4")
                 ),
             ]),
             orderBy: [
@@ -216,12 +259,12 @@ struct QueryTestSuite {
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: "Author #6"
+                    value: .init(value: "Author #6")
                 ),
                 .field(
                     key: "description",
                     operator: .like,
-                    value: "Author #6 desc"
+                    value: .init(value: "Author #6 desc")
                 ),
             ]),
             orderBy: [
@@ -231,7 +274,9 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
-        #expect(results[0].properties["name"] == .string("Author #6"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #6"
+        )
     }
 
     @Test
@@ -243,7 +288,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .in,
-                value: ["Author #6", "Author #4"]
+                value: .init(value: ["Author #6", "Author #4"])
             ),
             orderBy: [
                 .init(key: "name")
@@ -252,8 +297,12 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Author #4"))
-        #expect(results[1].properties["name"] == .string("Author #6"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #4"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self) == "Author #6"
+        )
     }
 
     @Test
@@ -265,14 +314,19 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .like,
-                value: "Author #1"
+                value: .init(value: "Author #1")
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Author #1"))
-        #expect(results[1].properties["name"] == .string("Author #10"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Author #10"
+        )
     }
 
     @Test
@@ -284,14 +338,19 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .caseInsensitiveLike,
-                value: "author #1"
+                value: .init(value: "author #1")
             )
         )
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
-        #expect(results[0].properties["name"] == .string("Author #1"))
-        #expect(results[1].properties["name"] == .string("Author #10"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Author #10"
+        )
     }
 
     @Test
@@ -303,7 +362,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "authors",
                 operator: .contains,
-                value: "author-1"
+                value: .init(value: "author-1")
             )
         )
 
@@ -327,7 +386,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "publication",
                 operator: .greaterThan,
-                value: pastDate.timeIntervalSince1970
+                value: .init(value: pastDate.timeIntervalSince1970)
             ),
             orderBy: [
                 .init(
@@ -350,7 +409,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "publication",
                 operator: .greaterThan,
-                value: pastDate.timeIntervalSince1970
+                value: .init(value: pastDate.timeIntervalSince1970)
             ),
             orderBy: [
                 .init(
@@ -362,6 +421,8 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
-        #expect(results[0].properties["name"] == .string("Post #6"))
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Post #6"
+        )
     }
 }

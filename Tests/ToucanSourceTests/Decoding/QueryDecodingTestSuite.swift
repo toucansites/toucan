@@ -71,7 +71,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "name")
         #expect(op == .equals)
-        #expect(value as? String == "hello")
+        #expect(value.value(as: String.self) == "hello")
     }
 
     @Test
@@ -101,7 +101,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "name")
         #expect(op == .in)
-        #expect(value as? [String] == ["foo", "bar", "baz"])
+        #expect(value.value(as: [String].self) == ["foo", "bar", "baz"])
     }
 
     @Test
@@ -136,7 +136,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "name")
         #expect(op == .equals)
-        #expect(value as? String == "hello")
+        #expect(value.value(as: String.self) == "hello")
     }
 
     @Test
@@ -175,7 +175,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "name")
         #expect(op == .equals)
-        #expect(value as? String == "hello")
+        #expect(value.value(as: String.self) == "hello")
 
         guard case let .field(key, op, value) = conditions[1] else {
             Issue.record("Condition is not a field case.")
@@ -184,7 +184,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "description")
         #expect(op == .like)
-        #expect(value as? String == "foo")
+        #expect(value.value(as: String.self) == "foo")
     }
 
     @Test
@@ -228,7 +228,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "name")
         #expect(op == .equals)
-        #expect(value as? String == "hello")
+        #expect(value.value(as: String.self) == "hello")
 
         guard case let .and(subconditions) = conditions[1] else {
             Issue.record("Result is not an and case.")
@@ -242,7 +242,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "featured")
         #expect(op == .equals)
-        #expect(value as? Bool == false)
+        #expect(value.value(as: Bool.self) == false)
 
         guard case let .field(key, op, value) = subconditions[1] else {
             Issue.record("Condition is not a field case.")
@@ -251,7 +251,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "likes")
         #expect(op == .greaterThan)
-        #expect(value as? Int == 100)
+        #expect(value.value(as: Int.self) == 100)
     }
 
     // MARK: - query
@@ -317,7 +317,7 @@ struct QueryDecodingTestSuite {
 
         #expect(key == "name")
         #expect(op == .equals)
-        #expect(value as? String == "hello")
+        #expect(value.value(as: String.self) == "hello")
 
         try #require(result.orderBy.count == 2)
         #expect(result.orderBy[0].key == "name")

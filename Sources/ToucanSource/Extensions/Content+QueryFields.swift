@@ -12,21 +12,21 @@ extension Content {
 
     // relations can be queried too
     // TODO: maybe add support for user defined values?
-    var queryFields: [String: PropertyValue] {
+    var queryFields: [String: AnyValue] {
         var fields = properties
 
         for (key, relation) in relations {
             switch relation.type {
             case .one:
-                fields[key] = .string(relation.identifiers[0])
+                fields[key] = .init(value: relation.identifiers[0])
             case .many:
-                fields[key] = .init(relation.identifiers)
+                fields[key] = .init(value: relation.identifiers)
             }
         }
 
         // add identifier & slug explicitly
-        fields["id"] = .string(id)
-        fields["slug"] = .string(slug)
+        fields["id"] = .init(value: id)
+        fields["slug"] = .init(value: slug)
         return fields
     }
 }

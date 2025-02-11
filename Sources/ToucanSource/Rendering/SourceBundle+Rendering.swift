@@ -89,9 +89,10 @@ extension SourceBundle {
 
             for (k, v) in content.properties {
                 result[k] = v.value
-                if case let .date(double) = v {
-                    result[k] = getDates(for: double, using: formatter)
-                }
+                // TODO: fix htis
+                //                if case let .date(double) = v {
+                //                    result[k] = getDates(for: double, using: formatter)
+                //                }
             }
             result["slug"] = content.slug
             result["permalink"] = "TODO_DOMAIN/" + content.slug
@@ -110,7 +111,9 @@ extension SourceBundle {
                         filter: .field(
                             key: "id",
                             operator: .in,
-                            value: content.relations[key]?.identifiers ?? []
+                            value: .init(
+                                value: content.relations[key]?.identifiers ?? []
+                            )
                         ),
                         orderBy: orderBy
                     )
@@ -135,7 +138,7 @@ extension SourceBundle {
                 // TODO: replace {{}} variables in query filter values...
                 let queryContents = source.run(
                     query: query.resolveFilterParameters(
-                        with: content.queryFields.mapValues { $0.value }
+                        with: content.queryFields
                     )
                 )
 

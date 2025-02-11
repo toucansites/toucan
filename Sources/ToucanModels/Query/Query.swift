@@ -31,7 +31,7 @@ public struct Query {
     }
 
     public func resolveFilterParameters(
-        with parameters: [String: Any]
+        with parameters: [String: AnyValue]
     ) -> Self {
         .init(
             contentType: contentType,

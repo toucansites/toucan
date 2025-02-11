@@ -7,11 +7,31 @@
 
 public struct AnyValue {
 
-    public let value: Any
+    public let value: Any?
 
-    public init(value: Any) {
+    public init(value: Any?) {
         self.value = value
     }
+
+    public func value<T>(as: T.Type) -> T? {
+        value as? T
+    }
+
+    //    public var boolValue: Bool? {
+    //        value(as: Bool.self)
+    //    }
+    //
+    //    public var intValue: Int? {
+    //        value(as: Int.self)
+    //    }
+    //
+    //    public var doubleValue: Double? {
+    //        value(as: Double.self)
+    //    }
+    //
+    //    public var stringValue: String? {
+    //        value(as: String.self)
+    //    }
 
 }
 

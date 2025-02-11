@@ -30,7 +30,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "authors",
                         operator: .contains,
-                        value: "{{id}}"
+                        value: .init(value: "{{id}}")
                     ),
                     orderBy: [
                         .init(key: "publication", direction: .desc)

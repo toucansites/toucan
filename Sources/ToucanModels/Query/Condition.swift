@@ -6,18 +6,18 @@
 //
 
 public enum Condition {
-    case field(key: String, operator: Operator, value: Any)
+    case field(key: String, operator: Operator, value: AnyValue)
     case and([Condition])
     case or([Condition])
 }
 
 extension Condition {
 
-    public func resolve(with parameters: [String: Any]) -> Self {
+    public func resolve(with parameters: [String: AnyValue]) -> Self {
         switch self {
         case .field(let key, let op, let value):
             guard
-                let stringValue = value as? String,
+                let stringValue = value.value(as: String.self),
                 stringValue.count > 4,
                 stringValue.hasPrefix("{{"),
                 stringValue.hasSuffix("}}")

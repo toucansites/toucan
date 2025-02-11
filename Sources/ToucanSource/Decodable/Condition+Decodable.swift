@@ -24,7 +24,7 @@ extension Condition: Decodable {
             let op = try? container.decode(Operator.self, forKey: .operator),
             let anyValue = try? container.decode(AnyValue.self, forKey: .value)
         {
-            self = .field(key: key, operator: op, value: anyValue.value)
+            self = .field(key: key, operator: op, value: anyValue)
         }
         else if let values = try? container.decode(
             [Condition].self,

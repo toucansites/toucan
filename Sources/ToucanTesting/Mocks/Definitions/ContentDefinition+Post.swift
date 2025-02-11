@@ -44,7 +44,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "publication",
                         operator: .lessThan,
-                        value: "{{publication}}"
+                        value: .init(value: "{{publication}}")
                     ),
                     orderBy: [
                         .init(
@@ -60,7 +60,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "publication",
                         operator: .greaterThan,
-                        value: "{{publication}}"
+                        value: .init(value: "{{publication}}")
                     ),
                     orderBy: [
                         .init(
@@ -79,12 +79,12 @@ public extension ContentDefinition.Mocks {
                             .field(
                                 key: "id",
                                 operator: .notEquals,
-                                value: "{{id}}"
+                                value: .init(value: "{{id}}")
                             ),
                             .field(
                                 key: "authors",
                                 operator: .matching,
-                                value: "{{authors}}"
+                                value: .init(value: "{{authors}}")
                             ),
                         ]
                     ),
@@ -100,12 +100,12 @@ public extension ContentDefinition.Mocks {
                             .field(
                                 key: "id",
                                 operator: .notEquals,
-                                value: "{{id}}"
+                                value: .init(value: "{{id}}")
                             ),
                             .field(
                                 key: "tags",
                                 operator: .matching,
-                                value: "{{tags}}"
+                                value: .init(value: "{{tags}}")
                             ),
                         ]
                     ),

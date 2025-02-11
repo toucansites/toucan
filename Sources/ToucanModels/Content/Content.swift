@@ -13,7 +13,7 @@ public struct Content {
     public var id: String
     public var slug: String
     public var definition: ContentDefinition
-    public var properties: [String: PropertyValue]
+    public var properties: [String: AnyValue]
     public var relations: [String: RelationValue]
     public var userDefined: [String: AnyValue]
 
@@ -22,7 +22,7 @@ public struct Content {
         slug: String,
         rawValue: RawContent,
         definition: ContentDefinition,
-        properties: [String: PropertyValue],
+        properties: [String: AnyValue],
         relations: [String: RelationValue],
         userDefined: [String: AnyValue]
     ) {
