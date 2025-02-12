@@ -9,28 +9,13 @@ import Foundation
 import ToucanModels
 import ToucanCodable
 
-// use this instead of String: Any
-struct DateFormats {
-
-    struct Standard {
-        let full: String
-        let long: String
-        let medium: String
-        let short: String
-    }
-
-    let date: Standard
-    let time: Standard
-    let custom: [String: String]
-}
-
 extension SourceBundle {
 
     func getDates(
         for timeInterval: Double,
         using formatter: DateFormatter,
         formats: [String: String] = [:]
-    ) -> [String: Any] {
+    ) -> DateFormats {
         let date = Date(timeIntervalSince1970: timeInterval)
 
         let styles: [(String, DateFormatter.Style)] = [
@@ -64,15 +49,26 @@ extension SourceBundle {
             custom[k] = formatter.string(from: date)
         }
 
-        return [
-            "timestamp": timeInterval,
-            "date": dateFormats,
-            "time": timeFormats,
-        ]
-        .recursivelyMerged(with: custom)
+        return .init(
+            date: .init(
+                full: dateFormats["full"]!,
+                long: dateFormats["long"]!,
+                medium: dateFormats["medium"]!,
+                short: dateFormats["short"]!
+            ),
+            time: .init(
+                full: timeFormats["full"]!,
+                long: timeFormats["long"]!,
+                medium: timeFormats["medium"]!,
+                short: timeFormats["short"]!
+            ),
+            timestamp: timeInterval,
+            formats: custom
+        )
     }
 
     func getContextObject(
+        slug: String?,
         for content: Content,
         context: RenderPipeline.Scope.Context,
         using source: SourceBundle,
@@ -83,21 +79,44 @@ extension SourceBundle {
         if context.contains(.properties) {
 
             let formatter = DateFormatter()
-            formatter.locale = .init(identifier: "hu_HU")
-            formatter.timeZone = .init(identifier: "Europe/Budapest")
-            //            formatter.locale = .init(identifier: "en_US_POSIX")
-            //            formatter.timeZone = .init(secondsFromGMT: 0)
+            formatter.locale = .init(identifier: "en_US")
+            formatter.timeZone = .init(secondsFromGMT: 0)
+            // TODO: validate locale
+            if let rawLocale = source.settings.locale {
+                formatter.locale = .init(identifier: rawLocale)
+            }
+            if let rawTimezone = source.settings.timezone,
+                let timeZone = TimeZone(identifier: rawTimezone)
+            {
+                formatter.timeZone = timeZone
+            }
 
             for (k, v) in content.properties {
-                result[k] = .init(v.value)
-                // TODO: fix htis
-                //                if case let .date(double) = v {
-                //                    result[k] = getDates(for: double, using: formatter)
-                //                }
+                if let p = content.definition.properties[k],
+                    case .date(_) = p.type,
+                    let rawDate = v.value(as: Double.self)
+                {
+                    result[k] = .init(
+                        getDates(
+                            for: rawDate,
+                            using: formatter,
+                            formats: source.config.dateFormats.output
+                                .recursivelyMerged(with: [
+                                    "test": "Y"
+                                ])
+                        )
+                    )
+                }
+                else {
+                    result[k] = .init(v.value)
+                }
             }
+
             result["slug"] = .init(content.slug)
-            result["permalink"] = .init("TODO_DOMAIN/" + content.slug)
-            result["isCurrentURL"] = .init(false)
+            result["permalink"] = .init(
+                content.slug.permalink(baseUrl: source.settings.baseUrl)
+            )
+            result["isCurrentURL"] = .init(content.slug == slug)
         }
         if allowSubQueries, context.contains(.relations) {
             for (key, relation) in content.definition.relations {
@@ -122,6 +141,7 @@ extension SourceBundle {
                 result[key] = .init(
                     relationContents.map {
                         getContextObject(
+                            slug: content.slug,
                             for: $0,
                             context: .properties,
                             using: self,
@@ -155,6 +175,7 @@ extension SourceBundle {
                 result[key] = .init(
                     queryContents.map {
                         getContextObject(
+                            slug: content.slug,
                             for: $0,
                             context: .all,
                             using: self,
@@ -193,6 +214,7 @@ extension SourceBundle {
                         //                        "global": pipelineContext,
                         "local": .init(
                             getContextObject(
+                                slug: content.slug,
                                 for: content,
                                 context: .all,
                                 using: self
@@ -222,6 +244,7 @@ extension SourceBundle {
             rawContext[key] = .init(
                 results.map {
                     getContextObject(
+                        slug: nil,
                         for: $0,
                         context: scope.context,
                         using: self

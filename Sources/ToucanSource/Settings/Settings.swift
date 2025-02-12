@@ -17,15 +17,15 @@ public struct Settings: Codable {
         case timezone
     }
 
-    public var baseUrl: String?
-    public var name: String?
+    public var baseUrl: String
+    public var name: String
     public var locale: String?
     public var timezone: String?
     public var userDefined: [String: AnyCodable]
 
     public init(
         baseUrl: String,
-        name: String?,
+        name: String,
         locale: String?,
         timezone: String?,
         userDefined: [String: AnyCodable]
@@ -39,8 +39,8 @@ public struct Settings: Codable {
 
     public static var defaults: Self {
         .init(
-            baseUrl: "http://localhost:3000/",
-            name: nil,
+            baseUrl: "http://localhost:3000",
+            name: "localhost",
             locale: nil,
             timezone: nil,
             userDefined: [:]
@@ -57,6 +57,7 @@ public struct Settings: Codable {
             self = defaults
             return
         }
+        // TODO: drop trailing slash
         self.baseUrl =
             try container.decodeIfPresent(
                 String.self,

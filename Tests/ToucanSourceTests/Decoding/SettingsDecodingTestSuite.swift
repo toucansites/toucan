@@ -47,7 +47,7 @@ struct SettingsDecodingTestSuite {
         )
 
         #expect(result.baseUrl == "https://toucansites.com/")
-        #expect(result.name == nil)
+        #expect(result.name == "localhost")
         #expect(result.locale == nil)
         #expect(result.timezone == nil)
         #expect(result.userDefined.isEmpty)
