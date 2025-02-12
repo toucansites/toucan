@@ -1,9 +1,10 @@
 
 public struct AnyCodable: Codable {
-    public let value: Any
+
+    public let value: Any?
 
     public init<T>(_ value: T?) {
-        self.value = value ?? ()
+        self.value = value
     }
 
     public func value<T>(as: T.Type) -> T? {
@@ -17,7 +18,7 @@ extension AnyCodable: Equatable {
 
     public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
         switch (lhs.value, rhs.value) {
-        case is (Void, Void):
+        case (nil, nil):
             return true
         case let (lhs as Bool, rhs as Bool):
             return lhs == rhs
@@ -61,8 +62,6 @@ extension AnyCodable: CustomStringConvertible {
 
     public var description: String {
         switch value {
-        case is Void:
-            return String(describing: nil as Any?)
         case let value as CustomStringConvertible:
             return value.description
         default:

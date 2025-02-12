@@ -32,8 +32,6 @@ struct AnyDecodableTests {
         #expect(dictionary["string"]?.value as! String == "string")
         #expect(dictionary["array"]?.value as! [Int] == [1, 2, 3])
         #expect(dictionary["dict"]?.value as! [String: String] == ["a": "alpha", "b": "bravo", "c": "charlie"])
-        
-#warning("fixme")
-//        #expect(dictionary["null"]!.value as? Any == nil)
+        #expect(dictionary["null"]!.value == nil)
     }
 }

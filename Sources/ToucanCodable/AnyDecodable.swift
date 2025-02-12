@@ -1,14 +1,21 @@
+
 public struct AnyDecodable: Decodable {
-    public let value: Any
+
+    public let value: Any?
 
     public init<T>(_ value: T?) {
-        self.value = value ?? ()
+        self.value = value
+    }
+    
+    public func value<T>(as: T.Type) -> T? {
+        value as? T
     }
 }
 
 protocol _AnyDecodable {
-    var value: Any { get }
+    var value: Any? { get }
     init<T>(_ value: T?)
+    func value<T>(as: T.Type) -> T?
 }
 
 extension AnyDecodable: _AnyDecodable {}
@@ -19,7 +26,7 @@ extension _AnyDecodable {
         let container = try decoder.singleValueContainer()
 
         if container.decodeNil() {
-            self.init(Optional<Self>.none)
+            self.init(Optional<Self>.none) // TODO: double check this
         }
         else if let bool = try? container.decode(Bool.self) {
             self.init(bool)
@@ -92,8 +99,6 @@ extension AnyDecodable: Equatable {
 extension AnyDecodable: CustomStringConvertible {
     public var description: String {
         switch value {
-        case is Void:
-            return String(describing: nil as Any?)
         case let value as CustomStringConvertible:
             return value.description
         default:

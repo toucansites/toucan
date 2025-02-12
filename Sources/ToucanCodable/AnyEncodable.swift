@@ -1,14 +1,19 @@
 public struct AnyEncodable: Encodable {
-    public let value: Any
+    public let value: Any?
 
     public init<T>(_ value: T?) {
-        self.value = value ?? ()
+        self.value = value
+    }
+    
+    public func value<T>(as: T.Type) -> T? {
+        value as? T
     }
 }
 
 protocol _AnyEncodable {
-    var value: Any { get }
+    var value: Any? { get }
     init<T>(_ value: T?)
+    func value<T>(as: T.Type) -> T?
 }
 
 extension AnyEncodable: _AnyEncodable {}
@@ -20,7 +25,7 @@ extension _AnyEncodable {
         var container = encoder.singleValueContainer()
 
         switch value {
-        case is Void:
+        case nil:
             try container.encodeNil()
         case let bool as Bool:
             try container.encode(bool)
@@ -58,7 +63,7 @@ extension _AnyEncodable {
             try encodable.encode(to: encoder)
         default:
             let context = EncodingError.Context(codingPath: container.codingPath, debugDescription: "AnyEncodable value cannot be encoded")
-            throw EncodingError.invalidValue(value, context)
+            throw EncodingError.invalidValue(value!, context)
         }
     }
 }
@@ -66,7 +71,7 @@ extension _AnyEncodable {
 extension AnyEncodable: Equatable {
     public static func == (lhs: AnyEncodable, rhs: AnyEncodable) -> Bool {
         switch (lhs.value, rhs.value) {
-        case is (Void, Void):
+        case (nil, nil):
             return true
         case let (lhs as Bool, rhs as Bool):
             return lhs == rhs
@@ -109,8 +114,6 @@ extension AnyEncodable: Equatable {
 extension AnyEncodable: CustomStringConvertible {
     public var description: String {
         switch value {
-        case is Void:
-            return String(describing: nil as Any?)
         case let value as CustomStringConvertible:
             return value.description
         default:

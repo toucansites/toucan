@@ -47,8 +47,7 @@ struct AnyCodableTests {
         #expect(dictionary["string"]?.value as! String == "string")
         #expect(dictionary["array"]?.value as! [Int] == [1, 2, 3])
         #expect(dictionary["dict"]?.value as! [String: String] == ["a": "alpha", "b": "bravo", "c": "charlie"])
-#warning("fixme")
-//        #expect(dictionary["null"]?.value == ())
+        #expect(dictionary["null"]?.value == nil)
     }
 
     @Test
@@ -79,7 +78,8 @@ struct AnyCodableTests {
         #expect(dictionary1["string"] == dictionary2["string"])
         #expect(dictionary1["array"]?.value as? [Int]  == dictionary2["array"]?.value as? [Int])
         #expect(dictionary1["dict"]?.value as? [String: String] == dictionary2["dict"]?.value as? [String: String])
-        #expect(dictionary1["null"] == dictionary2["null"])
+        #expect(dictionary1["null"]?.value == nil)
+        #expect(dictionary2["null"]?.value == nil)
     }
 
     @Test
@@ -103,9 +103,9 @@ struct AnyCodableTests {
             "someCodable": someCodable,
             "null": nil
         ]
+        print(dictionary)
 
         let encoder = JSONEncoder()
-
         let json = try encoder.encode(dictionary)
         let encodedJSONObject = try JSONSerialization.jsonObject(with: json, options: []) as! NSDictionary
 
@@ -131,7 +131,10 @@ struct AnyCodableTests {
             "null": null
         }
         """.data(using: .utf8)!
-        let expectedJSONObject = try JSONSerialization.jsonObject(with: expected, options: []) as! NSDictionary
+        let expectedJSONObject = try JSONSerialization.jsonObject(
+            with: expected,
+            options: []
+        ) as! NSDictionary
 
         #expect(encodedJSONObject == expectedJSONObject)
     }
