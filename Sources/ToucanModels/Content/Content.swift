@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
+import ToucanCodable
+
 public struct Content {
 
     public var rawValue: RawContent
@@ -13,18 +15,18 @@ public struct Content {
     public var id: String
     public var slug: String
     public var definition: ContentDefinition
-    public var properties: [String: AnyValue]
+    public var properties: [String: AnyCodable]
     public var relations: [String: RelationValue]
-    public var userDefined: [String: AnyValue]
+    public var userDefined: [String: AnyCodable]
 
     public init(
         id: String,
         slug: String,
         rawValue: RawContent,
         definition: ContentDefinition,
-        properties: [String: AnyValue],
+        properties: [String: AnyCodable],
         relations: [String: RelationValue],
-        userDefined: [String: AnyValue]
+        userDefined: [String: AnyCodable]
     ) {
         self.id = id
         self.slug = slug

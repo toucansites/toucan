@@ -14,5 +14,4 @@ struct SourceBundleTestSuite {
         let sourceBundle = SourceBundle.Mocks.complete()
         try sourceBundle.renderTest()
     }
-
 }

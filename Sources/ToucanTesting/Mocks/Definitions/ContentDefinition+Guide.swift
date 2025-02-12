@@ -17,7 +17,7 @@ public extension ContentDefinition.Mocks {
                 "order": .init(
                     type: .int,
                     required: false,
-                    default: 100
+                    default: .init(100)
                 ),
             ],
             relations: [

@@ -17,7 +17,7 @@ public extension ContentDefinition.Mocks {
                 "order": .init(
                     type: .int,
                     required: false,
-                    default: 100
+                    default: .init(100)
                 ),
             ],
             relations: [:],
@@ -30,7 +30,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "category",
                         operator: .equals,
-                        value: .init(value: "{{id}}")
+                        value: .init("{{id}}")
                     ),
                     orderBy: [
                         .init(key: "order", direction: .desc)

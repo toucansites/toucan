@@ -1,7 +1,9 @@
 import Foundation
 import Testing
 import ToucanModels
+import ToucanCodable
 @testable import ToucanSource
+
 
 @Suite
 struct AnyValueDecodingTestSuite {
@@ -10,7 +12,7 @@ struct AnyValueDecodingTestSuite {
     func decodingInt() throws {
         let json = "123"
         let data = json.data(using: .utf8)!
-        let decoded = try ToucanJSONDecoder().decode(AnyValue.self, from: data)
+        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
 
         #expect(decoded.value as? Int == 123)
     }
@@ -19,7 +21,7 @@ struct AnyValueDecodingTestSuite {
     func decodingDouble() throws {
         let json = "123.45"
         let data = json.data(using: .utf8)!
-        let decoded = try ToucanJSONDecoder().decode(AnyValue.self, from: data)
+        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
 
         #expect(decoded.value as? Double == 123.45)
     }
@@ -28,7 +30,7 @@ struct AnyValueDecodingTestSuite {
     func decodingBool() throws {
         let json = "true"
         let data = json.data(using: .utf8)!
-        let decoded = try ToucanJSONDecoder().decode(AnyValue.self, from: data)
+        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
 
         #expect(decoded.value as? Bool == true)
     }
@@ -37,7 +39,7 @@ struct AnyValueDecodingTestSuite {
     func decodingString() throws {
         let json = #""Hello""#
         let data = json.data(using: .utf8)!
-        let decoded = try ToucanJSONDecoder().decode(AnyValue.self, from: data)
+        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
 
         #expect(decoded.value as? String == "Hello")
     }
@@ -46,7 +48,7 @@ struct AnyValueDecodingTestSuite {
     func decodingArray() throws {
         let json = "[1, 2, 3]"
         let data = json.data(using: .utf8)!
-        let decoded = try ToucanJSONDecoder().decode(AnyValue.self, from: data)
+        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
 
         #expect(decoded.value as? [Int] == [1, 2, 3])
     }
@@ -55,7 +57,7 @@ struct AnyValueDecodingTestSuite {
     func decodingDictionary() throws {
         let json = #"{"key1": 1, "key2": "value"}"#
         let data = json.data(using: .utf8)!
-        let decoded = try ToucanJSONDecoder().decode(AnyValue.self, from: data)
+        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
 
         let dict = decoded.value as? [String: Any]
         #expect(dict?["key1"] as? Int == 1)

@@ -6,6 +6,7 @@
 //
 
 import ToucanModels
+import ToucanCodable
 
 extension Property: Decodable {
 
@@ -27,14 +28,14 @@ extension Property: Decodable {
             ) ?? true
 
         let anyValue = try container.decodeIfPresent(
-            AnyValue.self,
+            AnyCodable.self,
             forKey: .default
         )
 
         self.init(
             type: type,
             required: required,
-            default: anyValue?.value
+            default: anyValue
         )
     }
 }

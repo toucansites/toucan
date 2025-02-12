@@ -18,6 +18,7 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
+        print(results[0].properties)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
         )
@@ -49,7 +50,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .equals,
-                value: .init(value: "Author #6")
+                value: .init("Author #6")
             )
         )
 
@@ -69,7 +70,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .notEquals,
-                value: .init(value: "Author #1")
+                value: .init("Author #1")
             )
         )
 
@@ -89,7 +90,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .lessThan,
-                value: .init(value: 3)
+                value: .init(3)
             )
         )
 
@@ -114,7 +115,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .lessThanOrEquals,
-                value: .init(value: 3)
+                value: .init(3)
             )
         )
 
@@ -143,7 +144,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .greaterThan,
-                value: .init(value: 8)
+                value: .init(8)
             )
         )
 
@@ -168,7 +169,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "order",
                 operator: .greaterThanOrEquals,
-                value: .init(value: 8)
+                value: .init(8)
             )
         )
 
@@ -199,12 +200,12 @@ struct QueryTestSuite {
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: .init(value: "Author #6")
+                    value: .init("Author #6")
                 ),
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: .init(value: "Author #4")
+                    value: .init("Author #4")
                 ),
             ]),
             orderBy: [
@@ -232,12 +233,12 @@ struct QueryTestSuite {
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: .init(value: "Author 6")
+                    value: .init("Author 6")
                 ),
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: .init(value: "Author 4")
+                    value: .init("Author 4")
                 ),
             ]),
             orderBy: [
@@ -259,12 +260,12 @@ struct QueryTestSuite {
                 .field(
                     key: "name",
                     operator: .equals,
-                    value: .init(value: "Author #6")
+                    value: .init("Author #6")
                 ),
                 .field(
                     key: "description",
                     operator: .like,
-                    value: .init(value: "Author #6 desc")
+                    value: .init("Author #6 desc")
                 ),
             ]),
             orderBy: [
@@ -288,7 +289,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .in,
-                value: .init(value: ["Author #6", "Author #4"])
+                value: .init(["Author #6", "Author #4"])
             ),
             orderBy: [
                 .init(key: "name")
@@ -314,7 +315,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .like,
-                value: .init(value: "Author #1")
+                value: .init("Author #1")
             )
         )
 
@@ -338,7 +339,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "name",
                 operator: .caseInsensitiveLike,
-                value: .init(value: "author #1")
+                value: .init("author #1")
             )
         )
 
@@ -362,7 +363,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "authors",
                 operator: .contains,
-                value: .init(value: "author-1")
+                value: .init("author-1")
             )
         )
 
@@ -386,7 +387,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "publication",
                 operator: .greaterThan,
-                value: .init(value: pastDate.timeIntervalSince1970)
+                value: .init(pastDate.timeIntervalSince1970)
             ),
             orderBy: [
                 .init(
@@ -409,7 +410,7 @@ struct QueryTestSuite {
             filter: .field(
                 key: "publication",
                 operator: .greaterThan,
-                value: .init(value: pastDate.timeIntervalSince1970)
+                value: .init(pastDate.timeIntervalSince1970)
             ),
             orderBy: [
                 .init(

@@ -5,6 +5,8 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
+import ToucanCodable
+
 public struct Query {
 
     public var contentType: String
@@ -31,7 +33,7 @@ public struct Query {
     }
 
     public func resolveFilterParameters(
-        with parameters: [String: AnyValue]
+        with parameters: [String: AnyCodable]
     ) -> Self {
         .init(
             contentType: contentType,

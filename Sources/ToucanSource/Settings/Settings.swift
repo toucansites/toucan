@@ -6,6 +6,7 @@
 //
 
 import ToucanModels
+import ToucanCodable
 
 public struct Settings: Codable {
 
@@ -20,14 +21,14 @@ public struct Settings: Codable {
     public var name: String?
     public var locale: String?
     public var timezone: String?
-    public var userDefined: [String: AnyValue]
+    public var userDefined: [String: AnyCodable]
 
     public init(
         baseUrl: String,
         name: String?,
         locale: String?,
         timezone: String?,
-        userDefined: [String: AnyValue]
+        userDefined: [String: AnyCodable]
     ) {
         self.baseUrl = baseUrl
         self.name = name
@@ -81,7 +82,7 @@ public struct Settings: Codable {
             ) ?? defaults.timezone
 
         var result = try decoder.singleValueContainer()
-            .decode([String: AnyValue].self)
+            .decode([String: AnyCodable].self)
         for key in CodingKeys.allCases {
             result.removeValue(forKey: key.stringValue)
         }

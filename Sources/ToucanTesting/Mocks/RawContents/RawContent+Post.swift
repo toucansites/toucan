@@ -22,21 +22,11 @@ public extension RawContent.Mocks {
                         slug: "blog/posts/post-\(i)"
                     ),
                     frontMatter: [
-                        "name": .init(
-                            value: "Post #\(i)"
-                        ),
-                        "publication": .init(
-                            value: date
-                        ),
-                        "featured": .init(
-                            value: (i % 2 == 0)
-                        ),
-                        "authors": .init(
-                            value: (0...(i / 3)).map { "author-\($0)" }
-                        ),
-                        "tags": .init(
-                            value: (0...(i / 3)).map { "tag-\($0)" }
-                        ),
+                        "name": "Post #\(i)",
+                        "publication": .init(date),
+                        "featured": .init((i % 2 == 0)),
+                        "authors": .init((0...(i / 3)).map { "author-\($0)" }),
+                        "tags": .init((0...(i / 3)).map { "tag-\($0)" }),
                     ],
                     markdown: """
                         # Post #\(i)

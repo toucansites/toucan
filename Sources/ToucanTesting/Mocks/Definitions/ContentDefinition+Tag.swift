@@ -25,7 +25,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "tags",
                         operator: .contains,
-                        value: .init(value: "{{id}}")
+                        value: .init("{{id}}")
                     ),
                     orderBy: [
                         .init(key: "publication", direction: .desc)

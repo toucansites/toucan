@@ -5,16 +5,18 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
+import ToucanCodable
+
 public struct Property {
 
     public let type: PropertyType
     public let required: Bool
-    public let `default`: Any?  // TODO: eliminate any property value vs any value
+    public let `default`: AnyCodable?
 
     public init(
         type: PropertyType,
         required: Bool,
-        `default`: Any? = nil
+        `default`: AnyCodable? = nil
     ) {
         self.type = type
         self.required = required

@@ -14,12 +14,8 @@ public extension RawContent.Mocks {
                         slug: "blog/authors/author-\(i)"
                     ),
                     frontMatter: [
-                        "name": .init(
-                            value: "Author #\(i)"
-                        ),
-                        "description": .init(
-                            value: "Author #\(i) description"
-                        ),
+                        "name": "Author #\(i)",
+                        "description": "Author #\(i) description",
                     ],
                     markdown: """
                         # Author #\(i)

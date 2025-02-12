@@ -7,22 +7,23 @@
 
 import Foundation
 import ToucanModels
+import ToucanCodable
 
 extension Property {
 
     func convert(
         key: String,
-        rawValue: Any?,
+        rawValue: AnyCodable?,
         using formatter: DateFormatter
-    ) -> AnyValue? {
+    ) -> AnyCodable? {
 
         if self.required, rawValue == nil {
             print("ERROR: property is missing (\(key).")
         }
 
         let anyValue = rawValue ?? self.default
-
-        return .init(value: anyValue)
+        #warning("TODO: convert property based on prop type, date")
+        return anyValue
 
         //        var propertyValue: PropertyValue?
         //        switch self.type {
@@ -86,12 +87,12 @@ extension ContentDefinition {
         using formatter: DateFormatter
     ) -> Content {
 
-        var properties: [String: AnyValue] = [:]
+        var properties: [String: AnyCodable] = [:]
         for (key, property) in self.properties {
             let rawValue = rawContent.frontMatter[key]
             let value = property.convert(
                 key: key,  // TODO: key is only used for logging.
-                rawValue: rawValue?.value,
+                rawValue: rawValue,
                 using: formatter
             )
             properties[key] = value

@@ -14,10 +14,8 @@ public extension RawContent.Mocks {
                         slug: "docs/categories/category-\(i)"
                     ),
                     frontMatter: [
-                        "name": .init(
-                            value: "Category #\(i)"
-                        ),
-                        "order": .init(value: i),
+                        "name": "Category #\(i)",
+                        "order": .init(i),
                     ],
                     markdown: """
                         # Category #\(i)

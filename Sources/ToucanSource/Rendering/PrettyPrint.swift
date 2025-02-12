@@ -6,22 +6,34 @@
 //
 
 import Foundation
+import ToucanModels
+import ToucanCodable
 
-public func prettyPrint(_ object: Any) {
-    guard
-        let data = try? JSONSerialization.data(
-            withJSONObject: object,
-            options: [
-                .prettyPrinted,
-                .withoutEscapingSlashes,
-            ]
-        ),
-        let jsonString = String(
-            data: data,
-            encoding: .utf8
-        )
-    else {
-        return
+public func prettyPrint(_ object: [String: AnyCodable]) {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [
+        .prettyPrinted,
+        .withoutEscapingSlashes,
+//        .sortedKeys,
+    ]
+
+    do {
+        let data = try encoder.encode(object)
+        
+        guard
+            let jsonString = String(
+                data: data,
+                encoding: .utf8
+            )
+        else {
+            return
+        }
+        print(jsonString)
     }
-    print(jsonString)
+    catch {
+        print("\(error)")
+        fatalError(error.localizedDescription)
+    }
+    
+    
 }

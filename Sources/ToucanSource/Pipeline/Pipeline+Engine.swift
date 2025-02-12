@@ -6,16 +6,17 @@
 //
 
 import ToucanModels
+import ToucanCodable
 
 extension RenderPipeline {
 
     public struct Engine {
         var id: String
-        var options: AnyValue?
+        var options: AnyCodable?
 
         public init(
             id: String,
-            options: AnyValue?
+            options: AnyCodable?
         ) {
             self.id = id
             self.options = options

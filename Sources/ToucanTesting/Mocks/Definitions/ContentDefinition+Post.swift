@@ -22,7 +22,7 @@ public extension ContentDefinition.Mocks {
                 "featured": .init(
                     type: .bool,
                     required: true,
-                    default: false
+                    default: .init(false)
                 ),
             ],
             relations: [
@@ -44,7 +44,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "publication",
                         operator: .lessThan,
-                        value: .init(value: "{{publication}}")
+                        value: .init("{{publication}}")
                     ),
                     orderBy: [
                         .init(
@@ -60,7 +60,7 @@ public extension ContentDefinition.Mocks {
                     filter: .field(
                         key: "publication",
                         operator: .greaterThan,
-                        value: .init(value: "{{publication}}")
+                        value: .init("{{publication}}")
                     ),
                     orderBy: [
                         .init(
@@ -79,12 +79,12 @@ public extension ContentDefinition.Mocks {
                             .field(
                                 key: "id",
                                 operator: .notEquals,
-                                value: .init(value: "{{id}}")
+                                value: .init("{{id}}")
                             ),
                             .field(
                                 key: "authors",
                                 operator: .matching,
-                                value: .init(value: "{{authors}}")
+                                value: .init("{{authors}}")
                             ),
                         ]
                     ),
@@ -100,12 +100,12 @@ public extension ContentDefinition.Mocks {
                             .field(
                                 key: "id",
                                 operator: .notEquals,
-                                value: .init(value: "{{id}}")
+                                value: .init("{{id}}")
                             ),
                             .field(
                                 key: "tags",
                                 operator: .matching,
-                                value: .init(value: "{{tags}}")
+                                value: .init("{{tags}}")
                             ),
                         ]
                     ),

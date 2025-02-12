@@ -7,6 +7,7 @@
 
 import Foundation
 import ToucanModels
+import ToucanCodable
 
 // use this instead of String: Any
 struct DateFormats {
@@ -76,9 +77,9 @@ extension SourceBundle {
         context: RenderPipeline.Scope.Context,
         using source: SourceBundle,
         allowSubQueries: Bool = true  // allow top level queries only
-    ) -> [String: Any] {
+    ) -> [String: AnyCodable] {
 
-        var result: [String: Any] = [:]
+        var result: [String: AnyCodable] = [:]
         if context.contains(.properties) {
 
             let formatter = DateFormatter()
@@ -88,15 +89,15 @@ extension SourceBundle {
             //            formatter.timeZone = .init(secondsFromGMT: 0)
 
             for (k, v) in content.properties {
-                result[k] = v.value
+                result[k] = .init(v.value)
                 // TODO: fix htis
                 //                if case let .date(double) = v {
                 //                    result[k] = getDates(for: double, using: formatter)
                 //                }
             }
-            result["slug"] = content.slug
-            result["permalink"] = "TODO_DOMAIN/" + content.slug
-            result["isCurrentURL"] = false
+            result["slug"] = .init(content.slug)
+            result["permalink"] = .init("TODO_DOMAIN/" + content.slug)
+            result["isCurrentURL"] = .init(false)
         }
         if allowSubQueries, context.contains(.relations) {
             for (key, relation) in content.definition.relations {
@@ -112,26 +113,28 @@ extension SourceBundle {
                             key: "id",
                             operator: .in,
                             value: .init(
-                                value: content.relations[key]?.identifiers ?? []
+                                content.relations[key]?.identifiers ?? []
                             )
                         ),
                         orderBy: orderBy
                     )
                 )
-                result[key] = relationContents.map {
-                    getContextObject(
-                        for: $0,
-                        context: .properties,
-                        using: self,
-                        allowSubQueries: false
-                    )
-                }
+                result[key] = .init(
+                    relationContents.map {
+                        getContextObject(
+                            for: $0,
+                            context: .properties,
+                            using: self,
+                            allowSubQueries: false
+                        )
+                    }
+                )
             }
 
         }
         if context.contains(.contents) {
             // TODO: render using renderer.
-            result["contents"] = content.rawValue.markdown
+            result["contents"] = .init(content.rawValue.markdown)
         }
         if allowSubQueries, context.contains(.queries) {
             for (key, query) in content.definition.queries {
@@ -149,25 +152,27 @@ extension SourceBundle {
                 //                    with: content.queryFields.mapValues { $0.value }
                 //                ).filter ?? "n/a")
                 //                print("-------------------------!!!!!!!!!!!!!!")
-                result[key] = queryContents.map {
-                    getContextObject(
-                        for: $0,
-                        context: .all,
-                        using: self,
-                        allowSubQueries: false
-                    )
-                }
+                result[key] = .init(
+                    queryContents.map {
+                        getContextObject(
+                            for: $0,
+                            context: .all,
+                            using: self,
+                            allowSubQueries: false
+                        )
+                    }
+                )
             }
         }
         return result
     }
 
     func renderTestCase(
-        pipelineContext: [String: Any],
+        pipelineContext: [String: AnyCodable],
         pipeline: RenderPipeline
     ) {
-        let opt = pipeline.engine.options?.value as? [String: Any] ?? [:]
-        let ct = opt.dict("contentTypes")
+        let opt = pipeline.engine.options?.value as? [String: AnyCodable] ?? [:]
+        let ct = opt["contentTypes"]?.value as? [String: Any] ?? [:]
 
         for contentBundle in contentBundles {
             // content pipeline settings
@@ -184,13 +189,15 @@ extension SourceBundle {
             if pipeline.contentType.contains(.single) {
 
                 for content in contentBundle.contents {
-                    let context = [
+                    let context: [String: AnyCodable] = [
                         //                        "global": pipelineContext,
-                        "local": getContextObject(
-                            for: content,
-                            context: .all,
-                            using: self
-                        )
+                        "local": .init(
+                                getContextObject(
+                                    for: content,
+                                    context: .all,
+                                    using: self
+                                )
+                            )
                     ]
                     prettyPrint(context)
 
@@ -202,8 +209,8 @@ extension SourceBundle {
 
     func getPipelineContext(
         for pipeline: RenderPipeline
-    ) -> [String: Any] {
-        var rawContext: [String: Any] = [:]
+    ) -> [String: AnyCodable] {
+        var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
             let results = run(query: query)
 
@@ -212,13 +219,14 @@ extension SourceBundle {
                 for: query.contentType
             )
 
-            rawContext[key] = results.map {
+            rawContext[key] = .init(results.map {
                 getContextObject(
                     for: $0,
                     context: scope.context,
                     using: self
                 )
             }
+                                    )
         }
         return rawContext
     }

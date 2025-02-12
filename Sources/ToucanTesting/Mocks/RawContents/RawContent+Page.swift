@@ -13,17 +13,9 @@ public extension RawContent.Mocks {
                     slug: ""
                 ),
                 frontMatter: [
-                    "title": .init(
-                        value: "Home"
-                    ),
-                    "description": .init(
-                        value: "Home description"
-                    ),
-                    "foo": .init(
-                        value: [
-                            "bar": "baz"
-                        ]
-                    ),
+                    "title": "Home",
+                    "description": "Home description",
+                    "foo": ["bar": "baz"],
                 ],
                 markdown: """
                     # Home
@@ -39,12 +31,8 @@ public extension RawContent.Mocks {
                     slug: "404"
                 ),
                 frontMatter: [
-                    "title": .init(
-                        value: "404"
-                    ),
-                    "description": .init(
-                        value: "404 description"
-                    ),
+                    "title": "404",
+                    "description": "404 description",
                 ],
                 markdown: """
                     # 404
@@ -60,12 +48,8 @@ public extension RawContent.Mocks {
                     slug: "about"
                 ),
                 frontMatter: [
-                    "title": .init(
-                        value: "About"
-                    ),
-                    "description": .init(
-                        value: "About description"
-                    ),
+                    "title": "About",
+                    "description": "About description",
                 ],
                 markdown: """
                     # About
@@ -84,12 +68,8 @@ public extension RawContent.Mocks {
                         slug: "pages/page-\(i)"
                     ),
                     frontMatter: [
-                        "title": .init(
-                            value: "Page #\(i)"
-                        ),
-                        "description": .init(
-                            value: "Page #\(i) description"
-                        ),
+                        "title": "Page #\(i)",
+                        "description": "Page #\(i) description",
                     ],
                     markdown: """
                         # Page #\(i)

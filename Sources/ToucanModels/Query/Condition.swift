@@ -5,15 +5,17 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
+import ToucanCodable
+
 public enum Condition {
-    case field(key: String, operator: Operator, value: AnyValue)
+    case field(key: String, operator: Operator, value: AnyCodable)
     case and([Condition])
     case or([Condition])
 }
 
 extension Condition {
 
-    public func resolve(with parameters: [String: AnyValue]) -> Self {
+    public func resolve(with parameters: [String: AnyCodable]) -> Self {
         switch self {
         case .field(let key, let op, let value):
             guard

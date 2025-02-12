@@ -7,6 +7,7 @@
 
 import Foundation
 import ToucanModels
+import ToucanCodable
 
 extension SourceBundle {
 
@@ -22,8 +23,8 @@ extension SourceBundle {
     }
 
     private func compare(
-        _ valueA: AnyValue,
-        _ valueB: AnyValue,
+        _ valueA: AnyCodable,
+        _ valueB: AnyCodable,
         ascending: Bool,
         isInclusive: Bool = false
     ) -> Bool {
@@ -95,7 +96,7 @@ extension SourceBundle {
 
     private func evaluate(
         condition: Condition?,
-        with props: [String: AnyValue]
+        with props: [String: AnyCodable]
     ) -> Bool {
         guard let condition else {
             return true
@@ -122,8 +123,8 @@ extension SourceBundle {
     }
 
     private func equals(
-        _ valueA: AnyValue,
-        _ valueB: AnyValue
+        _ valueA: AnyCodable,
+        _ valueB: AnyCodable
     ) -> Bool {
         if let a = valueA.value(as: Bool.self),
             let b = valueB.value(as: Bool.self)
@@ -153,9 +154,9 @@ extension SourceBundle {
     }
 
     private func evaluateField(
-        fieldValue: AnyValue,
+        fieldValue: AnyCodable,
         operator: Operator,
-        value: AnyValue
+        value: AnyCodable
     ) -> Bool {
         switch `operator` {
         case .equals:

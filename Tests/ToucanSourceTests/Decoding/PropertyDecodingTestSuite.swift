@@ -26,7 +26,7 @@ struct PropertyDecodingTestSuite {
 
         #expect(result.type == .string)
         #expect(result.required == false)
-        #expect(result.default as? String == "hello")
+        #expect(result.default?.value as? String == "hello")
     }
 
     @Test

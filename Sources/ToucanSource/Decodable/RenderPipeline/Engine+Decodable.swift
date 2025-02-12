@@ -7,6 +7,7 @@
 
 import Foundation
 import ToucanModels
+import ToucanCodable
 
 extension RenderPipeline.Engine: Decodable {
 
@@ -20,7 +21,7 @@ extension RenderPipeline.Engine: Decodable {
 
         let id = try container.decode(String.self, forKey: .id)
         let options = try container.decodeIfPresent(
-            AnyValue.self,
+            AnyCodable.self,
             forKey: .options
         )
 
