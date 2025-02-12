@@ -43,8 +43,7 @@ struct RenderPipelineDecodingTestSuite {
         #expect(query.contentType == "post")
 
         #expect(result.engine.id == "test")
-        let dict = try #require(result.engine.options?.value as? [String: Any])
-        #expect(dict["foo"] as? String == "bar")
+        #expect(result.engine.options["foo"]?.value(as: String.self) == "bar")
     }
 
     @Test

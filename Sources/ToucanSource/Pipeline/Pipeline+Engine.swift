@@ -12,11 +12,11 @@ extension RenderPipeline {
 
     public struct Engine {
         var id: String
-        var options: AnyCodable?
+        var options: [String: AnyCodable]
 
         public init(
             id: String,
-            options: AnyCodable?
+            options: [String: AnyCodable]
         ) {
             self.id = id
             self.options = options

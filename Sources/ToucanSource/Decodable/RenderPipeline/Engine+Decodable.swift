@@ -20,10 +20,12 @@ extension RenderPipeline.Engine: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let id = try container.decode(String.self, forKey: .id)
-        let options = try container.decodeIfPresent(
-            AnyCodable.self,
-            forKey: .options
-        )
+
+        let options =
+            try container.decodeIfPresent(
+                [String: AnyCodable].self,
+                forKey: .options
+            ) ?? [:]
 
         self.init(
             id: id,

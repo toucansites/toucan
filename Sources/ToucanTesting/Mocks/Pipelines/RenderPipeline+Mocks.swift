@@ -4,36 +4,6 @@ import ToucanSource
 public extension RenderPipeline.Mocks {
 
     static func defaults() -> [RenderPipeline] {
-
-        let options: [String: Any] = [
-            "dataTypes": [
-                "date": [
-                    "formats": [
-                        "full": "y.m.d.",
-                        "iso": "",
-                    ]
-                ]
-            ],
-            "contentTypes": [
-                "post": [
-                    // segments
-                    "iterators": [
-                        "list": [
-                            "limit": 10
-                                // FULL QUERY?
-                        ]
-                    ],
-                    "template": "post.default.template",
-                    // keep here or move up? :think:
-                    "output": [
-                        "path": "{{slug}}",
-                        "file": "{{id}}",
-                        "ext": "json",
-                    ],
-                ]
-            ],
-        ]
-
         return [
             .init(
                 scopes: [
@@ -70,7 +40,34 @@ public extension RenderPipeline.Mocks {
                 contentType: .all,
                 engine: .init(
                     id: "context",
-                    options: .init(options)
+                    options: [
+                        "dataTypes": [
+                            "date": [
+                                "formats": [
+                                    "full": "y.m.d.",
+                                    "iso": "",
+                                ]
+                            ]
+                        ],
+                        "contentTypes": [
+                            "post": [
+                                // segments
+                                "iterators": [
+                                    "list": [
+                                        "limit": 10
+                                            // FULL QUERY?
+                                    ]
+                                ],
+                                "template": "post.default.template",
+                                // keep here or move up? :think:
+                                "output": [
+                                    "path": "{{slug}}",
+                                    "file": "{{id}}",
+                                    "ext": "json",
+                                ],
+                            ]
+                        ],
+                    ]
                 )
             )
         ]

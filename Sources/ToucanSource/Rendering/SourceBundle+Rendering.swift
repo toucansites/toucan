@@ -166,13 +166,6 @@ extension SourceBundle {
                     )
                 )
 
-                //                print("-----------")
-                //                print(query.filter ?? "n/a")
-                //                print("")
-                //                print(query.resolveFilterParameters(
-                //                    with: content.queryFields.mapValues { $0.value }
-                //                ).filter ?? "n/a")
-                //                print("-------------------------!!!!!!!!!!!!!!")
                 result[key] = .init(
                     queryContents.map {
                         getContextObject(
@@ -207,7 +200,8 @@ extension SourceBundle {
             //.sortedKeys,
         ]
 
-        //        let opt = pipeline.engine.options?.value as? [String: AnyCodable] ?? [:]
+        let engineOptions = pipeline.engine.options
+        print(engineOptions)
         //        let ct = opt["contentTypes"]?.value as? [String: Any] ?? [:]
 
         for contentBundle in contentBundles {
@@ -283,7 +277,7 @@ extension SourceBundle {
         return rawContext
     }
 
-    func render(// TODO: url input
+    func render(  // TODO: url input
         ) throws
     {
 
