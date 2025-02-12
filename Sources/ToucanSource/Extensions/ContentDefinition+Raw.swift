@@ -21,61 +21,27 @@ extension Property {
             print("ERROR: property is missing (\(key).")
         }
 
-        let anyValue = rawValue ?? self.default
-        #warning("TODO: convert property based on prop type, date")
-        return anyValue
+        let value = rawValue ?? self.default
 
-        //        var propertyValue: PropertyValue?
-        //        switch self.type {
-        //        case .bool:
-        //            guard let value = anyValue as? Bool else {
-        //                print(
-        //                    "ERROR: property is not a bool (\(key): \(anyValue ?? "nil"))."
-        //                )
-        //                break
-        //            }
-        //            propertyValue = .bool(value)
-        //        case .int:
-        //            guard let value = anyValue as? Int else {
-        //                print(
-        //                    "ERROR: property is not an integer (\(key): \(anyValue ?? "nil"))."
-        //                )
-        //                break
-        //            }
-        //            propertyValue = .int(value)
-        //        case .double:
-        //            guard let value = anyValue as? Double else {
-        //                print(
-        //                    "ERROR: property is not a double (\(key): \(anyValue ?? "nil"))."
-        //                )
-        //                break
-        //            }
-        //            propertyValue = .double(value)
-        //        case .string:
-        //            guard let value = anyValue as? String else {
-        //                print(
-        //                    "ERROR: property is not a string (\(key): \(anyValue ?? "nil"))."
-        //                )
-        //                break
-        //            }
-        //            propertyValue = .string(value)
-        //        case let .date(format):
-        //            guard let rawDateValue = anyValue as? String else {
-        //                print(
-        //                    "ERROR: property is not a string (\(key): \(anyValue ?? "nil"))."
-        //                )
-        //                break
-        //            }
-        //            formatter.dateFormat = format
-        //            guard let value = formatter.date(from: rawDateValue) else {
-        //                print(
-        //                    "ERROR: property is not a date (\(key): \(anyValue ?? "nil"))."
-        //                )
-        //                break
-        //            }
-        //            propertyValue = .date(value.timeIntervalSince1970)
-        //        }
-        //        return propertyValue
+        switch self.type {
+        case let .date(format):
+            guard let rawDateValue = value?.value(as: String.self) else {
+                print(
+                    "ERROR: property is not a string (\(key): \(value ?? "nil"))."
+                )
+                return nil
+            }
+            formatter.dateFormat = format
+            guard let value = formatter.date(from: rawDateValue) else {
+                print(
+                    "ERROR: property is not a date (\(key): \(value ?? "nil"))."
+                )
+                return nil
+            }
+            return .init(value.timeIntervalSince1970)
+        default:
+            return value
+        }
     }
 }
 
