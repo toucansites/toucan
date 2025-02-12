@@ -12,7 +12,7 @@ struct SettingsDecodingTestSuite {
             baseUrl: "lorem1"
             name: "lorem2"
             locale: "lorem3"
-            timezone: "lorem4"
+            timeZone: "lorem4"
             foo:
                 bar: baz
             """
@@ -49,7 +49,7 @@ struct SettingsDecodingTestSuite {
         #expect(result.baseUrl == "https://toucansites.com/")
         #expect(result.name == "localhost")
         #expect(result.locale == nil)
-        #expect(result.timezone == nil)
+        #expect(result.timeZone == nil)
         #expect(result.userDefined.isEmpty)
     }
 }

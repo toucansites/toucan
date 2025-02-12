@@ -111,6 +111,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Yams", package: "yams"),
                 .target(name: "ToucanModels"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
             ],
             swiftSettings: swiftSettings
         ),

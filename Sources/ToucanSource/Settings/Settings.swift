@@ -14,26 +14,26 @@ public struct Settings: Codable {
         case baseUrl
         case name
         case locale
-        case timezone
+        case timeZone
     }
 
     public var baseUrl: String
     public var name: String
     public var locale: String?
-    public var timezone: String?
+    public var timeZone: String?
     public var userDefined: [String: AnyCodable]
 
     public init(
         baseUrl: String,
         name: String,
         locale: String?,
-        timezone: String?,
+        timeZone: String?,
         userDefined: [String: AnyCodable]
     ) {
         self.baseUrl = baseUrl
         self.name = name
         self.locale = locale
-        self.timezone = timezone
+        self.timeZone = timeZone
         self.userDefined = userDefined
     }
 
@@ -42,7 +42,7 @@ public struct Settings: Codable {
             baseUrl: "http://localhost:3000",
             name: "localhost",
             locale: nil,
-            timezone: nil,
+            timeZone: nil,
             userDefined: [:]
         )
     }
@@ -76,11 +76,11 @@ public struct Settings: Codable {
                 forKey: .locale
             ) ?? defaults.locale
 
-        self.timezone =
+        self.timeZone =
             try container.decodeIfPresent(
                 String.self,
-                forKey: .timezone
-            ) ?? defaults.timezone
+                forKey: .timeZone
+            ) ?? defaults.timeZone
 
         var result = try decoder.singleValueContainer()
             .decode([String: AnyCodable].self)

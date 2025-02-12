@@ -10,8 +10,8 @@ struct SourceBundleTestSuite {
     // MARK: -
 
     @Test
-    func decodingThemeConfig() throws {
+    func pipelineRendering() throws {
         let sourceBundle = SourceBundle.Mocks.complete()
-        try sourceBundle.renderTest()
+        try sourceBundle.render()
     }
 }

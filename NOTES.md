@@ -13,7 +13,7 @@ contents
     index.yml
         baseUrl
         locale
-        timezone
+        timeZone
         name
         +userDefined
     

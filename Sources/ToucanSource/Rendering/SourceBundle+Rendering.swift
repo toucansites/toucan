@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FileManagerKit
 import ToucanModels
 import ToucanCodable
 
@@ -85,7 +86,7 @@ extension SourceBundle {
             if let rawLocale = source.settings.locale {
                 formatter.locale = .init(identifier: rawLocale)
             }
-            if let rawTimezone = source.settings.timezone,
+            if let rawTimezone = source.settings.timeZone,
                 let timeZone = TimeZone(identifier: rawTimezone)
             {
                 formatter.timeZone = timeZone
@@ -188,43 +189,70 @@ extension SourceBundle {
         return result
     }
 
-    func renderTestCase(
+    func renderContents(
         pipelineContext: [String: AnyCodable],
-        pipeline: RenderPipeline
-    ) {
-        let opt = pipeline.engine.options?.value as? [String: AnyCodable] ?? [:]
-        let ct = opt["contentTypes"]?.value as? [String: Any] ?? [:]
+        pipeline: RenderPipeline,
+        url: URL
+    ) throws {
+
+        if FileManager.default.exists(at: url) {
+            try FileManager.default.removeItem(at: url)
+        }
+        try FileManager.default.createDirectory(at: url)
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [
+            .prettyPrinted,
+            .withoutEscapingSlashes,
+            //.sortedKeys,
+        ]
+
+        //        let opt = pipeline.engine.options?.value as? [String: AnyCodable] ?? [:]
+        //        let ct = opt["contentTypes"]?.value as? [String: Any] ?? [:]
 
         for contentBundle in contentBundles {
             // content pipeline settings
-            let cps = ct.dict(contentBundle.definition.type)
-            print(contentBundle.definition.type)
-            print(cps)
+            //            let cps = ct.dict(contentBundle.definition.type)
+            //            print(contentBundle.definition.type)
+            //            print(cps)
 
-            if pipeline.contentType.contains(.bundle) {
-                //                        print("render content bundle...")
-                //                        print(contentBundle.definition.type)
-                //                        print("--------------------------------------")
-            }
+            //            if pipeline.contentType.contains(.bundle) {
+            //                        print("render content bundle...")
+            //                        print(contentBundle.definition.type)
+            //                        print("--------------------------------------")
+            //            }
 
-            if pipeline.contentType.contains(.single) {
+            //            if pipeline.contentType.contains(.single) {
 
-                for content in contentBundle.contents {
-                    let context: [String: AnyCodable] = [
-                        //                        "global": pipelineContext,
-                        "local": .init(
-                            getContextObject(
-                                slug: content.slug,
-                                for: content,
-                                context: .all,
-                                using: self
-                            )
+            for content in contentBundle.contents {
+                let context: [String: AnyCodable] = [
+                    //                        "global": pipelineContext,
+                    "local": .init(
+                        getContextObject(
+                            slug: content.slug,
+                            for: content,
+                            context: .all,
+                            using: self
                         )
-                    ]
-                    prettyPrint(context)
+                    )
+                ]
 
-                }
+                let folder =
+                    url
+                    .appending(path: content.slug)
+
+                try FileManager.default.createDirectory(at: folder)
+
+                let file =
+                    folder
+                    .appending(path: "context")
+                    .appendingPathExtension("json")
+
+                let data = try encoder.encode(context)
+                try data.write(to: file)
+                //prettyPrint(context)
             }
+            //            }
         }
 
     }
@@ -255,19 +283,32 @@ extension SourceBundle {
         return rawContext
     }
 
-    func renderTest() throws {
+    func render(// TODO: url input
+        ) throws
+    {
+
+        let url = FileManager.default.homeDirectoryForCurrentUser.appending(
+            path: "output"
+        )
 
         for pipeline in renderPipelines {
             let context = getPipelineContext(for: pipeline)
 
             switch pipeline.engine.id {
-            case "test":
-                renderTestCase(pipelineContext: context, pipeline: pipeline)
+            case "context":
+                try renderContents(
+                    pipelineContext: context,
+                    pipeline: pipeline,
+                    url: url
+                )
+            case "json":
+                print("mustache")
+            case "mustache":
+                print("mustache")
             default:
                 print("ERROR - no such renderer \(pipeline.engine.id)")
             }
         }
-
     }
 
 }
