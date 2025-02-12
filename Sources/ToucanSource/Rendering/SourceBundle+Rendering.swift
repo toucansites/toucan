@@ -192,12 +192,12 @@ extension SourceBundle {
                     let context: [String: AnyCodable] = [
                         //                        "global": pipelineContext,
                         "local": .init(
-                                getContextObject(
-                                    for: content,
-                                    context: .all,
-                                    using: self
-                                )
+                            getContextObject(
+                                for: content,
+                                context: .all,
+                                using: self
                             )
+                        )
                     ]
                     prettyPrint(context)
 
@@ -219,14 +219,15 @@ extension SourceBundle {
                 for: query.contentType
             )
 
-            rawContext[key] = .init(results.map {
-                getContextObject(
-                    for: $0,
-                    context: scope.context,
-                    using: self
-                )
-            }
-                                    )
+            rawContext[key] = .init(
+                results.map {
+                    getContextObject(
+                        for: $0,
+                        context: scope.context,
+                        using: self
+                    )
+                }
+            )
         }
         return rawContext
     }

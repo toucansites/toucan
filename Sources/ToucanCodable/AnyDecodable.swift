@@ -1,4 +1,3 @@
-
 public struct AnyDecodable: Decodable {
 
     public let value: Any?
@@ -6,7 +5,7 @@ public struct AnyDecodable: Decodable {
     public init<T>(_ value: T?) {
         self.value = value
     }
-    
+
     public func value<T>(as: T.Type) -> T? {
         value as? T
     }
@@ -26,7 +25,7 @@ extension _AnyDecodable {
         let container = try decoder.singleValueContainer()
 
         if container.decodeNil() {
-            self.init(Optional<Self>.none) // TODO: double check this
+            self.init(Optional<Self>.none)  // TODO: double check this
         }
         else if let bool = try? container.decode(Bool.self) {
             self.init(bool)
@@ -46,11 +45,16 @@ extension _AnyDecodable {
         else if let array = try? container.decode([AnyDecodable].self) {
             self.init(array.map { $0.value })
         }
-        else if let dictionary = try? container.decode([String: AnyDecodable].self) {
+        else if let dictionary = try? container.decode(
+            [String: AnyDecodable].self
+        ) {
             self.init(dictionary.mapValues { $0.value })
         }
         else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "AnyDecodable value cannot be decoded")
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "AnyDecodable value cannot be decoded"
+            )
         }
     }
 }

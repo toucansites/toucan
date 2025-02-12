@@ -1,4 +1,3 @@
-
 public struct AnyCodable: Codable {
 
     public let value: Any?
@@ -90,7 +89,6 @@ extension AnyCodable: ExpressibleByStringLiteral {}
 extension AnyCodable: ExpressibleByStringInterpolation {}
 extension AnyCodable: ExpressibleByArrayLiteral {}
 extension AnyCodable: ExpressibleByDictionaryLiteral {}
-
 
 extension AnyCodable: Hashable {
     public func hash(into hasher: inout Hasher) {

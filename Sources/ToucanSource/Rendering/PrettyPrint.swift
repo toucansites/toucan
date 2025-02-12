@@ -14,12 +14,12 @@ public func prettyPrint(_ object: [String: AnyCodable]) {
     encoder.outputFormatting = [
         .prettyPrinted,
         .withoutEscapingSlashes,
-//        .sortedKeys,
+        //        .sortedKeys,
     ]
 
     do {
         let data = try encoder.encode(object)
-        
+
         guard
             let jsonString = String(
                 data: data,
@@ -34,6 +34,5 @@ public func prettyPrint(_ object: [String: AnyCodable]) {
         print("\(error)")
         fatalError(error.localizedDescription)
     }
-    
-    
+
 }

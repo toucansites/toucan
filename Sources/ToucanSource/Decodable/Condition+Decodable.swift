@@ -23,7 +23,10 @@ extension Condition: Decodable {
 
         if let key = try? container.decode(String.self, forKey: .key),
             let op = try? container.decode(Operator.self, forKey: .operator),
-            let anyValue = try? container.decode(AnyCodable.self, forKey: .value)
+            let anyValue = try? container.decode(
+                AnyCodable.self,
+                forKey: .value
+            )
         {
             self = .field(key: key, operator: op, value: anyValue)
         }

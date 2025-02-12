@@ -4,7 +4,7 @@ public struct AnyEncodable: Encodable {
     public init<T>(_ value: T?) {
         self.value = value
     }
-    
+
     public func value<T>(as: T.Type) -> T? {
         value as? T
     }
@@ -62,7 +62,10 @@ extension _AnyEncodable {
         case let encodable as Encodable:
             try encodable.encode(to: encoder)
         default:
-            let context = EncodingError.Context(codingPath: container.codingPath, debugDescription: "AnyEncodable value cannot be encoded")
+            let context = EncodingError.Context(
+                codingPath: container.codingPath,
+                debugDescription: "AnyEncodable value cannot be encoded"
+            )
             throw EncodingError.invalidValue(value!, context)
         }
     }
@@ -173,7 +176,12 @@ extension _AnyEncodable {
     }
 
     public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
-        self.init([AnyHashable: Any](elements, uniquingKeysWith: { first, _ in first }))
+        self.init(
+            [AnyHashable: Any](
+                elements,
+                uniquingKeysWith: { first, _ in first }
+            )
+        )
     }
 }
 
