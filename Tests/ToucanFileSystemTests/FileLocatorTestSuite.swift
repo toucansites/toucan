@@ -3,7 +3,7 @@ import Foundation
 @testable import ToucanFileSystem
 @testable import FileManagerKitTesting
 
-@Suite
+@Suite(.serialized)
 struct FileLocatorTestSuite {
 
     @Test()

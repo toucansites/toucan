@@ -3,6 +3,8 @@ import Foundation
 @testable import ToucanFileSystem
 @testable import FileManagerKitTesting
 
+import Testing
+
 @Suite(.serialized)
 struct ContentTypeLocatorTestSuite {
 
@@ -32,10 +34,10 @@ struct ContentTypeLocatorTestSuite {
             )
 
             #expect(
-                locations == [
+                locations.sorted() == [
                     .init(path: "post.yaml", overridePath: "post.yml"),
                     .init(path: "tag.yml"),
-                ]
+                ].sorted()
             )
         }
     }
