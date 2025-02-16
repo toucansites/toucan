@@ -11,6 +11,33 @@ public struct AnyCodable: Codable {
     }
 }
 
+public extension AnyCodable {
+
+    func boolValue() -> Bool? {
+        value(as: Bool.self)
+    }
+
+    func intValue() -> Int? {
+        value(as: Int.self)
+    }
+
+    func doubleValue() -> Double? {
+        value(as: Double.self)
+    }
+
+    func stringValue() -> String? {
+        value(as: String.self)
+    }
+
+    func arrayValue<T>(as type: T.Type) -> [T] {
+        value(as: [T].self) ?? []
+    }
+
+    func dictValue() -> [String: AnyCodable] {
+        value(as: [String: AnyCodable].self) ?? [:]
+    }
+}
+
 extension AnyCodable: _AnyEncodable, _AnyDecodable {}
 
 extension AnyCodable: Equatable {

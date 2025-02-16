@@ -182,16 +182,12 @@ extension SourceBundle {
         return result
     }
 
+    // TODO: return full context instead of complete render?
     func renderContents(
         pipelineContext: [String: AnyCodable],
         pipeline: RenderPipeline,
         url: URL
     ) throws {
-
-        if FileManager.default.exists(at: url) {
-            try FileManager.default.removeItem(at: url)
-        }
-        try FileManager.default.createDirectory(at: url)
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [
@@ -200,9 +196,7 @@ extension SourceBundle {
             //.sortedKeys,
         ]
 
-        let engineOptions = pipeline.engine.options
-        print(engineOptions)
-        //        let ct = opt["contentTypes"]?.value as? [String: Any] ?? [:]
+        //        let engineOptions = pipeline.engine.options
 
         for contentBundle in contentBundles {
             // content pipeline settings
@@ -231,22 +225,28 @@ extension SourceBundle {
                     )
                 ]
 
-                let folder =
-                    url
-                    .appending(path: content.slug)
+                // TODO: more path arguments
+                let outputArgs: [String: String] = [
+                    "{{id}}": content.id,
+                    "{{slug}}": content.slug,
+                ]
 
+                let path = pipeline.output.path.replacingOccurrences(outputArgs)
+                let file = pipeline.output.file.replacingOccurrences(outputArgs)
+                let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
+
+                let folder = url.appending(path: path)
                 try FileManager.default.createDirectory(at: folder)
 
-                let file =
+                let outputUrl =
                     folder
-                    .appending(path: "context")
-                    .appendingPathExtension("json")
+                    .appending(path: file)
+                    .appendingPathExtension(ext)
 
                 let data = try encoder.encode(context)
-                try data.write(to: file)
+                try data.write(to: outputUrl)
                 //prettyPrint(context)
             }
-            //            }
         }
 
     }
@@ -285,6 +285,11 @@ extension SourceBundle {
             path: "output"
         )
 
+        if FileManager.default.exists(at: url) {
+            try FileManager.default.removeItem(at: url)
+        }
+        try FileManager.default.createDirectory(at: url)
+
         for pipeline in renderPipelines {
             let context = getPipelineContext(for: pipeline)
 
@@ -298,7 +303,11 @@ extension SourceBundle {
             case "json":
                 print("mustache")
             case "mustache":
-                print("mustache")
+                try renderContents(
+                    pipelineContext: context,
+                    pipeline: pipeline,
+                    url: url
+                )
             default:
                 print("ERROR - no such renderer \(pipeline.engine.id)")
             }

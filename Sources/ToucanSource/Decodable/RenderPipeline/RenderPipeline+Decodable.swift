@@ -13,8 +13,10 @@ extension RenderPipeline: Decodable {
     enum CodingKeys: CodingKey {
         case scopes
         case queries
-        case contentType
+        case dataTypes
+        case contentTypes
         case engine
+        case output
     }
 
     public init(from decoder: any Decoder) throws {
@@ -22,33 +24,51 @@ extension RenderPipeline: Decodable {
 
         let defaultScopes = Scope.default
 
-        let scopes =
+        let userScopes =
             try container.decodeIfPresent(
                 [String: [String: Scope]].self,
                 forKey: .scopes
             ) ?? [:]
 
-        let finalScopes = defaultScopes.recursivelyMerged(with: scopes)
-        print(finalScopes)
+        let scopes = defaultScopes.recursivelyMerged(with: userScopes)
 
         let queries =
             try container.decodeIfPresent(
                 [String: Query].self,
                 forKey: .queries
             ) ?? [:]
+
+        // TODO: defaults
+        let dataTypes =
+            try container.decodeIfPresent(
+                DataTypes.self,
+                forKey: .dataTypes
+            ) ?? .init(date: .init(formats: [:]))
+        
         // TODO: make a choice which one should be the default: single vs all ?!?
-        let contentType =
+        let contentTypes =
             try container.decodeIfPresent(
                 ContentTypes.self,
-                forKey: .contentType
+                forKey: .contentTypes
             ) ?? .single
-        let engine = try container.decode(Engine.self, forKey: .engine)
+        
+        let engine = try container.decode(
+            Engine.self,
+            forKey: .engine
+        )
+
+        let output = try container.decode(
+            Output.self,
+            forKey: .output
+        )
 
         self.init(
-            scopes: finalScopes,
+            scopes: scopes,
             queries: queries,
-            contentType: contentType,
-            engine: engine
+            dataTypes: dataTypes,
+            contentTypes: contentTypes,
+            engine: engine,
+            output: output
         )
     }
 }

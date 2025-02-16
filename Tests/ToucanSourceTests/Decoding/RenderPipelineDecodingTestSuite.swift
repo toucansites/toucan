@@ -23,11 +23,15 @@ struct RenderPipelineDecodingTestSuite {
                         - key: publication
                           direction: desc
 
-            contentType: all
+            contentTypes: all
             engine: 
                 id: test
                 options:
                     foo: bar
+            output:
+                path: "{{slug}}"
+                file: "{{id}}"
+                ext: json
             """
             .data(using: .utf8)!
 
@@ -38,12 +42,12 @@ struct RenderPipelineDecodingTestSuite {
             from: data
         )
 
-        #expect(result.contentType == .all)
+        #expect(result.contentTypes == .all)
         let query = try #require(result.queries["featured"])
         #expect(query.contentType == "post")
 
         #expect(result.engine.id == "test")
-        #expect(result.engine.options["foo"]?.value(as: String.self) == "bar")
+        #expect(result.engine.options.string("foo") == "bar")
     }
 
     @Test
@@ -55,8 +59,16 @@ struct RenderPipelineDecodingTestSuite {
                         context: 
                             - all
                         fields:
+            dataTypes:
+                date:
+                    formats:
+                        test: ymd
             engine: 
                 id: test
+            output:
+                path: "{{slug}}"
+                file: index
+                ext: html
             """
             .data(using: .utf8)!
 
@@ -67,7 +79,7 @@ struct RenderPipelineDecodingTestSuite {
             from: data
         )
 
-        #expect(result.contentType == .single)
+        #expect(result.contentTypes == .single)
         #expect(result.engine.id == "test")
 
         let defaultScope = try #require(result.scopes["*"])
@@ -78,6 +90,9 @@ struct RenderPipelineDecodingTestSuite {
         #expect(defaultReferenceScope.context == .reference)
         #expect(defaultListScope.context == .list)
         #expect(defaultDetailScope.context == .detail)
+
+        let dateFormat = try #require(result.dataTypes.date.formats["test"])
+        #expect(dateFormat == "ymd")
 
         let postScope = try #require(result.scopes["post"])
         let postListScope = try #require(postScope["list"])

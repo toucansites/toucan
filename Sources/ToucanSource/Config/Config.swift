@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 29..
 //
 
+// TODO: codable -> decodable, split implementation into files
 public struct Config: Codable {
 
     enum CodingKeys: CodingKey {

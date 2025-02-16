@@ -6,6 +6,40 @@ public extension RenderPipeline.Mocks {
     static func defaults() -> [RenderPipeline] {
         return [
             .init(
+                scopes: [:],
+                queries: [:],
+                dataTypes: .init(
+                    date: .init(
+                        formats: [
+                            "full": "y.m.d."
+                        ]
+                    )
+                ),
+                contentTypes: .all,
+                engine: .init(
+                    id: "mustache",
+                    options: [
+                        "contentTypes": [
+                            "post": [
+                                // segments
+                                "iterators": [
+                                    "list": [
+                                        "limit": 10
+                                            // FULL QUERY?
+                                    ]
+                                ],
+                                "template": "post.default.template",
+                            ]
+                        ]
+                    ]
+                ),
+                output: .init(
+                    path: "{{slug}}",
+                    file: "index",
+                    ext: "html"
+                )
+            ),
+            .init(
                 scopes: [
                     "*": [
                         "reference": .init(
@@ -37,39 +71,24 @@ public extension RenderPipeline.Mocks {
                         )
                     )
                 ],
-                contentType: .all,
+                dataTypes: .init(
+                    date: .init(
+                        formats: [
+                            "full": "y.m.d."
+                        ]
+                    )
+                ),
+                contentTypes: .all,
                 engine: .init(
                     id: "context",
-                    options: [
-                        "dataTypes": [
-                            "date": [
-                                "formats": [
-                                    "full": "y.m.d.",
-                                    "iso": "",
-                                ]
-                            ]
-                        ],
-                        "contentTypes": [
-                            "post": [
-                                // segments
-                                "iterators": [
-                                    "list": [
-                                        "limit": 10
-                                            // FULL QUERY?
-                                    ]
-                                ],
-                                "template": "post.default.template",
-                                // keep here or move up? :think:
-                                "output": [
-                                    "path": "{{slug}}",
-                                    "file": "{{id}}",
-                                    "ext": "json",
-                                ],
-                            ]
-                        ],
-                    ]
+                    options: [:]
+                ),
+                output: .init(
+                    path: "{{slug}}",
+                    file: "context",
+                    ext: "json"
                 )
-            )
+            ),
         ]
     }
 }

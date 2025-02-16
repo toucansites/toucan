@@ -26,7 +26,7 @@ extension Dictionary where Key == String, Value == AnyCodable {
                 return nil
             }
         }
-        return currentDict[keys.last!] as? T
+        return currentDict[keys.last!]?.value as? T
     }
 
     func bool(_ keyPath: String) -> Bool? {
