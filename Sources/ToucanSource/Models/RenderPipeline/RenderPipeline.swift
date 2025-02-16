@@ -14,6 +14,7 @@ public struct RenderPipeline {
     public var queries: [String: Query]
     public var dataTypes: DataTypes
     public var contentTypes: ContentTypes
+    public var iterators: [String: Query]
     public var engine: Engine
     public var output: Output
 
@@ -22,6 +23,7 @@ public struct RenderPipeline {
         queries: [String: Query],
         dataTypes: DataTypes,
         contentTypes: RenderPipeline.ContentTypes,
+        iterators: [String: Query],
         engine: RenderPipeline.Engine,
         output: Output
     ) {
@@ -29,6 +31,7 @@ public struct RenderPipeline {
         self.queries = queries
         self.dataTypes = dataTypes
         self.contentTypes = contentTypes
+        self.iterators = iterators
         self.engine = engine
         self.output = output
     }

@@ -15,6 +15,7 @@ extension RenderPipeline: Decodable {
         case queries
         case dataTypes
         case contentTypes
+        case iterators
         case engine
         case output
     }
@@ -52,6 +53,12 @@ extension RenderPipeline: Decodable {
                 forKey: .contentTypes
             ) ?? .single
 
+        let iterators =
+            try container.decodeIfPresent(
+                [String: Query].self,
+                forKey: .iterators
+            ) ?? [:]
+
         let engine = try container.decode(
             Engine.self,
             forKey: .engine
@@ -67,6 +74,7 @@ extension RenderPipeline: Decodable {
             queries: queries,
             dataTypes: dataTypes,
             contentTypes: contentTypes,
+            iterators: iterators,
             engine: engine,
             output: output
         )

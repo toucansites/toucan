@@ -59,6 +59,23 @@ public extension RawContent.Mocks {
                 lastModificationDate: Date().timeIntervalSince1970,
                 assets: []
             ),
+            .init(
+                origin: .init(
+                    path: "blog/posts/pages/{{post.pagination}}",
+                    slug: "blog/posts/pages/{{post.pagination}}"
+                ),
+                frontMatter: [
+                    "title": "Post pagination",
+                    "description": "Post pagination",
+                ],
+                markdown: """
+                    # Posts
+
+                    List posts here...
+                    """,
+                lastModificationDate: Date().timeIntervalSince1970,
+                assets: []
+            ),
         ]
             + (1...max)
             .map { i in

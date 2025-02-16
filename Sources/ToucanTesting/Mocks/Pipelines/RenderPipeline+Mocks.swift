@@ -17,19 +17,18 @@ public extension RenderPipeline.Mocks {
                     )
                 ),
                 contentTypes: .all,
+                iterators: [  // segments
+                    "post.pagination": .init(
+                        contentType: "post",
+                        limit: 2
+                    )
+                ],
                 engine: .init(
                     id: "mustache",
                     options: [
                         "contentTypes": [
                             "post": [
-                                // segments
-                                "iterators": [
-                                    "list": [
-                                        "limit": 10
-                                            // FULL QUERY?
-                                    ]
-                                ],
-                                "template": "post.default.template",
+                                "template": "post.default.template"
                             ]
                         ]
                     ]
@@ -80,6 +79,7 @@ public extension RenderPipeline.Mocks {
                     )
                 ),
                 contentTypes: .all,
+                iterators: [:],
                 engine: .init(
                     id: "context",
                     options: [:]

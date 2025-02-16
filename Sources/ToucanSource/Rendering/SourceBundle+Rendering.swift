@@ -196,6 +196,21 @@ extension SourceBundle {
         return result
     }
 
+    func extractIteratorId(
+        from input: String
+    ) -> String? {
+        guard
+            let startRange = input.range(of: "{{"),
+            let endRange = input.range(
+                of: "}}",
+                range: startRange.upperBound..<input.endIndex
+            )
+        else {
+            return nil
+        }
+        return .init(input[startRange.upperBound..<endRange.lowerBound])
+    }
+
     // TODO: return full context instead of complete render?
     func getContextBundles(
         pipelineContext: [String: AnyCodable],
@@ -207,6 +222,112 @@ extension SourceBundle {
         for contentBundle in contentBundles {
 
             for content in contentBundle.contents {
+
+                if let iteratorId = extractIteratorId(from: content.slug) {
+                    guard let query = pipeline.iterators[iteratorId] else {
+                        continue
+                    }
+                    let countQuery = Query(
+                        contentType: query.contentType,
+                        scope: query.scope,
+                        limit: nil,
+                        offset: nil,
+                        filter: query.filter,
+                        orderBy: query.orderBy
+                    )
+
+                    let total = run(query: countQuery).count
+                    let limit = max(1, query.limit ?? 10)
+                    let numberOfPages = (total + limit - 1) / limit
+
+                    for i in 0..<numberOfPages {
+                        let offset = i * limit
+                        let currentPageIndex = i + 1
+
+                        let pageQuery = Query(
+                            contentType: query.contentType,
+                            scope: query.scope,
+                            limit: limit,
+                            offset: offset,
+                            filter: query.filter,
+                            orderBy: query.orderBy
+                        )
+                        let pageItems = run(query: pageQuery)
+
+                        let id = content.id.replacingOccurrences([
+                            "{{\(iteratorId)}}": String(currentPageIndex)
+                        ])
+                        let slug = content.slug.replacingOccurrences([
+                            "{{\(iteratorId)}}": String(currentPageIndex)
+                        ])
+
+                        // TODO: meh... option to replace {{total}} {{limit}} {{current}}?
+                        var alteredContent = content
+                        alteredContent.id = id
+                        alteredContent.slug = slug
+
+                        var itemCtx: [[String: AnyCodable]] = []
+                        for pageItem in pageItems {
+                            let pageItemCtx = getContextObject(
+                                slug: slug,
+                                for: pageItem,
+                                context: .all,
+                                using: self
+                            )
+                            itemCtx.append(pageItemCtx)
+                        }
+
+                        let context: [String: AnyCodable] = [
+                            //                        "global": pipelineContext,
+                            // TODO: links to other pages?
+                            "pagination": .init(
+                                [
+                                    "total": .init(total),
+                                    "limit": .init(limit),
+                                    "current": .init(currentPageIndex),
+                                    "items": .init(itemCtx),
+                                ] as [String: AnyCodable]
+                            ),
+                            "local": .init(
+                                getContextObject(
+                                    slug: slug,
+                                    for: alteredContent,
+                                    context: .all,
+                                    using: self
+                                )
+                            ),
+                        ]
+                        // TODO: more path arguments
+                        let outputArgs: [String: String] = [
+                            "{{id}}": id,
+                            "{{slug}}": slug,
+                        ]
+
+                        let path = pipeline.output.path.replacingOccurrences(
+                            outputArgs
+                        )
+                        let file = pipeline.output.file.replacingOccurrences(
+                            outputArgs
+                        )
+                        let ext = pipeline.output.ext.replacingOccurrences(
+                            outputArgs
+                        )
+
+                        let bundle = ContextBundle(
+                            content: content,
+                            context: context,
+                            destination: .init(
+                                path: path,
+                                file: file,
+                                ext: ext
+                            )
+                        )
+                        bundles.append(bundle)
+                    }
+
+                    continue
+                }
+
                 let context: [String: AnyCodable] = [
                     //                        "global": pipelineContext,
                     "local": .init(
@@ -307,12 +428,12 @@ extension SourceBundle {
                         .appending(path: bundle.destination.file)
                         .appendingPathExtension(bundle.destination.ext)
 
+                    // TODO: override output using front matter in both cases
                     let data = try encoder.encode(context)
                     try data.write(to: outputUrl)
                     //                    prettyPrint(context)
                 }
             case "mustache":
-
                 let renderer = MockHTMLRenderer(
                     templates: [
                         "post.default.template": try .init(
