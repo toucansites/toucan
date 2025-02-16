@@ -97,11 +97,11 @@ struct QueryTestSuite {
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
         #expect(
-            results[0].properties["name"]?.value(as: String.self)
+            results[0].properties["title"]?.value(as: String.self)
                 == "Category #1"
         )
         #expect(
-            results[1].properties["name"]?.value(as: String.self)
+            results[1].properties["title"]?.value(as: String.self)
                 == "Category #2"
         )
     }
@@ -122,15 +122,15 @@ struct QueryTestSuite {
         let results = sourceBundle.run(query: query)
         try #require(results.count == 3)
         #expect(
-            results[0].properties["name"]?.value(as: String.self)
+            results[0].properties["title"]?.value(as: String.self)
                 == "Category #1"
         )
         #expect(
-            results[1].properties["name"]?.value(as: String.self)
+            results[1].properties["title"]?.value(as: String.self)
                 == "Category #2"
         )
         #expect(
-            results[2].properties["name"]?.value(as: String.self)
+            results[2].properties["title"]?.value(as: String.self)
                 == "Category #3"
         )
     }
@@ -151,11 +151,11 @@ struct QueryTestSuite {
         let results = sourceBundle.run(query: query)
         try #require(results.count == 2)
         #expect(
-            results[0].properties["name"]?.value(as: String.self)
+            results[0].properties["title"]?.value(as: String.self)
                 == "Category #9"
         )
         #expect(
-            results[1].properties["name"]?.value(as: String.self)
+            results[1].properties["title"]?.value(as: String.self)
                 == "Category #10"
         )
     }
@@ -177,15 +177,15 @@ struct QueryTestSuite {
         print(results.map(\.slug))
         try #require(results.count == 3)
         #expect(
-            results[0].properties["name"]?.value(as: String.self)
+            results[0].properties["title"]?.value(as: String.self)
                 == "Category #8"
         )
         #expect(
-            results[1].properties["name"]?.value(as: String.self)
+            results[1].properties["title"]?.value(as: String.self)
                 == "Category #9"
         )
         #expect(
-            results[2].properties["name"]?.value(as: String.self)
+            results[2].properties["title"]?.value(as: String.self)
                 == "Category #10"
         )
     }
@@ -423,7 +423,7 @@ struct QueryTestSuite {
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
         #expect(
-            results[0].properties["name"]?.value(as: String.self) == "Post #6"
+            results[0].properties["title"]?.value(as: String.self) == "Post #6"
         )
     }
 }
