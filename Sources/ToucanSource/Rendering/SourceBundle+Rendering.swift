@@ -19,8 +19,8 @@ struct ContextBundle {
         let ext: String
     }
 
+    let content: Content
     let context: [String: AnyCodable]
-    let template: String?
     let destination: Destination
 }
 
@@ -204,16 +204,7 @@ extension SourceBundle {
 
         var bundles: [ContextBundle] = []
 
-        let engineOptions = pipeline.engine.options
-        // TODO: This should be engine specific somehow...
-        let contentTypesOptions = engineOptions.dict("contentTypes")
-
         for contentBundle in contentBundles {
-            let bundleOptions = contentTypesOptions.dict(
-                contentBundle.definition.type
-            )
-
-            let contentTypeTemplate = bundleOptions.string("template")
 
             for content in contentBundle.contents {
                 let context: [String: AnyCodable] = [
@@ -238,13 +229,9 @@ extension SourceBundle {
                 let file = pipeline.output.file.replacingOccurrences(outputArgs)
                 let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
 
-                let contentTemplate = content.rawValue.frontMatter.string(
-                    "template"
-                )
-
                 let bundle = ContextBundle(
+                    content: content,
                     context: context,
-                    template: contentTemplate ?? contentTypeTemplate,
                     destination: .init(
                         path: path,
                         file: file,
@@ -357,8 +344,22 @@ extension SourceBundle {
                         .appending(path: bundle.destination.file)
                         .appendingPathExtension(bundle.destination.ext)
 
+                    let engineOptions = pipeline.engine.options
+                    let contentTypesOptions = engineOptions.dict("contentTypes")
+                    let bundleOptions = contentTypesOptions.dict(
+                        bundle.content.definition.type
+                    )
+
+                    let contentTypeTemplate = bundleOptions.string("template")
+                    let contentTemplate = bundle.content.rawValue.frontMatter
+                        .string(
+                            "template"
+                        )
+                    let template =
+                        contentTypeTemplate ?? contentTemplate ?? "default"  // TODO
+
                     try renderer.render(
-                        template: bundle.template ?? "default",  // TODO
+                        template: template,
                         with: bundle.context,
                         to: outputUrl
                     )
