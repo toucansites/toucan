@@ -313,27 +313,36 @@ extension SourceBundle {
                 }
             case "mustache":
 
-                let renderer = MockHTMLRenderer(templates: [
-                    "post.default.template": """
-                    <html>
-                    <head>
-                    </head>
-                    <body>
-                    {{title}}
-                    {{publication}}
-                    </body>
-                    </html>
-                    """,
-                    "default": """
-                    <html>
-                    <head>
-                    </head>
-                    <body>
-                    {{title}}
-                    </body>
-                    </html>
-                    """,
-                ])
+                let renderer = MockHTMLRenderer(
+                    templates: [
+                        "post.default.template": try .init(
+                            string: """
+                                <html>
+                                <head>
+                                </head>
+                                <body>
+                                {{title}}<br>
+                                Date<br>
+                                {{publication.date.full}}<br>
+                                Time<br>
+                                {{publication.time.short}}<br>
+                                </body>
+                                </html>
+                                """
+                        ),
+                        "default": try .init(
+                            string: """
+                                <html>
+                                <head>
+                                </head>
+                                <body>
+                                {{title}}
+                                </body>
+                                </html>
+                                """
+                        ),
+                    ]
+                )
 
                 for bundle in bundles {
                     let folder = url.appending(path: bundle.destination.path)
@@ -375,24 +384,14 @@ extension SourceBundle {
 
 struct MockHTMLRenderer {
 
-    var templates: [String: String]
+    var ids: [String]
+    var library: MustacheLibrary
 
-    func replaceTopLevelKeys(
-        in template: String,
-        with dictionary: [String: AnyCodable]
-    ) -> String {
-        var output = template
-        for (key, value) in dictionary {
-            let token = "{{\(key)}}"
-            let replacement: String = {
-                if let v = value.value {
-                    return String(describing: v)
-                }
-                return ""
-            }()
-            output = output.replacingOccurrences(of: token, with: replacement)
-        }
-        return output
+    init(
+        templates: [String: MustacheTemplate]
+    ) {
+        ids = Array(templates.keys)
+        library = .init(templates: templates)
     }
 
     func render(
@@ -400,17 +399,47 @@ struct MockHTMLRenderer {
         with object: [String: AnyCodable],
         to destination: URL
     ) throws {
-        guard let tpl = templates[template] else {
+        guard ids.contains(template) else {
+            print("throw or error, missing template \(template)")
             return
         }
+        // TODO: eliminate local
+        let local = object.dict("local").unwrapped()
 
-        // TODO: remove local
-        let output = replaceTopLevelKeys(in: tpl, with: object.dict("local"))
-
-        try output.write(
+        guard
+            let html = library.render(local, withTemplate: template)
+        else {
+            print("nil html")
+            return
+        }
+        try html.write(
             to: destination,
             atomically: true,
             encoding: .utf8
         )
+    }
+}
+
+extension Dictionary where Key == String, Value == AnyCodable {
+
+    func unwrapped() -> [String: Any] {
+        var result: [String: Any] = [:]
+        for (key, value) in self {
+            result[key] = value.unwrappedValue
+        }
+        return result
+    }
+}
+
+extension AnyCodable {
+
+    var unwrappedValue: Any? {
+        if let dict = value as? [String: AnyCodable] {
+            return dict.unwrapped()
+        }
+        if let array = value as? [AnyCodable] {
+            return array.map { $0.unwrappedValue }
+        }
+        return value
     }
 }
