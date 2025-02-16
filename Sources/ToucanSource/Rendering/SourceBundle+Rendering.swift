@@ -133,6 +133,7 @@ extension SourceBundle {
             )
             result["isCurrentURL"] = .init(content.slug == slug)
         }
+
         if allowSubQueries, context.contains(.relations) {
             for (key, relation) in content.definition.relations {
                 var orderBy: [Order] = []
@@ -220,6 +221,12 @@ extension SourceBundle {
         var bundles: [ContextBundle] = []
 
         for contentBundle in contentBundles {
+            if !pipeline.contentTypes.isEmpty,
+                !pipeline.contentTypes.contains(contentBundle.definition.type)
+            {
+                // skip content types that are not part of the renderer
+                continue
+            }
 
             for content in contentBundle.contents {
 

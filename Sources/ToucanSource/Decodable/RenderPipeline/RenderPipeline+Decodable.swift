@@ -46,12 +46,11 @@ extension RenderPipeline: Decodable {
                 forKey: .dataTypes
             ) ?? .init(date: .init(formats: [:]))
 
-        // TODO: make a choice which one should be the default: single vs all ?!?
         let contentTypes =
             try container.decodeIfPresent(
-                ContentTypes.self,
+                [String].self,
                 forKey: .contentTypes
-            ) ?? .single
+            ) ?? []
 
         let iterators =
             try container.decodeIfPresent(

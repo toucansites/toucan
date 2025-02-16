@@ -23,7 +23,9 @@ struct RenderPipelineDecodingTestSuite {
                         - key: publication
                           direction: desc
 
-            contentTypes: all
+            contentTypes: 
+                - page
+                - post
             engine: 
                 id: test
                 options:
@@ -42,7 +44,7 @@ struct RenderPipelineDecodingTestSuite {
             from: data
         )
 
-        #expect(result.contentTypes == .all)
+        #expect(result.contentTypes == ["page", "post"])
         let query = try #require(result.queries["featured"])
         #expect(query.contentType == "post")
 
@@ -79,7 +81,7 @@ struct RenderPipelineDecodingTestSuite {
             from: data
         )
 
-        #expect(result.contentTypes == .single)
+        #expect(result.contentTypes == [])
         #expect(result.engine.id == "test")
 
         let defaultScope = try #require(result.scopes["*"])
