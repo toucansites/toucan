@@ -82,15 +82,20 @@ public extension RenderPipeline.Mocks {
                     )
                 ),
                 contentTypes: [
-                    //                    "page"
+                    "post"
                 ],
-                iterators: [:],
+                iterators: [  // segments
+                    "post.pagination": .init(
+                        contentType: "post",
+                        limit: 2
+                    )
+                ],
                 engine: .init(
                     id: "context",
                     options: [:]
                 ),
                 output: .init(
-                    path: "{{slug}}",
+                    path: "api/{{slug}}",
                     file: "context",
                     ext: "json"
                 )

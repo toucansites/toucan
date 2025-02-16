@@ -127,6 +127,7 @@ extension SourceBundle {
                 }
             }
 
+            // TODO: web only properties
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
                 content.slug.permalink(baseUrl: source.settings.baseUrl)
@@ -221,12 +222,6 @@ extension SourceBundle {
         var bundles: [ContextBundle] = []
 
         for contentBundle in contentBundles {
-            if !pipeline.contentTypes.isEmpty,
-                !pipeline.contentTypes.contains(contentBundle.definition.type)
-            {
-                // skip content types that are not part of the renderer
-                continue
-            }
 
             for content in contentBundle.contents {
 
@@ -234,6 +229,14 @@ extension SourceBundle {
                     guard let query = pipeline.iterators[iteratorId] else {
                         continue
                     }
+
+                    if !pipeline.contentTypes.isEmpty,
+                        !pipeline.contentTypes.contains(query.contentType)
+                    {
+                        // skip content types that are not part of the renderer
+                        continue
+                    }
+
                     let countQuery = Query(
                         contentType: query.contentType,
                         scope: query.scope,
@@ -335,6 +338,15 @@ extension SourceBundle {
                     continue
                 }
 
+                if !pipeline.contentTypes.isEmpty,
+                    !pipeline.contentTypes.contains(
+                        contentBundle.definition.type
+                    )
+                {
+                    // skip content types that are not part of the renderer
+                    continue
+                }
+
                 let context: [String: AnyCodable] = [
                     //                        "global": pipelineContext,
                     "local": .init(
@@ -411,6 +423,7 @@ extension SourceBundle {
         try FileManager.default.createDirectory(at: url)
 
         for pipeline in renderPipelines {
+            // TODO: make sure bundle context + global context merged
             let context = getPipelineContext(for: pipeline)
             let bundles = try getContextBundles(
                 pipelineContext: context,
@@ -436,7 +449,7 @@ extension SourceBundle {
                         .appendingPathExtension(bundle.destination.ext)
 
                     // TODO: override output using front matter in both cases
-                    let data = try encoder.encode(context)
+                    let data = try encoder.encode(bundle.context)
                     try data.write(to: outputUrl)
                     //                    prettyPrint(context)
                 }
