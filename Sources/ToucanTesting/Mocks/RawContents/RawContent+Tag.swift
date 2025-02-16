@@ -14,7 +14,7 @@ public extension RawContent.Mocks {
                         slug: "blog/tags/tag-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Tag \(i)"
+                        "title": "Tag \(i)"
                     ],
                     markdown: """
                         # Tag #\(i)

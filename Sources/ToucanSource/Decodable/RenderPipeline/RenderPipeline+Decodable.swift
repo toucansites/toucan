@@ -44,14 +44,14 @@ extension RenderPipeline: Decodable {
                 DataTypes.self,
                 forKey: .dataTypes
             ) ?? .init(date: .init(formats: [:]))
-        
+
         // TODO: make a choice which one should be the default: single vs all ?!?
         let contentTypes =
             try container.decodeIfPresent(
                 ContentTypes.self,
                 forKey: .contentTypes
             ) ?? .single
-        
+
         let engine = try container.decode(
             Engine.self,
             forKey: .engine

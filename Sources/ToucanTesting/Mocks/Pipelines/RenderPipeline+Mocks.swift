@@ -1,10 +1,11 @@
 import ToucanModels
 import ToucanSource
+import ToucanCodable
 
 public extension RenderPipeline.Mocks {
 
     static func defaults() -> [RenderPipeline] {
-        return [
+        [
             .init(
                 scopes: [:],
                 queries: [:],

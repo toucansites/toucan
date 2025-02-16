@@ -22,7 +22,7 @@ public extension RawContent.Mocks {
                         slug: "blog/posts/post-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Post #\(i)",
+                        "title": "Post #\(i)",
                         "publication": .init(date),
                         "featured": .init((i % 2 == 0)),
                         "authors": .init((0...(i / 3)).map { "author-\($0)" }),

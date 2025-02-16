@@ -115,7 +115,46 @@ extension AnyCodable: ExpressibleByFloatLiteral {}
 extension AnyCodable: ExpressibleByStringLiteral {}
 extension AnyCodable: ExpressibleByStringInterpolation {}
 extension AnyCodable: ExpressibleByArrayLiteral {}
-extension AnyCodable: ExpressibleByDictionaryLiteral {}
+
+extension AnyCodable: ExpressibleByDictionaryLiteral {
+
+    // TODO: double check this + anyencodable support
+    public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
+        var dict: [String: AnyCodable] = [:]
+        for (key, value) in elements {
+            let converted: AnyCodable
+            if let childDict = value as? [AnyHashable: Any] {
+                var newDict: [String: AnyCodable] = [:]
+                for (childKey, childValue) in childDict {
+                    newDict[String(describing: childKey)] = AnyCodable(
+                        childValue
+                    )
+                }
+                converted = AnyCodable(newDict)
+            }
+            else if let arrayValue = value as? [Any] {
+                let newArray = arrayValue.map { element -> AnyCodable in
+                    if let dictElement = element as? [AnyHashable: Any] {
+                        var newDict: [String: AnyCodable] = [:]
+                        for (childKey, childValue) in dictElement {
+                            newDict[String(describing: childKey)] = AnyCodable(
+                                childValue
+                            )
+                        }
+                        return AnyCodable(newDict)
+                    }
+                    return AnyCodable(element)
+                }
+                converted = AnyCodable(newArray)
+            }
+            else {
+                converted = AnyCodable(value)
+            }
+            dict[String(describing: key)] = converted
+        }
+        self.init(dict)
+    }
+}
 
 extension AnyCodable: Hashable {
     public func hash(into hasher: inout Hasher) {

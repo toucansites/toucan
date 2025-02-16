@@ -9,7 +9,7 @@ public extension ContentDefinition.Mocks {
                 "docs/guides"
             ],
             properties: [
-                "name": .init(
+                "title": .init(
                     type: .string,
                     required: true,
                     default: nil

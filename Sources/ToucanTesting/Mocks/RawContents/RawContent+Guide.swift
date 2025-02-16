@@ -14,7 +14,7 @@ extension RawContent.Mocks {
                         slug: "docs/guides/guide-\(i)"
                     ),
                     frontMatter: [
-                        "name": "Guide #\(i)",
+                        "title": "Guide #\(i)",
                         "category": "category-\(i)",
                         "order": .init(i),
                     ],

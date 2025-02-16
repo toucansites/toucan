@@ -9,7 +9,7 @@ public extension ContentDefinition.Mocks {
                 "blog/tags"
             ],
             properties: [
-                "name": .init(
+                "title": .init(
                     type: .string,
                     required: true,
                     default: nil

@@ -34,10 +34,12 @@ struct ContentTypeLocatorTestSuite {
             )
 
             #expect(
-                locations.sorted() == [
-                    .init(path: "post.yaml", overridePath: "post.yml"),
-                    .init(path: "tag.yml"),
-                ].sorted()
+                locations.sorted()
+                    == [
+                        .init(path: "post.yaml", overridePath: "post.yml"),
+                        .init(path: "tag.yml"),
+                    ]
+                    .sorted()
             )
         }
     }

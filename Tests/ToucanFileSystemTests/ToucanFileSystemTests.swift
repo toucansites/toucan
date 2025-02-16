@@ -113,9 +113,9 @@ struct ToucanFileSystemTests {
         }
         .test { fileManager in
             let fs = ToucanFileSystem(fileManager: fileManager)
-            
+
             let contentsUrl = URL(fileURLWithPath: "./src/contents/")
-            
+
             let pageBundles = fs.locateRawContents(at: contentsUrl)
 
             #expect(

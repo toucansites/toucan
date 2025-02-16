@@ -9,6 +9,20 @@ import Foundation
 import FileManagerKit
 import ToucanModels
 import ToucanCodable
+import Mustache
+
+struct ContextBundle {
+
+    struct Destination {
+        let path: String
+        let file: String
+        let ext: String
+    }
+
+    let context: [String: AnyCodable]
+    let template: String?
+    let destination: Destination
+}
 
 extension SourceBundle {
 
@@ -183,34 +197,23 @@ extension SourceBundle {
     }
 
     // TODO: return full context instead of complete render?
-    func renderContents(
+    func getContextBundles(
         pipelineContext: [String: AnyCodable],
-        pipeline: RenderPipeline,
-        url: URL
-    ) throws {
+        pipeline: RenderPipeline
+    ) throws -> [ContextBundle] {
 
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [
-            .prettyPrinted,
-            .withoutEscapingSlashes,
-            //.sortedKeys,
-        ]
+        var bundles: [ContextBundle] = []
 
-        //        let engineOptions = pipeline.engine.options
+        let engineOptions = pipeline.engine.options
+        // TODO: This should be engine specific somehow...
+        let contentTypesOptions = engineOptions.dict("contentTypes")
 
         for contentBundle in contentBundles {
-            // content pipeline settings
-            //            let cps = ct.dict(contentBundle.definition.type)
-            //            print(contentBundle.definition.type)
-            //            print(cps)
+            let bundleOptions = contentTypesOptions.dict(
+                contentBundle.definition.type
+            )
 
-            //            if pipeline.contentType.contains(.bundle) {
-            //                        print("render content bundle...")
-            //                        print(contentBundle.definition.type)
-            //                        print("--------------------------------------")
-            //            }
-
-            //            if pipeline.contentType.contains(.single) {
+            let contentTypeTemplate = bundleOptions.string("template")
 
             for content in contentBundle.contents {
                 let context: [String: AnyCodable] = [
@@ -235,20 +238,23 @@ extension SourceBundle {
                 let file = pipeline.output.file.replacingOccurrences(outputArgs)
                 let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
 
-                let folder = url.appending(path: path)
-                try FileManager.default.createDirectory(at: folder)
+                let contentTemplate = content.rawValue.frontMatter.string(
+                    "template"
+                )
 
-                let outputUrl =
-                    folder
-                    .appending(path: file)
-                    .appendingPathExtension(ext)
-
-                let data = try encoder.encode(context)
-                try data.write(to: outputUrl)
-                //prettyPrint(context)
+                let bundle = ContextBundle(
+                    context: context,
+                    template: contentTemplate ?? contentTypeTemplate,
+                    destination: .init(
+                        path: path,
+                        file: file,
+                        ext: ext
+                    )
+                )
+                bundles.append(bundle)
             }
         }
-
+        return bundles
     }
 
     func getPipelineContext(
@@ -277,10 +283,9 @@ extension SourceBundle {
         return rawContext
     }
 
-    func render(  // TODO: url input
+    func render(// TODO: url input
         ) throws
     {
-
         let url = FileManager.default.homeDirectoryForCurrentUser.appending(
             path: "output"
         )
@@ -292,26 +297,119 @@ extension SourceBundle {
 
         for pipeline in renderPipelines {
             let context = getPipelineContext(for: pipeline)
+            let bundles = try getContextBundles(
+                pipelineContext: context,
+                pipeline: pipeline
+            )
 
             switch pipeline.engine.id {
-            case "context":
-                try renderContents(
-                    pipelineContext: context,
-                    pipeline: pipeline,
-                    url: url
-                )
-            case "json":
-                print("mustache")
+            case "json", "context":
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [
+                    .prettyPrinted,
+                    .withoutEscapingSlashes,
+                    //.sortedKeys,
+                ]
+
+                for bundle in bundles {
+                    let folder = url.appending(path: bundle.destination.path)
+                    try FileManager.default.createDirectory(at: folder)
+
+                    let outputUrl =
+                        folder
+                        .appending(path: bundle.destination.file)
+                        .appendingPathExtension(bundle.destination.ext)
+
+                    let data = try encoder.encode(context)
+                    try data.write(to: outputUrl)
+                    //                    prettyPrint(context)
+                }
             case "mustache":
-                try renderContents(
-                    pipelineContext: context,
-                    pipeline: pipeline,
-                    url: url
-                )
+
+                let renderer = MockHTMLRenderer(templates: [
+                    "post.default.template": """
+                    <html>
+                    <head>
+                    </head>
+                    <body>
+                    {{title}}
+                    {{publication}}
+                    </body>
+                    </html>
+                    """,
+                    "default": """
+                    <html>
+                    <head>
+                    </head>
+                    <body>
+                    {{title}}
+                    </body>
+                    </html>
+                    """,
+                ])
+
+                for bundle in bundles {
+                    let folder = url.appending(path: bundle.destination.path)
+                    try FileManager.default.createDirectory(at: folder)
+
+                    let outputUrl =
+                        folder
+                        .appending(path: bundle.destination.file)
+                        .appendingPathExtension(bundle.destination.ext)
+
+                    try renderer.render(
+                        template: bundle.template ?? "default",  // TODO
+                        with: bundle.context,
+                        to: outputUrl
+                    )
+                }
+
             default:
                 print("ERROR - no such renderer \(pipeline.engine.id)")
             }
         }
     }
 
+}
+
+struct MockHTMLRenderer {
+
+    var templates: [String: String]
+
+    func replaceTopLevelKeys(
+        in template: String,
+        with dictionary: [String: AnyCodable]
+    ) -> String {
+        var output = template
+        for (key, value) in dictionary {
+            let token = "{{\(key)}}"
+            let replacement: String = {
+                if let v = value.value {
+                    return String(describing: v)
+                }
+                return ""
+            }()
+            output = output.replacingOccurrences(of: token, with: replacement)
+        }
+        return output
+    }
+
+    func render(
+        template: String,
+        with object: [String: AnyCodable],
+        to destination: URL
+    ) throws {
+        guard let tpl = templates[template] else {
+            return
+        }
+
+        // TODO: remove local
+        let output = replaceTopLevelKeys(in: tpl, with: object.dict("local"))
+
+        try output.write(
+            to: destination,
+            atomically: true,
+            encoding: .utf8
+        )
+    }
 }
