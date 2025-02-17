@@ -28,6 +28,7 @@ extension Content {
         // add identifier & slug explicitly
         fields["id"] = .init(id)
         fields["slug"] = .init(slug)
+        fields["lastModificationDate"] = .init(rawValue.lastModificationDate)
         return fields
     }
 }

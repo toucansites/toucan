@@ -230,8 +230,10 @@ extension SourceBundle {
                         continue
                     }
 
-                    if !pipeline.contentTypes.isEmpty,
-                        !pipeline.contentTypes.contains(query.contentType)
+                    if !pipeline.contentTypes.filter.isEmpty,
+                        !pipeline.contentTypes.filter.contains(
+                            query.contentType
+                        )
                     {
                         // skip content types that are not part of the renderer
                         continue
@@ -338,8 +340,8 @@ extension SourceBundle {
                     continue
                 }
 
-                if !pipeline.contentTypes.isEmpty,
-                    !pipeline.contentTypes.contains(
+                if !pipeline.contentTypes.filter.isEmpty,
+                    !pipeline.contentTypes.filter.contains(
                         contentBundle.definition.type
                     )
                 {

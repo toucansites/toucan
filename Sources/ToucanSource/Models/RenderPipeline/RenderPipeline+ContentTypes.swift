@@ -9,32 +9,17 @@ import ToucanModels
 
 extension RenderPipeline {
 
-    public struct ContentTypes: OptionSet {
+    public struct ContentTypes {
 
-        public static var single: Self { .init(rawValue: 1 << 0) }
-        public static var bundle: Self { .init(rawValue: 1 << 1) }
+        public var filter: [String]
+        public var lastUpdate: [String]
 
-        public static var all: Self { [single, bundle] }
-
-        // MARK: -
-
-        public let rawValue: UInt
-
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-
-        public init(stringValue: String) {
-            switch stringValue.lowercased() {
-            case "single":
-                self = .single
-            case "bundle":
-                self = .bundle
-            case "all":
-                self = .all
-            default:
-                self = []
-            }
+        public init(
+            filter: [String],
+            lastUpdate: [String]
+        ) {
+            self.filter = filter
+            self.lastUpdate = lastUpdate
         }
     }
 }

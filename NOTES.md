@@ -26,6 +26,8 @@ renderer:
     lastUpdateTypes: ["post"]
     
     cumulativeLastUpdateTypes: ["post", "podcast"]
+    vs 
+    aggregatedLastUpdateTypes: [...]
 
 {{site.lastUpdate.full}}
 

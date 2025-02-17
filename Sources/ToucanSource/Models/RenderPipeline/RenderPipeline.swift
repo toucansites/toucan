@@ -13,7 +13,7 @@ public struct RenderPipeline {
     public var scopes: [String: [String: Scope]]
     public var queries: [String: Query]
     public var dataTypes: DataTypes
-    public var contentTypes: [String]
+    public var contentTypes: ContentTypes
     public var iterators: [String: Query]
     public var engine: Engine
     public var output: Output
@@ -22,7 +22,7 @@ public struct RenderPipeline {
         scopes: [String: [String: Scope]],
         queries: [String: Query],
         dataTypes: DataTypes,
-        contentTypes: [String],
+        contentTypes: ContentTypes,
         iterators: [String: Query],
         engine: RenderPipeline.Engine,
         output: Output

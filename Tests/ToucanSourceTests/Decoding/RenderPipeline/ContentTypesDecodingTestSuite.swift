@@ -7,47 +7,42 @@ import ToucanModels
 struct ContentTypesDecodingTestSuite {
 
     @Test
-    func initialization() throws {
-        let result = RenderPipeline.ContentTypes(stringValue: "foo")
+    func empty() throws {
+        let data = """
+            foo: bar
+            """
+            .data(using: .utf8)!
 
-        #expect(!result.contains(.single))
-        #expect(!result.contains(.bundle))
-        #expect(!result.contains(.all))
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            RenderPipeline.ContentTypes.self,
+            from: data
+        )
+
+        #expect(result.filter.isEmpty)
+        #expect(result.lastUpdate.isEmpty)
     }
 
     @Test
-    func decodingMultipleValues() throws {
-        let json = #"["single", "bundle"]"#
-        let data = json.data(using: .utf8)!
-        let result = try ToucanJSONDecoder()
-            .decode(RenderPipeline.ContentTypes.self, from: data)
+    func standard() throws {
+        let data = """
+            filter:
+                - post
+            lastUpdate:
+                - page
+            """
+            .data(using: .utf8)!
 
-        #expect(result.contains(.single))
-        #expect(result.contains(.bundle))
-        #expect(result.contains(.all))
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            RenderPipeline.ContentTypes.self,
+            from: data
+        )
+
+        #expect(result.filter == ["post"])
+        #expect(result.lastUpdate == ["page"])
     }
 
-    @Test
-    func decodingSingleValue() throws {
-        let json = #""single""#
-        let data = json.data(using: .utf8)!
-        let result = try ToucanJSONDecoder()
-            .decode(RenderPipeline.ContentTypes.self, from: data)
-
-        #expect(result.contains(.single))
-        #expect(!result.contains(.bundle))
-        #expect(!result.contains(.all))
-    }
-
-    @Test
-    func decodingSingleAllValue() throws {
-        let json = #""all""#
-        let data = json.data(using: .utf8)!
-        let result = try ToucanJSONDecoder()
-            .decode(RenderPipeline.ContentTypes.self, from: data)
-
-        #expect(result.contains(.single))
-        #expect(result.contains(.bundle))
-        #expect(result.contains(.all))
-    }
 }

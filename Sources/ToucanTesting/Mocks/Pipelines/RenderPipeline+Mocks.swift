@@ -16,9 +16,12 @@ public extension RenderPipeline.Mocks {
                         ]
                     )
                 ),
-                contentTypes: [
-                    //                    "page"
-                ],
+                contentTypes: .init(
+                    filter: [
+                        // page
+                    ],
+                    lastUpdate: []
+                ),
                 // are iterators are always pages? iteratorPages? 🤔
                 iterators: [  // segments
                     "post.pagination": .init(
@@ -81,9 +84,12 @@ public extension RenderPipeline.Mocks {
                         ]
                     )
                 ),
-                contentTypes: [
-                    "post"
-                ],
+                contentTypes: .init(
+                    filter: [
+                        "post"
+                    ],
+                    lastUpdate: []
+                ),
                 iterators: [  // segments
                     "post.pagination": .init(
                         contentType: "post",
