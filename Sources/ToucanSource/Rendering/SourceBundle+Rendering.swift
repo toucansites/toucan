@@ -207,9 +207,9 @@ extension SourceBundle {
         }
         return .init(input[startRange.upperBound..<endRange.lowerBound])
     }
-    
+
     // MARK: - helper for pagination stuff
-    
+
     func getContextBundle(
         content: Content,
         using pipeline: RenderPipeline,
@@ -217,7 +217,7 @@ extension SourceBundle {
     ) -> ContextBundle {
 
         let context: [String: AnyCodable] = [
-//                        "global": pipelineContext,
+            //                        "global": pipelineContext,
             content.definition.type: .init(
                 getContextObject(
                     slug: content.slug,
@@ -226,7 +226,8 @@ extension SourceBundle {
                     using: self
                 )
             )
-        ].recursivelyMerged(with: extraContext)
+        ]
+        .recursivelyMerged(with: extraContext)
 
         // TODO: more path arguments
         let outputArgs: [String: String] = [
@@ -335,18 +336,19 @@ extension SourceBundle {
                                     "limit": .init(limit),
                                     "current": .init(currentPageIndex),
                                     query.contentType: [
-                                        "items": itemCtx,
-                                    ]
+                                        "items": itemCtx
+                                    ],
                                 ] as [String: AnyCodable]
-                            ),
-                        ].recursivelyMerged(with: pipelineContext)
-                        
+                            )
+                        ]
+                        .recursivelyMerged(with: pipelineContext)
+
                         let bundle = getContextBundle(
                             content: alteredContent,
                             using: pipeline,
                             extraContext: iteratorContext
                         )
-                        
+
                         bundles.append(bundle)
                     }
 
@@ -414,7 +416,7 @@ extension SourceBundle {
         try FileManager.default.createDirectory(at: url)
 
         var siteContext: [String: AnyCodable] = [
-            "baseUrl" : .init(settings.baseUrl),
+            "baseUrl": .init(settings.baseUrl),
             "name": .init(settings.name),
             "locale": .init(settings.locale),
             "timeZone": .init(settings.timeZone),
