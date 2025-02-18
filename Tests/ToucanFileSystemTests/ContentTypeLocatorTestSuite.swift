@@ -36,7 +36,7 @@ struct ContentTypeLocatorTestSuite {
                 .init(path: "post.yaml", overridePath: "post.yml"),
                 .init(path: "tag.yml"),
             ]
-            
+
             #expect(locations.sorted() == expected.sorted())
         }
     }
@@ -75,7 +75,7 @@ struct ContentTypeLocatorTestSuite {
                 at: typesUrl,
                 overrides: overridesUrl
             )
-            
+
             #expect(locations.isEmpty)
         }
     }
@@ -102,7 +102,7 @@ struct ContentTypeLocatorTestSuite {
                 .init(path: "post.yaml"),
                 .init(path: "tag.yml"),
             ]
-            
+
             #expect(
                 locations.sorted() == expected.sorted()
             )

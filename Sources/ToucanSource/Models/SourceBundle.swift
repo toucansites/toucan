@@ -16,6 +16,8 @@ public struct SourceBundle {
     public var renderPipelines: [RenderPipeline]
     public var contentBundles: [ContentBundle]
 
+    var dateFormatter: DateFormatter
+
     public init(
         location: URL,
         config: Config,
@@ -28,6 +30,20 @@ public struct SourceBundle {
         self.settings = settings
         self.renderPipelines = renderPipelines
         self.contentBundles = contentBundles
-    }
 
+        /// setup date formatter
+        let formatter = DateFormatter()
+        formatter.locale = .init(identifier: "en_US")
+        formatter.timeZone = .init(secondsFromGMT: 0)
+        // TODO: validate locale
+        if let rawLocale = settings.locale {
+            formatter.locale = .init(identifier: rawLocale)
+        }
+        if let rawTimezone = settings.timeZone,
+            let timeZone = TimeZone(identifier: rawTimezone)
+        {
+            formatter.timeZone = timeZone
+        }
+        self.dateFormatter = formatter
+    }
 }

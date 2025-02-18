@@ -34,7 +34,7 @@ struct TemplateLocatorTestSuite {
             let overridesUrl = $1.appending(path: "themes/overrides/templates/")
             let locator = TemplateLocator(fileManager: $0)
             let result = locator.locate(at: url, overridesUrl: overridesUrl)
-            
+
             #expect(
                 result == [
                     .init(id: "foo.bar", path: "foo/bar.mustache"),

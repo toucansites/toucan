@@ -20,7 +20,10 @@ public extension RenderPipeline.Mocks {
                     filter: [
                         // page
                     ],
-                    lastUpdate: []
+                    lastUpdate: [
+                        "post",
+                        "foo",
+                    ]
                 ),
                 // are iterators are always pages? iteratorPages? 🤔
                 iterators: [  // segments

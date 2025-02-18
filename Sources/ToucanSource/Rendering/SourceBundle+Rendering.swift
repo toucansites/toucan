@@ -22,11 +22,27 @@ struct ContextBundle {
     let content: Content
     let context: [String: AnyCodable]
     let destination: Destination
+
 }
 
 extension SourceBundle {
 
-    func getDates(
+    // MARK: - date stuff
+
+    func convertToDateFormats(
+        date: Double
+    ) -> DateFormats {
+        getDates(
+            for: date,
+            using: dateFormatter,
+            formats: config.dateFormats.output
+                .recursivelyMerged(with: [
+                    "test": "Y"
+                ])
+        )
+    }
+
+    private func getDates(
         for timeInterval: Double,
         using formatter: DateFormatter,
         formats: [String: String] = [:]
@@ -82,6 +98,8 @@ extension SourceBundle {
         )
     }
 
+    // MARK: - helpers
+
     func getContextObject(
         slug: String?,
         for content: Content,
@@ -92,35 +110,12 @@ extension SourceBundle {
 
         var result: [String: AnyCodable] = [:]
         if context.contains(.properties) {
-
-            let formatter = DateFormatter()
-            formatter.locale = .init(identifier: "en_US")
-            formatter.timeZone = .init(secondsFromGMT: 0)
-            // TODO: validate locale
-            if let rawLocale = source.settings.locale {
-                formatter.locale = .init(identifier: rawLocale)
-            }
-            if let rawTimezone = source.settings.timeZone,
-                let timeZone = TimeZone(identifier: rawTimezone)
-            {
-                formatter.timeZone = timeZone
-            }
-
             for (k, v) in content.properties {
                 if let p = content.definition.properties[k],
                     case .date(_) = p.type,
                     let rawDate = v.value(as: Double.self)
                 {
-                    result[k] = .init(
-                        getDates(
-                            for: rawDate,
-                            using: formatter,
-                            formats: source.config.dateFormats.output
-                                .recursivelyMerged(with: [
-                                    "test": "Y"
-                                ])
-                        )
-                    )
+                    result[k] = .init(convertToDateFormats(date: rawDate))
                 }
                 else {
                     result[k] = .init(v.value)
@@ -426,7 +421,39 @@ extension SourceBundle {
 
         for pipeline in renderPipelines {
             // TODO: make sure bundle context + global context merged
-            let context = getPipelineContext(for: pipeline)
+            var context = getPipelineContext(for: pipeline)
+
+            var updateTypes = contentBundles.map(\.definition.type)
+            if !pipeline.contentTypes.lastUpdate.isEmpty {
+                updateTypes = updateTypes.filter {
+                    pipeline.contentTypes.lastUpdate.contains($0)
+                }
+            }
+
+            /// get last update date or use now as last update date.
+            let lastUpdate: Double =
+                updateTypes.compactMap {
+                    let items = self.run(
+                        query: .init(
+                            contentType: $0,
+                            scope: nil,
+                            limit: 1,
+                            orderBy: [
+                                .init(
+                                    key: "lastUpdate",
+                                    direction: .desc
+                                )
+                            ]
+                        )
+                    )
+                    return items.first?.rawValue.lastModificationDate
+                }
+                .sorted(by: >).first ?? Date().timeIntervalSince1970
+
+            // TODO: put this under site context?
+            let lastUpdateContext = convertToDateFormats(date: lastUpdate)
+            context["lastUpdate"] = .init(lastUpdateContext)
+
             let bundles = try getContextBundles(
                 pipelineContext: context,
                 pipeline: pipeline
