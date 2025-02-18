@@ -45,9 +45,9 @@ public struct MustacheTemplateRenderer {
             encoding: .utf8
         )
     }
-    
+
     // MARK: - unwrap AnyCodable
-    
+
     private func unwrap(_ value: Any?) -> Any? {
         if let anyCodable = value as? AnyCodable {
             return unwrap(anyCodable.value)
@@ -73,5 +73,3 @@ public struct MustacheTemplateRenderer {
     }
 
 }
-
-
