@@ -29,13 +29,12 @@ struct TemplateLocatorTestSuite {
                 }
             }
         }
-        .test { fileManager in
-            let url = URL(fileURLWithPath: "themes/default/templates/")
-            let overridesUrl = URL(
-                fileURLWithPath: "themes/overrides/templates/"
-            )
-            let locator = TemplateLocator(fileManager: fileManager)
+        .test {
+            let url = $1.appending(path: "themes/default/templates/")
+            let overridesUrl = $1.appending(path: "themes/overrides/templates/")
+            let locator = TemplateLocator(fileManager: $0)
             let result = locator.locate(at: url, overridesUrl: overridesUrl)
+            
             #expect(
                 result == [
                     .init(id: "foo.bar", path: "foo/bar.mustache"),

@@ -14,10 +14,10 @@ struct ToucanFileSystemTests {
                 Directory("baz")
             }
         }
-        .test { fileManager in
-            let url = URL(fileURLWithPath: "./foo/bar/")
-            let overrideUrl = URL(fileURLWithPath: "./foo/bar/")
-            let fs = ToucanFileSystem(fileManager: fileManager)
+        .test {
+            let url = $1.appending(path: "foo/bar/")
+            let overrideUrl = $1.appending(path: "foo/bar/")
+            let fs = ToucanFileSystem(fileManager: $0)
 
             let pageBundles = fs.locateRawContents(at: url)
             #expect(pageBundles.isEmpty)
@@ -111,10 +111,10 @@ struct ToucanFileSystemTests {
                 }
             }
         }
-        .test { fileManager in
-            let fs = ToucanFileSystem(fileManager: fileManager)
+        .test {
+            let fs = ToucanFileSystem(fileManager: $0)
 
-            let contentsUrl = URL(fileURLWithPath: "./src/contents/")
+            let contentsUrl = $1.appending(path: "src/contents/")
 
             let pageBundles = fs.locateRawContents(at: contentsUrl)
 
@@ -128,9 +128,9 @@ struct ToucanFileSystemTests {
                     .sorted()
             )
 
-            let typesUrl = URL(fileURLWithPath: "./src/themes/default/types/")
-            let typesOverridesUrl = URL(
-                fileURLWithPath: "./src/themes/overrides/types/"
+            let typesUrl = $1.appending(path: "src/themes/default/types/")
+            let typesOverridesUrl = $1.appending(
+                path: "src/themes/overrides/types/"
             )
 
             let contentTypes = fs.locateContentDefinitions(
@@ -149,11 +149,11 @@ struct ToucanFileSystemTests {
                     .sorted()
             )
 
-            let templatesUrl = URL(
-                fileURLWithPath: "./src/themes/default/templates/"
+            let templatesUrl = $1.appending(
+                path: "src/themes/default/templates/"
             )
-            let templatesOverridesUrl = URL(
-                fileURLWithPath: "./src/themes/overrides/templates/"
+            let templatesOverridesUrl = $1.appending(
+                path: "src/themes/overrides/templates/"
             )
 
             let templates = fs.locateTemplates(

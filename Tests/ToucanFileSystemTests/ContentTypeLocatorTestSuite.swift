@@ -24,33 +24,30 @@ struct ContentTypeLocatorTestSuite {
                 }
             }
         }
-        .test { fileManager in
-            let typesUrl = URL(fileURLWithPath: "default/types/")
-            let overridesUrl = URL(fileURLWithPath: "overrides/types/")
-            let locator = OverrideFileLocator(fileManager: fileManager)
+        .test {
+            let typesUrl = $1.appending(path: "default/types/")
+            let overridesUrl = $1.appending(path: "overrides/types/")
+            let locator = OverrideFileLocator(fileManager: $0)
             let locations = locator.locate(
                 at: typesUrl,
                 overrides: overridesUrl
             )
-
-            #expect(
-                locations.sorted()
-                    == [
-                        .init(path: "post.yaml", overridePath: "post.yml"),
-                        .init(path: "tag.yml"),
-                    ]
-                    .sorted()
-            )
+            let expected: [OverrideFileLocation] = [
+                .init(path: "post.yaml", overridePath: "post.yml"),
+                .init(path: "tag.yml"),
+            ]
+            
+            #expect(locations.sorted() == expected.sorted())
         }
     }
 
     @Test()
     func contentType_empty() async throws {
         try FileManagerPlayground()
-            .test { fileManager in
-                let typesUrl = URL(fileURLWithPath: "default/types/")
-                let overridesUrl = URL(fileURLWithPath: "overrides/types/")
-                let locator = OverrideFileLocator(fileManager: fileManager)
+            .test {
+                let typesUrl = $1.appending(path: "default/types/")
+                let overridesUrl = $1.appending(path: "overrides/types/")
+                let locator = OverrideFileLocator(fileManager: $0)
                 let locations = locator.locate(
                     at: typesUrl,
                     overrides: overridesUrl
@@ -70,15 +67,15 @@ struct ContentTypeLocatorTestSuite {
                 }
             }
         }
-        .test { fileManager in
-            let typesUrl = URL(fileURLWithPath: "default/types/")
-            let overridesUrl = URL(fileURLWithPath: "overrides/types/")
-            let locator = OverrideFileLocator(fileManager: fileManager)
+        .test {
+            let typesUrl = $1.appending(path: "default/types/")
+            let overridesUrl = $1.appending(path: "overrides/types/")
+            let locator = OverrideFileLocator(fileManager: $0)
             let locations = locator.locate(
                 at: typesUrl,
                 overrides: overridesUrl
             )
-
+            
             #expect(locations.isEmpty)
         }
     }
@@ -93,20 +90,21 @@ struct ContentTypeLocatorTestSuite {
                 }
             }
         }
-        .test { fileManager in
-            let typesUrl = URL(fileURLWithPath: "default/types/")
-            let overridesUrl = URL(fileURLWithPath: "overrides/types/")
-            let locator = OverrideFileLocator(fileManager: fileManager)
+        .test {
+            let typesUrl = $1.appending(path: "default/types/")
+            let overridesUrl = $1.appending(path: "overrides/types/")
+            let locator = OverrideFileLocator(fileManager: $0)
             let locations = locator.locate(
                 at: typesUrl,
                 overrides: overridesUrl
             )
-
+            let expected: [OverrideFileLocation] = [
+                .init(path: "post.yaml"),
+                .init(path: "tag.yml"),
+            ]
+            
             #expect(
-                locations == [
-                    .init(path: "post.yaml"),
-                    .init(path: "tag.yml"),
-                ]
+                locations.sorted() == expected.sorted()
             )
         }
     }

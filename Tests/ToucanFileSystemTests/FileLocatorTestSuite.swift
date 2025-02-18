@@ -9,10 +9,9 @@ struct FileLocatorTestSuite {
     @Test()
     func fileLocator_emptyRootDirectory() async throws {
         try FileManagerPlayground()
-            .test { fileManager in
-                let url = URL(fileURLWithPath: ".")
-                let locator = FileLocator(fileManager: fileManager)
-                let locations = locator.locate(at: url).sorted()
+            .test {
+                let locator = FileLocator(fileManager: $0)
+                let locations = locator.locate(at: $1).sorted()
 
                 #expect(locations.isEmpty)
             }
@@ -28,9 +27,9 @@ struct FileLocatorTestSuite {
                 }
             }
         }
-        .test { fileManager in
-            let url = URL(fileURLWithPath: "foo/bar/")
-            let locator = FileLocator(fileManager: fileManager)
+        .test {
+            let url = $1.appending(path: "foo/bar/")
+            let locator = FileLocator(fileManager: $0)
             let locations = locator.locate(at: url).sorted()
 
             #expect(locations == ["baz.yaml", "qux.yml"])
@@ -46,9 +45,9 @@ struct FileLocatorTestSuite {
                 "qux.yml"
             }
         }
-        .test { fileManager in
-            let url = URL(fileURLWithPath: "foo/")
-            let locator = FileLocator(fileManager: fileManager)
+        .test {
+            let url = $1.appending(path: "foo/")
+            let locator = FileLocator(fileManager: $0)
             let locations = locator.locate(at: url).sorted()
 
             #expect(locations == ["bar", "baz.yaml", "qux.yml"])
@@ -66,10 +65,10 @@ struct FileLocatorTestSuite {
                 }
             }
         }
-        .test { fileManager in
-            let url = URL(fileURLWithPath: "foo/bar/")
+        .test {
+            let url = $1.appending(path: "foo/bar/")
             let locator = FileLocator(
-                fileManager: fileManager,
+                fileManager: $0,
                 extensions: ["yaml", "yml"]
             )
             let locations = locator.locate(at: url).sorted()

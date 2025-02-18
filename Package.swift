@@ -183,13 +183,13 @@ let package = Package(
                 .target(name: "ToucanSDK"),
             ]
         ),
-//        .testTarget(
-//            name: "ToucanFileSystemTests",
-//            dependencies: [
-//                .target(name: "ToucanFileSystem"),
-//                .product(name: "FileManagerKitTesting", package: "file-manager-kit")
-//            ]
-//        ),
+        .testTarget(
+            name: "ToucanFileSystemTests",
+            dependencies: [
+                .target(name: "ToucanFileSystem"),
+                .product(name: "FileManagerKitTesting", package: "file-manager-kit")
+            ]
+        ),
         .testTarget(
             name: "ToucanModelsTests",
             dependencies: [
