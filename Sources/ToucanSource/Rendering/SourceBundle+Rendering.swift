@@ -207,10 +207,51 @@ extension SourceBundle {
         }
         return .init(input[startRange.upperBound..<endRange.lowerBound])
     }
+    
+    // MARK: - helper for pagination stuff
+    
+    func getContextBundle(
+        content: Content,
+        using pipeline: RenderPipeline,
+        extraContext: [String: AnyCodable]
+    ) -> ContextBundle {
+
+        let context: [String: AnyCodable] = [
+//                        "global": pipelineContext,
+            content.definition.type: .init(
+                getContextObject(
+                    slug: content.slug,
+                    for: content,
+                    context: .all,
+                    using: self
+                )
+            )
+        ].recursivelyMerged(with: extraContext)
+
+        // TODO: more path arguments
+        let outputArgs: [String: String] = [
+            "{{id}}": content.id,
+            "{{slug}}": content.slug,
+        ]
+
+        let path = pipeline.output.path.replacingOccurrences(outputArgs)
+        let file = pipeline.output.file.replacingOccurrences(outputArgs)
+        let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
+
+        return .init(
+            content: content,
+            context: context,
+            destination: .init(
+                path: path,
+                file: file,
+                ext: ext
+            )
+        )
+    }
 
     // TODO: return full context instead of complete render?
     func getContextBundles(
-        pipelineContext: [String: AnyCodable],
+        siteContext: [String: AnyCodable],
         pipeline: RenderPipeline
     ) throws -> [ContextBundle] {
 
@@ -220,12 +261,15 @@ extension SourceBundle {
 
             for content in contentBundle.contents {
 
-                if let iteratorId = extractIteratorId(from: content.slug) {
-                    guard let query = pipeline.iterators[iteratorId] else {
-                        continue
-                    }
+                let pipelineContext = getPipelineContext(
+                    for: pipeline,
+                    slug: content.slug
+                )
+                .recursivelyMerged(with: siteContext)
 
+                if let iteratorId = extractIteratorId(from: content.slug) {
                     guard
+                        let query = pipeline.iterators[iteratorId],
                         pipeline.contentTypes.isAllowed(
                             contentType: query.contentType
                         )
@@ -283,51 +327,26 @@ extension SourceBundle {
                             itemCtx.append(pageItemCtx)
                         }
 
-                        let context: [String: AnyCodable] = [
-                            //                        "global": pipelineContext,
+                        let iteratorContext: [String: AnyCodable] = [
                             // TODO: links to other pages?
-                            "pagination": .init(
+                            "iterator": .init(
                                 [
                                     "total": .init(total),
                                     "limit": .init(limit),
                                     "current": .init(currentPageIndex),
-                                    "items": .init(itemCtx),
+                                    query.contentType: [
+                                        "items": itemCtx,
+                                    ]
                                 ] as [String: AnyCodable]
                             ),
-                            "local": .init(
-                                getContextObject(
-                                    slug: slug,
-                                    for: alteredContent,
-                                    context: .all,
-                                    using: self
-                                )
-                            ),
-                        ]
-                        // TODO: more path arguments
-                        let outputArgs: [String: String] = [
-                            "{{id}}": id,
-                            "{{slug}}": slug,
-                        ]
-
-                        let path = pipeline.output.path.replacingOccurrences(
-                            outputArgs
+                        ].recursivelyMerged(with: pipelineContext)
+                        
+                        let bundle = getContextBundle(
+                            content: alteredContent,
+                            using: pipeline,
+                            extraContext: iteratorContext
                         )
-                        let file = pipeline.output.file.replacingOccurrences(
-                            outputArgs
-                        )
-                        let ext = pipeline.output.ext.replacingOccurrences(
-                            outputArgs
-                        )
-
-                        let bundle = ContextBundle(
-                            content: content,
-                            context: context,
-                            destination: .init(
-                                path: path,
-                                file: file,
-                                ext: ext
-                            )
-                        )
+                        
                         bundles.append(bundle)
                     }
 
@@ -342,36 +361,10 @@ extension SourceBundle {
                     continue
                 }
 
-                let context: [String: AnyCodable] = [
-                    //                        "global": pipelineContext,
-                    "local": .init(
-                        getContextObject(
-                            slug: content.slug,
-                            for: content,
-                            context: .all,
-                            using: self
-                        )
-                    )
-                ]
-
-                // TODO: more path arguments
-                let outputArgs: [String: String] = [
-                    "{{id}}": content.id,
-                    "{{slug}}": content.slug,
-                ]
-
-                let path = pipeline.output.path.replacingOccurrences(outputArgs)
-                let file = pipeline.output.file.replacingOccurrences(outputArgs)
-                let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
-
-                let bundle = ContextBundle(
+                let bundle = getContextBundle(
                     content: content,
-                    context: context,
-                    destination: .init(
-                        path: path,
-                        file: file,
-                        ext: ext
-                    )
+                    using: pipeline,
+                    extraContext: pipelineContext
                 )
                 bundles.append(bundle)
             }
@@ -380,7 +373,8 @@ extension SourceBundle {
     }
 
     func getPipelineContext(
-        for pipeline: RenderPipeline
+        for pipeline: RenderPipeline,
+        slug: String
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
@@ -409,6 +403,7 @@ extension SourceBundle {
     func render(
         templates: [String: String]
     ) throws {
+        let now = Date().timeIntervalSince1970
         let url = FileManager.default.homeDirectoryForCurrentUser.appending(
             path: "output"
         )
@@ -418,9 +413,16 @@ extension SourceBundle {
         }
         try FileManager.default.createDirectory(at: url)
 
+        var siteContext: [String: AnyCodable] = [
+            "baseUrl" : .init(settings.baseUrl),
+            "name": .init(settings.name),
+            "locale": .init(settings.locale),
+            "timeZone": .init(settings.timeZone),
+            "lastBuildDate": .init(convertToDateFormats(date: now)),
+        ]
+        .recursivelyMerged(with: settings.userDefined)
+
         for pipeline in renderPipelines {
-            // TODO: make sure bundle context + global context merged
-            var context = getPipelineContext(for: pipeline)
 
             var updateTypes = contentBundles.map(\.definition.type)
             if !pipeline.contentTypes.lastUpdate.isEmpty {
@@ -447,14 +449,16 @@ extension SourceBundle {
                     )
                     return items.first?.rawValue.lastModificationDate
                 }
-                .sorted(by: >).first ?? Date().timeIntervalSince1970
+                .sorted(by: >).first ?? now
 
             // TODO: put this under site context?
             let lastUpdateContext = convertToDateFormats(date: lastUpdate)
-            context["lastUpdate"] = .init(lastUpdateContext)
+            siteContext["lastUpdate"] = .init(lastUpdateContext)
 
             let bundles = try getContextBundles(
-                pipelineContext: context,
+                siteContext: [
+                    "site": .init(siteContext)
+                ],
                 pipeline: pipeline
             )
 

@@ -26,17 +26,7 @@ public extension RenderPipeline.Mocks {
                     ),
                 ]
             ],
-            queries: [
-                "featured": .init(
-                    contentType: "post",
-                    scope: "list",
-                    filter: .field(
-                        key: "featured",
-                        operator: .equals,
-                        value: true
-                    )
-                )
-            ],
+            queries: [:],
             dataTypes: .init(
                 date: .init(
                     formats: [
@@ -46,9 +36,7 @@ public extension RenderPipeline.Mocks {
             ),
             contentTypes: .init(
                 include: [],
-                exclude: [
-                    //                    "rss",
-                ],
+                exclude: [],
                 lastUpdate: []
             ),
             iterators: [

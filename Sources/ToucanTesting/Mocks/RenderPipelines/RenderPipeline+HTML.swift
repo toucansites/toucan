@@ -7,7 +7,17 @@ public extension RenderPipeline.Mocks {
     static func html() -> RenderPipeline {
         .init(
             scopes: [:],
-            queries: [:],
+            queries: [
+                "featured": .init(
+                    contentType: "post",
+                    scope: "list",
+                    filter: .field(
+                        key: "featured",
+                        operator: .equals,
+                        value: true
+                    )
+                )
+            ],
             dataTypes: .init(
                 date: .init(
                     formats: [

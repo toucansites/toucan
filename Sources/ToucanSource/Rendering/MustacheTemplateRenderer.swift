@@ -30,8 +30,7 @@ public struct MustacheTemplateRenderer {
             print("throw or error, missing template \(template)")
             return
         }
-        // TODO: eliminate local
-        let local = unwrap(object.dict("local")) as Any
+        let local = unwrap(object) as Any
 
         guard
             let html = library.render(local, withTemplate: template)

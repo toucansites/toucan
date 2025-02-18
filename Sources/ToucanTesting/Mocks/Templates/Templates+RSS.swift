@@ -4,26 +4,16 @@ public extension Templates.Mocks {
         """
         <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
         <channel>
-            <title>{{title}}</title>
-            <description>{{description}}</description>
-            <link>{{baseUrl}}</link>
-            <language>{{language}}</language>
-            <lastBuildDate>{{lastBuildDate}}</lastBuildDate>
-            <pubDate>{{lastUpdate}}</pubDate>
+            <title>{{site.title}}</title>
+            <description>{{site.description}}</description>
+            <link>{{site.baseUrl}}</link>
+            <language>{{site.language}}</language>
+            <lastBuildDate>{{site.lastBuildDate.formats.rss}}</lastBuildDate>
+            <pubDate>{{site.lastUpdate.formats.rss}}</pubDate>
             <ttl>250</ttl>
-            <atom:link href="{{baseUrl}}rss.xml" rel="self" type="application/rss+xml"/>
+            <atom:link href="{{site.baseUrl}}rss.xml" rel="self" type="application/rss+xml"/>
 
-        {{#items}}
-        <item>
-            <guid isPermaLink="true">{{permalink}}</guid>
-            <title><![CDATA[ {{title}} ]]></title>
-            <description><![CDATA[ {{description}} ]]></description>
-            <link>{{permalink}}</link>
-            <pubDate>{{publicationDate}}</pubDate>
-        </item>
-        {{/items}}
-
-        {{#posts}}
+        {{#rss.posts}}
         <item>
             <guid isPermaLink="true">{{permalink}}</guid>
             <title><![CDATA[ {{title}} ]]></title>
@@ -31,9 +21,9 @@ public extension Templates.Mocks {
             <link>{{permalink}}</link>
             <pubDate>{{publication.formats.rss}}</pubDate>
         </item>
-        {{/posts}}
+        {{/rss.posts}}
 
-        {{#tags}}
+        {{#rss.tags}}
         <item>
             <guid isPermaLink="true">{{permalink}}</guid>
             <title><![CDATA[ {{title}} ]]></title>
@@ -41,9 +31,9 @@ public extension Templates.Mocks {
             <link>{{permalink}}</link>
             <pubDate>{{publication.formats.rss}}</pubDate>
         </item>
-        {{/tags}}
+        {{/rss.tags}}
 
-        {{#authors}}
+        {{#rss.authors}}
         <item>
             <guid isPermaLink="true">{{permalink}}</guid>
             <title><![CDATA[ {{name}} ]]></title>
@@ -51,7 +41,7 @@ public extension Templates.Mocks {
             <link>{{permalink}}</link>
             <pubDate>{{publication.formats.rss}}</pubDate>
         </item>
-        {{/authors}}
+        {{/rss.authors}}
 
         </channel>
         </rss>
