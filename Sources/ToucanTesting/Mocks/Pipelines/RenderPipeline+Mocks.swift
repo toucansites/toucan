@@ -73,7 +73,7 @@ public extension RenderPipeline.Mocks {
                         filter: .field(
                             key: "featured",
                             operator: .equals,
-                            value: .init(true)
+                            value: true
                         )
                     )
                 ],
