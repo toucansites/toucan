@@ -31,7 +31,7 @@ public struct MustacheTemplateRenderer {
             return
         }
         // TODO: eliminate local
-        let local = object.dict("local").unwrapped()
+        let local = unwrap(object.dict("local")) as Any
 
         guard
             let html = library.render(local, withTemplate: template)
@@ -45,28 +45,33 @@ public struct MustacheTemplateRenderer {
             encoding: .utf8
         )
     }
-}
-
-extension Dictionary where Key == String, Value == AnyCodable {
-
-    func unwrapped() -> [String: Any] {
-        var result: [String: Any] = [:]
-        for (key, value) in self {
-            result[key] = value.unwrappedValue
+    
+    // MARK: - unwrap AnyCodable
+    
+    private func unwrap(_ value: Any?) -> Any? {
+        if let anyCodable = value as? AnyCodable {
+            return unwrap(anyCodable.value)
         }
-        return result
-    }
-}
-
-extension AnyCodable {
-
-    var unwrappedValue: Any? {
         if let dict = value as? [String: AnyCodable] {
-            return dict.unwrapped()
+            var result: [String: Any] = [:]
+            for (key, val) in dict {
+                result[key] = unwrap(val)
+            }
+            return result
         }
-        if let array = value as? [AnyCodable] {
-            return array.map { $0.unwrappedValue }
+        if let dict = value as? [String: Any] {
+            var result: [String: Any] = [:]
+            for (key, val) in dict {
+                result[key] = unwrap(val)
+            }
+            return result
+        }
+        if let array = value as? [Any] {
+            return array.map { unwrap($0) }
         }
         return value
     }
+
 }
+
+
