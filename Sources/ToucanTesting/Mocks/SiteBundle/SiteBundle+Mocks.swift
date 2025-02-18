@@ -73,6 +73,17 @@ public extension SourceBundle.Mocks {
             )
         }
 
+        // rss
+        let rssDefinition = ContentDefinition.Mocks.rss()
+        let rawRSSContents = RawContent.Mocks.rss()
+        let rssContents = rawRSSContents.map {
+            rssDefinition.convert(
+                rawContent: $0,
+                definition: rssDefinition,
+                using: formatter
+            )
+        }
+
         let contentBundles: [ContentBundle] = [
             .init(definition: pageDefinition, contents: pageContents),
             .init(definition: categoryDefinition, contents: categoryContents),
@@ -80,9 +91,14 @@ public extension SourceBundle.Mocks {
             .init(definition: tagDefinition, contents: tagContents),
             .init(definition: authorDefinition, contents: authorContents),
             .init(definition: postDefinition, contents: postContents),
+            .init(definition: rssDefinition, contents: rssContents),
         ]
 
-        let pipelines = RenderPipeline.Mocks.defaults()
+        let pipelines = [
+            RenderPipeline.Mocks.context(),
+            RenderPipeline.Mocks.html(),
+            RenderPipeline.Mocks.rss(),
+        ]
 
         return .init(
             location: .init(filePath: ""),

@@ -12,6 +12,13 @@ struct SourceBundleTestSuite {
     @Test
     func pipelineRendering() throws {
         let sourceBundle = SourceBundle.Mocks.complete()
-        try sourceBundle.render()
+
+        let templates: [String: String] = [
+            "default": Templates.Mocks.default(),
+            "post.default": Templates.Mocks.post(),
+            "rss": Templates.Mocks.rss(),
+        ]
+
+        try sourceBundle.render(templates: templates)
     }
 }

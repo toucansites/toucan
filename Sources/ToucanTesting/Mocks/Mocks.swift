@@ -35,3 +35,10 @@ public extension RenderPipeline {
 public extension Config {
     enum Mocks {}
 }
+
+public struct Templates {
+
+}
+public extension Templates {
+    enum Mocks {}
+}

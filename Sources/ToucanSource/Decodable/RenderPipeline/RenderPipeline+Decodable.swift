@@ -50,7 +50,12 @@ extension RenderPipeline: Decodable {
             try container.decodeIfPresent(
                 ContentTypes.self,
                 forKey: .contentTypes
-            ) ?? .init(filter: [], lastUpdate: [])
+            )
+            ?? .init(
+                include: [],
+                exclude: [],
+                lastUpdate: []
+            )
 
         let iterators =
             try container.decodeIfPresent(

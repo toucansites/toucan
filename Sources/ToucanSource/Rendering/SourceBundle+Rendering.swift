@@ -225,12 +225,11 @@ extension SourceBundle {
                         continue
                     }
 
-                    if !pipeline.contentTypes.filter.isEmpty,
-                        !pipeline.contentTypes.filter.contains(
-                            query.contentType
+                    guard
+                        pipeline.contentTypes.isAllowed(
+                            contentType: query.contentType
                         )
-                    {
-                        // skip content types that are not part of the renderer
+                    else {
                         continue
                     }
 
@@ -335,12 +334,11 @@ extension SourceBundle {
                     continue
                 }
 
-                if !pipeline.contentTypes.filter.isEmpty,
-                    !pipeline.contentTypes.filter.contains(
-                        contentBundle.definition.type
+                guard
+                    pipeline.contentTypes.isAllowed(
+                        contentType: contentBundle.definition.type
                     )
-                {
-                    // skip content types that are not part of the renderer
+                else {
                     continue
                 }
 
@@ -407,9 +405,10 @@ extension SourceBundle {
         return rawContext
     }
 
-    func render(  // TODO: url input
-        ) throws
-    {
+    // TODO: url input
+    func render(
+        templates: [String: String]
+    ) throws {
         let url = FileManager.default.homeDirectoryForCurrentUser.appending(
             path: "output"
         )
@@ -483,35 +482,10 @@ extension SourceBundle {
                     //                    prettyPrint(context)
                 }
             case "mustache":
-                let renderer = MockHTMLRenderer(
-                    templates: [
-                        "post.default.template": try .init(
-                            string: """
-                                <html>
-                                <head>
-                                </head>
-                                <body>
-                                {{title}}<br>
-                                Date<br>
-                                {{publication.date.full}}<br>
-                                Time<br>
-                                {{publication.time.short}}<br>
-                                </body>
-                                </html>
-                                """
-                        ),
-                        "default": try .init(
-                            string: """
-                                <html>
-                                <head>
-                                </head>
-                                <body>
-                                {{title}}
-                                </body>
-                                </html>
-                                """
-                        ),
-                    ]
+                let renderer = MustacheTemplateRenderer(
+                    templates: try templates.mapValues {
+                        try .init(string: $0)
+                    }
                 )
 
                 for bundle in bundles {
@@ -550,66 +524,4 @@ extension SourceBundle {
         }
     }
 
-}
-
-struct MockHTMLRenderer {
-
-    var ids: [String]
-    var library: MustacheLibrary
-
-    init(
-        templates: [String: MustacheTemplate]
-    ) {
-        ids = Array(templates.keys)
-        library = .init(templates: templates)
-    }
-
-    func render(
-        template: String,
-        with object: [String: AnyCodable],
-        to destination: URL
-    ) throws {
-        guard ids.contains(template) else {
-            print("throw or error, missing template \(template)")
-            return
-        }
-        // TODO: eliminate local
-        let local = object.dict("local").unwrapped()
-
-        guard
-            let html = library.render(local, withTemplate: template)
-        else {
-            print("nil html")
-            return
-        }
-        try html.write(
-            to: destination,
-            atomically: true,
-            encoding: .utf8
-        )
-    }
-}
-
-extension Dictionary where Key == String, Value == AnyCodable {
-
-    func unwrapped() -> [String: Any] {
-        var result: [String: Any] = [:]
-        for (key, value) in self {
-            result[key] = value.unwrappedValue
-        }
-        return result
-    }
-}
-
-extension AnyCodable {
-
-    var unwrappedValue: Any? {
-        if let dict = value as? [String: AnyCodable] {
-            return dict.unwrapped()
-        }
-        if let array = value as? [AnyCodable] {
-            return array.map { $0.unwrappedValue }
-        }
-        return value
-    }
 }

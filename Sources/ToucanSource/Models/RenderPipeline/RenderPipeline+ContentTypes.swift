@@ -11,15 +11,28 @@ extension RenderPipeline {
 
     public struct ContentTypes {
 
-        public var filter: [String]
+        public var include: [String]
+        public var exclude: [String]
         public var lastUpdate: [String]
 
         public init(
-            filter: [String],
+            include: [String],
+            exclude: [String],
             lastUpdate: [String]
         ) {
-            self.filter = filter
+            self.include = include
+            self.exclude = exclude
             self.lastUpdate = lastUpdate
+        }
+
+        public func isAllowed(contentType: String) -> Bool {
+            if exclude.contains(contentType) {
+                return false
+            }
+            if include.isEmpty {
+                return true
+            }
+            return include.contains(contentType)
         }
     }
 }

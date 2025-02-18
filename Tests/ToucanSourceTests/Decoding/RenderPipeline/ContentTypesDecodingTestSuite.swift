@@ -20,15 +20,17 @@ struct ContentTypesDecodingTestSuite {
             from: data
         )
 
-        #expect(result.filter.isEmpty)
+        #expect(result.include.isEmpty)
         #expect(result.lastUpdate.isEmpty)
     }
 
     @Test
     func standard() throws {
         let data = """
-            filter:
+            include:
                 - post
+            exclude:
+                - rss
             lastUpdate:
                 - page
             """
@@ -41,7 +43,8 @@ struct ContentTypesDecodingTestSuite {
             from: data
         )
 
-        #expect(result.filter == ["post"])
+        #expect(result.include == ["post"])
+        #expect(result.exclude == ["rss"])
         #expect(result.lastUpdate == ["page"])
     }
 

@@ -11,17 +11,24 @@ import ToucanModels
 extension RenderPipeline.ContentTypes: Decodable {
 
     enum CodingKeys: CodingKey {
-        case filter
+        case include
+        case exclude
         case lastUpdate
     }
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let filter =
+        let include =
             try container.decodeIfPresent(
                 [String].self,
-                forKey: .filter
+                forKey: .include
+            ) ?? []
+
+        let exclude =
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .exclude
             ) ?? []
 
         let lastUpdate =
@@ -31,7 +38,8 @@ extension RenderPipeline.ContentTypes: Decodable {
             ) ?? []
 
         self.init(
-            filter: filter,
+            include: include,
+            exclude: exclude,
             lastUpdate: lastUpdate
         )
     }
