@@ -10,6 +10,7 @@ import FileManagerKit
 import ToucanModels
 import ToucanCodable
 import Mustache
+import ToucanMarkdown
 
 public struct Destination {
     public var path: String
@@ -187,8 +188,14 @@ extension SourceBundle {
 
         }
         if context.contains(.contents) {
-            // TODO: render using renderer.
-            result["contents"] = .init(content.rawValue.markdown)
+            let renderer = MarkdownRenderer(
+                customBlockDirectives: [],
+                logger: .init(label: "MarkdownRenderer")
+            )
+            let contents = renderer.renderHTML(
+                markdown: content.rawValue.markdown
+            )
+            result["contents"] = .init(contents)
         }
         if allowSubQueries, context.contains(.queries) {
             for (key, query) in content.definition.queries {

@@ -8,7 +8,7 @@
 import Markdown
 import Logging
 
-struct MarkdownRenderer {
+public struct MarkdownRenderer {
 
     public let customBlockDirectives: [CustomBlockDirective]
     public let logger: Logger

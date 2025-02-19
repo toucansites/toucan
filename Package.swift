@@ -115,6 +115,7 @@ let package = Package(
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .target(name: "ToucanModels"),
+                .target(name: "ToucanMarkdown"),
             ],
             swiftSettings: swiftSettings
         ),
