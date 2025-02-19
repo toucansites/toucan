@@ -7,7 +7,7 @@ public extension RawContent.Mocks {
         max: Int = 10,
         now: Date = .init(),
         formatter: DateFormatter
-    ) -> [RawContent] {        
+    ) -> [RawContent] {
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
         return (1...max)

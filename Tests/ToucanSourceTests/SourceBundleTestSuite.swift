@@ -11,19 +11,19 @@ struct SourceBundleTestSuite {
 
     @Test
     func rss() throws {
-        
+
         let now = Date()
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
-        
+
         formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
         let nowString = formatter.string(from: now)
 
         let pipelines = [
-            RenderPipeline.Mocks.rss(),
+            RenderPipeline.Mocks.rss()
         ]
-        
+
         let postDefinition = ContentDefinition.Mocks.post()
         let rawPostContents = RawContent.Mocks.posts(
             max: 1,
@@ -48,7 +48,7 @@ struct SourceBundleTestSuite {
                 using: formatter
             )
         }
-        
+
         let contentBundles: [ContentBundle] = [
             .init(definition: postDefinition, contents: postContents),
             .init(definition: rssDefinition, contents: rssContents),
@@ -63,9 +63,8 @@ struct SourceBundleTestSuite {
         )
 
         let templates: [String: String] = [
-            "rss": Templates.Mocks.rss(),
+            "rss": Templates.Mocks.rss()
         ]
-
 
         let results = try sourceBundle.generatePipelineResults(
             templates: templates
@@ -74,37 +73,37 @@ struct SourceBundleTestSuite {
         #expect(results.count == 1)
 
         let expectation = #"""
-        <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-        <channel>
-            <title></title>
-            <description></description>
-            <link>http://localhost:3000</link>
-            <language></language>
-            <lastBuildDate>\#(nowString)</lastBuildDate>
-            <pubDate>\#(nowString)</pubDate>
-            <ttl>250</ttl>
-            <atom:link href="http://localhost:3000rss.xml" rel="self" type="application/rss+xml"/>
+            <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+            <channel>
+                <title></title>
+                <description></description>
+                <link>http://localhost:3000</link>
+                <language></language>
+                <lastBuildDate>\#(nowString)</lastBuildDate>
+                <pubDate>\#(nowString)</pubDate>
+                <ttl>250</ttl>
+                <atom:link href="http://localhost:3000rss.xml" rel="self" type="application/rss+xml"/>
 
-        <item>
-            <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
-            <title><![CDATA[ Post #1 ]]></title>
-            <description><![CDATA[  ]]></description>
-            <link>http://localhost:3000/blog/posts/post-1/</link>
-            <pubDate>\#(nowString)</pubDate>
-        </item>
+            <item>
+                <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
+                <title><![CDATA[ Post #1 ]]></title>
+                <description><![CDATA[  ]]></description>
+                <link>http://localhost:3000/blog/posts/post-1/</link>
+                <pubDate>\#(nowString)</pubDate>
+            </item>
 
 
 
-        </channel>
-        </rss>
-        """#
-        
+            </channel>
+            </rss>
+            """#
+
         #expect(results[0].contents == expectation)
         #expect(results[0].destination.path == "")
         #expect(results[0].destination.file == "rss")
         #expect(results[0].destination.ext == "xml")
     }
-    
+
     @Test
     func pipelineRendering() throws {
         let sourceBundle = SourceBundle.Mocks.complete()
