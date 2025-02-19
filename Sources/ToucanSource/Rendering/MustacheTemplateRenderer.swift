@@ -23,12 +23,11 @@ public struct MustacheTemplateRenderer {
 
     public func render(
         template: String,
-        with object: [String: AnyCodable],
-        to destination: URL
-    ) throws {
+        with object: [String: AnyCodable]
+    ) throws -> String? {
         guard ids.contains(template) else {
             print("throw or error, missing template \(template)")
-            return
+            return nil
         }
         let local = unwrap(object) as Any
 
@@ -36,13 +35,10 @@ public struct MustacheTemplateRenderer {
             let html = library.render(local, withTemplate: template)
         else {
             print("nil html")
-            return
+            return nil
         }
-        try html.write(
-            to: destination,
-            atomically: true,
-            encoding: .utf8
-        )
+        return html
+
     }
 
     // MARK: - unwrap AnyCodable

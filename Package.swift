@@ -112,6 +112,7 @@ let package = Package(
                 .product(name: "Yams", package: "yams"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Mustache", package: "swift-mustache"),
+                .product(name: "Markdown", package: "swift-markdown"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .target(name: "ToucanModels"),
             ],

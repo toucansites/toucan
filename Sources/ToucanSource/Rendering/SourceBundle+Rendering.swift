@@ -11,18 +11,40 @@ import ToucanModels
 import ToucanCodable
 import Mustache
 
-struct ContextBundle {
+public struct Destination {
+    public var path: String
+    public var file: String
+    public var ext: String
 
-    struct Destination {
-        let path: String
-        let file: String
-        let ext: String
+    public init(
+        path: String,
+        file: String,
+        ext: String
+    ) {
+        self.path = path
+        self.file = file
+        self.ext = ext
     }
+}
 
-    let content: Content
-    let context: [String: AnyCodable]
-    let destination: Destination
+struct ContextBundle {
+    var content: Content
+    var context: [String: AnyCodable]
+    var destination: Destination
+}
 
+// TODO: do we need anything else + information when testing? 🤔
+public struct PipelineResult {
+    public var contents: String
+    public var destination: Destination
+
+    public init(
+        contents: String,
+        destination: Destination
+    ) {
+        self.contents = contents
+        self.destination = destination
+    }
 }
 
 extension SourceBundle {
@@ -401,19 +423,12 @@ extension SourceBundle {
         return rawContext
     }
 
-    // TODO: url input
-    func render(
+    func generatePipelineResults(
         templates: [String: String]
-    ) throws {
-        let now = Date().timeIntervalSince1970
-        let url = FileManager.default.homeDirectoryForCurrentUser.appending(
-            path: "output"
-        )
+    ) throws -> [PipelineResult] {
 
-        if FileManager.default.exists(at: url) {
-            try FileManager.default.removeItem(at: url)
-        }
-        try FileManager.default.createDirectory(at: url)
+        let now = Date().timeIntervalSince1970
+        var results: [PipelineResult] = []
 
         var siteContext: [String: AnyCodable] = [
             "baseUrl": .init(settings.baseUrl),
@@ -474,18 +489,22 @@ extension SourceBundle {
                 ]
 
                 for bundle in bundles {
-                    let folder = url.appending(path: bundle.destination.path)
-                    try FileManager.default.createDirectory(at: folder)
-
-                    let outputUrl =
-                        folder
-                        .appending(path: bundle.destination.file)
-                        .appendingPathExtension(bundle.destination.ext)
-
                     // TODO: override output using front matter in both cases
                     let data = try encoder.encode(bundle.context)
-                    try data.write(to: outputUrl)
-                    //                    prettyPrint(context)
+                    guard
+                        let json = String(
+                            data: data,
+                            encoding: .utf8
+                        )
+                    else {
+                        // TODO: log
+                        continue
+                    }
+                    let result = PipelineResult(
+                        contents: json,
+                        destination: bundle.destination
+                    )
+                    results.append(result)
                 }
             case "mustache":
                 let renderer = MustacheTemplateRenderer(
@@ -493,16 +512,7 @@ extension SourceBundle {
                         try .init(string: $0)
                     }
                 )
-
                 for bundle in bundles {
-                    let folder = url.appending(path: bundle.destination.path)
-                    try FileManager.default.createDirectory(at: folder)
-
-                    let outputUrl =
-                        folder
-                        .appending(path: bundle.destination.file)
-                        .appendingPathExtension(bundle.destination.ext)
-
                     let engineOptions = pipeline.engine.options
                     let contentTypesOptions = engineOptions.dict("contentTypes")
                     let bundleOptions = contentTypesOptions.dict(
@@ -517,17 +527,27 @@ extension SourceBundle {
                     let template =
                         contentTypeTemplate ?? contentTemplate ?? "default"  // TODO
 
-                    try renderer.render(
-                        template: template,
-                        with: bundle.context,
-                        to: outputUrl
+                    guard
+                        let html = try renderer.render(
+                            template: template,
+                            with: bundle.context
+                        )
+                    else {
+                        // TODO: log
+                        continue
+                    }
+                    let result = PipelineResult(
+                        contents: html,
+                        destination: bundle.destination
                     )
+                    results.append(result)
                 }
 
             default:
                 print("ERROR - no such renderer \(pipeline.engine.id)")
             }
         }
+        return results
     }
 
 }
