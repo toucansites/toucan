@@ -4,11 +4,11 @@ import ToucanModels
 public extension RawContent.Mocks {
 
     static func posts(
-        max: Int = 10
-    ) -> [RawContent] {
-        let formatter = DateFormatter()
+        max: Int = 10,
+        now: Date = .init(),
+        formatter: DateFormatter
+    ) -> [RawContent] {        
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        let now = Date()
 
         return (1...max)
             .map { i in
@@ -33,7 +33,7 @@ public extension RawContent.Mocks {
 
                         Lorem ipsum dolor sit amet
                         """,
-                    lastModificationDate: Date().timeIntervalSince1970,
+                    lastModificationDate: now.timeIntervalSince1970,
                     assets: []
                 )
             }

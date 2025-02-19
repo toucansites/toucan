@@ -4,7 +4,13 @@ import ToucanSource
 
 public extension SourceBundle.Mocks {
 
-    static func complete() -> SourceBundle {
+    static func complete(
+        pipelines: [RenderPipeline] = [
+            RenderPipeline.Mocks.context(),
+            RenderPipeline.Mocks.html(),
+            RenderPipeline.Mocks.rss(),
+        ]
+    ) -> SourceBundle {
 
         let formatter = DateFormatter()
         // pages
@@ -64,7 +70,9 @@ public extension SourceBundle.Mocks {
 
         // posts
         let postDefinition = ContentDefinition.Mocks.post()
-        let rawPostContents = RawContent.Mocks.posts()
+        let rawPostContents = RawContent.Mocks.posts(
+            formatter: formatter
+        )
         let postContents = rawPostContents.map {
             postDefinition.convert(
                 rawContent: $0,
@@ -92,12 +100,6 @@ public extension SourceBundle.Mocks {
             .init(definition: authorDefinition, contents: authorContents),
             .init(definition: postDefinition, contents: postContents),
             .init(definition: rssDefinition, contents: rssContents),
-        ]
-
-        let pipelines = [
-            RenderPipeline.Mocks.context(),
-            RenderPipeline.Mocks.html(),
-            RenderPipeline.Mocks.rss(),
         ]
 
         return .init(
