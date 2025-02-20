@@ -37,24 +37,24 @@ struct Entrypoint: AsyncParsableCommand {
     // MARK: - run
 
     func run() async throws {
-        var logger = Logger(label: "toucan")
-        logger.logLevel = logLevel
-
-        let generator = Toucan(
-            input: input,
-            output: output,
-            baseUrl: baseUrl,
-            logger: logger
-        )
-
-        if generator.generateAndLogErrors(logger) {
-            let metadata: Logger.Metadata = [
-                "input": "\(input)",
-                "output": "\(output)",
-                "baseUrl": "\(String(describing: baseUrl?.description))",
-            ]
-            logger.info("Site generated successfully.", metadata: metadata)
-        }
+        //        var logger = Logger(label: "toucan")
+        //        logger.logLevel = logLevel
+        //
+        //        let generator = Toucan(
+        //            input: input,
+        //            output: output,
+        //            baseUrl: baseUrl,
+        //            logger: logger
+        //        )
+        //
+        //        if generator.generateAndLogErrors(logger) {
+        //            let metadata: Logger.Metadata = [
+        //                "input": "\(input)",
+        //                "output": "\(output)",
+        //                "baseUrl": "\(String(describing: baseUrl?.description))",
+        //            ]
+        //            logger.info("Site generated successfully.", metadata: metadata)
+        //        }
     }
 
 }
