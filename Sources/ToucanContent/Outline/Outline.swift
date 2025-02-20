@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 22/07/2024.
 //
 
-public struct Outline {
+public struct Outline: Equatable {
 
     public var level: Int
 

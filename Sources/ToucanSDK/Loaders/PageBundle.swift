@@ -10,33 +10,6 @@
 ///// A page bundle representing a subpage for a website.
 //struct PageBundle {
 //
-//    struct DateValue: Codable {
-//        let html: String
-//        let rss: String
-//        let sitemap: String
-//    }
-//
-//    let id: String
-//    let url: URL
-//    let baseUrl: String
-//
-//    let slug: String
-//    let permalink: String
-//
-//    let title: String
-//    let description: String
-//    let date: DateValue
-//
-//    let contentType: ContentType
-//    let publication: Date
-//    let lastModification: Date
-//    let config: Config
-//    let frontMatter: [String: Any]
-//    let properties: [String: Any]
-//    let relations: [String: Any]
-//    let markdown: String
-//    let assets: [String]
-//
 //    // MARK: -
 //
 //    var assetsLocation: String {
