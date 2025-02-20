@@ -1,5 +1,5 @@
 {
-  "originHash" : "902be187205eb00d5edd4f59380c97115b434f733cb1780890b2e700cca9e5bb",
+  "originHash" : "b00b849e1e6b6942f5d475ebfbcc294ebb516fb2d1fdd10d94360342b9a5de8b",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -35,15 +35,6 @@
       "state" : {
         "revision" : "567c1fdcd577d3463a1406a34d9a64749bf583ec",
         "version" : "2.9.0"
-      }
-    },
-    {
-      "identity" : "shell-kit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/binarybirds/shell-kit",
-      "state" : {
-        "revision" : "8507fc5a1d4c9b4aca71fa69bf6030fb94229d37",
-        "version" : "1.0.1"
       }
     },
     {
@@ -240,8 +231,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system",
       "state" : {
-        "revision" : "3a1b4a8e05a219c47efe85a120ec4e7ecd2071ca",
-        "version" : "1.4.1"
+        "revision" : "a34201439c74b53f0fd71ef11741af7e7caf01e1",
+        "version" : "1.4.2"
       }
     },
     {

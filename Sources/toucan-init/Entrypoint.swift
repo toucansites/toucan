@@ -2,7 +2,6 @@ import Foundation
 import ArgumentParser
 import Logging
 import FileManagerKit
-import ShellKit
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 

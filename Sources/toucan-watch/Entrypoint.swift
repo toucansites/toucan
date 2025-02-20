@@ -1,6 +1,5 @@
 import ArgumentParser
 import Logging
-import ShellKit
 import FileMonitor
 import Foundation
 
@@ -41,15 +40,15 @@ struct Entrypoint: AsyncParsableCommand {
         logger.logLevel = logLevel
 
         let bin = "/usr/local/bin"
-        let shell = Shell()
+        //        let shell = Shell()
 
-        let versionCheckOutput = try shell.run(
-            #"test -x \#(bin)/toucan && echo \#(bin)/toucan --version || echo """#
-        )
-        guard !versionCheckOutput.isEmpty else {
-            logger.error("Toucan is not installed.")
-            return
-        }
+        //        let versionCheckOutput = try shell.run(
+        //            #"test -x \#(bin)/toucan && echo \#(bin)/toucan --version || echo """#
+        //        )
+        //        guard !versionCheckOutput.isEmpty else {
+        //            logger.error("Toucan is not installed.")
+        //            return
+        //        }
 
         logger.info("👀 Watching: `\(input)` -> \(output).")
 
@@ -86,10 +85,10 @@ struct Entrypoint: AsyncParsableCommand {
         .joined(separator: " ")
 
         var lastGenerationTime = Date()
-        let output = try shell.run(cmd)
-        if !output.isEmpty {
-            logger.debug("\(output)")
-        }
+        //        let output = try shell.run(cmd)
+        //        if !output.isEmpty {
+        //            logger.debug("\(output)")
+        //        }
 
         let monitor = try FileMonitor(directory: inputUrl)
         try monitor.start()
@@ -104,10 +103,10 @@ struct Entrypoint: AsyncParsableCommand {
             }
             lastGenerationTime = now
             logger.info("Generating site...")
-            let output = try shell.run(cmd)
-            if !output.isEmpty {
-                logger.debug("\(output)")
-            }
+            //            let output = try shell.run(cmd)
+            //            if !output.isEmpty {
+            //                logger.debug("\(output)")
+            //            }
             //            switch event {
             //            case .added(let file):
             //                print("New file \(file.path)")
