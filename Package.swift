@@ -125,6 +125,7 @@ let package = Package(
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .target(name: "ToucanModels"),
                 .target(name: "ToucanMarkdown"),
+                .target(name: "ToucanToC"),
             ],
             swiftSettings: swiftSettings
         ),

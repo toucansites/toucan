@@ -8,14 +8,14 @@
 import Logging
 import SwiftSoup
 
-public struct HTMLToCParser {
+public struct OutlineParser {
 
     public var levels: [Int]
     public var logger: Logger
 
     public init(
         levels: [Int] = [1, 2, 3, 4, 5, 6],
-        logger: Logger = .init(label: "HTMLToCParser")
+        logger: Logger = .init(label: "OutlineParser")
     ) {
         precondition(
             levels.allSatisfy { 1...6 ~= $0 },
@@ -26,7 +26,7 @@ public struct HTMLToCParser {
         self.logger = logger
     }
 
-    public func parse(
+    public func parseHTML(
         _ html: String
     ) -> [ToC] {
         do {

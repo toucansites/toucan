@@ -8,13 +8,12 @@
 public struct ToC {
 
     public var level: Int
-    
-    public var text: String
-    
-    public var fragment: String?
-    
-    public var children: [ToC]
 
+    public var text: String
+
+    public var fragment: String?
+
+    public var children: [ToC]
 
     public init(
         level: Int,
