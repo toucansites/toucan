@@ -27,6 +27,7 @@ public extension RenderPipeline.Mocks {
                 ]
             ),
             iterators: [:],
+            transformers: [:],
             engine: .init(
                 id: "mustache",
                 options: [

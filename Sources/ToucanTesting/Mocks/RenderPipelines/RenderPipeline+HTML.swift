@@ -39,6 +39,7 @@ public extension RenderPipeline.Mocks {
                     limit: 2
                 )
             ],
+            transformers: [:],
             engine: .init(
                 id: "mustache",
                 options: [
