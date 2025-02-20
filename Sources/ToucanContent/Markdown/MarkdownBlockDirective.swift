@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 02. 19..
 //
 
-public struct CustomBlockDirective: Codable {
+public struct MarkdownBlockDirective: Codable {
 
     public struct Parameter: Codable {
 

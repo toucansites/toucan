@@ -8,14 +8,14 @@
 import Markdown
 import Logging
 
-public struct MarkdownRenderer {
+public struct MarkdownToHTMLRenderer {
 
-    public let customBlockDirectives: [CustomBlockDirective]
+    public let customBlockDirectives: [MarkdownBlockDirective]
     public let logger: Logger
 
     public init(
-        customBlockDirectives: [CustomBlockDirective] = [],
-        logger: Logger = .init(label: "MarkdownRenderer")
+        customBlockDirectives: [MarkdownBlockDirective] = [],
+        logger: Logger = .init(label: "MarkdownToHTMLRenderer")
     ) {
         self.customBlockDirectives = customBlockDirectives
         self.logger = logger

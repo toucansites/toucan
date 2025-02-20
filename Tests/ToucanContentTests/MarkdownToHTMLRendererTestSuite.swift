@@ -1,5 +1,5 @@
 import Testing
-@testable import ToucanMarkdown
+@testable import ToucanContent
 
 @Suite
 struct MarkdownRendererTestSuite {
@@ -7,7 +7,7 @@ struct MarkdownRendererTestSuite {
     @Test
     func simpleCustomBlockDirective() throws {
 
-        let renderer = MarkdownRenderer(
+        let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 .init(
                     name: "FAQ",
@@ -41,7 +41,7 @@ struct MarkdownRendererTestSuite {
     @Test
     func simpleCustomBlockDirectiveUsingOutput() throws {
 
-        let renderer = MarkdownRenderer(
+        let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 .init(
                     name: "FAQ",
@@ -73,7 +73,7 @@ struct MarkdownRendererTestSuite {
     @Test
     func customBlockDirectiveParameters() throws {
 
-        let renderer = MarkdownRenderer(
+        let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 .init(
                     name: "Grid",
@@ -113,7 +113,7 @@ struct MarkdownRendererTestSuite {
     @Test
     func customBlockDirectiveParametersUsingOutput() throws {
 
-        let renderer = MarkdownRenderer(
+        let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 .init(
                     name: "Grid",

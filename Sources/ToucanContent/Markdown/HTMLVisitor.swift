@@ -30,11 +30,11 @@ struct HTMLVisitor: MarkupVisitor {
 
     typealias Result = String
 
-    var customBlockDirectives: [CustomBlockDirective]
+    var customBlockDirectives: [MarkdownBlockDirective]
     var logger: Logger
 
     init(
-        blockDirectives: [CustomBlockDirective] = [],
+        blockDirectives: [MarkdownBlockDirective] = [],
         logger: Logger = .init(label: "HTMLVisitor")
     ) {
         self.customBlockDirectives = blockDirectives

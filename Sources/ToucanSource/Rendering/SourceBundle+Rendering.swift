@@ -9,8 +9,7 @@ import Foundation
 import FileManagerKit
 import ToucanModels
 import ToucanCodable
-import ToucanMarkdown
-import ToucanToC
+import ToucanContent
 
 public struct Destination {
     public var path: String
@@ -188,9 +187,9 @@ extension SourceBundle {
 
         }
         if context.contains(.contents) {
-            let renderer = MarkdownRenderer(
+            let renderer = MarkdownToHTMLRenderer(
                 customBlockDirectives: [],
-                logger: .init(label: "MarkdownRenderer")
+                logger: .init(label: "MarkdownToHTMLRenderer")
             )
             let html = renderer.renderHTML(
                 markdown: content.rawValue.markdown
@@ -201,10 +200,12 @@ extension SourceBundle {
             )
             let outline = outlineParser.parseHTML(html)
 
+            let readingTime = ReadingTime()
+
             result["contents"] = [
                 "html": html,
                 "outline": outline,
-                "readingTime": html.readingTime(),
+                "readingTime": readingTime.calculate(for: html),
             ]
         }
         if allowSubQueries, context.contains(.queries) {

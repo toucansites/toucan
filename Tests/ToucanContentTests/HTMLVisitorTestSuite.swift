@@ -1,13 +1,13 @@
 import Testing
 import Markdown
-@testable import ToucanMarkdown
+@testable import ToucanContent
 
 @Suite
 struct HTMLVisitorTestSuite {
 
     func renderHTML(
         markdown: String,
-        customBlockDirectives: [CustomBlockDirective] = []
+        customBlockDirectives: [MarkdownBlockDirective] = []
     ) -> String {
         let document = Document(
             parsing: markdown,

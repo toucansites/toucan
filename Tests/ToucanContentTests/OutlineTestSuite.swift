@@ -1,5 +1,5 @@
 import Testing
-@testable import ToucanToC
+@testable import ToucanContent
 
 @Suite
 struct ToucanToCTestSuite {

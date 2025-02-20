@@ -28,7 +28,7 @@ public struct OutlineParser {
 
     public func parseHTML(
         _ html: String
-    ) -> [ToC] {
+    ) -> [Outline] {
         do {
             let document = try SwiftSoup.parse(html)
 
@@ -49,7 +49,7 @@ public struct OutlineParser {
 
     func createToC(
         from element: SwiftSoup.Element
-    ) throws -> ToC? {
+    ) throws -> Outline? {
         let text = try element.text()
 
         let nodeName = element.nodeName()
@@ -75,12 +75,12 @@ public struct OutlineParser {
         )
     }
 
-    func buildTree(_ elements: [ToC]) -> [ToC] {
-        var result: [ToC] = []
-        var stack: [ToC] = []
+    func buildTree(_ elements: [Outline]) -> [Outline] {
+        var result: [Outline] = []
+        var stack: [Outline] = []
 
         for element in elements {
-            let newNode = ToC(
+            let newNode = Outline(
                 level: element.level,
                 text: element.text,
                 fragment: element.fragment
