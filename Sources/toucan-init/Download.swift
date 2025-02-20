@@ -1,6 +1,6 @@
 import Foundation
 import FileManagerKit
-import ShellKit
+//import ShellKit
 
 struct Download {
 
@@ -18,15 +18,15 @@ struct Download {
     }
 
     func resolve() async throws {
-        let shell = Shell()
+//        let shell = Shell()
 
         /// Downloading the ZIP file into a temporary directory.
-        try shell.run(
-            #"curl -L -o \#(zipUrl.path) \#(sourceUrl.absoluteString)"#
-        )
+//        try shell.run(
+//            #"curl -L -o \#(zipUrl.path) \#(sourceUrl.absoluteString)"#
+//        )
 
         /// Unzipping the file to a temporary directory.
-        try shell.run(#"unzip \#(zipUrl.path) -d \#(url.path)"#)
+//        try shell.run(#"unzip \#(zipUrl.path) -d \#(url.path)"#)
 
         /// Emptying the target directory. Git submodules can cause issues.
         try? fileManager.removeItem(at: targetDirUrl)
