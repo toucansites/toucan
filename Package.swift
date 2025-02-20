@@ -173,8 +173,12 @@ let package = Package(
             name: "ToucanContent",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
+                // for outline
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
+                // for markdown to html
                 .product(name: "Markdown", package: "swift-markdown"),
+                // for transformers
+                .product(name: "SwiftCommand", package: "SwiftCommand"),
             ],
             swiftSettings: swiftSettings
         ),

@@ -187,25 +187,25 @@ extension SourceBundle {
 
         }
         if context.contains(.contents) {
-            let renderer = MarkdownToHTMLRenderer(
-                customBlockDirectives: [],
-                logger: .init(label: "MarkdownToHTMLRenderer")
+            let renderer = ContentRenderer(
+                configuration: .init(
+                    markdown: .init(
+                        customBlockDirectives: []
+                    ),
+                    outline: .init(levels: [2, 3]),
+                    readingTime: .init(
+                        wordsPerMinute: 238
+                    )
+                ),
+                logger: .init(label: "ContentRenderer")
             )
-            let html = renderer.renderHTML(
-                markdown: content.rawValue.markdown
-            )
-            let outlineParser = OutlineParser(
-                levels: [2, 3],
-                logger: .init(label: "OutlineParser")
-            )
-            let outline = outlineParser.parseHTML(html)
 
-            let readingTime = ReadingTime()
+            let contents = renderer.render(content.rawValue.markdown)
 
             result["contents"] = [
-                "html": html,
-                "outline": outline,
-                "readingTime": readingTime.calculate(for: html),
+                "html": contents.html,
+                "readingTime": contents.readingTime,
+                "outline": contents.outline,
             ]
         }
         if allowSubQueries, context.contains(.queries) {
