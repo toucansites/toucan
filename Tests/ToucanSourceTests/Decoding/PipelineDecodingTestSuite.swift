@@ -4,7 +4,7 @@ import ToucanModels
 @testable import ToucanSource
 
 @Suite
-struct RenderPipelineDecodingTestSuite {
+struct PipelineDecodingTestSuite {
 
     // MARK: - order
 
@@ -41,7 +41,7 @@ struct RenderPipelineDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.self,
+            Pipeline.self,
             from: data
         )
 
@@ -78,7 +78,7 @@ struct RenderPipelineDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.self,
+            Pipeline.self,
             from: data
         )
 

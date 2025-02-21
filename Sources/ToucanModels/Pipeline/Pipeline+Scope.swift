@@ -5,16 +5,20 @@
 //  Created by Tibor Bodecs on 2025. 02. 03..
 //
 
-import ToucanModels
+extension Pipeline {
 
-extension RenderPipeline {
+    public struct Scope: Decodable {
 
-    public struct Scope {
+        enum CodingKeys: CodingKey {
+            case id
+            case context
+            case fields
+        }
 
-        // load these contexts
-        public let context: Context
-        // filter down context fields, empty means no filter
-        public let fields: [String]
+        public var context: Context
+        public var fields: [String]
+
+        // MARK: - init
 
         public init(
             context: Context = .all,
@@ -22,6 +26,30 @@ extension RenderPipeline {
         ) {
             self.context = context
             self.fields = fields
+        }
+
+        // MARK: - decoder
+
+        public init(
+            from decoder: any Decoder
+        ) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            let context =
+                try container.decodeIfPresent(
+                    Context.self,
+                    forKey: .context
+                ) ?? .all
+            let fields =
+                try container.decodeIfPresent(
+                    [String].self,
+                    forKey: .fields
+                ) ?? []
+
+            self.init(
+                context: context,
+                fields: fields
+            )
         }
 
         // MARK: - built-in scopes

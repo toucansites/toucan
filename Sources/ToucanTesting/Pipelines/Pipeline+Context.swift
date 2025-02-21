@@ -1,10 +1,9 @@
 import ToucanModels
 import ToucanSource
 
+public extension Pipeline.Mocks {
 
-public extension RenderPipeline.Mocks {
-
-    static func context() -> RenderPipeline {
+    static func context() -> Pipeline {
         .init(
             scopes: [
                 "*": [

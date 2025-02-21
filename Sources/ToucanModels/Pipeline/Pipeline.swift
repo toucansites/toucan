@@ -1,14 +1,18 @@
 //
-//  File.swift
-//  toucan
+//  rendererconfig.swift
+//  TestApp
 //
-//  Created by Tibor Bodecs on 2025. 01. 31..
+//  Created by Tibor Bodecs on 2025. 01. 16..
 //
 
-import Foundation
-import ToucanModels
+//transformers:
+//    pipelines:
+//        post:
+//          run:
+//            - name: swiftinit
+//          isMarkdownResult: false
 
-extension RenderPipeline: Decodable {
+public struct Pipeline: Decodable {
 
     enum CodingKeys: CodingKey {
         case scopes
@@ -21,7 +25,43 @@ extension RenderPipeline: Decodable {
         case output
     }
 
-    public init(from decoder: any Decoder) throws {
+    // content type -> scope key -> scope
+    public var scopes: [String: [String: Scope]]
+    public var queries: [String: Query]
+    public var dataTypes: DataTypes
+    public var contentTypes: ContentTypes
+    public var iterators: [String: Query]
+    public var transformers: [String: TransformerPipeline]
+    public var engine: Engine
+    public var output: Output
+
+    // MARK: - init
+
+    public init(
+        scopes: [String: [String: Scope]],
+        queries: [String: Query],
+        dataTypes: DataTypes,
+        contentTypes: ContentTypes,
+        iterators: [String: Query],
+        transformers: [String: TransformerPipeline],
+        engine: Pipeline.Engine,
+        output: Output
+    ) {
+        self.scopes = scopes
+        self.queries = queries
+        self.dataTypes = dataTypes
+        self.contentTypes = contentTypes
+        self.iterators = iterators
+        self.transformers = transformers
+        self.engine = engine
+        self.output = output
+    }
+
+    // MARK: - decoder
+
+    public init(
+        from decoder: any Decoder
+    ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let defaultScopes = Scope.default
@@ -90,5 +130,25 @@ extension RenderPipeline: Decodable {
             engine: engine,
             output: output
         )
+    }
+
+    // MARK: -
+
+    public func getScopes(
+        for contentType: String
+    ) -> [String: Scope] {
+        if let scopes = scopes[contentType] {
+            return scopes
+        }
+        return scopes["*"] ?? [:]
+    }
+
+    public func getScope(
+        keyedBy key: String,
+        for contentType: String
+    ) -> Scope {
+        let scopes = getScopes(for: contentType)
+        // TODO: what should we return if there's no scope definition?
+        return scopes[key] ?? .detail
     }
 }

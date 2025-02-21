@@ -8,7 +8,7 @@ struct ContextDecodingTestSuite {
 
     @Test
     func initialization() throws {
-        let result = RenderPipeline.Scope.Context(stringValue: "foo")
+        let result = Pipeline.Scope.Context(stringValue: "foo")
 
         #expect(!result.contains(.properties))
         #expect(!result.contains(.contents))
@@ -22,7 +22,7 @@ struct ContextDecodingTestSuite {
         let json = #"["contents", "queries"]"#
         let data = json.data(using: .utf8)!
         let result = try ToucanJSONDecoder()
-            .decode(RenderPipeline.Scope.Context.self, from: data)
+            .decode(Pipeline.Scope.Context.self, from: data)
 
         #expect(!result.contains(.properties))
         #expect(result.contains(.contents))
@@ -36,7 +36,7 @@ struct ContextDecodingTestSuite {
         let json = #""properties""#
         let data = json.data(using: .utf8)!
         let result = try ToucanJSONDecoder()
-            .decode(RenderPipeline.Scope.Context.self, from: data)
+            .decode(Pipeline.Scope.Context.self, from: data)
 
         #expect(result.contains(.properties))
         #expect(!result.contains(.contents))
@@ -50,7 +50,7 @@ struct ContextDecodingTestSuite {
         let json = #""all""#
         let data = json.data(using: .utf8)!
         let result = try ToucanJSONDecoder()
-            .decode(RenderPipeline.Scope.Context.self, from: data)
+            .decode(Pipeline.Scope.Context.self, from: data)
 
         #expect(result.contains(.properties))
         #expect(result.contains(.contents))

@@ -8,7 +8,6 @@
 import Foundation
 import ToucanModels
 
-
 public func prettyPrint(_ object: [String: AnyCodable]) {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [

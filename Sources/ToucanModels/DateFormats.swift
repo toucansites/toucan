@@ -5,10 +5,9 @@
 //  Created by Tibor Bodecs on 2025. 02. 12..
 //
 
-// TODO: move out codable?
-public struct DateFormats: Codable {
+public struct DateFormats: Encodable {
 
-    public struct Standard: Codable {
+    public struct Standard: Encodable {
 
         public init(
             full: String,

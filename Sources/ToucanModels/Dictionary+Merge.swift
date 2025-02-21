@@ -6,7 +6,7 @@
 //
 
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
-extension Dictionary where Key == String {
+public extension Dictionary where Key == String {
 
     /// Recursively merges another `[String: Value]` dictionary into the current dictionary and returns a new dictionary.
     ///

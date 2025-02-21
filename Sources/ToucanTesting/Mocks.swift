@@ -28,7 +28,7 @@ public extension SourceBundle {
     enum Mocks {}
 }
 
-public extension RenderPipeline {
+public extension Pipeline {
     enum Mocks {}
 }
 

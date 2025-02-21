@@ -14,7 +14,7 @@ public struct ContentDefinition: Decodable {
         case relations
         case queries
     }
-    
+
     /// content type identifier
     public var type: String
     /// paths to lookup for contents
@@ -25,7 +25,7 @@ public struct ContentDefinition: Decodable {
     public var queries: [String: Query]
 
     // MARK: - init
-    
+
     public init(
         type: String,
         paths: [String],
@@ -39,9 +39,9 @@ public struct ContentDefinition: Decodable {
         self.relations = relations
         self.queries = queries
     }
-    
+
     // MARK: - decoder
-    
+
     public init(
         from decoder: any Decoder
     ) throws {

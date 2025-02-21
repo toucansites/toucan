@@ -8,7 +8,6 @@
 import Foundation
 import ToucanModels
 
-
 extension Property {
 
     func convert(

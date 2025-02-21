@@ -125,7 +125,7 @@ extension SourceBundle {
     func getContextObject(
         slug: String?,
         for content: Content,
-        context: RenderPipeline.Scope.Context,
+        context: Pipeline.Scope.Context,
         using source: SourceBundle,
         allowSubQueries: Bool = true  // allow top level queries only
     ) -> [String: AnyCodable] {
@@ -252,7 +252,7 @@ extension SourceBundle {
 
     func getContextBundle(
         content: Content,
-        using pipeline: RenderPipeline,
+        using pipeline: Pipeline,
         extraContext: [String: AnyCodable]
     ) -> ContextBundle {
 
@@ -293,7 +293,7 @@ extension SourceBundle {
     // TODO: return full context instead of complete render?
     func getContextBundles(
         siteContext: [String: AnyCodable],
-        pipeline: RenderPipeline
+        pipeline: Pipeline
     ) throws -> [ContextBundle] {
 
         var bundles: [ContextBundle] = []
@@ -415,7 +415,7 @@ extension SourceBundle {
     }
 
     func getPipelineContext(
-        for pipeline: RenderPipeline,
+        for pipeline: Pipeline,
         slug: String
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
@@ -457,7 +457,7 @@ extension SourceBundle {
         ]
         .recursivelyMerged(with: settings.userDefined)
 
-        for pipeline in renderPipelines {
+        for pipeline in pipelines {
 
             var updateTypes = contentBundles.map(\.definition.type)
             if !pipeline.contentTypes.lastUpdate.isEmpty {

@@ -8,7 +8,6 @@
 import Foundation
 import ToucanModels
 
-
 extension Content {
 
     // relations can be queried too

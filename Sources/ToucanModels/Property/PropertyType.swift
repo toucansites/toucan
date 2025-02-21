@@ -11,22 +11,22 @@ public enum PropertyType: Decodable {
     case double
     case string
     case date(format: String?)  // => fallback to global date format config
-    
+
     private enum CodingKeys: String, CodingKey {
         case type
         case format
     }
 
-    private enum TypeKey: String, Codable {
+    private enum TypeKey: String, Decodable {
         case bool
         case int
         case double
         case string
         case date
     }
-    
+
     // MARK: - decoder
-    
+
     public init(
         from decoder: Decoder
     ) throws {

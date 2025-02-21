@@ -18,14 +18,14 @@ extension Config {
         public var output: [String: String]
 
         // MARK: - defaults
-        
+
         public static var defaults: Self {
             .init(
                 input: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                 output: [:]
             )
         }
-        
+
         // MARK: - init
 
         public init(
@@ -35,7 +35,7 @@ extension Config {
             self.input = input
             self.output = output
         }
-        
+
         // MARK: - decoder
 
         public init(

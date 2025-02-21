@@ -8,7 +8,7 @@
 public enum Direction: String, Decodable {
     case asc
     case desc
-    
+
     public static var defaults: Direction {
         .asc
     }

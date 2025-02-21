@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 29..
 //
 
-
 public struct Config: Decodable {
 
     enum CodingKeys: CodingKey {
@@ -29,7 +28,7 @@ public struct Config: Decodable {
     }
 
     // MARK: - init
-    
+
     public init(
         pipelines: Pipelines,
         contents: Contents,
@@ -39,7 +38,7 @@ public struct Config: Decodable {
         self.contents = contents
         self.dateFormats = dateFormats
     }
-    
+
     // MARK: - decoder
 
     public init(

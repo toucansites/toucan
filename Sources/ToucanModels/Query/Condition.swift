@@ -9,7 +9,7 @@ public enum Condition: Decodable {
     case field(key: String, operator: Operator, value: AnyCodable)
     case and([Condition])
     case or([Condition])
-    
+
     private enum CodingKeys: CodingKey {
         case key
         case `operator`
@@ -17,9 +17,9 @@ public enum Condition: Decodable {
         case and
         case or
     }
-    
+
     // MARK: - decoder
-    
+
     public init(
         from decoder: any Decoder
     ) throws {

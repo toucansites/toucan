@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 02. 11..
 //
 
-
-
 public struct Settings: Decodable {
 
     enum CodingKeys: CodingKey, CaseIterable {
@@ -33,9 +31,9 @@ public struct Settings: Decodable {
             userDefined: [:]
         )
     }
-    
+
     // MARK: - init
-    
+
     public init(
         baseUrl: String,
         name: String,
@@ -49,7 +47,7 @@ public struct Settings: Decodable {
         self.timeZone = timeZone
         self.userDefined = userDefined
     }
-    
+
     // MARK: - decoding
 
     public init(from decoder: any Decoder) throws {

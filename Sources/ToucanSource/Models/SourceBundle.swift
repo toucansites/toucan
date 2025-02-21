@@ -13,7 +13,7 @@ public struct SourceBundle {
     public var location: URL
     public var config: Config
     public var settings: Settings
-    public var renderPipelines: [RenderPipeline]
+    public var pipelines: [Pipeline]
     public var contentBundles: [ContentBundle]
 
     var dateFormatter: DateFormatter
@@ -22,13 +22,13 @@ public struct SourceBundle {
         location: URL,
         config: Config,
         settings: Settings,
-        renderPipelines: [RenderPipeline],
+        pipelines: [Pipeline],
         contentBundles: [ContentBundle]
     ) {
         self.location = location
         self.config = config
         self.settings = settings
-        self.renderPipelines = renderPipelines
+        self.pipelines = pipelines
         self.contentBundles = contentBundles
 
         /// setup date formatter

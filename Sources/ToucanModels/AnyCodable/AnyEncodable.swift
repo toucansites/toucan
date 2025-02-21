@@ -1,5 +1,6 @@
 public struct AnyEncodable: Encodable {
-    public let value: Any?
+
+    public var value: Any?
 
     public init<T>(_ value: T?) {
         self.value = value

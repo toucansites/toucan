@@ -11,25 +11,25 @@ public struct Property: Decodable {
         case `required`
         case `default`
     }
-    
-    public let type: PropertyType
-    public let required: Bool
-    public let `default`: AnyCodable?
+
+    public var `type`: PropertyType
+    public var `required`: Bool
+    public var `default`: AnyCodable?
 
     // MARK: - init
-    
+
     public init(
-        type: PropertyType,
-        required: Bool,
+        `type`: PropertyType,
+        `required`: Bool,
         `default`: AnyCodable? = nil
     ) {
-        self.type = type
-        self.required = required
+        self.`type` = `type`
+        self.`required` = `required`
         self.`default` = `default`
     }
-    
+
     // MARK: - decoder
-    
+
     public init(
         from decoder: any Decoder
     ) throws {

@@ -21,7 +21,7 @@ struct SourceBundleTestSuite {
         let nowString = formatter.string(from: now)
 
         let pipelines = [
-            RenderPipeline.Mocks.rss()
+            Pipeline.Mocks.rss()
         ]
 
         let postDefinition = ContentDefinition.Mocks.post()
@@ -58,7 +58,7 @@ struct SourceBundleTestSuite {
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
-            renderPipelines: pipelines,
+            pipelines: pipelines,
             contentBundles: contentBundles
         )
 

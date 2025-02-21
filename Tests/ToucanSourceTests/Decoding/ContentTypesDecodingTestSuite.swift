@@ -16,7 +16,7 @@ struct ContentTypesDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.ContentTypes.self,
+            Pipeline.ContentTypes.self,
             from: data
         )
 
@@ -39,7 +39,7 @@ struct ContentTypesDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.ContentTypes.self,
+            Pipeline.ContentTypes.self,
             from: data
         )
 

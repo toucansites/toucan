@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-
-
 public struct Content {
 
     public var rawValue: RawContent

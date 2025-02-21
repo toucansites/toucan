@@ -12,25 +12,25 @@ public struct Relation: Decodable {
         case `type`
         case order
     }
-    
-    public let references: String
-    public let type: RelationType
-    public let order: Order?
+
+    public var references: String
+    public var `type`: RelationType
+    public var order: Order?
 
     // MARK: - init
-    
+
     public init(
         references: String,
-        type: RelationType,
+        `type`: RelationType,
         order: Order? = nil
     ) {
         self.references = references
-        self.type = type
+        self.`type` = `type`
         self.order = order
     }
-    
+
     // MARK: - decoder
-    
+
     public init(
         from decoder: any Decoder
     ) throws {

@@ -8,7 +8,6 @@
 import Foundation
 import ToucanModels
 
-
 extension SourceBundle {
 
     public func run(query: Query) -> [Content] {

@@ -11,12 +11,12 @@ public struct Order: Decodable {
         case key
         case direction
     }
-    
+
     public var key: String
     public var direction: Direction
 
     // MARK: - init
-    
+
     public init(
         key: String,
         direction: Direction = .asc
@@ -24,7 +24,7 @@ public struct Order: Decodable {
         self.key = key
         self.direction = direction
     }
-    
+
     // MARK: - decoder
 
     public init(

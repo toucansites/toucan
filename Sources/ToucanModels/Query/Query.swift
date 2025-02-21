@@ -15,7 +15,7 @@ public struct Query: Decodable {
         case filter
         case orderBy
     }
-    
+
     public var contentType: String
     public var scope: String?
     public var limit: Int?
@@ -40,9 +40,9 @@ public struct Query: Decodable {
         self.filter = filter
         self.orderBy = orderBy
     }
-    
+
     // MARK: - decoder
-    
+
     public init(
         from decoder: any Decoder
     ) throws {

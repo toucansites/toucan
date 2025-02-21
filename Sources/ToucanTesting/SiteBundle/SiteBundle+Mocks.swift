@@ -5,10 +5,10 @@ import ToucanSource
 public extension SourceBundle.Mocks {
 
     static func complete(
-        pipelines: [RenderPipeline] = [
-            RenderPipeline.Mocks.context(),
-            RenderPipeline.Mocks.html(),
-            RenderPipeline.Mocks.rss(),
+        pipelines: [Pipeline] = [
+            Pipeline.Mocks.context(),
+            Pipeline.Mocks.html(),
+            Pipeline.Mocks.rss(),
         ]
     ) -> SourceBundle {
 
@@ -106,7 +106,7 @@ public extension SourceBundle.Mocks {
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
-            renderPipelines: pipelines,
+            pipelines: pipelines,
             contentBundles: contentBundles
         )
     }

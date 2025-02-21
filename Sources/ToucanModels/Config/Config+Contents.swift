@@ -29,7 +29,7 @@ extension Config {
         }
 
         // MARK: - init
-        
+
         public init(
             path: String,
             assets: Location
@@ -37,7 +37,7 @@ extension Config {
             self.path = path
             self.assets = assets
         }
-        
+
         // MARK: - decoder
 
         public init(

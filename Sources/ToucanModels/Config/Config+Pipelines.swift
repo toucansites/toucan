@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct Pipelines: Codable {
+    public struct Pipelines: Decodable {
 
         enum CodingKeys: CodingKey {
             case path
@@ -24,13 +24,13 @@ extension Config {
         }
 
         // MARK: - init
-        
+
         public init(
             path: String
         ) {
             self.path = path
         }
-        
+
         // MARK: - decoder
 
         public init(

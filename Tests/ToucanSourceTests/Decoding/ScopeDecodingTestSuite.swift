@@ -18,7 +18,7 @@ struct ScopeDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.Scope.self,
+            Pipeline.Scope.self,
             from: data
         )
 
@@ -40,7 +40,7 @@ struct ScopeDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.Scope.self,
+            Pipeline.Scope.self,
             from: data
         )
 
@@ -63,7 +63,7 @@ struct ScopeDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            RenderPipeline.Scope.self,
+            Pipeline.Scope.self,
             from: data
         )
 
