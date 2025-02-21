@@ -14,7 +14,7 @@ struct ContextDecodingTestSuite {
         #expect(!result.contains(.contents))
         #expect(!result.contains(.relations))
         #expect(!result.contains(.queries))
-        #expect(!result.contains(.all))
+        #expect(!result.contains(.detail))
     }
 
     @Test
@@ -28,7 +28,7 @@ struct ContextDecodingTestSuite {
         #expect(result.contains(.contents))
         #expect(!result.contains(.relations))
         #expect(result.contains(.queries))
-        #expect(!result.contains(.all))
+        #expect(!result.contains(.detail))
     }
 
     @Test
@@ -42,12 +42,12 @@ struct ContextDecodingTestSuite {
         #expect(!result.contains(.contents))
         #expect(!result.contains(.relations))
         #expect(!result.contains(.queries))
-        #expect(!result.contains(.all))
+        #expect(!result.contains(.detail))
     }
 
     @Test
     func decodingSingleAllValue() throws {
-        let json = #""all""#
+        let json = #""detail""#
         let data = json.data(using: .utf8)!
         let result = try ToucanJSONDecoder()
             .decode(Pipeline.Scope.Context.self, from: data)
@@ -56,6 +56,6 @@ struct ContextDecodingTestSuite {
         #expect(result.contains(.contents))
         #expect(result.contains(.relations))
         #expect(result.contains(.queries))
-        #expect(result.contains(.all))
+        #expect(result.contains(.detail))
     }
 }

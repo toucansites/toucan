@@ -137,12 +137,14 @@ public struct Pipeline: Decodable {
         return scopes["*"] ?? [:]
     }
 
+    // TODO: rework this
+    // - proper scope keys for reference, list, detail
+    // - what should we return if there's no scope definition?
     public func getScope(
         keyedBy key: String,
         for contentType: String
     ) -> Scope {
         let scopes = getScopes(for: contentType)
-        // TODO: what should we return if there's no scope definition?
         return scopes[key] ?? .detail
     }
 }

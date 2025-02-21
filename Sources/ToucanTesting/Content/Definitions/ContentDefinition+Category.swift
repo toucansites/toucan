@@ -24,7 +24,7 @@ public extension ContentDefinition.Mocks {
             queries: [
                 "guides": .init(
                     contentType: "guide",
-                    scope: "???",
+                    scope: "list",
                     limit: 100,
                     offset: 0,
                     filter: .field(

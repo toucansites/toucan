@@ -60,7 +60,7 @@ struct PipelineDecodingTestSuite {
                 post:
                     list:
                         context: 
-                            - all
+                            - detail
                         fields:
             dataTypes:
                 date:
@@ -99,6 +99,6 @@ struct PipelineDecodingTestSuite {
 
         let postScope = try #require(result.scopes["post"])
         let postListScope = try #require(postScope["list"])
-        #expect(postListScope.context == .all)
+        #expect(postListScope.context == .detail)
     }
 }

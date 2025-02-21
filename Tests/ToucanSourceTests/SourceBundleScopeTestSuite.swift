@@ -5,13 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 02. 21..
 //
 
-//
-//  File.swift
-//  toucan
-//
-//  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
-//
-
 import Foundation
 import Testing
 import ToucanModels
@@ -40,8 +33,25 @@ struct SourceBundleScopeTestSuite {
                             fields: [
                                 "slug"
                             ]
+                        ),
+                        "detail": .init(
+                            context: .detail,
+                            fields: [
+                                "title",
+                                "slug",
+                            ]
+                        ),
+                    ],
+                    "page": [
+                        "detail": .init(
+                            context: .detail,
+                            fields: [
+                                "title",
+                                "description",
+                                "slug",
+                            ]
                         )
-                    ]
+                    ],
                 ],
                 queries: [
                     "featured": .init(
@@ -132,17 +142,16 @@ struct SourceBundleScopeTestSuite {
 
         #expect(results.count == 2)
 
-        print(results[0].contents)
-        print(results[1].contents)
-
         let decoder = JSONDecoder()
 
         struct Exp0: Decodable {
             struct Item: Decodable {
-                let isCurrentURL: Bool
+                let slug: String
+                let isCurrentURL: Bool?
             }
             struct Post: Decodable {
-                let isCurrentURL: Bool
+                let slug: String
+                let isCurrentURL: Bool?
             }
             let post: Post
             let featured: [Item]
@@ -151,12 +160,18 @@ struct SourceBundleScopeTestSuite {
         let data0 = try #require(results[0].contents.data(using: .utf8))
         let exp0 = try decoder.decode(Exp0.self, from: data0)
 
+        #expect(exp0.featured.allSatisfy { $0.isCurrentURL == nil })
+
         struct Exp1: Decodable {
             struct Item: Decodable {
-                let isCurrentURL: Bool
+                let slug: String
+                let isCurrentURL: Bool?
             }
             struct Page: Decodable {
-                let isCurrentURL: Bool
+                let slug: String
+                let title: String
+                let description: String
+                let isCurrentURL: Bool?
             }
             let page: Page
             let featured: [Item]
@@ -164,6 +179,8 @@ struct SourceBundleScopeTestSuite {
 
         let data1 = try #require(results[1].contents.data(using: .utf8))
         let exp1 = try decoder.decode(Exp1.self, from: data1)
+
+        #expect(exp1.featured.allSatisfy { $0.isCurrentURL == nil })
 
     }
 

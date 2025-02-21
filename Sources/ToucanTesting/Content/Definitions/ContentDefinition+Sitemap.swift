@@ -12,7 +12,7 @@ public extension ContentDefinition.Mocks {
                 // for testing purpopses, we use authors, posts and tags
                 "posts": .init(
                     contentType: "post",
-                    scope: "all",
+                    scope: "list",
                     limit: 2,
                     orderBy: [
                         .init(key: "lastUpdate", direction: .desc)
@@ -20,7 +20,7 @@ public extension ContentDefinition.Mocks {
                 ),
                 "authors": .init(
                     contentType: "author",
-                    scope: "all",
+                    scope: "list",
                     limit: 2,
                     orderBy: [
                         .init(key: "lastUpdate", direction: .desc)
@@ -28,7 +28,7 @@ public extension ContentDefinition.Mocks {
                 ),
                 "tags": .init(
                     contentType: "tag",
-                    scope: "all",
+                    scope: "list",
                     limit: 2,
                     orderBy: [
                         .init(key: "lastUpdate", direction: .desc)

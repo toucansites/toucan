@@ -84,11 +84,15 @@ extension SourceBundle {
 
     func getContextObject(
         for content: Content,
-        scope: Pipeline.Scope, // = .init(context: .all),
+        scope: Pipeline.Scope,
         currentSlug: String?,
-        allowSubQueries: Bool = true // allow top level queries only
+        allowSubQueries: Bool = true  // allow top level queries only
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
+
+        if scope.context.contains(.userDefined) {
+            result = result.recursivelyMerged(with: content.userDefined)
+        }
 
         if scope.context.contains(.properties) {
             for (k, v) in content.properties {
@@ -138,7 +142,7 @@ extension SourceBundle {
                 "outline": contents.outline,
             ]
         }
-        
+
         if allowSubQueries, scope.context.contains(.relations) {
             for (key, relation) in content.definition.relations {
                 var orderBy: [Order] = []
@@ -148,7 +152,6 @@ extension SourceBundle {
                 let relationContents = run(
                     query: .init(
                         contentType: relation.references,
-                        scope: "properties",
                         filter: .field(
                             key: "id",
                             operator: .in,
@@ -163,7 +166,7 @@ extension SourceBundle {
                     relationContents.map {
                         getContextObject(
                             for: $0,
-                            scope: .init(context: .properties),
+                            scope: .reference,
                             currentSlug: content.slug,
                             allowSubQueries: false
                         )
@@ -172,7 +175,7 @@ extension SourceBundle {
             }
 
         }
-        
+
         if allowSubQueries, scope.context.contains(.queries) {
             for (key, query) in content.definition.queries {
                 let queryContents = run(
@@ -185,7 +188,7 @@ extension SourceBundle {
                     queryContents.map {
                         getContextObject(
                             for: $0,
-                            scope: .init(context: .all),
+                            scope: .detail,  // TODO: double check
                             currentSlug: content.slug,
                             allowSubQueries: false
                         )
@@ -193,7 +196,11 @@ extension SourceBundle {
                 )
             }
         }
-        return result
+
+        guard !scope.fields.isEmpty else {
+            return result
+        }
+        return result.filter { scope.fields.contains($0.key) }
     }
 
     func extractIteratorId(
@@ -219,11 +226,16 @@ extension SourceBundle {
         extraContext: [String: AnyCodable]
     ) -> ContextBundle {
 
+        let scope = pipeline.getScope(
+            keyedBy: "detail",
+            for: content.definition.type
+        )
+
         let context: [String: AnyCodable] = [
             content.definition.type: .init(
                 getContextObject(
                     for: content,
-                    scope: .init(context: .all),
+                    scope: scope,
                     currentSlug: content.slug
                 )
             )
@@ -321,7 +333,7 @@ extension SourceBundle {
                         for pageItem in pageItems {
                             let pageItemCtx = getContextObject(
                                 for: pageItem,
-                                scope: .init(context: .all),
+                                scope: .list,  // TODO: double check!!!
                                 currentSlug: slug
                             )
                             itemCtx.append(pageItemCtx)

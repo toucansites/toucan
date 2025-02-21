@@ -19,7 +19,7 @@ public extension ContentDefinition.Mocks {
             queries: [
                 "posts": .init(
                     contentType: "post",
-                    scope: "???",
+                    scope: "list",
                     limit: 100,
                     offset: 0,
                     filter: .field(

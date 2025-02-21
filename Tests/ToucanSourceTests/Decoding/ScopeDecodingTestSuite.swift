@@ -11,7 +11,7 @@ struct ScopeDecodingTestSuite {
     @Test
     func minimal() throws {
         let data = """
-            context: all
+            context: detail
             """
             .data(using: .utf8)!
 
@@ -22,7 +22,7 @@ struct ScopeDecodingTestSuite {
             from: data
         )
 
-        #expect(result.context == .all)
+        #expect(result.context == .detail)
         try #require(result.fields.count == 0)
         #expect(result.fields == [])
     }

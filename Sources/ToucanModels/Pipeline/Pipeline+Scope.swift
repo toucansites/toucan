@@ -21,7 +21,7 @@ extension Pipeline {
         // MARK: - init
 
         public init(
-            context: Context = .all,
+            context: Context = .detail,
             fields: [String] = []
         ) {
             self.context = context
@@ -39,7 +39,7 @@ extension Pipeline {
                 try container.decodeIfPresent(
                     Context.self,
                     forKey: .context
-                ) ?? .all
+                ) ?? .detail
             let fields =
                 try container.decodeIfPresent(
                     [String].self,
@@ -52,7 +52,7 @@ extension Pipeline {
             )
         }
 
-        // MARK: - built-in scopes
+        // MARK: - scope helpers for compund contexts
 
         public static var reference: Scope {
             .init(
@@ -74,6 +74,8 @@ extension Pipeline {
                 fields: []
             )
         }
+
+        // MARK: - defaults
 
         public static var standard: [String: Scope] {
             [

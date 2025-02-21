@@ -8,15 +8,18 @@
 extension Pipeline.Scope {
 
     public struct Context: OptionSet, Decodable {
-
-        public static var properties: Self { .init(rawValue: 1 << 0) }
-        public static var contents: Self { .init(rawValue: 1 << 1) }
-        public static var relations: Self { .init(rawValue: 1 << 2) }
-        public static var queries: Self { .init(rawValue: 1 << 3) }
+        // simple contexts
+        public static var userDefined: Self { .init(rawValue: 1 << 0) }
+        public static var properties: Self { .init(rawValue: 1 << 1) }
+        public static var contents: Self { .init(rawValue: 1 << 2) }
+        public static var relations: Self { .init(rawValue: 1 << 3) }
+        public static var queries: Self { .init(rawValue: 1 << 4) }
 
         // MARK: - decoder
 
-        public init(from decoder: any Decoder) throws {
+        public init(
+            from decoder: any Decoder
+        ) throws {
             let container = try decoder.singleValueContainer()
             if let stringValue = try? container.decode(String.self) {
                 self.init(stringValue: stringValue)
@@ -29,23 +32,23 @@ extension Pipeline.Scope {
             else {
                 throw DecodingError.dataCorruptedError(
                     in: container,
-                    debugDescription: "Invalid Context format."
+                    debugDescription: "Invalid context format."
                 )
             }
         }
 
-        // MARK: -
-
-        // TODO: separate userDefined?
+        // MARK: - compound contexts
 
         public static var reference: Self {
             [
-                .properties
+                .userDefined,
+                .properties,
             ]
         }
 
         public static var list: Self {
             [
+                .userDefined,
                 .properties,
                 .relations,
             ]
@@ -53,23 +56,15 @@ extension Pipeline.Scope {
 
         public static var detail: Self {
             [
-                properties,
-                contents,
-                relations,
-                queries,
+                .userDefined,
+                .properties,
+                .relations,
+                .contents,
+                .queries,
             ]
         }
 
-        public static var all: Self {
-            [
-                properties,
-                contents,
-                relations,
-                queries,
-            ]
-        }
-
-        // MARK: -
+        // MARK: - raw value
 
         public let rawValue: UInt
 
@@ -77,8 +72,13 @@ extension Pipeline.Scope {
             self.rawValue = rawValue
         }
 
+        // MARK: - string value
+
         public init(stringValue: String) {
             switch stringValue.lowercased() {
+            // simple contexts
+            case "userDefined":
+                self = .userDefined
             case "properties":
                 self = .properties
             case "contents":
@@ -87,8 +87,14 @@ extension Pipeline.Scope {
                 self = .relations
             case "queries":
                 self = .queries
-            case "all":
-                self = .all
+            // compund contexts
+            case "reference":
+                self = .reference
+            case "list":
+                self = .list
+            case "detail":
+                self = .detail
+            // default to empty
             default:
                 self = []
             }
