@@ -9,6 +9,7 @@ public extension SourceBundle.Mocks {
             Pipeline.Mocks.context(),
             Pipeline.Mocks.html(),
             Pipeline.Mocks.rss(),
+            Pipeline.Mocks.sitemap(),
         ]
     ) -> SourceBundle {
 
@@ -91,6 +92,17 @@ public extension SourceBundle.Mocks {
                 using: formatter
             )
         }
+        
+        // sitemap
+        let sitemapDefinition = ContentDefinition.Mocks.sitemap()
+        let rawSitemapContents = RawContent.Mocks.sitemap()
+        let sitemapContents = rawSitemapContents.map {
+            sitemapDefinition.convert(
+                rawContent: $0,
+                definition: sitemapDefinition,
+                using: formatter
+            )
+        }
 
         let contentBundles: [ContentBundle] = [
             .init(definition: pageDefinition, contents: pageContents),
@@ -100,6 +112,7 @@ public extension SourceBundle.Mocks {
             .init(definition: authorDefinition, contents: authorContents),
             .init(definition: postDefinition, contents: postContents),
             .init(definition: rssDefinition, contents: rssContents),
+            .init(definition: sitemapDefinition, contents: sitemapContents),
         ]
 
         return .init(

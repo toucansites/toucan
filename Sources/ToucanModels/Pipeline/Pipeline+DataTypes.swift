@@ -22,6 +22,11 @@ extension Pipeline {
         ) {
             self.date = date
         }
+        
+        // TODO: use `defauls` instead
+        public init() {
+            self.date = .init(formats: [:])
+        }
 
         // MARK: - decoder
 

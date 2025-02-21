@@ -21,7 +21,7 @@ struct SourceBundleSitemapTestSuite {
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
 
-        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
+        formatter.dateFormat = "Y-MM-dd"
         let nowString = formatter.string(from: now)
 
         let pipelines = [
@@ -50,7 +50,7 @@ struct SourceBundleSitemapTestSuite {
 
         let postDefinition = ContentDefinition.Mocks.post()
         let rawPostContents = RawContent.Mocks.posts(
-            max: 1,
+            max: 2,
             now: now,
             formatter: formatter
         )
@@ -101,13 +101,24 @@ struct SourceBundleSitemapTestSuite {
         let expectation = #"""
             <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                 <url>
-                    // TODO: sitemap urls and dates should be here
-                    <loc>https://toucansites.com</loc>
-                    <lastmod>2025-01-16</lastmod>
+                    <loc>http://localhost:3000/blog/tags/tag-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/tags/tag-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+
+                    <loc>http://localhost:3000/blog/authors/author-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/authors/author-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+
+                    <loc>http://localhost:3000/blog/posts/post-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/posts/post-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
                 </url>
             </urlset>
             """#
-
+        
         #expect(results[0].contents == expectation)
         #expect(results[0].destination.path == "")
         #expect(results[0].destination.file == "sitemap")

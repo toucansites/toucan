@@ -58,9 +58,6 @@ extension SourceBundle {
             for: date,
             using: dateFormatter,
             formats: config.dateFormats.output
-                .recursivelyMerged(with: [
-                    "test": "Y"
-                ])
         )
     }
 
@@ -131,6 +128,7 @@ extension SourceBundle {
     ) -> [String: AnyCodable] {
 
         var result: [String: AnyCodable] = [:]
+        
         if context.contains(.properties) {
             for (k, v) in content.properties {
                 if let p = content.definition.properties[k],
@@ -150,6 +148,9 @@ extension SourceBundle {
                 content.slug.permalink(baseUrl: source.settings.baseUrl)
             )
             result["isCurrentURL"] = .init(content.slug == slug)
+            result["lastUpdate"] = .init(convertToDateFormats(
+                date: content.rawValue.lastModificationDate
+            ))
         }
 
         if allowSubQueries, context.contains(.relations) {
@@ -278,7 +279,7 @@ extension SourceBundle {
         let path = pipeline.output.path.replacingOccurrences(outputArgs)
         let file = pipeline.output.file.replacingOccurrences(outputArgs)
         let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
-
+        
         return .init(
             content: content,
             context: context,
@@ -509,12 +510,8 @@ extension SourceBundle {
                 for bundle in bundles {
                     // TODO: override output using front matter in both cases
                     let data = try encoder.encode(bundle.context)
-                    guard
-                        let json = String(
-                            data: data,
-                            encoding: .utf8
-                        )
-                    else {
+                    let json = String(data: data, encoding: .utf8)
+                    guard let json else {
                         // TODO: log
                         continue
                     }
@@ -530,6 +527,7 @@ extension SourceBundle {
                         try .init(string: $0)
                     }
                 )
+                
                 for bundle in bundles {
                     let engineOptions = pipeline.engine.options
                     let contentTypesOptions = engineOptions.dict("contentTypes")
@@ -542,13 +540,12 @@ extension SourceBundle {
                         .string("template")
                     let template =
                         contentTypeTemplate ?? contentTemplate ?? "default"  // TODO
-
-                    guard
-                        let html = try renderer.render(
-                            template: template,
-                            with: bundle.context
-                        )
-                    else {
+                    let html = try renderer.render(
+                        template: template,
+                        with: bundle.context
+                    )
+                    
+                    guard let html else {
                         // TODO: log
                         continue
                     }

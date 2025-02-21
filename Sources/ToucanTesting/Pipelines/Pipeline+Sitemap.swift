@@ -8,22 +8,16 @@ public extension Pipeline.Mocks {
         .init(
             scopes: [:],
             queries: [:],
-            dataTypes: .init(
-                date: .init(
-                    formats: [
-                        "full": "y.m.d."
-                    ]
-                )
-            ),
+            dataTypes: .init(),
             contentTypes: .init(
                 include: [
                     "sitemap"
                 ],
                 exclude: [],
                 lastUpdate: [
-                    "post",
-                    "author",
                     "tag",
+                    "author",
+                    "post",
                 ]
             ),
             iterators: [:],

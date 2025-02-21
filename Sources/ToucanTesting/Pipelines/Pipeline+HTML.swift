@@ -27,7 +27,8 @@ public extension Pipeline.Mocks {
             contentTypes: .init(
                 include: [],
                 exclude: [
-                    "rss"
+                    "rss",
+                    "sitemap"
                 ],
                 lastUpdate: []
             ),
