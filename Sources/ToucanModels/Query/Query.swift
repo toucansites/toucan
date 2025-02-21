@@ -5,16 +5,25 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-import ToucanCodable
+public struct Query: Decodable {
 
-public struct Query {
-
+    enum CodingKeys: String, CodingKey {
+        case contentType
+        case scope
+        case limit
+        case offset
+        case filter
+        case orderBy
+    }
+    
     public var contentType: String
     public var scope: String?
     public var limit: Int?
     public var offset: Int?
     public var filter: Condition?
     public var orderBy: [Order]
+
+    // MARK: - init
 
     public init(
         contentType: String,
@@ -31,6 +40,40 @@ public struct Query {
         self.filter = filter
         self.orderBy = orderBy
     }
+    
+    // MARK: - decoder
+    
+    public init(
+        from decoder: any Decoder
+    ) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let contentType = try container.decode(
+            String.self,
+            forKey: .contentType
+        )
+        let scope = try container.decodeIfPresent(String.self, forKey: .scope)
+        let limit = try container.decodeIfPresent(Int.self, forKey: .limit)
+        let offset = try container.decodeIfPresent(Int.self, forKey: .offset)
+        let filter = try container.decodeIfPresent(
+            Condition.self,
+            forKey: .filter
+        )
+        // TODO: consider turning order by to an optional?
+        let orderBy =
+            try container.decodeIfPresent([Order].self, forKey: .orderBy) ?? []
+
+        self.init(
+            contentType: contentType,
+            scope: scope,
+            limit: limit,
+            offset: offset,
+            filter: filter,
+            orderBy: orderBy
+        )
+    }
+}
+
+extension Query {
 
     public func resolveFilterParameters(
         with parameters: [String: AnyCodable]
@@ -45,26 +88,3 @@ public struct Query {
         )
     }
 }
-
-/*
-
- always store dates as time interval from 1970
-
- special field values:
- global:
-    {{$now}} -> current date
-
- model queries:
-    {{id}} -> identifier of the current item
-    {{property}} -> any base property of self?
-        (maybe relations, like author ids?)
-
-
-     @Asdf(
-        param: "...?",
-     ) {
-
-     }
-
-     @
- */

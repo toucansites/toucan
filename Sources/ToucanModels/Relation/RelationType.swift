@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum RelationType: String {
+public enum RelationType: String, Decodable {
     case one
     case many
 }

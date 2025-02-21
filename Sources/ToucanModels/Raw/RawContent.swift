@@ -5,8 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 30..
 //
 
-import ToucanCodable
-
 public struct RawContent {
 
     public var origin: Origin

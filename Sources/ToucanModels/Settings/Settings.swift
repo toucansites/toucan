@@ -5,10 +5,9 @@
 //  Created by Tibor Bodecs on 2025. 02. 11..
 //
 
-import ToucanModels
-import ToucanCodable
 
-public struct Settings: Codable {
+
+public struct Settings: Decodable {
 
     enum CodingKeys: CodingKey, CaseIterable {
         case baseUrl
@@ -23,6 +22,20 @@ public struct Settings: Codable {
     public var timeZone: String?
     public var userDefined: [String: AnyCodable]
 
+    // MARK: - defaults
+
+    public static var defaults: Self {
+        .init(
+            baseUrl: "http://localhost:3000",
+            name: "localhost",
+            locale: nil,
+            timeZone: nil,
+            userDefined: [:]
+        )
+    }
+    
+    // MARK: - init
+    
     public init(
         baseUrl: String,
         name: String,
@@ -36,16 +49,8 @@ public struct Settings: Codable {
         self.timeZone = timeZone
         self.userDefined = userDefined
     }
-
-    public static var defaults: Self {
-        .init(
-            baseUrl: "http://localhost:3000",
-            name: "localhost",
-            locale: nil,
-            timeZone: nil,
-            userDefined: [:]
-        )
-    }
+    
+    // MARK: - decoding
 
     public init(from decoder: any Decoder) throws {
         let defaults = Self.defaults

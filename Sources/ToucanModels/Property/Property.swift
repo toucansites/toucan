@@ -1,21 +1,38 @@
 //
 //  File.swift
-//  toucan
+//  ToucanV2
 //
-//  Created by Tibor Bodecs on 2025. 01. 31..
+//  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-import ToucanModels
-import ToucanCodable
-
-extension Property: Decodable {
+public struct Property: Decodable {
 
     enum CodingKeys: CodingKey {
         case `required`
         case `default`
     }
+    
+    public let type: PropertyType
+    public let required: Bool
+    public let `default`: AnyCodable?
 
-    public init(from decoder: any Decoder) throws {
+    // MARK: - init
+    
+    public init(
+        type: PropertyType,
+        required: Bool,
+        `default`: AnyCodable? = nil
+    ) {
+        self.type = type
+        self.required = required
+        self.`default` = `default`
+    }
+    
+    // MARK: - decoder
+    
+    public init(
+        from decoder: any Decoder
+    ) throws {
         let type = try decoder.singleValueContainer().decode(PropertyType.self)
 
         let container = try decoder.container(keyedBy: CodingKeys.self)

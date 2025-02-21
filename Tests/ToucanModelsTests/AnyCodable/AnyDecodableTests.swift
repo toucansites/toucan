@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import ToucanCodable
+@testable import ToucanModels
 
 @Suite
 struct AnyDecodableTests {

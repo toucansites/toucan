@@ -38,7 +38,6 @@ let package = Package(
         .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
         .library(name: "ToucanModels", targets: ["ToucanModels"]),
         .library(name: "ToucanSource", targets: ["ToucanSource"]),
-        .library(name: "ToucanCodable", targets: ["ToucanCodable"]),
         .library(name: "ToucanContent", targets: ["ToucanContent"]),
         .library(name: "ToucanTesting", targets: ["ToucanTesting"]),
     ],
@@ -130,16 +129,9 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .target(
-            name: "ToucanCodable",
-            dependencies: [
-                
-            ],
-            swiftSettings: swiftSettings
-        ),
-        .target(
             name: "ToucanModels",
             dependencies: [
-                .target(name: "ToucanCodable"),
+
             ],
             swiftSettings: swiftSettings
         ),
@@ -202,12 +194,6 @@ let package = Package(
             name: "ToucanModelsTests",
             dependencies: [
                 .target(name: "ToucanModels"),
-            ]
-        ),
-        .testTarget(
-            name: "ToucanCodableTests",
-            dependencies: [
-                .target(name: "ToucanCodable"),
             ]
         ),
         .testTarget(

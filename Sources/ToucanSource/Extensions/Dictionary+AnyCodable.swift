@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ToucanCodable
+import ToucanModels
 
 extension Dictionary where Key == String, Value == AnyCodable {
 

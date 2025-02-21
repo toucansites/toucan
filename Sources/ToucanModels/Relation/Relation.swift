@@ -1,21 +1,39 @@
 //
 //  File.swift
-//  toucan
+//  ToucanV2
 //
-//  Created by Tibor Bodecs on 2025. 01. 31..
+//  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-import ToucanModels
-
-extension Relation: Decodable {
+public struct Relation: Decodable {
 
     enum CodingKeys: CodingKey {
         case references
         case `type`
         case order
     }
+    
+    public let references: String
+    public let type: RelationType
+    public let order: Order?
 
-    public init(from decoder: any Decoder) throws {
+    // MARK: - init
+    
+    public init(
+        references: String,
+        type: RelationType,
+        order: Order? = nil
+    ) {
+        self.references = references
+        self.type = type
+        self.order = order
+    }
+    
+    // MARK: - decoder
+    
+    public init(
+        from decoder: any Decoder
+    ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let references = try container.decode(String.self, forKey: .references)

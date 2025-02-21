@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-import ToucanCodable
+
 
 public struct Content {
 

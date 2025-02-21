@@ -6,7 +6,7 @@
 //
 
 // TODO: maybe use =, !=, >, >=, <, <= values
-public enum Operator: String {
+public enum Operator: String, Decodable {
 
     // int, double, bool, string
     case equals

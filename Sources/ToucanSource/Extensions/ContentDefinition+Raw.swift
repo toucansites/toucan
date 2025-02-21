@@ -7,7 +7,7 @@
 
 import Foundation
 import ToucanModels
-import ToucanCodable
+
 
 extension Property {
 
