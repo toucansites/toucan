@@ -84,11 +84,17 @@ extension SourceBundle {
 
     func getContextObject(
         for content: Content,
-        scope: Pipeline.Scope,
+        pipeline: Pipeline,
+        scopeKey: String,
         currentSlug: String?,
         allowSubQueries: Bool = true  // allow top level queries only
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
+
+        let scope = pipeline.getScope(
+            keyedBy: scopeKey,
+            for: content.definition.type
+        )
 
         if scope.context.contains(.userDefined) {
             result = result.recursivelyMerged(with: content.userDefined)
@@ -166,7 +172,8 @@ extension SourceBundle {
                     relationContents.map {
                         getContextObject(
                             for: $0,
-                            scope: .reference,
+                            pipeline: pipeline,
+                            scopeKey: "reference",
                             currentSlug: content.slug,
                             allowSubQueries: false
                         )
@@ -188,7 +195,8 @@ extension SourceBundle {
                     queryContents.map {
                         getContextObject(
                             for: $0,
-                            scope: .detail,  // TODO: double check
+                            pipeline: pipeline,
+                            scopeKey: query.scope ?? "list",
                             currentSlug: content.slug,
                             allowSubQueries: false
                         )
@@ -226,16 +234,12 @@ extension SourceBundle {
         extraContext: [String: AnyCodable]
     ) -> ContextBundle {
 
-        let scope = pipeline.getScope(
-            keyedBy: "detail",
-            for: content.definition.type
-        )
-
         let context: [String: AnyCodable] = [
             content.definition.type: .init(
                 getContextObject(
                     for: content,
-                    scope: scope,
+                    pipeline: pipeline,
+                    scopeKey: "detail",
                     currentSlug: content.slug
                 )
             )
@@ -307,15 +311,15 @@ extension SourceBundle {
                         let offset = i * limit
                         let currentPageIndex = i + 1
 
-                        let pageQuery = Query(
-                            contentType: query.contentType,
-                            scope: query.scope,
-                            limit: limit,
-                            offset: offset,
-                            filter: query.filter,
-                            orderBy: query.orderBy
+                        let pageItems = run(
+                            query: .init(
+                                contentType: query.contentType,
+                                limit: limit,
+                                offset: offset,
+                                filter: query.filter,
+                                orderBy: query.orderBy
+                            )
                         )
-                        let pageItems = run(query: pageQuery)
 
                         let id = content.id.replacingOccurrences([
                             "{{\(iteratorId)}}": String(currentPageIndex)
@@ -333,7 +337,8 @@ extension SourceBundle {
                         for pageItem in pageItems {
                             let pageItemCtx = getContextObject(
                                 for: pageItem,
-                                scope: .list,  // TODO: double check!!!
+                                pipeline: pipeline,
+                                scopeKey: query.scope ?? "list",
                                 currentSlug: slug
                             )
                             itemCtx.append(pageItemCtx)
@@ -393,16 +398,12 @@ extension SourceBundle {
         for (key, query) in pipeline.queries {
             let results = run(query: query)
 
-            let scope = pipeline.getScope(
-                keyedBy: query.scope ?? "list",  // TODO: list by default?
-                for: query.contentType
-            )
-
             rawContext[key] = .init(
                 results.map {
                     getContextObject(
                         for: $0,
-                        scope: scope,
+                        pipeline: pipeline,
+                        scopeKey: query.scope ?? "list",
                         currentSlug: currentSlug
                     )
                 }

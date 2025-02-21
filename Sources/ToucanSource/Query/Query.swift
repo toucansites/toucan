@@ -15,7 +15,7 @@ extension SourceBundle {
             query.contentType == $0.definition.type
         }
         guard let bundle else {
-            print("ERROR: no such content type")
+            print("ERROR: no such content type: `\(query.contentType)`.")
             return []
         }
         return filter(contents: bundle.contents, using: query)
