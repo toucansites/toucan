@@ -11,12 +11,12 @@ public extension Templates.Mocks {
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
                 {{/sitemap.tags}}
-        
+
                 {{#sitemap.authors}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
                 {{/sitemap.authors}}
-        
+
                 {{#sitemap.posts}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>

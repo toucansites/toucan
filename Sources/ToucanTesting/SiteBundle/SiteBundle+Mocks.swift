@@ -92,7 +92,7 @@ public extension SourceBundle.Mocks {
                 using: formatter
             )
         }
-        
+
         // sitemap
         let sitemapDefinition = ContentDefinition.Mocks.sitemap()
         let rawSitemapContents = RawContent.Mocks.sitemap()

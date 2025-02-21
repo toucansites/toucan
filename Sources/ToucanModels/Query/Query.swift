@@ -51,16 +51,32 @@ public struct Query: Decodable {
             String.self,
             forKey: .contentType
         )
-        let scope = try container.decodeIfPresent(String.self, forKey: .scope)
-        let limit = try container.decodeIfPresent(Int.self, forKey: .limit)
-        let offset = try container.decodeIfPresent(Int.self, forKey: .offset)
+
+        let scope = try container.decodeIfPresent(
+            String.self,
+            forKey: .scope
+        )
+
+        let limit = try container.decodeIfPresent(
+            Int.self,
+            forKey: .limit
+        )
+
+        let offset = try container.decodeIfPresent(
+            Int.self,
+            forKey: .offset
+        )
+
         let filter = try container.decodeIfPresent(
             Condition.self,
             forKey: .filter
         )
         // TODO: consider turning order by to an optional?
         let orderBy =
-            try container.decodeIfPresent([Order].self, forKey: .orderBy) ?? []
+            try container.decodeIfPresent(
+                [Order].self,
+                forKey: .orderBy
+            ) ?? []
 
         self.init(
             contentType: contentType,

@@ -197,30 +197,57 @@ extension SourceBundle {
             }
             return fieldString.lowercased().contains(valueString.lowercased())
         case .in:
-            // TODO: int, double
-            guard
-                let fieldValue = fieldValue.value(as: String.self),
-                let valueArray = value.value(as: [String].self)
-            else {
-                return false
+            if let fieldValue = fieldValue.value(as: Int.self),
+                let intArray = value.value(as: [Int].self)
+            {
+                return intArray.contains(fieldValue)
             }
-            return valueArray.contains(fieldValue)
+            if let fieldValue = fieldValue.value(as: Double.self),
+                let doubleArray = value.value(as: [Double].self)
+            {
+                return doubleArray.contains(fieldValue)
+            }
+            if let fieldValue = fieldValue.value(as: String.self),
+                let stringArray = value.value(as: [String].self)
+            {
+                return stringArray.contains(fieldValue)
+            }
+            return false
         case .contains:
-            guard
-                let fieldArray = fieldValue.value(as: [String].self),
+
+            if let fieldArray = fieldValue.value(as: [Int].self),
+                let value = value.value(as: Int.self)
+            {
+                return fieldArray.contains(value)
+            }
+            if let fieldArray = fieldValue.value(as: [Double].self),
+                let value = value.value(as: Double.self)
+            {
+                return fieldArray.contains(value)
+            }
+            if let fieldArray = fieldValue.value(as: [String].self),
                 let value = value.value(as: String.self)
-            else {
-                return false
+            {
+                return fieldArray.contains(value)
             }
-            return fieldArray.contains(value)
+            return false
         case .matching:
-            guard
-                let fieldArray = fieldValue.value(as: [String].self),
-                let valueArray = value.value(as: [String].self)
-            else {
-                return false
+            if let fieldArray = fieldValue.value(as: [Int].self),
+                let valueArray = value.value(as: [Int].self)
+            {
+                return !Set(fieldArray).intersection(valueArray).isEmpty
             }
-            return !Set(fieldArray).intersection(valueArray).isEmpty
+            if let fieldArray = fieldValue.value(as: [Double].self),
+                let valueArray = value.value(as: [Double].self)
+            {
+                return !Set(fieldArray).intersection(valueArray).isEmpty
+            }
+            if let fieldArray = fieldValue.value(as: [String].self),
+                let valueArray = value.value(as: [String].self)
+            {
+                return !Set(fieldArray).intersection(valueArray).isEmpty
+            }
+            return false
         }
     }
 

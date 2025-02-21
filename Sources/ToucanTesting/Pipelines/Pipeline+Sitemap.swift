@@ -7,7 +7,7 @@ public extension Pipeline.Mocks {
         .init(
             scopes: [:],
             queries: [:],
-            dataTypes: .init(),
+            dataTypes: .defaults,
             contentTypes: .init(
                 include: [
                     "sitemap"

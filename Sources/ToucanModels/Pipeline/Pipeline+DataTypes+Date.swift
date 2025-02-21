@@ -15,6 +15,14 @@ extension Pipeline.DataTypes {
 
         public var formats: [String: String]
 
+        // MARK: - defaults
+
+        public static var defaults: Self {
+            .init(formats: [:])
+        }
+
+        // MARK: - init
+
         public init(
             formats: [String: String]
         ) {

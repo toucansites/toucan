@@ -80,23 +80,17 @@ public struct Pipeline: Decodable {
                 forKey: .queries
             ) ?? [:]
 
-        // TODO: defaults
         let dataTypes =
             try container.decodeIfPresent(
                 DataTypes.self,
                 forKey: .dataTypes
-            ) ?? .init(date: .init(formats: [:]))
+            ) ?? .defaults
 
         let contentTypes =
             try container.decodeIfPresent(
                 ContentTypes.self,
                 forKey: .contentTypes
-            )
-            ?? .init(
-                include: [],
-                exclude: [],
-                lastUpdate: []
-            )
+            ) ?? .defaults
 
         let iterators =
             try container.decodeIfPresent(

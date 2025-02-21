@@ -28,7 +28,7 @@ public extension Pipeline.Mocks {
                 include: [],
                 exclude: [
                     "rss",
-                    "sitemap"
+                    "sitemap",
                 ],
                 lastUpdate: []
             ),

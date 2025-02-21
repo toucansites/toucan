@@ -13,7 +13,7 @@ import ToucanTesting
 
 @Suite
 struct SourceBundleSitemapTestSuite {
-    
+
     @Test
     func sitemap() throws {
         let now = Date()
@@ -37,7 +37,7 @@ struct SourceBundleSitemapTestSuite {
                 using: formatter
             )
         }
-        
+
         let authorDefinition = ContentDefinition.Mocks.author()
         let rawAuthorContents = RawContent.Mocks.authors()
         let authorContents = rawAuthorContents.map {
@@ -118,7 +118,7 @@ struct SourceBundleSitemapTestSuite {
                 </url>
             </urlset>
             """#
-        
+
         #expect(results[0].contents == expectation)
         #expect(results[0].destination.path == "")
         #expect(results[0].destination.file == "sitemap")

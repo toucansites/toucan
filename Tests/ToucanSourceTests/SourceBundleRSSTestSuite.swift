@@ -13,7 +13,7 @@ import ToucanTesting
 
 @Suite
 struct SourceBundleRSSTestSuite {
-    
+
     @Test
     func rss() throws {
         let now = Date()

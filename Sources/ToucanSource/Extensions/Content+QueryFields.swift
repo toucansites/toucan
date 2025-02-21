@@ -10,7 +10,6 @@ import ToucanModels
 
 extension Content {
 
-    // relations can be queried too
     // TODO: maybe add support for user defined values?
     var queryFields: [String: AnyCodable] {
         var fields = properties

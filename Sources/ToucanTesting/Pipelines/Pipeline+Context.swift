@@ -25,7 +25,17 @@ public extension Pipeline.Mocks {
                     ),
                 ]
             ],
-            queries: [:],
+            queries: [
+                "featured": .init(
+                    contentType: "post",
+                    scope: "list",
+                    filter: .field(
+                        key: "featured",
+                        operator: .equals,
+                        value: true
+                    )
+                )
+            ],
             dataTypes: .init(
                 date: .init(
                     formats: [

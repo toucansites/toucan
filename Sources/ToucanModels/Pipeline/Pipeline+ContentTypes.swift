@@ -19,6 +19,16 @@ extension Pipeline {
         public var exclude: [String]
         public var lastUpdate: [String]
 
+        // MARK: - defaults
+
+        public static var defaults: Self {
+            .init(
+                include: [],
+                exclude: [],
+                lastUpdate: []
+            )
+        }
+
         // MARK: - init
 
         public init(
@@ -64,7 +74,7 @@ extension Pipeline {
         }
 
         // MARK: -
-        // TODO: move out
+
         public func isAllowed(contentType: String) -> Bool {
             if exclude.contains(contentType) {
                 return false

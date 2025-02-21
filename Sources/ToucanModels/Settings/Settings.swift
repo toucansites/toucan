@@ -41,6 +41,7 @@ public struct Settings: Decodable {
         timeZone: String?,
         userDefined: [String: AnyCodable]
     ) {
+        // TODO: drop trailing slash
         self.baseUrl = baseUrl
         self.name = name
         self.locale = locale

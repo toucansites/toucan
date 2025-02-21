@@ -128,7 +128,7 @@ extension SourceBundle {
     ) -> [String: AnyCodable] {
 
         var result: [String: AnyCodable] = [:]
-        
+
         if context.contains(.properties) {
             for (k, v) in content.properties {
                 if let p = content.definition.properties[k],
@@ -148,9 +148,11 @@ extension SourceBundle {
                 content.slug.permalink(baseUrl: source.settings.baseUrl)
             )
             result["isCurrentURL"] = .init(content.slug == slug)
-            result["lastUpdate"] = .init(convertToDateFormats(
-                date: content.rawValue.lastModificationDate
-            ))
+            result["lastUpdate"] = .init(
+                convertToDateFormats(
+                    date: content.rawValue.lastModificationDate
+                )
+            )
         }
 
         if allowSubQueries, context.contains(.relations) {
@@ -211,7 +213,6 @@ extension SourceBundle {
         }
         if allowSubQueries, context.contains(.queries) {
             for (key, query) in content.definition.queries {
-                // TODO: replace {{}} variables in query filter values...
                 let queryContents = source.run(
                     query: query.resolveFilterParameters(
                         with: content.queryFields
@@ -258,7 +259,6 @@ extension SourceBundle {
     ) -> ContextBundle {
 
         let context: [String: AnyCodable] = [
-            //                        "global": pipelineContext,
             content.definition.type: .init(
                 getContextObject(
                     slug: content.slug,
@@ -270,7 +270,7 @@ extension SourceBundle {
         ]
         .recursivelyMerged(with: extraContext)
 
-        // TODO: more path arguments
+        // TODO: more path arguments?
         let outputArgs: [String: String] = [
             "{{id}}": content.id,
             "{{slug}}": content.slug,
@@ -279,7 +279,7 @@ extension SourceBundle {
         let path = pipeline.output.path.replacingOccurrences(outputArgs)
         let file = pipeline.output.file.replacingOccurrences(outputArgs)
         let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
-        
+
         return .init(
             content: content,
             context: context,
@@ -291,7 +291,6 @@ extension SourceBundle {
         )
     }
 
-    // TODO: return full context instead of complete render?
     func getContextBundles(
         siteContext: [String: AnyCodable],
         pipeline: Pipeline
@@ -487,7 +486,6 @@ extension SourceBundle {
                 }
                 .sorted(by: >).first ?? now
 
-            // TODO: put this under site context?
             let lastUpdateContext = convertToDateFormats(date: lastUpdate)
             siteContext["lastUpdate"] = .init(lastUpdateContext)
 
@@ -527,7 +525,7 @@ extension SourceBundle {
                         try .init(string: $0)
                     }
                 )
-                
+
                 for bundle in bundles {
                     let engineOptions = pipeline.engine.options
                     let contentTypesOptions = engineOptions.dict("contentTypes")
@@ -544,7 +542,7 @@ extension SourceBundle {
                         template: template,
                         with: bundle.context
                     )
-                    
+
                     guard let html else {
                         // TODO: log
                         continue

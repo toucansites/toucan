@@ -15,17 +15,18 @@ extension Pipeline {
 
         public var date: Date
 
+        // MARK: - defaults
+
+        public static var defaults: Self {
+            .init(date: .defaults)
+        }
+
         // MARK: - init
 
         public init(
             date: Date
         ) {
             self.date = date
-        }
-        
-        // TODO: use `defauls` instead
-        public init() {
-            self.date = .init(formats: [:])
         }
 
         // MARK: - decoder
@@ -39,7 +40,7 @@ extension Pipeline {
                 try container.decodeIfPresent(
                     Date.self,
                     forKey: .date
-                ) ?? .init(formats: [:])
+                ) ?? .defaults
 
             self.init(date: date)
         }

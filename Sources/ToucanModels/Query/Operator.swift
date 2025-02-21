@@ -8,10 +8,10 @@
 // TODO: maybe use =, !=, >, >=, <, <= values
 public enum Operator: String, Decodable {
 
-    // int, double, bool, string
+    // bool, int, double, string
     case equals
 
-    // int, double, bool, string
+    // bool, int, double, string
     case notEquals
 
     // int, double
@@ -33,15 +33,15 @@ public enum Operator: String, Decodable {
     case caseInsensitiveLike
 
     // field is a single value check is in array of values
-    // array of anything
+    // array of int, double, string
     case `in`
 
     // field is an array check contains single value
-    // single value
+    // single value int, double, string
     case contains
 
     // field is an array check intersection with array value
-    // array values both
+    // array values both int, double, string
     case matching
 
 }
