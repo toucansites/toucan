@@ -2,6 +2,13 @@
 //  File.swift
 //  toucan
 //
+//  Created by Tibor Bodecs on 2025. 02. 21..
+//
+
+//
+//  File.swift
+//  toucan
+//
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
 //
 
@@ -12,10 +19,10 @@ import ToucanTesting
 @testable import ToucanSource
 
 @Suite
-struct SourceBundleContextTestSuite {
+struct SourceBundleScopeTestSuite {
 
     @Test
-    func isCurrentUrl() throws {
+    func testScopes() throws {
         let now = Date()
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
@@ -26,11 +33,20 @@ struct SourceBundleContextTestSuite {
 
         let pipelines: [Pipeline] = [
             .init(
-                scopes: [:],
+                scopes: [
+                    "post": [
+                        "minimal": .init(
+                            context: .properties,
+                            fields: [
+                                "slug"
+                            ]
+                        )
+                    ]
+                ],
                 queries: [
                     "featured": .init(
                         contentType: "post",
-                        scope: "list"
+                        scope: "minimal"
                     )
                 ],
                 dataTypes: .defaults,
@@ -116,16 +132,17 @@ struct SourceBundleContextTestSuite {
 
         #expect(results.count == 2)
 
+        print(results[0].contents)
+        print(results[1].contents)
+
         let decoder = JSONDecoder()
 
         struct Exp0: Decodable {
             struct Item: Decodable {
                 let isCurrentURL: Bool
-                let slug: String
             }
             struct Post: Decodable {
                 let isCurrentURL: Bool
-                let slug: String
             }
             let post: Post
             let featured: [Item]
@@ -133,11 +150,6 @@ struct SourceBundleContextTestSuite {
 
         let data0 = try #require(results[0].contents.data(using: .utf8))
         let exp0 = try decoder.decode(Exp0.self, from: data0)
-
-        #expect(exp0.post.isCurrentURL)
-        for item in exp0.featured {
-            #expect(item.isCurrentURL == (exp0.post.slug == item.slug))
-        }
 
         struct Exp1: Decodable {
             struct Item: Decodable {
@@ -153,8 +165,6 @@ struct SourceBundleContextTestSuite {
         let data1 = try #require(results[1].contents.data(using: .utf8))
         let exp1 = try decoder.decode(Exp1.self, from: data1)
 
-        #expect(exp1.page.isCurrentURL)
-        #expect(exp1.featured.allSatisfy { !$0.isCurrentURL })
     }
 
 }

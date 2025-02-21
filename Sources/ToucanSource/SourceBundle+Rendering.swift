@@ -8,44 +8,7 @@
 import Foundation
 import FileManagerKit
 import ToucanModels
-
 import ToucanContent
-
-public struct Destination {
-    public var path: String
-    public var file: String
-    public var ext: String
-
-    public init(
-        path: String,
-        file: String,
-        ext: String
-    ) {
-        self.path = path
-        self.file = file
-        self.ext = ext
-    }
-}
-
-struct ContextBundle {
-    var content: Content
-    var context: [String: AnyCodable]
-    var destination: Destination
-}
-
-// TODO: do we need anything else + information when testing? 🤔
-public struct PipelineResult {
-    public var contents: String
-    public var destination: Destination
-
-    public init(
-        contents: String,
-        destination: Destination
-    ) {
-        self.contents = contents
-        self.destination = destination
-    }
-}
 
 extension SourceBundle {
 
@@ -120,16 +83,14 @@ extension SourceBundle {
     // MARK: - helpers
 
     func getContextObject(
-        slug: String?,
         for content: Content,
-        context: Pipeline.Scope.Context,
-        using source: SourceBundle,
-        allowSubQueries: Bool = true  // allow top level queries only
+        scope: Pipeline.Scope, // = .init(context: .all),
+        currentSlug: String?,
+        allowSubQueries: Bool = true // allow top level queries only
     ) -> [String: AnyCodable] {
-
         var result: [String: AnyCodable] = [:]
 
-        if context.contains(.properties) {
+        if scope.context.contains(.properties) {
             for (k, v) in content.properties {
                 if let p = content.definition.properties[k],
                     case .date(_) = p.type,
@@ -145,9 +106,9 @@ extension SourceBundle {
             // TODO: web only properties
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
-                content.slug.permalink(baseUrl: source.settings.baseUrl)
+                content.slug.permalink(baseUrl: settings.baseUrl)
             )
-            result["isCurrentURL"] = .init(content.slug == slug)
+            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 convertToDateFormats(
                     date: content.rawValue.lastModificationDate
@@ -155,41 +116,7 @@ extension SourceBundle {
             )
         }
 
-        if allowSubQueries, context.contains(.relations) {
-            for (key, relation) in content.definition.relations {
-                var orderBy: [Order] = []
-                if let order = relation.order {
-                    orderBy.append(order)
-                }
-                let relationContents = source.run(
-                    query: .init(
-                        contentType: relation.references,
-                        scope: "properties",
-                        filter: .field(
-                            key: "id",
-                            operator: .in,
-                            value: .init(
-                                content.relations[key]?.identifiers ?? []
-                            )
-                        ),
-                        orderBy: orderBy
-                    )
-                )
-                result[key] = .init(
-                    relationContents.map {
-                        getContextObject(
-                            slug: content.slug,
-                            for: $0,
-                            context: .properties,
-                            using: self,
-                            allowSubQueries: false
-                        )
-                    }
-                )
-            }
-
-        }
-        if context.contains(.contents) {
+        if scope.context.contains(.contents) {
             let renderer = ContentRenderer(
                 configuration: .init(
                     markdown: .init(
@@ -211,9 +138,44 @@ extension SourceBundle {
                 "outline": contents.outline,
             ]
         }
-        if allowSubQueries, context.contains(.queries) {
+        
+        if allowSubQueries, scope.context.contains(.relations) {
+            for (key, relation) in content.definition.relations {
+                var orderBy: [Order] = []
+                if let order = relation.order {
+                    orderBy.append(order)
+                }
+                let relationContents = run(
+                    query: .init(
+                        contentType: relation.references,
+                        scope: "properties",
+                        filter: .field(
+                            key: "id",
+                            operator: .in,
+                            value: .init(
+                                content.relations[key]?.identifiers ?? []
+                            )
+                        ),
+                        orderBy: orderBy
+                    )
+                )
+                result[key] = .init(
+                    relationContents.map {
+                        getContextObject(
+                            for: $0,
+                            scope: .init(context: .properties),
+                            currentSlug: content.slug,
+                            allowSubQueries: false
+                        )
+                    }
+                )
+            }
+
+        }
+        
+        if allowSubQueries, scope.context.contains(.queries) {
             for (key, query) in content.definition.queries {
-                let queryContents = source.run(
+                let queryContents = run(
                     query: query.resolveFilterParameters(
                         with: content.queryFields
                     )
@@ -222,10 +184,9 @@ extension SourceBundle {
                 result[key] = .init(
                     queryContents.map {
                         getContextObject(
-                            slug: content.slug,
                             for: $0,
-                            context: .all,
-                            using: self,
+                            scope: .init(context: .all),
+                            currentSlug: content.slug,
                             allowSubQueries: false
                         )
                     }
@@ -261,10 +222,9 @@ extension SourceBundle {
         let context: [String: AnyCodable] = [
             content.definition.type: .init(
                 getContextObject(
-                    slug: content.slug,
                     for: content,
-                    context: .all,
-                    using: self
+                    scope: .init(context: .all),
+                    currentSlug: content.slug
                 )
             )
         ]
@@ -304,7 +264,7 @@ extension SourceBundle {
 
                 let pipelineContext = getPipelineContext(
                     for: pipeline,
-                    slug: content.slug
+                    currentSlug: content.slug
                 )
                 .recursivelyMerged(with: siteContext)
 
@@ -360,10 +320,9 @@ extension SourceBundle {
                         var itemCtx: [[String: AnyCodable]] = []
                         for pageItem in pageItems {
                             let pageItemCtx = getContextObject(
-                                slug: slug,
                                 for: pageItem,
-                                context: .all,
-                                using: self
+                                scope: .init(context: .all),
+                                currentSlug: slug
                             )
                             itemCtx.append(pageItemCtx)
                         }
@@ -416,7 +375,7 @@ extension SourceBundle {
 
     func getPipelineContext(
         for pipeline: Pipeline,
-        slug: String
+        currentSlug: String
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
@@ -430,10 +389,9 @@ extension SourceBundle {
             rawContext[key] = .init(
                 results.map {
                     getContextObject(
-                        slug: nil,
                         for: $0,
-                        context: scope.context,
-                        using: self
+                        scope: scope,
+                        currentSlug: currentSlug
                     )
                 }
             )
