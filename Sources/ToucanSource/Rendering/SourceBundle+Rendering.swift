@@ -539,9 +539,7 @@ extension SourceBundle {
 
                     let contentTypeTemplate = bundleOptions.string("template")
                     let contentTemplate = bundle.content.rawValue.frontMatter
-                        .string(
-                            "template"
-                        )
+                        .string("template")
                     let template =
                         contentTypeTemplate ?? contentTemplate ?? "default"  // TODO
 
