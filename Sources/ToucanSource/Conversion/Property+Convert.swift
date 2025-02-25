@@ -17,7 +17,7 @@ extension Property {
     ) -> AnyCodable? {
 
         if self.required, rawValue == nil {
-            print("ERROR: property is missing (\(key).")
+            print("ERROR - property is missing: \(key).")
         }
 
         let value = rawValue ?? self.default

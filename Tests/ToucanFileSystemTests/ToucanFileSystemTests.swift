@@ -53,6 +53,12 @@ struct ToucanFileSystemTests {
                             "index.md"
                         }
                     }
+                    Directory("redirects") {
+                        "noindex.yml"
+                        Directory("home-old") {
+                            "index.md"
+                        }
+                    }
                     Directory("assets") {
                         "CNAME"
                         Directory("icons") {
@@ -96,6 +102,7 @@ struct ToucanFileSystemTests {
                         Directory("types") {
                             "author.yml"
                             "post.yml"
+                            "redirect.yml"
                         }
                     }
                     Directory("overrides") {
@@ -124,6 +131,7 @@ struct ToucanFileSystemTests {
                         .init(path: "404", slug: "404"),
                         .init(path: "home", slug: "home"),
                         .init(path: "blog/authors", slug: "authors"),
+                        .init(path: "redirects/home-old", slug: "home-old"),
                     ]
                     .sorted()
             )
@@ -145,6 +153,7 @@ struct ToucanFileSystemTests {
                             overridePath: .some("author.yml")
                         ),
                         .init(path: "post.yml", overridePath: nil),
+                        .init(path: "redirect.yml", overridePath: nil),
                     ]
                     .sorted()
             )

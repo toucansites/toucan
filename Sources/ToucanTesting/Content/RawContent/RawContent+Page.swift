@@ -77,25 +77,27 @@ public extension RawContent.Mocks {
                 assets: []
             ),
         ]
-            + (1...max)
-            .map { i in
-                .init(
-                    origin: .init(
-                        path: "pages/page-\(i)",
-                        slug: "pages/page-\(i)"
-                    ),
-                    frontMatter: [
-                        "title": "Page #\(i)",
-                        "description": "Page #\(i) description",
-                    ],
-                    markdown: """
+            
+        +
+        
+        (1...max).map { i in
+            .init(
+                origin: .init(
+                    path: "pages/page-\(i)",
+                    slug: "pages/page-\(i)"
+                ),
+                frontMatter: [
+                    "title": "Page #\(i)",
+                    "description": "Page #\(i) description",
+                ],
+                markdown: """
                         # Page #\(i)
-
+                        
                         Lorem ipsum dolor sit amet
                         """,
-                    lastModificationDate: Date().timeIntervalSince1970,
-                    assets: []
-                )
-            }
+                lastModificationDate: Date().timeIntervalSince1970,
+                assets: []
+            )
+        }
     }
 }

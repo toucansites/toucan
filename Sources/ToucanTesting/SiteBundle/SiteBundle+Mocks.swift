@@ -10,6 +10,7 @@ public extension SourceBundle.Mocks {
             Pipeline.Mocks.html(),
             Pipeline.Mocks.rss(),
             Pipeline.Mocks.sitemap(),
+            Pipeline.Mocks.redirect(),
         ]
     ) -> SourceBundle {
 
@@ -103,6 +104,17 @@ public extension SourceBundle.Mocks {
                 using: formatter
             )
         }
+        
+        // redirects
+        let redirectDefinition = ContentDefinition.Mocks.redirect()
+        let rawRedirectContents = RawContent.Mocks.redirectHomeOldAboutOld()
+        let redirectContents = rawRedirectContents.map {
+            redirectDefinition.convert(
+                rawContent: $0,
+                definition: redirectDefinition,
+                using: formatter
+            )
+        }
 
         let contentBundles: [ContentBundle] = [
             .init(definition: pageDefinition, contents: pageContents),
@@ -113,6 +125,7 @@ public extension SourceBundle.Mocks {
             .init(definition: postDefinition, contents: postContents),
             .init(definition: rssDefinition, contents: rssContents),
             .init(definition: sitemapDefinition, contents: sitemapContents),
+            .init(definition: redirectDefinition, contents: redirectContents),
         ]
 
         return .init(

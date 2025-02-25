@@ -32,7 +32,7 @@ public extension Pipeline.Mocks {
                 ],
                 lastUpdate: []
             ),
-            // are iterators are always pages? iteratorPages? or segments? 🤔
+            // are iterators always pages? iteratorPages? or segments? 🤔
             iterators: [
                 "post.pagination": .init(
                     contentType: "post",

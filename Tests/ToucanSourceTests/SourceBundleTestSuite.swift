@@ -17,6 +17,7 @@ struct SourceBundleTestSuite {
             "post.default": Templates.Mocks.post(),
             "rss": Templates.Mocks.rss(),
             "sitemap": Templates.Mocks.sitemap(),
+            "redirect": Templates.Mocks.redirect(),
         ]
 
         let homeUrl = FileManager.default.homeDirectoryForCurrentUser
