@@ -124,7 +124,8 @@ let package = Package(
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "Yams", package: "yams"),
-                .target(name: "ToucanFileSystem")
+                .target(name: "ToucanFileSystem"),
+                .target(name: "ToucanSource"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -138,6 +139,7 @@ let package = Package(
         .target(
             name: "ToucanFileSystem",
             dependencies: [
+                .target(name: "ToucanModels"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
             ],
@@ -181,6 +183,7 @@ let package = Package(
             name: "ToucanSDKTests",
             dependencies: [
                 .target(name: "ToucanSDK"),
+                .product(name: "FileManagerKitTesting", package: "file-manager-kit")
             ]
         ),
         .testTarget(

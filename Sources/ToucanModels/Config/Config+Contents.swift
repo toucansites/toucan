@@ -67,3 +67,14 @@ extension Config {
         }
     }
 }
+
+extension Config.Contents: Equatable {
+    
+    public static func == (
+        lhs: Config.Contents,
+        rhs: Config.Contents
+    ) -> Bool {
+        lhs.path == rhs.path &&
+        lhs.assets == rhs.assets
+    }
+}

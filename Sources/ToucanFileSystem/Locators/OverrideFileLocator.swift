@@ -7,7 +7,7 @@ public struct OverrideFileLocator {
     private let fileManager: FileManagerKit
     private let fileLocator: FileLocator
 
-    init(
+    public init(
         fileManager: FileManagerKit,
         extensions: [String]? = nil
     ) {
@@ -18,7 +18,7 @@ public struct OverrideFileLocator {
         )
     }
 
-    func locate(
+    public func locate(
         at url: URL,
         overrides overridesUrl: URL
     ) -> [OverrideFileLocation] {
@@ -38,57 +38,3 @@ public struct OverrideFileLocator {
             .sorted { $0.path < $1.path }
     }
 }
-
-/*
-foo/
-    bar/
-        baz/
-            index.markdown
-            index.md
-            index.yaml
-            index.yml
-
-    noindex.yml
-
-
-filelocator(name: index, extensions: markdown, md, yaml, yml):
-    - index.markdown
-    - index.md
-    - index.yaml
-    - index.yml
-
-pagebundlelocator: uses filelocator to check index / noindex files
-    pageBundle.path => foo/bar/baz
-    pageBundle.slug => foo/baz
-
-toucan file system
-locateFile
-loacatePageBundles
-listAssets
-
-content type locator
-template locator
-
-themes
-    default
-        templates:
-             foo.mustache
-        types:
-            page.yaml
-            post.yaml
-    overrides
-        templates:
-            foo.mustache
-        types:
-            post.yaml
-            custom.yaml
-
-
-content types:
-    post -> default/types/post.yaml
-            overrides/types/post.yaml
-
-    pages -> default/types/page.yaml
-
-    custom -> overrides/types/custom.yaml
-*/

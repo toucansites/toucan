@@ -12,7 +12,7 @@ public struct FileLocator {
     /// An array of file extensions to search for when loading files.
     let extensions: [String]?
 
-    init(
+    public init(
         fileManager: FileManagerKit,
         name: String? = nil,
         extensions: [String]? = nil
@@ -26,7 +26,7 @@ public struct FileLocator {
     ///
     /// - Parameter url: The base URL to look for files.
     /// - Returns: An array of file contents as strings.
-    func locate(at url: URL) -> [String] {
+    public func locate(at url: URL) -> [String] {
         fileManager
             .listDirectory(at: url)
             .filter { fileName in

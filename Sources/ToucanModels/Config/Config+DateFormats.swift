@@ -65,3 +65,7 @@ extension Config {
         }
     }
 }
+
+extension Config.DateFormats: Equatable {
+    
+}

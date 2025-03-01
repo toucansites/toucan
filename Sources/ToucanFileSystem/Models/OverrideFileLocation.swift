@@ -14,8 +14,8 @@ public struct OverrideFileLocation: Equatable, Comparable {
         lhs.path < rhs.path
     }
 
-    let path: String
-    let overridePath: String?
+    public let path: String
+    public let overridePath: String?
 
     public init(path: String, overridePath: String? = nil) {
         self.path = path

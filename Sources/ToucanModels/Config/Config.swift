@@ -5,16 +5,20 @@
 //  Created by Tibor Bodecs on 2025. 01. 29..
 //
 
+import Foundation
+
 public struct Config: Decodable {
 
     enum CodingKeys: CodingKey {
         case pipelines
         case contents
+        case themes
         case dateFormats
     }
 
     public var pipelines: Pipelines
     public var contents: Contents
+    public var themes: Themes
     public var dateFormats: DateFormats
 
     // MARK: - defaults
@@ -23,6 +27,7 @@ public struct Config: Decodable {
         .init(
             pipelines: .defaults,
             contents: .defaults,
+            themes: .defaults,
             dateFormats: .defaults
         )
     }
@@ -32,10 +37,12 @@ public struct Config: Decodable {
     public init(
         pipelines: Pipelines,
         contents: Contents,
+        themes: Themes,
         dateFormats: DateFormats
     ) {
         self.pipelines = pipelines
         self.contents = contents
+        self.themes = themes
         self.dateFormats = dateFormats
     }
 
@@ -45,32 +52,40 @@ public struct Config: Decodable {
         from decoder: any Decoder
     ) throws {
         let defaults = Self.defaults
-
-        guard
-            let container = try? decoder.container(
-                keyedBy: CodingKeys.self
-            )
-        else {
+        let container = try? decoder.container(keyedBy: CodingKeys.self)
+        
+        guard let container else {
             self = defaults
             return
         }
 
-        self.pipelines =
-            try container.decodeIfPresent(
-                Pipelines.self,
-                forKey: .pipelines
-            ) ?? defaults.pipelines
+        self.pipelines = try container.decodeIfPresent(
+            Pipelines.self,
+            forKey: .pipelines
+        ) ?? defaults.pipelines
 
-        self.contents =
-            try container.decodeIfPresent(
-                Contents.self,
-                forKey: .contents
-            ) ?? defaults.contents
+        self.contents = try container.decodeIfPresent(
+            Contents.self,
+            forKey: .contents
+        ) ?? defaults.contents
+        
+        self.themes = try container.decodeIfPresent(
+            Themes.self,
+            forKey: .themes
+        ) ?? defaults.themes
 
-        self.dateFormats =
-            try container.decodeIfPresent(
-                DateFormats.self,
-                forKey: .dateFormats
-            ) ?? defaults.dateFormats
+        self.dateFormats = try container.decodeIfPresent(
+            DateFormats.self,
+            forKey: .dateFormats
+        ) ?? defaults.dateFormats
+    }
+}
+
+extension Config: Equatable {
+    
+    public static func == (lhs: Config, rhs: Config) -> Bool {
+        lhs.pipelines == rhs.pipelines &&
+        lhs.contents == rhs.contents &&
+        lhs.dateFormats == rhs.dateFormats
     }
 }

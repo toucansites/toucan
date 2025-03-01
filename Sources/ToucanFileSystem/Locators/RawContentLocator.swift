@@ -13,7 +13,7 @@ public struct RawContentLocator {
     private let mdExtensions = ["md", "markdown"]
     private let yamlExtensions = ["yaml", "yml"]
 
-    init(fileManager: FileManagerKit) {
+    public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
         self.indexFileLocator = .init(
             fileManager: fileManager,
@@ -27,9 +27,8 @@ public struct RawContentLocator {
         )
     }
 
-    func locate(at url: URL) -> [RawContentLocation] {
-        loadBundleLocations(at: url)
-            .sorted { $0.path < $1.path }
+    public func locate(at url: URL) -> [RawContentLocation] {
+        loadBundleLocations(at: url).sorted { $0.path < $1.path }
     }
 }
 
@@ -71,6 +70,7 @@ private extension RawContentLocator {
         }
 
         // filter out site bundle
+        // TODO: check if we still need this filter
         return result.filter { !$0.slug.isEmpty }
     }
 }

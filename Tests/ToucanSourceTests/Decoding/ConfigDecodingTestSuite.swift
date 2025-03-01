@@ -29,7 +29,7 @@ struct ConfigDecodingTestSuite {
     @Test
     func full() throws {
         let data = """
-            pipelines: 
+            pipelines:
                 path: foo
             contents:
                 path: bar

@@ -12,10 +12,12 @@ extension Config {
 
         // MARK: - init
 
-        public init(
-            path: String
-        ) {
+        public init(path: String) {
             self.path = path
         }
     }
+}
+
+extension Config.Location: Equatable {
+    
 }

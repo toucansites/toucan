@@ -1,15 +1,16 @@
 import Foundation
 import FileManagerKit
+import ToucanModels
 
 public struct ToucanFileSystem {
 
     let rawContentLocator: RawContentLocator
-    let contentTypeLocator: OverrideFileLocator
+    let contentDefinitionLocator: OverrideFileLocator
     let templateLocator: TemplateLocator
 
     public init(fileManager: FileManagerKit) {
         self.rawContentLocator = RawContentLocator(fileManager: fileManager)
-        self.contentTypeLocator = OverrideFileLocator(
+        self.contentDefinitionLocator = OverrideFileLocator(
             fileManager: fileManager,
             extensions: ["yaml", "yml"]
         )
@@ -26,7 +27,7 @@ public struct ToucanFileSystem {
         at url: URL,
         overrides overridesUrl: URL
     ) -> [OverrideFileLocation] {
-        contentTypeLocator.locate(at: url, overrides: overridesUrl)
+        contentDefinitionLocator.locate(at: url, overrides: overridesUrl)
     }
 
     func locateTemplates(
@@ -34,5 +35,19 @@ public struct ToucanFileSystem {
         overrides overridesUrl: URL
     ) -> [TemplateLocation] {
         templateLocator.locate(at: url, overridesUrl: overridesUrl)
+    }
+    
+    func loadContentDefinitions(
+        _ locations: [OverrideFileLocation]
+    ) -> [ContentDefinition] {
+        [
+            .init(
+                type: "test",
+                paths: [],
+                properties: [:],
+                relations: [:],
+                queries: [:]
+            )
+        ]
     }
 }
