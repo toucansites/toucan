@@ -235,12 +235,22 @@ struct HTMLVisitor: MarkupVisitor {
         let code = HTML(
             name: "code",
             attributes: attributes,
-            contents: codeBlock.code.replacingOccurrences(
-                [
-                    "<": "&lt;",
-                    ">": "&gt;",
-                ]
-            )
+            contents: codeBlock.code
+                .replacingOccurrences(
+                    [
+                        #"<"#: #"&lt;"#,
+                        #">"#: #"&gt;"#,
+                            //#"&"#: #"&amp;"#,
+                            //#"'"#: #"&apos;"#,
+                            //#"""#: #"&quot;"#,
+                    ]
+                )
+                .replacingOccurrences(
+                    [
+                        #"/*!*/"#: #"<span class="highlight">"#,
+                        #"/*.*/"#: "</span>",
+                    ]
+                )
         )
         .render()
 

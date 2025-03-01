@@ -16,7 +16,7 @@ public extension RawContent.Mocks {
                     "code": "301",
                 ],
                 markdown: """
-                """,
+                    """,
                 lastModificationDate: Date().timeIntervalSince1970,
                 assets: []
             ),
@@ -31,10 +31,10 @@ public extension RawContent.Mocks {
                     "code": "301",
                 ],
                 markdown: """
-                """,
+                    """,
                 lastModificationDate: Date().timeIntervalSince1970,
                 assets: []
-            )
+            ),
         ]
     }
 }

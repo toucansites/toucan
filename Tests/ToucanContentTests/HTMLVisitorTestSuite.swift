@@ -590,6 +590,62 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test
+    func codeBlockWithHighlight() {
+
+        let input = #"""
+            ```css
+            Lorem
+            /*!*/
+                ipsum
+            /*.*/
+            dolor
+            sit
+            amet
+            ```
+            """#
+
+        let output = renderHTML(markdown: input)
+
+        let expectation = #"""
+            <pre><code class="language-css">Lorem
+            <span class="highlight">
+                ipsum
+            </span>
+            dolor
+            sit
+            amet
+            </code></pre>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func codeBlockWithHighlightSwift() {
+
+        let input = #"""
+            ```swift
+            /*!*/func main() -> String/*.*/ {
+                print("Hello world")
+                return /*!*/"foo"/*.*/
+            }
+            ```
+            """#
+
+        let output = renderHTML(markdown: input)
+
+        let expectation = #"""
+            <pre><code class="language-swift"><span class="highlight">func main() -&gt; String</span> {
+                print("Hello world")
+                return <span class="highlight">"foo"</span>
+            }
+            </code></pre>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
     func table() {
 
         let input = #"""

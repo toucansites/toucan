@@ -20,7 +20,7 @@ struct SourceBundleRedirectTestSuite {
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
         formatter.dateFormat = "Y-MM-dd"
-        
+
         let pipelines = [
             Pipeline.Mocks.redirect()
         ]
@@ -63,7 +63,8 @@ struct SourceBundleRedirectTestSuite {
             "redirect": Templates.Mocks.redirect()
         ]
 
-        let results = try sourceBundle
+        let results =
+            try sourceBundle
             .generatePipelineResults(templates: templates)
 
         #expect(results.count == 2)

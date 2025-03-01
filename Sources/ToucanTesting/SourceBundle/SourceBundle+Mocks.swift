@@ -104,7 +104,7 @@ public extension SourceBundle.Mocks {
                 using: formatter
             )
         }
-        
+
         // redirects
         let redirectDefinition = ContentDefinition.Mocks.redirect()
         let rawRedirectContents = RawContent.Mocks.redirectHomeOldAboutOld()
