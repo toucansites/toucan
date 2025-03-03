@@ -1,5 +1,6 @@
 import Foundation
 import FileManagerKit
+import ToucanModels
 
 /// A structure for locating files from the filesystem.
 public struct OverrideFileLocator {

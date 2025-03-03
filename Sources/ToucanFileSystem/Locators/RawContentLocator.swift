@@ -1,7 +1,8 @@
 import Foundation
 import FileManagerKit
+import ToucanModels
 
-// TODO: dedicated tests, ToucanFileSystem tests have some related tests
+// TODO: - dedicated tests, ToucanFileSystem tests have some related tests
 public struct RawContentLocator {
 
     private let fileManager: FileManagerKit
@@ -27,28 +28,30 @@ public struct RawContentLocator {
         )
     }
 
-    public func locate(at url: URL) -> [RawContentLocation] {
-        loadBundleLocations(at: url).sorted { $0.path < $1.path }
+    public func locate(at url: URL) -> [Origin] {
+        loadRawContents(at: url).sorted { $0.path < $1.path }
     }
 }
 
 private extension RawContentLocator {
 
-    func loadBundleLocations(
+    func loadRawContents(
         at contentsUrl: URL,
         slug: [String] = [],
         path: [String] = []
-    ) -> [RawContentLocation] {
-        var result: [RawContentLocation] = []
+    ) -> [Origin] {
+        var result: [Origin] = []
 
         let p = path.joined(separator: "/")
         let url = contentsUrl.appendingPathComponent(p)
 
-        let indexFilePaths = indexFileLocator.locate(at: url)
-        if indexFilePaths.count > 0 {
-            result.append(
-                .init(path: p, slug: slug.joined(separator: "/"))
+        let indexFilePaths = indexFileLocator.locate(at: url).sorted()
+        if !indexFilePaths.isEmpty {
+            let origin = Origin(
+                path: p + "/" + indexFilePaths.first!,
+                slug: slug.joined(separator: "/")
             )
+            result.append(origin)
         }
 
         let list = fileManager.listDirectory(at: url)
@@ -62,15 +65,15 @@ private extension RawContentLocator {
             }
 
             let newPath = path + [item]
-            result += loadBundleLocations(
+            result += loadRawContents(
                 at: contentsUrl,
                 slug: newSlug,
                 path: newPath
             )
         }
 
-        // filter out site bundle
-        // TODO: check if we still need this filter
+        // filter out site raw content
+        // TODO: - check if we still need this filter
         return result.filter { !$0.slug.isEmpty }
     }
 }

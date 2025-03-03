@@ -31,21 +31,13 @@ struct SourceBundleSitemapTestSuite {
         let tagDefinition = ContentDefinition.Mocks.tag()
         let rawTagContents = RawContent.Mocks.tags()
         let tagContents = rawTagContents.map {
-            tagDefinition.convert(
-                rawContent: $0,
-                definition: tagDefinition,
-                using: formatter
-            )
+            tagDefinition.convert(rawContent: $0, using: formatter)
         }
 
         let authorDefinition = ContentDefinition.Mocks.author()
         let rawAuthorContents = RawContent.Mocks.authors()
         let authorContents = rawAuthorContents.map {
-            authorDefinition.convert(
-                rawContent: $0,
-                definition: authorDefinition,
-                using: formatter
-            )
+            authorDefinition.convert(rawContent: $0, using: formatter)
         }
 
         let postDefinition = ContentDefinition.Mocks.post()
@@ -55,37 +47,29 @@ struct SourceBundleSitemapTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(
-                rawContent: $0,
-                definition: postDefinition,
-                using: formatter
-            )
+            postDefinition.convert(rawContent: $0, using: formatter)
         }
 
         // sitemap
         let sitemapDefinition = ContentDefinition.Mocks.sitemap()
         let rawSitemapContents = RawContent.Mocks.sitemap()
         let sitemapContents = rawSitemapContents.map {
-            sitemapDefinition.convert(
-                rawContent: $0,
-                definition: sitemapDefinition,
-                using: formatter
-            )
+            sitemapDefinition.convert(rawContent: $0, using: formatter)
         }
 
-        let contentBundles: [ContentBundle] = [
-            .init(definition: tagDefinition, contents: tagContents),
-            .init(definition: authorDefinition, contents: authorContents),
-            .init(definition: postDefinition, contents: postContents),
-            .init(definition: sitemapDefinition, contents: sitemapContents),
-        ]
+        let contents =
+            tagContents +
+            authorContents +
+            postContents +
+            sitemapContents
+        
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contentBundles: contentBundles
+            contents: contents
         )
 
         let templates: [String: String] = [

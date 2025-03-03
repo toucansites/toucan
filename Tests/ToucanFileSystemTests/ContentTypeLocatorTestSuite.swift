@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import ToucanFileSystem
+@testable import ToucanModels
 @testable import FileManagerKitTesting
 
 import Testing

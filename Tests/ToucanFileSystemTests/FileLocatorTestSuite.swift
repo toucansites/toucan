@@ -11,7 +11,7 @@ struct FileLocatorTestSuite {
         try FileManagerPlayground()
             .test {
                 let locator = FileLocator(fileManager: $0)
-                let locations = locator.locate(at: $1).sorted()
+                let locations = locator.locate(at: $1)
 
                 #expect(locations.isEmpty)
             }

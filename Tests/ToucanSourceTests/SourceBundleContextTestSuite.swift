@@ -61,11 +61,7 @@ struct SourceBundleContextTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(
-                rawContent: $0,
-                definition: postDefinition,
-                using: formatter
-            )
+            postDefinition.convert(rawContent: $0, using: formatter)
         }
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
@@ -90,24 +86,19 @@ struct SourceBundleContextTestSuite {
             )
         ]
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(
-                rawContent: $0,
-                definition: pageDefinition,
-                using: formatter
-            )
+            pageDefinition.convert(rawContent: $0, using: formatter)
         }
 
-        let contentBundles: [ContentBundle] = [
-            .init(definition: postDefinition, contents: postContents),
-            .init(definition: pageDefinition, contents: pageContents),
-        ]
+        let contents =
+            postContents +
+            pageContents
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contentBundles: contentBundles
+            contents: contents
         )
 
         let results = try sourceBundle.generatePipelineResults(

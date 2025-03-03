@@ -42,9 +42,7 @@ public struct ContentDefinition: Decodable {
 
     // MARK: - decoder
 
-    public init(
-        from decoder: any Decoder
-    ) throws {
+    public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let type = try container.decode(String.self, forKey: .type)

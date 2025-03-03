@@ -10,26 +10,18 @@ import Foundation
 extension URL {
 
     public func relativePath(to url: URL) -> String {
-        guard
-            let fullPath = URLComponents(
-                url: self,
-                resolvingAgainstBaseURL: true
-            )?
-            .path,
-            let basePath = URLComponents(
-                url: url,
-                resolvingAgainstBaseURL: true
-            )?
-            .path
-        else {
-            return self.path
-        }
+        let components = self.standardized.pathComponents
+        let baseComponents = url.standardized.pathComponents
 
-        if fullPath.hasPrefix(basePath) {
-            return String(fullPath.dropFirst(basePath.count))
-        }
+        // Find common prefix length
+        let commonPrefixCount = zip(components, baseComponents)
+            .prefix { $0 == $1 }
+            .count
 
-        return fullPath
+        // Get the relative components by dropping the common ones
+        let relativeComponents = components.dropFirst(commonPrefixCount)
+
+        return relativeComponents.joined(separator: "/")
     }
 }
 

@@ -20,10 +20,6 @@ public extension ContentDefinition {
     enum Mocks {}
 }
 
-public extension ContentBundle {
-    enum Mocks {}
-}
-
 public extension SourceBundle {
     enum Mocks {}
 }

@@ -14,7 +14,7 @@ public struct SourceBundle {
     public var config: Config
     public var settings: Settings
     public var pipelines: [Pipeline]
-    public var contentBundles: [ContentBundle]
+    public var contents: [Content]
 
     var dateFormatter: DateFormatter
 
@@ -23,13 +23,13 @@ public struct SourceBundle {
         config: Config,
         settings: Settings,
         pipelines: [Pipeline],
-        contentBundles: [ContentBundle]
+        contents: [Content]
     ) {
         self.location = location
         self.config = config
         self.settings = settings
         self.pipelines = pipelines
-        self.contentBundles = contentBundles
+        self.contents = contents
 
         /// setup date formatter
         let formatter = DateFormatter()

@@ -28,35 +28,27 @@ struct SourceBundleRedirectTestSuite {
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages(max: 2)
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(
-                rawContent: $0,
-                definition: pageDefinition,
-                using: formatter
-            )
+            pageDefinition.convert(rawContent: $0, using: formatter)
         }
 
         // redirects
         let redirectDefinition = ContentDefinition.Mocks.redirect()
         let rawRedirectContents = RawContent.Mocks.redirectHomeOldAboutOld()
         let redirectContents = rawRedirectContents.map {
-            redirectDefinition.convert(
-                rawContent: $0,
-                definition: redirectDefinition,
-                using: formatter
-            )
+            redirectDefinition.convert(rawContent: $0, using: formatter)
         }
 
-        let contentBundles: [ContentBundle] = [
-            .init(definition: pageDefinition, contents: pageContents),
-            .init(definition: redirectDefinition, contents: redirectContents),
-        ]
+        let contents =
+            pageContents +
+            redirectContents
+        
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contentBundles: contentBundles
+            contents: contents
         )
 
         let templates: [String: String] = [

@@ -17,16 +17,13 @@ struct SourceLoader {
     let sourceUrl: URL
 
 //    let baseUrl: String?
-//    let yamlFileLoader: FileLoader
-//    let frontMatterParser: FrontMatterParser
     
     let fileManager: FileManagerKit
     let yamlParser: YamlParser
+    let frontMatterParser: FrontMatterParser
     
     let logger: Logger
     
-    // TODO: move locators out of this? pass locations?
-
     /// load the configuration & the contents of the site source
     func load() throws -> SourceBundle {
         /// Config
@@ -137,34 +134,46 @@ struct SourceLoader {
 //
 //        let blockDirectives = try blockDirectiveLoader.load()
 
-        /// Content bundles
-        
+        /// Locate RawContents.
         let rawContentLocations = RawContentLocator(fileManager: fileManager)
             .locate(at: sourceConfig.contentsUrl)
         
-//        let pageBundleLoader = PageBundleLoader(
-//            sourceConfig: sourceConfig,
-//            contentTypes: contentTypes,
-//            fileManager: fileManager,
-//            frontMatterParser: frontMatterParser,
-//            logger: logger
-//        )
-//        let pageBundles = try pageBundleLoader.load()
+        /// Load RawContents.
+        let rawContentsLoader = RawContentLoader(
+            url: sourceConfig.contentsUrl,
+            locations: rawContentLocations,
+            sourceConfig: sourceConfig,
+            yamlParser: yamlParser,
+            frontMatterParser: frontMatterParser,
+            fileManager: fileManager,
+            logger: logger
+        )
+        let rawContents = try rawContentsLoader.load()
+        
+        /// Create Contents from RawContents.
+        let contents: [Content] = rawContents.compactMap {
+            // TODO: - create struct with reserved keys and try to decode?
+            let explicitTypeId = $0.frontMatter["type"]?.stringValue()
+            let contentDefinition = $0.origin.detectContentDefinition(
+                in: contentDefinitions,
+                explicitTypeId: explicitTypeId
+            )
+            
+            guard let contentDefinition else {
+                logger.info("Invalid content type for: \($0.origin.path)")
+                return nil
+            }
+            
+            // TODO: - find dateformatter
+            return contentDefinition.convert(rawContent: $0, using: .init())
+        }
 
         return .init(
             location: sourceUrl,
             config: config,
-            settings: .defaults,    // TODO: parse settings
+            settings: .defaults,    // TODO: - parse settings
             pipelines: pipelines,
-            contentBundles: []    // TODO: parse content bundles
+            contents: contents
         )
-        
-//        return .init(
-//            sourceConfig: sourceConfig,
-//            contentTypes: contentTypes,
-//            blockDirectives: blockDirectives,
-//            pageBundles: pageBundles,
-//            logger: logger
-//        )
     }
 }

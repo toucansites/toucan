@@ -14,8 +14,8 @@ public struct TemplateLocation: Equatable, Comparable {
         lhs.id < rhs.id
     }
 
-    let id: String
-    let path: String
+    public let id: String
+    public let path: String
 
     public init(id: String, path: String) {
         self.id = id

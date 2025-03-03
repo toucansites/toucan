@@ -12,7 +12,6 @@ extension ContentDefinition {
 
     public func convert(
         rawContent: RawContent,
-        definition: ContentDefinition,
         using formatter: DateFormatter
     ) -> Content {
 
@@ -60,9 +59,11 @@ extension ContentDefinition {
             userDefined.removeValue(forKey: key)
         }
 
-        var id: String =
-            rawContent.origin.path.split(separator: "/").last.map(String.init)
-            ?? ""
+        var id: String = rawContent.origin.path
+            .split(separator: "/")
+            .last
+            .map(String.init) ?? ""
+        
         if let rawId = rawContent.frontMatter["id"]?.value as? String,
             !rawId.isEmpty
         {
@@ -80,7 +81,7 @@ extension ContentDefinition {
             id: id,
             slug: slug,
             rawValue: rawContent,
-            definition: definition,
+            definition: self,
             properties: properties,
             relations: relations,
             userDefined: userDefined

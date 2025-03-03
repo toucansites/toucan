@@ -68,7 +68,7 @@ public struct YamlParser {
         do {
             return try Yams.dump(object: yaml)
         } catch {
-            // TODO: this might not be the best idea, we should let the user know that he messed up a file
+            // TODO: - this might not be the best idea, we should let the user know that he messed up a file
             print(error)
             return ""
         }

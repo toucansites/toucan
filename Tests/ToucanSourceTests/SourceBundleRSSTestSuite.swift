@@ -35,35 +35,27 @@ struct SourceBundleRSSTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(
-                rawContent: $0,
-                definition: postDefinition,
-                using: formatter
-            )
+            postDefinition.convert(rawContent: $0, using: formatter)
         }
 
         // rss
         let rssDefinition = ContentDefinition.Mocks.rss()
         let rawRSSContents = RawContent.Mocks.rss()
         let rssContents = rawRSSContents.map {
-            rssDefinition.convert(
-                rawContent: $0,
-                definition: rssDefinition,
-                using: formatter
-            )
+            rssDefinition.convert(rawContent: $0, using: formatter)
         }
 
-        let contentBundles: [ContentBundle] = [
-            .init(definition: postDefinition, contents: postContents),
-            .init(definition: rssDefinition, contents: rssContents),
-        ]
+        let contents =
+            postContents +
+            rssContents
+        
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contentBundles: contentBundles
+            contents: contents
         )
 
         let templates: [String: String] = [

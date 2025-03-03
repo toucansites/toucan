@@ -19,6 +19,7 @@ public struct Toucan {
 
     let fileManager: FileManagerKit
     let yamlParser: YamlParser
+    let frontMatterParser: FrontMatterParser
     
     let fs: ToucanFileSystem
 
@@ -35,6 +36,7 @@ public struct Toucan {
     ) {
         self.fileManager = FileManager.default
         self.yamlParser = YamlParser()
+        self.frontMatterParser = FrontMatterParser(yamlParser: yamlParser)
         
         let home = fileManager.homeDirectoryForCurrentUser.path
 
@@ -74,18 +76,16 @@ public struct Toucan {
         logger.debug("Working at: `\(workDirUrl.absoluteString)`.")
 
         do {
-            // locate
-            
-            
-            // load
-            
             let sourceLoader = SourceLoader(
                 sourceUrl: inputUrl,
                 fileManager: fileManager,
                 yamlParser: yamlParser,
+                frontMatterParser: frontMatterParser,
                 logger: logger
             )
-            let source = try sourceLoader.load()
+            let sourceBundle = try sourceLoader.load()
+            
+            print("TODO: - handle SourceBundle \(sourceBundle)")
             
 //            source.validate(dateFormatter: DateFormatters.baseFormatter)
 //

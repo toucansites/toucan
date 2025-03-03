@@ -11,14 +11,10 @@ import ToucanModels
 extension SourceBundle {
 
     public func run(query: Query) -> [Content] {
-        let bundle = contentBundles.first {
+        let contents = contents.filter {
             query.contentType == $0.definition.type
         }
-        guard let bundle else {
-            print("ERROR: no such content type: `\(query.contentType)`.")
-            return []
-        }
-        return filter(contents: bundle.contents, using: query)
+        return filter(contents: contents, using: query)
     }
 
     private func compare(

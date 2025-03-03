@@ -8,14 +8,17 @@
 import ToucanSDK
 import Logging
 
-//extension Toucan {
-//
-//    @discardableResult
-//    func generateAndLogErrors(_ logger: Logger) -> Bool {
-//        do {
-//            try generate()
-//            return true
-//        }
+extension Toucan {
+
+    @discardableResult
+    func generateAndLogErrors(_ logger: Logger) -> Bool {
+        do {
+            try generate()
+            return true
+        }
+        
+        // TODO: - restore errors if needed
+        
 //        catch let error as FileLoader.Error {
 //            switch error {
 //            case .missing(let url):
@@ -84,10 +87,10 @@ import Logging
 //                )
 //            }
 //        }
-//        catch {
-//            logger.error("\(String(describing: error))")
-//        }
-//
-//        return false
-//    }
-//}
+        catch {
+            logger.error("\(String(describing: error))")
+        }
+
+        return false
+    }
+}

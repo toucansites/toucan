@@ -123,15 +123,15 @@ struct ToucanFileSystemTests {
 
             let contentsUrl = $1.appending(path: "src/contents/")
 
-            let pageBundles = fs.locateRawContents(at: contentsUrl)
+            let rawContentLocations = fs.locateRawContents(at: contentsUrl)
 
             #expect(
-                pageBundles.sorted()
+                rawContentLocations.sorted()
                     == [
-                        .init(path: "404", slug: "404"),
-                        .init(path: "home", slug: "home"),
-                        .init(path: "blog/authors", slug: "authors"),
-                        .init(path: "redirects/home-old", slug: "home-old"),
+                        .init(path: "404/index.md", slug: "404"),
+                        .init(path: "home/index.md", slug: "home"),
+                        .init(path: "blog/authors/index.md", slug: "authors"),
+                        .init(path: "redirects/home-old/index.md", slug: "home-old"),
                     ]
                     .sorted()
             )

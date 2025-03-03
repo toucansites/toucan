@@ -17,9 +17,7 @@ public struct ToucanFileSystem {
         self.templateLocator = TemplateLocator(fileManager: fileManager)
     }
 
-    func locateRawContents(
-        at url: URL
-    ) -> [RawContentLocation] {
+    func locateRawContents(at url: URL) -> [Origin] {
         rawContentLocator.locate(at: url)
     }
 
