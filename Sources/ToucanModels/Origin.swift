@@ -6,11 +6,11 @@
 //
 
 public struct Origin {
-    
+
     public static func < (lhs: Origin, rhs: Origin) -> Bool {
         lhs.slug < rhs.slug
     }
-    
+
     /// The original path of the page bundle directory, also serves as the content identifier.
     public var path: String
     /// The slug, derermined by the path and noindex files.
@@ -23,9 +23,9 @@ public struct Origin {
 }
 
 extension Origin: Equatable {
-    
+
 }
 
 extension Origin: Comparable {
-    
+
 }

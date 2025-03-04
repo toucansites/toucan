@@ -15,16 +15,16 @@ public struct ConfigLoader {
 
     /// The URL of the source files.
     let url: URL
-    
+
     /// Config file paths
     let locations: [String]
-    
+
     /// A parser responsible for processing YAML data.
     let yamlParser: YamlParser
-    
+
     /// The logger instance
     let logger: Logger
-    
+
     /// An enumeration representing possible errors that can occur while loading the configuration.
     public enum Error: Swift.Error {
         /// Indicates that a required configuration file is missing at the specified URL.
@@ -43,35 +43,36 @@ public struct ConfigLoader {
         logger.debug(
             "Loading config files (\(locations) at: `\(url.absoluteString)`."
         )
-        
+
         var rawItems: [String] = []
         for location in locations {
             let item = try resolveItem(location)
             rawItems.append(item)
         }
-        
-        let combinedRawYaml = try rawItems
+
+        let combinedRawYaml =
+            try rawItems
             .compactMap {
                 try yamlParser.parse($0)
             }
             .reduce([:]) { partialResult, item in
                 partialResult.recursivelyMerged(with: item)
             }
-        
+
         let combinedYamlString = try yamlParser.encode(combinedRawYaml)
         return try yamlParser.decode(combinedYamlString, as: Config.self)
     }
 }
 
 private extension ConfigLoader {
-    
+
     func resolveItem(
         _ location: String
     ) throws -> String {
         let url = url.appendingPathComponent(location)
         return try loadItem(at: url)
     }
-    
+
     func loadItem(at url: URL) throws -> String {
         try String(contentsOf: url, encoding: .utf8)
     }

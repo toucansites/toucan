@@ -34,10 +34,11 @@ extension Pipeline {
 
             let id = try container.decode(String.self, forKey: .id)
 
-            let options = try container.decodeIfPresent(
-                [String: AnyCodable].self,
-                forKey: .options
-            ) ?? [:]
+            let options =
+                try container.decodeIfPresent(
+                    [String: AnyCodable].self,
+                    forKey: .options
+                ) ?? [:]
 
             self.init(id: id, options: options)
         }

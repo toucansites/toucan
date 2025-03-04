@@ -19,5 +19,5 @@ extension Config {
 }
 
 extension Config.Location: Equatable {
-    
+
 }

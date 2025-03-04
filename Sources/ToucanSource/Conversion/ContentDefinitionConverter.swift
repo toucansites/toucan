@@ -10,11 +10,11 @@ import ToucanModels
 import Logging
 
 public struct ContentDefinitionConverter {
-    
+
     let contentDefinition: ContentDefinition
     let dateFormatter: DateFormatter
     let defaultDateFormat: String
-    
+
     let logger: Logger
 
     public init(
@@ -28,7 +28,7 @@ public struct ContentDefinitionConverter {
         self.defaultDateFormat = defaultDateFormat
         self.logger = logger
     }
-    
+
     public func convert(rawContent: RawContent) -> Content {
         var properties: [String: AnyCodable] = [:]
         for (key, property) in contentDefinition.properties {
@@ -39,7 +39,7 @@ public struct ContentDefinitionConverter {
                 defaultDateFormat: defaultDateFormat,
                 logger: logger
             )
-            
+
             properties[key] = converter.convert(rawValue: rawValue, forKey: key)
         }
 
@@ -66,7 +66,8 @@ public struct ContentDefinitionConverter {
             )
         }
 
-        let keysToRemove = ["id", "type", "slug"]
+        let keysToRemove =
+            ["id", "type", "slug"]
             + contentDefinition.properties.keys
             + contentDefinition.relations.keys
 
@@ -75,20 +76,21 @@ public struct ContentDefinitionConverter {
             userDefined.removeValue(forKey: key)
         }
 
-        var id: String = rawContent.origin.path
+        var id: String =
+            rawContent.origin.path
             .split(separator: "/")
             .last
             .map(String.init) ?? ""
-        
+
         let rawId = rawContent.frontMatter["id"]?.value as? String
-        
+
         if let rawId, !rawId.isEmpty {
             id = rawId
         }
 
         var slug: String = rawContent.origin.slug
         let rawSlug = rawContent.frontMatter["slug"]?.value as? String
-        
+
         if let rawSlug, !rawSlug.isEmpty {
             slug = rawSlug
         }
@@ -104,7 +106,6 @@ public struct ContentDefinitionConverter {
         )
     }
 }
-
 
 //extension ContentDefinition {
 //
@@ -123,7 +124,7 @@ public struct ContentDefinitionConverter {
 //                defaultDateFormat: defaultDateFormat,
 //                logger: .init(label: "TODO: - add logger here")
 //            )
-//            
+//
 //            properties[key] = converter.convert(rawValue: rawValue, forKey: key)
 //        }
 //
@@ -164,7 +165,7 @@ public struct ContentDefinitionConverter {
 //            .split(separator: "/")
 //            .last
 //            .map(String.init) ?? ""
-//        
+//
 //        if let rawId = rawContent.frontMatter["id"]?.value as? String,
 //            !rawId.isEmpty
 //        {

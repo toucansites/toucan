@@ -13,7 +13,7 @@ public struct AssetLocator {
 
     /// The file manager used for accessing the filesystem.
     private let fileManager: FileManagerKit
-    
+
     public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
     }

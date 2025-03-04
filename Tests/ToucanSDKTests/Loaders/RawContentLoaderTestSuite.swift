@@ -13,7 +13,7 @@ import FileManagerKitTesting
 @testable import ToucanSDK
 
 struct RawContentLoaderTestSuite {
-    
+
     @Test
     func rawContent() throws {
         try FileManagerPlayground {
@@ -23,14 +23,17 @@ struct RawContentLoaderTestSuite {
                         Directory("articles") {
                             "noindex.yaml"
                             Directory("first-beta-release") {
-                                File("index.md", string: """
-                                ---
-                                type: post
-                                title: "First beta release"
-                                ---
-                                
-                                This is a dummy post!
-                                """)
+                                File(
+                                    "index.md",
+                                    string: """
+                                        ---
+                                        type: post
+                                        title: "First beta release"
+                                        ---
+
+                                        This is a dummy post!
+                                        """
+                                )
                                 Directory("assets") {
                                     "image.png"
                                 }
@@ -49,7 +52,7 @@ struct RawContentLoaderTestSuite {
                 sourceUrl: $1.appending(path: "src/"),
                 config: .defaults
             )
-            
+
             let loader = RawContentLoader(
                 url: url,
                 locations: locations,
@@ -60,19 +63,20 @@ struct RawContentLoaderTestSuite {
                 logger: .init(label: "RawContentLoaderTests")
             )
             let results = try loader.load()
-            
+
             let result = try #require(results.first)
-            
+
             #expect(
-                result.origin == .init(
-                    path: "blog/articles/first-beta-release/index.md",
-                    slug: "blog/first-beta-release"
-                )
+                result.origin
+                    == .init(
+                        path: "blog/articles/first-beta-release/index.md",
+                        slug: "blog/first-beta-release"
+                    )
             )
             #expect(
                 result.frontMatter == [
                     "type": .init("post"),
-                    "title": .init("First beta release")
+                    "title": .init("First beta release"),
                 ]
             )
             #expect(result.markdown == "\n\nThis is a dummy post!")

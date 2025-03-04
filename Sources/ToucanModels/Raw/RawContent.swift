@@ -29,12 +29,11 @@ public struct RawContent {
 }
 
 extension RawContent: Equatable {
-    
+
     public static func == (lhs: RawContent, rhs: RawContent) -> Bool {
-        lhs.origin == rhs.origin &&
-        lhs.frontMatter == rhs.frontMatter &&
-        lhs.markdown == rhs.markdown &&
-        lhs.lastModificationDate == rhs.lastModificationDate &&
-        lhs.assets == rhs.assets
+        lhs.origin == rhs.origin && lhs.frontMatter == rhs.frontMatter
+            && lhs.markdown == rhs.markdown
+            && lhs.lastModificationDate == rhs.lastModificationDate
+            && lhs.assets == rhs.assets
     }
 }

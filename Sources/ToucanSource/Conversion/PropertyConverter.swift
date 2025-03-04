@@ -10,13 +10,13 @@ import ToucanModels
 import Logging
 
 struct PropertConverter {
-    
+
     let property: Property
     let dateFormatter: DateFormatter
     let defaultDateFormat: String
-    
+
     let logger: Logger
-    
+
     func convert(rawValue: AnyCodable?, forKey key: String) -> AnyCodable? {
         if property.required, rawValue == nil {
             logger.debug("ERROR - property is missing: \(key).")
@@ -32,9 +32,9 @@ struct PropertConverter {
                 )
                 return nil
             }
-            
+
             dateFormatter.dateFormat = format.emptyToNil ?? defaultDateFormat
-            
+
             guard let value = dateFormatter.date(from: rawDateValue) else {
                 logger.debug(
                     "ERROR: property is not a date (\(key): \(value ?? "nil"))."

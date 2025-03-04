@@ -20,16 +20,19 @@ struct ConfigLoaderTestSuite {
     func config() throws {
         try FileManagerPlayground {
             Directory("src") {
-                File("config.yml", string: """
-                pipelines:
-                    testKey: testValue
-                contents:
-                    path: contents
-                    assets: 
-                        path: assets
-                dateFormats:
-                    input: y
-                """)
+                File(
+                    "config.yml",
+                    string: """
+                        pipelines:
+                            testKey: testValue
+                        contents:
+                            path: contents
+                            assets: 
+                                path: assets
+                        dateFormats:
+                            input: y
+                        """
+                )
             }
         }
         .test {
@@ -43,14 +46,15 @@ struct ConfigLoaderTestSuite {
                 logger: .init(label: "ConfigLoaderTests")
             )
             let result = try loader.load()
-            
+
             #expect(
-                result == Config(
-                    pipelines: .defaults,
-                    contents: .defaults,
-                    themes: .defaults,
-                    dateFormats: .init(input: "y", output: [:])
-                )
+                result
+                    == Config(
+                        pipelines: .defaults,
+                        contents: .defaults,
+                        themes: .defaults,
+                        dateFormats: .init(input: "y", output: [:])
+                    )
             )
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ToucanContent
 import ToucanModels
 
 public struct SourceBundle {
@@ -15,6 +16,7 @@ public struct SourceBundle {
     public var settings: Settings
     public var pipelines: [Pipeline]
     public var contents: [Content]
+    public var blockDirectives: [MarkdownBlockDirective]
 
     var dateFormatter: DateFormatter
 
@@ -23,13 +25,15 @@ public struct SourceBundle {
         config: Config,
         settings: Settings,
         pipelines: [Pipeline],
-        contents: [Content]
+        contents: [Content],
+        blockDirectives: [MarkdownBlockDirective]
     ) {
         self.location = location
         self.config = config
         self.settings = settings
         self.pipelines = pipelines
         self.contents = contents
+        self.blockDirectives = blockDirectives
 
         /// setup date formatter
         let formatter = DateFormatter()

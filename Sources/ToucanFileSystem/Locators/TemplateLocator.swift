@@ -31,12 +31,14 @@ private extension TemplateLocator {
         at url: URL,
         overrides overridesUrl: URL
     ) -> [TemplateLocation] {
-        let overrideLocations = fileManager
+        let overrideLocations =
+            fileManager
             .listDirectoryRecursively(at: overridesUrl)
             .relativePathsGroupedByPathId(baseUrl: overridesUrl)
             .filter { $1.hasSuffix(".\(ext)") }
 
-        var locations = fileManager
+        var locations =
+            fileManager
             .listDirectoryRecursively(at: url)
             .relativePathsGroupedByPathId(baseUrl: url)
             .filter { $1.hasSuffix(".\(ext)") }

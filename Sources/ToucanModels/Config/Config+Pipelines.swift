@@ -32,19 +32,20 @@ extension Config {
         public init(from decoder: any Decoder) throws {
             let defaults = Self.defaults
             let container = try? decoder.container(keyedBy: CodingKeys.self)
-            
+
             guard let container else {
                 self = defaults
                 return
             }
-            self.path = try container.decodeIfPresent(
-                String.self,
-                forKey: .path
-            ) ?? defaults.path
+            self.path =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .path
+                ) ?? defaults.path
         }
     }
 }
 
 extension Config.Pipelines: Equatable {
-    
+
 }

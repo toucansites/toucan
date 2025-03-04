@@ -22,20 +22,26 @@ struct ContentDefinitionLoaderTestSuite {
             Directory("themes") {
                 Directory("default") {
                     Directory("types") {
-                        File("foo.yml", string: """
-                        type: foo
-                        paths:
-                        properties:
-                        relations:
-                        queries:
-                        """)
-                        File("bar.yml", string: """
-                        type: bar
-                        paths:
-                        properties:
-                        relations:
-                        queries:
-                        """)
+                        File(
+                            "foo.yml",
+                            string: """
+                                type: foo
+                                paths:
+                                properties:
+                                relations:
+                                queries:
+                                """
+                        )
+                        File(
+                            "bar.yml",
+                            string: """
+                                type: bar
+                                paths:
+                                properties:
+                                relations:
+                                queries:
+                                """
+                        )
                     }
                 }
             }
@@ -54,7 +60,7 @@ struct ContentDefinitionLoaderTestSuite {
                 logger: .init(label: "ContentTypeLoaderTests")
             )
             let result = try loader.load()
-            
+
             #expect(
                 result == [
                     .init(
@@ -75,32 +81,38 @@ struct ContentDefinitionLoaderTestSuite {
             )
         }
     }
-    
+
     @Test
     func contentDefinitionsOverride() throws {
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
                     Directory("types") {
-                        File("foo.yml", string: """
-                        type: foo
-                        paths:
-                        properties:
-                        relations:
-                        queries:
-                        """)
+                        File(
+                            "foo.yml",
+                            string: """
+                                type: foo
+                                paths:
+                                properties:
+                                relations:
+                                queries:
+                                """
+                        )
                         File("bar.yml", string: "")
                     }
                 }
                 Directory("overrides") {
                     Directory("types") {
-                        File("bar.yml", string: """
-                        type: bar
-                        paths:
-                        properties:
-                        relations:
-                        queries:
-                        """)
+                        File(
+                            "bar.yml",
+                            string: """
+                                type: bar
+                                paths:
+                                properties:
+                                relations:
+                                queries:
+                                """
+                        )
                     }
                 }
             }
@@ -119,7 +131,7 @@ struct ContentDefinitionLoaderTestSuite {
                 logger: .init(label: "ContentTypeLoaderTests")
             )
             let result = try loader.load()
-            
+
             #expect(
                 result == [
                     .init(

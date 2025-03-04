@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import ToucanModels
+import ToucanContent
 import ToucanTesting
 import Logging
 @testable import ToucanSource
@@ -23,10 +24,10 @@ struct SourceBundleContextTestSuite {
         formatter.timeZone = .init(secondsFromGMT: 0)
 
         // TODO: - remove comment
-        
+
         //        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
         //        let nowString = formatter.string(from: now)
-        
+
         let logger = Logger(label: "SourceBundleContextTestSuite")
 
         let pipelines: [Pipeline] = [
@@ -107,15 +108,17 @@ struct SourceBundleContextTestSuite {
         }
 
         let contents =
-            postContents +
-            pageContents
+            postContents + pageContents
+
+        let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contents: contents
+            contents: contents,
+            blockDirectives: blockDirectives
         )
 
         let results = try sourceBundle.generatePipelineResults(

@@ -14,7 +14,7 @@ import Yams
 struct PipelineLoader {
 
     let url: URL
-    
+
     let locations: [String]
 
     let yamlParser: YamlParser
@@ -35,12 +35,12 @@ struct PipelineLoader {
 }
 
 private extension PipelineLoader {
-    
+
     func resolveItem(_ location: String) throws -> Pipeline {
         let url = url.appendingPathComponent(location)
         return try loadItem(at: url)
     }
-    
+
     func loadItem(at url: URL) throws -> Pipeline {
         let string = try String(contentsOf: url, encoding: .utf8)
         return try yamlParser.decode(string, as: Pipeline.self)

@@ -1,5 +1,6 @@
 import Foundation
 import ToucanModels
+import ToucanContent
 import ToucanSource
 import Logging
 
@@ -16,7 +17,7 @@ public extension SourceBundle.Mocks {
     ) -> SourceBundle {
         let logger = Logger(label: "SourceBundleMocks")
         let formatter = DateFormatter()
-        
+
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages()
@@ -134,23 +135,21 @@ public extension SourceBundle.Mocks {
             return converter.convert(rawContent: $0)
         }
 
+        // block directives
+        let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
+
         let contents =
-            pageContents +
-            categoryContents +
-            guideContents +
-            tagContents +
-            authorContents +
-            postContents +
-            rssContents +
-            sitemapContents +
-            redirectContents
+            pageContents + categoryContents + guideContents + tagContents
+            + authorContents + postContents + rssContents + sitemapContents
+            + redirectContents
 
         return .init(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contents: contents
+            contents: contents,
+            blockDirectives: blockDirectives
         )
     }
 }

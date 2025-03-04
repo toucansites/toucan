@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import ToucanContent
 import Logging
 @testable import ToucanSource
 
@@ -18,7 +19,7 @@ struct SourceBundleRedirectTestSuite {
     @Test
     func redirect() throws {
         let logger = Logger(label: "SourceBundleRedirectTestSuite")
-        
+
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
@@ -54,16 +55,17 @@ struct SourceBundleRedirectTestSuite {
         }
 
         let contents =
-            pageContents +
-            redirectContents
-        
+            pageContents + redirectContents
+
+        let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contents: contents
+            contents: contents,
+            blockDirectives: blockDirectives
         )
 
         let templates: [String: String] = [

@@ -75,15 +75,21 @@ public struct ContentDefinition: Decodable {
 }
 
 extension ContentDefinition: Equatable {
-    
-    public static func == (lhs: ContentDefinition, rhs: ContentDefinition) -> Bool {
+
+    public static func == (
+        lhs: ContentDefinition,
+        rhs: ContentDefinition
+    ) -> Bool {
         lhs.type == rhs.type
     }
 }
 
 extension ContentDefinition: Comparable {
-    
-    public static func < (lhs: ContentDefinition, rhs: ContentDefinition) -> Bool {
+
+    public static func < (
+        lhs: ContentDefinition,
+        rhs: ContentDefinition
+    ) -> Bool {
         lhs.type < rhs.type
     }
 }

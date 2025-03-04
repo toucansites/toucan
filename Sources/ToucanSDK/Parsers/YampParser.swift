@@ -63,7 +63,7 @@ public struct YamlParser {
     func decode<T: Decodable>(_ yaml: String, as type: T.Type) throws -> T {
         try YAMLDecoder().decode(T.self, from: yaml)
     }
-    
+
     func encode(_ yaml: [String: Any]) throws -> String {
         try Yams.dump(object: yaml)
     }
