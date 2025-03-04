@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public struct Property: Decodable {
+public struct Property: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
         case `required`

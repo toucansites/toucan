@@ -56,7 +56,9 @@ extension PropertyType: Equatable {
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
-        case (.bool, .bool), (.int, .int), (.double, .double),
+        case (.bool, .bool),
+            (.int, .int),
+            (.double, .double),
             (.string, .string):
             return true
         case let (.date(format1), .date(format2)):

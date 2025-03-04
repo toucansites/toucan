@@ -7,12 +7,7 @@
 
 import Foundation
 
-public struct TemplateLocation: Equatable, Comparable {
-
-    public static func < (lhs: TemplateLocation, rhs: TemplateLocation) -> Bool
-    {
-        lhs.id < rhs.id
-    }
+public struct TemplateLocation: Equatable {
 
     public let id: String
     public let path: String

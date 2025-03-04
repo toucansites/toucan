@@ -16,7 +16,7 @@ struct ContentDefinitionLoader {
 
     let url: URL
     let overridesUrl: URL
-    
+
     let locations: [OverrideFileLocation]
 
     let yamlParser: YamlParser
@@ -30,7 +30,7 @@ struct ContentDefinitionLoader {
         var items: [ContentDefinition] = []
         for location in locations {
             let item = try resolveItem(location)
-            
+
             if !items.contains(where: { $0.type == item.type }) {
                 items.append(item)
             }
@@ -44,7 +44,7 @@ struct ContentDefinitionLoader {
 }
 
 private extension ContentDefinitionLoader {
-    
+
     func resolveItem(
         _ location: OverrideFileLocation
     ) throws -> ContentDefinition {
@@ -52,11 +52,11 @@ private extension ContentDefinitionLoader {
             let url = overridesUrl.appendingPathComponent(path)
             return try loadItem(at: url)
         }
-        
+
         let url = url.appendingPathComponent(location.path)
         return try loadItem(at: url)
     }
-    
+
     func loadItem(at url: URL) throws -> ContentDefinition {
         let string = try String(contentsOf: url, encoding: .utf8)
         return try yamlParser.decode(string, as: ContentDefinition.self)

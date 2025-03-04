@@ -34,7 +34,7 @@ public struct ToucanFileSystem {
     ) -> [TemplateLocation] {
         templateLocator.locate(at: url, overridesUrl: overridesUrl)
     }
-    
+
     func loadContentDefinitions(
         _ locations: [OverrideFileLocation]
     ) -> [ContentDefinition] {

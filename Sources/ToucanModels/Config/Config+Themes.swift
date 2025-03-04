@@ -9,7 +9,7 @@ import Foundation
 
 extension Config {
 
-    public struct Themes: Decodable {
+    public struct Themes: Decodable, Equatable {
 
         enum CodingKeys: CodingKey {
             case location
@@ -63,45 +63,47 @@ extension Config {
         public init(from decoder: any Decoder) throws {
             let defaults = Self.defaults
             let container = try? decoder.container(keyedBy: CodingKeys.self)
-            
+
             guard let container else {
                 self = defaults
                 return
             }
-            
-            self.location = try container.decodeIfPresent(
-                Location.self,
-                forKey: .location
-            ) ?? defaults.location
-            
-            self.current = try container.decodeIfPresent(
-                Location.self,
-                forKey: .current
-            ) ?? defaults.current
-            
-            self.assets = try container.decodeIfPresent(
-                Location.self,
-                forKey: .assets
-            ) ?? defaults.assets
-            
-            self.templates = try container.decodeIfPresent(
-                Location.self,
-                forKey: .templates
-            ) ?? defaults.templates
-            
-            self.types = try container.decodeIfPresent(
-                Location.self,
-                forKey: .types
-            ) ?? defaults.types
-            
-            self.overrides = try container.decodeIfPresent(
-                Location.self,
-                forKey: .overrides
-            ) ?? defaults.overrides
+
+            self.location =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .location
+                ) ?? defaults.location
+
+            self.current =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .current
+                ) ?? defaults.current
+
+            self.assets =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .assets
+                ) ?? defaults.assets
+
+            self.templates =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .templates
+                ) ?? defaults.templates
+
+            self.types =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .types
+                ) ?? defaults.types
+
+            self.overrides =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .overrides
+                ) ?? defaults.overrides
         }
     }
-}
-
-extension Config.Themes: Equatable {
-    
 }

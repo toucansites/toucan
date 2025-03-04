@@ -275,13 +275,13 @@ extension SourceBundle {
         var bundles: [ContextBundle] = []
 
         for content in contents {
-            
+
             let pipelineContext = getPipelineContext(
                 for: pipeline,
                 currentSlug: content.slug
             )
-                .recursivelyMerged(with: siteContext)
-            
+            .recursivelyMerged(with: siteContext)
+
             if let iteratorId = extractIteratorId(from: content.slug) {
                 guard
                     let query = pipeline.iterators[iteratorId],
@@ -291,7 +291,7 @@ extension SourceBundle {
                 else {
                     continue
                 }
-                
+
                 let countQuery = Query(
                     contentType: query.contentType,
                     scope: query.scope,
@@ -300,15 +300,15 @@ extension SourceBundle {
                     filter: query.filter,
                     orderBy: query.orderBy
                 )
-                
+
                 let total = run(query: countQuery).count
                 let limit = max(1, query.limit ?? 10)
                 let numberOfPages = (total + limit - 1) / limit
-                
+
                 for i in 0..<numberOfPages {
                     let offset = i * limit
                     let currentPageIndex = i + 1
-                    
+
                     let pageItems = run(
                         query: .init(
                             contentType: query.contentType,
@@ -318,19 +318,19 @@ extension SourceBundle {
                             orderBy: query.orderBy
                         )
                     )
-                    
+
                     let id = content.id.replacingOccurrences([
                         "{{\(iteratorId)}}": String(currentPageIndex)
                     ])
                     let slug = content.slug.replacingOccurrences([
                         "{{\(iteratorId)}}": String(currentPageIndex)
                     ])
-                    
+
                     // TODO: meh... option to replace {{total}} {{limit}} {{current}}?
                     var alteredContent = content
                     alteredContent.id = id
                     alteredContent.slug = slug
-                    
+
                     var itemCtx: [[String: AnyCodable]] = []
                     for pageItem in pageItems {
                         let pageItemCtx = getContextObject(
@@ -341,7 +341,7 @@ extension SourceBundle {
                         )
                         itemCtx.append(pageItemCtx)
                     }
-                    
+
                     let iteratorContext: [String: AnyCodable] = [
                         // TODO: links to other pages?
                         "iterator": .init(
@@ -355,28 +355,28 @@ extension SourceBundle {
                             ] as [String: AnyCodable]
                         )
                     ]
-                        .recursivelyMerged(with: pipelineContext)
-                    
+                    .recursivelyMerged(with: pipelineContext)
+
                     let bundle = getContextBundle(
                         content: alteredContent,
                         using: pipeline,
                         extraContext: iteratorContext
                     )
-                    
+
                     bundles.append(bundle)
                 }
-                
+
                 continue
             }
-            
+
             let isAllowed = pipeline.contentTypes.isAllowed(
                 contentType: content.definition.type
             )
-            
+
             guard isAllowed else {
                 continue
             }
-            
+
             let bundle = getContextBundle(
                 content: content,
                 using: pipeline,
@@ -384,7 +384,7 @@ extension SourceBundle {
             )
             bundles.append(bundle)
         }
-        
+
         return bundles
     }
 

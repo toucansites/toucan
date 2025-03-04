@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum Direction: String, Decodable {
+public enum Direction: String, Decodable, Equatable {
     case asc
     case desc
 

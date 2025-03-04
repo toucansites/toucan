@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct Location: Decodable {
+    public struct Location: Decodable, Equatable {
         public var path: String
 
         // MARK: - init
@@ -16,8 +16,4 @@ extension Config {
             self.path = path
         }
     }
-}
-
-extension Config.Location: Equatable {
-    
 }

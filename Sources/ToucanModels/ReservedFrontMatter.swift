@@ -7,19 +7,15 @@
 
 import Foundation
 
-public struct ReservedFrontMatter: Decodable {
-    
+public struct ReservedFrontMatter: Decodable, Equatable {
+
     public let type: String?
-    
+
     public static func empty() -> Self {
         .init(type: nil)
     }
-    
+
     public init(type: String?) {
         self.type = type
     }
-}
-
-extension ReservedFrontMatter: Equatable {
-    
 }

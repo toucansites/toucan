@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Config: Decodable {
+public struct Config: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
         case pipelines
@@ -51,49 +51,44 @@ public struct Config: Decodable {
     public init(from decoder: any Decoder) throws {
         let defaults = Self.defaults
         let container = try? decoder.container(keyedBy: CodingKeys.self)
-        
+
         guard let container else {
             self = defaults
             return
         }
 
-        self.pipelines = try container.decodeIfPresent(
-            Pipelines.self,
-            forKey: .pipelines
-        ) ?? defaults.pipelines
+        self.pipelines =
+            try container.decodeIfPresent(
+                Pipelines.self,
+                forKey: .pipelines
+            ) ?? defaults.pipelines
 
-        self.contents = try container.decodeIfPresent(
-            Contents.self,
-            forKey: .contents
-        ) ?? defaults.contents
-        
-        self.themes = try container.decodeIfPresent(
-            Themes.self,
-            forKey: .themes
-        ) ?? defaults.themes
+        self.contents =
+            try container.decodeIfPresent(
+                Contents.self,
+                forKey: .contents
+            ) ?? defaults.contents
 
-        self.dateFormats = try container.decodeIfPresent(
-            DateFormats.self,
-            forKey: .dateFormats
-        ) ?? defaults.dateFormats
-    }
-}
+        self.themes =
+            try container.decodeIfPresent(
+                Themes.self,
+                forKey: .themes
+            ) ?? defaults.themes
 
-extension Config: Equatable {
-    
-    public static func == (lhs: Config, rhs: Config) -> Bool {
-        lhs.pipelines == rhs.pipelines &&
-        lhs.contents == rhs.contents &&
-        lhs.dateFormats == rhs.dateFormats
+        self.dateFormats =
+            try container.decodeIfPresent(
+                DateFormats.self,
+                forKey: .dateFormats
+            ) ?? defaults.dateFormats
     }
 }
 
 extension Config {
-    
+
     public func inputDateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = dateFormats.input
-        
+
         return formatter
     }
 }

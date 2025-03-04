@@ -20,7 +20,7 @@ public struct Toucan {
     let fileManager: FileManagerKit
     let yamlParser: YamlParser
     let frontMatterParser: FrontMatterParser
-    
+
     let fs: ToucanFileSystem
 
     /// Initialize a new instance.
@@ -37,7 +37,7 @@ public struct Toucan {
         self.fileManager = FileManager.default
         self.yamlParser = YamlParser()
         self.frontMatterParser = FrontMatterParser(yamlParser: yamlParser)
-        
+
         let home = fileManager.homeDirectoryForCurrentUser.path
 
         func getSafeUrl(_ path: String, home: String) -> URL {
@@ -84,104 +84,104 @@ public struct Toucan {
                 logger: logger
             )
             let sourceBundle = try sourceLoader.load()
-            
+
             print("TODO: - handle SourceBundle \(sourceBundle)")
-            
-//            source.validate(dateFormatter: DateFormatters.baseFormatter)
-//
-//            // theme assets
-//            try fileManager.copyRecursively(
-//                from: source.sourceConfig.currentThemeAssetsUrl,
-//                to: workDirUrl
-//            )
-//            // theme override assets
-//            try fileManager.copyRecursively(
-//                from: source.sourceConfig.currentThemeOverrideAssetsUrl,
-//                to: workDirUrl
-//            )
-//            // copy global site assets
-//            try fileManager.copyRecursively(
-//                from: source.sourceConfig.assetsUrl,
-//                to: workDirUrl
-//            )
-//
-//            // MARK: copy assets
-//
-//            for pageBundle in source.pageBundles {
-//                let assetsUrl = pageBundle.url
-//                    .appendingPathComponent(pageBundle.config.assets.folder)
-//
-//                guard
-//                    fileManager.directoryExists(at: assetsUrl),
-//                    !fileManager.listDirectory(at: assetsUrl).isEmpty
-//                else {
-//                    continue
-//                }
-//
-//                let workDirUrl =
-//                    workDirUrl
-//                    .appendingPathComponent(pageBundle.config.assets.folder)
-//                    .appendingPathComponent(pageBundle.assetsLocation)
-//
-//                try fileManager.copyRecursively(
-//                    from: assetsUrl,
-//                    to: workDirUrl
-//                )
-//            }
-//
-//            let templateRenderer = try MustacheToHTMLRenderer(
-//                templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
-//                overridesUrl: source
-//                    .sourceConfig
-//                    .currentThemeOverrideTemplatesUrl,
-//                logger: logger
-//            )
-//
-//            let redirectRenderer = RedirectRenderer(
-//                destinationUrl: workDirUrl,
-//                fileManager: .default,
-//                templateRenderer: templateRenderer,
-//                pageBundles: source.pageBundles
-//            )
-//            try redirectRenderer.render()
-//
-//            let sitemapRenderer = SitemapRenderer(
-//                destinationUrl: workDirUrl,
-//                fileManager: .default,
-//                templateRenderer: templateRenderer,
-//                pageBundles: source.sitemapPageBundles()
-//            )
-//            try sitemapRenderer.render()
-//
-//            let rssRenderer = RSSRenderer(
-//                source: source,
-//                destinationUrl: workDirUrl,
-//                fileManager: .default,
-//                templateRenderer: templateRenderer,
-//                pageBundles: source.rssPageBundles(),
-//                logger: logger
-//            )
-//            try rssRenderer.render()
-//
-//            let htmlRenderer = try HTMLRenderer(
-//                source: source,
-//                destinationUrl: workDirUrl,
-//                templateRenderer: templateRenderer,
-//                logger: logger
-//            )
-//
-//            try htmlRenderer.render()
-//
-//            let apiRenderer = try APIRenderer(
-//                source: source,
-//                destinationUrl: workDirUrl,
-//                logger: logger
-//            )
-//            try apiRenderer.render()
-//
-//            try resetDirectory(at: outputUrl)
-//            try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
-//
+
+            //            source.validate(dateFormatter: DateFormatters.baseFormatter)
+            //
+            //            // theme assets
+            //            try fileManager.copyRecursively(
+            //                from: source.sourceConfig.currentThemeAssetsUrl,
+            //                to: workDirUrl
+            //            )
+            //            // theme override assets
+            //            try fileManager.copyRecursively(
+            //                from: source.sourceConfig.currentThemeOverrideAssetsUrl,
+            //                to: workDirUrl
+            //            )
+            //            // copy global site assets
+            //            try fileManager.copyRecursively(
+            //                from: source.sourceConfig.assetsUrl,
+            //                to: workDirUrl
+            //            )
+            //
+            //            // MARK: copy assets
+            //
+            //            for pageBundle in source.pageBundles {
+            //                let assetsUrl = pageBundle.url
+            //                    .appendingPathComponent(pageBundle.config.assets.folder)
+            //
+            //                guard
+            //                    fileManager.directoryExists(at: assetsUrl),
+            //                    !fileManager.listDirectory(at: assetsUrl).isEmpty
+            //                else {
+            //                    continue
+            //                }
+            //
+            //                let workDirUrl =
+            //                    workDirUrl
+            //                    .appendingPathComponent(pageBundle.config.assets.folder)
+            //                    .appendingPathComponent(pageBundle.assetsLocation)
+            //
+            //                try fileManager.copyRecursively(
+            //                    from: assetsUrl,
+            //                    to: workDirUrl
+            //                )
+            //            }
+            //
+            //            let templateRenderer = try MustacheToHTMLRenderer(
+            //                templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
+            //                overridesUrl: source
+            //                    .sourceConfig
+            //                    .currentThemeOverrideTemplatesUrl,
+            //                logger: logger
+            //            )
+            //
+            //            let redirectRenderer = RedirectRenderer(
+            //                destinationUrl: workDirUrl,
+            //                fileManager: .default,
+            //                templateRenderer: templateRenderer,
+            //                pageBundles: source.pageBundles
+            //            )
+            //            try redirectRenderer.render()
+            //
+            //            let sitemapRenderer = SitemapRenderer(
+            //                destinationUrl: workDirUrl,
+            //                fileManager: .default,
+            //                templateRenderer: templateRenderer,
+            //                pageBundles: source.sitemapPageBundles()
+            //            )
+            //            try sitemapRenderer.render()
+            //
+            //            let rssRenderer = RSSRenderer(
+            //                source: source,
+            //                destinationUrl: workDirUrl,
+            //                fileManager: .default,
+            //                templateRenderer: templateRenderer,
+            //                pageBundles: source.rssPageBundles(),
+            //                logger: logger
+            //            )
+            //            try rssRenderer.render()
+            //
+            //            let htmlRenderer = try HTMLRenderer(
+            //                source: source,
+            //                destinationUrl: workDirUrl,
+            //                templateRenderer: templateRenderer,
+            //                logger: logger
+            //            )
+            //
+            //            try htmlRenderer.render()
+            //
+            //            let apiRenderer = try APIRenderer(
+            //                source: source,
+            //                destinationUrl: workDirUrl,
+            //                logger: logger
+            //            )
+            //            try apiRenderer.render()
+            //
+            //            try resetDirectory(at: outputUrl)
+            //            try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
+            //
             try? fileManager.delete(at: workDirUrl)
         }
         catch {

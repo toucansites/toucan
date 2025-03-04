@@ -84,11 +84,7 @@ struct SourceBundleSitemapTestSuite {
         }
 
         let contents =
-            tagContents +
-            authorContents +
-            postContents +
-            sitemapContents
-        
+            tagContents + authorContents + postContents + sitemapContents
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),

@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-public struct Query: Decodable {
+public struct Query: Decodable, Equatable {
 
     enum CodingKeys: String, CodingKey {
         case contentType

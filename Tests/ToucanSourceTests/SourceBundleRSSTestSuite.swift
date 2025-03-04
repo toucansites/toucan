@@ -60,9 +60,7 @@ struct SourceBundleRSSTestSuite {
         }
 
         let contents =
-            postContents +
-            rssContents
-        
+            postContents + rssContents
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),

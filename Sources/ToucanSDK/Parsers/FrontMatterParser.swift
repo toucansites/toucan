@@ -8,9 +8,9 @@
 import ToucanModels
 
 struct FrontMatterParser {
-    
+
     let yamlParser: YamlParser
-    
+
     /// Parses a given markdown string to extract metadata as a dictionary.
     /// - Parameter markdown: The markdown content containing metadata enclosed within "---".
     /// - Throws: An error if the YAML decoding fails.
@@ -19,17 +19,17 @@ struct FrontMatterParser {
         guard contents.starts(with: "---") else {
             return [:]
         }
-        
+
         let parts = contents.split(
             separator: "---",
             maxSplits: 1,
             omittingEmptySubsequences: true
         )
-        
+
         guard let rawMetadata = parts.first else {
             return [:]
         }
-        
+
         return try yamlParser.decode(
             String(rawMetadata),
             as: [String: AnyCodable].self

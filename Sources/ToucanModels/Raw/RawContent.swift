@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 30..
 //
 
-public struct RawContent {
+public struct RawContent: Equatable {
 
     public var origin: Origin
     public var frontMatter: [String: AnyCodable]
@@ -25,16 +25,5 @@ public struct RawContent {
         self.markdown = markdown
         self.lastModificationDate = lastModificationDate
         self.assets = assets
-    }
-}
-
-extension RawContent: Equatable {
-    
-    public static func == (lhs: RawContent, rhs: RawContent) -> Bool {
-        lhs.origin == rhs.origin &&
-        lhs.frontMatter == rhs.frontMatter &&
-        lhs.markdown == rhs.markdown &&
-        lhs.lastModificationDate == rhs.lastModificationDate &&
-        lhs.assets == rhs.assets
     }
 }

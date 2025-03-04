@@ -16,7 +16,7 @@ public extension SourceBundle.Mocks {
     ) -> SourceBundle {
         let logger = Logger(label: "SourceBundleMocks")
         let formatter = DateFormatter()
-        
+
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages()
@@ -135,15 +135,9 @@ public extension SourceBundle.Mocks {
         }
 
         let contents =
-            pageContents +
-            categoryContents +
-            guideContents +
-            tagContents +
-            authorContents +
-            postContents +
-            rssContents +
-            sitemapContents +
-            redirectContents
+            pageContents + categoryContents + guideContents + tagContents
+            + authorContents + postContents + rssContents + sitemapContents
+            + redirectContents
 
         return .init(
             location: .init(filePath: ""),

@@ -130,8 +130,7 @@ struct SourceBundleScopeTestSuite {
         }
 
         let contents =
-            postContents +
-            pageContents
+            postContents + pageContents
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
