@@ -23,17 +23,13 @@ extension Pipeline.DataTypes {
 
         // MARK: - init
 
-        public init(
-            formats: [String: String]
-        ) {
+        public init(formats: [String: String]) {
             self.formats = formats
         }
 
         // MARK: - decoder
 
-        public init(
-            from decoder: any Decoder
-        ) throws {
+        public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let formats =

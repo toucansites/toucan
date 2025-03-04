@@ -48,9 +48,7 @@ public struct Config: Decodable {
 
     // MARK: - decoder
 
-    public init(
-        from decoder: any Decoder
-    ) throws {
+    public init(from decoder: any Decoder) throws {
         let defaults = Self.defaults
         let container = try? decoder.container(keyedBy: CodingKeys.self)
         
@@ -87,5 +85,15 @@ extension Config: Equatable {
         lhs.pipelines == rhs.pipelines &&
         lhs.contents == rhs.contents &&
         lhs.dateFormats == rhs.dateFormats
+    }
+}
+
+extension Config {
+    
+    public func inputDateFormatter() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = dateFormats.input
+        
+        return formatter
     }
 }

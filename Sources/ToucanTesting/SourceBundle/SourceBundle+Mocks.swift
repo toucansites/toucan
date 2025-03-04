@@ -1,6 +1,7 @@
 import Foundation
 import ToucanModels
 import ToucanSource
+import Logging
 
 public extension SourceBundle.Mocks {
 
@@ -13,71 +14,124 @@ public extension SourceBundle.Mocks {
             Pipeline.Mocks.redirect(),
         ]
     ) -> SourceBundle {
-
+        let logger = Logger(label: "SourceBundleMocks")
         let formatter = DateFormatter()
+        
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages()
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: pageDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // categories
         let categoryDefinition = ContentDefinition.Mocks.category()
         let rawCategoryContents = RawContent.Mocks.categories()
         let categoryContents = rawCategoryContents.map {
-            categoryDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: categoryDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // guides
         let guideDefinition = ContentDefinition.Mocks.guide()
         let rawGuideContents = RawContent.Mocks.guides()
         let guideContents = rawGuideContents.map {
-            guideDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: guideDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // tags
         let tagDefinition = ContentDefinition.Mocks.tag()
         let rawTagContents = RawContent.Mocks.tags()
         let tagContents = rawTagContents.map {
-            tagDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: tagDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // authors
         let authorDefinition = ContentDefinition.Mocks.author()
         let rawAuthorContents = RawContent.Mocks.authors()
         let authorContents = rawAuthorContents.map {
-            authorDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: authorDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // posts
         let postDefinition = ContentDefinition.Mocks.post()
-        let rawPostContents = RawContent.Mocks.posts(
-            formatter: formatter
-        )
+        let rawPostContents = RawContent.Mocks.posts(formatter: formatter)
         let postContents = rawPostContents.map {
-            postDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: postDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // rss
         let rssDefinition = ContentDefinition.Mocks.rss()
         let rawRSSContents = RawContent.Mocks.rss()
         let rssContents = rawRSSContents.map {
-            rssDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: rssDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // sitemap
         let sitemapDefinition = ContentDefinition.Mocks.sitemap()
         let rawSitemapContents = RawContent.Mocks.sitemap()
         let sitemapContents = rawSitemapContents.map {
-            sitemapDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: sitemapDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // redirects
         let redirectDefinition = ContentDefinition.Mocks.redirect()
         let rawRedirectContents = RawContent.Mocks.redirectHomeOldAboutOld()
         let redirectContents = rawRedirectContents.map {
-            redirectDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: redirectDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let contents =

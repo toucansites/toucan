@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 @testable import ToucanSource
 
 @Suite
@@ -16,6 +17,7 @@ struct SourceBundleRSSTestSuite {
 
     @Test
     func rss() throws {
+        let logger = Logger(label: "SourceBundleRSSTestSuite")
         let now = Date()
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
@@ -35,14 +37,26 @@ struct SourceBundleRSSTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: postDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // rss
         let rssDefinition = ContentDefinition.Mocks.rss()
         let rawRSSContents = RawContent.Mocks.rss()
         let rssContents = rawRSSContents.map {
-            rssDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: rssDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let contents =

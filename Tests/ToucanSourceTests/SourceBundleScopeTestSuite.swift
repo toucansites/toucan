@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 @testable import ToucanSource
 
 @Suite
@@ -16,6 +17,7 @@ struct SourceBundleScopeTestSuite {
 
     @Test
     func testScopes() throws {
+        let logger = Logger(label: "SourceBundleScopeTestSuite")
         let now = Date()
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
@@ -87,7 +89,13 @@ struct SourceBundleScopeTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: postDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
@@ -112,7 +120,13 @@ struct SourceBundleScopeTestSuite {
             )
         ]
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: pageDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let contents =

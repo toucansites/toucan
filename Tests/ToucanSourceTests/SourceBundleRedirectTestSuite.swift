@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 @testable import ToucanSource
 
 @Suite
@@ -16,6 +17,8 @@ struct SourceBundleRedirectTestSuite {
 
     @Test
     func redirect() throws {
+        let logger = Logger(label: "SourceBundleRedirectTestSuite")
+        
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
@@ -28,14 +31,26 @@ struct SourceBundleRedirectTestSuite {
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages(max: 2)
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: pageDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // redirects
         let redirectDefinition = ContentDefinition.Mocks.redirect()
         let rawRedirectContents = RawContent.Mocks.redirectHomeOldAboutOld()
         let redirectContents = rawRedirectContents.map {
-            redirectDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: redirectDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let contents =

@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 @testable import ToucanSource
 
 @Suite
@@ -16,6 +17,7 @@ struct SourceBundleSitemapTestSuite {
 
     @Test
     func sitemap() throws {
+        let logger = Logger(label: "SourceBundleSitemapTestSuite")
         let now = Date()
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
@@ -31,13 +33,25 @@ struct SourceBundleSitemapTestSuite {
         let tagDefinition = ContentDefinition.Mocks.tag()
         let rawTagContents = RawContent.Mocks.tags()
         let tagContents = rawTagContents.map {
-            tagDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: tagDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let authorDefinition = ContentDefinition.Mocks.author()
         let rawAuthorContents = RawContent.Mocks.authors()
         let authorContents = rawAuthorContents.map {
-            authorDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: authorDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let postDefinition = ContentDefinition.Mocks.post()
@@ -47,14 +61,26 @@ struct SourceBundleSitemapTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: postDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         // sitemap
         let sitemapDefinition = ContentDefinition.Mocks.sitemap()
         let rawSitemapContents = RawContent.Mocks.sitemap()
         let sitemapContents = rawSitemapContents.map {
-            sitemapDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: sitemapDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let contents =

@@ -30,9 +30,7 @@ public struct Property: Decodable {
 
     // MARK: - decoder
 
-    public init(
-        from decoder: any Decoder
-    ) throws {
+    public init(from decoder: any Decoder) throws {
         let type = try decoder.singleValueContainer().decode(PropertyType.self)
 
         let container = try decoder.container(keyedBy: CodingKeys.self)

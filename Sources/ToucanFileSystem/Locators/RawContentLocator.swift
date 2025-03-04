@@ -2,7 +2,6 @@ import Foundation
 import FileManagerKit
 import ToucanModels
 
-// TODO: - dedicated tests, ToucanFileSystem tests have some related tests
 public struct RawContentLocator {
 
     private let fileManager: FileManagerKit

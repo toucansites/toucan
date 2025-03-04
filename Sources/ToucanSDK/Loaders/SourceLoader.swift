@@ -151,9 +151,15 @@ struct SourceLoader {
         let rawContents = try rawContentsLoader.load()
         
         /// Create Contents from RawContents.
-        let contents: [Content] = rawContents.compactMap {
-            // TODO: - create struct with reserved keys and try to decode?
-            let explicitTypeId = $0.frontMatter["type"]?.stringValue()
+        let contents: [Content] = try rawContents.compactMap {
+            /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
+            let rawReservedFromMatter = try yamlParser.encode($0.frontMatter)
+            let reservedFromMatter = try yamlParser.decode(
+                rawReservedFromMatter,
+                as: ReservedFrontMatter.self
+            )
+            
+            let explicitTypeId = reservedFromMatter.type
             let contentDefinition = $0.origin.detectContentDefinition(
                 in: contentDefinitions,
                 explicitTypeId: explicitTypeId
@@ -164,8 +170,14 @@ struct SourceLoader {
                 return nil
             }
             
-            // TODO: - find dateformatter
-            return contentDefinition.convert(rawContent: $0, using: .init())
+            let contentDefinitionConverter = ContentDefinitionConverter(
+                contentDefinition: contentDefinition,
+                dateFormatter: config.inputDateFormatter(),
+                defaultDateFormat: config.dateFormats.input,
+                logger: logger
+            )
+            
+            return contentDefinitionConverter.convert(rawContent: $0)
         }
 
         return .init(

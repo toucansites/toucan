@@ -65,12 +65,6 @@ public struct YamlParser {
     }
     
     func encode(_ yaml: [String: Any]) throws -> String {
-        do {
-            return try Yams.dump(object: yaml)
-        } catch {
-            // TODO: - this might not be the best idea, we should let the user know that he messed up a file
-            print(error)
-            return ""
-        }
+        try Yams.dump(object: yaml)
     }
 }

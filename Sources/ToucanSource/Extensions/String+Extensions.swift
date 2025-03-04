@@ -32,3 +32,24 @@ extension String {
         return ([baseUrl] + components).joined(separator: "/") + "/"
     }
 }
+
+extension String? {
+
+    var nilToEmpty: String {
+        switch self {
+        case .none:
+            return ""
+        case .some(let value):
+            return value
+        }
+    }
+
+    var emptyToNil: String? {
+        switch self {
+        case .none:
+            return nil
+        case .some(let value):
+            return value.isEmpty ? nil : self
+        }
+    }
+}

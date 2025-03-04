@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 @testable import ToucanSource
 
 @Suite
@@ -21,8 +22,12 @@ struct SourceBundleContextTestSuite {
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
 
+        // TODO: - remove comment
+        
         //        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
         //        let nowString = formatter.string(from: now)
+        
+        let logger = Logger(label: "SourceBundleContextTestSuite")
 
         let pipelines: [Pipeline] = [
             .init(
@@ -61,7 +66,13 @@ struct SourceBundleContextTestSuite {
             formatter: formatter
         )
         let postContents = rawPostContents.map {
-            postDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: postDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
@@ -86,7 +97,13 @@ struct SourceBundleContextTestSuite {
             )
         ]
         let pageContents = rawPageContents.map {
-            pageDefinition.convert(rawContent: $0, using: formatter)
+            let converter = ContentDefinitionConverter(
+                contentDefinition: pageDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
         }
 
         let contents =

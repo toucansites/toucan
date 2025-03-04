@@ -72,7 +72,6 @@ private extension RawContentLoader {
             .appending(path: sourceConfig.config.contents.assets.path)
         let assetLocations = assetLocator.locate(at: assetsUrl)
         
-        print(assetsUrl)
         return RawContent(
             origin: origin,
             frontMatter: frontMatter,
