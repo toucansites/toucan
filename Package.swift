@@ -126,6 +126,7 @@ let package = Package(
                 .product(name: "Yams", package: "yams"),
                 .target(name: "ToucanFileSystem"),
                 .target(name: "ToucanSource"),
+                .target(name: "ToucanTesting"),
             ],
             swiftSettings: swiftSettings
         ),

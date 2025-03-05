@@ -410,9 +410,7 @@ extension SourceBundle {
         return rawContext
     }
 
-    public func generatePipelineResults(
-        templates: [String: String]
-    ) throws -> [PipelineResult] {
+    public func generatePipelineResults() throws -> [PipelineResult] {
 
         let now = Date().timeIntervalSince1970
         var results: [PipelineResult] = []

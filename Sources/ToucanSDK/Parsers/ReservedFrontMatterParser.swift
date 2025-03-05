@@ -26,8 +26,6 @@ struct ReservedFrontMatterParser {
             return .empty()
         }
 
-        let a: [String: AnyCodable]
-
         return try yamlParser.decode(
             String(rawMetadata),
             as: ReservedFrontMatter.self

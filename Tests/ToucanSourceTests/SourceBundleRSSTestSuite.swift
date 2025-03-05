@@ -64,6 +64,9 @@ struct SourceBundleRSSTestSuite {
             postContents + rssContents
 
         let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
+        let templates: [String: String] = [
+            "rss": Templates.Mocks.rss()
+        ]
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
@@ -71,16 +74,11 @@ struct SourceBundleRSSTestSuite {
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,
-            blockDirectives: blockDirectives
-        )
-
-        let templates: [String: String] = [
-            "rss": Templates.Mocks.rss()
-        ]
-
-        let results = try sourceBundle.generatePipelineResults(
+            blockDirectives: blockDirectives,
             templates: templates
         )
+
+        let results = try sourceBundle.generatePipelineResults()
 
         #expect(results.count == 1)
 
