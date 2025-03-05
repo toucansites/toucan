@@ -8,7 +8,7 @@
 import FileManagerKit
 import Foundation
 
-extension FileManagerKit {
+public extension FileManagerKit {
 
     func listDirectoryRecursively(at url: URL) -> [URL] {
         listDirectory(at: url)
