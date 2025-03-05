@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum PropertyType: Decodable {
+public enum PropertyType: Decodable, Equatable {
     case bool
     case int
     case double
@@ -48,21 +48,6 @@ public enum PropertyType: Decodable {
                 forKey: .format
             )
             self = .date(format: format)
-        }
-    }
-}
-
-extension PropertyType: Equatable {
-
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case (.bool, .bool), (.int, .int), (.double, .double),
-            (.string, .string):
-            return true
-        case let (.date(format1), .date(format2)):
-            return format1 == format2
-        default:
-            return false
         }
     }
 }

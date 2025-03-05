@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct Contents: Decodable {
+    public struct Contents: Decodable, Equatable {
 
         enum CodingKeys: CodingKey {
             case path
@@ -65,15 +65,5 @@ extension Config {
                     forKey: .assets
                 ) ?? defaults.assets
         }
-    }
-}
-
-extension Config.Contents: Equatable {
-
-    public static func == (
-        lhs: Config.Contents,
-        rhs: Config.Contents
-    ) -> Bool {
-        lhs.path == rhs.path && lhs.assets == rhs.assets
     }
 }

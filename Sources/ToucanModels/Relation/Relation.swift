@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public struct Relation: Decodable {
+public struct Relation: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
         case references

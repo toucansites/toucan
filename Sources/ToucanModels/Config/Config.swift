@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Config: Decodable {
+public struct Config: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
         case pipelines
@@ -83,13 +83,13 @@ public struct Config: Decodable {
     }
 }
 
-extension Config: Equatable {
-
-    public static func == (lhs: Config, rhs: Config) -> Bool {
-        lhs.pipelines == rhs.pipelines && lhs.contents == rhs.contents
-            && lhs.dateFormats == rhs.dateFormats
-    }
-}
+//extension Config: Equatable {
+//
+//    public static func == (lhs: Config, rhs: Config) -> Bool {
+//        lhs.pipelines == rhs.pipelines && lhs.contents == rhs.contents
+//            && lhs.dateFormats == rhs.dateFormats
+//    }
+//}
 
 extension Config {
 

@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct Pipelines: Decodable {
+    public struct Pipelines: Decodable, Equatable {
 
         enum CodingKeys: CodingKey {
             case path
@@ -44,8 +44,4 @@ extension Config {
                 ) ?? defaults.path
         }
     }
-}
-
-extension Config.Pipelines: Equatable {
-
 }

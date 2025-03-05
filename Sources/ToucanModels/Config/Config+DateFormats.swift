@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct DateFormats: Decodable {
+    public struct DateFormats: Decodable, Equatable {
 
         enum CodingKeys: CodingKey {
             case input
@@ -64,8 +64,4 @@ extension Config {
                 ) ?? defaults.output
         }
     }
-}
-
-extension Config.DateFormats: Equatable {
-
 }

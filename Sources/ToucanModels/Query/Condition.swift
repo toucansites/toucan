@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum Condition: Decodable {
+public enum Condition: Decodable, Equatable {
     case field(key: String, operator: Operator, value: AnyCodable)
     case and([Condition])
     case or([Condition])

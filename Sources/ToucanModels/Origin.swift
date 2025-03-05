@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 30..
 //
 
-public struct Origin {
+public struct Origin: Equatable, Comparable {
 
     public static func < (lhs: Origin, rhs: Origin) -> Bool {
         lhs.slug < rhs.slug
@@ -20,12 +20,4 @@ public struct Origin {
         self.path = path
         self.slug = slug
     }
-}
-
-extension Origin: Equatable {
-
-}
-
-extension Origin: Comparable {
-
 }

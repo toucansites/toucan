@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-public struct Order: Decodable {
+public struct Order: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
         case key

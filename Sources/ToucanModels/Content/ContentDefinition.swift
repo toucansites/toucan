@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-public struct ContentDefinition: Decodable {
+public struct ContentDefinition: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
         case `type`
@@ -71,25 +71,5 @@ public struct ContentDefinition: Decodable {
             relations: relations,
             queries: queries
         )
-    }
-}
-
-extension ContentDefinition: Equatable {
-
-    public static func == (
-        lhs: ContentDefinition,
-        rhs: ContentDefinition
-    ) -> Bool {
-        lhs.type == rhs.type
-    }
-}
-
-extension ContentDefinition: Comparable {
-
-    public static func < (
-        lhs: ContentDefinition,
-        rhs: ContentDefinition
-    ) -> Bool {
-        lhs.type < rhs.type
     }
 }
