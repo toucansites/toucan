@@ -410,7 +410,7 @@ extension SourceBundle {
         return rawContext
     }
 
-    func generatePipelineResults(
+    public func generatePipelineResults(
         templates: [String: String]
     ) throws -> [PipelineResult] {
 
