@@ -70,6 +70,9 @@ struct SourceLoader {
         logger.trace(
             "Current theme types url: `\(sourceConfig.currentThemeTypesUrl.absoluteString)`"
         )
+        logger.trace(
+            "Current theme blocks url: `\(sourceConfig.currentThemeBlocksUrl.absoluteString)`"
+        )
 
         logger.trace(
             "Theme override url: `\(sourceConfig.currentThemeOverrideUrl.absoluteString)`"
@@ -82,6 +85,9 @@ struct SourceLoader {
         )
         logger.trace(
             "Theme override types url: `\(sourceConfig.currentThemeOverrideTypesUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Current override blocks url: `\(sourceConfig.currentThemeOverrideBlocksUrl.absoluteString)`"
         )
 
         /// Settings
@@ -114,7 +120,6 @@ struct SourceLoader {
             at: sourceConfig.currentThemeTypesUrl,
             overrides: sourceConfig.currentThemeOverrideTypesUrl
         )
-
         let contentDefinitionLoader = ContentDefinitionLoader(
             url: sourceConfig.currentThemeTypesUrl,
             overridesUrl: sourceConfig.currentThemeOverrideTypesUrl,
@@ -124,14 +129,21 @@ struct SourceLoader {
         )
         let contentDefinitions = try contentDefinitionLoader.load()
 
-        //        let blockDirectiveLoader = BlockDirectiveLoader(
-        //            sourceConfig: sourceConfig,
-        //            fileLoader: .yaml,
-        //            yamlParser: .init(),
-        //            logger: logger
-        //        )
-        //
-        //        let blockDirectives = try blockDirectiveLoader.load()
+        /// Block directives
+        
+        let blockDirectivesLocations = contentDefinitionLocator.locate(
+            at: sourceConfig.currentThemeBlocksUrl,
+            overrides: sourceConfig.currentThemeOverrideBlocksUrl
+        )
+
+        let blockDirectivesLoader = BlockDirectiveLoader(
+            url: sourceConfig.currentThemeBlocksUrl,
+            overridesUrl: sourceConfig.currentThemeOverrideBlocksUrl,
+            locations: blockDirectivesLocations,
+            yamlParser: yamlParser,
+            logger: logger
+        )
+        let blockDirectives = try blockDirectivesLoader.load()
 
         /// Locate RawContents.
         let rawContentLocations = RawContentLocator(fileManager: fileManager)
@@ -184,7 +196,8 @@ struct SourceLoader {
             config: config,
             settings: .defaults,  // TODO: - parse settings
             pipelines: pipelines,
-            contents: contents
+            contents: contents,
+            blockDirectives: blockDirectives
         )
     }
 }

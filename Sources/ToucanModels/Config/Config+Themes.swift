@@ -18,6 +18,7 @@ extension Config {
             case templates
             case types
             case overrides
+            case blocks
         }
 
         public var location: Location
@@ -26,6 +27,7 @@ extension Config {
         public var templates: Location
         public var types: Location
         public var overrides: Location
+        public var blocks: Location
 
         // MARK: - defaults
 
@@ -36,7 +38,8 @@ extension Config {
                 assets: .init(path: "assets"),
                 templates: .init(path: "templates"),
                 types: .init(path: "types"),
-                overrides: .init(path: "overrides")
+                overrides: .init(path: "overrides"),
+                blocks: .init(path: "blocks")
             )
         }
 
@@ -48,7 +51,8 @@ extension Config {
             assets: Location,
             templates: Location,
             types: Location,
-            overrides: Location
+            overrides: Location,
+            blocks: Location
         ) {
             self.location = location
             self.current = current
@@ -56,6 +60,7 @@ extension Config {
             self.templates = templates
             self.types = types
             self.overrides = overrides
+            self.blocks = blocks
         }
 
         // MARK: - decoder
@@ -104,6 +109,12 @@ extension Config {
                     Location.self,
                     forKey: .overrides
                 ) ?? defaults.overrides
+
+            self.blocks =
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .blocks
+                ) ?? defaults.blocks
         }
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import ToucanModels
+import ToucanContent
 import ToucanTesting
 import Logging
 @testable import ToucanSource
@@ -109,12 +110,15 @@ struct SourceBundleContextTestSuite {
         let contents =
             postContents + pageContents
 
+        let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
+
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contents: contents
+            contents: contents,
+            blockDirectives: blockDirectives
         )
 
         let results = try sourceBundle.generatePipelineResults(

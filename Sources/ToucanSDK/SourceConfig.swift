@@ -48,6 +48,10 @@ struct SourceConfig {
         currentThemeUrl.appendingPathComponent(config.themes.types.path)
     }
 
+    var currentThemeBlocksUrl: URL {
+        currentThemeUrl.appendingPathComponent(config.themes.blocks.path)
+    }
+
     // MARK: - theme overrides
 
     var currentThemeOverrideUrl: URL {
@@ -71,4 +75,11 @@ struct SourceConfig {
             config.themes.types.path
         )
     }
+
+    var currentThemeOverrideBlocksUrl: URL {
+        currentThemeUrl.appendingPathComponent(
+            config.themes.blocks.path
+        )
+    }
+
 }

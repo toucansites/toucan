@@ -1,5 +1,6 @@
 import Foundation
 import ToucanModels
+import ToucanContent
 import ToucanSource
 import Logging
 
@@ -134,6 +135,9 @@ public extension SourceBundle.Mocks {
             return converter.convert(rawContent: $0)
         }
 
+        // block directives
+        let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
+
         let contents =
             pageContents + categoryContents + guideContents + tagContents
             + authorContents + postContents + rssContents + sitemapContents
@@ -144,7 +148,8 @@ public extension SourceBundle.Mocks {
             config: .defaults,
             settings: .defaults,
             pipelines: pipelines,
-            contents: contents
+            contents: contents,
+            blockDirectives: blockDirectives
         )
     }
 }

@@ -5,9 +5,9 @@
 //  Created by Tibor Bodecs on 2025. 02. 19..
 //
 
-public struct MarkdownBlockDirective: Codable {
+public struct MarkdownBlockDirective: Codable, Equatable {
 
-    public struct Parameter: Codable {
+    public struct Parameter: Codable, Equatable {
 
         public var label: String
         public var `required`: Bool?
@@ -24,11 +24,11 @@ public struct MarkdownBlockDirective: Codable {
         }
     }
 
-    public struct Attribute: Codable {
+    public struct Attribute: Codable, Equatable {
         public var name: String
         public var value: String
 
-        init(
+        public init(
             name: String,
             value: String
         ) {

@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 30..
 //
 
+import ToucanContent
 import ToucanModels
 import ToucanSource
 
@@ -37,5 +38,9 @@ public struct Templates {
 }
 
 public extension Templates {
+    enum Mocks {}
+}
+
+public extension MarkdownBlockDirective {
     enum Mocks {}
 }
