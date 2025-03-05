@@ -72,7 +72,6 @@ private extension RawContentLocator {
         }
 
         // filter out site raw content
-        // TODO: - check if we still need this filter
         return result.filter { !$0.slug.isEmpty }
     }
 }

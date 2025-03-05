@@ -5,7 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 02. 11..
 //
 
-public struct Settings: Decodable {
+public struct Settings: Decodable, Equatable {
 
     enum CodingKeys: CodingKey, CaseIterable {
         case baseUrl
