@@ -78,9 +78,7 @@ struct SourceBundleRSSTestSuite {
             templates: templates
         )
 
-        let results = try sourceBundle.generatePipelineResults(
-            templates: templates
-        )
+        let results = try sourceBundle.generatePipelineResults()
 
         #expect(results.count == 1)
 

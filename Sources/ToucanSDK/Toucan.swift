@@ -85,17 +85,8 @@ public struct Toucan {
                 logger: logger
             )
             let sourceBundle = try sourceLoader.load()
-
-            let templates: [String: String] = [
-                "default": Templates.Mocks.default(),
-                "post.default": Templates.Mocks.post(),
-                "rss": Templates.Mocks.rss(),
-                "sitemap": Templates.Mocks.sitemap(),
-                "redirect": Templates.Mocks.redirect(),
-            ]
-
-            let results =
-                try sourceBundle.generatePipelineResults(templates: templates)
+            
+            let results = try sourceBundle.generatePipelineResults()
 
             print("TODO: - handle SourceBundle \(sourceBundle)")
 

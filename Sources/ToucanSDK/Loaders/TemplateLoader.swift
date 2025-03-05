@@ -31,10 +31,11 @@ struct TemplateLoader {
         case missing(URL)
     }
 
-    /// Loads and returns an array of MarkdownBlockDirectives
+    /// Loads and returns a map of templates
     ///
     /// - Throws: An error if the content types could not be loaded.
-    /// - Returns: An array of `MarkdownBlockDirective` objects.
+    /// - Returns: A map of `[String: String]` object.
+    ///
     func load() throws -> [String: String] {
         var items: [String: String] = [:]
         for location in locations {
@@ -42,9 +43,9 @@ struct TemplateLoader {
             items[location.id] = item
         }
 
-        //logger.debug(
-        //    "Available block directives: `\(items.map(\.name).joined(separator: ", "))`."
-        //)
+        logger.debug(
+            "Available templates: `\(items.map(\.key).joined(separator: ", "))`."
+        )
 
         return items
     }

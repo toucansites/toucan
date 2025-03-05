@@ -30,9 +30,7 @@ struct SourceBundleTestSuite {
         }
         try FileManager.default.createDirectory(at: url)
 
-        let results = try sourceBundle.generatePipelineResults(
-            templates: templates
-        )
+        let results = try sourceBundle.generatePipelineResults()
 
         for result in results {
             let folder = url.appending(path: result.destination.path)

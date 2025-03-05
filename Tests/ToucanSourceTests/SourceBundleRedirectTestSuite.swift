@@ -74,7 +74,7 @@ struct SourceBundleRedirectTestSuite {
 
         let results =
             try sourceBundle
-            .generatePipelineResults(templates: templates)
+            .generatePipelineResults()
 
         #expect(results.count == 2)
 
