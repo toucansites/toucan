@@ -88,26 +88,17 @@ public struct Toucan {
             
             let results = try sourceBundle.generatePipelineResults()
 
+            let assetsWriter = AssetsWriter(
+                fileManager: fileManager,
+                sourceConfig: sourceBundle.sourceConfig,
+                workDirUrl: workDirUrl
+            )
             
-            print("TODO: - handle SourceBundle \(sourceBundle)")
+            
+            // copy assests
+            try assetsWriter.copyAll()
 
-            //            source.validate(dateFormatter: DateFormatters.baseFormatter)
-            //
-            //            // theme assets
-            //            try fileManager.copyRecursively(
-            //                from: source.sourceConfig.currentThemeAssetsUrl,
-            //                to: workDirUrl
-            //            )
-            //            // theme override assets
-            //            try fileManager.copyRecursively(
-            //                from: source.sourceConfig.currentThemeOverrideAssetsUrl,
-            //                to: workDirUrl
-            //            )
-            //            // copy global site assets
-            //            try fileManager.copyRecursively(
-            //                from: source.sourceConfig.assetsUrl,
-            //                to: workDirUrl
-            //            )
+            
             //
             //            // MARK: copy assets
             //
