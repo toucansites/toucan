@@ -18,7 +18,6 @@ struct QueryTestSuite {
 
         let results = sourceBundle.run(query: query)
         try #require(results.count == 1)
-        print(results[0].properties)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
         )
@@ -174,7 +173,6 @@ struct QueryTestSuite {
         )
 
         let results = sourceBundle.run(query: query)
-        print(results.map(\.slug))
         try #require(results.count == 3)
         #expect(
             results[0].properties["title"]?.value(as: String.self)

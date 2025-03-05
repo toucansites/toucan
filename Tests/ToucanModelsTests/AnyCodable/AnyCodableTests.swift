@@ -133,7 +133,6 @@ struct AnyCodableTests {
             "someCodable": someCodable,
             "null": nil,
         ]
-        print(dictionary)
 
         let encoder = JSONEncoder()
         let json = try encoder.encode(dictionary)
