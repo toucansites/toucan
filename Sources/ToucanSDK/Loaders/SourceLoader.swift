@@ -112,11 +112,11 @@ struct SourceLoader {
 
         /// Content definitions
 
-        let contentDefinitionLocator = OverrideFileLocator(
+        let yamlFileLocator = OverrideFileLocator(
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
         )
-        let contentDefinitionLocations = contentDefinitionLocator.locate(
+        let contentDefinitionLocations = yamlFileLocator.locate(
             at: sourceConfig.currentThemeTypesUrl,
             overrides: sourceConfig.currentThemeOverrideTypesUrl
         )
@@ -131,7 +131,7 @@ struct SourceLoader {
 
         /// Block directives
         
-        let blockDirectivesLocations = contentDefinitionLocator.locate(
+        let blockDirectivesLocations = yamlFileLocator.locate(
             at: sourceConfig.currentThemeBlocksUrl,
             overrides: sourceConfig.currentThemeOverrideBlocksUrl
         )
@@ -190,6 +190,23 @@ struct SourceLoader {
 
             return contentDefinitionConverter.convert(rawContent: $0)
         }
+        
+        /// load templates
+        
+        let templateLocator = TemplateLocator(fileManager: fileManager)
+        
+        let templateLocations = templateLocator.locate(
+            at: sourceConfig.currentThemeTemplatesUrl,
+            overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl
+        )
+
+        let templateLoader = TemplateLoader(
+            url: sourceConfig.currentThemeTemplatesUrl,
+            overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl,
+            locations: templateLocations,
+            logger: logger
+        )
+        let templates = try templateLoader.load()
 
         return .init(
             location: sourceUrl,
@@ -197,7 +214,8 @@ struct SourceLoader {
             settings: .defaults,  // TODO: - parse settings
             pipelines: pipelines,
             contents: contents,
-            blockDirectives: blockDirectives
+            blockDirectives: blockDirectives,
+            templates: templates
         )
     }
 }

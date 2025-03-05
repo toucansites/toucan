@@ -142,6 +142,14 @@ public extension SourceBundle.Mocks {
             pageContents + categoryContents + guideContents + tagContents
             + authorContents + postContents + rssContents + sitemapContents
             + redirectContents
+        
+        let templates: [String: String] = [
+            "default": Templates.Mocks.default(),
+            "post.default": Templates.Mocks.post(),
+            "rss": Templates.Mocks.rss(),
+            "sitemap": Templates.Mocks.sitemap(),
+            "redirect": Templates.Mocks.redirect(),
+        ]
 
         return .init(
             location: .init(filePath: ""),
@@ -149,7 +157,8 @@ public extension SourceBundle.Mocks {
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,
-            blockDirectives: blockDirectives
+            blockDirectives: blockDirectives,
+            templates: templates
         )
     }
 }

@@ -58,6 +58,9 @@ struct SourceBundleRedirectTestSuite {
             pageContents + redirectContents
 
         let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
+        let templates: [String: String] = [
+            "redirect": Templates.Mocks.redirect()
+        ]
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
@@ -65,12 +68,9 @@ struct SourceBundleRedirectTestSuite {
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,
-            blockDirectives: blockDirectives
+            blockDirectives: blockDirectives,
+            templates: templates
         )
-
-        let templates: [String: String] = [
-            "redirect": Templates.Mocks.redirect()
-        ]
 
         let results =
             try sourceBundle

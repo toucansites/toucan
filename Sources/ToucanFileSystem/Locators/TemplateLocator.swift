@@ -15,11 +15,11 @@ public struct TemplateLocator {
 
     private let ext = "mustache"
 
-    init(fileManager: FileManagerKit) {
+    public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
     }
 
-    func locate(at url: URL, overridesUrl: URL) -> [TemplateLocation] {
+    public func locate(at url: URL, overridesUrl: URL) -> [TemplateLocation] {
         locateTemplateLocations(at: url, overrides: overridesUrl)
             .sorted { $0.id < $1.id }
     }

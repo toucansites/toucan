@@ -134,6 +134,9 @@ struct SourceBundleScopeTestSuite {
             postContents + pageContents
 
         let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
+        let templates: [String: String] = [
+            "sitemap": Templates.Mocks.sitemap()
+        ]
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
@@ -141,11 +144,12 @@ struct SourceBundleScopeTestSuite {
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,
-            blockDirectives: blockDirectives
+            blockDirectives: blockDirectives,
+            templates: templates
         )
 
         let results = try sourceBundle.generatePipelineResults(
-            templates: [:]
+            templates: templates
         )
 
         #expect(results.count == 2)
