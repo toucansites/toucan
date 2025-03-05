@@ -86,106 +86,42 @@ public struct Toucan {
             )
             let sourceBundle = try sourceLoader.load()
             
+            // TODO: - do we need this?
+            // source.validate(dateFormatter: DateFormatters.baseFormatter)
+            
             let results = try sourceBundle.generatePipelineResults()
 
+            // MARK: - Preparing work dir
             
-            print("TODO: - handle SourceBundle \(sourceBundle)")
+            try resetDirectory(at: workDirUrl)
 
-            //            source.validate(dateFormatter: DateFormatters.baseFormatter)
-            //
-            //            // theme assets
-            //            try fileManager.copyRecursively(
-            //                from: source.sourceConfig.currentThemeAssetsUrl,
-            //                to: workDirUrl
-            //            )
-            //            // theme override assets
-            //            try fileManager.copyRecursively(
-            //                from: source.sourceConfig.currentThemeOverrideAssetsUrl,
-            //                to: workDirUrl
-            //            )
-            //            // copy global site assets
-            //            try fileManager.copyRecursively(
-            //                from: source.sourceConfig.assetsUrl,
-            //                to: workDirUrl
-            //            )
-            //
-            //            // MARK: copy assets
-            //
-            //            for pageBundle in source.pageBundles {
-            //                let assetsUrl = pageBundle.url
-            //                    .appendingPathComponent(pageBundle.config.assets.folder)
-            //
-            //                guard
-            //                    fileManager.directoryExists(at: assetsUrl),
-            //                    !fileManager.listDirectory(at: assetsUrl).isEmpty
-            //                else {
-            //                    continue
-            //                }
-            //
-            //                let workDirUrl =
-            //                    workDirUrl
-            //                    .appendingPathComponent(pageBundle.config.assets.folder)
-            //                    .appendingPathComponent(pageBundle.assetsLocation)
-            //
-            //                try fileManager.copyRecursively(
-            //                    from: assetsUrl,
-            //                    to: workDirUrl
-            //                )
-            //            }
-            //
-            //            let templateRenderer = try MustacheToHTMLRenderer(
-            //                templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
-            //                overridesUrl: source
-            //                    .sourceConfig
-            //                    .currentThemeOverrideTemplatesUrl,
-            //                logger: logger
-            //            )
-            //
-            //            let redirectRenderer = RedirectRenderer(
-            //                destinationUrl: workDirUrl,
-            //                fileManager: .default,
-            //                templateRenderer: templateRenderer,
-            //                pageBundles: source.pageBundles
-            //            )
-            //            try redirectRenderer.render()
-            //
-            //            let sitemapRenderer = SitemapRenderer(
-            //                destinationUrl: workDirUrl,
-            //                fileManager: .default,
-            //                templateRenderer: templateRenderer,
-            //                pageBundles: source.sitemapPageBundles()
-            //            )
-            //            try sitemapRenderer.render()
-            //
-            //            let rssRenderer = RSSRenderer(
-            //                source: source,
-            //                destinationUrl: workDirUrl,
-            //                fileManager: .default,
-            //                templateRenderer: templateRenderer,
-            //                pageBundles: source.rssPageBundles(),
-            //                logger: logger
-            //            )
-            //            try rssRenderer.render()
-            //
-            //            let htmlRenderer = try HTMLRenderer(
-            //                source: source,
-            //                destinationUrl: workDirUrl,
-            //                templateRenderer: templateRenderer,
-            //                logger: logger
-            //            )
-            //
-            //            try htmlRenderer.render()
-            //
-            //            let apiRenderer = try APIRenderer(
-            //                source: source,
-            //                destinationUrl: workDirUrl,
-            //                logger: logger
-            //            )
-            //            try apiRenderer.render()
-            //
-            //            try resetDirectory(at: outputUrl)
-            //            try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
-            //
+            // MARK: - Copy assets
+            
+            print("TODO: - add assets copy here")
+            
+            // MARK: - Writing results
+            
+            for result in results {
+                let folder = workDirUrl.appending(path: result.destination.path)
+                try FileManager.default.createDirectory(at: folder)
+
+                let outputUrl =
+                    folder
+                    .appending(path: result.destination.file)
+                    .appendingPathExtension(result.destination.ext)
+
+                try result.contents.write(
+                    to: outputUrl,
+                    atomically: true,
+                    encoding: .utf8
+                )
+            }
+            
+            // MARK: - Finalize and cleanup
+            
+            try resetDirectory(at: outputUrl)
+            // TODO: - copy recursively
+            // try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
             try? fileManager.delete(at: workDirUrl)
         }
         catch {
