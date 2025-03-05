@@ -23,11 +23,6 @@ struct SourceBundleContextTestSuite {
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
 
-        // TODO: - remove comment
-
-        //        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
-        //        let nowString = formatter.string(from: now)
-
         let logger = Logger(label: "SourceBundleContextTestSuite")
 
         let pipelines: [Pipeline] = [
