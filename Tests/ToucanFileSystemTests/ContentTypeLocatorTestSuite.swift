@@ -38,7 +38,10 @@ struct ContentTypeLocatorTestSuite {
                 .init(path: "tag.yml"),
             ]
 
-            #expect(locations.sorted() == expected.sorted())
+            #expect(
+                locations.sorted { $0.path < $1.path }
+                    == expected.sorted { $0.path < $1.path }
+            )
         }
     }
 
@@ -105,7 +108,8 @@ struct ContentTypeLocatorTestSuite {
             ]
 
             #expect(
-                locations.sorted() == expected.sorted()
+                locations.sorted { $0.path < $1.path }
+                    == expected.sorted { $0.path < $1.path }
             )
         }
     }

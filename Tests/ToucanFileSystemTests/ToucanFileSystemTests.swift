@@ -126,7 +126,7 @@ struct ToucanFileSystemTests {
             let rawContentLocations = fs.locateRawContents(at: contentsUrl)
 
             #expect(
-                rawContentLocations.sorted()
+                rawContentLocations.sorted { $0.path < $1.path }
                     == [
                         .init(path: "404/index.md", slug: "404"),
                         .init(path: "home/index.md", slug: "home"),
@@ -136,7 +136,7 @@ struct ToucanFileSystemTests {
                             slug: "home-old"
                         ),
                     ]
-                    .sorted()
+                    .sorted { $0.path < $1.path }
             )
 
             let typesUrl = $1.appending(path: "src/themes/default/types/")
@@ -149,7 +149,7 @@ struct ToucanFileSystemTests {
                 overrides: typesOverridesUrl
             )
             #expect(
-                contentTypes.sorted()
+                contentTypes.sorted { $0.path < $1.path }
                     == [
                         .init(
                             path: "author.yml",
@@ -158,7 +158,7 @@ struct ToucanFileSystemTests {
                         .init(path: "post.yml", overridePath: nil),
                         .init(path: "redirect.yml", overridePath: nil),
                     ]
-                    .sorted()
+                    .sorted { $0.path < $1.path }
             )
 
             let templatesUrl = $1.appending(
@@ -211,7 +211,7 @@ struct ToucanFileSystemTests {
                         ),
                         .init(id: "redirect", path: "redirect.mustache"),
                     ]
-                    .sorted()
+                    .sorted { $0.path < $1.path }
             )
         }
     }

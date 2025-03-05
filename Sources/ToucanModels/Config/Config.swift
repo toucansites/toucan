@@ -83,14 +83,6 @@ public struct Config: Decodable, Equatable {
     }
 }
 
-//extension Config: Equatable {
-//
-//    public static func == (lhs: Config, rhs: Config) -> Bool {
-//        lhs.pipelines == rhs.pipelines && lhs.contents == rhs.contents
-//            && lhs.dateFormats == rhs.dateFormats
-//    }
-//}
-
 extension Config {
 
     public func inputDateFormatter() -> DateFormatter {

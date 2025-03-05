@@ -130,7 +130,7 @@ struct SourceLoader {
         let contentDefinitions = try contentDefinitionLoader.load()
 
         /// Block directives
-
+        
         let blockDirectivesLocations = contentDefinitionLocator.locate(
             at: sourceConfig.currentThemeBlocksUrl,
             overrides: sourceConfig.currentThemeOverrideBlocksUrl
