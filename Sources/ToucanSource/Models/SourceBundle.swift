@@ -13,6 +13,7 @@ public struct SourceBundle {
 
     public var location: URL
     public var config: Config
+    public var sourceConfig: SourceConfig
     public var settings: Settings
     public var pipelines: [Pipeline]
     public var contents: [Content]
@@ -25,6 +26,7 @@ public struct SourceBundle {
     public init(
         location: URL,
         config: Config,
+        sourceConfig: SourceConfig,
         settings: Settings,
         pipelines: [Pipeline],
         contents: [Content],
@@ -34,6 +36,7 @@ public struct SourceBundle {
     ) {
         self.location = location
         self.config = config
+        self.sourceConfig = sourceConfig
         self.settings = settings
         self.pipelines = pipelines
         self.contents = contents

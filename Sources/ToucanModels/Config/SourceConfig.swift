@@ -6,77 +6,81 @@
 //
 
 import Foundation
-import ToucanModels
 
-struct SourceConfig {
+public struct SourceConfig {
 
     let sourceUrl: URL
-    let config: Config
+    public let config: Config
+    
+    public init(sourceUrl: URL, config: Config) {
+        self.sourceUrl = sourceUrl
+        self.config = config
+    }
 
-    var contentsUrl: URL {
+    public var contentsUrl: URL {
         sourceUrl.appendingPathComponent(config.contents.path)
     }
 
     /// Global site assets.
-    var assetsUrl: URL {
+    public var assetsUrl: URL {
         contentsUrl.appendingPathComponent(config.contents.assets.path)
     }
 
-    var themesUrl: URL {
+    public var themesUrl: URL {
         sourceUrl.appendingPathComponent(config.themes.location.path)
     }
 
-    var pipelinesUrl: URL {
+    public var pipelinesUrl: URL {
         sourceUrl.appendingPathComponent(config.pipelines.path)
     }
 
     // MARK: - theme
 
-    var currentThemeUrl: URL {
+    public var currentThemeUrl: URL {
         themesUrl.appendingPathComponent(config.themes.current.path)
     }
 
-    var currentThemeAssetsUrl: URL {
+    public var currentThemeAssetsUrl: URL {
         currentThemeUrl.appendingPathComponent(config.themes.assets.path)
     }
 
-    var currentThemeTemplatesUrl: URL {
+    public var currentThemeTemplatesUrl: URL {
         currentThemeUrl.appendingPathComponent(config.themes.templates.path)
     }
 
-    var currentThemeTypesUrl: URL {
+    public var currentThemeTypesUrl: URL {
         currentThemeUrl.appendingPathComponent(config.themes.types.path)
     }
 
-    var currentThemeBlocksUrl: URL {
+    public var currentThemeBlocksUrl: URL {
         currentThemeUrl.appendingPathComponent(config.themes.blocks.path)
     }
 
     // MARK: - theme overrides
 
-    var currentThemeOverrideUrl: URL {
+    public var currentThemeOverrideUrl: URL {
         themesUrl.appendingPathComponent(config.themes.overrides.path)
     }
 
-    var currentThemeOverrideAssetsUrl: URL {
+    public var currentThemeOverrideAssetsUrl: URL {
         currentThemeOverrideUrl.appendingPathComponent(
             config.themes.assets.path
         )
     }
 
-    var currentThemeOverrideTemplatesUrl: URL {
+    public var currentThemeOverrideTemplatesUrl: URL {
         currentThemeOverrideUrl.appendingPathComponent(
             config.themes.templates.path
         )
     }
 
-    var currentThemeOverrideTypesUrl: URL {
+    public var currentThemeOverrideTypesUrl: URL {
         currentThemeOverrideUrl.appendingPathComponent(
             config.themes.types.path
         )
     }
 
-    var currentThemeOverrideBlocksUrl: URL {
+    public var currentThemeOverrideBlocksUrl: URL {
         currentThemeUrl.appendingPathComponent(
             config.themes.blocks.path
         )

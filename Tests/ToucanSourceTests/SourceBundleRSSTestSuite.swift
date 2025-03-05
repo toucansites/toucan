@@ -67,10 +67,14 @@ struct SourceBundleRSSTestSuite {
         let templates: [String: String] = [
             "rss": Templates.Mocks.rss()
         ]
+        
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(sourceUrl: .init(fileURLWithPath: ""), config: config)
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
-            config: .defaults,
+            config: config,
+            sourceConfig: sourceConfig,
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,

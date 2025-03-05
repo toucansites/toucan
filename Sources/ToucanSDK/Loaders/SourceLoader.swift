@@ -231,6 +231,7 @@ struct SourceLoader {
         return .init(
             location: sourceUrl,
             config: config,
+            sourceConfig: sourceConfig,
             settings: settings,
             pipelines: pipelines,
             contents: contents,

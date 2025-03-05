@@ -91,10 +91,14 @@ struct SourceBundleSitemapTestSuite {
         let templates: [String: String] = [
             "sitemap": Templates.Mocks.sitemap()
         ]
+        
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(sourceUrl: .init(fileURLWithPath: ""), config: config)
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
-            config: .defaults,
+            config: config,
+            sourceConfig: sourceConfig,
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,

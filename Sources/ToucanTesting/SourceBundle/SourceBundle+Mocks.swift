@@ -150,10 +150,14 @@ public extension SourceBundle.Mocks {
             "sitemap": Templates.Mocks.sitemap(),
             "redirect": Templates.Mocks.redirect(),
         ]
+        
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(sourceUrl: .init(fileURLWithPath: ""), config: config)
 
         return .init(
             location: .init(filePath: ""),
-            config: .defaults,
+            config: config,
+            sourceConfig: sourceConfig,
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,

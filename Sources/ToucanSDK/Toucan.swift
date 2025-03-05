@@ -88,6 +88,7 @@ public struct Toucan {
             
             let results = try sourceBundle.generatePipelineResults()
 
+            
             print("TODO: - handle SourceBundle \(sourceBundle)")
 
             //            source.validate(dateFormatter: DateFormatters.baseFormatter)
