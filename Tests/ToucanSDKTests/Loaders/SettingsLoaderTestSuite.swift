@@ -46,13 +46,13 @@ struct SettingsLoaderTestSuite {
 
             #expect(
                 result
-                == Settings(
-                    baseUrl: "http://localhost:8080/",
-                    name: "Test",
-                    locale: nil,
-                    timeZone: nil,
-                    userDefined: [:]
-                )
+                    == Settings(
+                        baseUrl: "http://localhost:8080/",
+                        name: "Test",
+                        locale: nil,
+                        timeZone: nil,
+                        userDefined: [:]
+                    )
             )
         }
     }

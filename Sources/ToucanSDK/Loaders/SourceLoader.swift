@@ -13,15 +13,15 @@ import ToucanFileSystem
 import FileManagerKit
 
 struct SourceLoader {
-    
+
     let sourceUrl: URL
-    
+
     let fileManager: FileManagerKit
     let yamlParser: YamlParser
     let frontMatterParser: FrontMatterParser
-    
+
     let logger: Logger
-    
+
     /// Loads and processes source content from the specified source URL.
     /// This function retrieves configuration, settings, content definitions, block directives,
     /// and raw contents, then transforms them into structured content.
@@ -29,16 +29,16 @@ struct SourceLoader {
     /// - Returns: A `SourceBundle` containing the loaded and processed data.
     /// - Throws: An error if any of the loading operations fail.
     func load() throws -> SourceBundle {
-        
+
         // MARK: - Config
-        
+
         let configLocator = FileLocator(
             fileManager: fileManager,
             name: "config",
             extensions: ["yml", "yaml"]
         )
         let configLocations = configLocator.locate(at: sourceUrl)
-        
+
         let configLoader = ConfigLoader(
             url: sourceUrl,
             locations: configLocations,
@@ -46,11 +46,11 @@ struct SourceLoader {
             logger: logger
         )
         let config = try configLoader.load()
-        
+
         // MARK: - Source URLs
-        
+
         let sourceConfig = SourceConfig(sourceUrl: sourceUrl, config: config)
-        
+
         logger.trace(
             "Themes location url: `\(sourceConfig.themesUrl.absoluteString)`"
         )
@@ -69,7 +69,7 @@ struct SourceLoader {
         logger.trace(
             "Current theme blocks url: `\(sourceConfig.currentThemeBlocksUrl.absoluteString)`"
         )
-        
+
         logger.trace(
             "Theme override url: `\(sourceConfig.currentThemeOverrideUrl.absoluteString)`"
         )
@@ -85,9 +85,9 @@ struct SourceLoader {
         logger.trace(
             "Current override blocks url: `\(sourceConfig.currentThemeOverrideBlocksUrl.absoluteString)`"
         )
-        
+
         // MARK: - Settings
-        
+
         let settingsLocator = FileLocator(
             fileManager: fileManager,
             name: "index",
@@ -96,7 +96,7 @@ struct SourceLoader {
         let settingsLocations = settingsLocator.locate(
             at: sourceConfig.contentsUrl
         )
-        
+
         let settingsLoader = SettingsLoader(
             url: sourceConfig.contentsUrl,
             locations: settingsLocations,
@@ -104,14 +104,14 @@ struct SourceLoader {
             logger: logger
         )
         let settings = try settingsLoader.load()
-        
+
         // MARK: - Assets
-        
+
         let assetLocator = AssetLocator(fileManager: fileManager)
         let assets = assetLocator.locate(at: sourceConfig.assetsUrl)
-        
+
         // MARK: - Pipelines
-        
+
         let pipelineLocator = FileLocator(
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
@@ -119,7 +119,7 @@ struct SourceLoader {
         let pipelineLocations = pipelineLocator.locate(
             at: sourceConfig.pipelinesUrl
         )
-        
+
         let pipelineLoader = PipelineLoader(
             url: sourceConfig.pipelinesUrl,
             locations: pipelineLocations,
@@ -129,7 +129,7 @@ struct SourceLoader {
         let pipelines = try pipelineLoader.load()
 
         // MARK: - Content definitions
-        
+
         let yamlFileLocator = OverrideFileLocator(
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
@@ -138,7 +138,7 @@ struct SourceLoader {
             at: sourceConfig.currentThemeTypesUrl,
             overrides: sourceConfig.currentThemeOverrideTypesUrl
         )
-        
+
         let contentDefinitionLoader = ContentDefinitionLoader(
             url: sourceConfig.currentThemeTypesUrl,
             overridesUrl: sourceConfig.currentThemeOverrideTypesUrl,
@@ -147,14 +147,14 @@ struct SourceLoader {
             logger: logger
         )
         let contentDefinitions = try contentDefinitionLoader.load()
-        
+
         // MARK: - Block directives
-        
+
         let blockDirectivesLocations = yamlFileLocator.locate(
             at: sourceConfig.currentThemeBlocksUrl,
             overrides: sourceConfig.currentThemeOverrideBlocksUrl
         )
-        
+
         let blockDirectivesLoader = BlockDirectiveLoader(
             url: sourceConfig.currentThemeBlocksUrl,
             overridesUrl: sourceConfig.currentThemeOverrideBlocksUrl,
@@ -163,12 +163,12 @@ struct SourceLoader {
             logger: logger
         )
         let blockDirectives = try blockDirectivesLoader.load()
-        
+
         // MARK: - RawContents
-        
+
         let rawContentLocations = RawContentLocator(fileManager: fileManager)
             .locate(at: sourceConfig.contentsUrl)
-        
+
         let rawContentsLoader = RawContentLoader(
             url: sourceConfig.contentsUrl,
             locations: rawContentLocations,
@@ -179,9 +179,9 @@ struct SourceLoader {
             logger: logger
         )
         let rawContents = try rawContentsLoader.load()
-        
+
         // MARK: - Create Contents from RawContents
-        
+
         let contents: [Content] = try rawContents.compactMap {
             /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
             let rawReservedFromMatter = try yamlParser.encode($0.frontMatter)
@@ -189,32 +189,32 @@ struct SourceLoader {
                 rawReservedFromMatter,
                 as: ReservedFrontMatter.self
             )
-            
+
             let explicitTypeId = reservedFromMatter.type
             let contentDefinition = $0.origin.detectContentDefinition(
                 in: contentDefinitions,
                 explicitTypeId: explicitTypeId
             )
-            
+
             guard let contentDefinition else {
                 logger.info("Invalid content type for: \($0.origin.path)")
                 return nil
             }
-            
+
             let contentDefinitionConverter = ContentDefinitionConverter(
                 contentDefinition: contentDefinition,
                 dateFormatter: config.inputDateFormatter(),
                 defaultDateFormat: config.dateFormats.input,
                 logger: logger
             )
-            
+
             return contentDefinitionConverter.convert(rawContent: $0)
         }
-        
+
         // MARK: - Templates
-        
+
         let templateLocator = TemplateLocator(fileManager: fileManager)
-        
+
         let templateLocations = templateLocator.locate(
             at: sourceConfig.currentThemeTemplatesUrl,
             overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl

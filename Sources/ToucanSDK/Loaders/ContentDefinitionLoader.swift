@@ -9,7 +9,6 @@ import Foundation
 import Logging
 import ToucanFileSystem
 import ToucanModels
-import Yams
 
 /// A struct responsible for loading and managing content types.
 struct ContentDefinitionLoader {

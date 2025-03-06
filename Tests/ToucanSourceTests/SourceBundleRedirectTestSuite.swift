@@ -61,9 +61,12 @@ struct SourceBundleRedirectTestSuite {
         let templates: [String: String] = [
             "redirect": Templates.Mocks.redirect()
         ]
-        
+
         let config = Config.defaults
-        let sourceConfig = SourceConfig(sourceUrl: .init(fileURLWithPath: ""), config: config)
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),

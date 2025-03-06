@@ -11,6 +11,34 @@ import Logging
 import ToucanFileSystem
 import ToucanTesting
 
+extension FileManagerKit {
+
+    func copyRecursively(
+        from inputURL: URL,
+        to outputURL: URL
+    ) throws {
+        guard directoryExists(at: inputURL) else {
+            return
+        }
+        if !directoryExists(at: outputURL) {
+            try createDirectory(at: outputURL)
+        }
+
+        for item in listDirectory(at: inputURL) {
+            let itemSourceUrl = inputURL.appendingPathComponent(item)
+            let itemDestinationUrl = outputURL.appendingPathComponent(item)
+            if fileExists(at: itemSourceUrl) {
+                if fileExists(at: itemDestinationUrl) {
+                    try delete(at: itemDestinationUrl)
+                }
+                try copy(from: itemSourceUrl, to: itemDestinationUrl)
+            }
+            else {
+                try copyRecursively(from: itemSourceUrl, to: itemDestinationUrl)
+            }
+        }
+    }
+}
 public struct Toucan {
 
     let inputUrl: URL
@@ -85,25 +113,25 @@ public struct Toucan {
                 logger: logger
             )
             let sourceBundle = try sourceLoader.load()
-            
+
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
-            
+
             let results = try sourceBundle.generatePipelineResults()
 
             // MARK: - Preparing work dir
-            
+
             try resetDirectory(at: workDirUrl)
 
             // MARK: - Copy assets
-            
+
             print("TODO: - add assets copy here")
-            
+
             // MARK: - Writing results
-            
+
             for result in results {
                 let folder = workDirUrl.appending(path: result.destination.path)
-                try FileManager.default.createDirectory(at: folder)
+                try fileManager.createDirectory(at: folder)
 
                 let outputUrl =
                     folder
@@ -116,12 +144,11 @@ public struct Toucan {
                     encoding: .utf8
                 )
             }
-            
+
             // MARK: - Finalize and cleanup
-            
+
             try resetDirectory(at: outputUrl)
-            // TODO: - copy recursively
-            // try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
+            try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
             try? fileManager.delete(at: workDirUrl)
         }
         catch {

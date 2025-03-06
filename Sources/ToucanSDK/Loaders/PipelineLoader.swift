@@ -9,7 +9,6 @@ import Foundation
 import Logging
 import ToucanFileSystem
 import ToucanModels
-import Yams
 
 struct PipelineLoader {
 

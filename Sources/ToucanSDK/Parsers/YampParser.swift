@@ -14,7 +14,7 @@ public struct YamlParser {
     /// An enumeration representing possible errors that can occur while parsing the yaml.
     public enum Error: Swift.Error {
         /// Indicates an error related to parsing YAML.
-        case yaml(String)
+        case yaml(String, String)
     }
 
     /// A `Resolver` instance used during parsing.
@@ -40,7 +40,7 @@ public struct YamlParser {
             return try Yams.load(yaml: yaml, resolver) as? T
         }
         catch let error as YamlError {
-            throw Error.yaml(error.description)
+            throw Error.yaml(error.description, yaml)
         }
     }
 
@@ -50,7 +50,12 @@ public struct YamlParser {
     /// - Returns: A dictionary with string keys and values of any type, or nil if parsing fails.
     /// - Throws: An error if the YAML parsing fails.
     func parse(_ yaml: String) throws -> [String: Any]? {
-        try parse(yaml, as: [String: Any].self)
+        do {
+            return try parse(yaml, as: [String: Any].self)
+        }
+        catch let error as YamlError {
+            throw Error.yaml(error.description, yaml)
+        }
     }
 
     /// Decodes a YAML string into a specified Decodable type.
@@ -61,10 +66,29 @@ public struct YamlParser {
     /// - Returns: An instance of the specified type, decoded from the provided YAML string.
     /// - Throws: An error if the decoding process fails.
     func decode<T: Decodable>(_ yaml: String, as type: T.Type) throws -> T {
-        try YAMLDecoder().decode(T.self, from: yaml)
+        do {
+            return try YAMLDecoder().decode(T.self, from: yaml)
+        }
+        catch let error as YamlError {
+            throw Error.yaml(error.description, yaml)
+        }
     }
 
     func encode(_ yaml: [String: Any]) throws -> String {
-        try Yams.dump(object: yaml)
+        do {
+            return try Yams.dump(
+                object: yaml.mapValues { v in
+                    if let v = v as? AnyCodable {
+                        return v.value
+                    }
+                    else {
+                        return v
+                    }
+                }
+            )
+        }
+        catch let error as YamlError {
+            throw Error.yaml(error.description, "\(yaml)")
+        }
     }
 }

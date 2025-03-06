@@ -11,7 +11,7 @@ public struct SourceConfig {
 
     let sourceUrl: URL
     public let config: Config
-    
+
     public init(sourceUrl: URL, config: Config) {
         self.sourceUrl = sourceUrl
         self.config = config
