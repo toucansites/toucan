@@ -419,4 +419,35 @@ struct QueryTestSuite {
             results[0].properties["title"]?.value(as: String.self) == "Post #6"
         )
     }
+    
+    @Test
+    func nextGuide() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query1 = Query(
+            contentType: "guide",
+            filter: .and(
+                [
+                    .field(
+                        key: "order",
+                        operator: .greaterThan,
+                        value: 2
+                    ),
+                    .field(
+                        key: "category",
+                        operator: .equals,
+                        value: "category-6"
+                    ),
+                ]
+            ),
+            orderBy: [
+                .init(
+                    key: "order",
+                    direction: .asc
+                )
+            ]
+        )
+        let results1 = sourceBundle.run(query: query1)
+        try #require(results1.count == 1)
+    }
 }

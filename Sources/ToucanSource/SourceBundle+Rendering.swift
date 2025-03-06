@@ -155,11 +155,12 @@ extension SourceBundle {
                 if let order = relation.order {
                     orderBy.append(order)
                 }
+                
                 let relationContents = run(
                     query: .init(
                         contentType: relation.references,
                         filter: .field(
-                            key: "id",
+                            key: "slug", // TODO: fix id bug and use id
                             operator: .in,
                             value: .init(
                                 content.relations[key]?.identifiers ?? []
@@ -179,6 +180,8 @@ extension SourceBundle {
                         )
                     }
                 )
+                
+                
             }
 
         }
