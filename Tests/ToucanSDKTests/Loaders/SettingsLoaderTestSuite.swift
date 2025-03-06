@@ -39,7 +39,8 @@ struct SettingsLoaderTestSuite {
                 locations: [
                     "index.yml"
                 ],
-                yamlParser: YamlParser(),
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "SettingsLoaderTestSuite")
             )
             let result = try loader.load()

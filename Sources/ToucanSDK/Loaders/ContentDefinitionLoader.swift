@@ -9,6 +9,7 @@ import Foundation
 import Logging
 import ToucanFileSystem
 import ToucanModels
+import ToucanSource
 
 /// A struct responsible for loading and managing content types.
 struct ContentDefinitionLoader {
@@ -18,7 +19,7 @@ struct ContentDefinitionLoader {
 
     let locations: [OverrideFileLocation]
 
-    let yamlParser: YamlParser
+    let decoder: ToucanDecoder
     let logger: Logger
 
     /// Loads and returns an array of content types.
@@ -57,7 +58,7 @@ private extension ContentDefinitionLoader {
     }
 
     func loadItem(at url: URL) throws -> ContentDefinition {
-        let string = try String(contentsOf: url, encoding: .utf8)
-        return try yamlParser.decode(string, as: ContentDefinition.self)
+        let data = try Data(contentsOf: url)
+        return try decoder.decode(ContentDefinition.self, from: data)
     }
 }

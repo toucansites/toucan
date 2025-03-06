@@ -21,9 +21,6 @@ struct RawContentLoader {
     /// Source configuration.
     let sourceConfig: SourceConfig
 
-    /// A parser responsible for processing YAML data.
-    let yamlParser: YamlParser
-
     /// A parser responsible for processing front matter data.
     let frontMatterParser: FrontMatterParser
 

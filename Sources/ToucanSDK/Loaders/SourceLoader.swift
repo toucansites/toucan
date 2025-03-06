@@ -17,8 +17,10 @@ struct SourceLoader {
     let sourceUrl: URL
 
     let fileManager: FileManagerKit
-    let yamlParser: YamlParser
     let frontMatterParser: FrontMatterParser
+
+    let encoder: ToucanEncoder
+    let decoder: ToucanDecoder
 
     let logger: Logger
 
@@ -42,7 +44,8 @@ struct SourceLoader {
         let configLoader = ConfigLoader(
             url: sourceUrl,
             locations: configLocations,
-            yamlParser: yamlParser,
+            encoder: encoder,
+            decoder: decoder,
             logger: logger
         )
         let config = try configLoader.load()
@@ -100,7 +103,8 @@ struct SourceLoader {
         let settingsLoader = SettingsLoader(
             url: sourceConfig.contentsUrl,
             locations: settingsLocations,
-            yamlParser: yamlParser,
+            encoder: encoder,
+            decoder: decoder,
             logger: logger
         )
         let settings = try settingsLoader.load()
@@ -123,7 +127,7 @@ struct SourceLoader {
         let pipelineLoader = PipelineLoader(
             url: sourceConfig.pipelinesUrl,
             locations: pipelineLocations,
-            yamlParser: yamlParser,
+            decoder: decoder,
             logger: logger
         )
         let pipelines = try pipelineLoader.load()
@@ -143,7 +147,7 @@ struct SourceLoader {
             url: sourceConfig.currentThemeTypesUrl,
             overridesUrl: sourceConfig.currentThemeOverrideTypesUrl,
             locations: contentDefinitionLocations,
-            yamlParser: yamlParser,
+            decoder: decoder,
             logger: logger
         )
         let contentDefinitions = try contentDefinitionLoader.load()
@@ -159,7 +163,7 @@ struct SourceLoader {
             url: sourceConfig.currentThemeBlocksUrl,
             overridesUrl: sourceConfig.currentThemeOverrideBlocksUrl,
             locations: blockDirectivesLocations,
-            yamlParser: yamlParser,
+            decoder: decoder,
             logger: logger
         )
         let blockDirectives = try blockDirectivesLoader.load()
@@ -173,7 +177,6 @@ struct SourceLoader {
             url: sourceConfig.contentsUrl,
             locations: rawContentLocations,
             sourceConfig: sourceConfig,
-            yamlParser: yamlParser,
             frontMatterParser: frontMatterParser,
             fileManager: fileManager,
             logger: logger
@@ -184,10 +187,10 @@ struct SourceLoader {
 
         let contents: [Content] = try rawContents.compactMap {
             /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
-            let rawReservedFromMatter = try yamlParser.encode($0.frontMatter)
-            let reservedFromMatter = try yamlParser.decode(
-                rawReservedFromMatter,
-                as: ReservedFrontMatter.self
+            let rawReservedFromMatter = try encoder.encode($0.frontMatter)
+            let reservedFromMatter = try decoder.decode(
+                ReservedFrontMatter.self,
+                from: rawReservedFromMatter.data(using: .utf8)!
             )
 
             let explicitTypeId = reservedFromMatter.type

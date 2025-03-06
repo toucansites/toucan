@@ -10,6 +10,7 @@ import ToucanModels
 import ToucanContent
 import ToucanFileSystem
 import FileManagerKit
+import ToucanSource
 
 struct BlockDirectiveLoader {
 
@@ -22,7 +23,7 @@ struct BlockDirectiveLoader {
     let locations: [OverrideFileLocation]
 
     /// A parser responsible for processing YAML data.
-    let yamlParser: YamlParser
+    let decoder: ToucanDecoder
 
     /// The logger instance
     let logger: Logger
@@ -68,7 +69,7 @@ private extension BlockDirectiveLoader {
     }
 
     func loadItem(at url: URL) throws -> MarkdownBlockDirective {
-        let string = try String(contentsOf: url, encoding: .utf8)
-        return try yamlParser.decode(string, as: MarkdownBlockDirective.self)
+        let data = try Data(contentsOf: url)
+        return try decoder.decode(MarkdownBlockDirective.self, from: data)
     }
 }

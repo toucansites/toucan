@@ -71,7 +71,7 @@ struct BlockDirectiveLoaderTestSuite {
                     .init(path: "highlighted-text.yml", overridePath: nil),
                     .init(path: "button.yml", overridePath: nil),
                 ],
-                yamlParser: YamlParser(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "BlockDirectiveLoaderTests")
             )
             let result = try loader.load()
@@ -194,7 +194,7 @@ struct BlockDirectiveLoaderTestSuite {
                     .init(path: "highlighted-text.yml", overridePath: nil),
                     .init(path: "button.yml", overridePath: "button.yml"),
                 ],
-                yamlParser: YamlParser(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "BlockDirectiveLoaderTests")
             )
             let result = try loader.load()

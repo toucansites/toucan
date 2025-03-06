@@ -6,6 +6,7 @@
 //
 
 import ToucanSDK
+import ToucanSource
 import Logging
 
 extension Toucan {
@@ -41,15 +42,16 @@ extension Toucan {
         //                )
         //            }
         //        }
-        //        catch let error as YamlError {
-        //            print(error.description)
-        //            print(error.localizedDescription)
-        //            print("---")
-        //        }
-        catch let error as YamlParser.Error {
+        catch let error as ToucanDecoderError {
             switch error {
-            case .yaml(let value, let yaml):
-                logger.error("YAML parser error: `\(value)`, \(yaml)")
+            case .decoding(let error):
+                logger.error("Decoding error: `\(error)`")
+            }
+        }
+        catch let error as ToucanEncoderError {
+            switch error {
+            case .encoding(let error):
+                logger.error("Encoding error: `\(error)`")
             }
         }
         catch let error as DecodingError {

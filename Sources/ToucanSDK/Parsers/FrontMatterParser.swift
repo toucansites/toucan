@@ -6,10 +6,11 @@
 //
 
 import ToucanModels
+import ToucanSource
 
 struct FrontMatterParser {
 
-    let yamlParser: YamlParser
+    let decoder: ToucanDecoder
 
     /// Parses a given markdown string to extract metadata as a dictionary.
     /// - Parameter markdown: The markdown content containing metadata enclosed within "---".
@@ -30,9 +31,9 @@ struct FrontMatterParser {
             return [:]
         }
 
-        return try yamlParser.decode(
-            String(rawMetadata),
-            as: [String: AnyCodable].self
+        return try decoder.decode(
+            [String: AnyCodable].self,
+            from: String(rawMetadata).data(using: .utf8)!
         )
     }
 }

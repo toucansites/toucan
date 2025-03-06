@@ -10,6 +10,7 @@ import FileManagerKit
 import Logging
 import ToucanFileSystem
 import ToucanTesting
+import ToucanSource
 
 extension FileManagerKit {
 
@@ -47,8 +48,9 @@ public struct Toucan {
     let logger: Logger
 
     let fileManager: FileManagerKit
-    let yamlParser: YamlParser
     let frontMatterParser: FrontMatterParser
+    let encoder: ToucanEncoder
+    let decoder: ToucanDecoder
 
     let fs: ToucanFileSystem
 
@@ -64,8 +66,9 @@ public struct Toucan {
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
-        self.yamlParser = YamlParser()
-        self.frontMatterParser = FrontMatterParser(yamlParser: yamlParser)
+        self.encoder = ToucanYAMLEncoder()
+        self.decoder = ToucanYAMLDecoder()
+        self.frontMatterParser = FrontMatterParser(decoder: decoder)
 
         let home = fileManager.homeDirectoryForCurrentUser.path
 
@@ -108,8 +111,9 @@ public struct Toucan {
             let sourceLoader = SourceLoader(
                 sourceUrl: inputUrl,
                 fileManager: fileManager,
-                yamlParser: yamlParser,
                 frontMatterParser: frontMatterParser,
+                encoder: encoder,
+                decoder: decoder,
                 logger: logger
             )
             let sourceBundle = try sourceLoader.load()

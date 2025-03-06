@@ -9,6 +9,7 @@ import Foundation
 import Logging
 import ToucanFileSystem
 import ToucanModels
+import ToucanSource
 
 struct PipelineLoader {
 
@@ -16,7 +17,7 @@ struct PipelineLoader {
 
     let locations: [String]
 
-    let yamlParser: YamlParser
+    let decoder: ToucanDecoder
     let logger: Logger
 
     func load() throws -> [Pipeline] {
@@ -41,7 +42,7 @@ private extension PipelineLoader {
     }
 
     func loadItem(at url: URL) throws -> Pipeline {
-        let string = try String(contentsOf: url, encoding: .utf8)
-        return try yamlParser.decode(string, as: Pipeline.self)
+        let data = try Data(contentsOf: url)
+        return try decoder.decode(Pipeline.self, from: data)
     }
 }

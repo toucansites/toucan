@@ -10,6 +10,7 @@ import FileManagerKit
 import Logging
 import ToucanFileSystem
 import ToucanModels
+import ToucanSource
 
 public struct SettingsLoader {
 
@@ -19,8 +20,9 @@ public struct SettingsLoader {
     /// Settings file paths.
     let locations: [String]
 
-    /// A parser responsible for processing YAML data.
-    let yamlParser: YamlParser
+    let encoder: ToucanEncoder
+
+    let decoder: ToucanDecoder
 
     /// The logger instance
     let logger: Logger
@@ -39,14 +41,20 @@ public struct SettingsLoader {
         let combinedRawYaml =
             try rawItems
             .compactMap {
-                try yamlParser.parse($0)
+                try decoder.decode(
+                    [String: AnyCodable].self,
+                    from: $0.data(using: .utf8)!
+                )
             }
             .reduce([:]) { partialResult, item in
                 partialResult.recursivelyMerged(with: item)
             }
 
-        let combinedYamlString = try yamlParser.encode(combinedRawYaml)
-        return try yamlParser.decode(combinedYamlString, as: Settings.self)
+        let combinedYamlString = try encoder.encode(combinedRawYaml)
+        return try decoder.decode(
+            Settings.self,
+            from: combinedYamlString.data(using: .utf8)!
+        )
     }
 }
 
