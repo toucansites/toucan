@@ -142,7 +142,7 @@ public extension SourceBundle.Mocks {
             pageContents + categoryContents + guideContents + tagContents
             + authorContents + postContents + rssContents + sitemapContents
             + redirectContents
-        
+
         // TODO: add support for multiple engines: [mustache: [foo: tpl1]]
 
         let templates: [String: String] = [

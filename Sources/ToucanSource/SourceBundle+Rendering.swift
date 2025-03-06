@@ -130,7 +130,7 @@ extension SourceBundle {
             let renderer = ContentRenderer(
                 configuration: .init(
                     markdown: .init(
-                        customBlockDirectives: []
+                        customBlockDirectives: blockDirectives
                     ),
                     outline: .init(levels: [2, 3]),
                     readingTime: .init(
@@ -234,15 +234,15 @@ extension SourceBundle {
         extraContext: [String: AnyCodable]
     ) -> ContextBundle {
 
+        let ctx = getContextObject(
+            for: content,
+            pipeline: pipeline,
+            scopeKey: "detail",
+            currentSlug: content.slug
+        )
         let context: [String: AnyCodable] = [
-            content.definition.type: .init(
-                getContextObject(
-                    for: content,
-                    pipeline: pipeline,
-                    scopeKey: "detail",
-                    currentSlug: content.slug
-                )
-            )
+            //            content.definition.type: .init(ctx),
+            "page": .init(ctx)
         ]
         .recursivelyMerged(with: extraContext)
 
@@ -504,7 +504,7 @@ extension SourceBundle {
                     let contentTemplate = bundle.content.rawValue.frontMatter
                         .string("template")
                     let template =
-                        contentTypeTemplate ?? contentTemplate
+                        contentTemplate ?? contentTypeTemplate
                         ?? "pages.default"  // TODO
 
                     let html = try renderer.render(

@@ -7,39 +7,43 @@
 import Foundation
 import FileManagerKit
 import ToucanModels
-    
+
 public struct AssetsWriter {
-    
+
     let fileManager: FileManagerKit
     let sourceConfig: SourceConfig
     let workDirUrl: URL
-    
-    public init(fileManager: FileManagerKit, sourceConfig: SourceConfig, workDirUrl: URL) {
+
+    public init(
+        fileManager: FileManagerKit,
+        sourceConfig: SourceConfig,
+        workDirUrl: URL
+    ) {
         self.fileManager = fileManager
         self.sourceConfig = sourceConfig
         self.workDirUrl = workDirUrl
     }
-    
+
     public func copyAll() throws {
-        
+
         // theme assets
         try fileManager.copyRecursively(
             from: sourceConfig.currentThemeAssetsUrl,
             to: workDirUrl
         )
-        
+
         // theme override assets
         try fileManager.copyRecursively(
             from: sourceConfig.currentThemeOverrideAssetsUrl,
             to: workDirUrl
         )
-        
+
         // copy global site assets
         try fileManager.copyRecursively(
             from: sourceConfig.assetsUrl,
             to: workDirUrl
         )
-        
+
     }
-    
+
 }

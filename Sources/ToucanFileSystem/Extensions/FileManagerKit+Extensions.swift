@@ -23,7 +23,7 @@ public extension FileManagerKit {
                 }
             }
     }
-    
+
     func copyRecursively(
         from inputURL: URL,
         to outputURL: URL
@@ -49,5 +49,5 @@ public extension FileManagerKit {
             }
         }
     }
-    
+
 }
