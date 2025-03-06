@@ -6,10 +6,11 @@
 //
 
 import ToucanModels
+import ToucanSource
 
 struct ReservedFrontMatterParser {
 
-    let yamlParser: YamlParser
+    let decoder: ToucanDecoder
 
     func parse(_ contents: String) throws -> ReservedFrontMatter {
         guard contents.starts(with: "---") else {
@@ -26,9 +27,9 @@ struct ReservedFrontMatterParser {
             return .empty()
         }
 
-        return try yamlParser.decode(
-            String(rawMetadata),
-            as: ReservedFrontMatter.self
+        return try decoder.decode(
+            ReservedFrontMatter.self,
+            from: String(rawMetadata).data(using: .utf8)!
         )
     }
 }

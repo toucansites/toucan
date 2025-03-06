@@ -56,7 +56,7 @@ struct ContentDefinitionLoaderTestSuite {
                     .init(path: "foo.yml", overridePath: nil),
                     .init(path: "bar.yml", overridePath: nil),
                 ],
-                yamlParser: YamlParser(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "ContentTypeLoaderTests")
             )
             let result = try loader.load()
@@ -127,7 +127,7 @@ struct ContentDefinitionLoaderTestSuite {
                     .init(path: "foo.yml", overridePath: nil),
                     .init(path: "bar.yml", overridePath: "bar.yml"),
                 ],
-                yamlParser: YamlParser(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "ContentTypeLoaderTests")
             )
             let result = try loader.load()

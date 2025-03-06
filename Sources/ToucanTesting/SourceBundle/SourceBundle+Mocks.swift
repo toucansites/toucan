@@ -144,6 +144,7 @@ public extension SourceBundle.Mocks {
             + redirectContents
         
         // TODO: add support for multiple engines: [mustache: [foo: tpl1]]
+
         let templates: [String: String] = [
             "default": Templates.Mocks.default(),
             "post.default": Templates.Mocks.post(),
@@ -151,9 +152,12 @@ public extension SourceBundle.Mocks {
             "sitemap": Templates.Mocks.sitemap(),
             "redirect": Templates.Mocks.redirect(),
         ]
-        
+
         let config = Config.defaults
-        let sourceConfig = SourceConfig(sourceUrl: .init(fileURLWithPath: ""), config: config)
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
 
         return .init(
             location: .init(filePath: ""),

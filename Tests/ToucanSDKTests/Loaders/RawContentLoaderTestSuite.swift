@@ -11,6 +11,7 @@ import ToucanTesting
 import ToucanModels
 import ToucanFileSystem
 import FileManagerKitTesting
+import ToucanSource
 @testable import ToucanSDK
 
 struct RawContentLoaderTestSuite {
@@ -48,7 +49,8 @@ struct RawContentLoaderTestSuite {
             let url = $1.appending(path: "src/contents/")
             let locator = RawContentLocator(fileManager: $0)
             let locations = locator.locate(at: url)
-            let yamlParser = YamlParser()
+            let encoder = ToucanYAMLEncoder()
+            let decoder = ToucanYAMLDecoder()
             let sourceConfig = SourceConfig(
                 sourceUrl: $1.appending(path: "src/"),
                 config: .defaults
@@ -58,8 +60,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                yamlParser: yamlParser,
-                frontMatterParser: FrontMatterParser(yamlParser: yamlParser),
+                frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: .init(label: "RawContentLoaderTests")
             )

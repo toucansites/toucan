@@ -504,7 +504,9 @@ extension SourceBundle {
                     let contentTemplate = bundle.content.rawValue.frontMatter
                         .string("template")
                     let template =
-                        contentTypeTemplate ?? contentTemplate ?? "default"  // TODO
+                        contentTypeTemplate ?? contentTemplate
+                        ?? "pages.default"  // TODO
+
                     let html = try renderer.render(
                         template: template,
                         with: bundle.context

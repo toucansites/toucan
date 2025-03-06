@@ -10,7 +10,36 @@ import FileManagerKit
 import Logging
 import ToucanFileSystem
 import ToucanTesting
+import ToucanSource
 
+extension FileManagerKit {
+
+    func copyRecursively(
+        from inputURL: URL,
+        to outputURL: URL
+    ) throws {
+        guard directoryExists(at: inputURL) else {
+            return
+        }
+        if !directoryExists(at: outputURL) {
+            try createDirectory(at: outputURL)
+        }
+
+        for item in listDirectory(at: inputURL) {
+            let itemSourceUrl = inputURL.appendingPathComponent(item)
+            let itemDestinationUrl = outputURL.appendingPathComponent(item)
+            if fileExists(at: itemSourceUrl) {
+                if fileExists(at: itemDestinationUrl) {
+                    try delete(at: itemDestinationUrl)
+                }
+                try copy(from: itemSourceUrl, to: itemDestinationUrl)
+            }
+            else {
+                try copyRecursively(from: itemSourceUrl, to: itemDestinationUrl)
+            }
+        }
+    }
+}
 public struct Toucan {
 
     let inputUrl: URL
@@ -19,8 +48,9 @@ public struct Toucan {
     let logger: Logger
 
     let fileManager: FileManagerKit
-    let yamlParser: YamlParser
     let frontMatterParser: FrontMatterParser
+    let encoder: ToucanEncoder
+    let decoder: ToucanDecoder
 
     let fs: ToucanFileSystem
 
@@ -36,8 +66,9 @@ public struct Toucan {
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
-        self.yamlParser = YamlParser()
-        self.frontMatterParser = FrontMatterParser(yamlParser: yamlParser)
+        self.encoder = ToucanYAMLEncoder()
+        self.decoder = ToucanYAMLDecoder()
+        self.frontMatterParser = FrontMatterParser(decoder: decoder)
 
         let home = fileManager.homeDirectoryForCurrentUser.path
 
@@ -80,19 +111,20 @@ public struct Toucan {
             let sourceLoader = SourceLoader(
                 sourceUrl: inputUrl,
                 fileManager: fileManager,
-                yamlParser: yamlParser,
                 frontMatterParser: frontMatterParser,
+                encoder: encoder,
+                decoder: decoder,
                 logger: logger
             )
             let sourceBundle = try sourceLoader.load()
-            
+
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
-            
+
             let results = try sourceBundle.generatePipelineResults()
 
             // MARK: - Preparing work dir
-            
+
             try resetDirectory(at: workDirUrl)
 
             // MARK: - Copy assets
@@ -103,12 +135,12 @@ public struct Toucan {
                 workDirUrl: workDirUrl
             )
             try assetsWriter.copyAll()
-            
+
             // MARK: - Writing results
-            
+
             for result in results {
                 let folder = workDirUrl.appending(path: result.destination.path)
-                try FileManager.default.createDirectory(at: folder)
+                try fileManager.createDirectory(at: folder)
 
                 let outputUrl =
                     folder
@@ -121,9 +153,9 @@ public struct Toucan {
                     encoding: .utf8
                 )
             }
-            
+
             // MARK: - Finalize and cleanup
-            
+
             try resetDirectory(at: outputUrl)
             try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
             try? fileManager.delete(at: workDirUrl)

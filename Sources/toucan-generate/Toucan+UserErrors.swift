@@ -6,6 +6,7 @@
 //
 
 import ToucanSDK
+import ToucanSource
 import Logging
 
 extension Toucan {
@@ -41,28 +42,34 @@ extension Toucan {
         //                )
         //            }
         //        }
-        //        catch let error as YamlParser.Error {
-        //            switch error {
-        //            case .yaml(let value):
-        //                logger.error("YAML parser error: `\(value)`")
-        //            }
-        //        }
-        //        catch let error as DecodingError {
-        //            switch error {
-        //            case .dataCorrupted(let context):
-        //                let underlyingError = context.underlyingError ?? error
-        //                let description = String(describing: underlyingError)
-        //                let message = "YAML corrupted: `\(description)`"
-        //                logger.error(.init(stringLiteral: message))
-        //            case .typeMismatch(_, let context):
-        //                let underlyingError = context.underlyingError ?? error
-        //                let description = String(describing: underlyingError)
-        //                let message = "YAML type mismatch: `\(description)`"
-        //                logger.error(.init(stringLiteral: message))
-        //            default:
-        //                logger.error("\(String(describing: error))")
-        //            }
-        //        }
+        catch let error as ToucanDecoderError {
+            switch error {
+            case .decoding(let error):
+                logger.error("Decoding error: `\(error)`")
+            }
+        }
+        catch let error as ToucanEncoderError {
+            switch error {
+            case .encoding(let error):
+                logger.error("Encoding error: `\(error)`")
+            }
+        }
+        catch let error as DecodingError {
+            switch error {
+            case .dataCorrupted(let context):
+                let underlyingError = context.underlyingError ?? error
+                let description = String(describing: underlyingError)
+                let message = "YAML corrupted: `\(description)`"
+                logger.error(.init(stringLiteral: message))
+            case .typeMismatch(_, let context):
+                let underlyingError = context.underlyingError ?? error
+                let description = String(describing: underlyingError)
+                let message = "YAML type mismatch: `\(description)`"
+                logger.error(.init(stringLiteral: message))
+            default:
+                logger.error("\(String(describing: error))")
+            }
+        }
         //        catch let error as PageBundleLoader.Error {
         //            switch error {
         //            case .pageBundle(let error):

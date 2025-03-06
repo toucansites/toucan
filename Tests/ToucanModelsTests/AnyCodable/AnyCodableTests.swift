@@ -51,7 +51,7 @@ struct AnyCodableTests {
         #expect(dictionary["string"]?.value as! String == "string")
         #expect(dictionary["array"]?.value as! [Int] == [1, 2, 3])
         #expect(
-            dictionary["dict"]?.value as! [String: String] == [
+            dictionary["dict"]?.value as! [String: AnyCodable] == [
                 "a": "alpha", "b": "bravo", "c": "charlie",
             ]
         )

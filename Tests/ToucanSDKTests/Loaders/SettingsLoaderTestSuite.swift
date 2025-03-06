@@ -39,20 +39,21 @@ struct SettingsLoaderTestSuite {
                 locations: [
                     "index.yml"
                 ],
-                yamlParser: YamlParser(),
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "SettingsLoaderTestSuite")
             )
             let result = try loader.load()
 
             #expect(
                 result
-                == Settings(
-                    baseUrl: "http://localhost:8080/",
-                    name: "Test",
-                    locale: nil,
-                    timeZone: nil,
-                    userDefined: [:]
-                )
+                    == Settings(
+                        baseUrl: "http://localhost:8080/",
+                        name: "Test",
+                        locale: nil,
+                        timeZone: nil,
+                        userDefined: [:]
+                    )
             )
         }
     }

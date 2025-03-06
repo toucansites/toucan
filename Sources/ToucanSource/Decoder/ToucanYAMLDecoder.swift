@@ -13,11 +13,10 @@ public struct ToucanYAMLDecoder: ToucanDecoder {
     ) throws(ToucanDecoderError) -> T {
         do {
             let decoder = YAMLDecoder()
-
             return try decoder.decode(type, from: data)
         }
         catch {
-            throw ToucanDecoderError.decoding(error)
+            throw .decoding(error)
         }
     }
 

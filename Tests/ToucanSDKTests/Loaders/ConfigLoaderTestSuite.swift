@@ -42,7 +42,8 @@ struct ConfigLoaderTestSuite {
                 locations: [
                     "config.yml"
                 ],
-                yamlParser: YamlParser(),
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder(),
                 logger: .init(label: "ConfigLoaderTests")
             )
             let result = try loader.load()

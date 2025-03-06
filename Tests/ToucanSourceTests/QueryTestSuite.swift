@@ -396,11 +396,6 @@ struct QueryTestSuite {
         )
         let results1 = sourceBundle.run(query: query1)
         try #require(results1.count == 5)
-        //        for result in results1 {
-        //            print((result.properties["publication"] as? PropertyValue)!.value)
-        //        }
-        //        print(pastDate.timeIntervalSince1970)
-        //        print(date)
 
         let query = Query(
             contentType: "post",

@@ -20,13 +20,19 @@ struct TemplateLoaderTestSuite {
 
     @Test
     func loadTemplates() throws {
-        
+
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
                     Directory("templates") {
-                        File("sitemap.mustache", string: Templates.Mocks.sitemap())
-                        File("redirect.mustache", string: Templates.Mocks.redirect())
+                        File(
+                            "sitemap.mustache",
+                            string: Templates.Mocks.sitemap()
+                        )
+                        File(
+                            "redirect.mustache",
+                            string: Templates.Mocks.redirect()
+                        )
                     }
                 }
             }
@@ -34,10 +40,13 @@ struct TemplateLoaderTestSuite {
         .test {
             let url = $1.appending(path: "themes/default/templates/")
             let overridesUrl = $1.appending(path: "themes/overrides/templates/")
-            
+
             let locator = TemplateLocator(fileManager: $0)
-            let locatorResults = locator.locate(at: url, overridesUrl: overridesUrl)
-            
+            let locatorResults = locator.locate(
+                at: url,
+                overridesUrl: overridesUrl
+            )
+
             let loader = TemplateLoader(
                 url: url,
                 overridesUrl: overridesUrl,
@@ -45,25 +54,31 @@ struct TemplateLoaderTestSuite {
                 logger: .init(label: "TemplateLoaderTestSuite")
             )
             let results = try loader.load()
-            
+
             #expect(results.count == 2)
         }
     }
-    
+
     @Test
     func loadTemplatesOverride() throws {
-        
+
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
                     Directory("templates") {
-                        File("sitemap.mustache", string: Templates.Mocks.sitemap())
+                        File(
+                            "sitemap.mustache",
+                            string: Templates.Mocks.sitemap()
+                        )
                         File("redirect.mustache", string: "")
                     }
                 }
                 Directory("overrides") {
                     Directory("templates") {
-                        File("redirect.mustache", string: Templates.Mocks.redirect())
+                        File(
+                            "redirect.mustache",
+                            string: Templates.Mocks.redirect()
+                        )
                     }
                 }
             }
@@ -71,10 +86,13 @@ struct TemplateLoaderTestSuite {
         .test {
             let url = $1.appending(path: "themes/default/templates/")
             let overridesUrl = $1.appending(path: "themes/overrides/templates/")
-            
+
             let locator = TemplateLocator(fileManager: $0)
-            let locatorResults = locator.locate(at: url, overridesUrl: overridesUrl)
-            
+            let locatorResults = locator.locate(
+                at: url,
+                overridesUrl: overridesUrl
+            )
+
             let loader = TemplateLoader(
                 url: url,
                 overridesUrl: overridesUrl,
@@ -82,9 +100,9 @@ struct TemplateLoaderTestSuite {
                 logger: .init(label: "TemplateLoaderTestSuite")
             )
             let results = try loader.load()
-            
+
             #expect(results.count == 2)
         }
     }
-    
+
 }
