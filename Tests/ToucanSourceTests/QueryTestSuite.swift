@@ -419,7 +419,7 @@ struct QueryTestSuite {
             results[0].properties["title"]?.value(as: String.self) == "Post #6"
         )
     }
-    
+
     @Test
     func nextGuide() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()

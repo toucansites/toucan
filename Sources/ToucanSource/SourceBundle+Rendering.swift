@@ -118,6 +118,7 @@ extension SourceBundle {
             result["permalink"] = .init(
                 content.slug.permalink(baseUrl: settings.baseUrl)
             )
+
             result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 convertToDateFormats(
@@ -155,12 +156,12 @@ extension SourceBundle {
                 if let order = relation.order {
                     orderBy.append(order)
                 }
-                
+
                 let relationContents = run(
                     query: .init(
                         contentType: relation.references,
                         filter: .field(
-                            key: "slug", // TODO: fix id bug and use id
+                            key: "slug",  // TODO: fix id bug and use id
                             operator: .in,
                             value: .init(
                                 content.relations[key]?.identifiers ?? []
@@ -175,13 +176,12 @@ extension SourceBundle {
                             for: $0,
                             pipeline: pipeline,
                             scopeKey: "reference",
-                            currentSlug: content.slug,
+                            currentSlug: currentSlug,
                             allowSubQueries: false
                         )
                     }
                 )
-                
-                
+
             }
 
         }
@@ -200,7 +200,7 @@ extension SourceBundle {
                             for: $0,
                             pipeline: pipeline,
                             scopeKey: query.scope ?? "list",
-                            currentSlug: content.slug,
+                            currentSlug: currentSlug,
                             allowSubQueries: false
                         )
                     }
