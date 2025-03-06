@@ -11,15 +11,6 @@ struct SourceBundleTestSuite {
     func pipelineRendering() throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
-        // TODO: add support for multiple engines: [mustache: [foo: tpl1]]
-        let templates: [String: String] = [
-            "default": Templates.Mocks.default(),
-            "post.default": Templates.Mocks.post(),
-            "rss": Templates.Mocks.rss(),
-            "sitemap": Templates.Mocks.sitemap(),
-            "redirect": Templates.Mocks.redirect(),
-        ]
-
         let homeUrl = FileManager.default.homeDirectoryForCurrentUser
         let url = homeUrl.appending(
             path: "output"

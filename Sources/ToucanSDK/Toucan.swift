@@ -128,8 +128,13 @@ public struct Toucan {
             try resetDirectory(at: workDirUrl)
 
             // MARK: - Copy assets
-
-            print("TODO: - add assets copy here")
+            
+            let assetsWriter = AssetsWriter(
+                fileManager: fileManager,
+                sourceConfig: sourceBundle.sourceConfig,
+                workDirUrl: workDirUrl
+            )
+            try assetsWriter.copyAll()
 
             // MARK: - Writing results
 
