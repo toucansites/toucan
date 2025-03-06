@@ -27,7 +27,7 @@ struct SettingsDecodingTestSuite {
 
         #expect(result.userDefined["name"] == nil)
         let foo = try #require(
-            result.userDefined["foo"]?.value as? [String: String]
+            result.userDefined["foo"]?.value as? [String: AnyCodable]
         )
         #expect(foo["bar"] == "baz")
     }

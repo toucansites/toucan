@@ -506,6 +506,7 @@ extension SourceBundle {
                     let template =
                         contentTypeTemplate ?? contentTemplate
                         ?? "pages.default"  // TODO
+
                     let html = try renderer.render(
                         template: template,
                         with: bundle.context

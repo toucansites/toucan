@@ -64,9 +64,9 @@ struct AnyValueDecodingTestSuite {
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
-        let dict = decoded.value as? [String: Any]
-        #expect(dict?["key1"] as? Int == 1)
-        #expect(dict?["key2"] as? String == "value")
+        let dict = decoded.value as? [String: AnyCodable]
+        #expect(dict?["key1"] == 1)
+        #expect(dict?["key2"] == "value")
     }
 
     @Test

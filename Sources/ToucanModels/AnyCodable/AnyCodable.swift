@@ -45,15 +45,15 @@ public struct AnyCodable: Codable {
         case let string as String:
             try container.encode(string)
         case let array as [Any?]:
-            try container.encode(array.map { AnyEncodable($0) })
+            try container.encode(array.map { AnyCodable($0) })
         case let dictionary as [String: Any?]:
-            try container.encode(dictionary.mapValues { AnyEncodable($0) })
+            try container.encode(dictionary.mapValues { AnyCodable($0) })
         case let encodable as Encodable:
             try encodable.encode(to: encoder)
         default:
             let context = EncodingError.Context(
                 codingPath: container.codingPath,
-                debugDescription: "AnyEncodable value cannot be encoded"
+                debugDescription: "AnyCodable value cannot be encoded"
             )
             throw EncodingError.invalidValue(value!, context)
         }
@@ -80,18 +80,18 @@ public struct AnyCodable: Codable {
         else if let string = try? container.decode(String.self) {
             self.init(string)
         }
-        else if let array = try? container.decode([AnyDecodable].self) {
+        else if let array = try? container.decode([AnyCodable].self) {
             self.init(array.map { $0.value })
         }
         else if let dictionary = try? container.decode(
-            [String: AnyDecodable].self
+            [String: AnyCodable].self
         ) {
-            self.init(dictionary.mapValues { $0.value })
+            self.init(dictionary.mapValues { wrap($0) })
         }
         else {
             throw DecodingError.dataCorruptedError(
                 in: container,
-                debugDescription: "AnyDecodable value cannot be decoded"
+                debugDescription: "AnyCodable value cannot be decoded"
             )
         }
     }

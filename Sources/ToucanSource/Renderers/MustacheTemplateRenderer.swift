@@ -38,33 +38,5 @@ public struct MustacheTemplateRenderer {
             return nil
         }
         return html
-
     }
-
-    // MARK: - unwrap AnyCodable
-
-    private func unwrap(_ value: Any?) -> Any? {
-        if let anyCodable = value as? AnyCodable {
-            return unwrap(anyCodable.value)
-        }
-        if let dict = value as? [String: AnyCodable] {
-            var result: [String: Any] = [:]
-            for (key, val) in dict {
-                result[key] = unwrap(val)
-            }
-            return result
-        }
-        if let dict = value as? [String: Any] {
-            var result: [String: Any] = [:]
-            for (key, val) in dict {
-                result[key] = unwrap(val)
-            }
-            return result
-        }
-        if let array = value as? [Any] {
-            return array.map { unwrap($0) }
-        }
-        return value
-    }
-
 }
