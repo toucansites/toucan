@@ -194,13 +194,54 @@ extension AnyCodable: CustomDebugStringConvertible {
     }
 }
 
-extension AnyCodable: ExpressibleByNilLiteral {}
-extension AnyCodable: ExpressibleByBooleanLiteral {}
-extension AnyCodable: ExpressibleByIntegerLiteral {}
-extension AnyCodable: ExpressibleByFloatLiteral {}
-extension AnyCodable: ExpressibleByStringLiteral {}
-extension AnyCodable: ExpressibleByStringInterpolation {}
-extension AnyCodable: ExpressibleByArrayLiteral {}
+extension AnyCodable: ExpressibleByNilLiteral {
+    
+    public init(nilLiteral: ()) {
+        self.init()
+    }
+}
+
+extension AnyCodable: ExpressibleByBooleanLiteral {
+    
+    public init(booleanLiteral value: Bool) {
+        self.init(value)
+    }
+}
+
+extension AnyCodable: ExpressibleByIntegerLiteral {
+    
+    public init(integerLiteral value: Int) {
+        self.init(value)
+    }
+}
+
+extension AnyCodable: ExpressibleByFloatLiteral {
+    
+    public init(floatLiteral value: Double) {
+        self.init(value)
+    }
+}
+
+extension AnyCodable: ExpressibleByStringLiteral {
+    
+    public init(stringLiteral value: String) {
+        self.init(value)
+    }
+}
+
+extension AnyCodable: ExpressibleByStringInterpolation {
+    
+    public init(stringInterpolation: DefaultStringInterpolation) {
+        self.init(stringInterpolation)
+    }
+}
+
+extension AnyCodable: ExpressibleByArrayLiteral {
+    
+    public init(arrayLiteral elements: Any...) {
+        self.init(elements)
+    }
+}
 
 extension AnyCodable: ExpressibleByDictionaryLiteral {
 
@@ -243,6 +284,7 @@ extension AnyCodable: ExpressibleByDictionaryLiteral {
 }
 
 extension AnyCodable: Hashable {
+    
     public func hash(into hasher: inout Hasher) {
         switch value {
         case let value as Bool:
