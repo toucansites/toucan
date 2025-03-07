@@ -11,38 +11,35 @@ public extension Templates.Mocks {
             <lastBuildDate>{{site.lastBuildDate.formats.rss}}</lastBuildDate>
             <pubDate>{{site.lastUpdate.formats.rss}}</pubDate>
             <ttl>250</ttl>
-            <atom:link href="{{site.baseUrl}}rss.xml" rel="self" type="application/rss+xml"/>
-
-        {{#rss.posts}}
-        <item>
-            <guid isPermaLink="true">{{permalink}}</guid>
-            <title><![CDATA[ {{title}} ]]></title>
-            <description><![CDATA[ {{description}} ]]></description>
-            <link>{{permalink}}</link>
-            <pubDate>{{publication.formats.rss}}</pubDate>
-        </item>
-        {{/rss.posts}}
-
-        {{#rss.tags}}
-        <item>
-            <guid isPermaLink="true">{{permalink}}</guid>
-            <title><![CDATA[ {{title}} ]]></title>
-            <description><![CDATA[ {{description}} ]]></description>
-            <link>{{permalink}}</link>
-            <pubDate>{{publication.formats.rss}}</pubDate>
-        </item>
-        {{/rss.tags}}
-
-        {{#rss.authors}}
-        <item>
-            <guid isPermaLink="true">{{permalink}}</guid>
-            <title><![CDATA[ {{name}} ]]></title>
-            <description><![CDATA[ {{description}} ]]></description>
-            <link>{{permalink}}</link>
-            <pubDate>{{publication.formats.rss}}</pubDate>
-        </item>
-        {{/rss.authors}}
-
+            <atom:link href="{{site.baseUrl}}/rss.xml" rel="self" type="application/rss+xml"/>
+        
+            {{#page.posts}}
+            <item>
+                <guid isPermaLink="true">{{permalink}}</guid>
+                <title><![CDATA[ {{title}} ]]></title>
+                <description><![CDATA[ {{description}} ]]></description>
+                <link>{{permalink}}</link>
+                <pubDate>{{publication.formats.rss}}</pubDate>
+            </item>
+            {{/page.posts}}
+            {{#page.tags}}
+            <item>
+                <guid isPermaLink="true">{{permalink}}</guid>
+                <title><![CDATA[ {{title}} ]]></title>
+                <description><![CDATA[ {{description}} ]]></description>
+                <link>{{permalink}}</link>
+                <pubDate>{{publication.formats.rss}}</pubDate>
+            </item>
+            {{/page.tags}}
+            {{#page.authors}}
+            <item>
+                <guid isPermaLink="true">{{permalink}}</guid>
+                <title><![CDATA[ {{name}} ]]></title>
+                <description><![CDATA[ {{description}} ]]></description>
+                <link>{{permalink}}</link>
+                <pubDate>{{publication.formats.rss}}</pubDate>
+            </item>
+            {{/page.authors}}
         </channel>
         </rss>
         """

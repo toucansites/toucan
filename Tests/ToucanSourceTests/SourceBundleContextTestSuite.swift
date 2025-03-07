@@ -143,16 +143,16 @@ struct SourceBundleContextTestSuite {
                 let isCurrentURL: Bool
                 let slug: String
             }
-            let post: Post
+            let page: Post
             let featured: [Item]
         }
 
         let data0 = try #require(results[0].contents.data(using: .utf8))
         let exp0 = try decoder.decode(Exp0.self, from: data0)
 
-        #expect(exp0.post.isCurrentURL)
+        #expect(exp0.page.isCurrentURL)
         for item in exp0.featured {
-            #expect(item.isCurrentURL == (exp0.post.slug == item.slug))
+            #expect(item.isCurrentURL == (exp0.page.slug == item.slug))
         }
 
         struct Exp1: Decodable {

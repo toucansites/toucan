@@ -87,7 +87,6 @@ struct SourceBundleSitemapTestSuite {
         let contents =
             tagContents + authorContents + postContents + sitemapContents
 
-        let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
         let templates: [String: String] = [
             "sitemap": Templates.Mocks.sitemap()
         ]
@@ -105,7 +104,7 @@ struct SourceBundleSitemapTestSuite {
             settings: .defaults,
             pipelines: pipelines,
             contents: contents,
-            blockDirectives: blockDirectives,
+            blockDirectives: [],
             templates: templates,
             assets: []
         )

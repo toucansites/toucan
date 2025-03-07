@@ -41,8 +41,7 @@ public struct Settings: Decodable, Equatable {
         timeZone: String?,
         userDefined: [String: AnyCodable]
     ) {
-        // TODO: drop trailing slash
-        self.baseUrl = baseUrl
+        self.baseUrl = baseUrl.dropTrailingSlash()
         self.name = name
         self.locale = locale
         self.timeZone = timeZone
@@ -61,12 +60,12 @@ public struct Settings: Decodable, Equatable {
             self = defaults
             return
         }
-        // TODO: drop trailing slash
+        
         self.baseUrl =
             try container.decodeIfPresent(
                 String.self,
                 forKey: .baseUrl
-            ) ?? defaults.baseUrl
+            )?.dropTrailingSlash() ?? defaults.baseUrl.dropTrailingSlash()
 
         self.name =
             try container.decodeIfPresent(

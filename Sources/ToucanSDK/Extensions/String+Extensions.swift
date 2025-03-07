@@ -245,11 +245,4 @@ extension String {
         }
         return ([baseUrl] + components).joined(separator: "/") + "/"
     }
-
-    func dropTrailingSlash() -> String {
-        if hasSuffix("/") {
-            return String(dropLast())
-        }
-        return self
-    }
 }

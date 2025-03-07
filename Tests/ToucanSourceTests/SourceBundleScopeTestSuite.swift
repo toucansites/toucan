@@ -171,7 +171,7 @@ struct SourceBundleScopeTestSuite {
                 let slug: String
                 let isCurrentURL: Bool?
             }
-            let post: Post
+            let page: Post
             let featured: [Item]
         }
 

@@ -100,18 +100,15 @@ struct SourceBundleRSSTestSuite {
                 <lastBuildDate>\#(nowString)</lastBuildDate>
                 <pubDate>\#(nowString)</pubDate>
                 <ttl>250</ttl>
-                <atom:link href="http://localhost:3000rss.xml" rel="self" type="application/rss+xml"/>
+                <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
 
-            <item>
-                <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
-                <title><![CDATA[ Post #1 ]]></title>
-                <description><![CDATA[  ]]></description>
-                <link>http://localhost:3000/blog/posts/post-1/</link>
-                <pubDate>\#(nowString)</pubDate>
-            </item>
-
-
-
+                <item>
+                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
+                    <title><![CDATA[ Post #1 ]]></title>
+                    <description><![CDATA[  ]]></description>
+                    <link>http://localhost:3000/blog/posts/post-1/</link>
+                    <pubDate>\#(nowString)</pubDate>
+                </item>
             </channel>
             </rss>
             """#
