@@ -15,5 +15,5 @@ public protocol ToucanEncoder {
 }
 
 public enum ToucanEncoderError: Error {
-    case encoding(Error)
+    case encoding(Error, Any.Type)
 }

@@ -2,6 +2,7 @@ import ArgumentParser
 import Logging
 import FileMonitor
 import Foundation
+import SwiftCommand
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
@@ -33,23 +34,29 @@ struct Entrypoint: AsyncParsableCommand {
     var baseUrl: String? = nil
 
     @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .info
+    var logLevel: Logger.Level = .debug
 
     func run() async throws {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
 
         let bin = "/usr/local/bin"
-        //        let shell = Shell()
 
-        //        let versionCheckOutput = try shell.run(
-        //            #"test -x \#(bin)/toucan && echo \#(bin)/toucan --version || echo """#
-        //        )
-        //        guard !versionCheckOutput.isEmpty else {
-        //            logger.error("Toucan is not installed.")
-        //            return
-        //        }
-
+        /// test -x /usr/local/bin/toucan && /usr/local/bin/toucan --version || echo ""
+        let versionCheck = try await Command
+            .findInPath(withName: "sh")?
+            .addArgument("-c")
+            .addArgument(
+                "test -x \(bin)/toucan && \(bin)/toucan --version || echo \"\""
+            )
+            .output
+            .stdout
+        
+        guard let versionCheck = versionCheck, !versionCheck.isEmpty else {
+            logger.error("Toucan is not installed.")
+            return
+        }
+        
         logger.info("👀 Watching: `\(input)` -> \(output).")
 
         var options: [String: String] = [
@@ -75,7 +82,7 @@ struct Entrypoint: AsyncParsableCommand {
         let inputUrl = getSafeUrl(input, home: home)
         let outputUrl = getSafeUrl(output, home: home)
 
-        let cmd = [
+        let generateCommand = [
             "\(bin)/toucan",
             "generate",
             inputUrl.path,
@@ -85,11 +92,33 @@ struct Entrypoint: AsyncParsableCommand {
         .joined(separator: " ")
 
         var lastGenerationTime = Date()
-        //        let output = try shell.run(cmd)
-        //        if !output.isEmpty {
-        //            logger.debug("\(output)")
-        //        }
+        
+//        let generate = try await Command
+//            .findInPath(withName: generateCommand)?
+//            .output
+//            .stdout
+        
+//        let generate = try await Command
+//            .findInPath(withName: "\(bin)/toucan generate")?
+//            .addArgument(opt)
+//            .addArgument("\(inputUrl.path) \(outputUrl.path)")
+//            .output
+//            .stdout
+        
+        let generate = try await Command
+            .findInPath(withName: "sh")?
+            .addArgument("-c")
+            .addArgument(
+                "\(bin)/toucan generate \(opt) \(inputUrl.path) \(outputUrl.path)"
+            )
+            .output
+            .stdout
 
+        if let generate, !generate.isEmpty {
+            logger.debug(.init(stringLiteral: generate))
+            return
+        }
+        
         let monitor = try FileMonitor(directory: inputUrl)
         try monitor.start()
         for await _ in monitor.stream {
@@ -103,16 +132,20 @@ struct Entrypoint: AsyncParsableCommand {
             }
             lastGenerationTime = now
             logger.info("Generating site...")
-            //            let output = try shell.run(cmd)
-            //            if !output.isEmpty {
-            //                logger.debug("\(output)")
-            //            }
-            //            switch event {
-            //            case .added(let file):
-            //                print("New file \(file.path)")
-            //            default:
-            //                print("\(event)")
-            //            }
+            
+            let generate = try await Command
+                .findInPath(withName: "sh")?
+                .addArgument("-c")
+                .addArgument(
+                    "\(bin)/toucan generate \(opt) \(inputUrl.path) \(outputUrl.path)"
+                )
+                .output
+                .stdout
+            
+            if let generate, !generate.isEmpty {
+                logger.debug(.init(stringLiteral: generate))
+                return
+            }
         }
     }
 }

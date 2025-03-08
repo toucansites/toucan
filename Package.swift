@@ -111,6 +111,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileMonitor", package: "FileMonitor"),
+                .product(name: "SwiftCommand", package: "SwiftCommand"),
             ],
             swiftSettings: swiftSettings
         ),

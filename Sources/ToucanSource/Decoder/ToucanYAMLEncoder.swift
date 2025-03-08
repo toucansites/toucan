@@ -22,8 +22,7 @@ public struct ToucanYAMLEncoder: ToucanEncoder {
             return try encoder.encode(object)
         }
         catch {
-            throw .encoding(error)
+            throw .encoding(error, T.self)
         }
     }
-
 }

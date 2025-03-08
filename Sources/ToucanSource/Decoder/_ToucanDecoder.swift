@@ -16,5 +16,5 @@ public protocol ToucanDecoder {
 }
 
 public enum ToucanDecoderError: Error {
-    case decoding(Error)
+    case decoding(Error, Any.Type)
 }

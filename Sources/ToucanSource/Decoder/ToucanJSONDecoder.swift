@@ -16,7 +16,7 @@ public struct ToucanJSONDecoder: ToucanDecoder {
             return try decoder.decode(type, from: data)
         }
         catch {
-            throw .decoding(error)
+            throw .decoding(error, T.self)
         }
     }
 
