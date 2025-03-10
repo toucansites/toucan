@@ -22,7 +22,7 @@ struct AnyEncodableTests {
     @Test
     func testJSONEncoding() throws {
 
-        let someEncodable = AnyEncodable(
+        let someEncodable = AnyCodable(
             SomeEncodable(
                 string: "String",
                 int: 100,
@@ -31,7 +31,7 @@ struct AnyEncodableTests {
             )
         )
 
-        let dictionary: [String: AnyEncodable] = [
+        let dictionary: [String: AnyCodable] = [
             "boolean": true,
             "integer": 42,
             "double": 3.141592653589793,
@@ -101,7 +101,7 @@ struct AnyEncodableTests {
 
         let encoder = JSONEncoder()
 
-        let json = try encoder.encode(AnyEncodable(dictionary))
+        let json = try encoder.encode(AnyCodable(dictionary))
         let encodedJSONObject =
             try JSONSerialization.jsonObject(with: json, options: [])
             as! NSDictionary
@@ -147,7 +147,7 @@ struct AnyEncodableTests {
 
     @Test
     func testStringInterpolationEncoding() throws {
-        let dictionary: [String: AnyEncodable] = [
+        let dictionary: [String: AnyCodable] = [
             "boolean": "\(true)",
             "integer": "\(42)",
             "double": "\(3.141592653589793)",

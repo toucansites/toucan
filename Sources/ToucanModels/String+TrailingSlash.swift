@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    
+
     func dropTrailingSlash() -> String {
         if hasSuffix("/") {
             return String(dropLast())

@@ -124,8 +124,6 @@ public extension AnyCodable {
     }
 }
 
-extension AnyCodable: _AnyEncodable, _AnyDecodable {}
-
 extension AnyCodable: Equatable {
 
     public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
@@ -195,57 +193,60 @@ extension AnyCodable: CustomDebugStringConvertible {
 }
 
 extension AnyCodable: ExpressibleByNilLiteral {
-    
-    public init(nilLiteral: ()) {
-        self.init()
+    public init(nilLiteral _: ()) {
+        self.init(nil as Any?)
     }
 }
 
 extension AnyCodable: ExpressibleByBooleanLiteral {
-    
     public init(booleanLiteral value: Bool) {
         self.init(value)
     }
 }
 
 extension AnyCodable: ExpressibleByIntegerLiteral {
-    
     public init(integerLiteral value: Int) {
         self.init(value)
     }
 }
 
 extension AnyCodable: ExpressibleByFloatLiteral {
-    
     public init(floatLiteral value: Double) {
         self.init(value)
     }
 }
 
 extension AnyCodable: ExpressibleByStringLiteral {
-    
-    public init(stringLiteral value: String) {
+    public init(extendedGraphemeClusterLiteral value: String) {
         self.init(value)
     }
 }
 
 extension AnyCodable: ExpressibleByStringInterpolation {
-    
-    public init(stringInterpolation: DefaultStringInterpolation) {
-        self.init(stringInterpolation)
+    public init(stringLiteral value: String) {
+        self.init(value)
     }
 }
 
 extension AnyCodable: ExpressibleByArrayLiteral {
-    
     public init(arrayLiteral elements: Any...) {
         self.init(elements)
     }
 }
+//extension AnyCodable: ExpressibleByDictionaryLiteral {
+//    public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
+//        self.init(
+//            [AnyHashable: Any](
+//                elements,
+//                uniquingKeysWith: { first, _ in first }
+//            )
+//        )
+//    }
+//}
 
 extension AnyCodable: ExpressibleByDictionaryLiteral {
 
-    // TODO: double check this + anyencodable support
+    // TODO: double check this
     public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
         var dict: [String: AnyCodable] = [:]
         for (key, value) in elements {
@@ -284,7 +285,7 @@ extension AnyCodable: ExpressibleByDictionaryLiteral {
 }
 
 extension AnyCodable: Hashable {
-    
+
     public func hash(into hasher: inout Hasher) {
         switch value {
         case let value as Bool:

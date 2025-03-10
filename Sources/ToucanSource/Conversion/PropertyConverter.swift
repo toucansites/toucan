@@ -28,7 +28,7 @@ struct PropertConverter {
         case let .date(format):
             guard let rawDateValue = value?.value(as: String.self) else {
                 logger.debug(
-                    "ERROR: property is not a string (\(key): \(value ?? "nil"))."
+                    "ERROR: property is not a string (\(key): \(value?.value ?? "nil"))."
                 )
                 return nil
             }
@@ -37,7 +37,7 @@ struct PropertConverter {
 
             guard let value = dateFormatter.date(from: rawDateValue) else {
                 logger.debug(
-                    "ERROR: property is not a date (\(key): \(value ?? "nil"))."
+                    "ERROR: property is not a date (\(key): \(value?.value ?? "nil"))."
                 )
                 return nil
             }

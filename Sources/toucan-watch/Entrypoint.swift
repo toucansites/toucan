@@ -51,12 +51,12 @@ struct Entrypoint: AsyncParsableCommand {
             )
             .output
             .stdout
-        
+
         guard let versionCheck = versionCheck, !versionCheck.isEmpty else {
             logger.error("Toucan is not installed.")
             return
         }
-        
+
         logger.info("👀 Watching: `\(input)` -> \(output).")
 
         var options: [String: String] = [
@@ -92,19 +92,19 @@ struct Entrypoint: AsyncParsableCommand {
         .joined(separator: " ")
 
         var lastGenerationTime = Date()
-        
-//        let generate = try await Command
-//            .findInPath(withName: generateCommand)?
-//            .output
-//            .stdout
-        
-//        let generate = try await Command
-//            .findInPath(withName: "\(bin)/toucan generate")?
-//            .addArgument(opt)
-//            .addArgument("\(inputUrl.path) \(outputUrl.path)")
-//            .output
-//            .stdout
-        
+
+        //        let generate = try await Command
+        //            .findInPath(withName: generateCommand)?
+        //            .output
+        //            .stdout
+
+        //        let generate = try await Command
+        //            .findInPath(withName: "\(bin)/toucan generate")?
+        //            .addArgument(opt)
+        //            .addArgument("\(inputUrl.path) \(outputUrl.path)")
+        //            .output
+        //            .stdout
+
         let generate = try await Command
             .findInPath(withName: "sh")?
             .addArgument("-c")
@@ -118,7 +118,7 @@ struct Entrypoint: AsyncParsableCommand {
             logger.debug(.init(stringLiteral: generate))
             return
         }
-        
+
         let monitor = try FileMonitor(directory: inputUrl)
         try monitor.start()
         for await _ in monitor.stream {
@@ -132,7 +132,7 @@ struct Entrypoint: AsyncParsableCommand {
             }
             lastGenerationTime = now
             logger.info("Generating site...")
-            
+
             let generate = try await Command
                 .findInPath(withName: "sh")?
                 .addArgument("-c")
@@ -141,7 +141,7 @@ struct Entrypoint: AsyncParsableCommand {
                 )
                 .output
                 .stdout
-            
+
             if let generate, !generate.isEmpty {
                 logger.debug(.init(stringLiteral: generate))
                 return

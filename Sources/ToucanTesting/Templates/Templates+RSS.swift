@@ -12,7 +12,7 @@ public extension Templates.Mocks {
             <pubDate>{{site.lastUpdate.formats.rss}}</pubDate>
             <ttl>250</ttl>
             <atom:link href="{{site.baseUrl}}/rss.xml" rel="self" type="application/rss+xml"/>
-        
+
             {{#page.posts}}
             <item>
                 <guid isPermaLink="true">{{permalink}}</guid>

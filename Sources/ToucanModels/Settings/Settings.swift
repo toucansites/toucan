@@ -60,12 +60,13 @@ public struct Settings: Decodable, Equatable {
             self = defaults
             return
         }
-        
+
         self.baseUrl =
             try container.decodeIfPresent(
                 String.self,
                 forKey: .baseUrl
-            )?.dropTrailingSlash() ?? defaults.baseUrl.dropTrailingSlash()
+            )?
+            .dropTrailingSlash() ?? defaults.baseUrl.dropTrailingSlash()
 
         self.name =
             try container.decodeIfPresent(

@@ -73,7 +73,7 @@ struct AnyValueDecodingTestSuite {
     func decodingNestedStructures() throws {
         //        let json = "{\"array\": [1, \"two\", 3.5], \"nested\": {\"key\": false}}"
         //        let data = json.data(using: .utf8)!
-        //        let decoded = try ToucanJSONDecoder().decode(AnyDecodable.self, from: data)
+        //        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
         //
         //        let dict = decoded.value as? [String: Any]
         //        #expect(dict?["array"] as? [Any] == [1, "two", 3.5])
