@@ -161,7 +161,7 @@ extension SourceBundle {
                     query: .init(
                         contentType: relation.references,
                         filter: .field(
-                            key: "slug",  // TODO: fix id bug and use id
+                            key: "id",
                             operator: .in,
                             value: .init(
                                 content.relations[key]?.identifiers ?? []
@@ -506,9 +506,12 @@ extension SourceBundle {
                     let contentTypeTemplate = bundleOptions.string("template")
                     let contentTemplate = bundle.content.rawValue.frontMatter
                         .string("template")
-                    let template =
-                        contentTemplate ?? contentTypeTemplate
-                        ?? "pages.default"  // TODO
+
+                    guard let template = contentTemplate ?? contentTypeTemplate
+                    else {
+                        // TODO: log
+                        continue
+                    }
 
                     let html = try renderer.render(
                         template: template,

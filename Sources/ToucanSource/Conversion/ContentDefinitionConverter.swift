@@ -79,19 +79,16 @@ public struct ContentDefinitionConverter {
         var id: String =
             rawContent.origin.path
             .split(separator: "/")
+            .dropLast()
             .last
             .map(String.init) ?? ""
 
-        let rawId = rawContent.frontMatter["id"]?.value as? String
-
-        if let rawId, !rawId.isEmpty {
+        if let rawId = rawContent.frontMatter.string("id") {
             id = rawId
         }
 
         var slug: String = rawContent.origin.slug
-        let rawSlug = rawContent.frontMatter["slug"]?.value as? String
-
-        if let rawSlug, !rawSlug.isEmpty {
+        if let rawSlug = rawContent.frontMatter.string("slug") {
             slug = rawSlug
         }
 
