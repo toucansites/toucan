@@ -192,18 +192,17 @@ struct SourceLoader {
                 ReservedFrontMatter.self,
                 from: rawReservedFromMatter.data(using: .utf8)!
             )
-
-            let explicitTypeId = reservedFromMatter.type
-            let contentDefinition = $0.origin.detectContentDefinition(
-                in: contentDefinitions,
-                explicitTypeId: explicitTypeId
+            
+            let detector = ContentDefinitionDetector(
+                definitions: contentDefinitions,
+                origin: $0.origin,
+                logger: logger
             )
-
-            guard let contentDefinition else {
-                logger.info("Invalid content type for: \($0.origin.path)")
-                return nil
-            }
-
+            
+            let contentDefinition = try detector.detect(
+                explicitType: reservedFromMatter.type
+            )
+            
             let contentDefinitionConverter = ContentDefinitionConverter(
                 contentDefinition: contentDefinition,
                 dateFormatter: config.inputDateFormatter(),
