@@ -12,7 +12,7 @@ extension SourceBundle {
 
     public func run(query: Query) -> [Content] {
         let contents = contents.filter {
-            query.contentType == $0.definition.type
+            query.contentType == $0.definition.id
         }
         return filter(contents: contents, using: query)
     }

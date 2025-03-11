@@ -93,7 +93,7 @@ extension SourceBundle {
 
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
-            for: content.definition.type
+            for: content.definition.id
         )
 
         if scope.context.contains(.userDefined) {
@@ -373,7 +373,7 @@ extension SourceBundle {
             }
 
             let isAllowed = pipeline.contentTypes.isAllowed(
-                contentType: content.definition.type
+                contentType: content.definition.id
             )
 
             guard isAllowed else {
@@ -429,7 +429,7 @@ extension SourceBundle {
 
         for pipeline in pipelines {
 
-            var updateTypes = contents.map(\.definition.type)
+            var updateTypes = contents.map(\.definition.id)
             if !pipeline.contentTypes.lastUpdate.isEmpty {
                 updateTypes = updateTypes.filter {
                     pipeline.contentTypes.lastUpdate.contains($0)
@@ -500,7 +500,7 @@ extension SourceBundle {
                     let engineOptions = pipeline.engine.options
                     let contentTypesOptions = engineOptions.dict("contentTypes")
                     let bundleOptions = contentTypesOptions.dict(
-                        bundle.content.definition.type
+                        bundle.content.definition.id
                     )
 
                     let contentTypeTemplate = bundleOptions.string("template")

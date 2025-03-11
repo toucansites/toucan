@@ -11,6 +11,7 @@ struct PipelineDecodingTestSuite {
     @Test
     func standard() throws {
         let data = """
+            id: test
             queries: 
                 featured:
                     contentType: post
@@ -56,6 +57,7 @@ struct PipelineDecodingTestSuite {
     @Test
     func scopes() throws {
         let data = """
+            id: test
             scopes: 
                 post:
                     list:

@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func page() -> ContentDefinition {
         .init(
-            type: "page",
+            id: "page",
             default: true,
             paths: [
                 "pages"

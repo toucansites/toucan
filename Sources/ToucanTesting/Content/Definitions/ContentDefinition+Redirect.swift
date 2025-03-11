@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func redirect() -> ContentDefinition {
         .init(
-            type: "redirect",
+            id: "redirect",
             paths: [],
             properties: [
                 "to": .init(type: .string, required: true),

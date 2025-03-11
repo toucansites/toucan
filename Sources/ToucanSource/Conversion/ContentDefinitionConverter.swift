@@ -40,7 +40,10 @@ public struct ContentDefinitionConverter {
                 logger: logger
             )
 
-            properties[key] = converter.convert(rawValue: rawValue, forKey: key)
+            properties[key] = converter.convert(
+                rawValue: rawValue,
+                forKey: key
+            )
         }
 
         var relations: [String: RelationValue] = [:]
@@ -88,7 +91,10 @@ public struct ContentDefinitionConverter {
         }
 
         var slug: String = rawContent.origin.slug
-        if let rawSlug = rawContent.frontMatter.string("slug") {
+        if let rawSlug = rawContent.frontMatter.string(
+            "slug",
+            allowingEmptyValue: true
+        ) {
             slug = rawSlug
         }
 

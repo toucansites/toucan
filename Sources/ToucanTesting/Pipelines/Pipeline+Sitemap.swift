@@ -5,6 +5,7 @@ public extension Pipeline.Mocks {
 
     static func sitemap() -> Pipeline {
         .init(
+            id: "sitemap",
             scopes: [:],
             queries: [:],
             dataTypes: .defaults,

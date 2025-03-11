@@ -25,7 +25,7 @@ struct ContentDefinitionLoaderTestSuite {
                         File(
                             "foo.yml",
                             string: """
-                                type: foo
+                                id: foo
                                 paths:
                                 properties:
                                 relations:
@@ -35,7 +35,7 @@ struct ContentDefinitionLoaderTestSuite {
                         File(
                             "bar.yml",
                             string: """
-                                type: bar
+                                id: bar
                                 paths:
                                 properties:
                                 relations:
@@ -64,14 +64,14 @@ struct ContentDefinitionLoaderTestSuite {
             #expect(
                 result == [
                     .init(
-                        type: "foo",
+                        id: "foo",
                         paths: [],
                         properties: [:],
                         relations: [:],
                         queries: [:]
                     ),
                     .init(
-                        type: "bar",
+                        id: "bar",
                         paths: [],
                         properties: [:],
                         relations: [:],
@@ -91,7 +91,7 @@ struct ContentDefinitionLoaderTestSuite {
                         File(
                             "foo.yml",
                             string: """
-                                type: foo
+                                id: foo
                                 paths:
                                 properties:
                                 relations:
@@ -106,7 +106,7 @@ struct ContentDefinitionLoaderTestSuite {
                         File(
                             "bar.yml",
                             string: """
-                                type: bar
+                                id: bar
                                 paths:
                                 properties:
                                 relations:
@@ -135,14 +135,14 @@ struct ContentDefinitionLoaderTestSuite {
             #expect(
                 result == [
                     .init(
-                        type: "foo",
+                        id: "foo",
                         paths: [],
                         properties: [:],
                         relations: [:],
                         queries: [:]
                     ),
                     .init(
-                        type: "bar",
+                        id: "bar",
                         paths: [],
                         properties: [:],
                         relations: [:],

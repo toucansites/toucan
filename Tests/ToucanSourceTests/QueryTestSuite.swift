@@ -476,6 +476,5 @@ struct QueryTestSuite {
         )
         let results1 = sourceBundle.run(query: query1)
         try #require(results1.count == 1)
-        print(results1)
     }
 }

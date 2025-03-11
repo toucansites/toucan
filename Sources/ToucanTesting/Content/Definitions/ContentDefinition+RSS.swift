@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func rss() -> ContentDefinition {
         .init(
-            type: "rss",
+            id: "rss",
             paths: [],
             properties: [:],
             relations: [:],

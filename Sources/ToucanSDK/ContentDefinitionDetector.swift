@@ -45,7 +45,7 @@ struct ContentDefinitionDetector {
 private extension ContentDefinitionDetector {
 
     func detectExplicitType(_ value: String) -> ContentDefinition? {
-        definitions.first { $0.type == value }
+        definitions.first { $0.id == value }
     }
 
     func detectMatchingPathsType() -> ContentDefinition? {
@@ -63,7 +63,7 @@ private extension ContentDefinitionDetector {
         }
 
         guard results.count == 1 else {
-            let types = results.map { $0.type }.joined(separator: ", ")
+            let types = results.map { $0.id }.joined(separator: ", ")
             logger.info(
                 "Multiple content types (\(types)) found for slug: `\(origin.slug)`"
             )

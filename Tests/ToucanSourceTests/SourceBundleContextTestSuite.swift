@@ -27,6 +27,7 @@ struct SourceBundleContextTestSuite {
 
         let pipelines: [Pipeline] = [
             .init(
+                id: "test",
                 scopes: [:],
                 queries: [
                     "featured": .init(

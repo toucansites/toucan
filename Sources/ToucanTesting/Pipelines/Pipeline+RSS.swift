@@ -5,6 +5,7 @@ public extension Pipeline.Mocks {
 
     static func rss() -> Pipeline {
         .init(
+            id: "rss",
             scopes: [:],
             queries: [:],
             dataTypes: .init(

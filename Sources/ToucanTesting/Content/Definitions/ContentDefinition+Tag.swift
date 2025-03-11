@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func tag() -> ContentDefinition {
         .init(
-            type: "tag",
+            id: "tag",
             paths: [
                 "blog/tags"
             ],
