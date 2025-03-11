@@ -164,27 +164,34 @@ struct SourceBundleScopeTestSuite {
         let decoder = JSONDecoder()
 
         struct Exp0: Decodable {
-            struct Item: Decodable {
-                let slug: String
-                let isCurrentURL: Bool?
+            struct Ctx: Decodable {
+                struct Item: Decodable {
+                    let slug: String
+                    let isCurrentURL: Bool?
+                }
+                let featured: [Item]
             }
             struct Post: Decodable {
                 let slug: String
                 let isCurrentURL: Bool?
             }
             let page: Post
-            let featured: [Item]
+            let context: Ctx
         }
 
         let data0 = try #require(results[0].contents.data(using: .utf8))
         let exp0 = try decoder.decode(Exp0.self, from: data0)
 
-        #expect(exp0.featured.allSatisfy { $0.isCurrentURL == nil })
+        #expect(exp0.context.featured.allSatisfy { $0.isCurrentURL == nil })
 
         struct Exp1: Decodable {
-            struct Item: Decodable {
-                let slug: String
-                let isCurrentURL: Bool?
+            struct Ctx: Decodable {
+                struct Item: Decodable {
+                    let slug: String
+                    let isCurrentURL: Bool?
+                }
+
+                let featured: [Item]
             }
             struct Page: Decodable {
                 let slug: String
@@ -193,13 +200,13 @@ struct SourceBundleScopeTestSuite {
                 let isCurrentURL: Bool?
             }
             let page: Page
-            let featured: [Item]
+            let context: Ctx
         }
 
         let data1 = try #require(results[1].contents.data(using: .utf8))
         let exp1 = try decoder.decode(Exp1.self, from: data1)
 
-        #expect(exp1.featured.allSatisfy { $0.isCurrentURL == nil })
+        #expect(exp1.context.featured.allSatisfy { $0.isCurrentURL == nil })
 
     }
 

@@ -410,7 +410,7 @@ extension SourceBundle {
                 }
             )
         }
-        return rawContext
+        return ["context": .init(rawContext)]
     }
 
     public func generatePipelineResults() throws -> [PipelineResult] {
