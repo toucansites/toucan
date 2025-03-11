@@ -40,7 +40,7 @@ public struct ToucanFileSystem {
     ) -> [ContentDefinition] {
         [
             .init(
-                type: "test",
+                id: "test",
                 paths: [],
                 properties: [:],
                 relations: [:],

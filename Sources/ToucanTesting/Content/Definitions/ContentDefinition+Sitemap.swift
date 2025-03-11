@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func sitemap() -> ContentDefinition {
         .init(
-            type: "sitemap",
+            id: "sitemap",
             paths: [],
             properties: [:],
             relations: [:],

@@ -15,6 +15,7 @@
 public struct Pipeline: Decodable {
 
     enum CodingKeys: CodingKey {
+        case id
         case scopes
         case queries
         case dataTypes
@@ -25,6 +26,7 @@ public struct Pipeline: Decodable {
         case output
     }
 
+    public var id: String
     // content type -> scope key -> scope
     public var scopes: [String: [String: Scope]]
     public var queries: [String: Query]
@@ -38,6 +40,7 @@ public struct Pipeline: Decodable {
     // MARK: - init
 
     public init(
+        id: String,
         scopes: [String: [String: Scope]],
         queries: [String: Query],
         dataTypes: DataTypes,
@@ -47,6 +50,7 @@ public struct Pipeline: Decodable {
         engine: Pipeline.Engine,
         output: Output
     ) {
+        self.id = id
         self.scopes = scopes
         self.queries = queries
         self.dataTypes = dataTypes
@@ -63,6 +67,11 @@ public struct Pipeline: Decodable {
         from decoder: any Decoder
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let id = try container.decode(
+            String.self,
+            forKey: .id
+        )
 
         let defaultScopes = Scope.default
 
@@ -115,6 +124,7 @@ public struct Pipeline: Decodable {
         )
 
         self.init(
+            id: id,
             scopes: scopes,
             queries: queries,
             dataTypes: dataTypes,

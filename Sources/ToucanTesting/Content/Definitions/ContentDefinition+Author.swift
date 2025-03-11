@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func author() -> ContentDefinition {
         .init(
-            type: "author",
+            id: "author",
             paths: [
                 "blog/authors"
             ],

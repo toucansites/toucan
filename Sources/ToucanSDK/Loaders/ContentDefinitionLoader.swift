@@ -31,12 +31,12 @@ struct ContentDefinitionLoader {
         for location in locations {
             let item = try resolveItem(location)
 
-            if !items.contains(where: { $0.type == item.type }) {
+            if !items.contains(where: { $0.id == item.id }) {
                 items.append(item)
             }
         }
 
-        let typeList = items.map(\.type).joined(separator: ", ")
+        let typeList = items.map(\.id).joined(separator: ", ")
         logger.debug("Available content types: `\(typeList)`.")
 
         return items

@@ -4,7 +4,7 @@ public extension ContentDefinition.Mocks {
 
     static func guide() -> ContentDefinition {
         .init(
-            type: "guide",
+            id: "guide",
             paths: [
                 "docs/guides"
             ],

@@ -5,6 +5,7 @@ public extension Pipeline.Mocks {
 
     static func redirect() -> Pipeline {
         .init(
+            id: "redirect",
             scopes: [:],
             queries: [:],
             dataTypes: .defaults,

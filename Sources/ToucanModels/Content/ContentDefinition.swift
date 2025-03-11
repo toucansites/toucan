@@ -8,7 +8,7 @@
 public struct ContentDefinition: Decodable, Equatable {
 
     enum CodingKeys: CodingKey {
-        case `type`
+        case id
         case `default`
         case paths
         case properties
@@ -17,7 +17,7 @@ public struct ContentDefinition: Decodable, Equatable {
     }
 
     /// content type identifier
-    public var type: String
+    public var id: String
 
     /// If `true`, the `ContentDefinition` will be used as the fallback type only when the user has not explicitly specified one
     /// **and** the system cannot determine it from the provided `paths`.
@@ -34,14 +34,14 @@ public struct ContentDefinition: Decodable, Equatable {
     // MARK: - init
 
     public init(
-        type: String,
+        id: String,
         default: Bool = false,
         paths: [String],
         properties: [String: Property],
         relations: [String: Relation],
         queries: [String: Query]
     ) {
-        self.type = type
+        self.id = id
         self.default = `default`
         self.paths = paths
         self.properties = properties
@@ -54,7 +54,7 @@ public struct ContentDefinition: Decodable, Equatable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let type = try container.decode(String.self, forKey: .type)
+        let id = try container.decode(String.self, forKey: .id)
         let `default` =
             (try? container.decode(Bool.self, forKey: .default)) ?? false
         let paths =
@@ -76,7 +76,7 @@ public struct ContentDefinition: Decodable, Equatable {
             ) ?? [:]
 
         self.init(
-            type: type,
+            id: id,
             default: `default`,
             paths: paths,
             properties: properties,

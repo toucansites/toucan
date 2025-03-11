@@ -29,6 +29,7 @@ struct SourceBundleScopeTestSuite {
 
         let pipelines: [Pipeline] = [
             .init(
+                id: "test",
                 scopes: [
                     "post": [
                         "minimal": .init(

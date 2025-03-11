@@ -5,6 +5,7 @@ public extension Pipeline.Mocks {
 
     static func context() -> Pipeline {
         .init(
+            id: "context",
             scopes: [
                 "*": [
                     "reference": .init(

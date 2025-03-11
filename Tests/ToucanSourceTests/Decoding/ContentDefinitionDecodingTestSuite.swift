@@ -11,7 +11,7 @@ struct ContentDefinitionDecodingTestSuite {
     @Test
     func minimal() throws {
         let data = """
-            type: post
+            id: post
             """
             .data(using: .utf8)!
 
@@ -22,13 +22,13 @@ struct ContentDefinitionDecodingTestSuite {
             from: data
         )
 
-        #expect(result.type == "post")
+        #expect(result.id == "post")
     }
 
     @Test
     func complex() throws {
         let data = """
-            type: post
+            id: post
             properties: 
                 title: 
                     type: string
@@ -108,6 +108,6 @@ struct ContentDefinitionDecodingTestSuite {
             from: data
         )
 
-        #expect(result.type == "post")
+        #expect(result.id == "post")
     }
 }

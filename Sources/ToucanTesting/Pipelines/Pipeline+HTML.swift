@@ -5,6 +5,7 @@ public extension Pipeline.Mocks {
 
     static func html() -> Pipeline {
         .init(
+            id: "html",
             scopes: [:],
             queries: [
                 "featured": .init(

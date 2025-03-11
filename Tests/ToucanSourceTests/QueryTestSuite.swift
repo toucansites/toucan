@@ -450,4 +450,31 @@ struct QueryTestSuite {
         let results1 = sourceBundle.run(query: query1)
         try #require(results1.count == 1)
     }
+
+    @Test
+    func resolveFilterParametersUsingId() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query1 = Query(
+            contentType: "guide",
+            filter: .field(
+                key: "category",
+                operator: .equals,
+                value: "{{id}}"
+            ),
+            orderBy: [
+                .init(
+                    key: "order",
+                    direction: .asc
+                )
+            ]
+        )
+        .resolveFilterParameters(
+            with: [
+                "id": "category-1"
+            ]
+        )
+        let results1 = sourceBundle.run(query: query1)
+        try #require(results1.count == 1)
+    }
 }
