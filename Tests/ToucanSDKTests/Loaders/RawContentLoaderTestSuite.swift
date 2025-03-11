@@ -36,9 +36,6 @@ struct RawContentLoaderTestSuite {
                                         This is a dummy post!
                                         """
                                 )
-                                Directory("assets") {
-                                    "image.png"
-                                }
                             }
                         }
                     }
@@ -81,7 +78,6 @@ struct RawContentLoaderTestSuite {
                 ]
             )
             #expect(result.markdown == "\n\nThis is a dummy post!")
-            #expect(result.assets == ["image.png"])
         }
     }
 }

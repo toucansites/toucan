@@ -114,8 +114,8 @@ struct SourceLoader {
         // MARK: - Assets
 
         let assetLocator = AssetLocator(fileManager: fileManager)
-        let assets = assetLocator.locate(at: sourceConfig.assetsUrl)
-
+        let contentAssets = assetLocator.locate(at: sourceConfig.contentsUrl)
+        
         // MARK: - Pipelines
 
         let pipelineLocator = FileLocator(
@@ -241,7 +241,7 @@ struct SourceLoader {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            assets: assets
+            contentAssets: contentAssets
         )
     }
 }

@@ -125,7 +125,7 @@ struct SourceBundleContextTestSuite {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            assets: []
+            contentAssets: []
         )
 
         let results = try sourceBundle.generatePipelineResults()

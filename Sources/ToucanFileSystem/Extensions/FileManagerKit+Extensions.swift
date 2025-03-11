@@ -9,6 +9,25 @@ import FileManagerKit
 import Foundation
 
 public extension FileManagerKit {
+    
+    func getAllDirectories(in url: URL) -> [String] {
+        let fileManager = FileManager.default
+        
+        guard let enumerator = fileManager.enumerator(at: url, includingPropertiesForKeys: nil) else {
+            return []
+        }
+        
+        var directories = Set<String>()
+        
+        for case let itemUrl as URL in enumerator {
+            if directoryExists(at: itemUrl) {
+                let relativePath = itemUrl.path.replacingOccurrences(of: url.path + "/", with: "")
+                directories.insert(relativePath)
+            }
+        }
+        
+        return Array(directories)
+    }
 
     func listDirectoryRecursively(at url: URL) -> [URL] {
         listDirectory(at: url)

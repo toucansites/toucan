@@ -133,18 +133,24 @@ public struct Toucan {
             let assetsWriter = AssetsWriter(
                 fileManager: fileManager,
                 sourceConfig: sourceBundle.sourceConfig,
+                contentAssets: sourceBundle.contentAssets,
                 workDirUrl: workDirUrl
             )
-            try assetsWriter.copyAll()
+            try assetsWriter.copyDefaultAssets()
 
-            // MARK: - Writing results
-
+            // MARK: - Writing results and copy content assets
+            
             for result in results {
-                let folder = workDirUrl.appending(path: result.destination.path)
-                try fileManager.createDirectory(at: folder)
+                let destinationFolder = workDirUrl.appending(path: result.destination.path)
+                try fileManager.createDirectory(at: destinationFolder)
+                
+                try assetsWriter.copyContentAssests(
+                    destinationFolder: destinationFolder,
+                    contentPath: result.destination.path
+                )
 
                 let outputUrl =
-                    folder
+                    destinationFolder
                     .appending(path: result.destination.file)
                     .appendingPathExtension(result.destination.ext)
 
