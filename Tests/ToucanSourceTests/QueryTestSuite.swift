@@ -450,7 +450,7 @@ struct QueryTestSuite {
         let results1 = sourceBundle.run(query: query1)
         try #require(results1.count == 1)
     }
-    
+
     @Test
     func resolveFilterParametersUsingId() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
@@ -471,7 +471,7 @@ struct QueryTestSuite {
         )
         .resolveFilterParameters(
             with: [
-                "id": "category-1",
+                "id": "category-1"
             ]
         )
         let results1 = sourceBundle.run(query: query1)
