@@ -15,6 +15,7 @@ import FileManagerKit
 struct SourceLoader {
 
     let sourceUrl: URL
+    let baseUrl: String?
 
     let fileManager: FileManagerKit
     let frontMatterParser: FrontMatterParser
@@ -102,6 +103,7 @@ struct SourceLoader {
 
         let settingsLoader = SettingsLoader(
             url: sourceConfig.contentsUrl,
+            baseUrl: baseUrl,
             locations: settingsLocations,
             encoder: encoder,
             decoder: decoder,
@@ -192,17 +194,17 @@ struct SourceLoader {
                 ReservedFrontMatter.self,
                 from: rawReservedFromMatter.data(using: .utf8)!
             )
-            
+
             let detector = ContentDefinitionDetector(
                 definitions: contentDefinitions,
                 origin: $0.origin,
                 logger: logger
             )
-            
+
             let contentDefinition = try detector.detect(
                 explicitType: reservedFromMatter.type
             )
-            
+
             let contentDefinitionConverter = ContentDefinitionConverter(
                 contentDefinition: contentDefinition,
                 dateFormatter: config.inputDateFormatter(),

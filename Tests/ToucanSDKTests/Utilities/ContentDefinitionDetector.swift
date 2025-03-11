@@ -14,7 +14,7 @@ import ToucanTesting
 
 @Suite
 struct ContentDefinitionDetectorTestSuite {
-    
+
     @Test
     func explicitContentDefinition() throws {
         let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
@@ -32,7 +32,7 @@ struct ContentDefinitionDetectorTestSuite {
         let result = try detector.detect(explicitType: "author")
         #expect(result == definitions[0])
     }
-    
+
     @Test
     func pathsContentDefinition() throws {
         let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
@@ -50,7 +50,7 @@ struct ContentDefinitionDetectorTestSuite {
         let result = try detector.detect(explicitType: nil)
         #expect(result == definitions[0])
     }
-    
+
     @Test
     func defaultContentDefinition() throws {
         let logger = Logger(label: "ContentDefinitionDetectorTestSuite")

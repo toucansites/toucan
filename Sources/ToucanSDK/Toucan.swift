@@ -110,6 +110,7 @@ public struct Toucan {
         do {
             let sourceLoader = SourceLoader(
                 sourceUrl: inputUrl,
+                baseUrl: baseUrl,
                 fileManager: fileManager,
                 frontMatterParser: frontMatterParser,
                 encoder: encoder,

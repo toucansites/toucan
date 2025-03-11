@@ -17,6 +17,8 @@ public struct SettingsLoader {
     /// The URL of the source files.
     let url: URL
 
+    let baseUrl: String?
+
     /// Settings file paths.
     let locations: [String]
 
@@ -38,7 +40,7 @@ public struct SettingsLoader {
             rawItems.append(item)
         }
 
-        let combinedRawYaml =
+        var combinedRawYaml =
             try rawItems
             .compactMap {
                 try decoder.decode(
@@ -49,6 +51,10 @@ public struct SettingsLoader {
             .reduce([:]) { partialResult, item in
                 partialResult.recursivelyMerged(with: item)
             }
+
+        if let baseUrl {
+            combinedRawYaml["baseUrl"] = .init(baseUrl)
+        }
 
         let combinedYamlString = try encoder.encode(combinedRawYaml)
         return try decoder.decode(

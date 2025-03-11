@@ -18,12 +18,12 @@ public struct ContentDefinition: Decodable, Equatable {
 
     /// content type identifier
     public var type: String
-    
+
     /// If `true`, the `ContentDefinition` will be used as the fallback type only when the user has not explicitly specified one
     /// **and** the system cannot determine it from the provided `paths`.
     /// An error is thrown if multiple types are marked as the default.
     public var `default`: Bool
-    
+
     /// paths to lookup for contents
     public var paths: [String]
 
