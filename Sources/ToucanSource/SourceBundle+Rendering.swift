@@ -308,9 +308,30 @@ extension SourceBundle {
                 let limit = max(1, query.limit ?? 10)
                 let numberOfPages = (total + limit - 1) / limit
 
+                struct PageLink: Codable {
+                    let number: Int
+                    let permalink: String
+                    let isCurrent: Bool
+                }
+
                 for i in 0..<numberOfPages {
                     let offset = i * limit
                     let currentPageIndex = i + 1
+
+                    let links = (0..<numberOfPages)
+                        .map { i in
+                            let pageIndex = i + 1
+                            let slug = content.slug.replacingOccurrences([
+                                "{{\(iteratorId)}}": String(pageIndex)
+                            ])
+                            return PageLink(
+                                number: pageIndex,
+                                permalink: slug.permalink(
+                                    baseUrl: settings.baseUrl
+                                ),
+                                isCurrent: pageIndex == currentPageIndex
+                            )
+                        }
 
                     let pageItems = run(
                         query: .init(
@@ -346,15 +367,13 @@ extension SourceBundle {
                     }
 
                     let iteratorContext: [String: AnyCodable] = [
-                        // TODO: links to other pages?
                         "iterator": .init(
                             [
                                 "total": .init(total),
                                 "limit": .init(limit),
                                 "current": .init(currentPageIndex),
-                                query.contentType: [
-                                    "items": itemCtx
-                                ],
+                                "items": .init(itemCtx),
+                                "links": .init(links),
                             ] as [String: AnyCodable]
                         )
                     ]
