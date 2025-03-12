@@ -32,15 +32,21 @@ struct HTMLVisitor: MarkupVisitor {
 
     var customBlockDirectives: [MarkdownBlockDirective]
     var logger: Logger
-    var baseUrl: String?
+    var slug: String
+    var assetsPath: String
+    var baseUrl: String
 
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
         logger: Logger = .init(label: "HTMLVisitor"),
-        baseUrl: String?
+        slug: String,
+        assetsPath: String,
+        baseUrl: String
     ) {
         self.customBlockDirectives = blockDirectives
         self.logger = logger
+        self.slug = slug
+        self.assetsPath = assetsPath
         self.baseUrl = baseUrl
     }
 
@@ -296,17 +302,21 @@ struct HTMLVisitor: MarkupVisitor {
                 )
             }
             else {
+                var hrefDestination = destination
+                if destination.hasPrefix("/") {
+                    hrefDestination = baseUrl.appending(destination.dropFirst())
+                }
                 attributes.append(
                     .init(
                         key: "href",
-                        value: destination
+                        value: hrefDestination
                     )
                 )
             }
 
             if !destination.hasPrefix("."),
-                !destination.hasPrefix("/"),
-                !destination.hasPrefix("#")
+               !destination.hasPrefix("/"),
+               !destination.hasPrefix("#")
             {
                 attributes.append(
                     .init(
@@ -324,42 +334,15 @@ struct HTMLVisitor: MarkupVisitor {
         )
         .render()
     }
-    
-    /*
-     mutating func visitImage(_ image: Image) -> Result {
-         guard let source = image.source else {
-             return ""
-         }
-         if let result = delegate?.imageOverride(image) {
-             return result
-         }
-         var attributes: [Attribute] = [
-             .init(key: "src", value: source),
-             .init(key: "alt", value: image.plainText),
-         ]
-         if let title = image.title {
-             attributes.append(
-                 .init(key: "title", value: title)
-             )
-         }
-         return tag(
-             name: "img",
-             type: .short,
-             attributes: attributes,
-             content: .value("")
-         )
-     }
-    */
 
     mutating func visitImage(_ image: Image) -> Result {
         guard let source = image.source, !source.isEmpty else {
             return ""
         }
         
-        //print("---------------")
-        //print(image.source)
-
-        // TODO: asset resolution?
+        if let result = imageOverride(image) {
+            return result
+        }
 
         var attributes: [HTML.Attribute] = [
             .init(key: "src", value: source),
@@ -386,6 +369,8 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         HTML(name: "table", contents: visit(table.children)).render()
     }
+    
+    
 
     mutating func visitTableHead(
         _ tableHead: Table.Head

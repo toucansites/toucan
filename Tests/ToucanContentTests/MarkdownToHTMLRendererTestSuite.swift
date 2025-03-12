@@ -29,7 +29,12 @@ struct MarkdownRendererTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(markdown: input)
+        let output = renderer.renderHTML(
+            markdown: input,
+            slug: "",
+            assetsPath: "",
+            baseUrl: ""
+        )
 
         let expectation = #"""
             <div class="faq"><p>Lorem ipsum</p></div>
@@ -61,7 +66,12 @@ struct MarkdownRendererTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(markdown: input)
+        let output = renderer.renderHTML(
+            markdown: input,
+            slug: "",
+            assetsPath: "",
+            baseUrl: ""
+        )
 
         let expectation = #"""
             <div class="faq"><p>Lorem ipsum</p></div>
@@ -101,7 +111,12 @@ struct MarkdownRendererTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(markdown: input)
+        let output = renderer.renderHTML(
+            markdown: input,
+            slug: "",
+            assetsPath: "",
+            baseUrl: ""
+        )
 
         let expectation = #"""
             <div columns="grid-3"><p>Lorem ipsum</p></div>
@@ -140,7 +155,12 @@ struct MarkdownRendererTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(markdown: input)
+        let output = renderer.renderHTML(
+            markdown: input,
+            slug: "",
+            assetsPath: "",
+            baseUrl: ""
+        )
 
         let expectation = #"""
             <div columns="grid-3"><p>Lorem ipsum</p></div>

@@ -168,7 +168,7 @@ public extension SourceBundle.Mocks {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            baseUrl: nil
+            baseUrl: ""
         )
     }
 }

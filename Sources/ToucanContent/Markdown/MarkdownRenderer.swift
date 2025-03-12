@@ -26,7 +26,9 @@ public struct MarkdownToHTMLRenderer {
     /// Render a Markdown string.
     public func renderHTML(
         markdown: String,
-        baseUrl: String?
+        slug: String,
+        assetsPath: String,
+        baseUrl: String
     ) -> String {
         let document = Document(
             parsing: markdown,
@@ -36,6 +38,8 @@ public struct MarkdownToHTMLRenderer {
         var htmlVisitor = HTMLVisitor(
             blockDirectives: customBlockDirectives,
             logger: logger,
+            slug: slug,
+            assetsPath: assetsPath,
             baseUrl: baseUrl
         )
         return htmlVisitor.visitDocument(document)

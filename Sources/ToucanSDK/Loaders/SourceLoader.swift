@@ -224,7 +224,7 @@ struct SourceLoader {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            baseUrl: baseUrl
+            baseUrl: baseUrl ?? settings.baseUrl
         )
     }
 }

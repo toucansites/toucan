@@ -19,7 +19,10 @@ struct HTMLVisitorTestSuite {
             blockDirectives: customBlockDirectives,
             logger: .init(
                 label: "TestHTMLVisitor"
-            )
+            ),
+            slug: "slug",
+            assetsPath: "assets",
+            baseUrl: "http://localhost:3000/"
         )
 
         return visitor.visit(document)
@@ -492,9 +495,9 @@ struct HTMLVisitorTestSuite {
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
-            <p><a href="/foo">Swift</a></p>
+            <p><a href="http://localhost:3000/foo">Swift</a></p>
             """#
-
+        
         #expect(output == expectation)
     }
 
@@ -559,6 +562,21 @@ struct HTMLVisitorTestSuite {
             <p><img src="lorem.jpg" alt="Lorem"></p>
             """#
 
+        #expect(output == expectation)
+    }
+    
+    @Test
+    func imageAssetsPrefix() {
+
+        let input = #"""
+            ![Lorem](./assets/lorem.jpg)
+            """#
+
+        let output = renderHTML(markdown: input)
+
+        let expectation = #"""
+            <p><img src="http:/localhost:3000/assets/slug/lorem.jpg" alt="Lorem"></p>
+            """#
         #expect(output == expectation)
     }
 

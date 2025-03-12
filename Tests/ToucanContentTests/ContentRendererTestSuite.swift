@@ -43,7 +43,12 @@ struct ContentRendererTestSuite {
             }
             """#
 
-        let contents = renderer.render(input)
+        let contents = renderer.render(
+            content: input,
+            slug: "",
+            assetsPath: "",
+            baseUrl: ""
+        )
 
         let html = #"""
             <div class="faq"><h2 id="test">test</h2><p>Lorem ipsum</p></div>

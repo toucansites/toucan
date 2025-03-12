@@ -19,7 +19,7 @@ public struct SourceBundle {
     public var contents: [Content]
     public var blockDirectives: [MarkdownBlockDirective]
     public var templates: [String: String]
-    public var baseUrl: String?
+    public var baseUrl: String
 
     var dateFormatter: DateFormatter
 
@@ -32,7 +32,7 @@ public struct SourceBundle {
         contents: [Content],
         blockDirectives: [MarkdownBlockDirective],
         templates: [String: String],
-        baseUrl: String?
+        baseUrl: String
     ) {
         self.location = location
         self.config = config

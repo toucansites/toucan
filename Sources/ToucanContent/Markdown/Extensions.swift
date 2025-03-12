@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Markdown
 
 extension Dictionary {
 
@@ -44,4 +45,49 @@ extension String {
             .filter { $0 != "" }
             .joined(separator: "-")
     }
+}
+
+extension HTMLVisitor {
+    
+    func imageOverride(_ image: Image) -> String? {
+        guard
+            let source = image.source
+        else {
+            return nil
+        }
+        let path = resolveAsset(path: source)
+        
+        var title = ""
+        if let ttl = image.title {
+            title = #" title="\#(ttl)""#
+        }
+        return """
+        <img src="\(path)" alt="\(image.plainText)"\(title)>
+        """
+    }
+    
+    func resolveAsset(path: String) -> String {
+        if baseUrl.isEmpty || assetsPath.isEmpty {
+            return path
+        }
+        
+        print("baseUrl", baseUrl)
+        print("assetsPath", assetsPath)
+        print("slug", slug)
+        
+        if path.contains("{{baseUrl}}"){
+            return path.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
+        }
+        
+        let prefix = "./\(assetsPath)/"
+        guard path.hasPrefix(prefix) else {
+            return path
+        }
+
+        let src = String(path.dropFirst(prefix.count))
+
+        return "\(baseUrl)/\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
+            .replacingOccurrences(of: "//", with: "/")
+    }
+    
 }

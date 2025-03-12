@@ -102,10 +102,16 @@ public struct ContentRenderer {
     }
 
     public func render(
-        _ content: String,
-        _ baseUrl: String?
+        content: String,
+        slug: String,
+        assetsPath: String,
+        baseUrl: String
     ) -> Output {
-        let html = markdownToHTMLRenderer.renderHTML(markdown: content, baseUrl: baseUrl)
+        let html = markdownToHTMLRenderer.renderHTML(
+            markdown: content,
+            slug: slug,
+            assetsPath: assetsPath,
+            baseUrl: baseUrl)
         let readingTime = readingTimeCalculator.calculate(for: html)
         let outline = outlineParser.parseHTML(html)
 
