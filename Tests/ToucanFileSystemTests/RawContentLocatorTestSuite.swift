@@ -34,6 +34,9 @@ struct RawContentLocatorTestSuite {
                                         This is a dummy post!
                                         """
                                 )
+                                Directory("assets") {
+                                    "image.png"
+                                }
                             }
                         }
                     }

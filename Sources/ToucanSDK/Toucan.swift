@@ -133,21 +133,40 @@ public struct Toucan {
             let assetsWriter = AssetsWriter(
                 fileManager: fileManager,
                 sourceConfig: sourceBundle.sourceConfig,
-                contentAssets: sourceBundle.contentAssets,
                 workDirUrl: workDirUrl
             )
             try assetsWriter.copyDefaultAssets()
 
-            // MARK: - Writing results and copy content assets
+            // MARK: - Copy content assets
+            
+            let assetsPath = sourceBundle.config.contents.assets.path
+            let assetsFolder = workDirUrl.appending(path: assetsPath)
+            try fileManager.createDirectory(at: assetsFolder)
+            
+            let scrDirectory = sourceBundle.sourceConfig.contentsUrl
+            
+            for content in sourceBundle.contents {
+                if !content.rawValue.assets.isEmpty {
+                    let contentFolder = assetsFolder.appending(path: content.slug)
+                    try fileManager.createDirectory(at: contentFolder)
+                    
+                    let originContentDir = URL(string: content.rawValue.origin.path)?.deletingLastPathComponent().path
+                    let originFullPath = scrDirectory.appending(path: originContentDir ?? "").appending(path: assetsPath)
+                    
+                    for asset in content.rawValue.assets {
+                        let fromFile = originFullPath.appending(path: asset)
+                        let toFile = contentFolder.appending(path: asset)
+                        try fileManager.copy(from: fromFile, to: toFile)
+                        
+                    }
+                }
+            }
+            
+            // MARK: - Writing results
             
             for result in results {
                 let destinationFolder = workDirUrl.appending(path: result.destination.path)
                 try fileManager.createDirectory(at: destinationFolder)
-                
-                try assetsWriter.copyContentAssests(
-                    destinationFolder: destinationFolder,
-                    contentPath: result.destination.path
-                )
 
                 let outputUrl =
                     destinationFolder

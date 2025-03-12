@@ -19,12 +19,14 @@ public struct AssetLocator {
     }
     
     public func locate(at url: URL) -> [String] {
-        let paths = fileManager
-            .getAllDirectories(in: url)
-            .filter {
-                !$0.starts(with: "assets") && $0.contains("assets")
-            }
-        return paths
+        fileManager
+        .listDirectoryRecursively(at: url)
+        .map { item in
+            item.relativePath(to: url)
+        }
+        .filter {
+            !$0.hasPrefix(".")
+        }
     }
     
 }

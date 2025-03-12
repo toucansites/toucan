@@ -19,25 +19,10 @@ struct AssetsLocatorTestSuite {
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
-                    Directory("blog") {
-                        Directory("posts") {
-                            Directory("first-post") {
-                                File("index.md", string: "")
-                                Directory("assets") {
-                                    "cover.png"
-                                }
-                            }
-                        }
-                        Directory("tags") {
-                            Directory("first-tag") {
-                                File("index.md", string: "")
-                                Directory("assets") {
-                                    "image.png"
-                                }
-                            }
-                        }
+                    Directory("assets") {
+                        "image.png"
+                        "cover.png"
                     }
-                    
                 }
             }
         }

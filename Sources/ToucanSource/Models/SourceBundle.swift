@@ -19,7 +19,6 @@ public struct SourceBundle {
     public var contents: [Content]
     public var blockDirectives: [MarkdownBlockDirective]
     public var templates: [String: String]
-    public var contentAssets: [String]
 
     var dateFormatter: DateFormatter
 
@@ -31,8 +30,7 @@ public struct SourceBundle {
         pipelines: [Pipeline],
         contents: [Content],
         blockDirectives: [MarkdownBlockDirective],
-        templates: [String: String],
-        contentAssets: [String]
+        templates: [String: String]
     ) {
         self.location = location
         self.config = config
@@ -42,7 +40,6 @@ public struct SourceBundle {
         self.contents = contents
         self.blockDirectives = blockDirectives
         self.templates = templates
-        self.contentAssets = contentAssets
 
         /// setup date formatter
         let formatter = DateFormatter()
