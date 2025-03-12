@@ -11,7 +11,7 @@ struct ContentTypesDecodingTestSuite {
         let data = """
             foo: bar
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -34,7 +34,7 @@ struct ContentTypesDecodingTestSuite {
             lastUpdate:
                 - page
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

@@ -10,7 +10,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingInt() throws {
         let json = "123"
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
@@ -20,7 +20,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingDouble() throws {
         let json = "123.45"
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
@@ -30,7 +30,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingBool() throws {
         let json = "true"
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
@@ -40,7 +40,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingString() throws {
         let json = #""Hello""#
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
@@ -50,7 +50,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingArray() throws {
         let json = "[1, 2, 3]"
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
@@ -60,7 +60,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingDictionary() throws {
         let json = #"{"key1": 1, "key2": "value"}"#
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let decoded = try ToucanJSONDecoder()
             .decode(AnyCodable.self, from: data)
 
@@ -72,7 +72,7 @@ struct AnyValueDecodingTestSuite {
     @Test
     func decodingNestedStructures() throws {
         //        let json = "{\"array\": [1, \"two\", 3.5], \"nested\": {\"key\": false}}"
-        //        let data = json.data(using: .utf8)!
+        //        let data = json.dataValue()
         //        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
         //
         //        let dict = decoded.value as? [String: Any]

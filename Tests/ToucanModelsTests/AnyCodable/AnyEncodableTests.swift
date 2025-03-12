@@ -74,7 +74,7 @@ struct AnyEncodableTests {
                 "null": null
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
         let expectedJSONObject =
             try JSONSerialization.jsonObject(with: expected, options: [])
             as! NSDictionary
@@ -122,7 +122,7 @@ struct AnyEncodableTests {
                 "double": 3.141592653589793,
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
         let expectedJSONObject =
             try JSONSerialization.jsonObject(with: expected, options: [])
             as! NSDictionary
@@ -171,7 +171,7 @@ struct AnyEncodableTests {
                 "array": "[1, 2, 3]",
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
         let expectedJSONObject =
             try JSONSerialization.jsonObject(with: expected, options: [])
             as! NSDictionary

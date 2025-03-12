@@ -10,7 +10,7 @@ struct ConfigDecodingTestSuite {
     func defaults() throws {
         let data = """
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -40,7 +40,7 @@ struct ConfigDecodingTestSuite {
                 output:
                     test1: his
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

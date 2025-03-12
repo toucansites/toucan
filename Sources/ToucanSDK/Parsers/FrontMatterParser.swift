@@ -33,7 +33,7 @@ struct FrontMatterParser {
 
         return try decoder.decode(
             [String: AnyCodable].self,
-            from: String(rawMetadata).data(using: .utf8)!
+            from: String(rawMetadata).dataValue()
         )
     }
 }

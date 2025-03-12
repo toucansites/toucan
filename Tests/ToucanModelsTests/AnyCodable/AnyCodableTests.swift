@@ -37,7 +37,7 @@ struct AnyCodableTests {
                 "null": null
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = JSONDecoder()
         let dictionary = try decoder.decode(
@@ -77,7 +77,7 @@ struct AnyCodableTests {
                 "null": null
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = JSONDecoder()
         let dictionary1 = try decoder.decode(
@@ -164,7 +164,7 @@ struct AnyCodableTests {
                 "null": null
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
         let expectedJSONObject =
             try JSONSerialization.jsonObject(
                 with: expected,

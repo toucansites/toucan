@@ -15,7 +15,7 @@ struct PropertyDecodingTestSuite {
             required: false
             default: hello
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -35,7 +35,7 @@ struct PropertyDecodingTestSuite {
             type: date
             format: abc
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -55,7 +55,7 @@ struct PropertyDecodingTestSuite {
             type: date
             required: true
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

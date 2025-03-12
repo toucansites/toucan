@@ -4,48 +4,43 @@ import ToucanModels
 
 public struct ToucanFileSystem {
 
-    let rawContentLocator: RawContentLocator
-    let contentDefinitionLocator: OverrideFileLocator
-    let templateLocator: TemplateLocator
+    public let configLocator: FileLocator
+    public let settingsLocator: FileLocator
+    public let assetLocator: AssetLocator
+    public let pipelineLocator: FileLocator
+    public let ymlFileLocator: OverrideFileLocator
+    public let mdRawContentLocator: RawContentLocator
+    public let ymlRawContentLocator: RawContentLocator
+    public let templateLocator: TemplateLocator
 
     public init(fileManager: FileManagerKit) {
-        self.rawContentLocator = RawContentLocator(fileManager: fileManager)
-        self.contentDefinitionLocator = OverrideFileLocator(
+        self.configLocator = FileLocator(
             fileManager: fileManager,
-            extensions: ["yaml", "yml"]
+            name: "config",
+            extensions: ["yml", "yaml"]
+        )
+        self.settingsLocator = FileLocator(
+            fileManager: fileManager,
+            name: "index",
+            extensions: ["yml", "yaml"]
+        )
+        self.assetLocator = AssetLocator(fileManager: fileManager)
+        self.pipelineLocator = FileLocator(
+            fileManager: fileManager,
+            extensions: ["yml", "yaml"]
+        )
+        self.ymlFileLocator = OverrideFileLocator(
+            fileManager: fileManager,
+            extensions: ["yml", "yaml"]
+        )
+        self.mdRawContentLocator = RawContentLocator(
+            fileManager: fileManager,
+            fileType: .markdown
+        )
+        self.ymlRawContentLocator = RawContentLocator(
+            fileManager: fileManager,
+            fileType: .yaml
         )
         self.templateLocator = TemplateLocator(fileManager: fileManager)
-    }
-
-    func locateRawContents(at url: URL) -> [Origin] {
-        rawContentLocator.locate(at: url)
-    }
-
-    func locateContentDefinitions(
-        at url: URL,
-        overrides overridesUrl: URL
-    ) -> [OverrideFileLocation] {
-        contentDefinitionLocator.locate(at: url, overrides: overridesUrl)
-    }
-
-    func locateTemplates(
-        at url: URL,
-        overrides overridesUrl: URL
-    ) -> [TemplateLocation] {
-        templateLocator.locate(at: url, overridesUrl: overridesUrl)
-    }
-
-    func loadContentDefinitions(
-        _ locations: [OverrideFileLocation]
-    ) -> [ContentDefinition] {
-        [
-            .init(
-                id: "test",
-                paths: [],
-                properties: [:],
-                relations: [:],
-                queries: [:]
-            )
-        ]
     }
 }

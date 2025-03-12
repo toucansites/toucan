@@ -42,15 +42,12 @@ struct TemplateLoaderTestSuite {
             let overridesUrl = $1.appending(path: "themes/overrides/templates/")
 
             let locator = TemplateLocator(fileManager: $0)
-            let locatorResults = locator.locate(
-                at: url,
-                overridesUrl: overridesUrl
-            )
+            let locations = locator.locate(at: url, overrides: overridesUrl)
 
             let loader = TemplateLoader(
                 url: url,
                 overridesUrl: overridesUrl,
-                locations: locatorResults,
+                locations: locations,
                 logger: .init(label: "TemplateLoaderTestSuite")
             )
             let results = try loader.load()
@@ -88,15 +85,12 @@ struct TemplateLoaderTestSuite {
             let overridesUrl = $1.appending(path: "themes/overrides/templates/")
 
             let locator = TemplateLocator(fileManager: $0)
-            let locatorResults = locator.locate(
-                at: url,
-                overridesUrl: overridesUrl
-            )
+            let locations = locator.locate(at: url, overrides: overridesUrl)
 
             let loader = TemplateLoader(
                 url: url,
                 overridesUrl: overridesUrl,
-                locations: locatorResults,
+                locations: locations,
                 logger: .init(label: "TemplateLoaderTestSuite")
             )
             let results = try loader.load()

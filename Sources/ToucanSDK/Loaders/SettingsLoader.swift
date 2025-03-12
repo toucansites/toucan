@@ -45,7 +45,7 @@ public struct SettingsLoader {
             .compactMap {
                 try decoder.decode(
                     [String: AnyCodable].self,
-                    from: $0.data(using: .utf8)!
+                    from: $0.dataValue()
                 )
             }
             .reduce([:]) { partialResult, item in
@@ -59,7 +59,7 @@ public struct SettingsLoader {
         let combinedYamlString = try encoder.encode(combinedRawYaml)
         return try decoder.decode(
             Settings.self,
-            from: combinedYamlString.data(using: .utf8)!
+            from: combinedYamlString.dataValue()
         )
     }
 }

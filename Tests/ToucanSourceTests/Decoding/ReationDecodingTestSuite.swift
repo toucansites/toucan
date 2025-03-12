@@ -17,7 +17,7 @@ struct RelationDecodingTestSuite {
                 key: title
                 direction: desc
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

@@ -12,34 +12,6 @@ import ToucanFileSystem
 import ToucanTesting
 import ToucanSource
 
-extension FileManagerKit {
-
-    func copyRecursively(
-        from inputURL: URL,
-        to outputURL: URL
-    ) throws {
-        guard directoryExists(at: inputURL) else {
-            return
-        }
-        if !directoryExists(at: outputURL) {
-            try createDirectory(at: outputURL)
-        }
-
-        for item in listDirectory(at: inputURL) {
-            let itemSourceUrl = inputURL.appendingPathComponent(item)
-            let itemDestinationUrl = outputURL.appendingPathComponent(item)
-            if fileExists(at: itemSourceUrl) {
-                if fileExists(at: itemDestinationUrl) {
-                    try delete(at: itemDestinationUrl)
-                }
-                try copy(from: itemSourceUrl, to: itemDestinationUrl)
-            }
-            else {
-                try copyRecursively(from: itemSourceUrl, to: itemDestinationUrl)
-            }
-        }
-    }
-}
 public struct Toucan {
 
     let inputUrl: URL
@@ -48,11 +20,10 @@ public struct Toucan {
     let logger: Logger
 
     let fileManager: FileManagerKit
+    let fs: ToucanFileSystem
     let frontMatterParser: FrontMatterParser
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
-
-    let fs: ToucanFileSystem
 
     /// Initialize a new instance.
     /// - Parameters:
@@ -66,6 +37,7 @@ public struct Toucan {
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
+        self.fs = ToucanFileSystem(fileManager: fileManager)
         self.encoder = ToucanYAMLEncoder()
         self.decoder = ToucanYAMLDecoder()
         self.frontMatterParser = FrontMatterParser(decoder: decoder)
@@ -83,7 +55,6 @@ public struct Toucan {
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
         self.logger = logger
-        self.fs = .init(fileManager: fileManager)
     }
 
     // MARK: - directory management
@@ -112,6 +83,7 @@ public struct Toucan {
                 sourceUrl: inputUrl,
                 baseUrl: baseUrl,
                 fileManager: fileManager,
+                fs: fs,
                 frontMatterParser: frontMatterParser,
                 encoder: encoder,
                 decoder: decoder,

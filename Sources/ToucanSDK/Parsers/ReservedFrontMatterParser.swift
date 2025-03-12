@@ -29,7 +29,7 @@ struct ReservedFrontMatterParser {
 
         return try decoder.decode(
             ReservedFrontMatter.self,
-            from: String(rawMetadata).data(using: .utf8)!
+            from: String(rawMetadata).dataValue()
         )
     }
 }

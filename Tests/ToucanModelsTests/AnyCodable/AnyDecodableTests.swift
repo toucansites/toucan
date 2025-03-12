@@ -22,7 +22,7 @@ struct AnyDecodableTests {
                 "null": null
             }
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = JSONDecoder()
         let dictionary = try decoder.decode(
