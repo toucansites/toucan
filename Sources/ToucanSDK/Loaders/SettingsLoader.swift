@@ -42,13 +42,13 @@ public struct SettingsLoader {
 
         var combinedRawYaml =
             try rawItems
-            .compactMap {
+            .map { i -> [String: AnyCodable] in
                 try decoder.decode(
                     [String: AnyCodable].self,
-                    from: $0.dataValue()
+                    from: i.dataValue()
                 )
             }
-            .reduce([:]) { partialResult, item in
+            .reduce([:]) { partialResult, item -> [String: AnyCodable] in
                 partialResult.recursivelyMerged(with: item)
             }
 
@@ -57,6 +57,7 @@ public struct SettingsLoader {
         }
 
         let combinedYamlString = try encoder.encode(combinedRawYaml)
+
         return try decoder.decode(
             Settings.self,
             from: combinedYamlString.dataValue()

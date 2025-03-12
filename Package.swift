@@ -1,22 +1,9 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
-// GIT_VERSION=1.2.2 swift run toucan-serve --version
-var gitVersion: String {
-    if let version = Context.environment["GIT_VERSION"] {
-        return version
-    }
-    guard let gitInfo = Context.gitInformation else {
-        return "(untracked)"
-    }
-    let base = gitInfo.currentTag ?? gitInfo.currentCommit
-    return gitInfo.hasUncommittedChanges ? "\(base) (modified)" : base
-}
-
 let swiftSettings: [SwiftSetting] = [
     .enableExperimentalFeature("StrictConcurrency=complete")
 ]
-
 
 let package = Package(
     name: "toucan",
@@ -54,23 +41,11 @@ let package = Package(
         .package(url: "https://github.com/Zollerboy1/SwiftCommand", from: "1.4.0"),
     ],
     targets: [
-        // MARK: - libraries
-        .target(
-            name: "libgitversion",
-            cSettings: [
-                .define("GIT_VERSION", to: #""\#(gitVersion)""#),
-            ]
-        ),
-        .target(
-            name: "GitVersion",
-            dependencies: [
-                .target(name: "libgitversion"),
-            ]
-        ),
         // MARK: - executable targets
         .executableTarget(
             name: "toucan",
             dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
             ],
@@ -100,7 +75,6 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
-                .target(name: "GitVersion"),
             ],
             swiftSettings: swiftSettings
         ),

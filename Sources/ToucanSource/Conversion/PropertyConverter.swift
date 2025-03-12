@@ -9,7 +9,7 @@ import Foundation
 import ToucanModels
 import Logging
 
-struct PropertConverter {
+struct PropertyConverter {
 
     let property: Property
     let dateFormatter: DateFormatter

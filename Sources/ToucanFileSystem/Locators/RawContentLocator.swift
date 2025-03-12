@@ -10,7 +10,7 @@ public struct RawContentLocator {
 
     private let indexName = "index"
     private let noindexName = "noindex"
-    
+
     public init(
         fileManager: FileManagerKit,
         fileType: RawContentFileType

@@ -47,7 +47,10 @@ struct RawContentLoaderTestSuite {
         }
         .test {
             let url = $1.appending(path: "src/contents/")
-            let locator = RawContentLocator(fileManager: $0, fileType: .markdown)
+            let locator = RawContentLocator(
+                fileManager: $0,
+                fileType: .markdown
+            )
             let locations = locator.locate(at: url)
             let decoder = ToucanYAMLDecoder()
             let sourceConfig = SourceConfig(
@@ -85,7 +88,7 @@ struct RawContentLoaderTestSuite {
             #expect(result.assets == ["image.png"])
         }
     }
-    
+
     @Test
     func rawContentYaml() throws {
         try FileManagerPlayground {
@@ -150,7 +153,7 @@ struct RawContentLoaderTestSuite {
             #expect(result.assets == ["image.png"])
         }
     }
-    
+
     @Test
     func invalidNoindexFileExtension() throws {
         try FileManagerPlayground {

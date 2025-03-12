@@ -1,6 +1,5 @@
 import ArgumentParser
 import Logging
-import GitVersion
 import Hummingbird
 import Foundation
 
@@ -14,13 +13,12 @@ struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "toucan-serve",
         abstract: """
-            Toucan serve
+            Toucan Serve Command
             """,
         discussion: """
             Serves a directory over a local web-server.
             """,
-        version: "1.0.0-beta.2",
-        subcommands: []
+        version: "1.0.0-beta.3"
     )
 
     // MARK: - arguments
@@ -37,16 +35,9 @@ struct Entrypoint: AsyncParsableCommand {
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
 
-    @Flag(name: .shortAndLong, help: "Version information.")
-    var version: Bool = false
-
     // MARK: - run
 
     func run() async throws {
-        guard !version else {
-            print(GitVersion())
-            return
-        }
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         var rootPath = root.replacingOccurrences(of: "~", with: home)
         if rootPath.hasPrefix(".") {

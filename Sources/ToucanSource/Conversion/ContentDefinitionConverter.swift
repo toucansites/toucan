@@ -33,7 +33,7 @@ public struct ContentDefinitionConverter {
         var properties: [String: AnyCodable] = [:]
         for (key, property) in contentDefinition.properties {
             let rawValue = rawContent.frontMatter[key]
-            let converter = PropertConverter(
+            let converter = PropertyConverter(
                 property: property,
                 dateFormatter: dateFormatter,
                 defaultDateFormat: defaultDateFormat,
