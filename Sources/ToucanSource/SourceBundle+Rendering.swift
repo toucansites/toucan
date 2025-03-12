@@ -150,7 +150,7 @@ extension SourceBundle {
             ]
         }
 
-        if allowSubQueries, scope.context.contains(.relations) {
+        if scope.context.contains(.relations) {
             for (key, relation) in content.definition.relations {
                 var orderBy: [Order] = []
                 if let order = relation.order {
@@ -181,9 +181,7 @@ extension SourceBundle {
                         )
                     }
                 )
-
             }
-
         }
 
         if allowSubQueries, scope.context.contains(.queries) {
