@@ -141,7 +141,7 @@ extension SourceBundle {
                 logger: .init(label: "ContentRenderer")
             )
 
-            let contents = renderer.render(content.rawValue.markdown)
+            let contents = renderer.render(content.rawValue.markdown, baseUrl)
 
             result["contents"] = [
                 "html": contents.html,

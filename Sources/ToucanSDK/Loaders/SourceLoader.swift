@@ -223,7 +223,8 @@ struct SourceLoader {
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
-            templates: templates
+            templates: templates,
+            baseUrl: baseUrl
         )
     }
 }
