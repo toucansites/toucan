@@ -148,8 +148,10 @@ struct SourceLoader {
         let blockDirectives = try blockDirectivesLoader.load()
 
         // MARK: - RawContents
-        
-        let mdRawContentLocations = fs.mdRawContentLocator.locate(at: sourceConfig.contentsUrl)
+
+        let mdRawContentLocations = fs.mdRawContentLocator.locate(
+            at: sourceConfig.contentsUrl
+        )
         let mdRawContentsLoader = RawContentLoader(
             url: sourceConfig.contentsUrl,
             locations: mdRawContentLocations,
@@ -161,7 +163,9 @@ struct SourceLoader {
         )
         let mdRawContents = try mdRawContentsLoader.load()
 
-        let ymlRawContentLocations = fs.ymlRawContentLocator.locate(at: sourceConfig.contentsUrl)
+        let ymlRawContentLocations = fs.ymlRawContentLocator.locate(
+            at: sourceConfig.contentsUrl
+        )
         let ymlRawContentsLoader = RawContentLoader(
             url: sourceConfig.contentsUrl,
             locations: ymlRawContentLocations,
@@ -172,7 +176,7 @@ struct SourceLoader {
             logger: logger
         )
         let ymlRawContents = try ymlRawContentsLoader.load()
-        
+
         let rawContents = mdRawContents + ymlRawContents
 
         // MARK: - Create Contents from RawContents

@@ -8,7 +8,7 @@
 import Foundation
 
 public extension String {
-    
+
     func dataValue() -> Data {
         data(using: .utf8)!
     }

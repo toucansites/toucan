@@ -21,8 +21,14 @@ struct ToucanFileSystemTests {
 
             #expect(fs.mdRawContentLocator.locate(at: url).isEmpty)
             #expect(fs.ymlRawContentLocator.locate(at: url).isEmpty)
-            #expect(fs.ymlFileLocator.locate(at: url, overrides: overrideUrl).isEmpty)
-            #expect(fs.templateLocator.locate(at: url, overrides: overrideUrl).isEmpty)
+            #expect(
+                fs.ymlFileLocator.locate(at: url, overrides: overrideUrl)
+                    .isEmpty
+            )
+            #expect(
+                fs.templateLocator.locate(at: url, overrides: overrideUrl)
+                    .isEmpty
+            )
         }
     }
 
@@ -115,11 +121,16 @@ struct ToucanFileSystemTests {
             let fs = ToucanFileSystem(fileManager: $0)
             let contentsUrl = $1.appending(path: "src/contents/")
 
-            let mdRawContentLocations = fs.mdRawContentLocator.locate(at: contentsUrl)
-            let ymlRawContentLocations = fs.ymlRawContentLocator.locate(at: contentsUrl)
+            let mdRawContentLocations = fs.mdRawContentLocator.locate(
+                at: contentsUrl
+            )
+            let ymlRawContentLocations = fs.ymlRawContentLocator.locate(
+                at: contentsUrl
+            )
 
-            let rawContentLocations = mdRawContentLocations + ymlRawContentLocations
-            
+            let rawContentLocations =
+                mdRawContentLocations + ymlRawContentLocations
+
             #expect(
                 rawContentLocations.sorted { $0.path < $1.path }
                     == [
@@ -167,7 +178,7 @@ struct ToucanFileSystemTests {
                 at: templatesUrl,
                 overrides: templatesOverridesUrl
             )
-            
+
             #expect(
                 templates
                     == [

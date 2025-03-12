@@ -71,12 +71,27 @@ struct AnyValueDecodingTestSuite {
 
     @Test
     func decodingNestedStructures() throws {
-        //        let json = "{\"array\": [1, \"two\", 3.5], \"nested\": {\"key\": false}}"
-        //        let data = json.dataValue()
-        //        let decoded = try ToucanJSONDecoder().decode(AnyCodable.self, from: data)
-        //
-        //        let dict = decoded.value as? [String: Any]
-        //        #expect(dict?["array"] as? [Any] == [1, "two", 3.5])
-        //        XCTAssertEqual((dict?["nested"] as? [String: Any])?["key"] as? Bool, false)
+        let data = """
+            baseUrl: "https://theswiftdev.com/"
+            language: "en-US"
+            title: "The.Swift.Dev."
+            description: "Articles about application development using the Swift programming language."
+            navigation:
+                - label: "Posts"
+                  url: "/page/1/"
+                - label: "Tags"
+                  url: "/tags/"
+                - label: "Authors"
+                  url: "/authors/"
+                - label: "My Book"
+                  url: "/practical-server-side-swift/"
+            """
+            .dataValue()
+
+        _ = try ToucanYAMLDecoder()
+            .decode(
+                [String: AnyCodable].self,
+                from: data
+            )
     }
 }

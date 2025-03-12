@@ -8,7 +8,7 @@
 public enum RawContentFileType {
     case markdown
     case yaml
-    
+
     public var extensions: [String] {
         switch self {
         case .markdown:
