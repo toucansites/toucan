@@ -19,8 +19,8 @@ public struct TemplateLocator {
         self.fileManager = fileManager
     }
 
-    public func locate(at url: URL, overridesUrl: URL) -> [TemplateLocation] {
-        locateTemplateLocations(at: url, overrides: overridesUrl)
+    public func locate(at url: URL, overrides: URL) -> [TemplateLocation] {
+        locateTemplateLocations(at: url, overrides: overrides)
             .sorted { $0.id < $1.id }
     }
 }

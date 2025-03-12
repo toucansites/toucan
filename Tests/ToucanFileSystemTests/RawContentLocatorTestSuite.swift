@@ -45,7 +45,10 @@ struct RawContentLocatorTestSuite {
         }
         .test {
             let url = $1.appending(path: "src/contents/")
-            let locator = RawContentLocator(fileManager: $0)
+            let locator = RawContentLocator(
+                fileManager: $0,
+                fileType: .markdown
+            )
             let results = locator.locate(at: url)
 
             #expect(results.count == 1)
@@ -64,7 +67,10 @@ struct RawContentLocatorTestSuite {
     func rawContentLocatorEmpty() async throws {
         try FileManagerPlayground()
             .test {
-                let locator = RawContentLocator(fileManager: $0)
+                let locator = RawContentLocator(
+                    fileManager: $0,
+                    fileType: .yaml
+                )
                 let locations = locator.locate(at: $1)
 
                 #expect(locations.isEmpty)

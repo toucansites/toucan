@@ -13,7 +13,7 @@ struct ScopeDecodingTestSuite {
         let data = """
             context: detail
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -35,7 +35,7 @@ struct ScopeDecodingTestSuite {
                 - foo
                 - bar
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -58,7 +58,7 @@ struct ScopeDecodingTestSuite {
             fields: 
                 - foo
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

@@ -13,7 +13,7 @@ struct QueryDecodingTestSuite {
         let data = """
             key: name
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -32,7 +32,7 @@ struct QueryDecodingTestSuite {
             key: name
             direction: desc
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -55,7 +55,7 @@ struct QueryDecodingTestSuite {
             operator: equals
             value: hello
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -85,7 +85,7 @@ struct QueryDecodingTestSuite {
                 - bar
                 - baz
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -113,7 +113,7 @@ struct QueryDecodingTestSuite {
                   operator: equals
                   value: hello
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -152,7 +152,7 @@ struct QueryDecodingTestSuite {
                   operator: like
                   value: foo
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -205,7 +205,7 @@ struct QueryDecodingTestSuite {
                       operator: greaterThan
                       value: 100
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -262,7 +262,7 @@ struct QueryDecodingTestSuite {
         let data = """
             contentType: post
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -296,7 +296,7 @@ struct QueryDecodingTestSuite {
                 - key: other
                   direction: desc
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

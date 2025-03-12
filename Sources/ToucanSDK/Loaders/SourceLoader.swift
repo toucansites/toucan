@@ -18,6 +18,7 @@ struct SourceLoader {
     let baseUrl: String?
 
     let fileManager: FileManagerKit
+    let fs: ToucanFileSystem
     let frontMatterParser: FrontMatterParser
 
     let encoder: ToucanEncoder
@@ -35,13 +36,7 @@ struct SourceLoader {
 
         // MARK: - Config
 
-        let configLocator = FileLocator(
-            fileManager: fileManager,
-            name: "config",
-            extensions: ["yml", "yaml"]
-        )
-        let configLocations = configLocator.locate(at: sourceUrl)
-
+        let configLocations = fs.configLocator.locate(at: sourceUrl)
         let configLoader = ConfigLoader(
             url: sourceUrl,
             locations: configLocations,
@@ -92,15 +87,9 @@ struct SourceLoader {
 
         // MARK: - Settings
 
-        let settingsLocator = FileLocator(
-            fileManager: fileManager,
-            name: "index",
-            extensions: ["yml", "yaml"]
-        )
-        let settingsLocations = settingsLocator.locate(
+        let settingsLocations = fs.settingsLocator.locate(
             at: sourceConfig.contentsUrl
         )
-
         let settingsLoader = SettingsLoader(
             url: sourceConfig.contentsUrl,
             baseUrl: baseUrl,
@@ -113,14 +102,9 @@ struct SourceLoader {
 
         // MARK: - Pipelines
 
-        let pipelineLocator = FileLocator(
-            fileManager: fileManager,
-            extensions: ["yml", "yaml"]
-        )
-        let pipelineLocations = pipelineLocator.locate(
+        let pipelineLocations = fs.pipelineLocator.locate(
             at: sourceConfig.pipelinesUrl
         )
-
         let pipelineLoader = PipelineLoader(
             url: sourceConfig.pipelinesUrl,
             locations: pipelineLocations,
@@ -131,15 +115,10 @@ struct SourceLoader {
 
         // MARK: - Content definitions
 
-        let yamlFileLocator = OverrideFileLocator(
-            fileManager: fileManager,
-            extensions: ["yml", "yaml"]
-        )
-        let contentDefinitionLocations = yamlFileLocator.locate(
+        let contentDefinitionLocations = fs.ymlFileLocator.locate(
             at: sourceConfig.currentThemeTypesUrl,
             overrides: sourceConfig.currentThemeOverrideTypesUrl
         )
-
         let contentDefinitionLoader = ContentDefinitionLoader(
             url: sourceConfig.currentThemeTypesUrl,
             overridesUrl: sourceConfig.currentThemeOverrideTypesUrl,
@@ -151,11 +130,10 @@ struct SourceLoader {
 
         // MARK: - Block directives
 
-        let blockDirectivesLocations = yamlFileLocator.locate(
+        let blockDirectivesLocations = fs.ymlFileLocator.locate(
             at: sourceConfig.currentThemeBlocksUrl,
             overrides: sourceConfig.currentThemeOverrideBlocksUrl
         )
-
         let blockDirectivesLoader = BlockDirectiveLoader(
             url: sourceConfig.currentThemeBlocksUrl,
             overridesUrl: sourceConfig.currentThemeOverrideBlocksUrl,
@@ -166,19 +144,32 @@ struct SourceLoader {
         let blockDirectives = try blockDirectivesLoader.load()
 
         // MARK: - RawContents
-
-        let rawContentLocations = RawContentLocator(fileManager: fileManager)
-            .locate(at: sourceConfig.contentsUrl)
-
-        let rawContentsLoader = RawContentLoader(
+        
+        let mdRawContentLocations = fs.mdRawContentLocator.locate(at: sourceConfig.contentsUrl)
+        let mdRawContentsLoader = RawContentLoader(
             url: sourceConfig.contentsUrl,
-            locations: rawContentLocations,
+            locations: mdRawContentLocations,
+            fileType: .markdown,
             sourceConfig: sourceConfig,
             frontMatterParser: frontMatterParser,
             fileManager: fileManager,
             logger: logger
         )
-        let rawContents = try rawContentsLoader.load()
+        let mdRawContents = try mdRawContentsLoader.load()
+
+        let ymlRawContentLocations = fs.ymlRawContentLocator.locate(at: sourceConfig.contentsUrl)
+        let ymlRawContentsLoader = RawContentLoader(
+            url: sourceConfig.contentsUrl,
+            locations: ymlRawContentLocations,
+            fileType: .yaml,
+            sourceConfig: sourceConfig,
+            frontMatterParser: frontMatterParser,
+            fileManager: fileManager,
+            logger: logger
+        )
+        let ymlRawContents = try ymlRawContentsLoader.load()
+        
+        let rawContents = mdRawContents + ymlRawContents
 
         // MARK: - Create Contents from RawContents
 
@@ -187,7 +178,7 @@ struct SourceLoader {
             let rawReservedFromMatter = try encoder.encode($0.frontMatter)
             let reservedFromMatter = try decoder.decode(
                 ReservedFrontMatter.self,
-                from: rawReservedFromMatter.data(using: .utf8)!
+                from: rawReservedFromMatter.dataValue()
             )
 
             let detector = ContentDefinitionDetector(
@@ -212,13 +203,10 @@ struct SourceLoader {
 
         // MARK: - Templates
 
-        let templateLocator = TemplateLocator(fileManager: fileManager)
-
-        let templateLocations = templateLocator.locate(
+        let templateLocations = fs.templateLocator.locate(
             at: sourceConfig.currentThemeTemplatesUrl,
-            overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl
+            overrides: sourceConfig.currentThemeOverrideTemplatesUrl
         )
-
         let templateLoader = TemplateLoader(
             url: sourceConfig.currentThemeTemplatesUrl,
             overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl,

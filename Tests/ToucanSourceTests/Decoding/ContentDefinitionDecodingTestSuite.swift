@@ -13,7 +13,7 @@ struct ContentDefinitionDecodingTestSuite {
         let data = """
             id: post
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -99,7 +99,7 @@ struct ContentDefinitionDecodingTestSuite {
 
                 
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

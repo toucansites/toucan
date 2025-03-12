@@ -17,6 +17,9 @@ struct RawContentLoader {
 
     /// Content file paths
     let locations: [Origin]
+    
+    /// The type of raw content file.
+    let fileType: RawContentFileType
 
     /// Source configuration.
     let sourceConfig: SourceConfig
@@ -58,9 +61,22 @@ private extension RawContentLoader {
     func resolveItem(_ origin: Origin) throws -> RawContent {
         let url = url.appendingPathComponent(origin.path)
         let rawContents = try loadItem(at: url)
-
-        let frontMatter = try frontMatterParser.parse(rawContents)
-        let markdown = rawContents.dropFrontMatter()
+        
+        let frontMatter: [String: AnyCodable]
+        let markdown: String
+        
+        switch fileType {
+        case .markdown:
+            frontMatter = try frontMatterParser.parse(rawContents)
+            markdown = rawContents.dropFrontMatter()
+        case .yaml:
+            frontMatter = try frontMatterParser.decoder.decode(
+                [String: AnyCodable].self,
+                from: rawContents.dataValue()
+            )
+            markdown = ""
+        }
+        
         let modificationDate = try fileManager.modificationDate(at: url)
 
         let assetLocator = AssetLocator(fileManager: fileManager)

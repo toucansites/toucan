@@ -16,7 +16,7 @@ struct SettingsDecodingTestSuite {
             foo:
                 bar: baz
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -37,7 +37,7 @@ struct SettingsDecodingTestSuite {
         let data = """
             baseUrl: https://toucansites.com/
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

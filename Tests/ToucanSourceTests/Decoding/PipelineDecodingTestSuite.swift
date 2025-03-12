@@ -37,7 +37,7 @@ struct PipelineDecodingTestSuite {
                 file: "{{id}}"
                 ext: json
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 
@@ -75,7 +75,7 @@ struct PipelineDecodingTestSuite {
                 file: index
                 ext: html
             """
-            .data(using: .utf8)!
+            .dataValue()
 
         let decoder = ToucanYAMLDecoder()
 

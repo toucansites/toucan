@@ -10,20 +10,21 @@ public struct RawContentLocator {
 
     private let indexName = "index"
     private let noindexName = "noindex"
-    private let mdExtensions = ["md", "markdown"]
-    private let yamlExtensions = ["yaml", "yml"]
-
-    public init(fileManager: FileManagerKit) {
+    
+    public init(
+        fileManager: FileManagerKit,
+        fileType: RawContentFileType
+    ) {
         self.fileManager = fileManager
         self.indexFileLocator = .init(
             fileManager: fileManager,
             name: indexName,
-            extensions: mdExtensions + yamlExtensions
+            extensions: fileType.extensions
         )
         self.noindexFileLocator = .init(
             fileManager: fileManager,
             name: noindexName,
-            extensions: mdExtensions + yamlExtensions
+            extensions: RawContentFileType.yaml.extensions
         )
     }
 

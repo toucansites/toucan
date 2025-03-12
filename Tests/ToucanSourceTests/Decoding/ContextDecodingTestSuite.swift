@@ -20,7 +20,7 @@ struct ContextDecodingTestSuite {
     @Test
     func decodingMultipleValues() throws {
         let json = #"["contents", "queries"]"#
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let result = try ToucanJSONDecoder()
             .decode(Pipeline.Scope.Context.self, from: data)
 
@@ -34,7 +34,7 @@ struct ContextDecodingTestSuite {
     @Test
     func decodingSingleValue() throws {
         let json = #""properties""#
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let result = try ToucanJSONDecoder()
             .decode(Pipeline.Scope.Context.self, from: data)
 
@@ -48,7 +48,7 @@ struct ContextDecodingTestSuite {
     @Test
     func decodingSingleAllValue() throws {
         let json = #""detail""#
-        let data = json.data(using: .utf8)!
+        let data = json.dataValue()
         let result = try ToucanJSONDecoder()
             .decode(Pipeline.Scope.Context.self, from: data)
 
