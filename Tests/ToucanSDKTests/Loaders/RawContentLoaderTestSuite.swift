@@ -31,6 +31,7 @@ struct RawContentLoaderTestSuite {
                                         ---
                                         type: post
                                         title: "First beta release"
+                                        image: "./assets/cover.jpg"
                                         ---
 
                                         This is a dummy post!
@@ -65,7 +66,8 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests")
+                logger: .init(label: "RawContentLoaderTests"),
+                baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
 
@@ -82,6 +84,7 @@ struct RawContentLoaderTestSuite {
                 result.frontMatter == [
                     "type": .init("post"),
                     "title": .init("First beta release"),
+                    "image": .init("http://localhost:3000/assets/blog/first-beta-release/cover.jpg"),
                 ]
             )
             #expect(result.markdown == "\n\nThis is a dummy post!")
@@ -103,6 +106,7 @@ struct RawContentLoaderTestSuite {
                                     string: """
                                         type: post
                                         title: "First beta release"
+                                        image: "./assets/cover.jpg"
                                         """
                                 )
                                 Directory("assets") {
@@ -131,7 +135,8 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests")
+                logger: .init(label: "RawContentLoaderTests"),
+                baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
 
@@ -148,6 +153,7 @@ struct RawContentLoaderTestSuite {
                 result.frontMatter == [
                     "type": .init("post"),
                     "title": .init("First beta release"),
+                    "image": .init("http://localhost:3000/assets/blog/first-beta-release/cover.jpg"),
                 ]
             )
             #expect(result.assets == ["image.png"])
@@ -168,6 +174,7 @@ struct RawContentLoaderTestSuite {
                                     string: """
                                         type: post
                                         title: "First beta release"
+                                        image: "no-assets-prefix.jpg"
                                         """
                                 )
                                 Directory("assets") {
@@ -196,7 +203,8 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests")
+                logger: .init(label: "RawContentLoaderTests"),
+                baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
 
@@ -213,6 +221,7 @@ struct RawContentLoaderTestSuite {
                 result.frontMatter == [
                     "type": .init("post"),
                     "title": .init("First beta release"),
+                    "image": .init("no-assets-prefix.jpg"),
                 ]
             )
             #expect(result.assets == ["image.png"])

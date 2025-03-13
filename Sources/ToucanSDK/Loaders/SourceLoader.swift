@@ -155,7 +155,8 @@ struct SourceLoader {
             sourceConfig: sourceConfig,
             frontMatterParser: frontMatterParser,
             fileManager: fileManager,
-            logger: logger
+            logger: logger,
+            baseUrl: baseUrl ?? settings.baseUrl
         )
         let mdRawContents = try mdRawContentsLoader.load()
 
@@ -169,7 +170,8 @@ struct SourceLoader {
             sourceConfig: sourceConfig,
             frontMatterParser: frontMatterParser,
             fileManager: fileManager,
-            logger: logger
+            logger: logger,
+            baseUrl: baseUrl ?? settings.baseUrl
         )
         let ymlRawContents = try ymlRawContentsLoader.load()
 

@@ -19,7 +19,7 @@ extension Dictionary {
     }
 }
 
-extension String {
+public extension String {
 
     func replacingOccurrences(
         _ dictionary: [String: String]
@@ -45,6 +45,25 @@ extension String {
             .filter { $0 != "" }
             .joined(separator: "-")
     }
+    
+    func resolveAsset(baseUrl: String, assetsPath: String, slug: String) -> String {
+        if baseUrl.isEmpty || assetsPath.isEmpty {
+            return self
+        }
+        
+        if self.contains("{{baseUrl}}"){
+            return self.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
+        }
+        
+        let prefix = "./\(assetsPath)/"
+        guard self.hasPrefix(prefix) else {
+            return self
+        }
+
+        let src = String(self.dropFirst(prefix.count))
+        
+        return "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
+    }
 }
 
 extension HTMLVisitor {
@@ -55,7 +74,7 @@ extension HTMLVisitor {
         else {
             return nil
         }
-        let path = resolveAsset(path: source)
+        let path = source.resolveAsset(baseUrl: baseUrl, assetsPath: assetsPath, slug: slug)
         
         var title = ""
         if let ttl = image.title {
@@ -64,25 +83,6 @@ extension HTMLVisitor {
         return """
         <img src="\(path)" alt="\(image.plainText)"\(title)>
         """
-    }
-    
-    func resolveAsset(path: String) -> String {
-        if baseUrl.isEmpty || assetsPath.isEmpty {
-            return path
-        }
-        
-        if path.contains("{{baseUrl}}"){
-            return path.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
-        }
-        
-        let prefix = "./\(assetsPath)/"
-        guard path.hasPrefix(prefix) else {
-            return path
-        }
-
-        let src = String(path.dropFirst(prefix.count))
-        
-        return "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
     }
     
 }

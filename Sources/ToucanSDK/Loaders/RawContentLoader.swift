@@ -32,6 +32,9 @@ struct RawContentLoader {
 
     /// The logger instance
     let logger: Logger
+    
+    // baseUrl for image asset resolve
+    let baseUrl: String
 
     /// Loads the configuration.
     ///
@@ -62,7 +65,7 @@ private extension RawContentLoader {
         let url = url.appendingPathComponent(origin.path)
         let rawContents = try loadItem(at: url)
 
-        let frontMatter: [String: AnyCodable]
+        var frontMatter: [String: AnyCodable]
         let markdown: String
 
         switch fileType {
@@ -75,6 +78,17 @@ private extension RawContentLoader {
                 from: rawContents.dataValue()
             )
             markdown = ""
+        }
+        
+        let imageKey = "image"
+        if let imageValue = frontMatter[imageKey]?.stringValue() {
+            frontMatter[imageKey] = .init(
+                imageValue.resolveAsset(
+                    baseUrl: baseUrl,
+                    assetsPath: sourceConfig.config.contents.assets.path,
+                    slug: origin.slug
+                )
+            )
         }
 
         let modificationDate = try fileManager.modificationDate(at: url)
