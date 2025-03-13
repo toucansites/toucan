@@ -93,18 +93,6 @@ struct Entrypoint: AsyncParsableCommand {
 
         var lastGenerationTime = Date()
 
-        //        let generate = try await Command
-        //            .findInPath(withName: generateCommand)?
-        //            .output
-        //            .stdout
-
-        //        let generate = try await Command
-        //            .findInPath(withName: "\(bin)/toucan generate")?
-        //            .addArgument(opt)
-        //            .addArgument("\(inputUrl.path) \(outputUrl.path)")
-        //            .output
-        //            .stdout
-
         let generate = try await Command
             .findInPath(withName: "sh")?
             .addArgument("-c")

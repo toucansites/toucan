@@ -128,8 +128,9 @@ public struct Toucan {
                     for asset in content.rawValue.assets {
                         let fromFile = originFullPath.appending(path: asset)
                         let toFile = contentFolder.appending(path: asset)
-                        try fileManager.copy(from: fromFile, to: toFile)
                         
+                        try fileManager.createDirectory(at: toFile.deletingLastPathComponent())
+                        try fileManager.copy(from: fromFile, to: toFile)
                     }
                 }
             }

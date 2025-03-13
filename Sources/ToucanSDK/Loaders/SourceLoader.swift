@@ -181,10 +181,10 @@ struct SourceLoader {
 
         let contents: [Content] = try rawContents.compactMap {
             /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
-            let rawReservedFromMatter = try encoder.encode($0.frontMatter)
-            let reservedFromMatter = try decoder.decode(
+            let rawReservedFrontMatter = try encoder.encode($0.frontMatter)
+            let reservedFrontMatter = try decoder.decode(
                 ReservedFrontMatter.self,
-                from: rawReservedFromMatter.dataValue()
+                from: rawReservedFrontMatter.dataValue()
             )
 
             let detector = ContentDefinitionDetector(
@@ -194,7 +194,7 @@ struct SourceLoader {
             )
 
             let contentDefinition = try detector.detect(
-                explicitType: reservedFromMatter.type
+                explicitType: reservedFrontMatter.type
             )
 
             let contentDefinitionConverter = ContentDefinitionConverter(
