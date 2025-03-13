@@ -98,12 +98,20 @@ public struct ContentRenderer {
         )
 
         self.logger = logger
+        
     }
 
     public func render(
-        _ content: String
+        content: String,
+        slug: String,
+        assetsPath: String,
+        baseUrl: String
     ) -> Output {
-        let html = markdownToHTMLRenderer.renderHTML(markdown: content)
+        let html = markdownToHTMLRenderer.renderHTML(
+            markdown: content,
+            slug: slug,
+            assetsPath: assetsPath,
+            baseUrl: baseUrl)
         let readingTime = readingTimeCalculator.calculate(for: html)
         let outline = outlineParser.parseHTML(html)
 

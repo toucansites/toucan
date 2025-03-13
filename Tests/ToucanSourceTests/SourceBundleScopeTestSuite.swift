@@ -154,7 +154,7 @@ struct SourceBundleScopeTestSuite {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            assets: []
+            baseUrl: ""
         )
 
         let results = try sourceBundle.generatePipelineResults()

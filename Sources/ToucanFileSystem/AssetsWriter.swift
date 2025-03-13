@@ -24,7 +24,7 @@ public struct AssetsWriter {
         self.workDirUrl = workDirUrl
     }
 
-    public func copyAll() throws {
+    public func copyDefaultAssets() throws {
 
         // theme assets
         try fileManager.copyRecursively(

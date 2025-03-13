@@ -77,7 +77,7 @@ struct SourceBundleRedirectTestSuite {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            assets: []
+            baseUrl: ""
         )
 
         let results =

@@ -100,10 +100,6 @@ struct SourceLoader {
         )
         let settings = try settingsLoader.load()
 
-        // MARK: - Assets
-
-        let assets = fs.assetLocator.locate(at: sourceConfig.assetsUrl)
-
         // MARK: - Pipelines
 
         let pipelineLocations = fs.pipelineLocator.locate(
@@ -232,7 +228,7 @@ struct SourceLoader {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            assets: assets
+            baseUrl: baseUrl ?? settings.baseUrl
         )
     }
 }

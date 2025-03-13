@@ -32,13 +32,22 @@ struct HTMLVisitor: MarkupVisitor {
 
     var customBlockDirectives: [MarkdownBlockDirective]
     var logger: Logger
+    var slug: String
+    var assetsPath: String
+    var baseUrl: String
 
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
-        logger: Logger = .init(label: "HTMLVisitor")
+        logger: Logger = .init(label: "HTMLVisitor"),
+        slug: String,
+        assetsPath: String,
+        baseUrl: String
     ) {
         self.customBlockDirectives = blockDirectives
         self.logger = logger
+        self.slug = slug
+        self.assetsPath = assetsPath
+        self.baseUrl = baseUrl
     }
 
     // MARK: - visitor functions
@@ -293,17 +302,21 @@ struct HTMLVisitor: MarkupVisitor {
                 )
             }
             else {
+                var hrefDestination = destination
+                if destination.hasPrefix("/") {
+                    hrefDestination = baseUrl.appending(destination.dropFirst())
+                }
                 attributes.append(
                     .init(
                         key: "href",
-                        value: destination
+                        value: hrefDestination
                     )
                 )
             }
 
             if !destination.hasPrefix("."),
-                !destination.hasPrefix("/"),
-                !destination.hasPrefix("#")
+               !destination.hasPrefix("/"),
+               !destination.hasPrefix("#")
             {
                 attributes.append(
                     .init(
@@ -326,8 +339,10 @@ struct HTMLVisitor: MarkupVisitor {
         guard let source = image.source, !source.isEmpty else {
             return ""
         }
-
-        // TODO: asset resolution?
+        
+        if let result = imageOverride(image) {
+            return result
+        }
 
         var attributes: [HTML.Attribute] = [
             .init(key: "src", value: source),
@@ -354,6 +369,8 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         HTML(name: "table", contents: visit(table.children)).render()
     }
+    
+    
 
     mutating func visitTableHead(
         _ tableHead: Table.Head

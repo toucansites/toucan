@@ -106,7 +106,7 @@ struct SourceBundleSitemapTestSuite {
             contents: contents,
             blockDirectives: [],
             templates: templates,
-            assets: []
+            baseUrl: ""
         )
 
         let results = try sourceBundle.generatePipelineResults()
