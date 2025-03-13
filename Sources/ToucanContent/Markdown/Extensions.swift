@@ -71,10 +71,6 @@ extension HTMLVisitor {
             return path
         }
         
-        print("baseUrl", baseUrl)
-        print("assetsPath", assetsPath)
-        print("slug", slug)
-        
         if path.contains("{{baseUrl}}"){
             return path.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
         }
@@ -85,9 +81,8 @@ extension HTMLVisitor {
         }
 
         let src = String(path.dropFirst(prefix.count))
-
-        return "\(baseUrl)/\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
-            .replacingOccurrences(of: "//", with: "/")
+        
+        return "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
     }
     
 }

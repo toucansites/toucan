@@ -575,7 +575,7 @@ struct HTMLVisitorTestSuite {
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
-            <p><img src="http:/localhost:3000/assets/slug/lorem.jpg" alt="Lorem"></p>
+            <p><img src="http://localhost:3000/assets/slug/lorem.jpg" alt="Lorem"></p>
             """#
         #expect(output == expectation)
     }
