@@ -82,13 +82,20 @@ private extension RawContentLoader {
         
         let imageKey = "image"
         if let imageValue = frontMatter[imageKey]?.stringValue() {
-            frontMatter[imageKey] = .init(
-                imageValue.resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: sourceConfig.config.contents.assets.path,
-                    slug: origin.slug
+            
+            if imageValue.hasPrefix("/") {
+                frontMatter[imageKey] = .init(
+                    baseUrl.appending(imageValue.dropFirst()))
+                                
+            } else {
+                frontMatter[imageKey] = .init(
+                    imageValue.resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: sourceConfig.config.contents.assets.path,
+                        slug: origin.slug
+                    )
                 )
-            )
+            }
         }
 
         let modificationDate = try fileManager.modificationDate(at: url)
