@@ -115,6 +115,7 @@ let package = Package(
             name: "ToucanFileSystem",
             dependencies: [
                 .target(name: "ToucanModels"),
+                .target(name: "ToucanContent"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
             ],

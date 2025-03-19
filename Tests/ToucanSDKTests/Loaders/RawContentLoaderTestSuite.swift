@@ -106,7 +106,7 @@ struct RawContentLoaderTestSuite {
                                     string: """
                                         type: post
                                         title: "First beta release"
-                                        image: "./assets/cover.jpg"
+                                        image: "/images/cover.jpg"
                                         """
                                 )
                                 Directory("assets") {
@@ -153,7 +153,7 @@ struct RawContentLoaderTestSuite {
                 result.frontMatter == [
                     "type": .init("post"),
                     "title": .init("First beta release"),
-                    "image": .init("http://localhost:3000/assets/blog/first-beta-release/cover.jpg"),
+                    "image": .init("http://localhost:3000/images/cover.jpg"),
                 ]
             )
             #expect(result.assets == ["image.png"])
