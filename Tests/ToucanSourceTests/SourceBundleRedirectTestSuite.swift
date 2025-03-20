@@ -54,8 +54,7 @@ struct SourceBundleRedirectTestSuite {
             return converter.convert(rawContent: $0)
         }
 
-        let contents =
-            pageContents + redirectContents
+        let contents = pageContents + redirectContents
 
         let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
         let templates: [String: String] = [
@@ -80,9 +79,10 @@ struct SourceBundleRedirectTestSuite {
             baseUrl: ""
         )
 
-        let results =
-            try sourceBundle
-            .generatePipelineResults()
+        let results = try sourceBundle.generatePipelineResults(
+            now: Date(),
+            generator: .v1_0_0_beta3
+        )
 
         #expect(results.count == 2)
 

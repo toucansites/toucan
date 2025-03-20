@@ -5,9 +5,9 @@
 //  Created by Tibor Bodecs on 2025. 02. 12..
 //
 
-public struct DateFormats: Encodable {
+public struct DateFormats: Codable {
 
-    public struct Standard: Encodable {
+    public struct Standard: Codable {
 
         public init(
             full: String,

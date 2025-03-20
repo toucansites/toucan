@@ -435,9 +435,11 @@ extension SourceBundle {
         return ["context": .init(rawContext)]
     }
 
-    public func generatePipelineResults() throws -> [PipelineResult] {
-
-        let now = Date().timeIntervalSince1970
+    public func generatePipelineResults(
+        now: Date,
+        generator: Generator
+    ) throws -> [PipelineResult] {
+        let now = now.timeIntervalSince1970
         var results: [PipelineResult] = []
 
         var siteContext: [String: AnyCodable] = [
@@ -446,6 +448,8 @@ extension SourceBundle {
             "locale": .init(settings.locale),
             "timeZone": .init(settings.timeZone),
             "lastBuildDate": .init(convertToDateFormats(date: now)),
+            "generation": .init(convertToDateFormats(date: now)),
+            "generator": .init(Generator.v1_0_0_beta3)
         ]
         .recursivelyMerged(with: settings.userDefined)
 
