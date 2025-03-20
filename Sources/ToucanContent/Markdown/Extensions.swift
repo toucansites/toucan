@@ -45,44 +45,53 @@ public extension String {
             .filter { $0 != "" }
             .joined(separator: "-")
     }
-    
-    func resolveAsset(baseUrl: String, assetsPath: String, slug: String) -> String {
+
+    func resolveAsset(
+        baseUrl: String,
+        assetsPath: String,
+        slug: String
+    ) -> String {
         if baseUrl.isEmpty || assetsPath.isEmpty {
             return self
         }
-        
-        if self.contains("{{baseUrl}}"){
+
+        if self.contains("{{baseUrl}}") {
             return self.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
         }
-        
+
         let prefix = "./\(assetsPath)/"
         guard self.hasPrefix(prefix) else {
             return self
         }
 
         let src = String(self.dropFirst(prefix.count))
-        
-        return "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
+
+        return
+            "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
     }
 }
 
 extension HTMLVisitor {
-    
+
     func imageOverride(_ image: Image) -> String? {
         guard
             let source = image.source
         else {
             return nil
         }
-        let path = source.resolveAsset(baseUrl: baseUrl, assetsPath: assetsPath, slug: slug)
-        
+        let path = source.resolveAsset(
+            baseUrl: baseUrl,
+            assetsPath: assetsPath,
+            slug: slug
+        )
+
         var title = ""
         if let ttl = image.title {
             title = #" title="\#(ttl)""#
         }
         return """
-        <img src="\(path)" alt="\(image.plainText)"\(title)>
-        """
+            <img src="\(path)" alt="\(image.plainText)"\(title)>
+            """
     }
-    
+
 }

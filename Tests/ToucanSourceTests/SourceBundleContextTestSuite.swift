@@ -129,7 +129,10 @@ struct SourceBundleContextTestSuite {
             baseUrl: ""
         )
 
-        let results = try sourceBundle.generatePipelineResults()
+        let results = try sourceBundle.generatePipelineResults(
+            now: now,
+            generator: .v1_0_0_beta3
+        )
 
         #expect(results.count == 2)
 
@@ -181,4 +184,121 @@ struct SourceBundleContextTestSuite {
         #expect(exp1.context.featured.allSatisfy { !$0.isCurrentURL })
     }
 
+    @Test
+    func generatorMetadata() async throws {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.locale = .init(identifier: "en_US")
+        formatter.timeZone = .init(secondsFromGMT: 0)
+
+        let isoFormatter = DateFormatter()
+        isoFormatter.locale = .init(identifier: "en_US")
+        isoFormatter.timeZone = .init(secondsFromGMT: 0)
+        isoFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
+        let logger = Logger(label: "SourceBundleContextTestSuite")
+
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "test",
+                scopes: [:],
+                queries: [:],
+                dataTypes: .defaults,
+                contentTypes: .init(
+                    include: [],
+                    exclude: [],
+                    lastUpdate: []
+                ),
+                iterators: [:],
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: [:]
+                ),
+                output: .init(
+                    path: "",
+                    file: "context",
+                    ext: "json"
+                )
+            )
+        ]
+
+        let pageDefinition = ContentDefinition.Mocks.page()
+        let rawPageContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: "",
+                    slug: ""
+                ),
+                frontMatter: [
+                    "title": "Home",
+                    "description": "Home description",
+                    "foo": ["bar": "baz"],
+                ],
+                markdown: """
+                    # Home
+
+                    Lorem ipsum dolor sit amet
+                    """,
+                lastModificationDate: Date().timeIntervalSince1970,
+                assets: []
+            )
+        ]
+        let pageContents = rawPageContents.map {
+            let converter = ContentDefinitionConverter(
+                contentDefinition: pageDefinition,
+                dateFormatter: formatter,
+                defaultDateFormat: "Y-MM-dd",
+                logger: logger
+            )
+            return converter.convert(rawContent: $0)
+        }
+
+        let contents = pageContents
+
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+
+        let sourceBundle = SourceBundle(
+            location: .init(filePath: ""),
+            config: config,
+            sourceConfig: sourceConfig,
+            settings: .defaults,
+            pipelines: pipelines,
+            contents: contents,
+            blockDirectives: [],
+            templates: [:],
+            baseUrl: ""
+        )
+
+        let results = try sourceBundle.generatePipelineResults(
+            now: now,
+            generator: .v1_0_0_beta3
+        )
+
+        #expect(results.count == 1)
+
+        let decoder = JSONDecoder()
+
+        struct Exp: Decodable {
+            struct Site: Codable {
+                let generation: DateFormats
+                let generator: Generator
+            }
+            let site: Site
+        }
+
+        let data = try #require(results[0].contents.data(using: .utf8))
+        let exp = try decoder.decode(Exp.self, from: data)
+
+        #expect(exp.site.generator.name == "Toucan")
+        #expect(exp.site.generator.version == "1.0.0-beta3")
+        #expect(
+            exp.site.generation.formats["iso8601"]
+                == isoFormatter.string(from: now)
+        )
+    }
 }

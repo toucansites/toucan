@@ -45,14 +45,18 @@ struct AssetsWriterTestSuite {
                 workDirUrl: workDirUrl
             )
             try assetsWriter.copyDefaultAssets()
-            
+
             let expectation = ["cover.png", "image.png"]
             let locator = FileLocator(fileManager: $0)
-            
-            var locations = locator.locate(at: workDirUrl.appending(path: "icons/")).sorted()
+
+            var locations =
+                locator.locate(at: workDirUrl.appending(path: "icons/"))
+                .sorted()
             #expect(locations == expectation)
-            
-            locations = locator.locate(at: workDirUrl.appending(path: "images/")).sorted()
+
+            locations =
+                locator.locate(at: workDirUrl.appending(path: "images/"))
+                .sorted()
             #expect(locations == expectation)
         }
     }
@@ -80,7 +84,7 @@ struct AssetsWriterTestSuite {
                 workDirUrl: workDirUrl
             )
             try assetsWriter.copyDefaultAssets()
-            
+
             let locator = FileLocator(fileManager: $0)
             var locations = locator.locate(at: workDirUrl).sorted()
             #expect(locations.isEmpty)

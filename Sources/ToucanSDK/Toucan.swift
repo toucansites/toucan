@@ -94,7 +94,10 @@ public struct Toucan {
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
 
-            let results = try sourceBundle.generatePipelineResults()
+            let results = try sourceBundle.generatePipelineResults(
+                now: Date(),
+                generator: .v1_0_0_beta3
+            )
 
             // MARK: - Preparing work dir
 
@@ -110,13 +113,13 @@ public struct Toucan {
             try assetsWriter.copyDefaultAssets()
 
             // MARK: - Copy content assets
-            
+
             let assetsPath = sourceBundle.config.contents.assets.path
             let assetsFolder = workDirUrl.appending(path: assetsPath)
             try fileManager.createDirectory(at: assetsFolder)
             let scrDirectory = sourceBundle.sourceConfig.contentsUrl
-            
-            let contentAssetsWriter  = ContentAssetsWriter(
+
+            let contentAssetsWriter = ContentAssetsWriter(
                 fileManager: fileManager,
                 assetsPath: assetsPath,
                 assetsFolder: assetsFolder,
@@ -125,11 +128,13 @@ public struct Toucan {
             for content in sourceBundle.contents {
                 try contentAssetsWriter.copyContentAssets(content: content)
             }
-            
+
             // MARK: - Writing results
-            
+
             for result in results {
-                let destinationFolder = workDirUrl.appending(path: result.destination.path)
+                let destinationFolder = workDirUrl.appending(
+                    path: result.destination.path
+                )
                 try fileManager.createDirectory(at: destinationFolder)
 
                 let outputUrl =
