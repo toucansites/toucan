@@ -315,8 +315,8 @@ struct HTMLVisitor: MarkupVisitor {
             }
 
             if !destination.hasPrefix("."),
-               !destination.hasPrefix("/"),
-               !destination.hasPrefix("#")
+                !destination.hasPrefix("/"),
+                !destination.hasPrefix("#")
             {
                 attributes.append(
                     .init(
@@ -339,7 +339,7 @@ struct HTMLVisitor: MarkupVisitor {
         guard let source = image.source, !source.isEmpty else {
             return ""
         }
-        
+
         if let result = imageOverride(image) {
             return result
         }
@@ -369,8 +369,6 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         HTML(name: "table", contents: visit(table.children)).render()
     }
-    
-    
 
     mutating func visitTableHead(
         _ tableHead: Table.Head

@@ -32,7 +32,7 @@ struct RawContentLoader {
 
     /// The logger instance
     let logger: Logger
-    
+
     // baseUrl for image asset resolve
     let baseUrl: String
 
@@ -79,15 +79,17 @@ private extension RawContentLoader {
             )
             markdown = ""
         }
-        
+
         let imageKey = "image"
         if let imageValue = frontMatter[imageKey]?.stringValue() {
-            
+
             if imageValue.hasPrefix("/") {
                 frontMatter[imageKey] = .init(
-                    baseUrl.appending(imageValue.dropFirst()))
-                                
-            } else {
+                    baseUrl.appending(imageValue.dropFirst())
+                )
+
+            }
+            else {
                 frontMatter[imageKey] = .init(
                     imageValue.resolveAsset(
                         baseUrl: baseUrl,

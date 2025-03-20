@@ -17,16 +17,16 @@ public struct AssetLocator {
     public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
     }
-    
+
     public func locate(at url: URL) -> [String] {
         fileManager
-        .listDirectoryRecursively(at: url)
-        .map { item in
-            item.relativePath(to: url)
-        }
-        .filter {
-            !$0.hasPrefix(".")
-        }
+            .listDirectoryRecursively(at: url)
+            .map { item in
+                item.relativePath(to: url)
+            }
+            .filter {
+                !$0.hasPrefix(".")
+            }
     }
-    
+
 }

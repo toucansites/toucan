@@ -30,18 +30,25 @@ public struct ContentAssetsWriter {
 
     public func copyContentAssets(content: Content) throws {
         if !content.rawValue.assets.isEmpty {
-            
-            let contentFolder = assetsFolder.appending(path: content.slug.isEmpty ? "home" : content.slug)
+
+            let contentFolder = assetsFolder.appending(
+                path: content.slug.isEmpty ? "home" : content.slug
+            )
             try fileManager.createDirectory(at: contentFolder)
-            
-            let originContentDir = URL(string: content.rawValue.origin.path)?.deletingLastPathComponent().path
-            let originFullPath = scrDirectory.appending(path: originContentDir ?? "").appending(path: assetsPath)
-            
+
+            let originContentDir = URL(string: content.rawValue.origin.path)?
+                .deletingLastPathComponent().path
+            let originFullPath =
+                scrDirectory.appending(path: originContentDir ?? "")
+                .appending(path: assetsPath)
+
             for asset in content.rawValue.assets {
                 let fromFile = originFullPath.appending(path: asset)
                 let toFile = contentFolder.appending(path: asset)
-                
-                try fileManager.createDirectory(at: toFile.deletingLastPathComponent())
+
+                try fileManager.createDirectory(
+                    at: toFile.deletingLastPathComponent()
+                )
                 try fileManager.copy(from: fromFile, to: toFile)
             }
         }

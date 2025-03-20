@@ -84,7 +84,9 @@ struct RawContentLoaderTestSuite {
                 result.frontMatter == [
                     "type": .init("post"),
                     "title": .init("First beta release"),
-                    "image": .init("http://localhost:3000/assets/blog/first-beta-release/cover.jpg"),
+                    "image": .init(
+                        "http://localhost:3000/assets/blog/first-beta-release/cover.jpg"
+                    ),
                 ]
             )
             #expect(result.markdown == "\n\nThis is a dummy post!")

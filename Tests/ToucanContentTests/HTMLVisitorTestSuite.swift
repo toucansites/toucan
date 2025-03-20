@@ -497,7 +497,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p><a href="http://localhost:3000/foo">Swift</a></p>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -564,7 +564,7 @@ struct HTMLVisitorTestSuite {
 
         #expect(output == expectation)
     }
-    
+
     @Test
     func imageAssetsPrefix() {
 

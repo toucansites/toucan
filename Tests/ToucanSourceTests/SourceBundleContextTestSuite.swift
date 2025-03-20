@@ -190,7 +190,7 @@ struct SourceBundleContextTestSuite {
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
-        
+
         let isoFormatter = DateFormatter()
         isoFormatter.locale = .init(identifier: "en_US")
         isoFormatter.timeZone = .init(secondsFromGMT: 0)
@@ -280,7 +280,7 @@ struct SourceBundleContextTestSuite {
         )
 
         #expect(results.count == 1)
-        
+
         let decoder = JSONDecoder()
 
         struct Exp: Decodable {
@@ -296,6 +296,9 @@ struct SourceBundleContextTestSuite {
 
         #expect(exp.site.generator.name == "Toucan")
         #expect(exp.site.generator.version == "1.0.0-beta3")
-        #expect(exp.site.generation.formats["iso8601"] == isoFormatter.string(from: now))
+        #expect(
+            exp.site.generation.formats["iso8601"]
+                == isoFormatter.string(from: now)
+        )
     }
 }

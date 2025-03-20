@@ -449,7 +449,7 @@ extension SourceBundle {
             "timeZone": .init(settings.timeZone),
             "lastBuildDate": .init(convertToDateFormats(date: now)),
             "generation": .init(convertToDateFormats(date: now)),
-            "generator": .init(Generator.v1_0_0_beta3)
+            "generator": .init(Generator.v1_0_0_beta3),
         ]
         .recursivelyMerged(with: settings.userDefined)
 

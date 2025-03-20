@@ -30,7 +30,7 @@ struct AssetsLocatorTestSuite {
             let url = $1.appending(path: "src/contents/")
             let locator = AssetLocator(fileManager: $0)
             let results = locator.locate(at: url)
-            
+
             #expect(results.count == 2)
         }
     }
