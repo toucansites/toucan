@@ -21,8 +21,8 @@ public struct AssetLocator {
     public func locate(at url: URL) -> [String] {
         fileManager
             .listDirectoryRecursively(at: url)
-            .map { item in
-                item.relativePath(to: url)
+            .map {
+                $0.relativePath(to: url)
             }
             .filter {
                 !$0.hasPrefix(".")
