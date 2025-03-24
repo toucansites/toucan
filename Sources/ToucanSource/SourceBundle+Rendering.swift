@@ -335,7 +335,6 @@ extension SourceBundle {
                                 isCurrent: pageIndex == currentPageIndex
                             )
                         }
-
                     let pageItems = run(
                         query: .init(
                             contentType: query.contentType,
@@ -352,11 +351,41 @@ extension SourceBundle {
                     let slug = content.slug.replacingOccurrences([
                         "{{\(iteratorId)}}": String(currentPageIndex)
                     ])
-
-                    // TODO: meh... option to replace {{total}} {{limit}} {{current}}?
+                    
                     var alteredContent = content
                     alteredContent.id = id
                     alteredContent.slug = slug
+                    
+                    let number = currentPageIndex
+                    let total = numberOfPages
+                    
+                    func replace(
+                        in value: String,
+                        number: Int,
+                        total: Int
+                    ) -> String {
+                        value.replacingOccurrences([
+                            "{{number}}": String(number),
+                            "{{total}}": String(total),
+                        ])
+                    }
+                    
+                    func replaceMap(_ array: inout [String: AnyCodable]) {
+                        for (key, _) in array {
+                            if let stringValue = array[key]?.stringValue() {
+                                array[key] = .init(replace(
+                                    in: stringValue,
+                                    number: number,
+                                    total: total
+                                ))
+                            }
+                        }
+                    }
+                    
+                    //replaceMap(&alteredContent.rawValue.frontMatter)
+                    //replaceMap(&alteredContent.properties)
+                    //replaceMap(&alteredContent.userDefined)
+                    
 
                     var itemCtx: [[String: AnyCodable]] = []
                     for pageItem in pageItems {

@@ -86,7 +86,7 @@ struct AssetsWriterTestSuite {
             try assetsWriter.copyDefaultAssets()
 
             let locator = FileLocator(fileManager: $0)
-            var locations = locator.locate(at: workDirUrl).sorted()
+            let locations = locator.locate(at: workDirUrl).sorted()
             #expect(locations.isEmpty)
         }
     }
