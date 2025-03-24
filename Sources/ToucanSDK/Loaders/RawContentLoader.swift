@@ -9,6 +9,7 @@ import Foundation
 import Logging
 import ToucanModels
 import ToucanFileSystem
+import ToucanSource
 
 struct RawContentLoader {
 
@@ -62,6 +63,7 @@ import FileManagerKit
 private extension RawContentLoader {
 
     func resolveItem(_ origin: Origin) throws -> RawContent {
+        let assetsPath = sourceConfig.config.contents.assets.path
         let url = url.appendingPathComponent(origin.path)
         let rawContents = try loadItem(at: url)
 
@@ -80,33 +82,111 @@ private extension RawContentLoader {
             markdown = ""
         }
 
-        let imageKey = "image"
-        if let imageValue = frontMatter[imageKey]?.stringValue() {
+        let assetLocator = AssetLocator(fileManager: fileManager)
 
-            if imageValue.hasPrefix("/") {
-                frontMatter[imageKey] = .init(
-                    baseUrl.appending(imageValue.dropFirst())
-                )
+        let assetsUrl = url.deletingLastPathComponent()
+            .appending(path: assetsPath)
+        let assetLocations = assetLocator.locate(at: assetsUrl)
 
-            }
-            else {
-                frontMatter[imageKey] = .init(
-                    imageValue.resolveAsset(
-                        baseUrl: baseUrl,
-                        assetsPath: sourceConfig.config.contents.assets.path,
-                        slug: origin.slug
-                    )
+        frontMatter["image"] = .init(
+            resolveImage(
+                frontMatter: frontMatter,
+                assetsPath: assetsPath,
+                assetLocations: assetLocations,
+                slug: origin.slug
+            )
+        )
+
+        //         TODO: - implement asset properties use them where: frontMatter. / frontMatter[
+        //        see: https://www.notion.so/binarybirds/Asset-properties-1b7947db00a680cc8bedcdd644c26698?pvs=4
+        //
+        //        let encoder: ToucanEncoder = ToucanYAMLEncoder()
+        //        let decoder: ToucanDecoder = ToucanYAMLDecoder()
+        //
+        //        let rawReservedFrontMatter = try encoder.encode(frontMatter)
+        //        let reservedFrontMatter = try decoder.decode(
+        //            ReservedFrontMatter.self,
+        //            from: rawReservedFrontMatter.dataValue()
+        //        )
+        //
+        //        var assets: [String] = []
+        //
+        //        if let assetProperties = reservedFrontMatter.assetProperties {
+        //            for assetProperty in assetProperties {
+        //                switch assetProperty.action {
+        //                case .add:
+        //                    let resolvedPath = assetProperty.resolvedPath(
+        //                        baseUrl: baseUrl,
+        //                        assetsPath: assetsPath,
+        //                        slug: origin.slug
+        //                    )
+        //                    assets.append(resolvedPath)
+        //                    print(resolvedPath)
+        //                case .set:
+        //                    assets.removeAll()
+        //
+        //                    let resolvedPath = assetProperty.resolvedPath(
+        //                        baseUrl: baseUrl,
+        //                        assetsPath: assetsPath,
+        //                        slug: origin.slug
+        //                    )
+        //                    assets.append(resolvedPath)
+        //                    print(resolvedPath)
+        //                }
+        //            }
+        //        }
+
+        // resolve css context
+        var css: [String] = []
+        if let config = frontMatter["css"]?.arrayValue(as: String.self) {
+            css = config.map {
+                $0.resolveAsset(
+                    baseUrl: baseUrl,
+                    assetsPath: assetsPath,
+                    slug: origin.slug
                 )
             }
         }
 
+        if assetLocations.contains("style.css") {
+            css.append(
+                "./\(assetsPath)/style.css"
+                    .resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: origin.slug
+                    )
+            )
+        }
+
+        frontMatter["css"] = .init(Array(Set(css)))
+
+        // resolve js context
+        var js: [String] = []
+        if let config = frontMatter["js"]?.arrayValue(as: String.self) {
+            js = config.map {
+                $0.resolveAsset(
+                    baseUrl: baseUrl,
+                    assetsPath: assetsPath,
+                    slug: origin.slug
+                )
+            }
+        }
+
+        if assetLocations.contains("main.js") {
+            js.append(
+                "./\(assetsPath)/main.js"
+                    .resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: origin.slug
+                    )
+            )
+        }
+
+        frontMatter["js"] = .init(Array(Set(js)))
+
         let modificationDate = try fileManager.modificationDate(at: url)
-
-        let assetLocator = AssetLocator(fileManager: fileManager)
-
-        let assetsUrl = url.deletingLastPathComponent()
-            .appending(path: sourceConfig.config.contents.assets.path)
-        let assetLocations = assetLocator.locate(at: assetsUrl)
 
         return RawContent(
             origin: origin,
@@ -119,5 +199,71 @@ private extension RawContentLoader {
 
     func loadItem(at url: URL) throws -> String {
         try String(contentsOf: url, encoding: .utf8)
+    }
+}
+
+extension RawContentLoader {
+
+    func resolveImage(
+        frontMatter: [String: AnyCodable],
+        assetsPath: String,
+        assetLocations: [String],
+        slug: String,
+        imageKey: String = "image"
+    ) -> String? {
+        func resolveCoverImage(fileName: String) -> String {
+            return .init(
+                "./\(assetsPath)/\(fileName)"
+                    .resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: slug
+                    )
+            )
+        }
+
+        if let imageValue = frontMatter[imageKey]?.stringValue() {
+            if imageValue.hasPrefix("/") {
+                return .init(
+                    baseUrl.appending(imageValue.dropFirst())
+                )
+            }
+            else {
+                return .init(
+                    imageValue.resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: slug
+                    )
+                )
+            }
+        }
+        else if assetLocations.contains("cover.jpg") {
+            return resolveCoverImage(fileName: "cover.jpg")
+        }
+        else if assetLocations.contains("cover.png") {
+            return resolveCoverImage(fileName: "cover.png")
+        }
+
+        return nil
+    }
+}
+
+extension AssetProperty {
+
+    func resolvedPath(
+        baseUrl: String,
+        assetsPath: String,
+        slug: String
+    ) -> String {
+        if resolvePath {
+            return "\(file.name).\(file.ext)"
+                .resolveAsset(
+                    baseUrl: baseUrl,
+                    assetsPath: assetsPath,
+                    slug: slug
+                )
+        }
+        return "\(file.name).\(file.ext)"
     }
 }

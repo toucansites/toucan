@@ -304,7 +304,8 @@ struct HTMLVisitor: MarkupVisitor {
             else {
                 var hrefDestination = destination
                 if destination.hasPrefix("/") {
-                    hrefDestination = baseUrl.appending(destination.dropFirst())
+                    hrefDestination =
+                        "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(destination.dropFirst())"
                 }
                 attributes.append(
                     .init(
