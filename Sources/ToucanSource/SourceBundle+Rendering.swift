@@ -91,21 +91,22 @@ extension SourceBundle {
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
+        let scope = pipeline.getScope(
+            keyedBy: scopeKey,
+            for: content.definition.id
+        )
+
         let cacheKey = [
             pipeline.id,
             content.slug,
             currentSlug ?? "",  // still a bit slow due to this
+            scopeKey,
         ]
         .joined(separator: "_")
 
         if let cachedContext = contextCache[cacheKey] {
             return cachedContext
         }
-
-        let scope = pipeline.getScope(
-            keyedBy: scopeKey,
-            for: content.definition.id
-        )
 
         if scope.context.contains(.userDefined) {
             result = result.recursivelyMerged(with: content.userDefined)
