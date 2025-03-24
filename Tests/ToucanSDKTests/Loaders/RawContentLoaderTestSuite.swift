@@ -80,14 +80,13 @@ struct RawContentLoaderTestSuite {
                         slug: "blog/first-beta-release"
                     )
             )
+            #expect(result.frontMatter["type"] == .init("post"))
+            #expect(result.frontMatter["title"] == .init("First beta release"))
             #expect(
-                result.frontMatter == [
-                    "type": .init("post"),
-                    "title": .init("First beta release"),
-                    "image": .init(
+                result.frontMatter["image"]
+                    == .init(
                         "http://localhost:3000/assets/blog/first-beta-release/cover.jpg"
-                    ),
-                ]
+                    )
             )
             #expect(result.markdown == "\n\nThis is a dummy post!")
             #expect(result.assets == ["image.png"])
@@ -151,12 +150,11 @@ struct RawContentLoaderTestSuite {
                         slug: "blog/first-beta-release"
                     )
             )
+            #expect(result.frontMatter["type"] == .init("post"))
+            #expect(result.frontMatter["title"] == .init("First beta release"))
             #expect(
-                result.frontMatter == [
-                    "type": .init("post"),
-                    "title": .init("First beta release"),
-                    "image": .init("http://localhost:3000/images/cover.jpg"),
-                ]
+                result.frontMatter["image"]
+                    == .init("http://localhost:3000/images/cover.jpg")
             )
             #expect(result.assets == ["image.png"])
         }
@@ -219,14 +217,160 @@ struct RawContentLoaderTestSuite {
                         slug: "blog/articles/first-beta-release"
                     )
             )
+            #expect(result.frontMatter["type"] == .init("post"))
+            #expect(result.frontMatter["title"] == .init("First beta release"))
             #expect(
-                result.frontMatter == [
-                    "type": .init("post"),
-                    "title": .init("First beta release"),
-                    "image": .init("no-assets-prefix.jpg"),
-                ]
+                result.frontMatter["image"] == .init("no-assets-prefix.jpg")
             )
             #expect(result.assets == ["image.png"])
+        }
+    }
+
+    @Test
+    func rawContentCoverImage() throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File(
+                                    "index.md",
+                                    string: """
+                                        ---
+                                        type: post
+                                        title: "First beta release"
+                                        ---
+
+                                        This is a dummy post!
+                                        """
+                                )
+                                Directory("assets") {
+                                    "cover.jpg"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(
+                fileManager: $0,
+                fileType: .markdown
+            )
+            let locations = locator.locate(at: url)
+            let decoder = ToucanYAMLDecoder()
+            let sourceConfig = SourceConfig(
+                sourceUrl: $1.appending(path: "src/"),
+                config: .defaults
+            )
+
+            let loader = RawContentLoader(
+                url: url,
+                locations: locations,
+                fileType: .markdown,
+                sourceConfig: sourceConfig,
+                frontMatterParser: FrontMatterParser(decoder: decoder),
+                fileManager: $0,
+                logger: .init(label: "RawContentLoaderTests"),
+                baseUrl: "http://localhost:3000/"
+            )
+            let results = try loader.load()
+
+            let result = try #require(results.first)
+
+            #expect(
+                result.origin
+                    == .init(
+                        path: "blog/articles/first-beta-release/index.md",
+                        slug: "blog/first-beta-release"
+                    )
+            )
+            #expect(result.frontMatter["type"] == .init("post"))
+            #expect(result.frontMatter["title"] == .init("First beta release"))
+            #expect(
+                result.frontMatter["image"]
+                    == .init(
+                        "http://localhost:3000/assets/blog/first-beta-release/cover.jpg"
+                    )
+            )
+            #expect(result.markdown == "\n\nThis is a dummy post!")
+            #expect(result.assets == ["cover.jpg"])
+        }
+    }
+
+    @Test
+    func rawContentJsCss() throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File(
+                                    "index.md",
+                                    string: """
+                                        ---
+                                        type: post
+                                        title: "First beta release"
+                                        ---
+
+                                        This is a dummy post!
+                                        """
+                                )
+                                Directory("assets") {
+                                    "main.js"
+                                    "style.css"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(
+                fileManager: $0,
+                fileType: .markdown
+            )
+            let locations = locator.locate(at: url)
+            let decoder = ToucanYAMLDecoder()
+            let sourceConfig = SourceConfig(
+                sourceUrl: $1.appending(path: "src/"),
+                config: .defaults
+            )
+
+            let loader = RawContentLoader(
+                url: url,
+                locations: locations,
+                fileType: .markdown,
+                sourceConfig: sourceConfig,
+                frontMatterParser: FrontMatterParser(decoder: decoder),
+                fileManager: $0,
+                logger: .init(label: "RawContentLoaderTests"),
+                baseUrl: "http://localhost:3000/"
+            )
+            let results = try loader.load()
+
+            let result = try #require(results.first)
+
+            #expect(
+                result.origin
+                    == .init(
+                        path: "blog/articles/first-beta-release/index.md",
+                        slug: "blog/first-beta-release"
+                    )
+            )
+            #expect(result.frontMatter["type"] == .init("post"))
+            #expect(result.frontMatter["title"] == .init("First beta release"))
+            #expect(result.frontMatter["image"] == .init(nil))
+            #expect(result.markdown == "\n\nThis is a dummy post!")
+            #expect(result.assets == ["main.js", "style.css"])
         }
     }
 }

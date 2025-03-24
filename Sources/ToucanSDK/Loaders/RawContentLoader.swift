@@ -82,23 +82,20 @@ private extension RawContentLoader {
             markdown = ""
         }
 
-        let imageKey = "image"
-        if let imageValue = frontMatter[imageKey]?.stringValue() {
-            if imageValue.hasPrefix("/") {
-                frontMatter[imageKey] = .init(
-                    baseUrl.appending(imageValue.dropFirst())
-                )
-            }
-            else {
-                frontMatter[imageKey] = .init(
-                    imageValue.resolveAsset(
-                        baseUrl: baseUrl,
-                        assetsPath: assetsPath,
-                        slug: origin.slug
-                    )
-                )
-            }
-        }
+        let assetLocator = AssetLocator(fileManager: fileManager)
+
+        let assetsUrl = url.deletingLastPathComponent()
+            .appending(path: assetsPath)
+        let assetLocations = assetLocator.locate(at: assetsUrl)
+
+        frontMatter["image"] = .init(
+            resolveImage(
+                frontMatter: frontMatter,
+                assetsPath: assetsPath,
+                assetLocations: assetLocations,
+                slug: origin.slug
+            )
+        )
 
         //         TODO: - implement asset properties use them where: frontMatter. / frontMatter[
         //        see: https://www.notion.so/binarybirds/Asset-properties-1b7947db00a680cc8bedcdd644c26698?pvs=4
@@ -138,12 +135,6 @@ private extension RawContentLoader {
         //                }
         //            }
         //        }
-
-        let assetLocator = AssetLocator(fileManager: fileManager)
-
-        let assetsUrl = url.deletingLastPathComponent()
-            .appending(path: assetsPath)
-        let assetLocations = assetLocator.locate(at: assetsUrl)
 
         // resolve css context
         var css: [String] = []
@@ -211,6 +202,53 @@ private extension RawContentLoader {
     }
 }
 
+extension RawContentLoader {
+
+    func resolveImage(
+        frontMatter: [String: AnyCodable],
+        assetsPath: String,
+        assetLocations: [String],
+        slug: String,
+        imageKey: String = "image"
+    ) -> String? {
+        func resolveCoverImage(fileName: String) -> String {
+            return .init(
+                "./\(assetsPath)/\(fileName)"
+                    .resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: slug
+                    )
+            )
+        }
+
+        if let imageValue = frontMatter[imageKey]?.stringValue() {
+            if imageValue.hasPrefix("/") {
+                return .init(
+                    baseUrl.appending(imageValue.dropFirst())
+                )
+            }
+            else {
+                return .init(
+                    imageValue.resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: slug
+                    )
+                )
+            }
+        }
+        else if assetLocations.contains("cover.jpg") {
+            return resolveCoverImage(fileName: "cover.jpg")
+        }
+        else if assetLocations.contains("cover.png") {
+            return resolveCoverImage(fileName: "cover.png")
+        }
+
+        return nil
+    }
+}
+
 extension AssetProperty {
 
     func resolvedPath(
@@ -219,12 +257,13 @@ extension AssetProperty {
         slug: String
     ) -> String {
         if resolvePath {
-            return path.resolveAsset(
-                baseUrl: baseUrl,
-                assetsPath: assetsPath,
-                slug: slug
-            )
+            return "\(file.name).\(file.ext)"
+                .resolveAsset(
+                    baseUrl: baseUrl,
+                    assetsPath: assetsPath,
+                    slug: slug
+                )
         }
-        return path
+        return "\(file.name).\(file.ext)"
     }
 }
