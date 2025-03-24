@@ -82,7 +82,7 @@ extension SourceBundle {
 
     // MARK: - helpers
 
-    func getContextObject(
+    mutating func getContextObject(
         for content: Content,
         pipeline: Pipeline,
         scopeKey: String,
@@ -90,6 +90,17 @@ extension SourceBundle {
         allowSubQueries: Bool = true  // allow top level queries only
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
+
+        let cacheKey = [
+            pipeline.id,
+            content.slug,
+            currentSlug ?? "",  // still a bit slow due to this
+        ]
+        .joined(separator: "_")
+
+        if let cachedContext = contextCache[cacheKey] {
+            return cachedContext
+        }
 
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
@@ -212,8 +223,10 @@ extension SourceBundle {
         }
 
         guard !scope.fields.isEmpty else {
+            contextCache[cacheKey] = result
             return result
         }
+        contextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
     }
 
@@ -234,7 +247,7 @@ extension SourceBundle {
 
     // MARK: - helper for pagination stuff
 
-    func getContextBundle(
+    mutating func getContextBundle(
         content: Content,
         using pipeline: Pipeline,
         extraContext: [String: AnyCodable]
@@ -273,7 +286,7 @@ extension SourceBundle {
         )
     }
 
-    func getContextBundles(
+    mutating func getContextBundles(
         siteContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
@@ -413,7 +426,7 @@ extension SourceBundle {
         return bundles
     }
 
-    func getPipelineContext(
+    mutating func getPipelineContext(
         for pipeline: Pipeline,
         currentSlug: String
     ) -> [String: AnyCodable] {
@@ -435,7 +448,7 @@ extension SourceBundle {
         return ["context": .init(rawContext)]
     }
 
-    public func generatePipelineResults(
+    public mutating func generatePipelineResults(
         now: Date,
         generator: Generator
     ) throws -> [PipelineResult] {
