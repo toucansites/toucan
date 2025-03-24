@@ -382,11 +382,10 @@ extension SourceBundle {
                         }
                     }
                     
-                    //replaceMap(&alteredContent.rawValue.frontMatter)
-                    //replaceMap(&alteredContent.properties)
-                    //replaceMap(&alteredContent.userDefined)
+                    replaceMap(&alteredContent.rawValue.frontMatter)
+                    replaceMap(&alteredContent.properties)
+                    replaceMap(&alteredContent.userDefined)
                     
-
                     var itemCtx: [[String: AnyCodable]] = []
                     for pageItem in pageItems {
                         let pageItemCtx = getContextObject(
