@@ -81,7 +81,7 @@ private extension RawContentLoader {
             )
             markdown = ""
         }
-        
+
         let imageKey = "image"
         if let imageValue = frontMatter[imageKey]?.stringValue() {
             if imageValue.hasPrefix("/") {
@@ -100,48 +100,49 @@ private extension RawContentLoader {
             }
         }
 
-//         TODO: - implement asset properties use them where: frontMatter. / frontMatter[
-//        see: https://www.notion.so/binarybirds/Asset-properties-1b7947db00a680cc8bedcdd644c26698?pvs=4
-//
-//        let encoder: ToucanEncoder = ToucanYAMLEncoder()
-//        let decoder: ToucanDecoder = ToucanYAMLDecoder()
-//        
-//        let rawReservedFrontMatter = try encoder.encode(frontMatter)
-//        let reservedFrontMatter = try decoder.decode(
-//            ReservedFrontMatter.self,
-//            from: rawReservedFrontMatter.dataValue()
-//        )
-//        
-//        var assets: [String] = []
-//
-//        if let assetProperties = reservedFrontMatter.assetProperties {
-//            for assetProperty in assetProperties {
-//                switch assetProperty.action {
-//                case .add:
-//                    let resolvedPath = assetProperty.resolvedPath(
-//                        baseUrl: baseUrl,
-//                        assetsPath: assetsPath,
-//                        slug: origin.slug
-//                    )
-//                    assets.append(resolvedPath)
-//                    print(resolvedPath)
-//                case .set:
-//                    assets.removeAll()
-//                    
-//                    let resolvedPath = assetProperty.resolvedPath(
-//                        baseUrl: baseUrl,
-//                        assetsPath: assetsPath,
-//                        slug: origin.slug
-//                    )
-//                    assets.append(resolvedPath)
-//                    print(resolvedPath)
-//                }
-//            }
-//        }
-        
+        //         TODO: - implement asset properties use them where: frontMatter. / frontMatter[
+        //        see: https://www.notion.so/binarybirds/Asset-properties-1b7947db00a680cc8bedcdd644c26698?pvs=4
+        //
+        //        let encoder: ToucanEncoder = ToucanYAMLEncoder()
+        //        let decoder: ToucanDecoder = ToucanYAMLDecoder()
+        //
+        //        let rawReservedFrontMatter = try encoder.encode(frontMatter)
+        //        let reservedFrontMatter = try decoder.decode(
+        //            ReservedFrontMatter.self,
+        //            from: rawReservedFrontMatter.dataValue()
+        //        )
+        //
+        //        var assets: [String] = []
+        //
+        //        if let assetProperties = reservedFrontMatter.assetProperties {
+        //            for assetProperty in assetProperties {
+        //                switch assetProperty.action {
+        //                case .add:
+        //                    let resolvedPath = assetProperty.resolvedPath(
+        //                        baseUrl: baseUrl,
+        //                        assetsPath: assetsPath,
+        //                        slug: origin.slug
+        //                    )
+        //                    assets.append(resolvedPath)
+        //                    print(resolvedPath)
+        //                case .set:
+        //                    assets.removeAll()
+        //
+        //                    let resolvedPath = assetProperty.resolvedPath(
+        //                        baseUrl: baseUrl,
+        //                        assetsPath: assetsPath,
+        //                        slug: origin.slug
+        //                    )
+        //                    assets.append(resolvedPath)
+        //                    print(resolvedPath)
+        //                }
+        //            }
+        //        }
+
         let assetLocator = AssetLocator(fileManager: fileManager)
 
-        let assetsUrl = url.deletingLastPathComponent().appending(path: assetsPath)
+        let assetsUrl = url.deletingLastPathComponent()
+            .appending(path: assetsPath)
         let assetLocations = assetLocator.locate(at: assetsUrl)
 
         // resolve css context
@@ -155,19 +156,20 @@ private extension RawContentLoader {
                 )
             }
         }
-        
+
         if assetLocations.contains("style.css") {
             css.append(
-                "./\(assetsPath)/style.css".resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: origin.slug
-                )
+                "./\(assetsPath)/style.css"
+                    .resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: origin.slug
+                    )
             )
         }
-        
+
         frontMatter["css"] = .init(Array(Set(css)))
-        
+
         // resolve js context
         var js: [String] = []
         if let config = frontMatter["js"]?.arrayValue(as: String.self) {
@@ -179,19 +181,20 @@ private extension RawContentLoader {
                 )
             }
         }
-        
+
         if assetLocations.contains("main.js") {
             js.append(
-                "./\(assetsPath)/main.js".resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: origin.slug
-                )
+                "./\(assetsPath)/main.js"
+                    .resolveAsset(
+                        baseUrl: baseUrl,
+                        assetsPath: assetsPath,
+                        slug: origin.slug
+                    )
             )
         }
-        
+
         frontMatter["js"] = .init(Array(Set(js)))
-        
+
         let modificationDate = try fileManager.modificationDate(at: url)
 
         return RawContent(
@@ -209,7 +212,7 @@ private extension RawContentLoader {
 }
 
 extension AssetProperty {
-    
+
     func resolvedPath(
         baseUrl: String,
         assetsPath: String,
