@@ -99,10 +99,15 @@ extension SourceBundle {
         let cacheKey = [
             pipeline.id,
             content.slug,
-            currentSlug ?? "",  // still a bit slow due to this
+            //            currentSlug ?? "",  // still a bit slow due to this
             scopeKey,
+            String(allowSubQueries),
         ]
         .joined(separator: "_")
+
+        //        if cacheKey.hasPrefix("html_whats-new-in-vapor-4") {
+        //            print("----------\(currentSlug)---------\(allowSubQueries)-----\(cacheKey)-----")
+        //        }
 
         if let cachedContext = contextCache[cacheKey] {
             return cachedContext
@@ -202,6 +207,7 @@ extension SourceBundle {
         }
 
         if allowSubQueries, scope.context.contains(.queries) {
+
             for (key, query) in content.definition.queries {
                 let queryContents = run(
                     query: query.resolveFilterParameters(
@@ -225,6 +231,10 @@ extension SourceBundle {
 
         guard !scope.fields.isEmpty else {
             contextCache[cacheKey] = result
+            //            if cacheKey.hasPrefix("html_whats-new-in-vapor-4") {
+            //                print(cacheKey)
+            //                prettyPrint(result)
+            //            }
             return result
         }
         contextCache[cacheKey] = result
