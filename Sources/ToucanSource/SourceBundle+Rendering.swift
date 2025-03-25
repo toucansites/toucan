@@ -136,7 +136,7 @@ extension SourceBundle {
                 content.slug.permalink(baseUrl: settings.baseUrl)
             )
 
-            result["isCurrentURL"] = .init(content.slug == currentSlug)
+//            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 convertToDateFormats(
                     date: content.rawValue.lastModificationDate
