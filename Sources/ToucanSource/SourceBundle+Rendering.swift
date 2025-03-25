@@ -9,6 +9,7 @@ import Foundation
 import FileManagerKit
 import ToucanModels
 import ToucanContent
+import Logging
 
 extension SourceBundle {
 
@@ -87,7 +88,9 @@ extension SourceBundle {
         pipeline: Pipeline,
         scopeKey: String,
         currentSlug: String?,
-        allowSubQueries: Bool = true  // allow top level queries only
+        allowSubQueries: Bool = true,  // allow top level queries only
+        fileManager: FileManagerKit,
+        logger: Logger
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
@@ -136,9 +139,13 @@ extension SourceBundle {
                     outline: .init(levels: [2, 3]),
                     readingTime: .init(
                         wordsPerMinute: 238
-                    )
+                    ),
+                    transformerPipeline: pipeline.transformers[
+                        content.definition.id
+                    ]
                 ),
-                logger: .init(label: "ContentRenderer")
+                fileManager: fileManager,
+                logger: logger
             )
 
             let contents = renderer.render(
@@ -182,7 +189,9 @@ extension SourceBundle {
                             pipeline: pipeline,
                             scopeKey: "reference",
                             currentSlug: currentSlug,
-                            allowSubQueries: false
+                            allowSubQueries: false,
+                            fileManager: fileManager,
+                            logger: logger
                         )
                     }
                 )
@@ -204,7 +213,9 @@ extension SourceBundle {
                             pipeline: pipeline,
                             scopeKey: query.scope ?? "list",
                             currentSlug: currentSlug,
-                            allowSubQueries: false
+                            allowSubQueries: false,
+                            fileManager: fileManager,
+                            logger: logger
                         )
                     }
                 )
@@ -237,14 +248,18 @@ extension SourceBundle {
     func getContextBundle(
         content: Content,
         using pipeline: Pipeline,
-        extraContext: [String: AnyCodable]
+        extraContext: [String: AnyCodable],
+        fileManager: FileManagerKit,
+        logger: Logger
     ) -> ContextBundle {
 
         let ctx = getContextObject(
             for: content,
             pipeline: pipeline,
             scopeKey: "detail",
-            currentSlug: content.slug
+            currentSlug: content.slug,
+            fileManager: fileManager,
+            logger: logger
         )
         let context: [String: AnyCodable] = [
             //            content.definition.type: .init(ctx),
@@ -275,7 +290,9 @@ extension SourceBundle {
 
     func getContextBundles(
         siteContext: [String: AnyCodable],
-        pipeline: Pipeline
+        pipeline: Pipeline,
+        fileManager: FileManagerKit,
+        logger: Logger
     ) throws -> [ContextBundle] {
 
         var bundles: [ContextBundle] = []
@@ -284,7 +301,9 @@ extension SourceBundle {
 
             let pipelineContext = getPipelineContext(
                 for: pipeline,
-                currentSlug: content.slug
+                currentSlug: content.slug,
+                fileManager: fileManager,
+                logger: logger
             )
             .recursivelyMerged(with: siteContext)
 
@@ -364,7 +383,9 @@ extension SourceBundle {
                             for: pageItem,
                             pipeline: pipeline,
                             scopeKey: query.scope ?? "list",
-                            currentSlug: slug
+                            currentSlug: slug,
+                            fileManager: fileManager,
+                            logger: logger
                         )
                         itemCtx.append(pageItemCtx)
                     }
@@ -385,7 +406,9 @@ extension SourceBundle {
                     let bundle = getContextBundle(
                         content: alteredContent,
                         using: pipeline,
-                        extraContext: iteratorContext
+                        extraContext: iteratorContext,
+                        fileManager: fileManager,
+                        logger: logger
                     )
 
                     bundles.append(bundle)
@@ -405,7 +428,9 @@ extension SourceBundle {
             let bundle = getContextBundle(
                 content: content,
                 using: pipeline,
-                extraContext: pipelineContext
+                extraContext: pipelineContext,
+                fileManager: fileManager,
+                logger: logger
             )
             bundles.append(bundle)
         }
@@ -415,7 +440,9 @@ extension SourceBundle {
 
     func getPipelineContext(
         for pipeline: Pipeline,
-        currentSlug: String
+        currentSlug: String,
+        fileManager: FileManagerKit,
+        logger: Logger
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
@@ -427,7 +454,9 @@ extension SourceBundle {
                         for: $0,
                         pipeline: pipeline,
                         scopeKey: query.scope ?? "list",
-                        currentSlug: currentSlug
+                        currentSlug: currentSlug,
+                        fileManager: fileManager,
+                        logger: logger
                     )
                 }
             )
@@ -437,7 +466,9 @@ extension SourceBundle {
 
     public func generatePipelineResults(
         now: Date,
-        generator: Generator
+        generator: Generator,
+        fileManager: FileManagerKit,
+        logger: Logger
     ) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
         var results: [PipelineResult] = []
@@ -488,7 +519,9 @@ extension SourceBundle {
                 siteContext: [
                     "site": .init(siteContext)
                 ],
-                pipeline: pipeline
+                pipeline: pipeline,
+                fileManager: fileManager,
+                logger: logger
             )
 
             switch pipeline.engine.id {

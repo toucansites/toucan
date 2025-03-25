@@ -6,6 +6,8 @@
 //
 
 import Logging
+import ToucanModels
+import FileManagerKit
 
 // TODO: transformers
 public struct ContentRenderer {
@@ -50,15 +52,18 @@ public struct ContentRenderer {
         public var markdown: Markdown
         public var outline: Outline
         public var readingTime: ReadingTime
+        public var transformerPipeline: TransformerPipeline?
 
         public init(
             markdown: Markdown,
             outline: Outline,
-            readingTime: ReadingTime
+            readingTime: ReadingTime,
+            transformerPipeline: TransformerPipeline?
         ) {
             self.markdown = markdown
             self.outline = outline
             self.readingTime = readingTime
+            self.transformerPipeline = transformerPipeline
         }
     }
 
@@ -74,10 +79,12 @@ public struct ContentRenderer {
     public var markdownToHTMLRenderer: MarkdownToHTMLRenderer
     public var outlineParser: OutlineParser
     public var readingTimeCalculator: ReadingTimeCalculator
+    public var fileManager: FileManagerKit
     public var logger: Logger
 
     public init(
         configuration: Configuration,
+        fileManager: FileManagerKit,
         logger: Logger = .init(label: "ContentRenderer")
     ) {
         self.configuration = configuration
@@ -97,8 +104,8 @@ public struct ContentRenderer {
             logger: logger
         )
 
+        self.fileManager = fileManager
         self.logger = logger
-
     }
 
     public func render(
@@ -107,17 +114,46 @@ public struct ContentRenderer {
         assetsPath: String,
         baseUrl: String
     ) -> Output {
-        let html = markdownToHTMLRenderer.renderHTML(
-            markdown: content,
-            slug: slug,
-            assetsPath: assetsPath,
-            baseUrl: baseUrl
-        )
-        let readingTime = readingTimeCalculator.calculate(for: html)
-        let outline = outlineParser.parseHTML(html)
+        var finalHtml = content
+        var shouldRenderMarkdown = true
+
+        if let transformerPipeline = configuration.transformerPipeline {
+            if !transformerPipeline.run.isEmpty {
+                shouldRenderMarkdown = transformerPipeline.isMarkdownResult
+                let executor = TransformerExecutor(
+                    pipeline: transformerPipeline,
+                    fileManager: fileManager,
+                    logger: logger
+                )
+                do {
+                    finalHtml = try executor.transform(
+                        contents: finalHtml,
+                        slug: slug
+                    )
+                }
+                catch {
+                    logger.error("\(String(describing: error))")
+                }
+            }
+            else {
+                logger.warning("Empty transformer pipeline.")
+            }
+        }
+
+        if shouldRenderMarkdown {
+            finalHtml = markdownToHTMLRenderer.renderHTML(
+                markdown: content,
+                slug: slug,
+                assetsPath: assetsPath,
+                baseUrl: baseUrl
+            )
+        }
+
+        let readingTime = readingTimeCalculator.calculate(for: finalHtml)
+        let outline = outlineParser.parseHTML(finalHtml)
 
         return .init(
-            html: html,
+            html: finalHtml,
             readingTime: readingTime,
             outline: outline
         )

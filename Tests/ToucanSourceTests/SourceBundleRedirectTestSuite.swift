@@ -81,7 +81,9 @@ struct SourceBundleRedirectTestSuite {
 
         let results = try sourceBundle.generatePipelineResults(
             now: Date(),
-            generator: .v1_0_0_beta3
+            generator: .v1_0_0_beta3,
+            fileManager: FileManager.default,
+            logger: logger
         )
 
         #expect(results.count == 2)

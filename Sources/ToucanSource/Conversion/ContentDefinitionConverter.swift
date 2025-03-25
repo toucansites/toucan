@@ -98,7 +98,7 @@ public struct ContentDefinitionConverter {
             slug = rawSlug
         }
 
-        return .init(
+        return Content(
             id: id,
             slug: slug,
             rawValue: rawContent,

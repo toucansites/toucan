@@ -159,7 +159,9 @@ struct SourceBundleScopeTestSuite {
 
         let results = try sourceBundle.generatePipelineResults(
             now: now,
-            generator: .v1_0_0_beta3
+            generator: .v1_0_0_beta3,
+            fileManager: FileManager.default,
+            logger: logger
         )
 
         #expect(results.count == 2)

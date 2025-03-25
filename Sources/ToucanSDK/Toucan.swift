@@ -96,7 +96,9 @@ public struct Toucan {
 
             let results = try sourceBundle.generatePipelineResults(
                 now: Date(),
-                generator: .v1_0_0_beta3
+                generator: .v1_0_0_beta3,
+                fileManager: fileManager,
+                logger: logger
             )
 
             // MARK: - Preparing work dir
