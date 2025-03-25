@@ -382,7 +382,6 @@ extension SourceBundle {
                         }
                     }
                     
-                    replaceMap(&alteredContent.rawValue.frontMatter)
                     replaceMap(&alteredContent.properties)
                     replaceMap(&alteredContent.userDefined)
                     
