@@ -22,15 +22,24 @@ struct SourceBundlePageLinkTestSuite {
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
-        
+
         let pipelines: [Pipeline] = [
             .init(
                 id: "html",
                 scopes: [
-                    "*" : [
-                        "detail" : Pipeline.Scope(context: Pipeline.Scope.Context(rawValue: 31), fields: []),
-                        "list" : Pipeline.Scope(context: Pipeline.Scope.Context(rawValue: 11), fields: []),
-                        "reference" : Pipeline.Scope(context: Pipeline.Scope.Context(rawValue: 3), fields: [])
+                    "*": [
+                        "detail": Pipeline.Scope(
+                            context: Pipeline.Scope.Context(rawValue: 31),
+                            fields: []
+                        ),
+                        "list": Pipeline.Scope(
+                            context: Pipeline.Scope.Context(rawValue: 11),
+                            fields: []
+                        ),
+                        "reference": Pipeline.Scope(
+                            context: Pipeline.Scope.Context(rawValue: 3),
+                            fields: []
+                        ),
                     ]
                 ],
                 queries: [
@@ -47,8 +56,17 @@ struct SourceBundlePageLinkTestSuite {
                 ),
                 iterators: [
                     "post.pagination": Query(
-                        contentType: "post", scope: "detail", limit: 9, offset: nil, filter: nil,
-                        orderBy: [Order(key: "publication", direction: ToucanModels.Direction.desc)]
+                        contentType: "post",
+                        scope: "detail",
+                        limit: 9,
+                        offset: nil,
+                        filter: nil,
+                        orderBy: [
+                            Order(
+                                key: "publication",
+                                direction: ToucanModels.Direction.desc
+                            )
+                        ]
                     )
                 ],
                 transformers: [:],
@@ -63,7 +81,7 @@ struct SourceBundlePageLinkTestSuite {
                 )
             )
         ]
-        
+
         let postContent = Content(
             id: "post",
             slug: "post",
@@ -88,12 +106,15 @@ struct SourceBundlePageLinkTestSuite {
             relations: [:],
             userDefined: [:]
         )
-        
+
         let content = Content(
             id: "{{post.pagination}}",
             slug: "posts/page/{{post.pagination}}",
             rawValue: RawContent(
-                origin: Origin(path: "posts/{{post.pagination}}/index.md", slug: "{{post.pagination}}"),
+                origin: Origin(
+                    path: "posts/{{post.pagination}}/index.md",
+                    slug: "{{post.pagination}}"
+                ),
                 frontMatter: [
                     "home": .init("posts/page"),
                     "title": .init("Posts - {{number}} / {{total}}"),
@@ -103,7 +124,7 @@ struct SourceBundlePageLinkTestSuite {
                     "js": .init([]),
                     "type": .init("page"),
                     "template": .init("posts"),
-                    "image": nil
+                    "image": nil,
                 ],
                 markdown: "",
                 lastModificationDate: 1742843632.8373249,
@@ -113,7 +134,13 @@ struct SourceBundlePageLinkTestSuite {
                 id: "page",
                 default: true,
                 paths: ["home", "about", "authors", "tags", "search"],
-                properties: ["title": Property(type: PropertyType.string, required: true, default: nil)],
+                properties: [
+                    "title": Property(
+                        type: PropertyType.string,
+                        required: true,
+                        default: nil
+                    )
+                ],
                 relations: [:],
                 queries: [:]
             ),
@@ -125,22 +152,22 @@ struct SourceBundlePageLinkTestSuite {
                 "css": .init([]),
                 "js": .init([]),
                 "template": .init("posts"),
-                "image": nil
+                "image": nil,
             ]
         )
-        
+
         let contents: [Content] = [postContent, content]
         let templates: [String: String] = [
             "posts": Templates.Mocks.pageLink()
         ]
-        
+
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        
-        let sourceBundle = SourceBundle(
+
+        var sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
@@ -151,16 +178,15 @@ struct SourceBundlePageLinkTestSuite {
             templates: templates,
             baseUrl: "http://localhost:3000/"
         )
-        
+
         let results = try sourceBundle.generatePipelineResults(
             now: now,
             generator: .v1_0_0_beta3
         )
-        
+
         #expect(results.count == 1)
         #expect(results[0].contents.contains("<title>Posts - 1 / 1 - </title>"))
         #expect(results[0].destination.path == "posts/page/1")
     }
-    
-    
+
 }

@@ -82,7 +82,7 @@ extension SourceBundle {
 
     // MARK: - helpers
 
-    func getContextObject(
+    mutating func getContextObject(
         for content: Content,
         pipeline: Pipeline,
         scopeKey: String,
@@ -95,6 +95,23 @@ extension SourceBundle {
             keyedBy: scopeKey,
             for: content.definition.id
         )
+
+        let cacheKey = [
+            pipeline.id,
+            content.slug,
+            //            currentSlug ?? "",  // still a bit slow due to this
+            scopeKey,
+            String(allowSubQueries),
+        ]
+        .joined(separator: "_")
+
+        //        if cacheKey.hasPrefix("html_whats-new-in-vapor-4") {
+        //            print("----------\(currentSlug)---------\(allowSubQueries)-----\(cacheKey)-----")
+        //        }
+
+        if let cachedContext = contextCache[cacheKey] {
+            return cachedContext
+        }
 
         if scope.context.contains(.userDefined) {
             result = result.recursivelyMerged(with: content.userDefined)
@@ -119,7 +136,7 @@ extension SourceBundle {
                 content.slug.permalink(baseUrl: settings.baseUrl)
             )
 
-            result["isCurrentURL"] = .init(content.slug == currentSlug)
+            //            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 convertToDateFormats(
                     date: content.rawValue.lastModificationDate
@@ -190,6 +207,7 @@ extension SourceBundle {
         }
 
         if allowSubQueries, scope.context.contains(.queries) {
+
             for (key, query) in content.definition.queries {
                 let queryContents = run(
                     query: query.resolveFilterParameters(
@@ -212,8 +230,14 @@ extension SourceBundle {
         }
 
         guard !scope.fields.isEmpty else {
+            contextCache[cacheKey] = result
+            //            if cacheKey.hasPrefix("html_whats-new-in-vapor-4") {
+            //                print(cacheKey)
+            //                prettyPrint(result)
+            //            }
             return result
         }
+        contextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
     }
 
@@ -234,7 +258,7 @@ extension SourceBundle {
 
     // MARK: - helper for pagination stuff
 
-    func getContextBundle(
+    mutating func getContextBundle(
         content: Content,
         using pipeline: Pipeline,
         extraContext: [String: AnyCodable]
@@ -273,7 +297,7 @@ extension SourceBundle {
         )
     }
 
-    func getContextBundles(
+    mutating func getContextBundles(
         siteContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
@@ -351,14 +375,14 @@ extension SourceBundle {
                     let slug = content.slug.replacingOccurrences([
                         "{{\(iteratorId)}}": String(currentPageIndex)
                     ])
-                    
+
                     var alteredContent = content
                     alteredContent.id = id
                     alteredContent.slug = slug
-                    
+
                     let number = currentPageIndex
                     let total = numberOfPages
-                    
+
                     func replace(
                         in value: String,
                         number: Int,
@@ -369,22 +393,24 @@ extension SourceBundle {
                             "{{total}}": String(total),
                         ])
                     }
-                    
+
                     func replaceMap(_ array: inout [String: AnyCodable]) {
                         for (key, _) in array {
                             if let stringValue = array[key]?.stringValue() {
-                                array[key] = .init(replace(
-                                    in: stringValue,
-                                    number: number,
-                                    total: total
-                                ))
+                                array[key] = .init(
+                                    replace(
+                                        in: stringValue,
+                                        number: number,
+                                        total: total
+                                    )
+                                )
                             }
                         }
                     }
-                    
+
                     replaceMap(&alteredContent.properties)
                     replaceMap(&alteredContent.userDefined)
-                    
+
                     var itemCtx: [[String: AnyCodable]] = []
                     for pageItem in pageItems {
                         let pageItemCtx = getContextObject(
@@ -440,7 +466,7 @@ extension SourceBundle {
         return bundles
     }
 
-    func getPipelineContext(
+    mutating func getPipelineContext(
         for pipeline: Pipeline,
         currentSlug: String
     ) -> [String: AnyCodable] {
@@ -462,7 +488,7 @@ extension SourceBundle {
         return ["context": .init(rawContext)]
     }
 
-    public func generatePipelineResults(
+    public mutating func generatePipelineResults(
         now: Date,
         generator: Generator
     ) throws -> [PipelineResult] {
