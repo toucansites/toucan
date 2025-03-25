@@ -136,7 +136,7 @@ extension SourceBundle {
                 content.slug.permalink(baseUrl: settings.baseUrl)
             )
 
-//            result["isCurrentURL"] = .init(content.slug == currentSlug)
+            //            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 convertToDateFormats(
                     date: content.rawValue.lastModificationDate
@@ -375,14 +375,14 @@ extension SourceBundle {
                     let slug = content.slug.replacingOccurrences([
                         "{{\(iteratorId)}}": String(currentPageIndex)
                     ])
-                    
+
                     var alteredContent = content
                     alteredContent.id = id
                     alteredContent.slug = slug
-                    
+
                     let number = currentPageIndex
                     let total = numberOfPages
-                    
+
                     func replace(
                         in value: String,
                         number: Int,
@@ -393,22 +393,24 @@ extension SourceBundle {
                             "{{total}}": String(total),
                         ])
                     }
-                    
+
                     func replaceMap(_ array: inout [String: AnyCodable]) {
                         for (key, _) in array {
                             if let stringValue = array[key]?.stringValue() {
-                                array[key] = .init(replace(
-                                    in: stringValue,
-                                    number: number,
-                                    total: total
-                                ))
+                                array[key] = .init(
+                                    replace(
+                                        in: stringValue,
+                                        number: number,
+                                        total: total
+                                    )
+                                )
                             }
                         }
                     }
-                    
+
                     replaceMap(&alteredContent.properties)
                     replaceMap(&alteredContent.userDefined)
-                    
+
                     var itemCtx: [[String: AnyCodable]] = []
                     for pageItem in pageItems {
                         let pageItemCtx = getContextObject(
