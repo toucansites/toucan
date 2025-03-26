@@ -119,6 +119,7 @@ struct SourceBundleSitemapTestSuite {
         let expectation = #"""
             <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                 <url>
+
                     <loc>http://localhost:3000/blog/tags/tag-1/</loc>
                     <lastmod>\#(nowString)</lastmod>
                     <loc>http://localhost:3000/blog/tags/tag-2/</loc>
