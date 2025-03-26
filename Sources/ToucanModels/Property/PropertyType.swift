@@ -10,7 +10,7 @@ public enum PropertyType: Decodable, Equatable {
     case int
     case double
     case string
-    case date(format: String?)  // => fallback to global date format config
+    case date(format: String?)
 
     private enum CodingKeys: String, CodingKey {
         case type

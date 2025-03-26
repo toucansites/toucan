@@ -12,12 +12,14 @@ import ToucanModels
 import ToucanFileSystem
 import FileManagerKitTesting
 import ToucanSource
+import Logging
 @testable import ToucanSDK
 
 struct RawContentLoaderTestSuite {
 
     @Test
     func rawContentMarkdown() throws {
+        let logger = Logger(label: "RawContentLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -66,7 +68,7 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests"),
+                logger: logger,
                 baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
@@ -95,6 +97,7 @@ struct RawContentLoaderTestSuite {
 
     @Test
     func rawContentYaml() throws {
+        let logger = Logger(label: "RawContentLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -136,7 +139,7 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests"),
+                logger: logger,
                 baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
@@ -162,6 +165,7 @@ struct RawContentLoaderTestSuite {
 
     @Test
     func invalidNoindexFileExtension() throws {
+        let logger = Logger(label: "RawContentLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -203,7 +207,7 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests"),
+                logger: logger,
                 baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
@@ -228,6 +232,7 @@ struct RawContentLoaderTestSuite {
 
     @Test
     func rawContentCoverImage() throws {
+        let logger = Logger(label: "RawContentLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -275,7 +280,7 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests"),
+                logger: logger,
                 baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()
@@ -304,6 +309,7 @@ struct RawContentLoaderTestSuite {
 
     @Test
     func rawContentJsCss() throws {
+        let logger = Logger(label: "RawContentLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -352,7 +358,7 @@ struct RawContentLoaderTestSuite {
                 sourceConfig: sourceConfig,
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
-                logger: .init(label: "RawContentLoaderTests"),
+                logger: logger,
                 baseUrl: "http://localhost:3000/"
             )
             let results = try loader.load()

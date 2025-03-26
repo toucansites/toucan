@@ -10,6 +10,7 @@ import Testing
 import ToucanContent
 import ToucanModels
 import ToucanTesting
+import Logging
 import FileManagerKitTesting
 @testable import ToucanSource
 @testable import ToucanSDK
@@ -19,7 +20,7 @@ struct BlockDirectiveLoaderTestSuite {
 
     @Test
     func loadMarkdownBlockDirectives() throws {
-
+        let logger = Logger(label: "BlockDirectiveLoaderTests")
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
@@ -72,7 +73,7 @@ struct BlockDirectiveLoaderTestSuite {
                     .init(path: "button.yml", overridePath: nil),
                 ],
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "BlockDirectiveLoaderTests")
+                logger: logger
             )
             let result = try loader.load()
 
@@ -137,7 +138,7 @@ struct BlockDirectiveLoaderTestSuite {
 
     @Test
     func loadMarkdownBlockDirectivesOverride() throws {
-
+        let logger = Logger(label: "BlockDirectiveLoaderTests")
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
@@ -195,7 +196,7 @@ struct BlockDirectiveLoaderTestSuite {
                     .init(path: "button.yml", overridePath: "button.yml"),
                 ],
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "BlockDirectiveLoaderTests")
+                logger: logger
             )
             let result = try loader.load()
 
@@ -257,5 +258,4 @@ struct BlockDirectiveLoaderTestSuite {
             )
         }
     }
-
 }

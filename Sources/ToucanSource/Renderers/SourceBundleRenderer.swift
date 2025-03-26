@@ -16,10 +16,10 @@ public struct SourceBundleRenderer {
     let sourceBundle: SourceBundle
     let generator: Generator
     let dateFormatter: DateFormatter
-    
+
     let fileManager: FileManagerKit
     let logger: Logger
-    
+
     var contextCache: [String: [String: AnyCodable]] = [:]
 
     public init(
@@ -36,7 +36,9 @@ public struct SourceBundleRenderer {
         self.logger = logger
     }
 
-    mutating public func renderPipelineResults(now: Date) throws -> [PipelineResult] {
+    mutating public func renderPipelineResults(
+        now: Date
+    ) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
         var results: [PipelineResult] = []
 
@@ -140,7 +142,7 @@ public struct SourceBundleRenderer {
                         template: template,
                         with: bundle.context
                     )
-
+                    
                     guard let html else {
                         // TODO: log
                         continue
