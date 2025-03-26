@@ -74,7 +74,7 @@ struct SourceBundleRSSTestSuite {
             config: config
         )
 
-        var sourceBundle = SourceBundle(
+        let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
@@ -88,6 +88,7 @@ struct SourceBundleRSSTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
+            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )

@@ -97,7 +97,7 @@ struct SourceBundleSitemapTestSuite {
             config: config
         )
 
-        var sourceBundle = SourceBundle(
+        let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
@@ -111,6 +111,7 @@ struct SourceBundleSitemapTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
+            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )

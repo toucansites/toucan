@@ -15,6 +15,8 @@ public struct SourceBundleRenderer {
 
     let sourceBundle: SourceBundle
     let generator: Generator
+    let dateFormatter: DateFormatter
+    
     let fileManager: FileManagerKit
     let logger: Logger
     
@@ -23,11 +25,13 @@ public struct SourceBundleRenderer {
     public init(
         sourceBundle: SourceBundle,
         generator: Generator = .v1_0_0_beta3,
+        dateFormatter: DateFormatter,
         fileManager: FileManagerKit,
         logger: Logger
     ) {
         self.sourceBundle = sourceBundle
         self.generator = generator
+        self.dateFormatter = dateFormatter
         self.fileManager = fileManager
         self.logger = logger
     }
@@ -566,7 +570,7 @@ extension SourceBundleRenderer {
     func convertToDateFormats(date: Double) -> DateFormats {
         getDates(
             for: date,
-            using: sourceBundle.dateFormatter,
+            using: dateFormatter,
             formats: sourceBundle.config.dateFormats.output
         )
     }

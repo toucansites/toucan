@@ -94,9 +94,23 @@ public struct Toucan {
 
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
+            
+            let formatter = DateFormatter()
+            formatter.locale = .init(identifier: "en_US")
+            formatter.timeZone = .init(secondsFromGMT: 0)
+            // TODO: validate locale
+            if let rawLocale = sourceBundle.settings.locale {
+                formatter.locale = .init(identifier: rawLocale)
+            }
+            if let rawTimezone = sourceBundle.settings.timeZone,
+                let timeZone = TimeZone(identifier: rawTimezone)
+            {
+                formatter.timeZone = timeZone
+            }
 
             var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
+                dateFormatter: formatter,
                 fileManager: fileManager,
                 logger: logger
             )
