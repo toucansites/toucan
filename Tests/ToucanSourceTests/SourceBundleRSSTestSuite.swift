@@ -86,9 +86,8 @@ struct SourceBundleRSSTestSuite {
             baseUrl: ""
         )
 
-        let renderer = SourceBundleRenderer(
+        var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            generator: .v1_0_0_beta3,
             fileManager: FileManager.default,
             logger: logger
         )

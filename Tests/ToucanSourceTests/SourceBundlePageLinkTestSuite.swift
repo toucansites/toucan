@@ -18,6 +18,7 @@ struct SourceBundlePageLinkTestSuite {
 
     @Test
     func testPageLink() throws {
+        let logger = Logger(label: "SourceBundlePageLinkTestSuite")
         let now = Date()
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
@@ -179,10 +180,13 @@ struct SourceBundlePageLinkTestSuite {
             baseUrl: "http://localhost:3000/"
         )
 
-        let results = try sourceBundle.generatePipelineResults(
-            now: now,
-            generator: .v1_0_0_beta3
+        var renderer = SourceBundleRenderer(
+            sourceBundle: sourceBundle,
+            fileManager: FileManager.default,
+            logger: logger
         )
+        
+        let results = try renderer.renderPipelineResults(now: now)
 
         #expect(results.count == 1)
         #expect(results[0].contents.contains("<title>Posts - 1 / 1 - </title>"))

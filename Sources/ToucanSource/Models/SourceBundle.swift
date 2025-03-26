@@ -23,7 +23,6 @@ public struct SourceBundle {
 
     // TODO: - is this ok here? maybe move to SourceBundleRenderer?
     var dateFormatter: DateFormatter
-    var contextCache: [String: [String: AnyCodable]]
 
     public init(
         location: URL,
@@ -60,7 +59,5 @@ public struct SourceBundle {
             formatter.timeZone = timeZone
         }
         self.dateFormatter = formatter
-
-        self.contextCache = [:]
     }
 }

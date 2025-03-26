@@ -90,14 +90,13 @@ public struct Toucan {
                 logger: logger
             )
 
-            var sourceBundle = try sourceLoader.load()
+            let sourceBundle = try sourceLoader.load()
 
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
 
-            let renderer = SourceBundleRenderer(
+            var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
-                generator: .v1_0_0_beta3,
                 fileManager: fileManager,
                 logger: logger
             )
