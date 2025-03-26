@@ -17,10 +17,12 @@ public struct SourceBundleRenderer {
     let generator: Generator
     let fileManager: FileManagerKit
     let logger: Logger
+    
+    var contextCache: [String: [String: AnyCodable]] = [:]
 
     public init(
         sourceBundle: SourceBundle,
-        generator: Generator,
+        generator: Generator = .v1_0_0_beta3,
         fileManager: FileManagerKit,
         logger: Logger
     ) {
@@ -30,7 +32,7 @@ public struct SourceBundleRenderer {
         self.logger = logger
     }
 
-    public func renderPipelineResults(now: Date) throws -> [PipelineResult] {
+    mutating public func renderPipelineResults(now: Date) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
         var results: [PipelineResult] = []
 
@@ -155,7 +157,7 @@ public struct SourceBundleRenderer {
 
     // MARK: - helpers
 
-    func getContextObject(
+    mutating func getContextObject(
         for content: Content,
         pipeline: Pipeline,
         scopeKey: String,
@@ -168,6 +170,19 @@ public struct SourceBundleRenderer {
             keyedBy: scopeKey,
             for: content.definition.id
         )
+
+        let cacheKey = [
+            pipeline.id,
+            content.slug,
+            //            currentSlug ?? "",  // still a bit slow due to this
+            scopeKey,
+            String(allowSubQueries),
+        ]
+        .joined(separator: "_")
+
+        if let cachedContext = contextCache[cacheKey] {
+            return cachedContext
+        }
 
         if scope.context.contains(.userDefined) {
             result = result.recursivelyMerged(with: content.userDefined)
@@ -192,7 +207,7 @@ public struct SourceBundleRenderer {
                 content.slug.permalink(baseUrl: sourceBundle.settings.baseUrl)
             )
 
-            result["isCurrentURL"] = .init(content.slug == currentSlug)
+            //            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 convertToDateFormats(
                     date: content.rawValue.lastModificationDate
@@ -267,6 +282,7 @@ public struct SourceBundleRenderer {
         }
 
         if allowSubQueries, scope.context.contains(.queries) {
+
             for (key, query) in content.definition.queries {
                 let queryContents = sourceBundle.run(
                     query: query.resolveFilterParameters(
@@ -289,8 +305,10 @@ public struct SourceBundleRenderer {
         }
 
         guard !scope.fields.isEmpty else {
+            contextCache[cacheKey] = result
             return result
         }
+        contextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
     }
 
@@ -311,7 +329,7 @@ public struct SourceBundleRenderer {
 
     // MARK: - helper for pagination stuff
 
-    func getContextBundle(
+    mutating func getContextBundle(
         content: Content,
         using pipeline: Pipeline,
         extraContext: [String: AnyCodable]
@@ -350,7 +368,7 @@ public struct SourceBundleRenderer {
         )
     }
 
-    func getContextBundles(
+    mutating func getContextBundles(
         siteContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
@@ -430,10 +448,40 @@ public struct SourceBundleRenderer {
                         "{{\(iteratorId)}}": String(currentPageIndex)
                     ])
 
-                    // TODO: meh... option to replace {{total}} {{limit}} {{current}}?
                     var alteredContent = content
                     alteredContent.id = id
                     alteredContent.slug = slug
+
+                    let number = currentPageIndex
+                    let total = numberOfPages
+
+                    func replace(
+                        in value: String,
+                        number: Int,
+                        total: Int
+                    ) -> String {
+                        value.replacingOccurrences([
+                            "{{number}}": String(number),
+                            "{{total}}": String(total),
+                        ])
+                    }
+
+                    func replaceMap(_ array: inout [String: AnyCodable]) {
+                        for (key, _) in array {
+                            if let stringValue = array[key]?.stringValue() {
+                                array[key] = .init(
+                                    replace(
+                                        in: stringValue,
+                                        number: number,
+                                        total: total
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    replaceMap(&alteredContent.properties)
+                    replaceMap(&alteredContent.userDefined)
 
                     var itemCtx: [[String: AnyCodable]] = []
                     for pageItem in pageItems {
@@ -490,7 +538,7 @@ public struct SourceBundleRenderer {
         return bundles
     }
 
-    func getPipelineContext(
+    mutating func getPipelineContext(
         for pipeline: Pipeline,
         currentSlug: String
     ) -> [String: AnyCodable] {
