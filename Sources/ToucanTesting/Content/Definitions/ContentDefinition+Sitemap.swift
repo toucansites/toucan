@@ -9,7 +9,15 @@ public extension ContentDefinition.Mocks {
             properties: [:],
             relations: [:],
             queries: [
-                // for testing purpopses, we use authors, posts and tags
+                // for testing purpopses, we use pages, authors, posts and tags
+                
+                "pages": .init(
+                    contentType: "page",
+                    scope: "list",
+                    orderBy: [
+                        .init(key: "lastUpdate", direction: .desc)
+                    ]
+                ),
                 "posts": .init(
                     contentType: "post",
                     scope: "list",

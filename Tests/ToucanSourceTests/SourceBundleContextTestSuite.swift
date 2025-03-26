@@ -117,7 +117,7 @@ struct SourceBundleContextTestSuite {
             config: config
         )
 
-        let sourceBundle = SourceBundle(
+        var sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
@@ -262,7 +262,7 @@ struct SourceBundleContextTestSuite {
             config: config
         )
 
-        let sourceBundle = SourceBundle(
+        var sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,

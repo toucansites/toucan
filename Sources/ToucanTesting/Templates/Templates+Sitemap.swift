@@ -7,6 +7,11 @@ public extension Templates.Mocks {
             {{/empty(urls)}}
             {{^empty(urls)}}
             <url>
+                {{#page.pages}}
+                <loc>{{permalink}}</loc>
+                <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
+                {{/page.pages}}
+
                 {{#page.tags}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>

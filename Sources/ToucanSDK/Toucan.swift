@@ -89,7 +89,7 @@ public struct Toucan {
                 decoder: decoder,
                 logger: logger
             )
-            let sourceBundle = try sourceLoader.load()
+            var sourceBundle = try sourceLoader.load()
 
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)

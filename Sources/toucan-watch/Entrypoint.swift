@@ -82,7 +82,8 @@ struct Entrypoint: AsyncParsableCommand {
         let inputUrl = getSafeUrl(input, home: home)
         let outputUrl = getSafeUrl(output, home: home)
 
-        let generateCommand = [
+        // generateCommand
+        let _ = [
             "\(bin)/toucan",
             "generate",
             inputUrl.path,

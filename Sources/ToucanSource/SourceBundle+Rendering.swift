@@ -273,7 +273,7 @@ extension SourceBundle {
         )
     }
 
-    func getContextBundles(
+    mutating func getContextBundles(
         siteContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
@@ -417,7 +417,20 @@ extension SourceBundle {
 
                     bundles.append(bundle)
                 }
-
+                
+                //remove the original pagination content and add new separate contents for all pagination pages (seo fix)
+                let filtered = contents.filter {  $0.slug != content.slug }
+                let paginationContent = contents.filter {  $0.slug == content.slug }
+                var newPaginationContents: [Content] = []
+                if !paginationContent.isEmpty {
+                    for i in 0..<numberOfPages {
+                        var newContent = paginationContent[0]
+                        let newSlug = newContent.slug.replacingOccurrences(of: "{{post.pagination}}", with: "\(i + 1)")
+                        newContent.slug = newSlug
+                        newPaginationContents.append(newContent)
+                    }
+                }
+                contents = filtered + newPaginationContents
                 continue
             }
 
@@ -462,7 +475,7 @@ extension SourceBundle {
         return ["context": .init(rawContext)]
     }
 
-    public func generatePipelineResults(
+    public mutating func generatePipelineResults(
         now: Date,
         generator: Generator
     ) throws -> [PipelineResult] {
