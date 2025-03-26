@@ -2,26 +2,524 @@
 //  File.swift
 //  toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 11..
+//  Created by Viasz-Kádi Ferenc on 2025. 03. 25..
 //
 
 import Foundation
-import FileManagerKit
 import ToucanModels
 import ToucanContent
+import FileManagerKit
 import Logging
 
-extension SourceBundle {
+public struct SourceBundleRenderer {
 
-    // MARK: - date stuff
+    let sourceBundle: SourceBundle
+    let generator: Generator
+    let fileManager: FileManagerKit
+    let logger: Logger
 
-    func convertToDateFormats(
-        date: Double
-    ) -> DateFormats {
+    public init(
+        sourceBundle: SourceBundle,
+        generator: Generator,
+        fileManager: FileManagerKit,
+        logger: Logger
+    ) {
+        self.sourceBundle = sourceBundle
+        self.generator = generator
+        self.fileManager = fileManager
+        self.logger = logger
+    }
+
+    public func renderPipelineResults(now: Date) throws -> [PipelineResult] {
+        let now = now.timeIntervalSince1970
+        var results: [PipelineResult] = []
+
+        var siteContext: [String: AnyCodable] = [
+            "baseUrl": .init(sourceBundle.settings.baseUrl),
+            "name": .init(sourceBundle.settings.name),
+            "locale": .init(sourceBundle.settings.locale),
+            "timeZone": .init(sourceBundle.settings.timeZone),
+            "generation": .init(convertToDateFormats(date: now)),
+            "generator": .init(Generator.v1_0_0_beta3),
+        ]
+        .recursivelyMerged(with: sourceBundle.settings.userDefined)
+
+        for pipeline in sourceBundle.pipelines {
+
+            var updateTypes = sourceBundle.contents.map(\.definition.id)
+            if !pipeline.contentTypes.lastUpdate.isEmpty {
+                updateTypes = updateTypes.filter {
+                    pipeline.contentTypes.lastUpdate.contains($0)
+                }
+            }
+
+            /// get last update date or use now as last update date.
+            let lastUpdate: Double =
+                updateTypes.compactMap {
+                    let items = sourceBundle.run(
+                        query: .init(
+                            contentType: $0,
+                            scope: nil,
+                            limit: 1,
+                            orderBy: [
+                                .init(
+                                    key: "lastUpdate",
+                                    direction: .desc
+                                )
+                            ]
+                        )
+                    )
+                    return items.first?.rawValue.lastModificationDate
+                }
+                .sorted(by: >).first ?? now
+
+            let lastUpdateContext = convertToDateFormats(date: lastUpdate)
+            siteContext["lastUpdate"] = .init(lastUpdateContext)
+
+            let bundles = try getContextBundles(
+                siteContext: [
+                    "site": .init(siteContext)
+                ],
+                pipeline: pipeline
+            )
+
+            switch pipeline.engine.id {
+            case "json", "context":
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [
+                    .prettyPrinted,
+                    .withoutEscapingSlashes,
+                    //.sortedKeys,
+                ]
+
+                for bundle in bundles {
+                    // TODO: override output using front matter in both cases
+                    let data = try encoder.encode(bundle.context)
+                    let json = String(data: data, encoding: .utf8)
+                    guard let json else {
+                        // TODO: log
+                        continue
+                    }
+                    let result = PipelineResult(
+                        contents: json,
+                        destination: bundle.destination
+                    )
+                    results.append(result)
+                }
+            case "mustache":
+                let renderer = MustacheTemplateRenderer(
+                    templates: try sourceBundle.templates.mapValues {
+                        try .init(string: $0)
+                    }
+                )
+
+                for bundle in bundles {
+                    let engineOptions = pipeline.engine.options
+                    let contentTypesOptions = engineOptions.dict("contentTypes")
+                    let bundleOptions = contentTypesOptions.dict(
+                        bundle.content.definition.id
+                    )
+
+                    let contentTypeTemplate = bundleOptions.string("template")
+                    let contentTemplate = bundle.content.rawValue.frontMatter
+                        .string("template")
+
+                    guard let template = contentTemplate ?? contentTypeTemplate
+                    else {
+                        // TODO: log
+                        continue
+                    }
+
+                    let html = try renderer.render(
+                        template: template,
+                        with: bundle.context
+                    )
+
+                    guard let html else {
+                        // TODO: log
+                        continue
+                    }
+                    let result = PipelineResult(
+                        contents: html,
+                        destination: bundle.destination
+                    )
+                    results.append(result)
+                }
+
+            default:
+                print("ERROR - no such renderer \(pipeline.engine.id)")
+            }
+        }
+        return results
+    }
+
+    // MARK: - helpers
+
+    func getContextObject(
+        for content: Content,
+        pipeline: Pipeline,
+        scopeKey: String,
+        currentSlug: String?,
+        allowSubQueries: Bool = true  // allow top level queries only
+    ) -> [String: AnyCodable] {
+        var result: [String: AnyCodable] = [:]
+
+        let scope = pipeline.getScope(
+            keyedBy: scopeKey,
+            for: content.definition.id
+        )
+
+        if scope.context.contains(.userDefined) {
+            result = result.recursivelyMerged(with: content.userDefined)
+        }
+
+        if scope.context.contains(.properties) {
+            for (k, v) in content.properties {
+                if let p = content.definition.properties[k],
+                    case .date(_) = p.type,
+                    let rawDate = v.value(as: Double.self)
+                {
+                    result[k] = .init(convertToDateFormats(date: rawDate))
+                }
+                else {
+                    result[k] = .init(v.value)
+                }
+            }
+
+            // TODO: web only properties
+            result["slug"] = .init(content.slug)
+            result["permalink"] = .init(
+                content.slug.permalink(baseUrl: sourceBundle.settings.baseUrl)
+            )
+
+            result["isCurrentURL"] = .init(content.slug == currentSlug)
+            result["lastUpdate"] = .init(
+                convertToDateFormats(
+                    date: content.rawValue.lastModificationDate
+                )
+            )
+        }
+
+        if scope.context.contains(.contents) {
+            let renderer = ContentRenderer(
+                configuration: .init(
+                    markdown: .init(
+                        customBlockDirectives: sourceBundle.blockDirectives
+                    ),
+                    outline: .init(levels: [2, 3]),
+                    readingTime: .init(
+                        wordsPerMinute: 238
+                    ),
+                    transformerPipeline: pipeline.transformers[
+                        content.definition.id
+                    ]
+                ),
+                fileManager: fileManager,
+                logger: logger
+            )
+
+            let contents = renderer.render(
+                content: content.rawValue.markdown,
+                slug: content.slug,
+                assetsPath: sourceBundle.config.contents.assets.path,
+                baseUrl: sourceBundle.baseUrl
+            )
+
+            result["contents"] = [
+                "html": contents.html,
+                "readingTime": contents.readingTime,
+                "outline": contents.outline,
+            ]
+        }
+
+        if scope.context.contains(.relations) {
+            for (key, relation) in content.definition.relations {
+                var orderBy: [Order] = []
+                if let order = relation.order {
+                    orderBy.append(order)
+                }
+
+                let relationContents = sourceBundle.run(
+                    query: .init(
+                        contentType: relation.references,
+                        filter: .field(
+                            key: "id",
+                            operator: .in,
+                            value: .init(
+                                content.relations[key]?.identifiers ?? []
+                            )
+                        ),
+                        orderBy: orderBy
+                    )
+                )
+                result[key] = .init(
+                    relationContents.map {
+                        getContextObject(
+                            for: $0,
+                            pipeline: pipeline,
+                            scopeKey: "reference",
+                            currentSlug: currentSlug,
+                            allowSubQueries: false
+                        )
+                    }
+                )
+            }
+        }
+
+        if allowSubQueries, scope.context.contains(.queries) {
+            for (key, query) in content.definition.queries {
+                let queryContents = sourceBundle.run(
+                    query: query.resolveFilterParameters(
+                        with: content.queryFields
+                    )
+                )
+
+                result[key] = .init(
+                    queryContents.map {
+                        getContextObject(
+                            for: $0,
+                            pipeline: pipeline,
+                            scopeKey: query.scope ?? "list",
+                            currentSlug: currentSlug,
+                            allowSubQueries: false
+                        )
+                    }
+                )
+            }
+        }
+
+        guard !scope.fields.isEmpty else {
+            return result
+        }
+        return result.filter { scope.fields.contains($0.key) }
+    }
+
+    func extractIteratorId(
+        from input: String
+    ) -> String? {
+        guard
+            let startRange = input.range(of: "{{"),
+            let endRange = input.range(
+                of: "}}",
+                range: startRange.upperBound..<input.endIndex
+            )
+        else {
+            return nil
+        }
+        return .init(input[startRange.upperBound..<endRange.lowerBound])
+    }
+
+    // MARK: - helper for pagination stuff
+
+    func getContextBundle(
+        content: Content,
+        using pipeline: Pipeline,
+        extraContext: [String: AnyCodable]
+    ) -> ContextBundle {
+
+        let ctx = getContextObject(
+            for: content,
+            pipeline: pipeline,
+            scopeKey: "detail",
+            currentSlug: content.slug
+        )
+        let context: [String: AnyCodable] = [
+            //            content.definition.type: .init(ctx),
+            "page": .init(ctx)
+        ]
+        .recursivelyMerged(with: extraContext)
+
+        // TODO: more path arguments?
+        let outputArgs: [String: String] = [
+            "{{id}}": content.id,
+            "{{slug}}": content.slug,
+        ]
+
+        let path = pipeline.output.path.replacingOccurrences(outputArgs)
+        let file = pipeline.output.file.replacingOccurrences(outputArgs)
+        let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
+
+        return .init(
+            content: content,
+            context: context,
+            destination: .init(
+                path: path,
+                file: file,
+                ext: ext
+            )
+        )
+    }
+
+    func getContextBundles(
+        siteContext: [String: AnyCodable],
+        pipeline: Pipeline
+    ) throws -> [ContextBundle] {
+
+        var bundles: [ContextBundle] = []
+
+        for content in sourceBundle.contents {
+
+            let pipelineContext = getPipelineContext(
+                for: pipeline,
+                currentSlug: content.slug
+            )
+            .recursivelyMerged(with: siteContext)
+
+            if let iteratorId = extractIteratorId(from: content.slug) {
+                guard
+                    let query = pipeline.iterators[iteratorId],
+                    pipeline.contentTypes.isAllowed(
+                        contentType: query.contentType
+                    )
+                else {
+                    continue
+                }
+
+                let countQuery = Query(
+                    contentType: query.contentType,
+                    scope: query.scope,
+                    limit: nil,
+                    offset: nil,
+                    filter: query.filter,
+                    orderBy: query.orderBy
+                )
+
+                let total = sourceBundle.run(query: countQuery).count
+                let limit = max(1, query.limit ?? 10)
+                let numberOfPages = (total + limit - 1) / limit
+
+                struct PageLink: Codable {
+                    let number: Int
+                    let permalink: String
+                    let isCurrent: Bool
+                }
+
+                for i in 0..<numberOfPages {
+                    let offset = i * limit
+                    let currentPageIndex = i + 1
+
+                    let links = (0..<numberOfPages)
+                        .map { i in
+                            let pageIndex = i + 1
+                            let slug = content.slug.replacingOccurrences([
+                                "{{\(iteratorId)}}": String(pageIndex)
+                            ])
+                            return PageLink(
+                                number: pageIndex,
+                                permalink: slug.permalink(
+                                    baseUrl: sourceBundle.settings.baseUrl
+                                ),
+                                isCurrent: pageIndex == currentPageIndex
+                            )
+                        }
+
+                    let pageItems = sourceBundle.run(
+                        query: .init(
+                            contentType: query.contentType,
+                            limit: limit,
+                            offset: offset,
+                            filter: query.filter,
+                            orderBy: query.orderBy
+                        )
+                    )
+
+                    let id = content.id.replacingOccurrences([
+                        "{{\(iteratorId)}}": String(currentPageIndex)
+                    ])
+                    let slug = content.slug.replacingOccurrences([
+                        "{{\(iteratorId)}}": String(currentPageIndex)
+                    ])
+
+                    // TODO: meh... option to replace {{total}} {{limit}} {{current}}?
+                    var alteredContent = content
+                    alteredContent.id = id
+                    alteredContent.slug = slug
+
+                    var itemCtx: [[String: AnyCodable]] = []
+                    for pageItem in pageItems {
+                        let pageItemCtx = getContextObject(
+                            for: pageItem,
+                            pipeline: pipeline,
+                            scopeKey: query.scope ?? "list",
+                            currentSlug: slug
+                        )
+                        itemCtx.append(pageItemCtx)
+                    }
+
+                    let iteratorContext: [String: AnyCodable] = [
+                        "iterator": .init(
+                            [
+                                "total": .init(total),
+                                "limit": .init(limit),
+                                "current": .init(currentPageIndex),
+                                "items": .init(itemCtx),
+                                "links": .init(links),
+                            ] as [String: AnyCodable]
+                        )
+                    ]
+                    .recursivelyMerged(with: pipelineContext)
+
+                    let bundle = getContextBundle(
+                        content: alteredContent,
+                        using: pipeline,
+                        extraContext: iteratorContext
+                    )
+
+                    bundles.append(bundle)
+                }
+
+                continue
+            }
+
+            let isAllowed = pipeline.contentTypes.isAllowed(
+                contentType: content.definition.id
+            )
+
+            guard isAllowed else {
+                continue
+            }
+
+            let bundle = getContextBundle(
+                content: content,
+                using: pipeline,
+                extraContext: pipelineContext
+            )
+            bundles.append(bundle)
+        }
+
+        return bundles
+    }
+
+    func getPipelineContext(
+        for pipeline: Pipeline,
+        currentSlug: String
+    ) -> [String: AnyCodable] {
+        var rawContext: [String: AnyCodable] = [:]
+        for (key, query) in pipeline.queries {
+            let results = sourceBundle.run(query: query)
+
+            rawContext[key] = .init(
+                results.map {
+                    getContextObject(
+                        for: $0,
+                        pipeline: pipeline,
+                        scopeKey: query.scope ?? "list",
+                        currentSlug: currentSlug
+                    )
+                }
+            )
+        }
+        return ["context": .init(rawContext)]
+    }
+}
+
+extension SourceBundleRenderer {
+
+    func convertToDateFormats(date: Double) -> DateFormats {
         getDates(
             for: date,
-            using: dateFormatter,
-            formats: config.dateFormats.output
+            using: sourceBundle.dateFormatter,
+            formats: sourceBundle.config.dateFormats.output
         )
     }
 
@@ -80,518 +578,4 @@ extension SourceBundle {
             formats: custom
         )
     }
-
-    // MARK: - helpers
-
-    func getContextObject(
-        for content: Content,
-        pipeline: Pipeline,
-        scopeKey: String,
-        currentSlug: String?,
-        allowSubQueries: Bool = true,  // allow top level queries only
-        fileManager: FileManagerKit,
-        logger: Logger
-    ) -> [String: AnyCodable] {
-        var result: [String: AnyCodable] = [:]
-
-        let scope = pipeline.getScope(
-            keyedBy: scopeKey,
-            for: content.definition.id
-        )
-
-        if scope.context.contains(.userDefined) {
-            result = result.recursivelyMerged(with: content.userDefined)
-        }
-
-        if scope.context.contains(.properties) {
-            for (k, v) in content.properties {
-                if let p = content.definition.properties[k],
-                    case .date(_) = p.type,
-                    let rawDate = v.value(as: Double.self)
-                {
-                    result[k] = .init(convertToDateFormats(date: rawDate))
-                }
-                else {
-                    result[k] = .init(v.value)
-                }
-            }
-
-            // TODO: web only properties
-            result["slug"] = .init(content.slug)
-            result["permalink"] = .init(
-                content.slug.permalink(baseUrl: settings.baseUrl)
-            )
-
-            result["isCurrentURL"] = .init(content.slug == currentSlug)
-            result["lastUpdate"] = .init(
-                convertToDateFormats(
-                    date: content.rawValue.lastModificationDate
-                )
-            )
-        }
-
-        if scope.context.contains(.contents) {
-            let renderer = ContentRenderer(
-                configuration: .init(
-                    markdown: .init(
-                        customBlockDirectives: blockDirectives
-                    ),
-                    outline: .init(levels: [2, 3]),
-                    readingTime: .init(
-                        wordsPerMinute: 238
-                    ),
-                    transformerPipeline: pipeline.transformers[
-                        content.definition.id
-                    ]
-                ),
-                fileManager: fileManager,
-                logger: logger
-            )
-
-            let contents = renderer.render(
-                content: content.rawValue.markdown,
-                slug: content.slug,
-                assetsPath: config.contents.assets.path,
-                baseUrl: baseUrl
-            )
-
-            result["contents"] = [
-                "html": contents.html,
-                "readingTime": contents.readingTime,
-                "outline": contents.outline,
-            ]
-        }
-
-        if scope.context.contains(.relations) {
-            for (key, relation) in content.definition.relations {
-                var orderBy: [Order] = []
-                if let order = relation.order {
-                    orderBy.append(order)
-                }
-
-                let relationContents = run(
-                    query: .init(
-                        contentType: relation.references,
-                        filter: .field(
-                            key: "id",
-                            operator: .in,
-                            value: .init(
-                                content.relations[key]?.identifiers ?? []
-                            )
-                        ),
-                        orderBy: orderBy
-                    )
-                )
-                result[key] = .init(
-                    relationContents.map {
-                        getContextObject(
-                            for: $0,
-                            pipeline: pipeline,
-                            scopeKey: "reference",
-                            currentSlug: currentSlug,
-                            allowSubQueries: false,
-                            fileManager: fileManager,
-                            logger: logger
-                        )
-                    }
-                )
-            }
-        }
-
-        if allowSubQueries, scope.context.contains(.queries) {
-            for (key, query) in content.definition.queries {
-                let queryContents = run(
-                    query: query.resolveFilterParameters(
-                        with: content.queryFields
-                    )
-                )
-
-                result[key] = .init(
-                    queryContents.map {
-                        getContextObject(
-                            for: $0,
-                            pipeline: pipeline,
-                            scopeKey: query.scope ?? "list",
-                            currentSlug: currentSlug,
-                            allowSubQueries: false,
-                            fileManager: fileManager,
-                            logger: logger
-                        )
-                    }
-                )
-            }
-        }
-
-        guard !scope.fields.isEmpty else {
-            return result
-        }
-        return result.filter { scope.fields.contains($0.key) }
-    }
-
-    func extractIteratorId(
-        from input: String
-    ) -> String? {
-        guard
-            let startRange = input.range(of: "{{"),
-            let endRange = input.range(
-                of: "}}",
-                range: startRange.upperBound..<input.endIndex
-            )
-        else {
-            return nil
-        }
-        return .init(input[startRange.upperBound..<endRange.lowerBound])
-    }
-
-    // MARK: - helper for pagination stuff
-
-    func getContextBundle(
-        content: Content,
-        using pipeline: Pipeline,
-        extraContext: [String: AnyCodable],
-        fileManager: FileManagerKit,
-        logger: Logger
-    ) -> ContextBundle {
-
-        let ctx = getContextObject(
-            for: content,
-            pipeline: pipeline,
-            scopeKey: "detail",
-            currentSlug: content.slug,
-            fileManager: fileManager,
-            logger: logger
-        )
-        let context: [String: AnyCodable] = [
-            //            content.definition.type: .init(ctx),
-            "page": .init(ctx)
-        ]
-        .recursivelyMerged(with: extraContext)
-
-        // TODO: more path arguments?
-        let outputArgs: [String: String] = [
-            "{{id}}": content.id,
-            "{{slug}}": content.slug,
-        ]
-
-        let path = pipeline.output.path.replacingOccurrences(outputArgs)
-        let file = pipeline.output.file.replacingOccurrences(outputArgs)
-        let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
-
-        return .init(
-            content: content,
-            context: context,
-            destination: .init(
-                path: path,
-                file: file,
-                ext: ext
-            )
-        )
-    }
-
-    func getContextBundles(
-        siteContext: [String: AnyCodable],
-        pipeline: Pipeline,
-        fileManager: FileManagerKit,
-        logger: Logger
-    ) throws -> [ContextBundle] {
-
-        var bundles: [ContextBundle] = []
-
-        for content in contents {
-
-            let pipelineContext = getPipelineContext(
-                for: pipeline,
-                currentSlug: content.slug,
-                fileManager: fileManager,
-                logger: logger
-            )
-            .recursivelyMerged(with: siteContext)
-
-            if let iteratorId = extractIteratorId(from: content.slug) {
-                guard
-                    let query = pipeline.iterators[iteratorId],
-                    pipeline.contentTypes.isAllowed(
-                        contentType: query.contentType
-                    )
-                else {
-                    continue
-                }
-
-                let countQuery = Query(
-                    contentType: query.contentType,
-                    scope: query.scope,
-                    limit: nil,
-                    offset: nil,
-                    filter: query.filter,
-                    orderBy: query.orderBy
-                )
-
-                let total = run(query: countQuery).count
-                let limit = max(1, query.limit ?? 10)
-                let numberOfPages = (total + limit - 1) / limit
-
-                struct PageLink: Codable {
-                    let number: Int
-                    let permalink: String
-                    let isCurrent: Bool
-                }
-
-                for i in 0..<numberOfPages {
-                    let offset = i * limit
-                    let currentPageIndex = i + 1
-
-                    let links = (0..<numberOfPages)
-                        .map { i in
-                            let pageIndex = i + 1
-                            let slug = content.slug.replacingOccurrences([
-                                "{{\(iteratorId)}}": String(pageIndex)
-                            ])
-                            return PageLink(
-                                number: pageIndex,
-                                permalink: slug.permalink(
-                                    baseUrl: settings.baseUrl
-                                ),
-                                isCurrent: pageIndex == currentPageIndex
-                            )
-                        }
-
-                    let pageItems = run(
-                        query: .init(
-                            contentType: query.contentType,
-                            limit: limit,
-                            offset: offset,
-                            filter: query.filter,
-                            orderBy: query.orderBy
-                        )
-                    )
-
-                    let id = content.id.replacingOccurrences([
-                        "{{\(iteratorId)}}": String(currentPageIndex)
-                    ])
-                    let slug = content.slug.replacingOccurrences([
-                        "{{\(iteratorId)}}": String(currentPageIndex)
-                    ])
-
-                    // TODO: meh... option to replace {{total}} {{limit}} {{current}}?
-                    var alteredContent = content
-                    alteredContent.id = id
-                    alteredContent.slug = slug
-
-                    var itemCtx: [[String: AnyCodable]] = []
-                    for pageItem in pageItems {
-                        let pageItemCtx = getContextObject(
-                            for: pageItem,
-                            pipeline: pipeline,
-                            scopeKey: query.scope ?? "list",
-                            currentSlug: slug,
-                            fileManager: fileManager,
-                            logger: logger
-                        )
-                        itemCtx.append(pageItemCtx)
-                    }
-
-                    let iteratorContext: [String: AnyCodable] = [
-                        "iterator": .init(
-                            [
-                                "total": .init(total),
-                                "limit": .init(limit),
-                                "current": .init(currentPageIndex),
-                                "items": .init(itemCtx),
-                                "links": .init(links),
-                            ] as [String: AnyCodable]
-                        )
-                    ]
-                    .recursivelyMerged(with: pipelineContext)
-
-                    let bundle = getContextBundle(
-                        content: alteredContent,
-                        using: pipeline,
-                        extraContext: iteratorContext,
-                        fileManager: fileManager,
-                        logger: logger
-                    )
-
-                    bundles.append(bundle)
-                }
-
-                continue
-            }
-
-            let isAllowed = pipeline.contentTypes.isAllowed(
-                contentType: content.definition.id
-            )
-
-            guard isAllowed else {
-                continue
-            }
-
-            let bundle = getContextBundle(
-                content: content,
-                using: pipeline,
-                extraContext: pipelineContext,
-                fileManager: fileManager,
-                logger: logger
-            )
-            bundles.append(bundle)
-        }
-
-        return bundles
-    }
-
-    func getPipelineContext(
-        for pipeline: Pipeline,
-        currentSlug: String,
-        fileManager: FileManagerKit,
-        logger: Logger
-    ) -> [String: AnyCodable] {
-        var rawContext: [String: AnyCodable] = [:]
-        for (key, query) in pipeline.queries {
-            let results = run(query: query)
-
-            rawContext[key] = .init(
-                results.map {
-                    getContextObject(
-                        for: $0,
-                        pipeline: pipeline,
-                        scopeKey: query.scope ?? "list",
-                        currentSlug: currentSlug,
-                        fileManager: fileManager,
-                        logger: logger
-                    )
-                }
-            )
-        }
-        return ["context": .init(rawContext)]
-    }
-
-    public func generatePipelineResults(
-        now: Date,
-        generator: Generator,
-        fileManager: FileManagerKit,
-        logger: Logger
-    ) throws -> [PipelineResult] {
-        let now = now.timeIntervalSince1970
-        var results: [PipelineResult] = []
-
-        var siteContext: [String: AnyCodable] = [
-            "baseUrl": .init(settings.baseUrl),
-            "name": .init(settings.name),
-            "locale": .init(settings.locale),
-            "timeZone": .init(settings.timeZone),
-            "generation": .init(convertToDateFormats(date: now)),
-            "generator": .init(Generator.v1_0_0_beta3),
-        ]
-        .recursivelyMerged(with: settings.userDefined)
-
-        for pipeline in pipelines {
-
-            var updateTypes = contents.map(\.definition.id)
-            if !pipeline.contentTypes.lastUpdate.isEmpty {
-                updateTypes = updateTypes.filter {
-                    pipeline.contentTypes.lastUpdate.contains($0)
-                }
-            }
-
-            /// get last update date or use now as last update date.
-            let lastUpdate: Double =
-                updateTypes.compactMap {
-                    let items = self.run(
-                        query: .init(
-                            contentType: $0,
-                            scope: nil,
-                            limit: 1,
-                            orderBy: [
-                                .init(
-                                    key: "lastUpdate",
-                                    direction: .desc
-                                )
-                            ]
-                        )
-                    )
-                    return items.first?.rawValue.lastModificationDate
-                }
-                .sorted(by: >).first ?? now
-
-            let lastUpdateContext = convertToDateFormats(date: lastUpdate)
-            siteContext["lastUpdate"] = .init(lastUpdateContext)
-
-            let bundles = try getContextBundles(
-                siteContext: [
-                    "site": .init(siteContext)
-                ],
-                pipeline: pipeline,
-                fileManager: fileManager,
-                logger: logger
-            )
-
-            switch pipeline.engine.id {
-            case "json", "context":
-                let encoder = JSONEncoder()
-                encoder.outputFormatting = [
-                    .prettyPrinted,
-                    .withoutEscapingSlashes,
-                    //.sortedKeys,
-                ]
-
-                for bundle in bundles {
-                    // TODO: override output using front matter in both cases
-                    let data = try encoder.encode(bundle.context)
-                    let json = String(data: data, encoding: .utf8)
-                    guard let json else {
-                        // TODO: log
-                        continue
-                    }
-                    let result = PipelineResult(
-                        contents: json,
-                        destination: bundle.destination
-                    )
-                    results.append(result)
-                }
-            case "mustache":
-                let renderer = MustacheTemplateRenderer(
-                    templates: try templates.mapValues {
-                        try .init(string: $0)
-                    }
-                )
-
-                for bundle in bundles {
-                    let engineOptions = pipeline.engine.options
-                    let contentTypesOptions = engineOptions.dict("contentTypes")
-                    let bundleOptions = contentTypesOptions.dict(
-                        bundle.content.definition.id
-                    )
-
-                    let contentTypeTemplate = bundleOptions.string("template")
-                    let contentTemplate = bundle.content.rawValue.frontMatter
-                        .string("template")
-
-                    guard let template = contentTemplate ?? contentTypeTemplate
-                    else {
-                        // TODO: log
-                        continue
-                    }
-
-                    let html = try renderer.render(
-                        template: template,
-                        with: bundle.context
-                    )
-
-                    guard let html else {
-                        // TODO: log
-                        continue
-                    }
-                    let result = PipelineResult(
-                        contents: html,
-                        destination: bundle.destination
-                    )
-                    results.append(result)
-                }
-
-            default:
-                print("ERROR - no such renderer \(pipeline.engine.id)")
-            }
-        }
-        return results
-    }
-
 }

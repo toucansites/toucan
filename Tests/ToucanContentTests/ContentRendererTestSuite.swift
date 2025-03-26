@@ -68,10 +68,12 @@ struct ContentRendererTestSuite {
         #expect(contents.readingTime == 1)
     }
 
+    /// Tests the `ContentRenderer`'s transformer pipeline using the "replace-char" script.
+    /// Requires the external script `/usr/local/bin/replace-char` to be available.
     @Test(
         .disabled(
             if: !isReplaceCharScriptAvailable,
-            "Requires to setup the `/usr/local/bin/replace-char` script. See `isReplaceCharScriptAvailable` for more information!"
+            "Requires the `/usr/local/bin/replace-char` script. See `isReplaceCharScriptAvailable` for more information!"
         )
     )
     func transformers() throws {
@@ -163,7 +165,7 @@ extension ContentRendererTestSuite {
     chmod +x replace-char
     ```
 
-    Finally move to `/usr/local/bin`.
+    Finally move it to `/usr/local/bin`.
     ```
     sudo mv replace-char /usr/local/bin/replace-char
     ```

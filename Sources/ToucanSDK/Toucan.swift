@@ -94,12 +94,13 @@ public struct Toucan {
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
 
-            let results = try sourceBundle.generatePipelineResults(
-                now: Date(),
+            let renderer = SourceBundleRenderer(
+                sourceBundle: sourceBundle,
                 generator: .v1_0_0_beta3,
                 fileManager: fileManager,
                 logger: logger
             )
+            let results = try renderer.renderPipelineResults(now: Date())
 
             // MARK: - Preparing work dir
 

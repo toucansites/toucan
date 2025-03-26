@@ -86,12 +86,13 @@ struct SourceBundleRSSTestSuite {
             baseUrl: ""
         )
 
-        let results = try sourceBundle.generatePipelineResults(
-            now: now,
+        let renderer = SourceBundleRenderer(
+            sourceBundle: sourceBundle,
             generator: .v1_0_0_beta3,
             fileManager: FileManager.default,
             logger: logger
         )
+        let results = try renderer.renderPipelineResults(now: now)
 
         #expect(results.count == 1)
 

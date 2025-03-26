@@ -21,6 +21,7 @@ public struct SourceBundle {
     public var templates: [String: String]
     public var baseUrl: String
 
+    // TODO: - is this ok here? maybe move to SourceBundleRenderer?
     var dateFormatter: DateFormatter
 
     public init(
