@@ -242,11 +242,14 @@ struct SourceBundleSitemapTestSuite {
             templates: templates,
             baseUrl: ""
         )
-
-        let results = try sourceBundle.generatePipelineResults(
-            now: now,
-            generator: .v1_0_0_beta3
+        
+        var renderer = SourceBundleRenderer(
+            sourceBundle: sourceBundle,
+            dateFormatter: formatter,
+            fileManager: FileManager.default,
+            logger: logger
         )
+        let results = try renderer.renderPipelineResults(now: now)
         
         #expect(results.first(where: { $0.destination.file == "sitemap" }) != nil)
         
