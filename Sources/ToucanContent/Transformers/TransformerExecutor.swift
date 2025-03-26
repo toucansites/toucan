@@ -8,57 +8,53 @@
 import Foundation
 import SwiftCommand
 import Logging
+import ToucanModels
+import FileManagerKit
 
 public struct TransformerExecutor {
 
-    public var commandsUrl: URL
     public var pipeline: TransformerPipeline
-    public var fileManager: FileManager
+    public var fileManager: FileManagerKit
     public var logger: Logger
 
     public init(
-        commandsURL: URL,
         pipeline: TransformerPipeline,
-        fileManager: FileManager = .default,
+        fileManager: FileManagerKit,
         logger: Logger = .init(label: "TransformerExecutor")
     ) {
-        self.commandsUrl = commandsURL
         self.pipeline = pipeline
         self.fileManager = fileManager
         self.logger = logger
     }
 
-    public func transform(
-        contents: String
-    ) throws -> String {
+    public func transform(contents: String, slug: String) throws -> String {
         // Create a temporary directory URL
         let tempDirectoryURL = fileManager.temporaryDirectory
         let fileName = UUID().uuidString
         let fileURL = tempDirectoryURL.appendingPathComponent(fileName)
         try contents.write(to: fileURL, atomically: true, encoding: .utf8)
 
-        for command in pipeline.commands {
-
+        for command in pipeline.run {
             do {
-                let command = commandsUrl.appendingPathComponent(command.name)
-                //            let options = [
-                //                "file": fileURL.path,
-                //                "id": pageBundle.contextAwareIdentifier,
-                //                "slug": pageBundle.slug,
-                //            ]
-                //            .map { #"--\#($0) "\#($1)""# }
-                //            .joined(separator: " ")
+                let contextAwareIdentifier = String(
+                    slug.split(separator: "/").last ?? ""
+                )
+                let arguments: [String] = [
+                    "--id", contextAwareIdentifier,
+                    "--file", fileURL.path,
+                    "--slug", slug,
+                ]
+                let commandUrl = URL(fileURLWithPath: command.url)
+                    .appendingPathComponent(command.name)
+                let command = Command(executablePath: .init(commandUrl.path()))
+                    .addArguments(arguments)
 
-                let log = try Command(executablePath: .init(command.path()))
-                    //                .init(executablePath: )
-                    //                .findInPath(withName: command.name)!
-                    //                .setEnvVariables([:]])
-                    .waitForOutput()
+                let result = try command.waitForOutput()
 
-                if !log.stdout.isEmpty {
-                    logger.debug("\(log)")
+                if !result.stdout.isEmpty {
+                    logger.debug("\(result)")
                 }
-                if let err = log.stderr, !err.isEmpty {
+                if let err = result.stderr, !err.isEmpty {
                     logger.error("\(err)")
                 }
             }
@@ -67,9 +63,14 @@ public struct TransformerExecutor {
             }
         }
 
-        let finalContents = try String(contentsOf: fileURL, encoding: .utf8)
-        // TODO: also remove if error thrown
-        try fileManager.removeItem(at: fileURL)
-        return finalContents
+        do {
+            let finalContents = try String(contentsOf: fileURL, encoding: .utf8)
+            try fileManager.delete(at: fileURL)
+            return finalContents
+        }
+        catch {
+            try fileManager.delete(at: fileURL)
+            throw error
+        }
     }
 }

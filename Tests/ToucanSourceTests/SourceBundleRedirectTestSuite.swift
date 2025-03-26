@@ -18,6 +18,7 @@ struct SourceBundleRedirectTestSuite {
 
     @Test
     func redirect() throws {
+        let now = Date()
         let logger = Logger(label: "SourceBundleRedirectTestSuite")
 
         let formatter = DateFormatter()
@@ -67,7 +68,7 @@ struct SourceBundleRedirectTestSuite {
             config: config
         )
 
-        var sourceBundle = SourceBundle(
+        let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
@@ -79,10 +80,13 @@ struct SourceBundleRedirectTestSuite {
             baseUrl: ""
         )
 
-        let results = try sourceBundle.generatePipelineResults(
-            now: Date(),
-            generator: .v1_0_0_beta3
+        var renderer = SourceBundleRenderer(
+            sourceBundle: sourceBundle,
+            dateFormatter: formatter,
+            fileManager: FileManager.default,
+            logger: logger
         )
+        let results = try renderer.renderPipelineResults(now: now)
 
         #expect(results.count == 2)
 

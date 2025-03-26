@@ -143,6 +143,8 @@ let package = Package(
                 .product(name: "Markdown", package: "swift-markdown"),
                 // for transformers
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
+                .target(name: "ToucanModels"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
             ],
             swiftSettings: swiftSettings
         ),
