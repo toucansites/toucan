@@ -22,6 +22,7 @@ public struct SourceBundle {
     public var baseUrl: String
 
     var dateFormatter: DateFormatter
+    var contextCache: [String: [String: AnyCodable]]
 
     public init(
         location: URL,
@@ -58,5 +59,7 @@ public struct SourceBundle {
             formatter.timeZone = timeZone
         }
         self.dateFormatter = formatter
+
+        self.contextCache = [:]
     }
 }
