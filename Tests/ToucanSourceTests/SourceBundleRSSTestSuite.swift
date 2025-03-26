@@ -20,11 +20,7 @@ struct SourceBundleRSSTestSuite {
     func rss() throws {
         let logger = Logger(label: "SourceBundleRSSTestSuite")
         let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-
-        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
+        let formatter = DateFormatter.Mocks.en_US("EEE, dd MMM yyyy HH:mm:ss Z")
         let nowString = formatter.string(from: now)
 
         let pipelines = [

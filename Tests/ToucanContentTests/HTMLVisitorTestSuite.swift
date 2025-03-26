@@ -1,5 +1,6 @@
 import Testing
 import Markdown
+import Logging
 @testable import ToucanContent
 
 @Suite
@@ -9,6 +10,7 @@ struct HTMLVisitorTestSuite {
         markdown: String,
         customBlockDirectives: [MarkdownBlockDirective] = []
     ) -> String {
+        let logger = Logger(label: "HTMLVisitorTestSuite")
         let document = Document(
             parsing: markdown,
             options: !customBlockDirectives.isEmpty
@@ -17,9 +19,7 @@ struct HTMLVisitorTestSuite {
 
         var visitor = HTMLVisitor(
             blockDirectives: customBlockDirectives,
-            logger: .init(
-                label: "TestHTMLVisitor"
-            ),
+            logger: logger,
             slug: "slug",
             assetsPath: "assets",
             baseUrl: "http://localhost:3000/"

@@ -10,6 +10,7 @@ import Testing
 import ToucanContent
 import ToucanModels
 import ToucanTesting
+import Logging
 import FileManagerKitTesting
 @testable import ToucanSource
 @testable import ToucanSDK
@@ -20,7 +21,7 @@ struct TemplateLoaderTestSuite {
 
     @Test
     func loadTemplates() throws {
-
+        let logger = Logger(label: "TemplateLoaderTestSuite")
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
@@ -48,7 +49,7 @@ struct TemplateLoaderTestSuite {
                 url: url,
                 overridesUrl: overridesUrl,
                 locations: locations,
-                logger: .init(label: "TemplateLoaderTestSuite")
+                logger: logger
             )
             let results = try loader.load()
 
@@ -58,7 +59,7 @@ struct TemplateLoaderTestSuite {
 
     @Test
     func loadTemplatesOverride() throws {
-
+        let logger = Logger(label: "TemplateLoaderTestSuite")
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
@@ -91,7 +92,7 @@ struct TemplateLoaderTestSuite {
                 url: url,
                 overridesUrl: overridesUrl,
                 locations: locations,
-                logger: .init(label: "TemplateLoaderTestSuite")
+                logger: logger
             )
             let results = try loader.load()
 

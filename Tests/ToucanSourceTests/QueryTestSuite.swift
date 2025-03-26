@@ -372,13 +372,9 @@ struct QueryTestSuite {
     @Test
     func nextPost() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         let now = Date()
         let diff = Double(5) * -86_400
         let pastDate = now.addingTimeInterval(diff)
-        //        let date = formatter.string(from: pastDate)
 
         let query1 = Query(
             contentType: "post",

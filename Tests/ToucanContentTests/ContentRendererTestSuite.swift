@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import Logging
 @testable import ToucanContent
 
 @Suite
@@ -7,7 +8,7 @@ struct ContentRendererTestSuite {
 
     @Test
     func basicRendering() throws {
-
+        let logger = Logger(label: "ContentRendererTestSuite")
         let renderer = ContentRenderer(
             configuration: .init(
                 markdown: .init(
@@ -34,7 +35,7 @@ struct ContentRendererTestSuite {
                 transformerPipeline: nil
             ),
             fileManager: FileManager.default,
-            logger: .init(label: "ContentRendererTestSuite")
+            logger: logger
         )
 
         let input = #"""
@@ -77,6 +78,7 @@ struct ContentRendererTestSuite {
         )
     )
     func transformers() throws {
+        let logger = Logger(label: "ContentRendererTestSuite")
         let renderer = ContentRenderer(
             configuration: .init(
                 markdown: .init(customBlockDirectives: []),
@@ -93,7 +95,7 @@ struct ContentRendererTestSuite {
                 )
             ),
             fileManager: FileManager.default,
-            logger: .init(label: "ContentRendererTestSuite")
+            logger: logger
         )
 
         let input = "Character to replace => :"

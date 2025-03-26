@@ -19,10 +19,8 @@ struct SourceBundlePageLinkTestSuite {
     @Test
     func testPageLink() throws {
         let logger = Logger(label: "SourceBundlePageLinkTestSuite")
+        let formatter = DateFormatter.Mocks.en_US("Y-MM-dd")
         let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
 
         let pipelines: [Pipeline] = [
             .init(
@@ -186,7 +184,7 @@ struct SourceBundlePageLinkTestSuite {
             fileManager: FileManager.default,
             logger: logger
         )
-        
+
         let results = try renderer.renderPipelineResults(now: now)
 
         #expect(results.count == 1)

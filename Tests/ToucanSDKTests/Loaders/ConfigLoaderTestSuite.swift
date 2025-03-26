@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 import FileManagerKitTesting
 @testable import ToucanSource
 @testable import ToucanSDK
@@ -18,6 +19,7 @@ struct ConfigLoaderTestSuite {
 
     @Test
     func config() throws {
+        let logger = Logger(label: "ConfigLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -44,7 +46,7 @@ struct ConfigLoaderTestSuite {
                 ],
                 encoder: ToucanYAMLEncoder(),
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "ConfigLoaderTests")
+                logger: logger
             )
             let result = try loader.load()
 

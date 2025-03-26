@@ -26,6 +26,7 @@ public struct MustacheTemplateRenderer {
         with object: [String: AnyCodable]
     ) throws -> String? {
         guard ids.contains(template) else {
+            // TODO: - log + error
             print("throw or error, missing template \(template)")
             return nil
         }

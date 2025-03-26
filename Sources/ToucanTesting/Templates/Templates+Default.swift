@@ -6,7 +6,7 @@ public extension Templates.Mocks {
         <head>
         </head>
         <body>
-        {{title}}
+        {{page.title}}
         </body>
         </html>
         """

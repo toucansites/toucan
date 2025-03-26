@@ -82,13 +82,3 @@ public struct Config: Decodable, Equatable {
             ) ?? defaults.dateFormats
     }
 }
-
-extension Config {
-
-    public func inputDateFormatter() -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = dateFormats.input
-
-        return formatter
-    }
-}
