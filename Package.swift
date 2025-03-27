@@ -66,6 +66,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .product(name: "SwiftCommand", package: "SwiftCommand"),
             ],
             swiftSettings: swiftSettings
         ),
