@@ -452,7 +452,7 @@ public struct SourceBundleRenderer {
         encoder.outputFormatting = [
             .prettyPrinted,
             .withoutEscapingSlashes,
-            //.sortedKeys,
+            .sortedKeys,
         ]
 
         return try contextBundles.compactMap {
