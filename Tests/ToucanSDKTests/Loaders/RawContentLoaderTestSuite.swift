@@ -376,7 +376,9 @@ struct RawContentLoaderTestSuite {
             #expect(result.frontMatter["title"] == .init("First beta release"))
             #expect(result.frontMatter["image"] == .init(nil))
             #expect(result.markdown == "\n\nThis is a dummy post!")
-            #expect(result.assets == ["main.js", "style.css"])
+            #expect(
+                result.assets.sorted() == ["main.js", "style.css"].sorted()
+            )
         }
     }
 }
