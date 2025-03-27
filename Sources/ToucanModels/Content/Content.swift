@@ -16,7 +16,7 @@ public struct Content {
     public var properties: [String: AnyCodable]
     public var relations: [String: RelationValue]
     public var userDefined: [String: AnyCodable]
-    public var iteratorContext: [String: AnyCodable] = [:]
+    public var iteratorContext: [String: AnyCodable]
 
     public init(
         id: String,
@@ -25,7 +25,8 @@ public struct Content {
         definition: ContentDefinition,
         properties: [String: AnyCodable],
         relations: [String: RelationValue],
-        userDefined: [String: AnyCodable]
+        userDefined: [String: AnyCodable],
+        iteratorContext: [String: AnyCodable] = [:]
     ) {
         self.id = id
         self.slug = slug
@@ -34,5 +35,6 @@ public struct Content {
         self.properties = properties
         self.relations = relations
         self.userDefined = userDefined
+        self.iteratorContext = iteratorContext
     }
 }

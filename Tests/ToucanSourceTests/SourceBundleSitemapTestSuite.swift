@@ -228,7 +228,7 @@ struct SourceBundleSitemapTestSuite {
             config: config
         )
 
-        var sourceBundle = SourceBundle(
+        let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,

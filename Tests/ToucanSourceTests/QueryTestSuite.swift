@@ -16,7 +16,7 @@ struct QueryTestSuite {
             offset: 1
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -33,7 +33,7 @@ struct QueryTestSuite {
             offset: 3
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #4"
@@ -53,7 +53,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
@@ -73,7 +73,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 9)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -93,7 +93,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -118,7 +118,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 3)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -147,7 +147,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -172,7 +172,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 3)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -211,7 +211,7 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
@@ -244,7 +244,7 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         #expect(results.isEmpty)
     }
 
@@ -271,7 +271,7 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
@@ -294,7 +294,7 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #4"
@@ -317,7 +317,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -341,7 +341,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -365,7 +365,7 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 8)
     }
 
@@ -390,7 +390,7 @@ struct QueryTestSuite {
                 )
             ]
         )
-        let results1 = sourceBundle.run(query: query1)
+        let results1 = sourceBundle.contents.run(query: query1)
         try #require(results1.count == 5)
 
         let query = Query(
@@ -409,7 +409,7 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.run(query: query)
+        let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 1)
         #expect(
             results[0].properties["title"]?.value(as: String.self) == "Post #6"
@@ -443,7 +443,7 @@ struct QueryTestSuite {
                 )
             ]
         )
-        let results1 = sourceBundle.run(query: query1)
+        let results1 = sourceBundle.contents.run(query: query1)
         try #require(results1.count == 1)
     }
 
@@ -470,7 +470,27 @@ struct QueryTestSuite {
                 "id": "category-1"
             ]
         )
-        let results1 = sourceBundle.run(query: query1)
+        let results1 = sourceBundle.contents.run(query: query1)
         try #require(results1.count == 1)
+    }
+
+    @Test
+    func iterators() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "iterator",
+                operator: .equals,
+                value: true
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        //        try #require(results.count == 1)
+        //        #expect(
+        //            results[0].properties["name"]?.value(as: String.self) == "Author #2"
+        //        )
     }
 }

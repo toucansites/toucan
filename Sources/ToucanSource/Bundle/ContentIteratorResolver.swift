@@ -10,16 +10,18 @@ import ToucanContent
 import FileManagerKit
 import Logging
 
-public struct ContentIteratorResolver {
+struct ContentIteratorResolver {
 
-    func resolveContents(
-        sourceBundle: SourceBundle,
-        pipeline: Pipeline
+    var baseUrl: String
+
+    func resolve(
+        contents: [Content],
+        using pipeline: Pipeline
     ) -> [Content] {
 
         var finalContents: [Content] = []
 
-        for content in sourceBundle.contents {
+        for content in contents {
 
             if let iteratorId = extractIteratorId(from: content.slug) {
                 guard
@@ -41,7 +43,7 @@ public struct ContentIteratorResolver {
                     orderBy: query.orderBy
                 )
 
-                let total = sourceBundle.run(query: countQuery).count
+                let total = contents.run(query: countQuery).count
                 let limit = max(1, query.limit ?? 10)
                 let numberOfPages = (total + limit - 1) / limit
 
@@ -64,13 +66,13 @@ public struct ContentIteratorResolver {
                             return PageLink(
                                 number: pageIndex,
                                 permalink: slug.permalink(
-                                    baseUrl: sourceBundle.settings.baseUrl
+                                    baseUrl: baseUrl
                                 ),
                                 isCurrent: pageIndex == currentPageIndex
                             )
                         }
 
-                    let pageItems = sourceBundle.run(
+                    let pageItems = contents.run(
                         query: .init(
                             contentType: query.contentType,
                             limit: limit,

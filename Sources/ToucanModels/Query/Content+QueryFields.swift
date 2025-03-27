@@ -5,10 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 31..
 //
 
-import Foundation
-import ToucanModels
-
-extension Content {
+public extension Content {
 
     // TODO: maybe add support for user defined values?
     var queryFields: [String: AnyCodable] {
@@ -27,6 +24,7 @@ extension Content {
         fields["id"] = .init(id)
         fields["slug"] = .init(slug)
         fields["lastUpdate"] = .init(rawValue.lastModificationDate)
+        fields["iterator"] = .init(false)
 
         return fields
     }

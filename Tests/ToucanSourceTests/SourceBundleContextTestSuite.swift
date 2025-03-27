@@ -283,7 +283,7 @@ struct SourceBundleContextTestSuite {
         struct Exp: Decodable {
             struct Site: Codable {
                 let generation: DateFormats
-                let generator: Generator
+                let generator: GeneratorInfo
             }
             let site: Site
         }
