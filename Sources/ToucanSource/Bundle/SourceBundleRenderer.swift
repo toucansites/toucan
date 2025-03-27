@@ -152,8 +152,7 @@ public struct SourceBundleRenderer {
         context globalContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
-
-        return contents.compactMap { content in
+        contents.compactMap { content in
             let isAllowed = pipeline.contentTypes.isAllowed(
                 contentType: content.definition.id
             )

@@ -24,7 +24,7 @@ public extension Content {
         fields["id"] = .init(id)
         fields["slug"] = .init(slug)
         fields["lastUpdate"] = .init(rawValue.lastModificationDate)
-        fields["iterator"] = .init(false)
+        fields["iterator"] = .init(isIterator)
 
         return fields
     }

@@ -23,10 +23,7 @@ struct ContentIteratorResolver {
         for content in contents {
             if let iteratorId = extractIteratorId(from: content.slug) {
                 guard
-                    let query = pipeline.iterators[iteratorId],
-                    pipeline.contentTypes.isAllowed(
-                        contentType: query.contentType
-                    )
+                    let query = pipeline.iterators[iteratorId]
                 else {
                     continue
                 }
@@ -112,7 +109,6 @@ struct ContentIteratorResolver {
                 finalContents.append(content)
             }
         }
-
         return finalContents
     }
 
