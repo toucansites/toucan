@@ -5,7 +5,7 @@ import ToucanSource
 import Logging
 
 public extension SourceBundle.Mocks {
-    
+
     static func complete(
         pipelines: [Pipeline] = [
             Pipeline.Mocks.context(),
@@ -17,7 +17,7 @@ public extension SourceBundle.Mocks {
     ) -> SourceBundle {
         let logger = Logger(label: "SourceBundleMocks")
         let formatter = DateFormatter.Mocks.en_US()
-        
+
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages()
@@ -30,7 +30,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // categories
         let categoryDefinition = ContentDefinition.Mocks.category()
         let rawCategoryContents = RawContent.Mocks.categories()
@@ -43,7 +43,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // guides
         let guideDefinition = ContentDefinition.Mocks.guide()
         let rawGuideContents = RawContent.Mocks.guides()
@@ -56,7 +56,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // tags
         let tagDefinition = ContentDefinition.Mocks.tag()
         let rawTagContents = RawContent.Mocks.tags()
@@ -69,7 +69,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // authors
         let authorDefinition = ContentDefinition.Mocks.author()
         let rawAuthorContents = RawContent.Mocks.authors()
@@ -82,7 +82,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // posts
         let postDefinition = ContentDefinition.Mocks.post()
         let rawPostContents = RawContent.Mocks.posts(formatter: formatter)
@@ -95,7 +95,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // rss
         let rssDefinition = ContentDefinition.Mocks.rss()
         let rawRSSContents = RawContent.Mocks.rss()
@@ -108,7 +108,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // sitemap
         let sitemapDefinition = ContentDefinition.Mocks.sitemap()
         let rawSitemapContents = RawContent.Mocks.sitemap()
@@ -121,7 +121,7 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // redirects
         let redirectDefinition = ContentDefinition.Mocks.redirect()
         let rawRedirectContents = RawContent.Mocks.redirectHomeOldAboutOld()
@@ -134,17 +134,17 @@ public extension SourceBundle.Mocks {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         // block directives
         let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
-        
+
         let contents =
-        pageContents + categoryContents + guideContents + tagContents
-        + authorContents + postContents + rssContents + sitemapContents
-        + redirectContents
-        
+            pageContents + categoryContents + guideContents + tagContents
+            + authorContents + postContents + rssContents + sitemapContents
+            + redirectContents
+
         // TODO: add support for multiple engines: [mustache: [foo: tpl1]]
-        
+
         let templates: [String: String] = [
             "default": Templates.Mocks.default(),
             "post.default": Templates.Mocks.post(),
@@ -152,13 +152,13 @@ public extension SourceBundle.Mocks {
             "sitemap": Templates.Mocks.sitemap(),
             "redirect": Templates.Mocks.redirect(),
         ]
-        
+
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        
+
         return .init(
             location: .init(filePath: ""),
             config: config,

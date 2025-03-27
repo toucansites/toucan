@@ -101,7 +101,7 @@ public struct Toucan {
                 fileManager: fileManager,
                 logger: logger
             )
-            
+
             let results = try renderer.renderPipelineResults(now: Date())
 
             // MARK: - Preparing work dir

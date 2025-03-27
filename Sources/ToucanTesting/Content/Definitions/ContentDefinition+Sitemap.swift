@@ -10,7 +10,7 @@ public extension ContentDefinition.Mocks {
             relations: [:],
             queries: [
                 // for testing purpopses, we use pages, authors, posts and tags
-                
+
                 "pages": .init(
                     contentType: "page",
                     scope: "list",

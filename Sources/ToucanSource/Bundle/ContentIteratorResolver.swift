@@ -9,18 +9,18 @@ import ToucanModels
 import ToucanContent
 import FileManagerKit
 import Logging
-    
+
 public struct ContentIteratorResolver {
-    
+
     func resolveContents(
         sourceBundle: SourceBundle,
         pipeline: Pipeline
     ) -> [Content] {
-        
+
         var finalContents: [Content] = []
-        
+
         for content in sourceBundle.contents {
-            
+
             if let iteratorId = extractIteratorId(from: content.slug) {
                 guard
                     let query = pipeline.iterators[iteratorId],
@@ -31,7 +31,7 @@ public struct ContentIteratorResolver {
                     finalContents.append(content)
                     continue
                 }
-                
+
                 let countQuery = Query(
                     contentType: query.contentType,
                     scope: query.scope,
@@ -94,9 +94,17 @@ public struct ContentIteratorResolver {
                     let number = currentPageIndex
                     let total = numberOfPages
 
-                    replaceMap(number: number, total: total, array: &alteredContent.properties)
-                    replaceMap(number: number, total: total, array: &alteredContent.userDefined)
-                    
+                    replaceMap(
+                        number: number,
+                        total: total,
+                        array: &alteredContent.properties
+                    )
+                    replaceMap(
+                        number: number,
+                        total: total,
+                        array: &alteredContent.userDefined
+                    )
+
                     alteredContent.iteratorContext = [
                         "scopeKey": .init(query.scope ?? "list"),
                         "pageItems": .init(pageItems),
@@ -105,18 +113,19 @@ public struct ContentIteratorResolver {
                         "current": .init(currentPageIndex),
                         "links": .init(links),
                     ]
-                    
+
                     finalContents.append(alteredContent)
                 }
-                
-            } else {
+
+            }
+            else {
                 finalContents.append(content)
             }
         }
-        
+
         return finalContents
     }
-    
+
     private func extractIteratorId(
         from input: String
     ) -> String? {
@@ -131,7 +140,7 @@ public struct ContentIteratorResolver {
         }
         return .init(input[startRange.upperBound..<endRange.lowerBound])
     }
-    
+
     private func replaceMap(
         number: Int,
         total: Int,
@@ -149,7 +158,7 @@ public struct ContentIteratorResolver {
             }
         }
     }
-    
+
     private func replace(
         in value: String,
         number: Int,

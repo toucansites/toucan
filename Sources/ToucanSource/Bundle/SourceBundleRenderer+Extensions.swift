@@ -3,13 +3,13 @@
 //
 //  Created by gerp83 on 2025. 03. 26.
 //
-    
+
 import Foundation
 import ToucanModels
 import ToucanContent
 
 extension SourceBundleRenderer {
-    
+
     mutating func getPipelineContext(
         for pipeline: Pipeline,
         currentSlug: String
@@ -32,23 +32,25 @@ extension SourceBundleRenderer {
         }
         return ["context": .init(rawContext)]
     }
-    
+
     mutating func getContextBundle(
         content: Content,
         using pipeline: Pipeline,
         pipelineContext: [String: AnyCodable]
     ) -> ContextBundle {
-        
+
         var contextToAdd = pipelineContext
-        
+
         if !content.iteratorContext.isEmpty {
-                    
-            let pageItems = content.iteratorContext["pageItems"]?.value(as: [Content].self) ?? []
+
+            let pageItems =
+                content.iteratorContext["pageItems"]?.value(as: [Content].self)
+                ?? []
             let scopeKey = content.iteratorContext["scopeKey"]?.stringValue()
             let total = content.iteratorContext["total"]?.intValue()
             let limit = content.iteratorContext["limit"]?.intValue()
             let current = content.iteratorContext["current"]?.intValue()
-            
+
             var itemCtx: [[String: AnyCodable]] = []
             for pageItem in pageItems {
                 let pageItemCtx = getContextObject(
@@ -62,21 +64,20 @@ extension SourceBundleRenderer {
             }
 
             let iteratorContext: [String: AnyCodable] = [
-                 "iterator": .init(
-                     [
-                         "total": .init(total),
-                         "limit": .init(limit),
-                         "current": .init(current),
-                         "items": .init(itemCtx),
-                         "links": content.iteratorContext["links"]!,
-                     ] as [String: AnyCodable]
-                 )
-             ]
-             .recursivelyMerged(with: contextToAdd)
-            
-             contextToAdd = iteratorContext
+                "iterator": .init(
+                    [
+                        "total": .init(total),
+                        "limit": .init(limit),
+                        "current": .init(current),
+                        "items": .init(itemCtx),
+                        "links": content.iteratorContext["links"]!,
+                    ] as [String: AnyCodable]
+                )
+            ]
+            .recursivelyMerged(with: contextToAdd)
+
+            contextToAdd = iteratorContext
         }
-        
 
         let ctx = getContextObject(
             for: content,
@@ -111,7 +112,7 @@ extension SourceBundleRenderer {
             )
         )
     }
-    
+
     mutating func getContextObject(
         for content: Content,
         pipeline: Pipeline,
@@ -277,7 +278,7 @@ extension SourceBundleRenderer {
 }
 
 extension Double {
-    
+
     func convertToDateFormats(
         formatter: DateFormatter,
         formats: [String: String]
@@ -288,7 +289,7 @@ extension Double {
             formats: formats
         )
     }
-    
+
     private func getDates(
         for timeInterval: Double,
         using formatter: DateFormatter,
@@ -344,5 +345,5 @@ extension Double {
             formats: custom
         )
     }
-    
+
 }

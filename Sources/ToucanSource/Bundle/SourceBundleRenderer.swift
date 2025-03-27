@@ -34,17 +34,23 @@ public struct SourceBundleRenderer {
         self.logger = logger
     }
 
-    public mutating func renderPipelineResults(now: Date) throws -> [PipelineResult] {
+    public mutating func renderPipelineResults(
+        now: Date
+    ) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
         var results: [PipelineResult] = []
-        
+
         var siteContext: [String: AnyCodable] = [
             "baseUrl": .init(sourceBundle.settings.baseUrl),
             "name": .init(sourceBundle.settings.name),
             "locale": .init(sourceBundle.settings.locale),
             "timeZone": .init(sourceBundle.settings.timeZone),
-            "generation": .init(now.convertToDateFormats(
-                formatter: dateFormatter, formats: sourceBundle.config.dateFormats.output)),
+            "generation": .init(
+                now.convertToDateFormats(
+                    formatter: dateFormatter,
+                    formats: sourceBundle.config.dateFormats.output
+                )
+            ),
             "generator": .init(Generator.v1_0_0_beta3),
         ]
         .recursivelyMerged(with: sourceBundle.settings.userDefined)
@@ -79,9 +85,11 @@ public struct SourceBundleRenderer {
                 .sorted(by: >).first ?? now
 
             let lastUpdateContext = lastUpdate.convertToDateFormats(
-                formatter: dateFormatter, formats: sourceBundle.config.dateFormats.output)
+                formatter: dateFormatter,
+                formats: sourceBundle.config.dateFormats.output
+            )
             siteContext["lastUpdate"] = .init(lastUpdateContext)
-            
+
             let contentIteratorResolver = ContentIteratorResolver()
             let bundles = try getContextBundles(
                 finalContents: contentIteratorResolver.resolveContents(
@@ -163,16 +171,16 @@ public struct SourceBundleRenderer {
         }
         return results
     }
-    
+
     mutating func getContextBundles(
         finalContents: [Content],
         siteContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
-        
+
         // we need to do this, otherwise all queries will run on the original contents and use the original {{post.pagination}}
         sourceBundle.contents = finalContents
-        
+
         var bundles: [ContextBundle] = []
 
         for content in sourceBundle.contents {

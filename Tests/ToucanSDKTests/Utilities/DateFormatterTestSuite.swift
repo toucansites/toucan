@@ -14,7 +14,7 @@ struct DateFormatterTestSuite {
     func localeDeFormatter() throws {
         var settings = Settings.defaults
         settings.locale = "de_DE"
-        
+
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: .defaults,
@@ -29,29 +29,29 @@ struct DateFormatterTestSuite {
             templates: [:],
             baseUrl: ""
         )
-        
+
         let date = Date.init(timeIntervalSinceReferenceDate: 0)
         let formatter = sourceBundle.settings.dateFormatter()
         formatter.dateStyle = .full
-        
+
         #expect(formatter.locale.identifier == "de_DE")
         #expect(formatter.string(from: date) == "Montag, 1. Januar 2001")
     }
-    
+
     @Test
     func locale_DE_HtmlOutput_DefaultDateFormat() throws {
         let logger = Logger(label: "DateFormatterTestSuite")
         let now = Date()
-        let publication = Date.init(timeIntervalSinceReferenceDate: 99887766)
-        
+        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
+
         var settings = Settings.defaults
         settings.locale = "de_DE"
-        
+
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: .defaults
         )
-        
+
         let inputFormatter = settings.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
@@ -69,7 +69,7 @@ struct DateFormatterTestSuite {
                     type: .date(format: nil),
                     required: true,
                     default: nil
-                )
+                ),
             ],
             relations: [:],
             queries: [:]
@@ -81,7 +81,7 @@ struct DateFormatterTestSuite {
             ),
             frontMatter: [
                 "title": "Post",
-                "publication": .init(inputFormatter.string(from: publication))
+                "publication": .init(inputFormatter.string(from: publication)),
             ],
             markdown: """
                 # Post
@@ -100,10 +100,9 @@ struct DateFormatterTestSuite {
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)
-        
-        
+
         let templates: [String: String] = [
-            "post.default": Templates.Mocks.post(),
+            "post.default": Templates.Mocks.post()
         ]
 
         let sourceBundle = SourceBundle(
@@ -117,18 +116,18 @@ struct DateFormatterTestSuite {
             templates: templates,
             baseUrl: ""
         )
-        
+
         var sourceBundleRenderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
             dateFormatter: sourceBundle.settings.dateFormatter(),
             fileManager: FileManager.default,
             logger: logger
         )
-        
+
         let results = try sourceBundleRenderer.renderPipelineResults(now: now)
         #expect(results.count == 1)
         let first = try #require(results.first)
-        
+
         let expected = """
             <html>
                 <head>
@@ -144,27 +143,27 @@ struct DateFormatterTestSuite {
             """
         #expect(first.contents == expected)
     }
-    
+
     @Test
     func locale_DE_ContextOutput_CustomDateFormat() throws {
         let logger = Logger(label: "DateFormatterTestSuite")
         let now = Date()
-        let publication = Date.init(timeIntervalSinceReferenceDate: 99887766)
-        
+        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
+
         var settings = Settings.defaults
         settings.locale = "de_DE"
 
         var config = Config.defaults
         config.dateFormats.output = [
             "my-date-format": "y | MM | dd",
-            "my-time-format": "HH | mm | ss"
+            "my-time-format": "HH | mm | ss",
         ]
-        
+
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        
+
         let inputFormatter = settings.dateFormatter(config.dateFormats.input)
 
         let postDefinition = ContentDefinition(
@@ -180,7 +179,7 @@ struct DateFormatterTestSuite {
                     type: .date(format: nil),
                     required: true,
                     default: nil
-                )
+                ),
             ],
             relations: [:],
             queries: [:]
@@ -192,7 +191,7 @@ struct DateFormatterTestSuite {
             ),
             frontMatter: [
                 "title": "Post",
-                "publication": .init(inputFormatter.string(from: publication))
+                "publication": .init(inputFormatter.string(from: publication)),
             ],
             markdown: """
                 # Post
@@ -209,22 +208,21 @@ struct DateFormatterTestSuite {
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)
-        
-        
+
         let templates: [String: String] = [
             "post.default": """
-                <html>
-                    <head>
-                    </head>
-                    <body>
-                        {{page.title}}
-                        Date
-                        {{page.publication.formats.my-date-format}}
-                        Time
-                        {{page.publication.formats.my-time-format}}
-                    </body>
-                </html>
-                """
+            <html>
+                <head>
+                </head>
+                <body>
+                    {{page.title}}
+                    Date
+                    {{page.publication.formats.my-date-format}}
+                    Time
+                    {{page.publication.formats.my-time-format}}
+                </body>
+            </html>
+            """
         ]
 
         let sourceBundle = SourceBundle(
@@ -238,18 +236,18 @@ struct DateFormatterTestSuite {
             templates: templates,
             baseUrl: ""
         )
-        
+
         var sourceBundleRenderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
             dateFormatter: sourceBundle.settings.dateFormatter(),
             fileManager: FileManager.default,
             logger: logger
         )
-        
+
         let results = try sourceBundleRenderer.renderPipelineResults(now: now)
         #expect(results.count == 1)
         let first = try #require(results.first)
-        
+
         let expected = """
             <html>
                 <head>

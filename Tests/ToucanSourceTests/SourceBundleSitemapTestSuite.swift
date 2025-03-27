@@ -142,7 +142,7 @@ struct SourceBundleSitemapTestSuite {
         #expect(results[0].destination.file == "sitemap")
         #expect(results[0].destination.ext == "xml")
     }
-    
+
     @Test
     func sitemapWithPagination() throws {
         let logger = Logger(label: "SourceBundleSitemapTestSuite")
@@ -156,7 +156,7 @@ struct SourceBundleSitemapTestSuite {
 
         let pipelines = [
             Pipeline.Mocks.html(),
-            Pipeline.Mocks.sitemap()
+            Pipeline.Mocks.sitemap(),
         ]
 
         let tagDefinition = ContentDefinition.Mocks.tag()
@@ -212,13 +212,14 @@ struct SourceBundleSitemapTestSuite {
             return converter.convert(rawContent: $0)
         }
 
-        var contents = tagContents + authorContents + postContents + sitemapContents
+        var contents =
+            tagContents + authorContents + postContents + sitemapContents
         contents.append(Content.Mocks.pagination(now: now))
 
         let templates: [String: String] = [
             "default": Templates.Mocks.default(),
             "post.default": Templates.Mocks.post(),
-            "sitemap": Templates.Mocks.sitemap()
+            "sitemap": Templates.Mocks.sitemap(),
         ]
 
         let config = Config.defaults
@@ -238,7 +239,7 @@ struct SourceBundleSitemapTestSuite {
             templates: templates,
             baseUrl: ""
         )
-        
+
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
             dateFormatter: formatter,
@@ -246,11 +247,15 @@ struct SourceBundleSitemapTestSuite {
             logger: logger
         )
         let results = try renderer.renderPipelineResults(now: now)
-        
-        #expect(results.first(where: { $0.destination.file == "sitemap" }) != nil)
-        
-        if let sitemap = results.first(where: { $0.destination.file == "sitemap" }) {
-            
+
+        #expect(
+            results.first(where: { $0.destination.file == "sitemap" }) != nil
+        )
+
+        if let sitemap = results.first(where: {
+            $0.destination.file == "sitemap"
+        }) {
+
             let expectation = #"""
                 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                     <url>
@@ -282,5 +287,5 @@ struct SourceBundleSitemapTestSuite {
         }
 
     }
-    
+
 }
