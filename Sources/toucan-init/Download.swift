@@ -39,7 +39,7 @@ struct Download {
             .addArguments([zipUrl.path, "-d", url.path])
             .output
 
-        // 3. Remove existing target directory
+        /// Remove existing target directory
         try? fileManager.removeItem(at: targetDirUrl)
 
         /// Emptying the target directory. Git submodules can cause issues.
