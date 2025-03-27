@@ -43,6 +43,9 @@ extension Pipeline.Scope {
             [
                 .userDefined,
                 .properties,
+                .relations,
+                .contents,
+                .queries,
             ]
         }
 
@@ -51,6 +54,8 @@ extension Pipeline.Scope {
                 .userDefined,
                 .properties,
                 .relations,
+                .contents,
+                .queries,
             ]
         }
 

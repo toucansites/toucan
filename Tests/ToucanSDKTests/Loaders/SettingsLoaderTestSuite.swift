@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 import FileManagerKitTesting
 @testable import ToucanSource
 @testable import ToucanSDK
@@ -19,6 +20,7 @@ struct SettingsLoaderTestSuite {
 
     @Test
     func basicSettings() throws {
+        let logger = Logger(label: "SettingsLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -42,7 +44,7 @@ struct SettingsLoaderTestSuite {
                 ],
                 encoder: ToucanYAMLEncoder(),
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "SettingsLoaderTestSuite")
+                logger: logger
             )
             let result = try loader.load()
             let expectation = Settings(
@@ -58,6 +60,7 @@ struct SettingsLoaderTestSuite {
 
     @Test
     func baseUrlOverride() throws {
+        let logger = Logger(label: "SettingsLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -81,7 +84,7 @@ struct SettingsLoaderTestSuite {
                 ],
                 encoder: ToucanYAMLEncoder(),
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "SettingsLoaderTestSuite")
+                logger: logger
             )
             let result = try loader.load()
             let expectation = Settings(

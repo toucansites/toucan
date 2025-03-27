@@ -20,11 +20,7 @@ struct SourceBundleSitemapTestSuite {
     func sitemap() throws {
         let logger = Logger(label: "SourceBundleSitemapTestSuite")
         let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-
-        formatter.dateFormat = "Y-MM-dd"
+        let formatter = DateFormatter.Mocks.en_US("Y-MM-dd")
         let nowString = formatter.string(from: now)
 
         let pipelines = [

@@ -20,12 +20,7 @@ struct SourceBundleScopeTestSuite {
     func testScopes() throws {
         let logger = Logger(label: "SourceBundleScopeTestSuite")
         let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-
-        //        formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
-        //        let nowString = formatter.string(from: now)
+        let formatter = DateFormatter.Mocks.en_US()
 
         let pipelines: [Pipeline] = [
             .init(

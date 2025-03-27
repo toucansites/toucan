@@ -18,13 +18,9 @@ struct SourceBundleRedirectTestSuite {
 
     @Test
     func redirect() throws {
-        let now = Date()
         let logger = Logger(label: "SourceBundleRedirectTestSuite")
-
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-        formatter.dateFormat = "Y-MM-dd"
+        let formatter = DateFormatter.Mocks.en_US("Y-MM-dd")
+        let now = Date()
 
         let pipelines = [
             Pipeline.Mocks.redirect()

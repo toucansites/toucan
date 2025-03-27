@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanTesting
+import Logging
 import FileManagerKitTesting
 @testable import ToucanSource
 @testable import ToucanSDK
@@ -18,6 +19,7 @@ struct ContentDefinitionLoaderTestSuite {
 
     @Test
     func contentDefinitions() throws {
+        let logger = Logger(label: "ContentDefinitionLoaderTestSuite")
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
@@ -57,7 +59,7 @@ struct ContentDefinitionLoaderTestSuite {
                     .init(path: "bar.yml", overridePath: nil),
                 ],
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "ContentTypeLoaderTests")
+                logger: logger
             )
             let result = try loader.load()
 
@@ -84,6 +86,7 @@ struct ContentDefinitionLoaderTestSuite {
 
     @Test
     func contentDefinitionsOverride() throws {
+        let logger = Logger(label: "ContentDefinitionLoaderTestSuite")
         try FileManagerPlayground {
             Directory("themes") {
                 Directory("default") {
@@ -128,7 +131,7 @@ struct ContentDefinitionLoaderTestSuite {
                     .init(path: "bar.yml", overridePath: "bar.yml"),
                 ],
                 decoder: ToucanYAMLDecoder(),
-                logger: .init(label: "ContentTypeLoaderTests")
+                logger: logger
             )
             let result = try loader.load()
 

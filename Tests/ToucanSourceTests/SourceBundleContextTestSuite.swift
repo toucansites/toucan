@@ -15,16 +15,13 @@ import Logging
 
 @Suite
 struct SourceBundleContextTestSuite {
-    
+
     @Test(.disabled("Disable for now to speed up generation process"))
     func isCurrentUrl() throws {
-        let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-        
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        
+        let formatter = DateFormatter.Mocks.en_US()
+        let now = Date()
+
         let pipelines: [Pipeline] = [
             .init(
                 id: "test",
@@ -54,7 +51,7 @@ struct SourceBundleContextTestSuite {
                 )
             )
         ]
-        
+
         // posts
         let postDefinition = ContentDefinition.Mocks.post()
         let rawPostContents = RawContent.Mocks.posts(
@@ -86,7 +83,7 @@ struct SourceBundleContextTestSuite {
                 ],
                 markdown: """
                     # Home
-                    
+
                     Lorem ipsum dolor sit amet
                     """,
                 lastModificationDate: Date().timeIntervalSince1970,
@@ -102,21 +99,21 @@ struct SourceBundleContextTestSuite {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         let contents =
-        postContents + pageContents
-        
+            postContents + pageContents
+
         let blockDirectives = MarkdownBlockDirective.Mocks.highlightedTexts()
         let templates: [String: String] = [
             "sitemap": Templates.Mocks.sitemap()
         ]
-        
+
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        
+
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
@@ -128,7 +125,7 @@ struct SourceBundleContextTestSuite {
             templates: templates,
             baseUrl: ""
         )
-        
+
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
             dateFormatter: formatter,
@@ -136,11 +133,11 @@ struct SourceBundleContextTestSuite {
             logger: logger
         )
         let results = try renderer.renderPipelineResults(now: now)
-        
+
         #expect(results.count == 2)
-        
+
         let decoder = JSONDecoder()
-        
+
         struct Exp0: Decodable {
             struct Ctx: Decodable {
                 struct Item: Decodable {
@@ -156,21 +153,21 @@ struct SourceBundleContextTestSuite {
             let page: Post
             let context: Ctx
         }
-        
+
         let data0 = try #require(results[0].contents.data(using: .utf8))
         let exp0 = try decoder.decode(Exp0.self, from: data0)
-        
+
         #expect(exp0.page.isCurrentURL)
         for item in exp0.context.featured {
             #expect(item.isCurrentURL == (exp0.page.slug == item.slug))
         }
-        
+
         struct Exp1: Decodable {
             struct Ctx: Decodable {
                 struct Item: Decodable {
                     let isCurrentURL: Bool
                 }
-                
+
                 let featured: [Item]
             }
             struct Page: Decodable {
@@ -179,28 +176,22 @@ struct SourceBundleContextTestSuite {
             let page: Page
             let context: Ctx
         }
-        
+
         let data1 = try #require(results[1].contents.data(using: .utf8))
         let exp1 = try decoder.decode(Exp1.self, from: data1)
-        
+
         #expect(exp1.page.isCurrentURL)
         #expect(exp1.context.featured.allSatisfy { !$0.isCurrentURL })
     }
-    
+
     @Test(.disabled("Disable for now to speed up generation process"))
     func generatorMetadata() async throws {
-        let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-        
-        let isoFormatter = DateFormatter()
-        isoFormatter.locale = .init(identifier: "en_US")
-        isoFormatter.timeZone = .init(secondsFromGMT: 0)
-        isoFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        
+        let formatter = DateFormatter.Mocks.en_US()
+        let isoFormatter = DateFormatter.Mocks
+            .en_US("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        let now = Date()
+
         let pipelines: [Pipeline] = [
             .init(
                 id: "test",
@@ -225,7 +216,7 @@ struct SourceBundleContextTestSuite {
                 )
             )
         ]
-        
+
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents: [RawContent] = [
             .init(
@@ -240,7 +231,7 @@ struct SourceBundleContextTestSuite {
                 ],
                 markdown: """
                     # Home
-                    
+
                     Lorem ipsum dolor sit amet
                     """,
                 lastModificationDate: Date().timeIntervalSince1970,
@@ -256,15 +247,15 @@ struct SourceBundleContextTestSuite {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         let contents = pageContents
-        
+
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        
+
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
@@ -276,7 +267,7 @@ struct SourceBundleContextTestSuite {
             templates: [:],
             baseUrl: ""
         )
-        
+
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
             dateFormatter: formatter,
@@ -284,11 +275,11 @@ struct SourceBundleContextTestSuite {
             logger: logger
         )
         let results = try renderer.renderPipelineResults(now: now)
-        
+
         #expect(results.count == 1)
-        
+
         let decoder = JSONDecoder()
-        
+
         struct Exp: Decodable {
             struct Site: Codable {
                 let generation: DateFormats
@@ -296,15 +287,15 @@ struct SourceBundleContextTestSuite {
             }
             let site: Site
         }
-        
+
         let data = try #require(results[0].contents.data(using: .utf8))
         let exp = try decoder.decode(Exp.self, from: data)
-        
+
         #expect(exp.site.generator.name == "Toucan")
         #expect(exp.site.generator.version == "1.0.0-beta3")
         #expect(
             exp.site.generation.formats["iso8601"]
-            == isoFormatter.string(from: now)
+                == isoFormatter.string(from: now)
         )
     }
 }

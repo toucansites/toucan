@@ -8,6 +8,7 @@
 import ToucanContent
 import ToucanModels
 import ToucanSource
+import Foundation
 
 public extension RawContent {
     enum Mocks {}
@@ -42,5 +43,9 @@ public extension Templates {
 }
 
 public extension MarkdownBlockDirective {
+    enum Mocks {}
+}
+
+public extension DateFormatter {
     enum Mocks {}
 }
