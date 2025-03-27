@@ -23,7 +23,7 @@ struct Download {
         try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         let zipUrl = url.appendingPathExtension("zip")
 
-        /// Find `curl` in PATH and /Run curl to download the file
+        /// Find and run `curl` using SwiftCommand
         guard let curl = Command.findInPath(withName: "curl") else {
             fatalError("Command not found: 'curl'")
         }
