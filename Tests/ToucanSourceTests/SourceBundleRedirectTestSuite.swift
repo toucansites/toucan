@@ -82,7 +82,7 @@ struct SourceBundleRedirectTestSuite {
             fileManager: FileManager.default,
             logger: logger
         )
-        let results = try renderer.renderPipelineResults(now: now)
+        let results = try renderer.render(now: now)
 
         #expect(results.count == 2)
 

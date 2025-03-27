@@ -132,7 +132,7 @@ struct SourceBundleContextTestSuite {
             fileManager: FileManager.default,
             logger: logger
         )
-        let results = try renderer.renderPipelineResults(now: now)
+        let results = try renderer.render(now: now)
 
         #expect(results.count == 2)
 
@@ -274,7 +274,7 @@ struct SourceBundleContextTestSuite {
             fileManager: FileManager.default,
             logger: logger
         )
-        let results = try renderer.renderPipelineResults(now: now)
+        let results = try renderer.render(now: now)
 
         #expect(results.count == 1)
 
@@ -283,7 +283,7 @@ struct SourceBundleContextTestSuite {
         struct Exp: Decodable {
             struct Site: Codable {
                 let generation: DateFormats
-                let generator: Generator
+                let generator: GeneratorInfo
             }
             let site: Site
         }

@@ -7,25 +7,25 @@ public extension Templates.Mocks {
             {{/empty(urls)}}
             {{^empty(urls)}}
             <url>
-                {{#page.pages}}
+                {{#context.pages}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
-                {{/page.pages}}
+                {{/context.pages}}
 
-                {{#page.tags}}
+                {{#context.tags}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
-                {{/page.tags}}
+                {{/context.tags}}
 
-                {{#page.authors}}
+                {{#context.authors}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
-                {{/page.authors}}
+                {{/context.authors}}
 
-                {{#page.posts}}
+                {{#context.posts}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
-                {{/page.posts}}
+                {{/context.posts}}
             </url>
             {{/empty(urls)}}
         </urlset>

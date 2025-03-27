@@ -9,7 +9,7 @@ import Foundation
 
 public extension String {
 
-    func dataValue() -> Data {
-        data(using: .utf8)!
+    func dataValue(using encoding: String.Encoding = .utf8) -> Data {
+        data(using: encoding)!
     }
 }

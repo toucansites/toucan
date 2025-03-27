@@ -18,16 +18,20 @@ struct Download {
     }
 
     func resolve() async throws {
-        
+
         /// Ensure working directory exists
-        try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+        try fileManager.createDirectory(
+            at: url,
+            withIntermediateDirectories: true
+        )
         let zipUrl = url.appendingPathExtension("zip")
 
         /// Find and run `curl` using SwiftCommand
         guard let curl = Command.findInPath(withName: "curl") else {
             fatalError("Command not found: 'curl'")
         }
-        _ = try await curl
+        _ =
+            try await curl
             .addArguments(["-L", sourceUrl.absoluteString, "-o", zipUrl.path])
             .output
 
@@ -35,7 +39,8 @@ struct Download {
         guard let unzipExe = Command.findInPath(withName: "unzip") else {
             fatalError("Command not found 'unzip'")
         }
-        _ = try await unzipExe
+        _ =
+            try await unzipExe
             .addArguments([zipUrl.path, "-d", url.path])
             .output
 

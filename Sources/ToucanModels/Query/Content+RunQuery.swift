@@ -6,12 +6,11 @@
 //
 
 import Foundation
-import ToucanModels
 
-extension SourceBundle {
+extension [Content] {
 
     public func run(query: Query) -> [Content] {
-        let contents = contents.filter {
+        let contents = self.filter {
             query.contentType == $0.definition.id
         }
         return filter(contents: contents, using: query)
@@ -246,5 +245,4 @@ extension SourceBundle {
             return false
         }
     }
-
 }
