@@ -82,33 +82,17 @@ public struct SourceBundleRenderer {
                 formatter: dateFormatter, formats: sourceBundle.config.dateFormats.output)
             siteContext["lastUpdate"] = .init(lastUpdateContext)
             
-            var contextBundleCreator = ContextBundleCreator(
-                sourceBundle: sourceBundle,
-                fileManager: fileManager,
-                logger: logger,
-                dateFormatter: dateFormatter,
-                contextCache: &contextCache
-            )
-            
-            let contextBundleData = try contextBundleCreator.getContextBundles(
+            let contentIteratorResolver = ContentIteratorResolver()
+            let bundles = try getContextBundles(
+                finalContents: contentIteratorResolver.resolveContents(
+                    sourceBundle: sourceBundle,
+                    pipeline: pipeline
+                ),
                 siteContext: [
                     "site": .init(siteContext)
                 ],
                 pipeline: pipeline
             )
-            let bundles = contextBundleData.0
-            let contentSlugsToRemove = contextBundleData.1
-            let contentsToAdd = contextBundleData.2
-            
-            // remove pagination contents
-            if !contentSlugsToRemove.isEmpty {
-                sourceBundle.contents = sourceBundle.contents.filter { !contentSlugsToRemove.contains($0.slug) }
-            }
-            
-            // add iterator contents
-            if !contentsToAdd.isEmpty {
-                sourceBundle.contents = sourceBundle.contents + contentsToAdd
-            }
 
             switch pipeline.engine.id {
             case "json", "context":
@@ -178,6 +162,43 @@ public struct SourceBundleRenderer {
             }
         }
         return results
+    }
+    
+    mutating func getContextBundles(
+        finalContents: [Content],
+        siteContext: [String: AnyCodable],
+        pipeline: Pipeline
+    ) throws -> [ContextBundle] {
+        
+        // we need to do this, otherwise all queries will run on the original contents and use the original {{post.pagination}}
+        sourceBundle.contents = finalContents
+        
+        var bundles: [ContextBundle] = []
+
+        for content in sourceBundle.contents {
+
+            let pipelineContext = getPipelineContext(
+                for: pipeline,
+                currentSlug: content.slug
+            )
+            .recursivelyMerged(with: siteContext)
+
+            let isAllowed = pipeline.contentTypes.isAllowed(
+                contentType: content.definition.id
+            )
+
+            guard isAllowed else {
+                continue
+            }
+
+            let bundle = getContextBundle(
+                content: content,
+                using: pipeline,
+                pipelineContext: pipelineContext
+            )
+            bundles.append(bundle)
+        }
+        return bundles
     }
 
 }
