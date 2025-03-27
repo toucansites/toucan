@@ -19,7 +19,7 @@ public struct SourceBundleRenderer {
     let fileManager: FileManagerKit
     let logger: Logger
 
-    var contextCache: [String: [String: AnyCodable]] = [:]
+    var contentContextCache: [String: [String: AnyCodable]] = [:]
 
     public init(
         sourceBundle: SourceBundle,
@@ -181,13 +181,14 @@ public struct SourceBundleRenderer {
         pipeline: Pipeline,
         currentSlug: String
     ) -> [String: AnyCodable] {
+        print("pipeline, \(pipeline.id)")
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
             let results = contents.run(query: query)
 
             rawContext[key] = .init(
                 results.map {
-                    getContextObject(
+                    getContentContext(
                         for: $0,
                         pipeline: pipeline,
                         scopeKey: query.scope ?? "list",
@@ -221,7 +222,7 @@ public struct SourceBundleRenderer {
 
             var itemCtx: [[String: AnyCodable]] = []
             for pageItem in pageItems {
-                let pageItemCtx = getContextObject(
+                let pageItemCtx = getContentContext(
                     for: pageItem,
                     pipeline: pipeline,
                     scopeKey: scopeKey ?? "list",
@@ -246,7 +247,7 @@ public struct SourceBundleRenderer {
             contextToAdd = iteratorContext
         }
 
-        let ctx = getContextObject(
+        let ctx = getContentContext(
             for: content,
             pipeline: pipeline,
             scopeKey: "detail",
@@ -279,7 +280,7 @@ public struct SourceBundleRenderer {
         )
     }
 
-    mutating func getContextObject(
+    mutating func getContentContext(
         for content: Content,
         pipeline: Pipeline,
         scopeKey: String,
@@ -301,7 +302,7 @@ public struct SourceBundleRenderer {
         ]
         .joined(separator: "_")
 
-        if let cachedContext = contextCache[cacheKey] {
+        if let cachedContext = contentContextCache[cacheKey] {
             return cachedContext
         }
 
@@ -396,7 +397,7 @@ public struct SourceBundleRenderer {
                 )
                 result[key] = .init(
                     relationContents.map {
-                        getContextObject(
+                        getContentContext(
                             for: $0,
                             pipeline: pipeline,
                             scopeKey: "reference",
@@ -419,7 +420,7 @@ public struct SourceBundleRenderer {
 
                 result[key] = .init(
                     queryContents.map {
-                        getContextObject(
+                        getContentContext(
                             for: $0,
                             pipeline: pipeline,
                             scopeKey: query.scope ?? "list",
@@ -432,10 +433,10 @@ public struct SourceBundleRenderer {
         }
 
         guard !scope.fields.isEmpty else {
-            contextCache[cacheKey] = result
+            contentContextCache[cacheKey] = result
             return result
         }
-        contextCache[cacheKey] = result
+        contentContextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
     }
 
