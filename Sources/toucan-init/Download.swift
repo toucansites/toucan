@@ -1,6 +1,6 @@
 import Foundation
 import FileManagerKit
-//import ShellKit
+import SwiftCommand
 
 struct Download {
 
@@ -18,15 +18,29 @@ struct Download {
     }
 
     func resolve() async throws {
-        //        let shell = Shell()
+        
+        /// Ensure working directory exists
+        try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+        let zipUrl = url.appendingPathExtension("zip")
 
-        /// Downloading the ZIP file into a temporary directory.
-        //        try shell.run(
-        //            #"curl -L -o \#(zipUrl.path) \#(sourceUrl.absoluteString)"#
-        //        )
+        /// Find and run `curl` using SwiftCommand
+        guard let curl = Command.findInPath(withName: "curl") else {
+            fatalError("Command not found: 'curl'")
+        }
+        _ = try await curl
+            .addArguments(["-L", sourceUrl.absoluteString, "-o", zipUrl.path])
+            .output
 
-        /// Unzipping the file to a temporary directory.
-        //        try shell.run(#"unzip \#(zipUrl.path) -d \#(url.path)"#)
+        /// Find and run `unzip` using SwiftCommand
+        guard let unzipExe = Command.findInPath(withName: "unzip") else {
+            fatalError("Command not found 'unzip'")
+        }
+        _ = try await unzipExe
+            .addArguments([zipUrl.path, "-d", url.path])
+            .output
+
+        /// Remove existing target directory
+        try? fileManager.removeItem(at: targetDirUrl)
 
         /// Emptying the target directory. Git submodules can cause issues.
         try? fileManager.removeItem(at: targetDirUrl)
