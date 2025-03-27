@@ -111,7 +111,7 @@ struct SourceBundleSitemapTestSuite {
             fileManager: FileManager.default,
             logger: logger
         )
-        let results = try renderer.renderPipelineResults(now: now)
+        let results = try renderer.render(now: now)
 
         #expect(results.count == 1)
 
@@ -246,7 +246,7 @@ struct SourceBundleSitemapTestSuite {
             fileManager: FileManager.default,
             logger: logger
         )
-        let results = try renderer.renderPipelineResults(now: now)
+        let results = try renderer.render(now: now)
 
         #expect(
             results.first(where: { $0.destination.file == "sitemap" }) != nil

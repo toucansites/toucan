@@ -124,7 +124,7 @@ struct DateFormatterTestSuite {
             logger: logger
         )
 
-        let results = try sourceBundleRenderer.renderPipelineResults(now: now)
+        let results = try sourceBundleRenderer.render(now: now)
         #expect(results.count == 1)
         let first = try #require(results.first)
 
@@ -244,7 +244,7 @@ struct DateFormatterTestSuite {
             logger: logger
         )
 
-        let results = try sourceBundleRenderer.renderPipelineResults(now: now)
+        let results = try sourceBundleRenderer.render(now: now)
         #expect(results.count == 1)
         let first = try #require(results.first)
 

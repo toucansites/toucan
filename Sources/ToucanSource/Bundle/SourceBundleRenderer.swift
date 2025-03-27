@@ -35,13 +35,13 @@ public struct SourceBundleRenderer {
         self.logger = logger
     }
 
-    public mutating func renderPipelineResults(
-        now: Date
-    ) throws -> [PipelineResult] {
-        let now = now.timeIntervalSince1970
-        var results: [PipelineResult] = []
+    // MARK: -
 
-        var siteContext: [String: AnyCodable] = [
+    /// Returns the site context based on the source bundle settings and the generator info
+    private func getSiteContext(
+        for now: TimeInterval
+    ) -> [String: AnyCodable] {
+        return [
             "baseUrl": .init(sourceBundle.settings.baseUrl),
             "name": .init(sourceBundle.settings.name),
             "locale": .init(sourceBundle.settings.locale),
@@ -54,45 +54,64 @@ public struct SourceBundleRenderer {
             ),
             "generator": .init(generatorInfo),
         ]
+        // TODO: check if overwritten with e.g.: generator
         .recursivelyMerged(with: sourceBundle.settings.userDefined)
+    }
 
+    /// Returns the last content update based on the pipeline config
+    private func getLastContentUpdate(
+        contents: [Content],
+        pipeline: Pipeline
+    ) -> TimeInterval? {
+        var updateTypes = contents.map(\.definition.id)
+        if !pipeline.contentTypes.lastUpdate.isEmpty {
+            updateTypes = updateTypes.filter {
+                pipeline.contentTypes.lastUpdate.contains($0)
+            }
+        }
+        return
+            updateTypes.compactMap {
+                let items = contents.run(
+                    query: .init(
+                        contentType: $0,
+                        scope: nil,
+                        limit: 1,
+                        orderBy: [
+                            .init(
+                                key: "lastUpdate",
+                                direction: .desc
+                            )
+                        ]
+                    )
+                )
+                return items.first?.rawValue.lastModificationDate
+            }
+            .sorted(by: >).first
+    }
+
+    // MARK: -
+    public mutating func render(
+        now: Date
+    ) throws -> [PipelineResult] {
+        let now = now.timeIntervalSince1970
+        var siteContext = getSiteContext(for: now)
+        var results: [PipelineResult] = []
         let iteratorResolver = ContentIteratorResolver(
             baseUrl: sourceBundle.settings.baseUrl
         )
 
         for pipeline in sourceBundle.pipelines {
-            // first of all, resolve contents
+
             let contents = iteratorResolver.resolve(
                 contents: sourceBundle.contents,
                 using: pipeline
             )
 
-            var updateTypes = contents.map(\.definition.id)
-            if !pipeline.contentTypes.lastUpdate.isEmpty {
-                updateTypes = updateTypes.filter {
-                    pipeline.contentTypes.lastUpdate.contains($0)
-                }
-            }
-
-            /// get last update date or use now as last update date.
-            let lastUpdate: Double =
-                updateTypes.compactMap {
-                    let items = contents.run(
-                        query: .init(
-                            contentType: $0,
-                            scope: nil,
-                            limit: 1,
-                            orderBy: [
-                                .init(
-                                    key: "lastUpdate",
-                                    direction: .desc
-                                )
-                            ]
-                        )
-                    )
-                    return items.first?.rawValue.lastModificationDate
-                }
-                .sorted(by: >).first ?? now
+            let lastUpdate =
+                getLastContentUpdate(
+                    contents: contents,
+                    pipeline: pipeline
+                ) ?? now
 
             let lastUpdateContext = lastUpdate.convertToDateFormats(
                 formatter: dateFormatter,
@@ -102,7 +121,7 @@ public struct SourceBundleRenderer {
 
             let contextBundles = try getContextBundles(
                 contents: contents,
-                siteContext: [
+                context: [
                     "site": .init(siteContext)
                 ],
                 pipeline: pipeline
@@ -110,112 +129,56 @@ public struct SourceBundleRenderer {
 
             switch pipeline.engine.id {
             case "json", "context":
-                let encoder = JSONEncoder()
-                encoder.outputFormatting = [
-                    .prettyPrinted,
-                    .withoutEscapingSlashes,
-                    //.sortedKeys,
-                ]
-
-                for bundle in contextBundles {
-                    // TODO: override output using front matter in both cases
-                    let data = try encoder.encode(bundle.context)
-                    let json = String(data: data, encoding: .utf8)
-                    guard let json else {
-                        // TODO: log
-                        continue
-                    }
-                    let result = PipelineResult(
-                        contents: json,
-                        destination: bundle.destination
-                    )
-                    results.append(result)
-                }
-            case "mustache":
-                let renderer = MustacheTemplateRenderer(
-                    templates: try sourceBundle.templates.mapValues {
-                        try .init(string: $0)
-                    }
+                results += try renderAsJSON(
+                    contextBundles: contextBundles
                 )
-
-                for bundle in contextBundles {
-                    let engineOptions = pipeline.engine.options
-                    let contentTypesOptions = engineOptions.dict("contentTypes")
-                    let bundleOptions = contentTypesOptions.dict(
-                        bundle.content.definition.id
-                    )
-
-                    let contentTypeTemplate = bundleOptions.string("template")
-                    let contentTemplate = bundle.content.rawValue.frontMatter
-                        .string("template")
-
-                    guard let template = contentTemplate ?? contentTypeTemplate
-                    else {
-                        // TODO: log
-                        continue
-                    }
-
-                    let html = try renderer.render(
-                        template: template,
-                        with: bundle.context
-                    )
-
-                    guard let html else {
-                        // TODO: log
-                        continue
-                    }
-                    let result = PipelineResult(
-                        contents: html,
-                        destination: bundle.destination
-                    )
-                    results.append(result)
-                }
-
+            case "mustache":
+                results += try renderAsHTML(
+                    contextBundles: contextBundles,
+                    pipeline: pipeline
+                )
             default:
-                print("ERROR - no such renderer \(pipeline.engine.id)")
+                logger.error(
+                    "Unknown renderer engine `\(pipeline.engine.id)`."
+                )
             }
         }
         return results
     }
 
+    /// Returns the renderable context bundle for each content for a given pipeline using the global context
     mutating func getContextBundles(
         contents: [Content],
-        siteContext: [String: AnyCodable],
+        context globalContext: [String: AnyCodable],
         pipeline: Pipeline
     ) throws -> [ContextBundle] {
 
-        var bundles: [ContextBundle] = []
-
-        for content in contents {
-
-            let pipelineContext = getPipelineContext(
-                contents: contents,
-                for: pipeline,
-                currentSlug: content.slug
-            )
-            .recursivelyMerged(with: siteContext)
-
+        return contents.compactMap { content in
             let isAllowed = pipeline.contentTypes.isAllowed(
                 contentType: content.definition.id
             )
-
             guard isAllowed else {
-                continue
+                return nil
             }
 
-            let bundle = getContextBundle(
+            let pipelineContext = getPipelineContext(
+                contents: contents,
+                pipeline: pipeline,
+                currentSlug: content.slug
+            )
+            .recursivelyMerged(with: globalContext)
+
+            return getContextBundle(
                 content: content,
-                using: pipeline,
+                pipeline: pipeline,
                 pipelineContext: pipelineContext
             )
-            bundles.append(bundle)
         }
-        return bundles
     }
 
     mutating func getPipelineContext(
         contents: [Content],
-        for pipeline: Pipeline,
+        pipeline: Pipeline,
         currentSlug: String
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
@@ -228,18 +191,19 @@ public struct SourceBundleRenderer {
                         for: $0,
                         pipeline: pipeline,
                         scopeKey: query.scope ?? "list",
-                        currentSlug: currentSlug,
-                        from: "getPipelineContext"
+                        currentSlug: currentSlug
                     )
                 }
             )
         }
-        return ["context": .init(rawContext)]
+        return [
+            "context": .init(rawContext)
+        ]
     }
 
     mutating func getContextBundle(
         content: Content,
-        using pipeline: Pipeline,
+        pipeline: Pipeline,
         pipelineContext: [String: AnyCodable]
     ) -> ContextBundle {
 
@@ -261,8 +225,7 @@ public struct SourceBundleRenderer {
                     for: pageItem,
                     pipeline: pipeline,
                     scopeKey: scopeKey ?? "list",
-                    currentSlug: content.slug,
-                    from: "getContextBundle"
+                    currentSlug: content.slug
                 )
                 itemCtx.append(pageItemCtx)
             }
@@ -287,8 +250,7 @@ public struct SourceBundleRenderer {
             for: content,
             pipeline: pipeline,
             scopeKey: "detail",
-            currentSlug: content.slug,
-            from: "getContextBundle2"
+            currentSlug: content.slug
         )
         let context: [String: AnyCodable] = [
             //            content.definition.type: .init(ctx),
@@ -322,8 +284,7 @@ public struct SourceBundleRenderer {
         pipeline: Pipeline,
         scopeKey: String,
         currentSlug: String?,
-        allowSubQueries: Bool = true,  // allow top level queries only,
-        from: String
+        allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
         let scope = pipeline.getScope(
@@ -440,8 +401,7 @@ public struct SourceBundleRenderer {
                             pipeline: pipeline,
                             scopeKey: "reference",
                             currentSlug: currentSlug,
-                            allowSubQueries: false,
-                            from: "getContextObject"
+                            allowSubQueries: false
                         )
                     }
                 )
@@ -464,8 +424,7 @@ public struct SourceBundleRenderer {
                             pipeline: pipeline,
                             scopeKey: query.scope ?? "list",
                             currentSlug: currentSlug,
-                            allowSubQueries: false,
-                            from: "getContextObject2"
+                            allowSubQueries: false
                         )
                     }
                 )
@@ -479,9 +438,81 @@ public struct SourceBundleRenderer {
         contextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
     }
+
+    // MARK: - rendering
+
+    private func renderAsJSON(
+        contextBundles: [ContextBundle]
+    ) throws -> [PipelineResult] {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [
+            .prettyPrinted,
+            .withoutEscapingSlashes,
+            //.sortedKeys,
+        ]
+
+        return try contextBundles.compactMap {
+            // TODO: override output using front matter in both cases
+            let data = try encoder.encode($0.context)
+            let json = String(data: data, encoding: .utf8)
+            guard let json else {
+                // TODO: log
+                return nil
+            }
+            return .init(
+                contents: json,
+                destination: $0.destination
+            )
+        }
+    }
+
+    private func renderAsHTML(
+        contextBundles: [ContextBundle],
+        pipeline: Pipeline
+    ) throws -> [PipelineResult] {
+        let renderer = MustacheTemplateRenderer(
+            templates: try sourceBundle.templates.mapValues {
+                try .init(string: $0)
+            }
+        )
+
+        return try contextBundles.compactMap {
+            let engineOptions = pipeline.engine.options
+            let contentTypesOptions = engineOptions.dict("contentTypes")
+            let bundleOptions = contentTypesOptions.dict(
+                $0.content.definition.id
+            )
+
+            let contentTypeTemplate = bundleOptions.string("template")
+            let contentTemplate = $0.content.rawValue.frontMatter
+                .string("template")
+
+            guard let template = contentTemplate ?? contentTypeTemplate
+            else {
+                // TODO: log
+                return nil
+            }
+
+            let html = try renderer.render(
+                template: template,
+                with: $0.context
+            )
+
+            guard let html else {
+                // TODO: log
+                return nil
+            }
+            return .init(
+                contents: html,
+                destination: $0.destination
+            )
+        }
+    }
 }
 
-extension Double {
+// MARK: - date helpers
+
+private extension Double {
 
     func convertToDateFormats(
         formatter: DateFormatter,
@@ -494,7 +525,7 @@ extension Double {
         )
     }
 
-    private func getDates(
+    func getDates(
         for timeInterval: Double,
         using formatter: DateFormatter,
         formats: [String: String] = [:]
