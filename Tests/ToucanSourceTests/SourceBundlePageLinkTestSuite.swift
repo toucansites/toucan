@@ -103,7 +103,8 @@ struct SourceBundlePageLinkTestSuite {
             ),
             properties: [:],
             relations: [:],
-            userDefined: [:]
+            userDefined: [:],
+            iteratorInfo: nil
         )
 
         let content = Content(
@@ -152,7 +153,8 @@ struct SourceBundlePageLinkTestSuite {
                 "js": .init([]),
                 "template": .init("posts"),
                 "image": nil,
-            ]
+            ],
+            iteratorInfo: nil
         )
 
         let contents: [Content] = [postContent, content]

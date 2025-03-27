@@ -18,11 +18,9 @@ struct ContentIteratorResolver {
         contents: [Content],
         using pipeline: Pipeline
     ) -> [Content] {
-
         var finalContents: [Content] = []
 
         for content in contents {
-
             if let iteratorId = extractIteratorId(from: content.slug) {
                 guard
                     let query = pipeline.iterators[iteratorId],
@@ -30,7 +28,6 @@ struct ContentIteratorResolver {
                         contentType: query.contentType
                     )
                 else {
-                    finalContents.append(content)
                     continue
                 }
 
@@ -47,15 +44,31 @@ struct ContentIteratorResolver {
                 let limit = max(1, query.limit ?? 10)
                 let numberOfPages = (total + limit - 1) / limit
 
-                struct PageLink: Codable {
-                    let number: Int
-                    let permalink: String
-                    let isCurrent: Bool
-                }
-
                 for i in 0..<numberOfPages {
                     let offset = i * limit
                     let currentPageIndex = i + 1
+
+                    var alteredContent = content
+                    rewrite(
+                        iteratorId: iteratorId,
+                        pageIndex: currentPageIndex,
+                        &alteredContent.id
+                    )
+                    rewrite(
+                        iteratorId: iteratorId,
+                        pageIndex: currentPageIndex,
+                        &alteredContent.slug
+                    )
+                    rewrite(
+                        number: currentPageIndex,
+                        total: numberOfPages,
+                        &alteredContent.properties
+                    )
+                    rewrite(
+                        number: currentPageIndex,
+                        total: numberOfPages,
+                        &alteredContent.userDefined
+                    )
 
                     let links = (0..<numberOfPages)
                         .map { i in
@@ -63,7 +76,7 @@ struct ContentIteratorResolver {
                             let slug = content.slug.replacingOccurrences([
                                 "{{\(iteratorId)}}": String(pageIndex)
                             ])
-                            return PageLink(
+                            return Content.IteratorInfo.Link(
                                 number: pageIndex,
                                 permalink: slug.permalink(
                                     baseUrl: baseUrl
@@ -72,7 +85,7 @@ struct ContentIteratorResolver {
                             )
                         }
 
-                    let pageItems = contents.run(
+                    let items = contents.run(
                         query: .init(
                             contentType: query.contentType,
                             limit: limit,
@@ -82,39 +95,14 @@ struct ContentIteratorResolver {
                         )
                     )
 
-                    let id = content.id.replacingOccurrences([
-                        "{{\(iteratorId)}}": String(currentPageIndex)
-                    ])
-                    let slug = content.slug.replacingOccurrences([
-                        "{{\(iteratorId)}}": String(currentPageIndex)
-                    ])
-
-                    var alteredContent = content
-                    alteredContent.id = id
-                    alteredContent.slug = slug
-
-                    let number = currentPageIndex
-                    let total = numberOfPages
-
-                    replaceMap(
-                        number: number,
-                        total: total,
-                        array: &alteredContent.properties
+                    alteredContent.iteratorInfo = .init(
+                        current: currentPageIndex,
+                        total: numberOfPages,
+                        limit: limit,
+                        items: items,
+                        links: links,
+                        scope: query.scope
                     )
-                    replaceMap(
-                        number: number,
-                        total: total,
-                        array: &alteredContent.userDefined
-                    )
-
-                    alteredContent.iteratorContext = [
-                        "scopeKey": .init(query.scope ?? "list"),
-                        "pageItems": .init(pageItems),
-                        "total": .init(total),
-                        "limit": .init(limit),
-                        "current": .init(currentPageIndex),
-                        "links": .init(links),
-                    ]
 
                     finalContents.append(alteredContent)
                 }
@@ -143,10 +131,33 @@ struct ContentIteratorResolver {
         return .init(input[startRange.upperBound..<endRange.lowerBound])
     }
 
-    private func replaceMap(
+    private func replace(
+        in value: String,
+        number: Int,
+        total: Int
+    ) -> String {
+        value.replacingOccurrences([
+            "{{number}}": String(number),
+            "{{total}}": String(total),
+        ])
+    }
+
+    // MARK: - rewrite
+
+    private func rewrite(
+        iteratorId: String,
+        pageIndex: Int,
+        _ value: inout String
+    ) {
+        value = value.replacingOccurrences([
+            "{{\(iteratorId)}}": String(pageIndex)
+        ])
+    }
+
+    private func rewrite(
         number: Int,
         total: Int,
-        array: inout [String: AnyCodable]
+        _ array: inout [String: AnyCodable]
     ) {
         for (key, _) in array {
             if let stringValue = array[key]?.stringValue() {
@@ -159,17 +170,6 @@ struct ContentIteratorResolver {
                 )
             }
         }
-    }
-
-    private func replace(
-        in value: String,
-        number: Int,
-        total: Int
-    ) -> String {
-        value.replacingOccurrences([
-            "{{number}}": String(number),
-            "{{total}}": String(total),
-        ])
     }
 
 }

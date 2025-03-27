@@ -83,7 +83,8 @@ struct ContentAssetsWriterTestSuite {
                     ),
                     properties: [:],
                     relations: [:],
-                    userDefined: [:]
+                    userDefined: [:],
+                    iteratorInfo: nil
                 ),
                 Content(
                     id: "user1",
@@ -107,7 +108,8 @@ struct ContentAssetsWriterTestSuite {
                     ),
                     properties: [:],
                     relations: [:],
-                    userDefined: [:]
+                    userDefined: [:],
+                    iteratorInfo: nil
                 ),
                 Content(
                     id: "user2",
@@ -131,7 +133,8 @@ struct ContentAssetsWriterTestSuite {
                     ),
                     properties: [:],
                     relations: [:],
-                    userDefined: [:]
+                    userDefined: [:],
+                    iteratorInfo: nil
                 ),
             ]
 
@@ -209,7 +212,8 @@ struct ContentAssetsWriterTestSuite {
                     ),
                     properties: [:],
                     relations: [:],
-                    userDefined: [:]
+                    userDefined: [:],
+                    iteratorInfo: nil
                 )
             ]
 

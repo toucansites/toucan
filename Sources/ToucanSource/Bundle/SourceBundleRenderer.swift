@@ -169,6 +169,7 @@ public struct SourceBundleRenderer {
             .recursivelyMerged(with: globalContext)
 
             return getContextBundle(
+                contents: contents,
                 content: content,
                 pipeline: pipeline,
                 pipelineContext: pipelineContext
@@ -181,7 +182,6 @@ public struct SourceBundleRenderer {
         pipeline: Pipeline,
         currentSlug: String
     ) -> [String: AnyCodable] {
-        print("pipeline, \(pipeline.id)")
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
             let results = contents.run(query: query)
@@ -189,6 +189,7 @@ public struct SourceBundleRenderer {
             rawContext[key] = .init(
                 results.map {
                     getContentContext(
+                        contents: contents,
                         for: $0,
                         pipeline: pipeline,
                         scopeKey: query.scope ?? "list",
@@ -202,62 +203,62 @@ public struct SourceBundleRenderer {
         ]
     }
 
+    mutating func getIteratorContext(
+        contents: [Content],
+        content: Content,
+        pipeline: Pipeline
+    ) -> [String: AnyCodable] {
+        guard let iteratorInfo = content.iteratorInfo else {
+            return [:]
+        }
+        let itemContext = iteratorInfo.items.map {
+            getContentContext(
+                contents: contents,
+                for: $0,
+                pipeline: pipeline,
+                scopeKey: iteratorInfo.scope ?? "list",
+                currentSlug: content.slug
+            )
+        }
+        return [
+            "iterator": .init(
+                [
+                    "total": .init(iteratorInfo.total),
+                    "limit": .init(iteratorInfo.limit),
+                    "current": .init(iteratorInfo.current),
+                    "items": .init(itemContext),
+                    "links": .init(iteratorInfo.links),
+                ] as [String: AnyCodable]
+            )
+        ]
+    }
+
     mutating func getContextBundle(
+        contents: [Content],
         content: Content,
         pipeline: Pipeline,
         pipelineContext: [String: AnyCodable]
     ) -> ContextBundle {
 
-        var contextToAdd = pipelineContext
-
-        if !content.iteratorContext.isEmpty {
-
-            let pageItems =
-                content.iteratorContext["pageItems"]?.value(as: [Content].self)
-                ?? []
-            let scopeKey = content.iteratorContext["scopeKey"]?.stringValue()
-            let total = content.iteratorContext["total"]?.intValue()
-            let limit = content.iteratorContext["limit"]?.intValue()
-            let current = content.iteratorContext["current"]?.intValue()
-
-            var itemCtx: [[String: AnyCodable]] = []
-            for pageItem in pageItems {
-                let pageItemCtx = getContentContext(
-                    for: pageItem,
-                    pipeline: pipeline,
-                    scopeKey: scopeKey ?? "list",
-                    currentSlug: content.slug
-                )
-                itemCtx.append(pageItemCtx)
-            }
-
-            let iteratorContext: [String: AnyCodable] = [
-                "iterator": .init(
-                    [
-                        "total": .init(total),
-                        "limit": .init(limit),
-                        "current": .init(current),
-                        "items": .init(itemCtx),
-                        "links": content.iteratorContext["links"]!,
-                    ] as [String: AnyCodable]
-                )
-            ]
-            .recursivelyMerged(with: contextToAdd)
-
-            contextToAdd = iteratorContext
-        }
-
-        let ctx = getContentContext(
+        let pageContext = getContentContext(
+            contents: contents,
             for: content,
             pipeline: pipeline,
             scopeKey: "detail",
             currentSlug: content.slug
         )
+
+        let iteratorContext = getIteratorContext(
+            contents: contents,
+            content: content,
+            pipeline: pipeline
+        )
+
         let context: [String: AnyCodable] = [
-            //            content.definition.type: .init(ctx),
-            "page": .init(ctx)
+            "page": .init(pageContext)
         ]
-        .recursivelyMerged(with: contextToAdd)
+        .recursivelyMerged(with: iteratorContext)
+        .recursivelyMerged(with: pipelineContext)
 
         // TODO: more path arguments?
         let outputArgs: [String: String] = [
@@ -281,6 +282,7 @@ public struct SourceBundleRenderer {
     }
 
     mutating func getContentContext(
+        contents: [Content],
         for content: Content,
         pipeline: Pipeline,
         scopeKey: String,
@@ -382,7 +384,7 @@ public struct SourceBundleRenderer {
                     orderBy.append(order)
                 }
 
-                let relationContents = sourceBundle.contents.run(
+                let relationContents = contents.run(
                     query: .init(
                         contentType: relation.references,
                         filter: .field(
@@ -398,6 +400,7 @@ public struct SourceBundleRenderer {
                 result[key] = .init(
                     relationContents.map {
                         getContentContext(
+                            contents: contents,
                             for: $0,
                             pipeline: pipeline,
                             scopeKey: "reference",
@@ -412,7 +415,7 @@ public struct SourceBundleRenderer {
         if allowSubQueries, scope.context.contains(.queries) {
 
             for (key, query) in content.definition.queries {
-                let queryContents = sourceBundle.contents.run(
+                let queryContents = contents.run(
                     query: query.resolveFilterParameters(
                         with: content.queryFields
                     )
@@ -421,6 +424,7 @@ public struct SourceBundleRenderer {
                 result[key] = .init(
                     queryContents.map {
                         getContentContext(
+                            contents: contents,
                             for: $0,
                             pipeline: pipeline,
                             scopeKey: query.scope ?? "list",

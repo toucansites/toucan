@@ -56,7 +56,8 @@ public extension Content.Mocks {
                 "description": .init("Posts page - {{number}} / {{total}}"),
                 "home": .init("posts/page"),
                 "template": .init("default"),
-            ]
+            ],
+            iteratorInfo: nil
         )
     }
 
