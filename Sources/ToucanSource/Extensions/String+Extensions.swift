@@ -9,16 +9,6 @@ import Foundation
 
 extension String {
 
-    func replacingOccurrences(
-        _ dictionary: [String: String]
-    ) -> String {
-        var result = self
-        for (key, value) in dictionary {
-            result = result.replacingOccurrences(of: key, with: value)
-        }
-        return result
-    }
-
     func permalink(
         baseUrl: String
     ) -> String {

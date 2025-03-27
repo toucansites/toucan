@@ -16,6 +16,7 @@ public struct Content {
     public var properties: [String: AnyCodable]
     public var relations: [String: RelationValue]
     public var userDefined: [String: AnyCodable]
+    public var iteratorContext: [String: AnyCodable] = [:]
 
     public init(
         id: String,
