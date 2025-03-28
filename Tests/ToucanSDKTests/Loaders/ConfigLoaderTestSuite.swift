@@ -33,6 +33,17 @@ struct ConfigLoaderTestSuite {
                                 path: assets
                         dateFormats:
                             input: y
+                        contentConfigurations:
+                            wordsPerMinute: 240
+                            outlineLevels:
+                                - 3
+                                - 4
+                            paragraphStyles:
+                                note: 
+                                    - note
+                                warn:
+                                    - warn
+                                    - warning
                         """
                 )
             }
@@ -56,7 +67,12 @@ struct ConfigLoaderTestSuite {
                         pipelines: .defaults,
                         contents: .defaults,
                         themes: .defaults,
-                        dateFormats: .init(input: "y", output: [:])
+                        dateFormats: .init(input: "y", output: [:]),
+                        contentConfigurations: .init(
+                            wordsPerMinute: 240,
+                            outlineLevels: [3, 4],
+                            paragraphStyles: .init(note: ["note"], warn: ["warn", "warning"])
+                        )
                     )
             )
         }
