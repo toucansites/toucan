@@ -18,7 +18,7 @@ extension Toucan {
             return true
         }
 
-        // TODO: - restore errors if needed
+        // TODO: restore errors if needed
 
         //        catch let error as FileLoader.Error {
         //            switch error {

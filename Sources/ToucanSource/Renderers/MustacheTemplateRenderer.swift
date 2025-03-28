@@ -8,17 +8,21 @@
 import Mustache
 import Foundation
 import ToucanModels
+import Logging
 
 public struct MustacheTemplateRenderer {
 
     var ids: [String]
     var library: MustacheLibrary
+    var logger: Logger
 
     public init(
-        templates: [String: MustacheTemplate]
+        templates: [String: MustacheTemplate],
+        logger: Logger
     ) {
-        ids = Array(templates.keys)
-        library = .init(templates: templates)
+        self.ids = Array(templates.keys)
+        self.library = .init(templates: templates)
+        self.logger = logger
     }
 
     public func render(
@@ -26,8 +30,12 @@ public struct MustacheTemplateRenderer {
         with object: [String: AnyCodable]
     ) throws -> String? {
         guard ids.contains(template) else {
-            // TODO: - log + error
-            print("throw or error, missing template \(template)")
+            logger.error(
+                "Missing or invalid template file.",
+                metadata: [
+                    "id": "\(template)"
+                ]
+            )
             return nil
         }
         let local = unwrap(object) as Any
@@ -35,7 +43,12 @@ public struct MustacheTemplateRenderer {
         guard
             let html = library.render(local, withTemplate: template)
         else {
-            print("nil html")
+            logger.error(
+                "Could not render HTML using the template file.",
+                metadata: [
+                    "id": "\(template)"
+                ]
+            )
             return nil
         }
         return html
