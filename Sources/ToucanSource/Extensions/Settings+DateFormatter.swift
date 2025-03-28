@@ -9,20 +9,17 @@ import Foundation
 import ToucanModels
 
 public extension Settings {
-
+    
+    func dateFormatter(_ dateFormat: LocalizedDateFormat) -> DateFormatter {
+        let formatter = DateFormatter.default
+        formatter.config(with: self)
+        formatter.config(with: dateFormat)
+        return formatter
+    }
+    
     func dateFormatter(_ format: String? = nil) -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-        // TODO: validate locale
-        if let rawLocale = locale {
-            formatter.locale = .init(identifier: rawLocale)
-        }
-        if let rawTimezone = timeZone,
-            let timeZone = TimeZone(identifier: rawTimezone)
-        {
-            formatter.timeZone = timeZone
-        }
+        let formatter = DateFormatter.default
+        formatter.config(with: self)
         if let format {
             formatter.dateFormat = format
         }

@@ -11,7 +11,7 @@ import Logging
 struct DateFormatterTestSuite {
 
     @Test
-    func localeDeFormatter() throws {
+    func locale_DE_Formatter() throws {
         var settings = Settings.defaults
         settings.locale = "de_DE"
 
@@ -93,10 +93,8 @@ struct DateFormatterTestSuite {
         )
         let converter = ContentDefinitionConverter(
             contentDefinition: postDefinition,
-            dateFormatter: settings.dateFormatter(
-                sourceConfig.config.dateFormats.input
-            ),
-            defaultDateFormat: sourceConfig.config.dateFormats.input,
+            dateFormatter: inputFormatter,
+            defaultDateFormat: sourceConfig.config.dateFormats.input.format,
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)
@@ -155,8 +153,8 @@ struct DateFormatterTestSuite {
 
         var config = Config.defaults
         config.dateFormats.output = [
-            "my-date-format": "y | MM | dd",
-            "my-time-format": "HH | mm | ss",
+            "my-date-format": .init(format: "y | MM | dd"),
+            "my-time-format": .init(locale: "hu_HU", timeZone: "CET", format: "HH | mm | ss"),
         ]
 
         let sourceConfig = SourceConfig(
@@ -203,8 +201,8 @@ struct DateFormatterTestSuite {
         )
         let converter = ContentDefinitionConverter(
             contentDefinition: postDefinition,
-            dateFormatter: settings.dateFormatter(config.dateFormats.input),
-            defaultDateFormat: config.dateFormats.input,
+            dateFormatter: inputFormatter,
+            defaultDateFormat: config.dateFormats.input.format,
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)
@@ -257,7 +255,7 @@ struct DateFormatterTestSuite {
                     Date
                     2004 | 03 | 02
                     Time
-                    02 | 36 | 06
+                    03 | 36 | 06
                 </body>
             </html>
             """

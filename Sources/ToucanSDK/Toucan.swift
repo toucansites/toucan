@@ -11,6 +11,7 @@ import Logging
 import ToucanFileSystem
 import ToucanTesting
 import ToucanSource
+import ToucanModels
 
 public struct Toucan {
 
@@ -95,6 +96,23 @@ public struct Toucan {
             // TODO: - do we need this?
             // source.validate(dateFormatter: DateFormatters.baseFormatter)
 
+            // MARK: - Validate locales and time zones
+
+            /// Validate site locale
+            validate(
+                .init(
+                    locale: sourceBundle.settings.locale,
+                    timeZone: sourceBundle.settings.timeZone,
+                    format: ""
+                )
+            )
+            validate(sourceBundle.config.dateFormats.input)
+            for dateFormat in sourceBundle.sourceConfig.config.dateFormats.output.values {
+                validate(dateFormat)
+            }
+            
+            // MARK: - Render pipeline results
+            
             var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
                 dateFormatter: sourceBundle.settings.dateFormatter(),
@@ -163,6 +181,15 @@ public struct Toucan {
         catch {
             try? fileManager.delete(at: workDirUrl)
             throw error
+        }
+    }
+    
+    func validate(_ dateFormat: LocalizedDateFormat) {
+        if let value = dateFormat.locale, !Locale.availableIdentifiers.contains(value) {
+            logger.warning("Invalid site locale: \(value)")
+        }
+        if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {
+            logger.warning("Invalid site time zone: \(value)")
         }
     }
 }

@@ -13,7 +13,7 @@ extension Pipeline.DataTypes {
             case formats
         }
 
-        public var formats: [String: String]
+        public var formats: [String: LocalizedDateFormat]
 
         // MARK: - defaults
 
@@ -23,9 +23,7 @@ extension Pipeline.DataTypes {
 
         // MARK: - init
 
-        public init(
-            formats: [String: String]
-        ) {
+        public init(formats: [String: LocalizedDateFormat]) {
             self.formats = formats
         }
 
@@ -38,7 +36,7 @@ extension Pipeline.DataTypes {
 
             let formats =
                 try container.decodeIfPresent(
-                    [String: String].self,
+                    [String: LocalizedDateFormat].self,
                     forKey: .formats
                 ) ?? [:]
 

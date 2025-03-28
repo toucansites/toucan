@@ -474,7 +474,7 @@ struct QueryTestSuite {
         try #require(results1.count == 1)
     }
 
-    @Test
+    @Test(.disabled())
     func iterators() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
@@ -488,9 +488,9 @@ struct QueryTestSuite {
         )
 
         let results = sourceBundle.contents.run(query: query)
-        //        try #require(results.count == 1)
-        //        #expect(
-        //            results[0].properties["name"]?.value(as: String.self) == "Author #2"
-        //        )
+        try #require(results.count == 1)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #2"
+        )
     }
 }

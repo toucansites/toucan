@@ -49,7 +49,8 @@ public struct SourceBundleRenderer {
             "generation": .init(
                 now.convertToDateFormats(
                     formatter: dateFormatter,
-                    formats: sourceBundle.config.dateFormats.output
+                    formats: sourceBundle.config.dateFormats.output,
+                    settings: sourceBundle.settings
                 )
             ),
             "generator": .init(generatorInfo),
@@ -115,7 +116,8 @@ public struct SourceBundleRenderer {
 
             let lastUpdateContext = lastUpdate.convertToDateFormats(
                 formatter: dateFormatter,
-                formats: sourceBundle.config.dateFormats.output
+                formats: sourceBundle.config.dateFormats.output,
+                settings: sourceBundle.settings
             )
             siteContext["lastUpdate"] = .init(lastUpdateContext)
 
@@ -320,7 +322,8 @@ public struct SourceBundleRenderer {
                     result[k] = .init(
                         rawDate.convertToDateFormats(
                             formatter: dateFormatter,
-                            formats: sourceBundle.config.dateFormats.output
+                            formats: sourceBundle.config.dateFormats.output,
+                            settings: sourceBundle.settings
                         )
                     )
                 }
@@ -339,7 +342,8 @@ public struct SourceBundleRenderer {
             result["lastUpdate"] = .init(
                 content.rawValue.lastModificationDate.convertToDateFormats(
                     formatter: dateFormatter,
-                    formats: sourceBundle.config.dateFormats.output
+                    formats: sourceBundle.config.dateFormats.output,
+                    settings: sourceBundle.settings
                 )
             )
         }
@@ -506,82 +510,11 @@ public struct SourceBundleRenderer {
                 // TODO: log
                 return nil
             }
+
             return .init(
                 contents: html,
                 destination: $0.destination
             )
         }
-    }
-}
-
-// MARK: - date helpers
-
-private extension Double {
-
-    func convertToDateFormats(
-        formatter: DateFormatter,
-        formats: [String: String]
-    ) -> DateFormats {
-        getDates(
-            for: self,
-            using: formatter,
-            formats: formats
-        )
-    }
-
-    func getDates(
-        for timeInterval: Double,
-        using formatter: DateFormatter,
-        formats: [String: String] = [:]
-    ) -> DateFormats {
-        let date = Date(timeIntervalSince1970: timeInterval)
-
-        let styles: [(String, DateFormatter.Style)] = [
-            ("full", .full),
-            ("long", .long),
-            ("medium", .medium),
-            ("short", .short),
-        ]
-
-        var dateFormats: [String: String] = [:]
-        var timeFormats: [String: String] = [:]
-
-        for (key, style) in styles {
-            formatter.dateStyle = style
-            formatter.timeStyle = .none
-            dateFormats[key] = formatter.string(from: date)
-
-            formatter.dateStyle = .none
-            formatter.timeStyle = style
-            timeFormats[key] = formatter.string(from: date)
-        }
-
-        let standard: [String: String] = [
-            "iso8601": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            "rss": "EEE, dd MMM yyyy HH:mm:ss Z",
-            "sitemap": "yyyy-MM-dd",
-        ]
-        var custom: [String: String] = [:]
-        for (k, f) in formats.recursivelyMerged(with: standard) {
-            formatter.dateFormat = f
-            custom[k] = formatter.string(from: date)
-        }
-
-        return .init(
-            date: .init(
-                full: dateFormats["full"]!,
-                long: dateFormats["long"]!,
-                medium: dateFormats["medium"]!,
-                short: dateFormats["short"]!
-            ),
-            time: .init(
-                full: timeFormats["full"]!,
-                long: timeFormats["long"]!,
-                medium: timeFormats["medium"]!,
-                short: timeFormats["short"]!
-            ),
-            timestamp: timeInterval,
-            formats: custom
-        )
     }
 }

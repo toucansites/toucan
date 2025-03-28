@@ -7,7 +7,7 @@ import ToucanModels
 struct SettingsDecodingTestSuite {
 
     @Test
-    func defaults() throws {
+    func full() throws {
         let data = """
             baseUrl: "lorem1"
             name: "lorem2"
@@ -25,15 +25,19 @@ struct SettingsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.userDefined["name"] == nil)
+        #expect(result.baseUrl == "lorem1")
+        #expect(result.name == "lorem2")
+        #expect(result.locale == "lorem3")
+        #expect(result.timeZone == "lorem4")
         let foo = try #require(
             result.userDefined["foo"]?.value as? [String: AnyCodable]
         )
         #expect(foo["bar"] == "baz")
+        #expect(result.userDefined["name"] == nil)
     }
 
     @Test
-    func full() throws {
+    func defaults() throws {
         let data = """
             baseUrl: https://toucansites.com/
             """
@@ -48,8 +52,8 @@ struct SettingsDecodingTestSuite {
 
         #expect(result.baseUrl == "https://toucansites.com")
         #expect(result.name == "localhost")
-        #expect(result.locale == nil)
-        #expect(result.timeZone == nil)
+        #expect(result.locale == "en_US")
+        #expect(result.timeZone == "UTC")
         #expect(result.userDefined.isEmpty)
     }
 }

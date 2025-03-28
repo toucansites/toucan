@@ -67,7 +67,10 @@ struct PipelineDecodingTestSuite {
             dataTypes:
                 date:
                     formats:
-                        test: ymd
+                        test: 
+                            locale: en_US
+                            timeZone: EST
+                            format: ymd
             engine: 
                 id: test
             output:
@@ -97,7 +100,13 @@ struct PipelineDecodingTestSuite {
         #expect(defaultDetailScope.context == .detail)
 
         let dateFormat = try #require(result.dataTypes.date.formats["test"])
-        #expect(dateFormat == "ymd")
+        #expect(
+            dateFormat == .init(
+                locale: "en_US",
+                timeZone: "EST",
+                format: "ymd"
+            )
+        )
 
         let postScope = try #require(result.scopes["post"])
         let postListScope = try #require(postScope["list"])
