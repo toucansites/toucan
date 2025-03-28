@@ -1,26 +1,5 @@
 import Foundation
 
-extension String? {
-
-    var nilToEmpty: String {
-        switch self {
-        case .none:
-            return ""
-        case .some(let value):
-            return value
-        }
-    }
-
-    var emptyToNil: String? {
-        switch self {
-        case .none:
-            return nil
-        case .some(let value):
-            return value.isEmpty ? nil : self
-        }
-    }
-}
-
 extension String {
 
     var minifiedCss: String {
@@ -229,31 +208,6 @@ extension String {
         return String(substring)
     }
 
-    func slugify() -> String {
-        let allowed = CharacterSet(
-            charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_."
-        )
-        return trimmingCharacters(in: .whitespacesAndNewlines)
-            .lowercased()
-            .folding(
-                options: .diacriticInsensitive,
-                locale: .init(identifier: "en_US")
-            )
-            .components(separatedBy: allowed.inverted)
-            .filter { $0 != "" }
-            .joined(separator: "-")
-    }
-
-    func replacingOccurrences(
-        _ dictionary: [String: String]
-    ) -> String {
-        var result = self
-        for (key, value) in dictionary {
-            result = result.replacingOccurrences(of: key, with: value)
-        }
-        return result
-    }
-
     func permalink(
         baseUrl: String
     ) -> String {
@@ -265,12 +219,5 @@ extension String {
             return ([baseUrl] + components).joined(separator: "/")
         }
         return ([baseUrl] + components).joined(separator: "/") + "/"
-    }
-
-    func dropTrailingSlash() -> String {
-        if hasSuffix("/") {
-            return String(dropLast())
-        }
-        return self
     }
 }

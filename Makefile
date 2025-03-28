@@ -1,5 +1,7 @@
 SHELL=/bin/bash
 
+.PHONY: docker
+
 build:
 	swift build
 
@@ -27,3 +29,5 @@ install:
 uninstall:
 	./scripts/uninstall-toucan.sh
 
+docker:
+	docker build -t toucan-image . -f ./Docker/Dockerfile.ubuntu && docker run --rm toucan-image

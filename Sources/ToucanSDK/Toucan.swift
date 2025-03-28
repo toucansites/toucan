@@ -8,17 +8,22 @@
 import Foundation
 import FileManagerKit
 import Logging
+import ToucanFileSystem
+import ToucanTesting
+import ToucanSource
 
-/// A static site generator.
 public struct Toucan {
-
-    // MARK: -
 
     let inputUrl: URL
     let outputUrl: URL
     let baseUrl: String?
-    let seoChecks: Bool
     let logger: Logger
+
+    let fileManager: FileManagerKit
+    let fs: ToucanFileSystem
+    let frontMatterParser: FrontMatterParser
+    let encoder: ToucanEncoder
+    let decoder: ToucanDecoder
 
     /// Initialize a new instance.
     /// - Parameters:
@@ -29,10 +34,13 @@ public struct Toucan {
         input: String,
         output: String,
         baseUrl: String?,
-        seoChecks: Bool,
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
+        self.fs = ToucanFileSystem(fileManager: fileManager)
+        self.encoder = ToucanYAMLEncoder()
+        self.decoder = ToucanYAMLDecoder()
+        self.frontMatterParser = FrontMatterParser(decoder: decoder)
 
         let home = fileManager.homeDirectoryForCurrentUser.path
 
@@ -46,13 +54,8 @@ public struct Toucan {
         self.inputUrl = getSafeUrl(input, home: home)
         self.outputUrl = getSafeUrl(output, home: home)
         self.baseUrl = baseUrl
-        self.seoChecks = seoChecks
         self.logger = logger
     }
-
-    // MARK: - file management
-
-    let fileManager: FileManager
 
     // MARK: - directory management
 
@@ -76,115 +79,89 @@ public struct Toucan {
         logger.debug("Working at: `\(workDirUrl.absoluteString)`.")
 
         do {
-            let loader = SourceLoader(
-                baseUrl: baseUrl,
+            let sourceLoader = SourceLoader(
                 sourceUrl: inputUrl,
-                yamlFileLoader: .yaml,
+                baseUrl: baseUrl,
                 fileManager: fileManager,
-                frontMatterParser: .init(),
+                fs: fs,
+                frontMatterParser: frontMatterParser,
+                encoder: encoder,
+                decoder: decoder,
                 logger: logger
             )
-            let source = try loader.load()
-            source.validate(dateFormatter: DateFormatters.baseFormatter)
 
-            // theme assets
-            try fileManager.copyRecursively(
-                from: source.sourceConfig.currentThemeAssetsUrl,
-                to: workDirUrl
-            )
-            // theme override assets
-            try fileManager.copyRecursively(
-                from: source.sourceConfig.currentThemeOverrideAssetsUrl,
-                to: workDirUrl
-            )
-            // copy global site assets
-            try fileManager.copyRecursively(
-                from: source.sourceConfig.assetsUrl,
-                to: workDirUrl
+            let sourceBundle = try sourceLoader.load()
+
+            // TODO: - do we need this?
+            // source.validate(dateFormatter: DateFormatters.baseFormatter)
+
+            var renderer = SourceBundleRenderer(
+                sourceBundle: sourceBundle,
+                dateFormatter: sourceBundle.settings.dateFormatter(),
+                fileManager: fileManager,
+                logger: logger
             )
 
-            // MARK: copy assets
+            let results = try renderer.render(now: Date())
 
-            for pageBundle in source.pageBundles {
-                let assetsUrl = pageBundle.url
-                    .appendingPathComponent(pageBundle.config.assets.folder)
+            // MARK: - Preparing work dir
 
-                guard
-                    fileManager.directoryExists(at: assetsUrl),
-                    !fileManager.listDirectory(at: assetsUrl).isEmpty
-                else {
-                    continue
-                }
+            try resetDirectory(at: workDirUrl)
 
-                let workDirUrl =
-                    workDirUrl
-                    .appendingPathComponent(pageBundle.config.assets.folder)
-                    .appendingPathComponent(pageBundle.assetsLocation)
+            // MARK: - Copy default assets
 
-                try fileManager.copyRecursively(
-                    from: assetsUrl,
-                    to: workDirUrl
+            let assetsWriter = AssetsWriter(
+                fileManager: fileManager,
+                sourceConfig: sourceBundle.sourceConfig,
+                workDirUrl: workDirUrl
+            )
+            try assetsWriter.copyDefaultAssets()
+
+            // MARK: - Copy content assets
+
+            let assetsPath = sourceBundle.config.contents.assets.path
+            let assetsFolder = workDirUrl.appending(path: assetsPath)
+            try fileManager.createDirectory(at: assetsFolder)
+            let scrDirectory = sourceBundle.sourceConfig.contentsUrl
+
+            let contentAssetsWriter = ContentAssetsWriter(
+                fileManager: fileManager,
+                assetsPath: assetsPath,
+                assetsFolder: assetsFolder,
+                scrDirectory: scrDirectory
+            )
+            for content in sourceBundle.contents {
+                try contentAssetsWriter.copyContentAssets(content: content)
+            }
+
+            // MARK: - Writing results
+
+            for result in results {
+                let destinationFolder = workDirUrl.appending(
+                    path: result.destination.path
+                )
+                try fileManager.createDirectory(at: destinationFolder)
+
+                let outputUrl =
+                    destinationFolder
+                    .appending(path: result.destination.file)
+                    .appendingPathExtension(result.destination.ext)
+
+                try result.contents.write(
+                    to: outputUrl,
+                    atomically: true,
+                    encoding: .utf8
                 )
             }
 
-            let templateRenderer = try MustacheToHTMLRenderer(
-                templatesUrl: source.sourceConfig.currentThemeTemplatesUrl,
-                overridesUrl: source
-                    .sourceConfig
-                    .currentThemeOverrideTemplatesUrl,
-                logger: logger
-            )
-
-            let redirectRenderer = RedirectRenderer(
-                destinationUrl: workDirUrl,
-                fileManager: .default,
-                templateRenderer: templateRenderer,
-                pageBundles: source.pageBundles
-            )
-            try redirectRenderer.render()
-
-            let sitemapRenderer = SitemapRenderer(
-                destinationUrl: workDirUrl,
-                fileManager: .default,
-                templateRenderer: templateRenderer,
-                pageBundles: source.sitemapPageBundles()
-            )
-            try sitemapRenderer.render()
-
-            let rssRenderer = RSSRenderer(
-                source: source,
-                destinationUrl: workDirUrl,
-                fileManager: .default,
-                templateRenderer: templateRenderer,
-                pageBundles: source.rssPageBundles(),
-                logger: logger
-            )
-            try rssRenderer.render()
-
-            let htmlRenderer = try HTMLRenderer(
-                source: source,
-                destinationUrl: workDirUrl,
-                templateRenderer: templateRenderer,
-                seoChecks: seoChecks,
-                logger: logger
-            )
-
-            try htmlRenderer.render()
-
-            let apiRenderer = try APIRenderer(
-                source: source,
-                destinationUrl: workDirUrl,
-                logger: logger
-            )
-            try apiRenderer.render()
+            // MARK: - Finalize and cleanup
 
             try resetDirectory(at: outputUrl)
             try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
-
-            try? fileManager.removeItem(at: workDirUrl)
+            try? fileManager.delete(at: workDirUrl)
         }
         catch {
-            try? fileManager.removeItem(at: workDirUrl)
+            try? fileManager.delete(at: workDirUrl)
             throw error
         }
     }

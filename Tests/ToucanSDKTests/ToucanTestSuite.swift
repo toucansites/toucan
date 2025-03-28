@@ -1,14 +1,8 @@
-//
-//  File.swift
-//
-//
-//  Created by Tibor Bodecs on 03/05/2024.
-//
-
-import XCTest
+import Testing
 @testable import ToucanSDK
 
-final class ToucanTestSuite: XCTestCase {
+@Suite
+struct ToucanTestSuite {
 
     var sitesPath: String {
         "/"
@@ -19,31 +13,8 @@ final class ToucanTestSuite: XCTestCase {
             + "/sites/"
     }
 
-    //    func generate(
-    //        _ site: String
-    //    ) async throws {
-    //        let baseUrl = URL(fileURLWithPath: sitesPath)
-    //        let siteUrl = baseUrl.appendingPathComponent(site)
-    //        let srcUrl = siteUrl.appendingPathComponent("src")
-    //        let destUrl = siteUrl.appendingPathComponent("dist")
-    //
-    //        let toucan = Toucan(
-    //            input: srcUrl.path,
-    //            output: destUrl.path,
-    //            baseUrl: nil
-    //        )
-    //        try toucan.generate()
-    //    }
-    //
-    //    func testGenerate() async throws {
-    //        for argument in [
-    //            //                "minimal",
-    //            "demo"
-    //            //            "theswiftdev.com",
-    //            //            "binarybirds.com",
-    //            //            "swiftonserver.com",
-    //        ] {
-    //            try await generate(argument)
-    //        }
-    //    }
+    @Test
+    func example() async throws {
+
+    }
 }
