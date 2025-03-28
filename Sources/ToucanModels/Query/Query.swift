@@ -71,7 +71,7 @@ public struct Query: Decodable, Equatable {
             Condition.self,
             forKey: .filter
         )
-        // TODO: consider turning order by to an optional?
+
         let orderBy =
             try container.decodeIfPresent(
                 [Order].self,

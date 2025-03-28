@@ -92,9 +92,6 @@ public struct Toucan {
 
             let sourceBundle = try sourceLoader.load()
 
-            // TODO: - do we need this?
-            // source.validate(dateFormatter: DateFormatters.baseFormatter)
-
             var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
                 dateFormatter: sourceBundle.settings.dateFormatter(),

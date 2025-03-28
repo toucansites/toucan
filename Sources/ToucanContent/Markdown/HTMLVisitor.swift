@@ -175,7 +175,6 @@ struct HTMLVisitor: MarkupVisitor {
         var paragraphCount = 0
         var otherCount = 0
 
-        // TODO: provide these from the outside
         let types: [String: [String]] = [
             "note": ["note"],
             "warning": ["warn", "warning"],
@@ -364,7 +363,6 @@ struct HTMLVisitor: MarkupVisitor {
 
     // MARK: - table
 
-    // TODO: alignment support
     mutating func visitTable(
         _ table: Table
     ) -> Result {

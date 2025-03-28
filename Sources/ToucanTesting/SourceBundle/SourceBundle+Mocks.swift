@@ -143,8 +143,6 @@ public extension SourceBundle.Mocks {
             + authorContents + postContents + rssContents + sitemapContents
             + redirectContents
 
-        // TODO: add support for multiple engines: [mustache: [foo: tpl1]]
-
         let templates: [String: String] = [
             "default": Templates.Mocks.default(),
             "post.default": Templates.Mocks.post(),

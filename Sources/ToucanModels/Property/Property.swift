@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  ToucanV2
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
@@ -13,6 +13,7 @@ public struct Property: Decodable, Equatable {
     }
 
     public var `type`: PropertyType
+    /// Required, defaults to  true
     public var `required`: Bool
     public var `default`: AnyCodable?
 
@@ -35,7 +36,6 @@ public struct Property: Decodable, Equatable {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        // TODO: decide if required is true or false by default
         let required =
             try container.decodeIfPresent(
                 Bool.self,

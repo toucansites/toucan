@@ -14,7 +14,7 @@ public extension Settings {
         let formatter = DateFormatter()
         formatter.locale = .init(identifier: "en_US")
         formatter.timeZone = .init(secondsFromGMT: 0)
-        // TODO: validate locale
+
         if let rawLocale = locale {
             formatter.locale = .init(identifier: rawLocale)
         }

@@ -9,7 +9,6 @@ import Logging
 import ToucanModels
 import FileManagerKit
 
-// TODO: transformers
 public struct ContentRenderer {
 
     // MARK: - config

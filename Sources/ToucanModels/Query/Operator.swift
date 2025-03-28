@@ -1,11 +1,10 @@
 //
 //  File.swift
-//  ToucanV2
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-// TODO: maybe use =, !=, >, >=, <, <= values
 public enum Operator: String, Decodable {
 
     // bool, int, double, string

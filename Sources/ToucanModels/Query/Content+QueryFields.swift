@@ -7,7 +7,6 @@
 
 public extension Content {
 
-    // TODO: maybe add support for user defined values?
     var queryFields: [String: AnyCodable] {
         var fields = properties
 
@@ -20,7 +19,7 @@ public extension Content {
             }
         }
 
-        // add identifier & slug explicitly
+        // add some other fields explicitly
         fields["id"] = .init(id)
         fields["slug"] = .init(slug)
         fields["lastUpdate"] = .init(rawValue.lastModificationDate)
