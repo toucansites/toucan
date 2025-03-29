@@ -115,7 +115,6 @@ public struct Toucan {
             
             var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
-                dateFormatter: sourceBundle.settings.dateFormatter(),
                 fileManager: fileManager,
                 logger: logger
             )

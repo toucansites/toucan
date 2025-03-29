@@ -117,7 +117,6 @@ struct DateFormatterTestSuite {
 
         var sourceBundleRenderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: sourceBundle.settings.dateFormatter(),
             fileManager: FileManager.default,
             logger: logger
         )
@@ -237,7 +236,6 @@ struct DateFormatterTestSuite {
 
         var sourceBundleRenderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: sourceBundle.settings.dateFormatter(),
             fileManager: FileManager.default,
             logger: logger
         )

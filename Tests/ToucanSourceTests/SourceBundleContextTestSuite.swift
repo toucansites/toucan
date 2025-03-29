@@ -128,7 +128,6 @@ struct SourceBundleContextTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )
@@ -270,7 +269,6 @@ struct SourceBundleContextTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )

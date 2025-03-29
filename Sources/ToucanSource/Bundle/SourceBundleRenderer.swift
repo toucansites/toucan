@@ -15,7 +15,7 @@ public struct SourceBundleRenderer {
 
     let sourceBundle: SourceBundle
     let generatorInfo: GeneratorInfo
-    let dateFormatter: DateFormatter
+    let formatters: [String: DateFormatter]
     let fileManager: FileManagerKit
     let logger: Logger
 
@@ -24,15 +24,14 @@ public struct SourceBundleRenderer {
     public init(
         sourceBundle: SourceBundle,
         generatorInfo: GeneratorInfo = .current,
-        dateFormatter: DateFormatter,
         fileManager: FileManagerKit,
         logger: Logger
     ) {
         self.sourceBundle = sourceBundle
         self.generatorInfo = generatorInfo
-        self.dateFormatter = dateFormatter
         self.fileManager = fileManager
         self.logger = logger
+        self.formatters = Self.prepareFormatters(sourceBundle)
     }
 
     // MARK: -
@@ -41,18 +40,12 @@ public struct SourceBundleRenderer {
     private func getSiteContext(
         for now: TimeInterval
     ) -> [String: AnyCodable] {
-        return [
+        [
             "baseUrl": .init(sourceBundle.settings.baseUrl),
             "name": .init(sourceBundle.settings.name),
             "locale": .init(sourceBundle.settings.locale),
             "timeZone": .init(sourceBundle.settings.timeZone),
-            "generation": .init(
-                now.convertToDateFormats(
-                    formatter: dateFormatter,
-                    formats: sourceBundle.config.dateFormats.output,
-                    settings: sourceBundle.settings
-                )
-            ),
+            "generation": .init(now.toDateFormats(formatters: formatters)),
             "generator": .init(generatorInfo),
         ]
         // TODO: check if overwritten with e.g.: generator
@@ -114,10 +107,8 @@ public struct SourceBundleRenderer {
                     pipeline: pipeline
                 ) ?? now
 
-            let lastUpdateContext = lastUpdate.convertToDateFormats(
-                formatter: dateFormatter,
-                formats: sourceBundle.config.dateFormats.output,
-                settings: sourceBundle.settings
+            let lastUpdateContext = lastUpdate.toDateFormats(
+                formatters: formatters
             )
             siteContext["lastUpdate"] = .init(lastUpdateContext)
 
@@ -320,11 +311,7 @@ public struct SourceBundleRenderer {
                     let rawDate = v.value(as: Double.self)
                 {
                     result[k] = .init(
-                        rawDate.convertToDateFormats(
-                            formatter: dateFormatter,
-                            formats: sourceBundle.config.dateFormats.output,
-                            settings: sourceBundle.settings
-                        )
+                        rawDate.toDateFormats(formatters: formatters)
                     )
                 }
                 else {
@@ -340,10 +327,8 @@ public struct SourceBundleRenderer {
 
             //            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
-                content.rawValue.lastModificationDate.convertToDateFormats(
-                    formatter: dateFormatter,
-                    formats: sourceBundle.config.dateFormats.output,
-                    settings: sourceBundle.settings
+                content.rawValue.lastModificationDate.toDateFormats(
+                    formatters: formatters
                 )
             )
         }
@@ -516,5 +501,47 @@ public struct SourceBundleRenderer {
                 destination: $0.destination
             )
         }
+    }
+}
+
+extension SourceBundleRenderer {
+    
+    static func prepareFormatters(
+        _ sourceBundle: SourceBundle
+    ) -> [String: DateFormatter] {
+        var formatters: [String: DateFormatter] = [:]
+        let styles: [(String, DateFormatter.Style)] = [
+            ("full", .full),
+            ("long", .long),
+            ("medium", .medium),
+            ("short", .short),
+        ]
+
+        for (key, style) in styles {
+            let dateFormatter = sourceBundle.settings.dateFormatter()
+            dateFormatter.dateStyle = style
+            dateFormatter.timeStyle = .none
+            formatters["date.\(key)"] = dateFormatter
+
+            let timeFormatter = sourceBundle.settings.dateFormatter()
+            timeFormatter.dateStyle = .none
+            timeFormatter.timeStyle = style
+            formatters["time.\(key)"] = timeFormatter
+        }
+
+        let standard: [String: LocalizedDateFormat] = [
+            "iso8601": .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+            "rss": .init(format: "EEE, dd MMM yyyy HH:mm:ss Z"),
+            "sitemap": .init(format: "yyyy-MM-dd"),
+        ]
+
+        for (key, dateFormat) in standard.recursivelyMerged(
+            with: sourceBundle.config.dateFormats.output
+        ) {
+            let formatter = sourceBundle.settings.dateFormatter()
+            formatter.config(with: dateFormat)
+            formatters[key] = formatter
+        }
+        return formatters
     }
 }

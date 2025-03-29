@@ -107,7 +107,6 @@ struct SourceBundleSitemapTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )
@@ -242,7 +241,6 @@ struct SourceBundleSitemapTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )

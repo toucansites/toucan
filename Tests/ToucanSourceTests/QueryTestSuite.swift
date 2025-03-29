@@ -474,7 +474,6 @@ struct QueryTestSuite {
         try #require(results1.count == 1)
     }
 
-    @Test(.disabled())
     func iterators() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
