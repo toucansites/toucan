@@ -97,7 +97,7 @@ private extension RawContentLoader {
             )
         )
 
-        //         TODO: - implement asset properties, use them where: frontMatter. / frontMatter[
+        //         TODO: implement asset properties, use them where: frontMatter. / frontMatter[
         //        see: https://www.notion.so/binarybirds/Asset-properties-1b7947db00a680cc8bedcdd644c26698?pvs=4
         //
         //        let encoder: ToucanEncoder = ToucanYAMLEncoder()
