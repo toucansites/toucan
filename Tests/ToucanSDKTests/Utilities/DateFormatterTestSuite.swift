@@ -13,7 +13,7 @@ struct DateFormatterTestSuite {
     @Test
     func locale_DE_Formatter() throws {
         var settings = Settings.defaults
-        settings.locale = "de_DE"
+        settings.locale = "de-DE"
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
@@ -34,7 +34,7 @@ struct DateFormatterTestSuite {
         let formatter = sourceBundle.settings.dateFormatter()
         formatter.dateStyle = .full
 
-        #expect(formatter.locale.identifier == "de_DE")
+        #expect(formatter.locale.identifier == "de-DE")
         #expect(formatter.string(from: date) == "Montag, 1. Januar 2001")
     }
 
@@ -45,7 +45,7 @@ struct DateFormatterTestSuite {
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
         var settings = Settings.defaults
-        settings.locale = "de_DE"
+        settings.locale = "de-DE"
 
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -147,13 +147,13 @@ struct DateFormatterTestSuite {
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
         var settings = Settings.defaults
-        settings.locale = "de_DE"
+        settings.locale = "de-DE"
 
         var config = Config.defaults
         config.dateFormats.output = [
             "my-date-format": .init(format: "y | MM | dd"),
             "my-time-format": .init(
-                locale: "hu_HU",
+                locale: "hu-HU",
                 timeZone: "CET",
                 format: "HH | mm | ss"
             ),
@@ -269,7 +269,7 @@ struct DateFormatterTestSuite {
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
         var settings = Settings.defaults
-        settings.locale = "de_DE"
+        settings.locale = "de-DE"
 
         var config = Config.defaults
         config.dateFormats.output = [

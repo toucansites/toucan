@@ -26,7 +26,7 @@ public struct Settings: Decodable, Equatable {
         .init(
             baseUrl: "http://localhost:3000",
             name: "localhost",
-            locale: "en_US",
+            locale: "en-US",
             timeZone: "UTC",
             userDefined: [:]
         )

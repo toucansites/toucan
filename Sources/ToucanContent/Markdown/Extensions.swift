@@ -39,7 +39,7 @@ public extension String {
             .lowercased()
             .folding(
                 options: .diacriticInsensitive,
-                locale: .init(identifier: "en_US")
+                locale: .init(identifier: "en-US")
             )
             .components(separatedBy: allowed.inverted)
             .filter { $0 != "" }

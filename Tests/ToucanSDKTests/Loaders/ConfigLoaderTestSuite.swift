@@ -36,7 +36,7 @@ struct ConfigLoaderTestSuite {
                                 format: y
                             output:
                                 hu:
-                                    locale: hu_HU
+                                    locale: hu-HU
                                     timeZone: CET
                                     format: "y.MM.dd"
                         """
@@ -66,7 +66,7 @@ struct ConfigLoaderTestSuite {
                             input: .init(format: "y"),
                             output: [
                                 "hu": .init(
-                                    locale: "hu_HU",
+                                    locale: "hu-HU",
                                     timeZone: "CET",
                                     format: "y.MM.dd"
                                 )
