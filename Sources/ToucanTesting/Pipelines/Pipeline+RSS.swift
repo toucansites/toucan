@@ -8,13 +8,7 @@ public extension Pipeline.Mocks {
             id: "rss",
             scopes: [:],
             queries: [:],
-            dataTypes: .init(
-                date: .init(
-                    formats: [
-                        "full": .init(format: "y.m.d.")
-                    ]
-                )
-            ),
+            dataTypes: .defaults,
             contentTypes: .init(
                 include: [
                     "rss"

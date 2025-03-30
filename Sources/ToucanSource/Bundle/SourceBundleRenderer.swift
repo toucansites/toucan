@@ -96,6 +96,13 @@ public struct SourceBundleRenderer {
 
         for pipeline in sourceBundle.pipelines {
 
+            let pipelineFormatters = pipeline.dataTypes.date.formats.mapValues {
+                sourceBundle.settings.dateFormatter($0)
+            }
+            let allFormatters = formatters.recursivelyMerged(
+                with: pipelineFormatters
+            )
+            
             let contents = iteratorResolver.resolve(
                 contents: sourceBundle.contents,
                 using: pipeline
@@ -108,7 +115,7 @@ public struct SourceBundleRenderer {
                 ) ?? now
 
             let lastUpdateContext = lastUpdate.toDateFormats(
-                formatters: formatters
+                formatters: allFormatters
             )
             siteContext["lastUpdate"] = .init(lastUpdateContext)
 
@@ -282,6 +289,14 @@ public struct SourceBundleRenderer {
         allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
+        
+        let pipelineFormatters = pipeline.dataTypes.date.formats.mapValues {
+            sourceBundle.settings.dateFormatter($0)
+        }
+        let allFormatters = formatters.recursivelyMerged(
+            with: pipelineFormatters
+        )
+        
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
             for: content.definition.id
@@ -311,7 +326,7 @@ public struct SourceBundleRenderer {
                     let rawDate = v.value(as: Double.self)
                 {
                     result[k] = .init(
-                        rawDate.toDateFormats(formatters: formatters)
+                        rawDate.toDateFormats(formatters: allFormatters)
                     )
                 }
                 else {
@@ -328,7 +343,7 @@ public struct SourceBundleRenderer {
             //            result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 content.rawValue.lastModificationDate.toDateFormats(
-                    formatters: formatters
+                    formatters: allFormatters
                 )
             )
         }

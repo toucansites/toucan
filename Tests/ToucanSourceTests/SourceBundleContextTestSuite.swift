@@ -19,7 +19,15 @@ struct SourceBundleContextTestSuite {
     @Test(.disabled("Disable for now to speed up generation process"))
     func isCurrentUrl() throws {
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        let formatter = DateFormatter.Mocks.en_US()
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
         let now = Date()
 
         let pipelines: [Pipeline] = [
@@ -63,7 +71,7 @@ struct SourceBundleContextTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
+                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -94,7 +102,7 @@ struct SourceBundleContextTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
+                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -108,17 +116,11 @@ struct SourceBundleContextTestSuite {
             "sitemap": Templates.Mocks.sitemap()
         ]
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
@@ -183,12 +185,21 @@ struct SourceBundleContextTestSuite {
         #expect(exp1.context.featured.allSatisfy { !$0.isCurrentURL })
     }
 
-    @Test(.disabled("Disable for now to speed up generation process"))
+    @Test()
     func generatorMetadata() async throws {
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        let formatter = DateFormatter.Mocks.en_US()
-        let isoFormatter = DateFormatter.Mocks
-            .en_US("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+        let isoFormatter = settings.dateFormatter(
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        )
         let now = Date()
 
         let pipelines: [Pipeline] = [
@@ -241,7 +252,7 @@ struct SourceBundleContextTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
+                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -249,17 +260,11 @@ struct SourceBundleContextTestSuite {
 
         let contents = pageContents
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],
@@ -290,7 +295,7 @@ struct SourceBundleContextTestSuite {
         let exp = try decoder.decode(Exp.self, from: data)
 
         #expect(exp.site.generator.name == "Toucan")
-        #expect(exp.site.generator.version == "1.0.0-beta3")
+        #expect(exp.site.generator.version == "1.0.0-beta.3")
         #expect(
             exp.site.generation.formats["iso8601"]
                 == isoFormatter.string(from: now)
