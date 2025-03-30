@@ -93,9 +93,6 @@ public struct Toucan {
 
             let sourceBundle = try sourceLoader.load()
 
-            // TODO: - do we need this?
-            // source.validate(dateFormatter: DateFormatters.baseFormatter)
-
             // MARK: - Validate locales and time zones
 
             /// Validate site locale

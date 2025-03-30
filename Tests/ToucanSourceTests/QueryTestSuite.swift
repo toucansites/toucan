@@ -478,7 +478,7 @@ struct QueryTestSuite {
         let sourceBundle = SourceBundle.Mocks.complete()
 
         let query = Query(
-            contentType: "post",
+            contentType: "page",
             filter: .field(
                 key: "iterator",
                 operator: .equals,
@@ -486,10 +486,14 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
-        try #require(results.count == 1)
-        #expect(
-            results[0].properties["name"]?.value(as: String.self) == "Author #2"
+        let resolver = ContentIteratorResolver(
+            baseUrl: "http://localhost:3000"
         )
+        let contents = resolver.resolve(
+            contents: sourceBundle.contents,
+            using: Pipeline.Mocks.html()
+        )
+        let results = contents.run(query: query)
+        try #require(results.count == 5)
     }
 }

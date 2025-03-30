@@ -63,7 +63,7 @@ public struct AnyCodable: Codable {
         let container = try decoder.singleValueContainer()
 
         if container.decodeNil() {
-            self.init(Optional<Self>.none)  // TODO: double check this
+            self.init(Optional<Self>.none)
         }
         else if let bool = try? container.decode(Bool.self) {
             self.init(bool)
@@ -233,20 +233,9 @@ extension AnyCodable: ExpressibleByArrayLiteral {
         self.init(elements)
     }
 }
-//extension AnyCodable: ExpressibleByDictionaryLiteral {
-//    public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
-//        self.init(
-//            [AnyHashable: Any](
-//                elements,
-//                uniquingKeysWith: { first, _ in first }
-//            )
-//        )
-//    }
-//}
 
 extension AnyCodable: ExpressibleByDictionaryLiteral {
 
-    // TODO: double check this
     public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
         var dict: [String: AnyCodable] = [:]
         for (key, value) in elements {

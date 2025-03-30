@@ -40,16 +40,16 @@ public struct SourceBundleRenderer {
     private func getSiteContext(
         for now: TimeInterval
     ) -> [String: AnyCodable] {
-        [
-            "baseUrl": .init(sourceBundle.settings.baseUrl),
-            "name": .init(sourceBundle.settings.name),
-            "locale": .init(sourceBundle.settings.locale),
-            "timeZone": .init(sourceBundle.settings.timeZone),
-            "generation": .init(now.toDateFormats(formatters: formatters)),
-            "generator": .init(generatorInfo),
-        ]
-        // TODO: check if overwritten with e.g.: generator
-        .recursivelyMerged(with: sourceBundle.settings.userDefined)
+        sourceBundle.settings.userDefined.recursivelyMerged(
+            with: [
+                "baseUrl": .init(sourceBundle.settings.baseUrl),
+                "name": .init(sourceBundle.settings.name),
+                "locale": .init(sourceBundle.settings.locale),
+                "timeZone": .init(sourceBundle.settings.timeZone),
+                "generation": .init(now.toDateFormats(formatters: formatters)),
+                "generator": .init(generatorInfo),
+            ]
+        )
     }
 
     /// Returns the last content update based on the pipeline config
@@ -260,7 +260,6 @@ public struct SourceBundleRenderer {
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
 
-        // TODO: more path arguments?
         let outputArgs: [String: String] = [
             "{{id}}": content.id,
             "{{slug}}": content.slug,
@@ -335,13 +334,12 @@ public struct SourceBundleRenderer {
                 }
             }
 
-            // TODO: web only properties
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
                 content.slug.permalink(baseUrl: sourceBundle.settings.baseUrl)
             )
 
-            //            result["isCurrentURL"] = .init(content.slug == currentSlug)
+            // result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 content.rawValue.lastModificationDate.toDateFormats(
                     formatters: allFormatters
@@ -461,11 +459,10 @@ public struct SourceBundleRenderer {
         ]
 
         return try contextBundles.compactMap {
-            // TODO: override output using front matter in both cases
             let data = try encoder.encode($0.context)
             let json = String(data: data, encoding: .utf8)
             guard let json else {
-                // TODO: log
+                logger.warning("Could not encode context data as JSON output.")
                 return nil
             }
             return .init(
@@ -482,7 +479,8 @@ public struct SourceBundleRenderer {
         let renderer = MustacheTemplateRenderer(
             templates: try sourceBundle.templates.mapValues {
                 try .init(string: $0)
-            }
+            },
+            logger: logger
         )
 
         return try contextBundles.compactMap {
@@ -495,10 +493,16 @@ public struct SourceBundleRenderer {
             let contentTypeTemplate = bundleOptions.string("template")
             let contentTemplate = $0.content.rawValue.frontMatter
                 .string("template")
+            let template = contentTemplate ?? contentTypeTemplate
 
-            guard let template = contentTemplate ?? contentTypeTemplate
-            else {
-                // TODO: log
+            guard let template, !template.isEmpty else {
+                logger.warning(
+                    "Missing mustache template file.",
+                    metadata: [
+                        "slug": "\($0.content.slug)",
+                        "type": "\($0.content.definition.id)",
+                    ]
+                )
                 return nil
             }
 
@@ -507,8 +511,15 @@ public struct SourceBundleRenderer {
                 with: $0.context
             )
 
-            guard let html else {
-                // TODO: log
+            guard let html, !html.isEmpty else {
+                logger.warning(
+                    "Could not get valid HTML from content using template.",
+                    metadata: [
+                        "slug": "\($0.content.slug)",
+                        "type": "\($0.content.definition.id)",
+                        "template": "\(template)",
+                    ]
+                )
                 return nil
             }
 
