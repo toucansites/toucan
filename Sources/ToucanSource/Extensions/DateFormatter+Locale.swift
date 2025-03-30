@@ -12,7 +12,7 @@ extension DateFormatter {
 
     static var `default`: DateFormatter {
         let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
+        formatter.locale = .init(identifier: "en-US")
         formatter.timeZone = .init(secondsFromGMT: 0)!
         return formatter
     }

@@ -88,7 +88,7 @@ struct SourceBundleRedirectTestSuite {
 
         let expectation = #"""
             <!DOCTYPE html>
-            <html >
+            <html lang="en-US">
                 <meta charset="utf-8">
                 <title>Redirecting&hellip;</title>
                 <link rel="canonical" href="home">

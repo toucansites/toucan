@@ -35,7 +35,7 @@ struct PropertyDecodingTestSuite {
             type: date
             dateFormat: 
                 format: "ymd"
-                locale: en_US
+                locale: en-US
                 timeZone: EST
 
             """
@@ -52,7 +52,7 @@ struct PropertyDecodingTestSuite {
             result.type
                 == .date(
                     format: .init(
-                        locale: "en_US",
+                        locale: "en-US",
                         timeZone: "EST",
                         format: "ymd"
                     )

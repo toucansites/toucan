@@ -45,7 +45,7 @@ struct ConfigDecodingTestSuite {
                     format: ymd
                 output:
                     test1: 
-                        locale: en_US
+                        locale: en-US
                         timeZone: EST
                         format: his
             """
@@ -66,7 +66,7 @@ struct ConfigDecodingTestSuite {
         #expect(
             output
                 == .init(
-                    locale: "en_US",
+                    locale: "en-US",
                     timeZone: "EST",
                     format: "his"
                 )

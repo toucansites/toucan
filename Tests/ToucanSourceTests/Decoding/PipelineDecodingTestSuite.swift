@@ -68,7 +68,7 @@ struct PipelineDecodingTestSuite {
                 date:
                     dateFormats:
                         test: 
-                            locale: en_US
+                            locale: en-US
                             timeZone: EST
                             format: ymd
             engine: 
@@ -103,7 +103,7 @@ struct PipelineDecodingTestSuite {
         #expect(
             dateFormat
                 == .init(
-                    locale: "en_US",
+                    locale: "en-US",
                     timeZone: "EST",
                     format: "ymd"
                 )

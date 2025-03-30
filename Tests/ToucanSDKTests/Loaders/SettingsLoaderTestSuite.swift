@@ -50,7 +50,7 @@ struct SettingsLoaderTestSuite {
             let expectation = Settings(
                 baseUrl: "http://localhost:8080/",
                 name: "Test",
-                locale: "en_US",
+                locale: "en-US",
                 timeZone: "UTC",
                 userDefined: [:]
             )
@@ -90,7 +90,7 @@ struct SettingsLoaderTestSuite {
             let expectation = Settings(
                 baseUrl: "http://localhost:3000/",
                 name: "Test",
-                locale: "en_US",
+                locale: "en-US",
                 timeZone: "UTC",
                 userDefined: [:]
             )

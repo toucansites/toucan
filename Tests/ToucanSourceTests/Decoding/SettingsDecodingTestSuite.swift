@@ -52,7 +52,7 @@ struct SettingsDecodingTestSuite {
 
         #expect(result.baseUrl == "https://toucansites.com")
         #expect(result.name == "localhost")
-        #expect(result.locale == "en_US")
+        #expect(result.locale == "en-US")
         #expect(result.timeZone == "UTC")
         #expect(result.userDefined.isEmpty)
     }

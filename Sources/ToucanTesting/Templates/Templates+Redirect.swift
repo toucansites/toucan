@@ -3,7 +3,7 @@ public extension Templates.Mocks {
     static func redirect() -> String {
         """
         <!DOCTYPE html>
-        <html {{#site.language}}lang="{{.}}"{{/site.language}}>
+        <html {{#site.locale}}lang="{{.}}"{{/site.locale}}>
             <meta charset="utf-8">
             <title>Redirecting&hellip;</title>
             <link rel="canonical" href="{{page.to}}">
