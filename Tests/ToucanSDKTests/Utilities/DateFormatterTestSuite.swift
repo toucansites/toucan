@@ -94,7 +94,6 @@ struct DateFormatterTestSuite {
         let converter = ContentDefinitionConverter(
             contentDefinition: postDefinition,
             dateFormatter: inputFormatter,
-            defaultDateFormat: sourceConfig.config.dateFormats.input.format,
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)
@@ -205,7 +204,6 @@ struct DateFormatterTestSuite {
         let converter = ContentDefinitionConverter(
             contentDefinition: postDefinition,
             dateFormatter: inputFormatter,
-            defaultDateFormat: config.dateFormats.input.format,
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)
@@ -324,7 +322,6 @@ struct DateFormatterTestSuite {
         let converter = ContentDefinitionConverter(
             contentDefinition: postDefinition,
             dateFormatter: inputFormatter,
-            defaultDateFormat: config.dateFormats.input.format,
             logger: logger
         )
         let postContent = converter.convert(rawContent: rawPostContent)

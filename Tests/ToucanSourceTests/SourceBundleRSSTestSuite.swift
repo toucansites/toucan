@@ -46,7 +46,6 @@ struct SourceBundleRSSTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -59,7 +58,6 @@ struct SourceBundleRSSTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: rssDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)

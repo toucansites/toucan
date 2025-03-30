@@ -42,7 +42,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: tagDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -54,7 +53,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: authorDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -70,7 +68,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -83,7 +80,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: sitemapDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -149,12 +145,17 @@ struct SourceBundleSitemapTestSuite {
     func sitemapWithPagination() throws {
         let logger = Logger(label: "SourceBundleSitemapTestSuite")
         let now = Date()
-        let formatter = DateFormatter()
-        formatter.locale = .init(identifier: "en_US")
-        formatter.timeZone = .init(secondsFromGMT: 0)
-
-        formatter.dateFormat = "Y-MM-dd"
-        let nowString = formatter.string(from: now)
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+        let sitemapFormatter = settings.dateFormatter("Y-MM-dd")
+        let nowString = sitemapFormatter.string(from: now)
 
         let pipelines = [
             Pipeline.Mocks.html(),
@@ -167,7 +168,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: tagDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -179,7 +179,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: authorDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -195,7 +194,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -208,7 +206,6 @@ struct SourceBundleSitemapTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: sitemapDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -224,17 +221,11 @@ struct SourceBundleSitemapTestSuite {
             "sitemap": Templates.Mocks.sitemap(),
         ]
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

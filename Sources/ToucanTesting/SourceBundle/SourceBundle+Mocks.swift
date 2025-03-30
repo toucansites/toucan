@@ -34,7 +34,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -47,7 +46,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: categoryDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -60,7 +58,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: guideDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -73,7 +70,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: tagDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -86,7 +82,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: authorDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -99,7 +94,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -112,7 +106,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: rssDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -125,7 +118,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: sitemapDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -138,7 +130,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: redirectDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)

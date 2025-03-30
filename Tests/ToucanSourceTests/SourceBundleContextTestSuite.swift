@@ -71,7 +71,6 @@ struct SourceBundleContextTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -102,7 +101,6 @@ struct SourceBundleContextTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -252,7 +250,6 @@ struct SourceBundleContextTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)

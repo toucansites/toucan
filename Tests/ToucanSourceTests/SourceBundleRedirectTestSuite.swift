@@ -41,7 +41,6 @@ struct SourceBundleRedirectTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -54,7 +53,6 @@ struct SourceBundleRedirectTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: redirectDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: sourceConfig.config.dateFormats.input.format,
                 logger: logger
             )
             return converter.convert(rawContent: $0)
