@@ -222,4 +222,26 @@ struct ToucanFileSystemTests {
             )
         }
     }
+
+    @Test()
+    func fileSystem_SettingsLocator() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    "site.yml"
+                    "site.yaml"
+                    "index.yml"
+                    "index.md"
+                }
+            }
+        }
+        .test {
+            let fs = ToucanFileSystem(fileManager: $0)
+            let url = $1.appending(path: "src/contents/")
+            let locations = fs.settingsLocator.locate(at: url)
+
+            #expect(locations.sorted() == ["site.yaml", "site.yml"])
+        }
+    }
+
 }

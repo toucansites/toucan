@@ -15,7 +15,9 @@ public extension ContentDefinition.Mocks {
                     default: nil
                 ),
                 "publication": .init(
-                    type: .date(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+                    type: .date(
+                        format: .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    ),
                     required: true,
                     default: nil
                 ),

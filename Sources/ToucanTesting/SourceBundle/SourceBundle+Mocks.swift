@@ -16,7 +16,16 @@ public extension SourceBundle.Mocks {
         ]
     ) -> SourceBundle {
         let logger = Logger(label: "SourceBundleMocks")
-        let formatter = DateFormatter.Mocks.en_US()
+
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
 
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
@@ -25,7 +34,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -38,7 +46,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: categoryDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -51,7 +58,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: guideDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -64,7 +70,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: tagDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -77,7 +82,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: authorDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -90,7 +94,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -103,7 +106,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: rssDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -116,7 +118,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: sitemapDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -129,7 +130,6 @@ public extension SourceBundle.Mocks {
             let converter = ContentDefinitionConverter(
                 contentDefinition: redirectDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -151,17 +151,11 @@ public extension SourceBundle.Mocks {
             "redirect": Templates.Mocks.redirect(),
         ]
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         return .init(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,

@@ -20,8 +20,17 @@ struct SourceBundleRSSTestSuite {
     func rss() throws {
         let logger = Logger(label: "SourceBundleRSSTestSuite")
         let now = Date()
-        let formatter = DateFormatter.Mocks.en_US("EEE, dd MMM yyyy HH:mm:ss Z")
-        let nowString = formatter.string(from: now)
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+        let rssFormatter = settings.dateFormatter("EEE, dd MMM yyyy HH:mm:ss Z")
+        let nowString = rssFormatter.string(from: now)
 
         let pipelines = [
             Pipeline.Mocks.rss()
@@ -37,7 +46,6 @@ struct SourceBundleRSSTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -50,7 +58,6 @@ struct SourceBundleRSSTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: rssDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -64,17 +71,11 @@ struct SourceBundleRSSTestSuite {
             "rss": Templates.Mocks.rss()
         ]
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
@@ -84,7 +85,6 @@ struct SourceBundleRSSTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )

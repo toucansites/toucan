@@ -25,7 +25,7 @@ struct SettingsLoaderTestSuite {
             Directory("src") {
                 Directory("contents") {
                     File(
-                        "index.yml",
+                        "site.yml",
                         string: """
                             baseUrl: http://localhost:8080/
                             name: Test
@@ -40,7 +40,7 @@ struct SettingsLoaderTestSuite {
                 url: url,
                 baseUrl: nil,
                 locations: [
-                    "index.yml"
+                    "site.yml"
                 ],
                 encoder: ToucanYAMLEncoder(),
                 decoder: ToucanYAMLDecoder(),
@@ -50,8 +50,8 @@ struct SettingsLoaderTestSuite {
             let expectation = Settings(
                 baseUrl: "http://localhost:8080/",
                 name: "Test",
-                locale: nil,
-                timeZone: nil,
+                locale: "en_US",
+                timeZone: "UTC",
                 userDefined: [:]
             )
             #expect(result == expectation)
@@ -65,7 +65,7 @@ struct SettingsLoaderTestSuite {
             Directory("src") {
                 Directory("contents") {
                     File(
-                        "index.yml",
+                        "site.yml",
                         string: """
                             baseUrl: http://localhost:8080/
                             name: Test
@@ -80,7 +80,7 @@ struct SettingsLoaderTestSuite {
                 url: url,
                 baseUrl: "http://localhost:3000",
                 locations: [
-                    "index.yml"
+                    "site.yml"
                 ],
                 encoder: ToucanYAMLEncoder(),
                 decoder: ToucanYAMLDecoder(),
@@ -90,8 +90,8 @@ struct SettingsLoaderTestSuite {
             let expectation = Settings(
                 baseUrl: "http://localhost:3000/",
                 name: "Test",
-                locale: nil,
-                timeZone: nil,
+                locale: "en_US",
+                timeZone: "UTC",
                 userDefined: [:]
             )
             #expect(result == expectation)

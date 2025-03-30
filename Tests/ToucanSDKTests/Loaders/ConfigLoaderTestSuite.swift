@@ -32,7 +32,13 @@ struct ConfigLoaderTestSuite {
                             assets: 
                                 path: assets
                         dateFormats:
-                            input: y
+                            input: 
+                                format: y
+                            output:
+                                hu:
+                                    locale: hu_HU
+                                    timeZone: CET
+                                    format: "y.MM.dd"
                         """
                 )
             }
@@ -56,7 +62,16 @@ struct ConfigLoaderTestSuite {
                         pipelines: .defaults,
                         contents: .defaults,
                         themes: .defaults,
-                        dateFormats: .init(input: "y", output: [:])
+                        dateFormats: .init(
+                            input: .init(format: "y"),
+                            output: [
+                                "hu": .init(
+                                    locale: "hu_HU",
+                                    timeZone: "CET",
+                                    format: "y.MM.dd"
+                                )
+                            ]
+                        )
                     )
             )
         }

@@ -43,3 +43,10 @@ extension String? {
         }
     }
 }
+
+extension String {
+
+    var emptyToNil: String? {
+        isEmpty ? nil : self
+    }
+}

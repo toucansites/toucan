@@ -200,7 +200,6 @@ struct SourceLoader {
             let contentDefinitionConverter = ContentDefinitionConverter(
                 contentDefinition: contentDefinition,
                 dateFormatter: settings.dateFormatter(config.dateFormats.input),
-                defaultDateFormat: config.dateFormats.input,
                 logger: logger
             )
 

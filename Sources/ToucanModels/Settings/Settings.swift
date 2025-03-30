@@ -16,8 +16,8 @@ public struct Settings: Decodable, Equatable {
 
     public var baseUrl: String
     public var name: String
-    public var locale: String?
-    public var timeZone: String?
+    public var locale: String
+    public var timeZone: String
     public var userDefined: [String: AnyCodable]
 
     // MARK: - defaults
@@ -26,8 +26,8 @@ public struct Settings: Decodable, Equatable {
         .init(
             baseUrl: "http://localhost:3000",
             name: "localhost",
-            locale: nil,
-            timeZone: nil,
+            locale: "en_US",
+            timeZone: "UTC",
             userDefined: [:]
         )
     }
@@ -37,8 +37,8 @@ public struct Settings: Decodable, Equatable {
     public init(
         baseUrl: String,
         name: String,
-        locale: String?,
-        timeZone: String?,
+        locale: String,
+        timeZone: String,
         userDefined: [String: AnyCodable]
     ) {
         self.baseUrl = baseUrl.dropTrailingSlash()

@@ -22,7 +22,12 @@ struct ConfigDecodingTestSuite {
         #expect(result.pipelines.path == "pipelines")
         #expect(result.contents.path == "contents")
         #expect(result.contents.assets.path == "assets")
-        #expect(result.dateFormats.input == "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        #expect(
+            result.dateFormats.input
+                == .init(
+                    format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                )
+        )
         #expect(result.dateFormats.output.isEmpty)
     }
 
@@ -36,9 +41,13 @@ struct ConfigDecodingTestSuite {
                 assets:
                     path: baz
             dateFormats:
-                input: ymd
+                input: 
+                    format: ymd
                 output:
-                    test1: his
+                    test1: 
+                        locale: en_US
+                        timeZone: EST
+                        format: his
             """
             .dataValue()
 
@@ -52,8 +61,15 @@ struct ConfigDecodingTestSuite {
         #expect(result.pipelines.path == "foo")
         #expect(result.contents.path == "bar")
         #expect(result.contents.assets.path == "baz")
-        #expect(result.dateFormats.input == "ymd")
+        #expect(result.dateFormats.input == .init(format: "ymd"))
         let output = try #require(result.dateFormats.output["test1"])
-        #expect(output == "his")
+        #expect(
+            output
+                == .init(
+                    locale: "en_US",
+                    timeZone: "EST",
+                    format: "his"
+                )
+        )
     }
 }

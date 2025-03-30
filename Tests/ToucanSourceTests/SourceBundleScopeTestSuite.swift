@@ -20,7 +20,16 @@ struct SourceBundleScopeTestSuite {
     func testScopes() throws {
         let logger = Logger(label: "SourceBundleScopeTestSuite")
         let now = Date()
-        let formatter = DateFormatter.Mocks.en_US()
+
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
 
         let pipelines: [Pipeline] = [
             .init(
@@ -89,7 +98,6 @@ struct SourceBundleScopeTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: postDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -120,7 +128,6 @@ struct SourceBundleScopeTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -134,17 +141,11 @@ struct SourceBundleScopeTestSuite {
             "sitemap": Templates.Mocks.sitemap()
         ]
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
@@ -154,7 +155,6 @@ struct SourceBundleScopeTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )
@@ -208,7 +208,5 @@ struct SourceBundleScopeTestSuite {
         let exp1 = try decoder.decode(Exp1.self, from: data1)
 
         #expect(exp1.context.featured.allSatisfy { $0.isCurrentURL == nil })
-
     }
-
 }

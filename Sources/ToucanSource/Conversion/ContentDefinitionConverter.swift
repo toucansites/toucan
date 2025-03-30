@@ -13,25 +13,33 @@ public struct ContentDefinitionConverter {
 
     let contentDefinition: ContentDefinition
     let dateFormatter: DateFormatter
-    let defaultDateFormat: String
+    let defaultDateFormat: LocalizedDateFormat
 
     let logger: Logger
 
     public init(
         contentDefinition: ContentDefinition,
         dateFormatter: DateFormatter,
-        defaultDateFormat: String,
         logger: Logger
     ) {
         self.contentDefinition = contentDefinition
         self.dateFormatter = dateFormatter
-        self.defaultDateFormat = defaultDateFormat
+        self.defaultDateFormat = .init(
+            locale: dateFormatter.locale.identifier,
+            timeZone: dateFormatter.timeZone.identifier,
+            format: dateFormatter.dateFormat!
+        )
         self.logger = logger
     }
 
     public func convert(rawContent: RawContent) -> Content {
         var properties: [String: AnyCodable] = [:]
-        for (key, property) in contentDefinition.properties {
+
+        for (key, property) in contentDefinition.properties.sorted(by: {
+            $0.key < $1.key
+        }) {
+            dateFormatter.config(with: defaultDateFormat)
+
             let rawValue = rawContent.frontMatter[key]
             let converter = PropertyConverter(
                 property: property,
@@ -47,7 +55,9 @@ public struct ContentDefinitionConverter {
         }
 
         var relations: [String: RelationValue] = [:]
-        for (key, relation) in contentDefinition.relations {
+        for (key, relation) in contentDefinition.relations.sorted(by: {
+            $0.key < $1.key
+        }) {
             let rawValue = rawContent.frontMatter[key]
 
             var identifiers: [String] = []
