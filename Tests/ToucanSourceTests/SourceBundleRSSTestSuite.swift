@@ -98,7 +98,7 @@ struct SourceBundleRSSTestSuite {
                 <title></title>
                 <description></description>
                 <link>http://localhost:3000</link>
-                <language></language>
+                <language>en-US</language>
                 <lastBuildDate>\#(nowString)</lastBuildDate>
                 <pubDate>\#(nowString)</pubDate>
                 <ttl>250</ttl>

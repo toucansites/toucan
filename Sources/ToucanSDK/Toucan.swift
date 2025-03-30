@@ -103,7 +103,7 @@ public struct Toucan {
                     format: ""
                 )
             )
-            
+
             /// Validate config date formats
             validate(sourceBundle.config.dateFormats.input)
             for dateFormat in sourceBundle.sourceConfig.config.dateFormats
@@ -193,7 +193,7 @@ public struct Toucan {
     func validate(_ dateFormat: LocalizedDateFormat) {
         if let value = dateFormat.locale {
             let canonicalId = Locale.identifier(.icu, from: value)
-            
+
             if !Locale.availableIdentifiers.contains(canonicalId) {
                 logger.warning("Invalid site locale: \(value)")
             }
