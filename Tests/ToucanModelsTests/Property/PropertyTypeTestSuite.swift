@@ -16,6 +16,11 @@ struct PropertyTypeTestSuite {
         #expect(PropertyType.string == .string)
         #expect(PropertyType.string != .date(format: nil))
         #expect(PropertyType.date(format: nil) == .date(format: nil))
-        #expect(PropertyType.date(format: nil) != .date(format: "y.m.d"))
+        #expect(
+            PropertyType.date(format: nil)
+                != .date(
+                    format: .init(format: "y.m.d")
+                )
+        )
     }
 }

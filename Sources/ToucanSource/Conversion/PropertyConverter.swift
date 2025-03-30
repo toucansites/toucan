@@ -13,7 +13,7 @@ struct PropertyConverter {
 
     let property: Property
     let dateFormatter: DateFormatter
-    let defaultDateFormat: String
+    let defaultDateFormat: LocalizedDateFormat
 
     let logger: Logger
 
@@ -25,7 +25,7 @@ struct PropertyConverter {
         let value = rawValue ?? property.default
 
         switch property.type {
-        case let .date(format):
+        case .date(let dateFormat):
             guard let rawDateValue = value?.value(as: String.self) else {
                 logger.debug(
                     "ERROR: property is not a string (\(key): \(value?.value ?? "nil"))."
@@ -33,7 +33,9 @@ struct PropertyConverter {
                 return nil
             }
 
-            dateFormatter.dateFormat = format.emptyToNil ?? defaultDateFormat
+            if let dateFormat {
+                dateFormatter.config(with: dateFormat)
+            }
 
             guard let value = dateFormatter.date(from: rawDateValue) else {
                 logger.debug(

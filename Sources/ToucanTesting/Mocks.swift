@@ -45,7 +45,3 @@ public extension Templates {
 public extension MarkdownBlockDirective {
     enum Mocks {}
 }
-
-public extension DateFormatter {
-    enum Mocks {}
-}

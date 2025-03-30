@@ -106,16 +106,24 @@ public struct Toucan {
                     format: ""
                 )
             )
+            /// Validate config date formats
             validate(sourceBundle.config.dateFormats.input)
-            for dateFormat in sourceBundle.sourceConfig.config.dateFormats.output.values {
+            for dateFormat in sourceBundle.sourceConfig.config.dateFormats
+                .output.values
+            {
                 validate(dateFormat)
             }
-            
+            /// Validate pipeline date formats
+            for pipeline in sourceBundle.pipelines {
+                for dateFormat in pipeline.dataTypes.date.dateFormats.values {
+                    validate(dateFormat)
+                }
+            }
+
             // MARK: - Render pipeline results
-            
+
             var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
-                dateFormatter: sourceBundle.settings.dateFormatter(),
                 fileManager: fileManager,
                 logger: logger
             )
@@ -183,9 +191,11 @@ public struct Toucan {
             throw error
         }
     }
-    
+
     func validate(_ dateFormat: LocalizedDateFormat) {
-        if let value = dateFormat.locale, !Locale.availableIdentifiers.contains(value) {
+        if let value = dateFormat.locale,
+            !Locale.availableIdentifiers.contains(value)
+        {
             logger.warning("Invalid site locale: \(value)")
         }
         if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {

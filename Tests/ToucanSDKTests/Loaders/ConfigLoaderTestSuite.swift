@@ -65,11 +65,12 @@ struct ConfigLoaderTestSuite {
                         dateFormats: .init(
                             input: .init(format: "y"),
                             output: [
-                                "hu" : .init(
+                                "hu": .init(
                                     locale: "hu_HU",
                                     timeZone: "CET",
                                     format: "y.MM.dd"
-                                )]
+                                )
+                            ]
                         )
                     )
             )
