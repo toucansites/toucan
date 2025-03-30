@@ -34,7 +34,8 @@ struct ContentDefinitionDecodingTestSuite {
                     type: string
                 publication:
                     type: date
-                    format: "y.m.d"
+                    dateFormat: 
+                        format: "y.m.d"
                     required: true
             relations:
                 authors:

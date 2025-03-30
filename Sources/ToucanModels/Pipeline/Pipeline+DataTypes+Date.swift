@@ -10,21 +10,21 @@ extension Pipeline.DataTypes {
     public struct Date: Decodable {
 
         enum CodingKeys: CodingKey {
-            case formats
+            case dateFormats
         }
 
-        public var formats: [String: LocalizedDateFormat]
+        public var dateFormats: [String: LocalizedDateFormat]
 
         // MARK: - defaults
 
         public static var defaults: Self {
-            .init(formats: [:])
+            .init(dateFormats: [:])
         }
 
         // MARK: - init
 
-        public init(formats: [String: LocalizedDateFormat]) {
-            self.formats = formats
+        public init(dateFormats: [String: LocalizedDateFormat]) {
+            self.dateFormats = dateFormats
         }
 
         // MARK: - decoder
@@ -34,13 +34,13 @@ extension Pipeline.DataTypes {
         ) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
-            let formats =
+            let dateFormats =
                 try container.decodeIfPresent(
                     [String: LocalizedDateFormat].self,
-                    forKey: .formats
+                    forKey: .dateFormats
                 ) ?? [:]
 
-            self.init(formats: formats)
+            self.init(dateFormats: dateFormats)
         }
     }
 }

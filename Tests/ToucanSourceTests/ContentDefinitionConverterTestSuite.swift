@@ -35,12 +35,12 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "customFormat": .init(
-                    type: .date(format: "y-MM-d"),
+                    type: .date(format: .init(format: "y-MM-d")),
                     required: true,
                     default: nil
                 ),
                 "customFormatDefaultValue": .init(
-                    type: .date(format: "y-MM-d"),
+                    type: .date(format: .init(format: "y-MM-d")),
                     required: true,
                     default: .init("2021-03-03")
                 ),
@@ -69,14 +69,16 @@ struct ContentDefinitionConverterTestSuite {
             dateFormatter: formatter,
             logger: logger
         )
-        
+
         let result = converter.convert(rawContent: rawContent)
-        
+
         #expect(result.properties["customFormat"] == .init(1614902400.0))
-        #expect(result.properties["customFormatDefaultValue"] == .init(1614729600.0))
+        #expect(
+            result.properties["customFormatDefaultValue"] == .init(1614729600.0)
+        )
         #expect(result.properties["defaultFormat"] == .init(1743326594.87))
     }
-    
+
     @Test()
     func contentDefinitionConverter_InvalidValue() async throws {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
@@ -96,10 +98,10 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "monthAndDay": .init(
-                    type: .date(format: "MM-d"),
+                    type: .date(format: .init(format: "MM-d")),
                     required: true,
                     default: nil
-                ),
+                )
             ],
             relations: [:],
             queries: [:]
@@ -107,7 +109,7 @@ struct ContentDefinitionConverterTestSuite {
         let rawContent = RawContent(
             origin: .init(path: "test", slug: "test"),
             frontMatter: [
-                "monthAndDay": .init("2021-03-05"),
+                "monthAndDay": .init("2021-03-05")
             ],
             markdown: "no content",
             lastModificationDate: now.timeIntervalSince1970,
@@ -118,14 +120,15 @@ struct ContentDefinitionConverterTestSuite {
             dateFormatter: formatter,
             logger: logger
         )
-        
+
         let result = converter.convert(rawContent: rawContent)
-        
+
         #expect(result.properties.isEmpty)
     }
-    
+
     @Test()
-    func contentDefinitionConverter_InvalidValueWithDefaultValue() async throws {
+    func contentDefinitionConverter_InvalidValueWithDefaultValue() async throws
+    {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
         let settings = Settings.defaults
         let config = Config.defaults
@@ -143,10 +146,10 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "monthAndDay": .init(
-                    type: .date(format: "MM-d"),
+                    type: .date(format: .init(format: "MM-d")),
                     required: true,
                     default: .init("03-30")
-                ),
+                )
             ],
             relations: [:],
             queries: [:]
@@ -154,7 +157,7 @@ struct ContentDefinitionConverterTestSuite {
         let rawContent = RawContent(
             origin: .init(path: "test", slug: "test"),
             frontMatter: [
-                "monthAndDay": .init("2021-03-05"),
+                "monthAndDay": .init("2021-03-05")
             ],
             markdown: "no content",
             lastModificationDate: now.timeIntervalSince1970,
@@ -165,9 +168,9 @@ struct ContentDefinitionConverterTestSuite {
             dateFormatter: formatter,
             logger: logger
         )
-        
+
         let result = converter.convert(rawContent: rawContent)
-        
+
         #expect(result.properties.isEmpty)
     }
 }

@@ -96,9 +96,10 @@ public struct SourceBundleRenderer {
 
         for pipeline in sourceBundle.pipelines {
 
-            let pipelineFormatters = pipeline.dataTypes.date.formats.mapValues {
-                sourceBundle.settings.dateFormatter($0)
-            }
+            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
+                .mapValues {
+                    sourceBundle.settings.dateFormatter($0)
+                }
             let allFormatters = formatters.recursivelyMerged(
                 with: pipelineFormatters
             )
@@ -290,7 +291,7 @@ public struct SourceBundleRenderer {
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
-        let pipelineFormatters = pipeline.dataTypes.date.formats.mapValues {
+        let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
             sourceBundle.settings.dateFormatter($0)
         }
         let allFormatters = formatters.recursivelyMerged(

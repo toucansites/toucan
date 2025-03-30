@@ -13,7 +13,7 @@ public struct ContentDefinitionConverter {
 
     let contentDefinition: ContentDefinition
     let dateFormatter: DateFormatter
-    let defaultDateFormat: String
+    let defaultDateFormat: LocalizedDateFormat
 
     let logger: Logger
 
@@ -24,7 +24,11 @@ public struct ContentDefinitionConverter {
     ) {
         self.contentDefinition = contentDefinition
         self.dateFormatter = dateFormatter
-        self.defaultDateFormat = dateFormatter.dateFormat!
+        self.defaultDateFormat = .init(
+            locale: dateFormatter.locale.identifier,
+            timeZone: dateFormatter.timeZone.identifier,
+            format: dateFormatter.dateFormat!
+        )
         self.logger = logger
     }
 
@@ -34,7 +38,7 @@ public struct ContentDefinitionConverter {
         for (key, property) in contentDefinition.properties.sorted(by: {
             $0.key < $1.key
         }) {
-            dateFormatter.dateFormat = defaultDateFormat
+            dateFormatter.config(with: defaultDateFormat)
 
             let rawValue = rawContent.frontMatter[key]
             let converter = PropertyConverter(

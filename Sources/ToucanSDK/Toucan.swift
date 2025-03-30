@@ -106,11 +106,18 @@ public struct Toucan {
                     format: ""
                 )
             )
+            /// Validate config date formats
             validate(sourceBundle.config.dateFormats.input)
             for dateFormat in sourceBundle.sourceConfig.config.dateFormats
                 .output.values
             {
                 validate(dateFormat)
+            }
+            /// Validate pipeline date formats
+            for pipeline in sourceBundle.pipelines {
+                for dateFormat in pipeline.dataTypes.date.dateFormats.values {
+                    validate(dateFormat)
+                }
             }
 
             // MARK: - Render pipeline results

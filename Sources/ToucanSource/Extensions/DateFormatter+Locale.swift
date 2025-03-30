@@ -33,6 +33,8 @@ extension DateFormatter {
         {
             timeZone = value
         }
-        self.dateFormat = dateFormat.format
+        if let format = dateFormat.format.emptyToNil {
+            self.dateFormat = format
+        }
     }
 }
