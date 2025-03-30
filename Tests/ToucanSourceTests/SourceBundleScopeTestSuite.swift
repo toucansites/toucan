@@ -20,7 +20,7 @@ struct SourceBundleScopeTestSuite {
     func testScopes() throws {
         let logger = Logger(label: "SourceBundleScopeTestSuite")
         let now = Date()
-        
+
         let settings = Settings.defaults
         let config = Config.defaults
         let sourceConfig = SourceConfig(

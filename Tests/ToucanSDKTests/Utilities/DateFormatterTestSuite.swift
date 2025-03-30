@@ -153,7 +153,11 @@ struct DateFormatterTestSuite {
         var config = Config.defaults
         config.dateFormats.output = [
             "my-date-format": .init(format: "y | MM | dd"),
-            "my-time-format": .init(locale: "hu_HU", timeZone: "CET", format: "HH | mm | ss"),
+            "my-time-format": .init(
+                locale: "hu_HU",
+                timeZone: "CET",
+                format: "HH | mm | ss"
+            ),
         ]
 
         let sourceConfig = SourceConfig(
@@ -259,7 +263,7 @@ struct DateFormatterTestSuite {
             """
         #expect(first.contents == expected)
     }
-    
+
     @Test
     func locale_DE_ContextOutput_DateFormatOverride() throws {
         let logger = Logger(label: "DateFormatterTestSuite")

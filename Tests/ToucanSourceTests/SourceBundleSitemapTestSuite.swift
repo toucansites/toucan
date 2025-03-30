@@ -95,7 +95,7 @@ struct SourceBundleSitemapTestSuite {
         let templates: [String: String] = [
             "sitemap": Templates.Mocks.sitemap()
         ]
-        
+
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,

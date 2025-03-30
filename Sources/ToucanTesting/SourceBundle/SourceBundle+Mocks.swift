@@ -16,7 +16,7 @@ public extension SourceBundle.Mocks {
         ]
     ) -> SourceBundle {
         let logger = Logger(label: "SourceBundleMocks")
-        
+
         let settings = Settings.defaults
         let config = Config.defaults
         let sourceConfig = SourceConfig(
@@ -26,7 +26,7 @@ public extension SourceBundle.Mocks {
         let formatter = settings.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
-        
+
         // pages
         let pageDefinition = ContentDefinition.Mocks.page()
         let rawPageContents = RawContent.Mocks.pages()

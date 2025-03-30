@@ -107,12 +107,14 @@ public struct Toucan {
                 )
             )
             validate(sourceBundle.config.dateFormats.input)
-            for dateFormat in sourceBundle.sourceConfig.config.dateFormats.output.values {
+            for dateFormat in sourceBundle.sourceConfig.config.dateFormats
+                .output.values
+            {
                 validate(dateFormat)
             }
-            
+
             // MARK: - Render pipeline results
-            
+
             var renderer = SourceBundleRenderer(
                 sourceBundle: sourceBundle,
                 fileManager: fileManager,
@@ -182,9 +184,11 @@ public struct Toucan {
             throw error
         }
     }
-    
+
     func validate(_ dateFormat: LocalizedDateFormat) {
-        if let value = dateFormat.locale, !Locale.availableIdentifiers.contains(value) {
+        if let value = dateFormat.locale,
+            !Locale.availableIdentifiers.contains(value)
+        {
             logger.warning("Invalid site locale: \(value)")
         }
         if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {

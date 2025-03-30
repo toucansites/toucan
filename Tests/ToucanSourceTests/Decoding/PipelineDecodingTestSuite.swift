@@ -101,11 +101,12 @@ struct PipelineDecodingTestSuite {
 
         let dateFormat = try #require(result.dataTypes.date.formats["test"])
         #expect(
-            dateFormat == .init(
-                locale: "en_US",
-                timeZone: "EST",
-                format: "ymd"
-            )
+            dateFormat
+                == .init(
+                    locale: "en_US",
+                    timeZone: "EST",
+                    format: "ymd"
+                )
         )
 
         let postScope = try #require(result.scopes["post"])

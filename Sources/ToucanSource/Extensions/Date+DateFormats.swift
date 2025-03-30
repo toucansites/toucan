@@ -27,7 +27,7 @@ extension Double {
             medium: formatters["time.medium"]!.string(from: date),
             short: formatters["time.short"]!.string(from: date)
         )
-        
+
         results.removeValue(forKey: "date.full")
         results.removeValue(forKey: "date.long")
         results.removeValue(forKey: "date.medium")
@@ -36,7 +36,7 @@ extension Double {
         results.removeValue(forKey: "time.long")
         results.removeValue(forKey: "time.medium")
         results.removeValue(forKey: "time.short")
-        
+
         return .init(
             date: dates,
             time: times,

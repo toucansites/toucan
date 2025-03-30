@@ -102,7 +102,7 @@ public struct SourceBundleRenderer {
             let allFormatters = formatters.recursivelyMerged(
                 with: pipelineFormatters
             )
-            
+
             let contents = iteratorResolver.resolve(
                 contents: sourceBundle.contents,
                 using: pipeline
@@ -289,14 +289,14 @@ public struct SourceBundleRenderer {
         allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
-        
+
         let pipelineFormatters = pipeline.dataTypes.date.formats.mapValues {
             sourceBundle.settings.dateFormatter($0)
         }
         let allFormatters = formatters.recursivelyMerged(
             with: pipelineFormatters
         )
-        
+
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
             for: content.definition.id
@@ -520,7 +520,7 @@ public struct SourceBundleRenderer {
 }
 
 extension SourceBundleRenderer {
-    
+
     static func prepareFormatters(
         _ sourceBundle: SourceBundle
     ) -> [String: DateFormatter] {

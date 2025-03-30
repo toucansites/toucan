@@ -6,7 +6,7 @@
 //
 
 public struct LocalizedDateFormat: Codable, Equatable {
-    
+
     public let locale: String?
     public let timeZone: String?
     public let format: String

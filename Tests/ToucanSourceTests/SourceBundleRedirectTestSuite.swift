@@ -28,7 +28,7 @@ struct SourceBundleRedirectTestSuite {
         let formatter = settings.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
-        
+
         let now = Date()
 
         let pipelines = [
