@@ -14,12 +14,14 @@ public struct Config: Decodable, Equatable {
         case contents
         case themes
         case dateFormats
+        case contentConfigurations
     }
 
     public var pipelines: Pipelines
     public var contents: Contents
     public var themes: Themes
     public var dateFormats: DateFormats
+    public var contentConfigurations: ContentConfigurations
 
     // MARK: - defaults
 
@@ -28,7 +30,8 @@ public struct Config: Decodable, Equatable {
             pipelines: .defaults,
             contents: .defaults,
             themes: .defaults,
-            dateFormats: .defaults
+            dateFormats: .defaults,
+            contentConfigurations: .defaults
         )
     }
 
@@ -38,12 +41,14 @@ public struct Config: Decodable, Equatable {
         pipelines: Pipelines,
         contents: Contents,
         themes: Themes,
-        dateFormats: DateFormats
+        dateFormats: DateFormats,
+        contentConfigurations: ContentConfigurations
     ) {
         self.pipelines = pipelines
         self.contents = contents
         self.themes = themes
         self.dateFormats = dateFormats
+        self.contentConfigurations = contentConfigurations
     }
 
     // MARK: - decoder
@@ -80,5 +85,11 @@ public struct Config: Decodable, Equatable {
                 DateFormats.self,
                 forKey: .dateFormats
             ) ?? defaults.dateFormats
+        
+        self.contentConfigurations =
+            try container.decodeIfPresent(
+                ContentConfigurations.self,
+                forKey: .contentConfigurations
+            ) ?? defaults.contentConfigurations
     }
 }

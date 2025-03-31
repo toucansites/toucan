@@ -52,17 +52,20 @@ public struct ContentRenderer {
         public var outline: Outline
         public var readingTime: ReadingTime
         public var transformerPipeline: TransformerPipeline?
+        public var paragraphStyles: ParagraphStyles
 
         public init(
             markdown: Markdown,
             outline: Outline,
             readingTime: ReadingTime,
-            transformerPipeline: TransformerPipeline?
+            transformerPipeline: TransformerPipeline?,
+            paragraphStyles: ParagraphStyles
         ) {
             self.markdown = markdown
             self.outline = outline
             self.readingTime = readingTime
             self.transformerPipeline = transformerPipeline
+            self.paragraphStyles = paragraphStyles
         }
     }
 
@@ -90,6 +93,7 @@ public struct ContentRenderer {
 
         self.markdownToHTMLRenderer = MarkdownToHTMLRenderer(
             customBlockDirectives: configuration.markdown.customBlockDirectives,
+            paragraphStyles: configuration.paragraphStyles,
             logger: logger
         )
 

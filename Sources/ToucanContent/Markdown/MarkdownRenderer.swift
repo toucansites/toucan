@@ -6,18 +6,22 @@
 //
 
 import Markdown
+import ToucanModels
 import Logging
 
 public struct MarkdownToHTMLRenderer {
 
     public let customBlockDirectives: [MarkdownBlockDirective]
+    public let paragraphStyles: ParagraphStyles
     public let logger: Logger
 
     public init(
         customBlockDirectives: [MarkdownBlockDirective] = [],
+        paragraphStyles: ParagraphStyles,
         logger: Logger = .init(label: "MarkdownToHTMLRenderer")
     ) {
         self.customBlockDirectives = customBlockDirectives
+        self.paragraphStyles = paragraphStyles
         self.logger = logger
     }
 
@@ -37,6 +41,7 @@ public struct MarkdownToHTMLRenderer {
         )
         var htmlVisitor = HTMLVisitor(
             blockDirectives: customBlockDirectives,
+            paragraphStyles: paragraphStyles,
             logger: logger,
             slug: slug,
             assetsPath: assetsPath,

@@ -47,9 +47,6 @@ struct Download {
         /// Remove existing target directory
         try? fileManager.removeItem(at: targetDirUrl)
 
-        /// Emptying the target directory. Git submodules can cause issues.
-        try? fileManager.removeItem(at: targetDirUrl)
-
         /// Finding the root directory URL.
         let items = fileManager.listDirectory(at: url)
         guard let rootDirName = items.first else {

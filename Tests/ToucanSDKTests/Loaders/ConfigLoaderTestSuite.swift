@@ -39,6 +39,24 @@ struct ConfigLoaderTestSuite {
                                     locale: hu-HU
                                     timeZone: CET
                                     format: "y.MM.dd"
+                        contentConfigurations:
+                            wordsPerMinute: 240
+                            outlineLevels:
+                                - 3
+                                - 4
+                            paragraphStyles:
+                                note: 
+                                    - note
+                                warn:
+                                    - warn
+                                    - warning
+                                tip:
+                                    - tip
+                                important:
+                                    - important
+                                error:
+                                    - error
+                                    - caution
                         """
                 )
             }
@@ -71,6 +89,17 @@ struct ConfigLoaderTestSuite {
                                     format: "y.MM.dd"
                                 )
                             ]
+                        ),
+                        contentConfigurations: .init(
+                            wordsPerMinute: 240,
+                            outlineLevels: [3, 4],
+                            paragraphStyles: .init(
+                                note: ["note"],
+                                warn: ["warn", "warning"],
+                                tip: ["tip"],
+                                important: ["important"],
+                                error: ["error", "caution"]
+                            )
                         )
                     )
             )

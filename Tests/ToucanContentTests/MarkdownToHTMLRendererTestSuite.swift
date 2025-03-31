@@ -1,4 +1,5 @@
 import Testing
+@testable import ToucanModels
 @testable import ToucanContent
 
 @Suite
@@ -20,7 +21,8 @@ struct MarkdownRendererTestSuite {
                     ],
                     output: nil
                 )
-            ]
+            ],
+            paragraphStyles: ParagraphStyles.defaults
         )
 
         let input = #"""
@@ -57,7 +59,8 @@ struct MarkdownRendererTestSuite {
                     attributes: nil,
                     output: #"<div class="faq">{{contents}}</div>"#
                 )
-            ]
+            ],
+            paragraphStyles: ParagraphStyles.defaults
         )
 
         let input = #"""
@@ -102,7 +105,8 @@ struct MarkdownRendererTestSuite {
                     ],
                     output: nil  //#"<div class="faq">{{contents}}</div>"#
                 )
-            ]
+            ],
+            paragraphStyles: ParagraphStyles.defaults
         )
 
         let input = #"""
@@ -146,7 +150,8 @@ struct MarkdownRendererTestSuite {
                     output:
                         #"<div columns="grid-{{columns}}">{{contents}}</div>"#
                 )
-            ]
+            ],
+            paragraphStyles: ParagraphStyles.defaults
         )
 
         let input = #"""

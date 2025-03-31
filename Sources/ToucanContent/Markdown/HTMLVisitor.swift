@@ -6,6 +6,7 @@
 //
 
 import Markdown
+import ToucanModels
 import Logging
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
@@ -31,6 +32,7 @@ struct HTMLVisitor: MarkupVisitor {
     typealias Result = String
 
     var customBlockDirectives: [MarkdownBlockDirective]
+    var paragraphStyles: ParagraphStyles
     var logger: Logger
     var slug: String
     var assetsPath: String
@@ -38,12 +40,14 @@ struct HTMLVisitor: MarkupVisitor {
 
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
+        paragraphStyles: ParagraphStyles,
         logger: Logger = .init(label: "HTMLVisitor"),
         slug: String,
         assetsPath: String,
         baseUrl: String
     ) {
         self.customBlockDirectives = blockDirectives
+        self.paragraphStyles = paragraphStyles
         self.logger = logger
         self.slug = slug
         self.assetsPath = assetsPath
@@ -176,11 +180,11 @@ struct HTMLVisitor: MarkupVisitor {
         var otherCount = 0
 
         let types: [String: [String]] = [
-            "note": ["note"],
-            "warning": ["warn", "warning"],
-            "tip": ["tip"],
-            "important": ["important"],
-            "error": ["error", "caution"],
+            "note": paragraphStyles.note,
+            "warning": paragraphStyles.warn,
+            "tip": paragraphStyles.tip,
+            "important": paragraphStyles.important,
+            "error": paragraphStyles.error
         ]
 
         var type: String?

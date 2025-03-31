@@ -2,6 +2,7 @@ import Testing
 import Markdown
 import Logging
 @testable import ToucanContent
+@testable import ToucanModels
 
 @Suite
 struct HTMLVisitorTestSuite {
@@ -19,6 +20,7 @@ struct HTMLVisitorTestSuite {
 
         var visitor = HTMLVisitor(
             blockDirectives: customBlockDirectives,
+            paragraphStyles: ParagraphStyles.defaults,
             logger: logger,
             slug: "slug",
             assetsPath: "assets",

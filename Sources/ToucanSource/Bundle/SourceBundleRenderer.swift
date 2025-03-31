@@ -353,14 +353,18 @@ public struct SourceBundleRenderer {
                     markdown: .init(
                         customBlockDirectives: sourceBundle.blockDirectives
                     ),
-                    outline: .init(levels: [2, 3]),
+                    outline: .init(
+                        levels: sourceBundle.config.contentConfigurations.outlineLevels
+                    ),
                     readingTime: .init(
-                        wordsPerMinute: 238
+                        wordsPerMinute: sourceBundle.config.contentConfigurations.wordsPerMinute
                     ),
                     transformerPipeline: pipeline.transformers[
                         content.definition.id
-                    ]
+                    ],
+                    paragraphStyles: sourceBundle.config.contentConfigurations.paragraphStyles
                 ),
+                
                 fileManager: fileManager,
                 logger: logger
             )
