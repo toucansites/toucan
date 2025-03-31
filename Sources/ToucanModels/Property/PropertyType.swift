@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  ToucanV2
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
@@ -10,11 +10,11 @@ public enum PropertyType: Decodable, Equatable {
     case int
     case double
     case string
-    case date(format: String?)
+    case date(format: LocalizedDateFormat?)
 
     private enum CodingKeys: String, CodingKey {
         case type
-        case format
+        case dateFormat
     }
 
     private enum TypeKey: String, Decodable {
@@ -44,8 +44,8 @@ public enum PropertyType: Decodable, Equatable {
             self = .string
         case .date:
             let format = try container.decodeIfPresent(
-                String.self,
-                forKey: .format
+                LocalizedDateFormat.self,
+                forKey: .dateFormat
             )
             self = .date(format: format)
         }

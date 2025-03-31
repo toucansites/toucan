@@ -19,7 +19,6 @@ struct SourceBundlePageLinkTestSuite {
     @Test
     func testPageLink() throws {
         let logger = Logger(label: "SourceBundlePageLinkTestSuite")
-        let formatter = DateFormatter.Mocks.en_US("Y-MM-dd")
         let now = Date()
 
         let pipelines: [Pipeline] = [
@@ -182,7 +181,6 @@ struct SourceBundlePageLinkTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )

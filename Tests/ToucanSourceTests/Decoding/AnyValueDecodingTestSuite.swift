@@ -73,7 +73,7 @@ struct AnyValueDecodingTestSuite {
     func decodingNestedStructures() throws {
         let data = """
             baseUrl: "https://theswiftdev.com/"
-            language: "en-US"
+            locale: "en-US"
             title: "The.Swift.Dev."
             description: "Articles about application development using the Swift programming language."
             navigation:

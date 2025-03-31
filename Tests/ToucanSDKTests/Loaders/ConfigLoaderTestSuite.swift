@@ -32,7 +32,13 @@ struct ConfigLoaderTestSuite {
                             assets: 
                                 path: assets
                         dateFormats:
-                            input: y
+                            input: 
+                                format: y
+                            output:
+                                hu:
+                                    locale: hu-HU
+                                    timeZone: CET
+                                    format: "y.MM.dd"
                         contentConfigurations:
                             wordsPerMinute: 240
                             outlineLevels:
@@ -44,6 +50,13 @@ struct ConfigLoaderTestSuite {
                                 warn:
                                     - warn
                                     - warning
+                                tip:
+                                    - tip
+                                important:
+                                    - important
+                                error:
+                                    - error
+                                    - caution
                         """
                 )
             }
@@ -67,11 +80,26 @@ struct ConfigLoaderTestSuite {
                         pipelines: .defaults,
                         contents: .defaults,
                         themes: .defaults,
-                        dateFormats: .init(input: "y", output: [:]),
+                        dateFormats: .init(
+                            input: .init(format: "y"),
+                            output: [
+                                "hu": .init(
+                                    locale: "hu-HU",
+                                    timeZone: "CET",
+                                    format: "y.MM.dd"
+                                )
+                            ]
+                        ),
                         contentConfigurations: .init(
                             wordsPerMinute: 240,
                             outlineLevels: [3, 4],
-                            paragraphStyles: .init(note: ["note"], warn: ["warn", "warning"])
+                            paragraphStyles: .init(
+                                note: ["note"],
+                                warn: ["warn", "warning"],
+                                tip: ["tip"],
+                                important: ["important"],
+                                error: ["error", "caution"]
+                            )
                         )
                     )
             )

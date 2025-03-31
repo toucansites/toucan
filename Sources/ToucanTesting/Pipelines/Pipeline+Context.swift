@@ -39,8 +39,8 @@ public extension Pipeline.Mocks {
             ],
             dataTypes: .init(
                 date: .init(
-                    formats: [
-                        "full": "y.m.d."
+                    dateFormats: [
+                        "full": .init(format: "y.m.d.")
                     ]
                 )
             ),

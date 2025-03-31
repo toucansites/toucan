@@ -15,7 +15,7 @@ public struct SourceBundleRenderer {
 
     let sourceBundle: SourceBundle
     let generatorInfo: GeneratorInfo
-    let dateFormatter: DateFormatter
+    let formatters: [String: DateFormatter]
     let fileManager: FileManagerKit
     let logger: Logger
 
@@ -24,15 +24,14 @@ public struct SourceBundleRenderer {
     public init(
         sourceBundle: SourceBundle,
         generatorInfo: GeneratorInfo = .current,
-        dateFormatter: DateFormatter,
         fileManager: FileManagerKit,
         logger: Logger
     ) {
         self.sourceBundle = sourceBundle
         self.generatorInfo = generatorInfo
-        self.dateFormatter = dateFormatter
         self.fileManager = fileManager
         self.logger = logger
+        self.formatters = Self.prepareFormatters(sourceBundle)
     }
 
     // MARK: -
@@ -41,21 +40,16 @@ public struct SourceBundleRenderer {
     private func getSiteContext(
         for now: TimeInterval
     ) -> [String: AnyCodable] {
-        return [
-            "baseUrl": .init(sourceBundle.settings.baseUrl),
-            "name": .init(sourceBundle.settings.name),
-            "locale": .init(sourceBundle.settings.locale),
-            "timeZone": .init(sourceBundle.settings.timeZone),
-            "generation": .init(
-                now.convertToDateFormats(
-                    formatter: dateFormatter,
-                    formats: sourceBundle.config.dateFormats.output
-                )
-            ),
-            "generator": .init(generatorInfo),
-        ]
-        // TODO: check if overwritten with e.g.: generator
-        .recursivelyMerged(with: sourceBundle.settings.userDefined)
+        sourceBundle.settings.userDefined.recursivelyMerged(
+            with: [
+                "baseUrl": .init(sourceBundle.settings.baseUrl),
+                "name": .init(sourceBundle.settings.name),
+                "locale": .init(sourceBundle.settings.locale),
+                "timeZone": .init(sourceBundle.settings.timeZone),
+                "generation": .init(now.toDateFormats(formatters: formatters)),
+                "generator": .init(generatorInfo),
+            ]
+        )
     }
 
     /// Returns the last content update based on the pipeline config
@@ -102,6 +96,14 @@ public struct SourceBundleRenderer {
 
         for pipeline in sourceBundle.pipelines {
 
+            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
+                .mapValues {
+                    sourceBundle.settings.dateFormatter($0)
+                }
+            let allFormatters = formatters.recursivelyMerged(
+                with: pipelineFormatters
+            )
+
             let contents = iteratorResolver.resolve(
                 contents: sourceBundle.contents,
                 using: pipeline
@@ -113,9 +115,8 @@ public struct SourceBundleRenderer {
                     pipeline: pipeline
                 ) ?? now
 
-            let lastUpdateContext = lastUpdate.convertToDateFormats(
-                formatter: dateFormatter,
-                formats: sourceBundle.config.dateFormats.output
+            let lastUpdateContext = lastUpdate.toDateFormats(
+                formatters: allFormatters
             )
             siteContext["lastUpdate"] = .init(lastUpdateContext)
 
@@ -259,7 +260,6 @@ public struct SourceBundleRenderer {
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
 
-        // TODO: more path arguments?
         let outputArgs: [String: String] = [
             "{{id}}": content.id,
             "{{slug}}": content.slug,
@@ -289,6 +289,14 @@ public struct SourceBundleRenderer {
         allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
+
+        let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
+            sourceBundle.settings.dateFormatter($0)
+        }
+        let allFormatters = formatters.recursivelyMerged(
+            with: pipelineFormatters
+        )
+
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
             for: content.definition.id
@@ -318,10 +326,7 @@ public struct SourceBundleRenderer {
                     let rawDate = v.value(as: Double.self)
                 {
                     result[k] = .init(
-                        rawDate.convertToDateFormats(
-                            formatter: dateFormatter,
-                            formats: sourceBundle.config.dateFormats.output
-                        )
+                        rawDate.toDateFormats(formatters: allFormatters)
                     )
                 }
                 else {
@@ -329,17 +334,15 @@ public struct SourceBundleRenderer {
                 }
             }
 
-            // TODO: web only properties
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
                 content.slug.permalink(baseUrl: sourceBundle.settings.baseUrl)
             )
 
-            //            result["isCurrentURL"] = .init(content.slug == currentSlug)
+            // result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
-                content.rawValue.lastModificationDate.convertToDateFormats(
-                    formatter: dateFormatter,
-                    formats: sourceBundle.config.dateFormats.output
+                content.rawValue.lastModificationDate.toDateFormats(
+                    formatters: allFormatters
                 )
             )
         }
@@ -358,8 +361,10 @@ public struct SourceBundleRenderer {
                     ),
                     transformerPipeline: pipeline.transformers[
                         content.definition.id
-                    ]
+                    ],
+                    paragraphStyles: sourceBundle.config.contentConfigurations.paragraphStyles
                 ),
+                
                 fileManager: fileManager,
                 logger: logger
             )
@@ -458,11 +463,10 @@ public struct SourceBundleRenderer {
         ]
 
         return try contextBundles.compactMap {
-            // TODO: override output using front matter in both cases
             let data = try encoder.encode($0.context)
             let json = String(data: data, encoding: .utf8)
             guard let json else {
-                // TODO: log
+                logger.warning("Could not encode context data as JSON output.")
                 return nil
             }
             return .init(
@@ -479,7 +483,8 @@ public struct SourceBundleRenderer {
         let renderer = MustacheTemplateRenderer(
             templates: try sourceBundle.templates.mapValues {
                 try .init(string: $0)
-            }
+            },
+            logger: logger
         )
 
         return try contextBundles.compactMap {
@@ -492,10 +497,16 @@ public struct SourceBundleRenderer {
             let contentTypeTemplate = bundleOptions.string("template")
             let contentTemplate = $0.content.rawValue.frontMatter
                 .string("template")
+            let template = contentTemplate ?? contentTypeTemplate
 
-            guard let template = contentTemplate ?? contentTypeTemplate
-            else {
-                // TODO: log
+            guard let template, !template.isEmpty else {
+                logger.warning(
+                    "Missing mustache template file.",
+                    metadata: [
+                        "slug": "\($0.content.slug)",
+                        "type": "\($0.content.definition.id)",
+                    ]
+                )
                 return nil
             }
 
@@ -504,10 +515,18 @@ public struct SourceBundleRenderer {
                 with: $0.context
             )
 
-            guard let html else {
-                // TODO: log
+            guard let html, !html.isEmpty else {
+                logger.warning(
+                    "Could not get valid HTML from content using template.",
+                    metadata: [
+                        "slug": "\($0.content.slug)",
+                        "type": "\($0.content.definition.id)",
+                        "template": "\(template)",
+                    ]
+                )
                 return nil
             }
+
             return .init(
                 contents: html,
                 destination: $0.destination
@@ -516,28 +535,12 @@ public struct SourceBundleRenderer {
     }
 }
 
-// MARK: - date helpers
+extension SourceBundleRenderer {
 
-private extension Double {
-
-    func convertToDateFormats(
-        formatter: DateFormatter,
-        formats: [String: String]
-    ) -> DateFormats {
-        getDates(
-            for: self,
-            using: formatter,
-            formats: formats
-        )
-    }
-
-    func getDates(
-        for timeInterval: Double,
-        using formatter: DateFormatter,
-        formats: [String: String] = [:]
-    ) -> DateFormats {
-        let date = Date(timeIntervalSince1970: timeInterval)
-
+    static func prepareFormatters(
+        _ sourceBundle: SourceBundle
+    ) -> [String: DateFormatter] {
+        var formatters: [String: DateFormatter] = [:]
         let styles: [(String, DateFormatter.Style)] = [
             ("full", .full),
             ("long", .long),
@@ -545,45 +548,31 @@ private extension Double {
             ("short", .short),
         ]
 
-        var dateFormats: [String: String] = [:]
-        var timeFormats: [String: String] = [:]
-
         for (key, style) in styles {
-            formatter.dateStyle = style
-            formatter.timeStyle = .none
-            dateFormats[key] = formatter.string(from: date)
+            let dateFormatter = sourceBundle.settings.dateFormatter()
+            dateFormatter.dateStyle = style
+            dateFormatter.timeStyle = .none
+            formatters["date.\(key)"] = dateFormatter
 
-            formatter.dateStyle = .none
-            formatter.timeStyle = style
-            timeFormats[key] = formatter.string(from: date)
+            let timeFormatter = sourceBundle.settings.dateFormatter()
+            timeFormatter.dateStyle = .none
+            timeFormatter.timeStyle = style
+            formatters["time.\(key)"] = timeFormatter
         }
 
-        let standard: [String: String] = [
-            "iso8601": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            "rss": "EEE, dd MMM yyyy HH:mm:ss Z",
-            "sitemap": "yyyy-MM-dd",
+        let standard: [String: LocalizedDateFormat] = [
+            "iso8601": .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+            "rss": .init(format: "EEE, dd MMM yyyy HH:mm:ss Z"),
+            "sitemap": .init(format: "yyyy-MM-dd"),
         ]
-        var custom: [String: String] = [:]
-        for (k, f) in formats.recursivelyMerged(with: standard) {
-            formatter.dateFormat = f
-            custom[k] = formatter.string(from: date)
-        }
 
-        return .init(
-            date: .init(
-                full: dateFormats["full"]!,
-                long: dateFormats["long"]!,
-                medium: dateFormats["medium"]!,
-                short: dateFormats["short"]!
-            ),
-            time: .init(
-                full: timeFormats["full"]!,
-                long: timeFormats["long"]!,
-                medium: timeFormats["medium"]!,
-                short: timeFormats["short"]!
-            ),
-            timestamp: timeInterval,
-            formats: custom
-        )
+        for (key, dateFormat) in standard.recursivelyMerged(
+            with: sourceBundle.config.dateFormats.output
+        ) {
+            let formatter = sourceBundle.settings.dateFormatter()
+            formatter.config(with: dateFormat)
+            formatters[key] = formatter
+        }
+        return formatters
     }
 }

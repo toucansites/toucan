@@ -21,7 +21,7 @@ public struct ToucanFileSystem {
         )
         self.settingsLocator = FileLocator(
             fileManager: fileManager,
-            name: "index",
+            name: "site",
             extensions: ["yml", "yaml"]
         )
         self.assetLocator = AssetLocator(fileManager: fileManager)

@@ -2,6 +2,7 @@ import Foundation
 import Testing
 import Logging
 @testable import ToucanContent
+@testable import ToucanModels
 
 @Suite
 struct ContentRendererTestSuite {
@@ -32,7 +33,8 @@ struct ContentRendererTestSuite {
                 readingTime: .init(
                     wordsPerMinute: 238
                 ),
-                transformerPipeline: nil
+                transformerPipeline: nil,
+                paragraphStyles: ParagraphStyles.defaults
             ),
             fileManager: FileManager.default,
             logger: logger
@@ -92,7 +94,8 @@ struct ContentRendererTestSuite {
                         )
                     ],
                     isMarkdownResult: false
-                )
+                ),
+                paragraphStyles: ParagraphStyles.defaults
             ),
             fileManager: FileManager.default,
             logger: logger

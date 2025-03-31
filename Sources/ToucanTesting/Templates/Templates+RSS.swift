@@ -7,7 +7,7 @@ public extension Templates.Mocks {
             <title>{{site.title}}</title>
             <description>{{site.description}}</description>
             <link>{{site.baseUrl}}</link>
-            <language>{{site.language}}</language>
+            <language>{{site.locale}}</language>
             <lastBuildDate>{{site.generation.formats.rss}}</lastBuildDate>
             <pubDate>{{site.lastUpdate.formats.rss}}</pubDate>
             <ttl>250</ttl>

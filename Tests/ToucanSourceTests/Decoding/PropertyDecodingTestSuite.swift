@@ -33,7 +33,11 @@ struct PropertyDecodingTestSuite {
     func dateTypeWithFormat() throws {
         let data = """
             type: date
-            format: abc
+            dateFormat: 
+                format: "ymd"
+                locale: en-US
+                timeZone: EST
+
             """
             .dataValue()
 
@@ -44,7 +48,16 @@ struct PropertyDecodingTestSuite {
             from: data
         )
 
-        #expect(result.type == .date(format: "abc"))
+        #expect(
+            result.type
+                == .date(
+                    format: .init(
+                        locale: "en-US",
+                        timeZone: "EST",
+                        format: "ymd"
+                    )
+                )
+        )
         #expect(result.required == true)
         #expect(result.default == nil)
     }

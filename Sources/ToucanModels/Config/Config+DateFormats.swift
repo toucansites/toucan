@@ -14,14 +14,14 @@ extension Config {
             case output
         }
 
-        public var input: String
-        public var output: [String: String]
+        public var input: LocalizedDateFormat
+        public var output: [String: LocalizedDateFormat]
 
         // MARK: - defaults
 
         public static var defaults: Self {
             .init(
-                input: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                input: .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
                 output: [:]
             )
         }
@@ -29,8 +29,8 @@ extension Config {
         // MARK: - init
 
         public init(
-            input: String,
-            output: [String: String]
+            input: LocalizedDateFormat,
+            output: [String: LocalizedDateFormat]
         ) {
             self.input = input
             self.output = output
@@ -53,13 +53,13 @@ extension Config {
 
             self.input =
                 try container.decodeIfPresent(
-                    String.self,
+                    LocalizedDateFormat.self,
                     forKey: .input
                 ) ?? defaults.input
 
             self.output =
                 try container.decodeIfPresent(
-                    [String: String].self,
+                    [String: LocalizedDateFormat].self,
                     forKey: .output
                 ) ?? defaults.output
         }

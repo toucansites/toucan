@@ -10,17 +10,26 @@ public struct ParagraphStyles: Decodable, Equatable {
     enum CodingKeys: CodingKey {
         case note
         case warn
+        case tip
+        case important
+        case error
     }
     
     public var note: [String]
     public var warn: [String]
+    public var tip: [String]
+    public var important: [String]
+    public var error: [String]
 
     // MARK: - defaults
 
     public static var defaults: Self {
         .init(
             note: ["note"],
-            warn: ["warn", "warning"]
+            warn: ["warn", "warning"],
+            tip: ["tip"],
+            important: ["important"],
+            error: ["error", "caution"]
         )
     }
     
@@ -28,10 +37,16 @@ public struct ParagraphStyles: Decodable, Equatable {
 
     public init(
         note: [String],
-        warn: [String]
+        warn: [String],
+        tip: [String],
+        important: [String],
+        error: [String]
     ) {
         self.note = note
         self.warn = warn
+        self.tip = tip
+        self.important = important
+        self.error = error
     }
 
     // MARK: - decoder
@@ -52,10 +67,31 @@ public struct ParagraphStyles: Decodable, Equatable {
                 [String].self,
                 forKey: .warn
             ) ?? []
+        
+        let tip =
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .tip
+            ) ?? []
+        
+        let important =
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .important
+            ) ?? []
+        
+        let error =
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .error
+            ) ?? []
 
         self.init(
             note: note,
-            warn: warn
+            warn: warn,
+            tip: tip,
+            important: important,
+            error: error
         )
     }
     

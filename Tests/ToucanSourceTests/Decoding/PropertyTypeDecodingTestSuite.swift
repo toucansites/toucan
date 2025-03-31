@@ -51,14 +51,15 @@ struct PropertyTypeDecodingTestSuite {
 
     @Test
     func decodingDate() throws {
-        let jsonData = #"{"format":"y.m.d","type":"date"}"#.dataValue()
+        let jsonData = #"{"dateFormat":{"format":"y.m.d"},"type":"date"}"#
+            .dataValue()
         let decodedDataType = try ToucanJSONDecoder()
             .decode(
                 PropertyType.self,
                 from: jsonData
             )
 
-        #expect(decodedDataType == .date(format: "y.m.d"))
+        #expect(decodedDataType == .date(format: .init(format: "y.m.d")))
     }
 
     @Test

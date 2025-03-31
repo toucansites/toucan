@@ -19,7 +19,16 @@ struct SourceBundleRedirectTestSuite {
     @Test
     func redirect() throws {
         let logger = Logger(label: "SourceBundleRedirectTestSuite")
-        let formatter = DateFormatter.Mocks.en_US("Y-MM-dd")
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+
         let now = Date()
 
         let pipelines = [
@@ -32,7 +41,6 @@ struct SourceBundleRedirectTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: pageDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -45,7 +53,6 @@ struct SourceBundleRedirectTestSuite {
             let converter = ContentDefinitionConverter(
                 contentDefinition: redirectDefinition,
                 dateFormatter: formatter,
-                defaultDateFormat: "Y-MM-dd",
                 logger: logger
             )
             return converter.convert(rawContent: $0)
@@ -58,17 +65,11 @@ struct SourceBundleRedirectTestSuite {
             "redirect": Templates.Mocks.redirect()
         ]
 
-        let config = Config.defaults
-        let sourceConfig = SourceConfig(
-            sourceUrl: .init(fileURLWithPath: ""),
-            config: config
-        )
-
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: settings,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
@@ -78,7 +79,6 @@ struct SourceBundleRedirectTestSuite {
 
         var renderer = SourceBundleRenderer(
             sourceBundle: sourceBundle,
-            dateFormatter: formatter,
             fileManager: FileManager.default,
             logger: logger
         )
@@ -88,7 +88,7 @@ struct SourceBundleRedirectTestSuite {
 
         let expectation = #"""
             <!DOCTYPE html>
-            <html >
+            <html lang="en-US">
                 <meta charset="utf-8">
                 <title>Redirecting&hellip;</title>
                 <link rel="canonical" href="home">
