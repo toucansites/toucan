@@ -131,7 +131,10 @@ struct ToucanFileSystemTests {
                         .init(slug: "404", md: "404/index.md"),
                         .init(slug: "home", md: "home/index.md"),
                         .init(slug: "authors", md: "blog/authors/index.md"),
-                        .init(slug: "home-old", md: "redirects/home-old/index.md"),
+                        .init(
+                            slug: "home-old",
+                            md: "redirects/home-old/index.md"
+                        ),
                     ]
                     .sorted { $0.slug < $1.slug }
             )

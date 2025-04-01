@@ -18,7 +18,8 @@ import Logging
 struct RawContentLoaderTestSuite {
 
     func testRawContentStructure(
-        @FileManagerPlayground.DirectoryBuilder _ contentsClosure: () -> [FileManagerPlayground.Item]
+        @FileManagerPlayground.DirectoryBuilder _ contentsClosure: () ->
+            [FileManagerPlayground.Item]
     ) -> FileManagerPlayground {
         FileManagerPlayground {
             Directory("src") {
@@ -35,7 +36,7 @@ struct RawContentLoaderTestSuite {
             }
         }
     }
-    
+
     @Test
     func rawContentMarkdown() throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -97,7 +98,7 @@ struct RawContentLoaderTestSuite {
             #expect(result.assets == ["image.png"])
         }
     }
-    
+
     @Test
     func rawContentMd() throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -215,7 +216,7 @@ struct RawContentLoaderTestSuite {
             #expect(result.assets == ["image.png"])
         }
     }
-    
+
     @Test
     func rawContentYml() throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -271,7 +272,7 @@ struct RawContentLoaderTestSuite {
             #expect(result.assets == ["image.png"])
         }
     }
-    
+
     @Test
     func rawContentMarkdowns() throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -328,11 +329,14 @@ struct RawContentLoaderTestSuite {
                     )
             )
             #expect(result.frontMatter["type"] == .init("post"))
-            #expect(result.frontMatter["title"] == .init("First beta release - Markdown"))
+            #expect(
+                result.frontMatter["title"]
+                    == .init("First beta release - Markdown")
+            )
             #expect(result.markdown == "\nThis is a dummy post!")
         }
     }
-    
+
     @Test
     func rawContentYamls() throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -383,10 +387,13 @@ struct RawContentLoaderTestSuite {
                     )
             )
             #expect(result.frontMatter["type"] == .init("post"))
-            #expect(result.frontMatter["title"] == .init("First beta release - Yaml"))
+            #expect(
+                result.frontMatter["title"]
+                    == .init("First beta release - Yaml")
+            )
         }
     }
-    
+
     @Test
     func rawContentAllFormats() throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -459,8 +466,13 @@ struct RawContentLoaderTestSuite {
                     )
             )
             #expect(result.frontMatter["type"] == .init("post"))
-            #expect(result.frontMatter["title"] == .init("First beta release - Markdown"))
-            #expect(result.frontMatter["description"] == .init("Description - Yaml"))
+            #expect(
+                result.frontMatter["title"]
+                    == .init("First beta release - Markdown")
+            )
+            #expect(
+                result.frontMatter["description"] == .init("Description - Yaml")
+            )
             #expect(result.markdown == "\nThis is a dummy post!")
         }
     }

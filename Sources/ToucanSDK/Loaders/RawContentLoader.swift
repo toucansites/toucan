@@ -69,18 +69,24 @@ private extension RawContentLoader {
             markdown: String
         )
 
-        let orderedPathResolvers: [
-            (primaryPath: String?, fallbackPath: String?, resolver: Resolver, isMarkdown: Bool)
-        ] = [
-            (location.markdown, location.md, resolveMarkdown, true),
-            (location.yaml, location.yml, resolveYaml, false)
-        ]
+        let orderedPathResolvers:
+            [(
+                primaryPath: String?, fallbackPath: String?, resolver: Resolver,
+                isMarkdown: Bool
+            )] = [
+                (location.markdown, location.md, resolveMarkdown, true),
+                (location.yaml, location.yml, resolveYaml, false),
+            ]
 
-        for (primaryPath, fallbackPath, resolver, isMarkdown) in orderedPathResolvers {
+        for (primaryPath, fallbackPath, resolver, isMarkdown)
+            in orderedPathResolvers
+        {
             if let filePath = primaryPath ?? fallbackPath {
                 let result = try resolver(filePath)
-                frontMatter = frontMatter.recursivelyMerged(with: result.frontMatter)
-                
+                frontMatter = frontMatter.recursivelyMerged(
+                    with: result.frontMatter
+                )
+
                 /// Set contents if its a md resolver
                 if isMarkdown {
                     markdown = result.markdown
@@ -96,21 +102,23 @@ private extension RawContentLoader {
                         existingDate,
                         try fileManager.modificationDate(at: url)
                     )
-                } else {
+                }
+                else {
                     modificationDate = try fileManager.modificationDate(at: url)
                 }
             }
         }
-        
+
         let url = url.appendingPathComponent(path ?? "")
 
         let assetLocator = AssetLocator(fileManager: fileManager)
         let assetsPath = sourceConfig.config.contents.assets.path
-        let assetsUrl = url.deletingLastPathComponent().appending(
-            path: assetsPath
-        )
+        let assetsUrl = url.deletingLastPathComponent()
+            .appending(
+                path: assetsPath
+            )
         let assetLocations = assetLocator.locate(at: assetsUrl)
-        
+
         frontMatter["image"] = .init(
             resolveImage(
                 frontMatter: frontMatter,
@@ -213,7 +221,8 @@ private extension RawContentLoader {
             origin: .init(path: path ?? "", slug: location.slug),
             frontMatter: frontMatter,
             markdown: markdown ?? "",
-            lastModificationDate: (modificationDate ?? Date()).timeIntervalSince1970,
+            lastModificationDate: (modificationDate ?? Date())
+                .timeIntervalSince1970,
             assets: assetLocations
         )
     }
@@ -235,7 +244,7 @@ extension RawContentLoader {
             markdown: rawContents.dropFrontMatter()
         )
     }
-    
+
     func resolveYaml(
         at path: String
     ) throws -> (frontMatter: [String: AnyCodable], markdown: String) {

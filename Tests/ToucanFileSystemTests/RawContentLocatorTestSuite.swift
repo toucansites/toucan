@@ -24,7 +24,7 @@ struct RawContentLocatorTestSuite {
                 #expect(locations.isEmpty)
             }
     }
-    
+
     func rawContentLocatorMarkdownOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -56,7 +56,7 @@ struct RawContentLocatorTestSuite {
             #expect(result == expected)
         }
     }
-    
+
     @Test()
     func rawContentLocatorMdOnly() async throws {
         try FileManagerPlayground {
@@ -85,11 +85,11 @@ struct RawContentLocatorTestSuite {
                 slug: "blog/first-beta-release",
                 md: "blog/articles/first-beta-release/index.md"
             )
-            
+
             #expect(result == expected)
         }
     }
-    
+
     func rawContentLocatorYamlOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -121,7 +121,7 @@ struct RawContentLocatorTestSuite {
             #expect(result == expected)
         }
     }
-    
+
     func rawContentLocatorYmlOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -153,7 +153,7 @@ struct RawContentLocatorTestSuite {
             #expect(result == expected)
         }
     }
-    
+
     func rawContentLocatorMarkdowns() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -187,7 +187,7 @@ struct RawContentLocatorTestSuite {
             #expect(result == expected)
         }
     }
-    
+
     func rawContentLocatorYamls() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -221,7 +221,7 @@ struct RawContentLocatorTestSuite {
             #expect(result == expected)
         }
     }
-    
+
     @Test()
     func rawContentLocatorAll() async throws {
         try FileManagerPlayground {
