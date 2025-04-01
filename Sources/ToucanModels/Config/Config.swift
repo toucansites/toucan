@@ -85,7 +85,7 @@ public struct Config: Decodable, Equatable {
                 DateFormats.self,
                 forKey: .dateFormats
             ) ?? defaults.dateFormats
-        
+
         self.contentConfigurations =
             try container.decodeIfPresent(
                 ContentConfigurations.self,

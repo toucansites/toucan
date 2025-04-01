@@ -19,8 +19,8 @@ struct ToucanFileSystemTests {
             let overrideUrl = $1.appending(path: "foo/bar/")
             let fs = ToucanFileSystem(fileManager: $0)
 
-            #expect(fs.mdRawContentLocator.locate(at: url).isEmpty)
-            #expect(fs.ymlRawContentLocator.locate(at: url).isEmpty)
+            #expect(fs.rawContentLocator.locate(at: url).isEmpty)
+            #expect(fs.rawContentLocator.locate(at: url).isEmpty)
             #expect(
                 fs.ymlFileLocator.locate(at: url, overrides: overrideUrl)
                     .isEmpty
@@ -121,28 +121,22 @@ struct ToucanFileSystemTests {
             let fs = ToucanFileSystem(fileManager: $0)
             let contentsUrl = $1.appending(path: "src/contents/")
 
-            let mdRawContentLocations = fs.mdRawContentLocator.locate(
+            let rawContentLocations = fs.rawContentLocator.locate(
                 at: contentsUrl
             )
-            let ymlRawContentLocations = fs.ymlRawContentLocator.locate(
-                at: contentsUrl
-            )
-
-            let rawContentLocations =
-                mdRawContentLocations + ymlRawContentLocations
 
             #expect(
-                rawContentLocations.sorted { $0.path < $1.path }
+                rawContentLocations.sorted { $0.slug < $1.slug }
                     == [
-                        .init(path: "404/index.md", slug: "404"),
-                        .init(path: "home/index.md", slug: "home"),
-                        .init(path: "blog/authors/index.md", slug: "authors"),
+                        .init(slug: "404", md: "404/index.md"),
+                        .init(slug: "home", md: "home/index.md"),
+                        .init(slug: "authors", md: "blog/authors/index.md"),
                         .init(
-                            path: "redirects/home-old/index.md",
-                            slug: "home-old"
+                            slug: "home-old",
+                            md: "redirects/home-old/index.md"
                         ),
                     ]
-                    .sorted { $0.path < $1.path }
+                    .sorted { $0.slug < $1.slug }
             )
 
             let typesUrl = $1.appending(path: "src/themes/default/types/")

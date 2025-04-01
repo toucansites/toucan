@@ -145,37 +145,19 @@ struct SourceLoader {
 
         // MARK: - RawContents
 
-        let mdRawContentLocations = fs.mdRawContentLocator.locate(
+        let rawContentLocations = fs.rawContentLocator.locate(
             at: sourceConfig.contentsUrl
         )
-        let mdRawContentsLoader = RawContentLoader(
+        let rawContentsLoader = RawContentLoader(
             url: sourceConfig.contentsUrl,
-            locations: mdRawContentLocations,
-            fileType: .markdown,
+            locations: rawContentLocations,
             sourceConfig: sourceConfig,
             frontMatterParser: frontMatterParser,
             fileManager: fileManager,
             logger: logger,
             baseUrl: baseUrl ?? settings.baseUrl
         )
-        let mdRawContents = try mdRawContentsLoader.load()
-
-        let ymlRawContentLocations = fs.ymlRawContentLocator.locate(
-            at: sourceConfig.contentsUrl
-        )
-        let ymlRawContentsLoader = RawContentLoader(
-            url: sourceConfig.contentsUrl,
-            locations: ymlRawContentLocations,
-            fileType: .yaml,
-            sourceConfig: sourceConfig,
-            frontMatterParser: frontMatterParser,
-            fileManager: fileManager,
-            logger: logger,
-            baseUrl: baseUrl ?? settings.baseUrl
-        )
-        let ymlRawContents = try ymlRawContentsLoader.load()
-
-        let rawContents = mdRawContents + ymlRawContents
+        let rawContents = try rawContentsLoader.load()
 
         // MARK: - Create Contents from RawContents
 

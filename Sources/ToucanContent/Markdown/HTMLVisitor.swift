@@ -184,7 +184,7 @@ struct HTMLVisitor: MarkupVisitor {
             "warning": paragraphStyles.warn,
             "tip": paragraphStyles.tip,
             "important": paragraphStyles.important,
-            "error": paragraphStyles.error
+            "error": paragraphStyles.error,
         ]
 
         var type: String?

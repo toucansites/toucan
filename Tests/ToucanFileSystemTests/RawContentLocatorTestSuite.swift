@@ -15,7 +15,17 @@ import ToucanModels
 struct RawContentLocatorTestSuite {
 
     @Test()
-    func rawContentLocator() async throws {
+    func rawContentLocatorEmpty() async throws {
+        try FileManagerPlayground()
+            .test {
+                let locator = RawContentLocator(fileManager: $0)
+                let locations = locator.locate(at: $1)
+
+                #expect(locations.isEmpty)
+            }
+    }
+
+    func rawContentLocatorMarkdownOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -23,20 +33,7 @@ struct RawContentLocatorTestSuite {
                         Directory("articles") {
                             "noindex.yaml"
                             Directory("first-beta-release") {
-                                File(
-                                    "index.md",
-                                    string: """
-                                        ---
-                                        type: post
-                                        title: "First beta release"
-                                        ---
-
-                                        This is a dummy post!
-                                        """
-                                )
-                                Directory("assets") {
-                                    "image.png"
-                                }
+                                File("index.markdown")
                             }
                         }
                     }
@@ -45,18 +42,15 @@ struct RawContentLocatorTestSuite {
         }
         .test {
             let url = $1.appending(path: "src/contents/")
-            let locator = RawContentLocator(
-                fileManager: $0,
-                fileType: .markdown
-            )
+            let locator = RawContentLocator(fileManager: $0)
             let results = locator.locate(at: url)
 
             #expect(results.count == 1)
 
             let result = try #require(results.first)
-            let expected = Origin(
-                path: "blog/articles/first-beta-release/index.md",
-                slug: "blog/first-beta-release"
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                markdown: "blog/articles/first-beta-release/index.markdown"
             )
 
             #expect(result == expected)
@@ -64,16 +58,206 @@ struct RawContentLocatorTestSuite {
     }
 
     @Test()
-    func rawContentLocatorEmpty() async throws {
-        try FileManagerPlayground()
-            .test {
-                let locator = RawContentLocator(
-                    fileManager: $0,
-                    fileType: .yaml
-                )
-                let locations = locator.locate(at: $1)
-
-                #expect(locations.isEmpty)
+    func rawContentLocatorMdOnly() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File("index.md")
+                            }
+                        }
+                    }
+                }
             }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                md: "blog/articles/first-beta-release/index.md"
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    func rawContentLocatorYamlOnly() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File("index.yaml")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                yaml: "blog/articles/first-beta-release/index.yaml"
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    func rawContentLocatorYmlOnly() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File("index.yml")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                yml: "blog/articles/first-beta-release/index.yml"
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    func rawContentLocatorMarkdowns() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File("index.markdown")
+                                File("index.md")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                markdown: "blog/articles/first-beta-release/index.markdown",
+                md: "blog/articles/first-beta-release/index.md"
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    func rawContentLocatorYamls() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File("index.yaml")
+                                File("index.yml")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                yaml: "blog/articles/first-beta-release/index.yaml",
+                yml: "blog/articles/first-beta-release/index.yml"
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    @Test()
+    func rawContentLocatorAll() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                File("index.markdown")
+                                File("index.md")
+                                File("index.yaml")
+                                File("index.yml")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                markdown: "blog/articles/first-beta-release/index.markdown",
+                md: "blog/articles/first-beta-release/index.md",
+                yaml: "blog/articles/first-beta-release/index.yaml",
+                yml: "blog/articles/first-beta-release/index.yml"
+            )
+
+            #expect(result == expected)
+        }
     }
 }
