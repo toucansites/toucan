@@ -67,7 +67,7 @@ extension Config {
                     [Int].self,
                     forKey: .outlineLevels
                 ) ?? defaults.outlineLevels
-            
+
             self.paragraphStyles =
                 try container.decodeIfPresent(
                     ParagraphStyles.self,

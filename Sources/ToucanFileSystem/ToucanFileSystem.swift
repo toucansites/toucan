@@ -9,8 +9,7 @@ public struct ToucanFileSystem {
     public let assetLocator: AssetLocator
     public let pipelineLocator: FileLocator
     public let ymlFileLocator: OverrideFileLocator
-    public let mdRawContentLocator: RawContentLocator
-    public let ymlRawContentLocator: RawContentLocator
+    public let rawContentLocator: RawContentLocator
     public let templateLocator: TemplateLocator
 
     public init(fileManager: FileManagerKit) {
@@ -33,14 +32,7 @@ public struct ToucanFileSystem {
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
         )
-        self.mdRawContentLocator = RawContentLocator(
-            fileManager: fileManager,
-            fileType: .markdown
-        )
-        self.ymlRawContentLocator = RawContentLocator(
-            fileManager: fileManager,
-            fileType: .yaml
-        )
+        self.rawContentLocator = RawContentLocator(fileManager: fileManager)
         self.templateLocator = TemplateLocator(fileManager: fileManager)
     }
 }

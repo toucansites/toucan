@@ -5,53 +5,80 @@ import ToucanModels
 public struct RawContentLocator {
 
     private let fileManager: FileManagerKit
-    private let indexFileLocator: FileLocator
+    private let indexMarkdownLocator: FileLocator
+    private let indexMdLocator: FileLocator
+    private let indexYamlLocator: FileLocator
+    private let indexYmlLocator: FileLocator
     private let noindexFileLocator: FileLocator
 
     private let indexName = "index"
     private let noindexName = "noindex"
 
-    public init(
-        fileManager: FileManagerKit,
-        fileType: RawContentFileType
-    ) {
+    public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
-        self.indexFileLocator = .init(
+        self.indexMarkdownLocator = .init(
             fileManager: fileManager,
             name: indexName,
-            extensions: fileType.extensions
+            extensions: ["markdown"]
+        )
+        self.indexMdLocator = .init(
+            fileManager: fileManager,
+            name: indexName,
+            extensions: ["md"]
+        )
+        self.indexYamlLocator = .init(
+            fileManager: fileManager,
+            name: indexName,
+            extensions: ["yaml"]
+        )
+        self.indexYmlLocator = .init(
+            fileManager: fileManager,
+            name: indexName,
+            extensions: ["yml"]
         )
         self.noindexFileLocator = .init(
             fileManager: fileManager,
             name: noindexName,
-            extensions: RawContentFileType.yaml.extensions
+            extensions: ["yaml", "yml"]
         )
     }
 
-    public func locate(at url: URL) -> [Origin] {
-        loadRawContents(at: url).sorted { $0.path < $1.path }
+    public func locate(at url: URL) -> [RawContentLocation] {
+        locateRawContents(at: url).sorted { $0.slug < $1.slug }
     }
 }
 
 private extension RawContentLocator {
 
-    func loadRawContents(
+    func locateRawContents(
         at contentsUrl: URL,
         slug: [String] = [],
         path: [String] = []
-    ) -> [Origin] {
-        var result: [Origin] = []
+    ) -> [RawContentLocation] {
+        var result: [RawContentLocation] = []
 
         let p = path.joined(separator: "/")
         let url = contentsUrl.appendingPathComponent(p)
 
-        let indexFilePaths = indexFileLocator.locate(at: url).sorted()
-        if !indexFilePaths.isEmpty {
-            let origin = Origin(
-                path: p + "/" + indexFilePaths.first!,
-                slug: slug.joined(separator: "/")
-            )
-            result.append(origin)
+        var rawContentLocation = RawContentLocation(
+            slug: slug.joined(separator: "/")
+        )
+
+        if let value = indexMarkdownLocator.locate(at: url).first {
+            rawContentLocation.markdown = p + "/" + value
+        }
+        if let value = indexMdLocator.locate(at: url).first {
+            rawContentLocation.md = p + "/" + value
+        }
+        if let value = indexYamlLocator.locate(at: url).first {
+            rawContentLocation.yaml = p + "/" + value
+        }
+        if let value = indexYmlLocator.locate(at: url).first {
+            rawContentLocation.yml = p + "/" + value
+        }
+
+        if !rawContentLocation.isEmpty {
+            result.append(rawContentLocation)
         }
 
         let list = fileManager.listDirectory(at: url)
@@ -65,7 +92,7 @@ private extension RawContentLocator {
             }
 
             let newPath = path + [item]
-            result += loadRawContents(
+            result += locateRawContents(
                 at: contentsUrl,
                 slug: newSlug,
                 path: newPath

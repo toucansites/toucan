@@ -354,17 +354,20 @@ public struct SourceBundleRenderer {
                         customBlockDirectives: sourceBundle.blockDirectives
                     ),
                     outline: .init(
-                        levels: sourceBundle.config.contentConfigurations.outlineLevels
+                        levels: sourceBundle.config.contentConfigurations
+                            .outlineLevels
                     ),
                     readingTime: .init(
-                        wordsPerMinute: sourceBundle.config.contentConfigurations.wordsPerMinute
+                        wordsPerMinute: sourceBundle.config
+                            .contentConfigurations.wordsPerMinute
                     ),
                     transformerPipeline: pipeline.transformers[
                         content.definition.id
                     ],
-                    paragraphStyles: sourceBundle.config.contentConfigurations.paragraphStyles
+                    paragraphStyles: sourceBundle.config.contentConfigurations
+                        .paragraphStyles
                 ),
-                
+
                 fileManager: fileManager,
                 logger: logger
             )

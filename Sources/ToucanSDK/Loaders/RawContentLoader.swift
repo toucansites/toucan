@@ -10,6 +10,7 @@ import Logging
 import ToucanModels
 import ToucanFileSystem
 import ToucanSource
+import FileManagerKit
 
 struct RawContentLoader {
 
@@ -17,10 +18,7 @@ struct RawContentLoader {
     let url: URL
 
     /// Content file paths
-    let locations: [Origin]
-
-    /// The type of raw content file.
-    let fileType: RawContentFileType
+    let locations: [RawContentLocation]
 
     /// Source configuration.
     let sourceConfig: SourceConfig
@@ -58,42 +56,67 @@ struct RawContentLoader {
     }
 }
 
-import FileManagerKit
-
 private extension RawContentLoader {
 
-    func resolveItem(_ origin: Origin) throws -> RawContent {
-        let assetsPath = sourceConfig.config.contents.assets.path
-        let url = url.appendingPathComponent(origin.path)
-        let rawContents = try loadItem(at: url)
+    func resolveItem(_ location: RawContentLocation) throws -> RawContent {
+        var frontMatter: [String: AnyCodable] = [:]
+        var markdown: String?
+        var path: String?
+        var modificationDate: Date?
 
-        var frontMatter: [String: AnyCodable]
-        let markdown: String
+        typealias Resolver = (String) throws -> (
+            frontMatter: [String: AnyCodable],
+            markdown: String
+        )
 
-        switch fileType {
-        case .markdown:
-            frontMatter = try frontMatterParser.parse(rawContents)
-            markdown = rawContents.dropFrontMatter()
-        case .yaml:
-            frontMatter = try frontMatterParser.decoder.decode(
-                [String: AnyCodable].self,
-                from: rawContents.dataValue()
-            )
-            markdown = ""
+        let orderedPathResolvers: [
+            (primaryPath: String?, fallbackPath: String?, resolver: Resolver, isMarkdown: Bool)
+        ] = [
+            (location.markdown, location.md, resolveMarkdown, true),
+            (location.yaml, location.yml, resolveYaml, false)
+        ]
+
+        for (primaryPath, fallbackPath, resolver, isMarkdown) in orderedPathResolvers {
+            if let filePath = primaryPath ?? fallbackPath {
+                let result = try resolver(filePath)
+                frontMatter = frontMatter.recursivelyMerged(with: result.frontMatter)
+                
+                /// Set contents if its a md resolver
+                if isMarkdown {
+                    markdown = result.markdown
+                }
+                /// Set path if its a md resolver or a yml resolver but there is no path yet
+                if isMarkdown || path == nil {
+                    path = filePath
+                }
+                /// Set modification date if there is no date yet (either md or yml) or if its more recent
+                let url = url.appendingPathComponent(path ?? "")
+                if let existingDate = modificationDate {
+                    modificationDate = max(
+                        existingDate,
+                        try fileManager.modificationDate(at: url)
+                    )
+                } else {
+                    modificationDate = try fileManager.modificationDate(at: url)
+                }
+            }
         }
+        
+        let url = url.appendingPathComponent(path ?? "")
 
         let assetLocator = AssetLocator(fileManager: fileManager)
-
-        let assetsUrl = url.deletingLastPathComponent()
-            .appending(path: assetsPath)
+        let assetsPath = sourceConfig.config.contents.assets.path
+        let assetsUrl = url.deletingLastPathComponent().appending(
+            path: assetsPath
+        )
         let assetLocations = assetLocator.locate(at: assetsUrl)
-
+        
         frontMatter["image"] = .init(
             resolveImage(
                 frontMatter: frontMatter,
                 assetsPath: assetsPath,
                 assetLocations: assetLocations,
-                slug: origin.slug
+                slug: location.slug
             )
         )
 
@@ -143,7 +166,7 @@ private extension RawContentLoader {
                 $0.resolveAsset(
                     baseUrl: baseUrl,
                     assetsPath: assetsPath,
-                    slug: origin.slug
+                    slug: location.slug
                 )
             }
         }
@@ -154,7 +177,7 @@ private extension RawContentLoader {
                     .resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: origin.slug
+                        slug: location.slug
                     )
             )
         }
@@ -168,7 +191,7 @@ private extension RawContentLoader {
                 $0.resolveAsset(
                     baseUrl: baseUrl,
                     assetsPath: assetsPath,
-                    slug: origin.slug
+                    slug: location.slug
                 )
             }
         }
@@ -179,20 +202,18 @@ private extension RawContentLoader {
                     .resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: origin.slug
+                        slug: location.slug
                     )
             )
         }
 
         frontMatter["js"] = .init(Array(Set(js)))
 
-        let modificationDate = try fileManager.modificationDate(at: url)
-
         return RawContent(
-            origin: origin,
+            origin: .init(path: path ?? "", slug: location.slug),
             frontMatter: frontMatter,
-            markdown: markdown,
-            lastModificationDate: modificationDate.timeIntervalSince1970,
+            markdown: markdown ?? "",
+            lastModificationDate: (modificationDate ?? Date()).timeIntervalSince1970,
             assets: assetLocations
         )
     }
@@ -203,6 +224,31 @@ private extension RawContentLoader {
 }
 
 extension RawContentLoader {
+
+    func resolveMarkdown(
+        at path: String
+    ) throws -> (frontMatter: [String: AnyCodable], markdown: String) {
+        let url = url.appendingPathComponent(path)
+        let rawContents = try loadItem(at: url)
+        return (
+            frontMatter: try frontMatterParser.parse(rawContents),
+            markdown: rawContents.dropFrontMatter()
+        )
+    }
+    
+    func resolveYaml(
+        at path: String
+    ) throws -> (frontMatter: [String: AnyCodable], markdown: String) {
+        let url = url.appendingPathComponent(path)
+        let rawContents = try loadItem(at: url)
+        return (
+            frontMatter: try frontMatterParser.decoder.decode(
+                [String: AnyCodable].self,
+                from: rawContents.dataValue()
+            ),
+            markdown: ""
+        )
+    }
 
     func resolveImage(
         frontMatter: [String: AnyCodable],

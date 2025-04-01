@@ -3,10 +3,9 @@
 //
 //  Created by gerp83 on 2025. 03. 28.
 //
-    
 
 public struct ParagraphStyles: Decodable, Equatable {
-    
+
     enum CodingKeys: CodingKey {
         case note
         case warn
@@ -14,7 +13,7 @@ public struct ParagraphStyles: Decodable, Equatable {
         case important
         case error
     }
-    
+
     public var note: [String]
     public var warn: [String]
     public var tip: [String]
@@ -32,7 +31,7 @@ public struct ParagraphStyles: Decodable, Equatable {
             error: ["error", "caution"]
         )
     }
-    
+
     // MARK: - init
 
     public init(
@@ -67,19 +66,19 @@ public struct ParagraphStyles: Decodable, Equatable {
                 [String].self,
                 forKey: .warn
             ) ?? []
-        
+
         let tip =
             try container.decodeIfPresent(
                 [String].self,
                 forKey: .tip
             ) ?? []
-        
+
         let important =
             try container.decodeIfPresent(
                 [String].self,
                 forKey: .important
             ) ?? []
-        
+
         let error =
             try container.decodeIfPresent(
                 [String].self,
@@ -94,6 +93,5 @@ public struct ParagraphStyles: Decodable, Equatable {
             error: error
         )
     }
-    
-    
+
 }
