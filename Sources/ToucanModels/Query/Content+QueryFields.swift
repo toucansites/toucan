@@ -13,7 +13,13 @@ public extension Content {
         for (key, relation) in relations {
             switch relation.type {
             case .one:
-                fields[key] = .init(relation.identifiers[0])
+                if relation.identifiers.isEmpty {
+                    logger.error("Identifiers is empty for contentType/key/relationType: \(relation.contentType)/\(key)/\(relation.type)")
+                    fields[key] = .init([])
+                    
+                } else {
+                    fields[key] = .init(relation.identifiers[0])
+                }
             case .many:
                 fields[key] = .init(relation.identifiers)
             }

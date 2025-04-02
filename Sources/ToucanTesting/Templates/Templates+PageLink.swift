@@ -8,7 +8,7 @@ public extension Templates.Mocks {
             <meta name="description" content="{{page.description}}">
         </head>
         <body>
-        {{title}}
+        {{& page.contents.html}}
         </body>
         </html>
         """

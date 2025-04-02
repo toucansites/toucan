@@ -5,6 +5,7 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
 //
 
+import Logging
 import Foundation
 import Testing
 import FileManagerKitTesting
@@ -16,6 +17,7 @@ struct ContentAssetsWriterTestSuite {
 
     @Test()
     func testContentAssetsWriter() async throws {
+        let logger = Logger(label: "ContentAssetsWriterTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -84,7 +86,8 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil
+                    iteratorInfo: nil,
+                    logger: logger
                 ),
                 Content(
                     id: "user1",
@@ -109,7 +112,8 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil
+                    iteratorInfo: nil,
+                    logger: logger
                 ),
                 Content(
                     id: "user2",
@@ -134,7 +138,8 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil
+                    iteratorInfo: nil,
+                    logger: logger
                 ),
             ]
 
@@ -177,6 +182,7 @@ struct ContentAssetsWriterTestSuite {
 
     @Test()
     func testContentAssetsWriterEmpty() async throws {
+        let logger = Logger(label: "ContentAssetsWriterTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -213,7 +219,8 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil
+                    iteratorInfo: nil,
+                    logger: logger
                 )
             ]
 

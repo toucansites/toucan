@@ -213,7 +213,7 @@ struct SourceBundleSitemapTestSuite {
 
         var contents =
             tagContents + authorContents + postContents + sitemapContents
-        contents.append(Content.Mocks.pagination(now: now))
+        contents.append(Content.Mocks.pagination(now: now, logger: logger))
 
         let templates: [String: String] = [
             "default": Templates.Mocks.default(),
