@@ -29,5 +29,13 @@ install:
 uninstall:
 	./scripts/uninstall-toucan.sh
 
-docker:
-	docker build -t toucan-image . -f ./Docker/Dockerfile.ubuntu && docker run --rm toucan-image
+docker-image:
+	docker build -t toucan . -f ./Docker/Dockerfile
+
+# docker run --rm -v $(pwd):/app/site toucan generate /app/site/src /app/site/docs
+# docker run --rm -v $(pwd):/app/site toucan generate ./site/src ./site/docs --base-url "http://localhost:3000"
+# docker run --rm -v $(pwd):/app/site --entrypoint /app/toucan toucan generate ./site/src ./site/docs --base-url "http://localhost:3000"
+# docker run --rm -p 3000:3000 -v $(pwd):/app/site toucan serve --hostname "0.0.0.0" --port 3000 ./site/docs
+
+docker-tests:
+	docker build -t toucan-tests . -f ./Docker/Dockerfile.testing && docker run --rm toucan-tests
