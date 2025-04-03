@@ -5,7 +5,6 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
-import Logging
 
 public struct Content {
 
@@ -64,7 +63,6 @@ public struct Content {
     public var userDefined: [String: AnyCodable]
     public var iteratorInfo: IteratorInfo?
     public var isIterator: Bool { iteratorInfo != nil }
-    public var logger: Logger
 
     public init(
         id: String,
@@ -74,8 +72,7 @@ public struct Content {
         properties: [String: AnyCodable],
         relations: [String: RelationValue],
         userDefined: [String: AnyCodable],
-        iteratorInfo: IteratorInfo?,
-        logger: Logger
+        iteratorInfo: IteratorInfo?
     ) {
         self.id = id
         self.slug = slug
@@ -85,6 +82,5 @@ public struct Content {
         self.relations = relations
         self.userDefined = userDefined
         self.iteratorInfo = iteratorInfo
-        self.logger = logger
     }
 }

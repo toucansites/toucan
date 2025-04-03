@@ -1,12 +1,10 @@
-import Logging
 import Foundation
 import ToucanModels
 
 public extension Content.Mocks {
 
     static func pagination(
-        now: Date = .init(),
-        logger: Logger
+        now: Date = .init()
     ) -> Content {
 
         return .init(
@@ -59,8 +57,7 @@ public extension Content.Mocks {
                 "home": .init("posts/page"),
                 "template": .init("default"),
             ],
-            iteratorInfo: nil,
-            logger: logger
+            iteratorInfo: nil
         )
     }
 

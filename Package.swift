@@ -108,7 +108,6 @@ let package = Package(
         .target(
             name: "ToucanModels",
             dependencies: [
-                .product(name: "Logging", package: "swift-log"),
             ],
             swiftSettings: swiftSettings
         ),

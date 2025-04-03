@@ -17,7 +17,6 @@ struct ContentAssetsWriterTestSuite {
 
     @Test()
     func testContentAssetsWriter() async throws {
-        let logger = Logger(label: "ContentAssetsWriterTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -86,8 +85,7 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil,
-                    logger: logger
+                    iteratorInfo: nil
                 ),
                 Content(
                     id: "user1",
@@ -112,8 +110,7 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil,
-                    logger: logger
+                    iteratorInfo: nil
                 ),
                 Content(
                     id: "user2",
@@ -138,8 +135,7 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil,
-                    logger: logger
+                    iteratorInfo: nil
                 ),
             ]
 
@@ -182,7 +178,6 @@ struct ContentAssetsWriterTestSuite {
 
     @Test()
     func testContentAssetsWriterEmpty() async throws {
-        let logger = Logger(label: "ContentAssetsWriterTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -219,8 +214,7 @@ struct ContentAssetsWriterTestSuite {
                     properties: [:],
                     relations: [:],
                     userDefined: [:],
-                    iteratorInfo: nil,
-                    logger: logger
+                    iteratorInfo: nil
                 )
             ]
 

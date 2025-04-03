@@ -103,8 +103,7 @@ struct SourceBundlePageLinkTestSuite {
             properties: [:],
             relations: [:],
             userDefined: [:],
-            iteratorInfo: nil,
-            logger: logger
+            iteratorInfo: nil
         )
 
         let paginationContent = Content(
@@ -154,8 +153,7 @@ struct SourceBundlePageLinkTestSuite {
                 "template": .init("posts"),
                 "image": nil,
             ],
-            iteratorInfo: nil,
-            logger: logger
+            iteratorInfo: nil
         )
 
         let contents: [Content] = [postContent, paginationContent]

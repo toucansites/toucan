@@ -14,7 +14,6 @@ public extension Content {
             switch relation.type {
             case .one:
                 if relation.identifiers.isEmpty {
-                    logger.error("Identifiers is empty for contentType/key/relationType: \(relation.contentType)/\(key)/\(relation.type)")
                     fields[key] = .init([])
                     
                 } else {

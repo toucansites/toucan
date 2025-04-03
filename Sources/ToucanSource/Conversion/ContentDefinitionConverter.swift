@@ -116,8 +116,7 @@ public struct ContentDefinitionConverter {
             properties: properties,
             relations: relations,
             userDefined: userDefined,
-            iteratorInfo: nil,
-            logger: logger
+            iteratorInfo: nil
         )
     }
 }
