@@ -66,7 +66,14 @@ struct ContentIteratorResolver {
                         total: numberOfPages,
                         &alteredContent.userDefined
                     )
-
+                    
+                    if !alteredContent.rawValue.markdown.isEmpty {
+                        alteredContent.rawValue.markdown = replace(
+                            in: alteredContent.rawValue.markdown,
+                            number: currentPageIndex,
+                            total: numberOfPages)
+                    }
+                    
                     let links = (0..<numberOfPages)
                         .map { i in
                             let pageIndex = i + 1
@@ -127,17 +134,6 @@ struct ContentIteratorResolver {
         return .init(input[startRange.upperBound..<endRange.lowerBound])
     }
 
-    private func replace(
-        in value: String,
-        number: Int,
-        total: Int
-    ) -> String {
-        value.replacingOccurrences([
-            "{{number}}": String(number),
-            "{{total}}": String(total),
-        ])
-    }
-
     // MARK: - rewrite
 
     private func rewrite(
@@ -166,6 +162,17 @@ struct ContentIteratorResolver {
                 )
             }
         }
+    }
+    
+    private func replace(
+        in value: String,
+        number: Int,
+        total: Int
+    ) -> String {
+        value.replacingOccurrences([
+            "{{number}}": String(number),
+            "{{total}}": String(total),
+        ])
     }
 
 }

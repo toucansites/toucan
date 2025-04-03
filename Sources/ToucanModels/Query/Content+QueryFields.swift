@@ -13,7 +13,12 @@ public extension Content {
         for (key, relation) in relations {
             switch relation.type {
             case .one:
-                fields[key] = .init(relation.identifiers[0])
+                if relation.identifiers.isEmpty {
+                    fields[key] = .init([])
+                    
+                } else {
+                    fields[key] = .init(relation.identifiers[0])
+                }
             case .many:
                 fields[key] = .init(relation.identifiers)
             }

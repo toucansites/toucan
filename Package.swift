@@ -108,7 +108,6 @@ let package = Package(
         .target(
             name: "ToucanModels",
             dependencies: [
-
             ],
             swiftSettings: swiftSettings
         ),

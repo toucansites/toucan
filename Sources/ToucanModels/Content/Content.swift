@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
+
 public struct Content {
 
     public struct IteratorInfo {
@@ -61,7 +62,6 @@ public struct Content {
     public var relations: [String: RelationValue]
     public var userDefined: [String: AnyCodable]
     public var iteratorInfo: IteratorInfo?
-
     public var isIterator: Bool { iteratorInfo != nil }
 
     public init(

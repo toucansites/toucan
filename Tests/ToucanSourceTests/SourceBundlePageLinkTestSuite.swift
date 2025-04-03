@@ -106,7 +106,7 @@ struct SourceBundlePageLinkTestSuite {
             iteratorInfo: nil
         )
 
-        let content = Content(
+        let paginationContent = Content(
             id: "{{post.pagination}}",
             slug: "posts/page/{{post.pagination}}",
             rawValue: RawContent(
@@ -125,14 +125,14 @@ struct SourceBundlePageLinkTestSuite {
                     "template": .init("posts"),
                     "image": nil,
                 ],
-                markdown: "",
+                markdown: "Values in markdown: {{number}} / {{total}}",
                 lastModificationDate: 1742843632.8373249,
                 assets: []
             ),
             definition: ContentDefinition(
                 id: "page",
                 default: true,
-                paths: ["home", "about", "authors", "tags", "search"],
+                paths: [],
                 properties: [
                     "title": Property(
                         type: PropertyType.string,
@@ -156,7 +156,7 @@ struct SourceBundlePageLinkTestSuite {
             iteratorInfo: nil
         )
 
-        let contents: [Content] = [postContent, content]
+        let contents: [Content] = [postContent, paginationContent]
         let templates: [String: String] = [
             "posts": Templates.Mocks.pageLink()
         ]
@@ -189,6 +189,7 @@ struct SourceBundlePageLinkTestSuite {
 
         #expect(results.count == 1)
         #expect(results[0].contents.contains("<title>Posts - 1 / 1 - </title>"))
+        #expect(results[0].contents.contains("Values in markdown: 1 / 1"))
         #expect(results[0].destination.path == "posts/page/1")
     }
 

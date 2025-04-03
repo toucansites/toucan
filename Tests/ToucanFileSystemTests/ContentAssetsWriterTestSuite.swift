@@ -5,6 +5,7 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
 //
 
+import Logging
 import Foundation
 import Testing
 import FileManagerKitTesting
