@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ToucanModels
 import Markdown
 
 extension Dictionary {
@@ -45,11 +46,15 @@ public extension String {
             .filter { $0 != "" }
             .joined(separator: "-")
     }
+    
+    func suffixForPath() -> String {
+        return self.hasSuffix("/") ? "" : "/"
+    }
 
     func resolveAsset(
         baseUrl: String,
         assetsPath: String,
-        slug: String
+        slug: Slug
     ) -> String {
         if baseUrl.isEmpty || assetsPath.isEmpty {
             return self
@@ -66,8 +71,7 @@ public extension String {
 
         let src = String(self.dropFirst(prefix.count))
 
-        return
-            "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
+        return "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)/\(slug.resolveForPath())/\(src)"
     }
 }
 

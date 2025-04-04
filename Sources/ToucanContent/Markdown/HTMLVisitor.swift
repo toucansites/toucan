@@ -34,7 +34,7 @@ struct HTMLVisitor: MarkupVisitor {
     var customBlockDirectives: [MarkdownBlockDirective]
     var paragraphStyles: ParagraphStyles
     var logger: Logger
-    var slug: String
+    var slug: Slug
     var assetsPath: String
     var baseUrl: String
 
@@ -42,7 +42,7 @@ struct HTMLVisitor: MarkupVisitor {
         blockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: ParagraphStyles,
         logger: Logger = .init(label: "HTMLVisitor"),
-        slug: String,
+        slug: Slug,
         assetsPath: String,
         baseUrl: String
     ) {
@@ -308,7 +308,7 @@ struct HTMLVisitor: MarkupVisitor {
                 var hrefDestination = destination
                 if destination.hasPrefix("/") {
                     hrefDestination =
-                        "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(destination.dropFirst())"
+                        "\(baseUrl)\(baseUrl.suffixForPath())\(destination.dropFirst())"
                 }
                 attributes.append(
                     .init(

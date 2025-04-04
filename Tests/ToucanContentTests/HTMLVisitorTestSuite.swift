@@ -22,7 +22,7 @@ struct HTMLVisitorTestSuite {
             blockDirectives: customBlockDirectives,
             paragraphStyles: ParagraphStyles.defaults,
             logger: logger,
-            slug: "slug",
+            slug: .init(value: "slug"),
             assetsPath: "assets",
             baseUrl: "http://localhost:3000/"
         )

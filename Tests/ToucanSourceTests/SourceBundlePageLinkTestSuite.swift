@@ -82,7 +82,7 @@ struct SourceBundlePageLinkTestSuite {
 
         let postContent = Content(
             id: "post",
-            slug: "post",
+            slug: .init(value: "post"),
             rawValue: RawContent(
                 origin: Origin(path: "", slug: "post"),
                 frontMatter: [
@@ -108,7 +108,7 @@ struct SourceBundlePageLinkTestSuite {
 
         let paginationContent = Content(
             id: "{{post.pagination}}",
-            slug: "posts/page/{{post.pagination}}",
+            slug: .init(value: "posts/page/{{post.pagination}}"),
             rawValue: RawContent(
                 origin: Origin(
                     path: "posts/{{post.pagination}}/index.md",

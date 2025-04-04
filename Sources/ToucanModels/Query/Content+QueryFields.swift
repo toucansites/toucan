@@ -26,7 +26,7 @@ public extension Content {
 
         // add some other fields explicitly
         fields["id"] = .init(id)
-        fields["slug"] = .init(slug)
+        fields["slug"] = .init(slug.value)
         fields["lastUpdate"] = .init(rawValue.lastModificationDate)
         fields["iterator"] = .init(isIterator)
 

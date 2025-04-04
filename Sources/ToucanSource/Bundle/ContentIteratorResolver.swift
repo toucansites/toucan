@@ -21,7 +21,7 @@ struct ContentIteratorResolver {
         var finalContents: [Content] = []
 
         for content in contents {
-            if let iteratorId = extractIteratorId(from: content.slug) {
+            if let iteratorId = content.slug.extractIteratorId() {
                 guard
                     let query = pipeline.iterators[iteratorId]
                 else {
@@ -54,7 +54,7 @@ struct ContentIteratorResolver {
                     rewrite(
                         iteratorId: iteratorId,
                         pageIndex: currentPageIndex,
-                        &alteredContent.slug
+                        &alteredContent.slug.value
                     )
                     rewrite(
                         number: currentPageIndex,
@@ -77,14 +77,11 @@ struct ContentIteratorResolver {
                     let links = (0..<numberOfPages)
                         .map { i in
                             let pageIndex = i + 1
-                            let slug = content.slug.replacingOccurrences([
-                                "{{\(iteratorId)}}": String(pageIndex)
-                            ])
-                            return Content.IteratorInfo.Link(
+                            let permalink = content.slug.permalink(baseUrl: baseUrl)
+                            return IteratorInfo.Link(
                                 number: pageIndex,
-                                permalink: slug.permalink(
-                                    baseUrl: baseUrl
-                                ),
+                                permalink: permalink.replacingOccurrences(
+                                    ["{{\(iteratorId)}}": String(pageIndex)]),
                                 isCurrent: pageIndex == currentPageIndex
                             )
                         }
@@ -117,21 +114,6 @@ struct ContentIteratorResolver {
             }
         }
         return finalContents
-    }
-
-    private func extractIteratorId(
-        from input: String
-    ) -> String? {
-        guard
-            let startRange = input.range(of: "{{"),
-            let endRange = input.range(
-                of: "}}",
-                range: startRange.upperBound..<input.endIndex
-            )
-        else {
-            return nil
-        }
-        return .init(input[startRange.upperBound..<endRange.lowerBound])
     }
 
     // MARK: - rewrite
