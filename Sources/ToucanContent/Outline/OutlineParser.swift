@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  OutlineParser.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2024. 10. 14..
 //

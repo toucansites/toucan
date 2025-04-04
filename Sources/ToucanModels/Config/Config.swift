@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Config.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 29..
 //

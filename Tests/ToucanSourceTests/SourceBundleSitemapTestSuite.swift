@@ -1,6 +1,6 @@
 //
 //  SourceBundleSitemapTestSuite.swift
-//  toucan
+//  Toucan
 //
 //  Created by Lengyel Gábor on 2025. 03. 26..
 //

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Pipeline+Scope.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 03..
 //

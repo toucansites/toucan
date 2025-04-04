@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Property.swift
 //  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 21..

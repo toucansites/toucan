@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  PropertyTypeDecodingTestSuite.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 31..
 //
@@ -74,56 +74,4 @@ struct PropertyTypeDecodingTestSuite {
         #expect(decodedDataType == .string)
     }
 
-    //    private var encoder: JSONEncoder {
-    //        let encoder = JSONEncoder()
-    //        encoder.outputFormatting = [
-    //            .sortedKeys
-    //        ]
-    //        return encoder
-    //    }
-    //
-    //    @Test
-    //    func encodingBool() throws {
-    //        let dataType: PropertyType = .bool
-    //        let encodedData = try encoder.encode(dataType)
-    //        let jsonString = String(data: encodedData, encoding: .utf8)
-    //
-    //        #expect(jsonString == #"{"type":"bool"}"#)
-    //    }
-    //
-    //    @Test
-    //    func encodingInt() throws {
-    //        let dataType: PropertyType = .int
-    //        let encodedData = try encoder.encode(dataType)
-    //        let jsonString = String(data: encodedData, encoding: .utf8)
-    //
-    //        #expect(jsonString == #"{"type":"int"}"#)
-    //    }
-    //
-    //    @Test
-    //    func encodingDouble() throws {
-    //        let dataType: PropertyType = .double
-    //        let encodedData = try encoder.encode(dataType)
-    //        let jsonString = String(data: encodedData, encoding: .utf8)
-    //
-    //        #expect(jsonString == #"{"type":"double"}"#)
-    //    }
-    //
-    //    @Test
-    //    func encodingDate() throws {
-    //        let dataType: PropertyType = .date(format: "y.m.d")
-    //        let encodedData = try encoder.encode(dataType)
-    //        let jsonString = String(data: encodedData, encoding: .utf8)
-    //
-    //        #expect(jsonString == #"{"format":"y.m.d","type":"date"}"#)
-    //    }
-    //
-    //    @Test
-    //    func encodingString() throws {
-    //        let dataType: PropertyType = .string
-    //        let encodedData = try encoder.encode(dataType)
-    //        let jsonString = String(data: encodedData, encoding: .utf8)
-    //
-    //        #expect(jsonString == #"{"type":"string"}"#)
-    //    }
 }
