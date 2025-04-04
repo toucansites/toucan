@@ -49,7 +49,7 @@ struct ContentRendererTestSuite {
 
         let contents = renderer.render(
             content: input,
-            slug: "",
+            slug: .init(value: ""),
             assetsPath: "",
             baseUrl: ""
         )
@@ -105,7 +105,7 @@ struct ContentRendererTestSuite {
 
         let contents = renderer.render(
             content: input,
-            slug: "home",
+            slug: .init(value: "home"),
             assetsPath: "assets/home",
             baseUrl: "http://localhost:3000"
         )

@@ -113,7 +113,7 @@ public struct ContentRenderer {
 
     public func render(
         content: String,
-        slug: String,
+        slug: Slug,
         assetsPath: String,
         baseUrl: String
     ) -> Output {

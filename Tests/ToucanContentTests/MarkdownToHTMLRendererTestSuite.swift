@@ -33,7 +33,7 @@ struct MarkdownRendererTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: "",
+            slug: .init(value: ""),
             assetsPath: "",
             baseUrl: ""
         )
@@ -71,7 +71,7 @@ struct MarkdownRendererTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: "",
+            slug: .init(value: ""),
             assetsPath: "",
             baseUrl: ""
         )
@@ -117,7 +117,7 @@ struct MarkdownRendererTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: "",
+            slug: .init(value: ""),
             assetsPath: "",
             baseUrl: ""
         )
@@ -162,7 +162,7 @@ struct MarkdownRendererTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: "",
+            slug: .init(value: ""),
             assetsPath: "",
             baseUrl: ""
         )

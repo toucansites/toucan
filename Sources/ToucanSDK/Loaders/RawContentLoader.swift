@@ -124,7 +124,7 @@ private extension RawContentLoader {
                 frontMatter: frontMatter,
                 assetsPath: assetsPath,
                 assetLocations: assetLocations,
-                slug: location.slug
+                slug: .init(value: location.slug)
             )
         )
 
@@ -174,7 +174,7 @@ private extension RawContentLoader {
                 $0.resolveAsset(
                     baseUrl: baseUrl,
                     assetsPath: assetsPath,
-                    slug: location.slug
+                    slug: .init(value: location.slug)
                 )
             }
         }
@@ -185,7 +185,7 @@ private extension RawContentLoader {
                     .resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: location.slug
+                        slug: .init(value: location.slug)
                     )
             )
         }
@@ -199,7 +199,7 @@ private extension RawContentLoader {
                 $0.resolveAsset(
                     baseUrl: baseUrl,
                     assetsPath: assetsPath,
-                    slug: location.slug
+                    slug: .init(value: location.slug)
                 )
             }
         }
@@ -210,7 +210,7 @@ private extension RawContentLoader {
                     .resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: location.slug
+                        slug: .init(value: location.slug)
                     )
             )
         }
@@ -263,7 +263,7 @@ extension RawContentLoader {
         frontMatter: [String: AnyCodable],
         assetsPath: String,
         assetLocations: [String],
-        slug: String,
+        slug: Slug,
         imageKey: String = "image"
     ) -> String? {
         func resolveCoverImage(fileName: String) -> String {
@@ -309,7 +309,7 @@ extension AssetProperty {
     func resolvedPath(
         baseUrl: String,
         assetsPath: String,
-        slug: String
+        slug: Slug
     ) -> String {
         if resolvePath {
             return "\(file.name).\(file.ext)"

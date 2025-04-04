@@ -9,7 +9,7 @@ public extension Content.Mocks {
 
         return .init(
             id: "{{post.pagination}}",
-            slug: "posts/page/{{post.pagination}}",
+            slug: .init(value: "posts/page/{{post.pagination}}"),
             rawValue: .init(
                 origin: .init(
                     path: "posts/{{post.pagination}}/index.md",

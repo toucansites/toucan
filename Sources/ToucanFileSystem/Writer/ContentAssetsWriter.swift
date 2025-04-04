@@ -32,7 +32,7 @@ public struct ContentAssetsWriter {
         if !content.rawValue.assets.isEmpty {
 
             let contentFolder = assetsFolder.appending(
-                path: content.slug.isEmpty ? "home" : content.slug
+                path: content.slug.resolveForPath()
             )
             try fileManager.createDirectory(at: contentFolder)
 

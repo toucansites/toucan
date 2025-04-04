@@ -165,15 +165,18 @@ struct SourceBundleScopeTestSuite {
         let decoder = JSONDecoder()
 
         struct Exp0: Decodable {
+            struct Slug: Decodable {
+                let value: String
+            }
             struct Ctx: Decodable {
                 struct Item: Decodable {
-                    let slug: String
+                    let slug: Slug
                     let isCurrentURL: Bool?
                 }
                 let featured: [Item]
             }
             struct Post: Decodable {
-                let slug: String
+                let slug: Slug
                 let isCurrentURL: Bool?
             }
             let page: Post
@@ -186,16 +189,19 @@ struct SourceBundleScopeTestSuite {
         #expect(exp0.context.featured.allSatisfy { $0.isCurrentURL == nil })
 
         struct Exp1: Decodable {
+            struct Slug: Decodable {
+                let value: String
+            }
             struct Ctx: Decodable {
                 struct Item: Decodable {
-                    let slug: String
+                    let slug: Slug
                     let isCurrentURL: Bool?
                 }
 
                 let featured: [Item]
             }
             struct Page: Decodable {
-                let slug: String
+                let slug: Slug
                 let title: String
                 let description: String
                 let isCurrentURL: Bool?

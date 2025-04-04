@@ -164,7 +164,7 @@ public struct SourceBundleRenderer {
             let pipelineContext = getPipelineContext(
                 contents: contents,
                 pipeline: pipeline,
-                currentSlug: content.slug
+                currentSlug: content.slug.value
             )
             .recursivelyMerged(with: globalContext)
 
@@ -217,7 +217,7 @@ public struct SourceBundleRenderer {
                 for: $0,
                 pipeline: pipeline,
                 scopeKey: iteratorInfo.scope ?? "list",
-                currentSlug: content.slug
+                currentSlug: content.slug.value
             )
         }
         return [
@@ -245,7 +245,7 @@ public struct SourceBundleRenderer {
             for: content,
             pipeline: pipeline,
             scopeKey: "detail",
-            currentSlug: content.slug
+            currentSlug: content.slug.value
         )
 
         let iteratorContext = getIteratorContext(
@@ -262,7 +262,7 @@ public struct SourceBundleRenderer {
 
         let outputArgs: [String: String] = [
             "{{id}}": content.id,
-            "{{slug}}": content.slug,
+            "{{slug}}": content.slug.value,
         ]
 
         let path = pipeline.output.path.replacingOccurrences(outputArgs)
@@ -304,7 +304,7 @@ public struct SourceBundleRenderer {
 
         let cacheKey = [
             pipeline.id,
-            content.slug,
+            content.slug.value,
             //            currentSlug ?? "",  // still a bit slow due to this
             scopeKey,
             String(allowSubQueries),

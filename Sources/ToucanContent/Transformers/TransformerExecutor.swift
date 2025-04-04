@@ -27,7 +27,7 @@ public struct TransformerExecutor {
         self.logger = logger
     }
 
-    public func transform(contents: String, slug: String) throws -> String {
+    public func transform(contents: String, slug: Slug) throws -> String {
         // Create a temporary directory URL
         let tempDirectoryURL = fileManager.temporaryDirectory
         let fileName = UUID().uuidString
@@ -37,12 +37,12 @@ public struct TransformerExecutor {
         for command in pipeline.run {
             do {
                 let contextAwareIdentifier = String(
-                    slug.split(separator: "/").last ?? ""
+                    slug.value.split(separator: "/").last ?? ""
                 )
                 let arguments: [String] = [
                     "--id", contextAwareIdentifier,
                     "--file", fileURL.path,
-                    "--slug", slug,
+                    "--slug", slug.value,
                 ]
                 let commandUrl = URL(fileURLWithPath: command.url)
                     .appendingPathComponent(command.name)
