@@ -36,9 +36,7 @@ public struct TransformerExecutor {
 
         for command in pipeline.run {
             do {
-                let contextAwareIdentifier = String(
-                    slug.value.split(separator: "/").last ?? ""
-                )
+                let contextAwareIdentifier = slug.contextAwareIdentifier()
                 let arguments: [String] = [
                     "--id", contextAwareIdentifier,
                     "--file", fileURL.path,

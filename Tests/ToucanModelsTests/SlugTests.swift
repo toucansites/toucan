@@ -40,4 +40,16 @@ struct SlugTests {
         #expect(slug.permalink(baseUrl: "http://localhost:3000") == "http://localhost:3000/slug/")
     }
     
+    @Test
+    func testContextAwareIdentifier() throws {
+        let slug = Slug(value: "slug")
+        #expect(slug.contextAwareIdentifier() == "slug")
+    }
+    
+    @Test
+    func testContextAwareIdentifierLonger() throws {
+        let slug = Slug(value: "path/slug")
+        #expect(slug.contextAwareIdentifier() == "slug")
+    }
+    
 }

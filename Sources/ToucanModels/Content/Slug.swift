@@ -42,4 +42,8 @@ public struct Slug: Codable, Equatable {
         return ([baseUrl] + components).joined(separator: "/") + "/"
     }
     
+    public func contextAwareIdentifier() -> String {
+        return String(value.split(separator: "/").last ?? "")
+    }
+    
 }
