@@ -111,7 +111,6 @@ public struct ContentDefinitionConverter {
         return Content(
             id: id,
             slug: .init(value: slug),
-            //slug: slug,
             rawValue: rawContent,
             definition: contentDefinition,
             properties: properties,
