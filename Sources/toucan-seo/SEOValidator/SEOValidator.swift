@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  SEOValidator.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2024. 10. 28..
 //
@@ -60,6 +60,7 @@ public struct SEOValidator {
         self.logger = logger
     }
 
+    // TODO: fix this?
     func validate(
         html: String,
         using pageBundle: PageBundle

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Settings+DateFormatter.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 26..
 //

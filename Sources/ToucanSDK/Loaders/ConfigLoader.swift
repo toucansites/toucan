@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  ConfigLoader.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 27/06/2024.
 //

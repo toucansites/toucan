@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  TransformerPipeline.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 21..
 //

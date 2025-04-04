@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Content+QueryFields.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 31..
 //

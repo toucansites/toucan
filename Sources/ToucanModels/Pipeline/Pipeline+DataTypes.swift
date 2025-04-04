@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Pipeline+DataTypes.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 16..
 //

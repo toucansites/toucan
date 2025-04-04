@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Toucan+UserErros.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2024. 10. 07..
 //

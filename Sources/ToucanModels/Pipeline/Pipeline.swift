@@ -1,16 +1,9 @@
 //
-//  rendererconfig.swift
-//  TestApp
+//  Pipeline.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 16..
 //
-
-//transformers:
-//    pipelines:
-//        post:
-//          run:
-//            - name: swiftinit
-//          isMarkdownResult: false
 
 public struct Pipeline: Decodable {
 

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Outline.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 22/07/2024.
 //
