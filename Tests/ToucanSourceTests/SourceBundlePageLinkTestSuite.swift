@@ -176,7 +176,7 @@ struct SourceBundlePageLinkTestSuite {
             contents: contents,
             blockDirectives: [],
             templates: templates,
-            baseUrl: "http://localhost:3000/"
+            baseUrl: "http://localhost:3000"
         )
 
         var renderer = SourceBundleRenderer(

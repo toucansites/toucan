@@ -73,7 +73,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -135,7 +135,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -194,7 +194,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -250,7 +250,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -315,7 +315,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -373,7 +373,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -452,7 +452,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -521,7 +521,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -578,7 +578,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 
@@ -640,7 +640,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000/"
+                baseUrl: "http://localhost:3000"
             )
             let results = try loader.load()
 

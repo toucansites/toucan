@@ -24,7 +24,7 @@ struct HTMLVisitorTestSuite {
             logger: logger,
             slug: "slug",
             assetsPath: "assets",
-            baseUrl: "http://localhost:3000/"
+            baseUrl: "http://localhost:3000"
         )
 
         return visitor.visit(document)
