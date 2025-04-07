@@ -16,7 +16,7 @@ import FileManagerKitTesting
 
 @Suite
 struct ConfigLoaderTestSuite {
-
+    
     @Test
     func config() throws {
         let logger = Logger(label: "ConfigLoaderTestSuite")
@@ -105,4 +105,5 @@ struct ConfigLoaderTestSuite {
             )
         }
     }
+    
 }
