@@ -280,7 +280,7 @@ extension RawContentLoader {
         if let imageValue = frontMatter[imageKey]?.stringValue() {
             if imageValue.hasPrefix("/") {
                 return .init(
-                    baseUrl.appending(imageValue.dropFirst())
+                    "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(imageValue.dropFirst())"
                 )
             }
             else {
