@@ -8,6 +8,7 @@ import Logging
 struct HTMLVisitorTestSuite {
 
     func renderHTML(
+        baseUrl: String,
         markdown: String,
         customBlockDirectives: [MarkdownBlockDirective] = []
     ) -> String {
@@ -24,7 +25,7 @@ struct HTMLVisitorTestSuite {
             logger: logger,
             slug: .init(value: "slug"),
             assetsPath: "assets",
-            baseUrl: "http://localhost:3000/"
+            baseUrl: baseUrl
         )
 
         return visitor.visit(document)
@@ -32,14 +33,14 @@ struct HTMLVisitorTestSuite {
 
     // MARK: - standard elements
 
-    @Test
-    func inlineHTML() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func inlineHTML(baseUrl: String) {
 
         let input = #"""
             <b>https://swift.org</b>
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><b>https://swift.org</b></p>
@@ -48,14 +49,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func paragraph() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func paragraph(baseUrl: String) {
 
         let input = #"""
             Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>Lorem ipsum dolor sit amet.</p>
@@ -64,15 +65,15 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func softBreak() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func softBreak(baseUrl: String) {
 
         let input = #"""
             This is the first line.
             And this is the second line.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>This is the first line.<br>And this is the second line.</p>
@@ -81,15 +82,15 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func lineBreak() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func lineBreak(baseUrl: String) {
 
         let input = #"""
             a\
             b
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>a<br>b</p>
@@ -98,8 +99,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func thematicBreak() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func thematicBreak(baseUrl: String) {
 
         let input = #"""
             Lorem ipsum
@@ -111,7 +112,7 @@ struct HTMLVisitorTestSuite {
             amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>Lorem ipsum</p><hr><h2 id="dolor">dolor</h2><p>sit</p><hr><p>amet.</p>
@@ -120,14 +121,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func strong() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func strong(baseUrl: String) {
 
         let input = #"""
             Lorem **ipsum** dolor __sit__ amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>Lorem <strong>ipsum</strong> dolor <strong>sit</strong> amet.</p>
@@ -136,14 +137,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func striketrough() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func striketrough(baseUrl: String) {
 
         let input = #"""
             Lorem ipsum ~~dolor sit amet~~.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>Lorem ipsum <s>dolor sit amet</s>.</p>
@@ -152,14 +153,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func blockquote() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func blockquote(baseUrl: String) {
 
         let input = #"""
             > Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <blockquote><p>Lorem ipsum dolor sit amet.</p></blockquote>
@@ -168,14 +169,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func blockquoteNote() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func blockquoteNote(baseUrl: String) {
 
         let input = #"""
             > NOTE: Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <blockquote class="note"><p>Lorem ipsum dolor sit amet.</p></blockquote>
@@ -184,14 +185,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func blockquoteWarn() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func blockquoteWarn(baseUrl: String) {
 
         let input = #"""
             > WARN: Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <blockquote class="warning"><p>Lorem ipsum dolor sit amet.</p></blockquote>
@@ -200,14 +201,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func blockquoteWarning() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func blockquoteWarning(baseUrl: String) {
 
         let input = #"""
             > warning: Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <blockquote class="warning"><p>Lorem ipsum dolor sit amet.</p></blockquote>
@@ -216,8 +217,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func nestedBlockquote() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func nestedBlockquote(baseUrl: String) {
 
         let input = #"""
             > Lorem ipsum
@@ -225,7 +226,7 @@ struct HTMLVisitorTestSuite {
             >> dolor __sit__ amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <blockquote><p>Lorem ipsum</p><blockquote><p>dolor <strong>sit</strong> amet.</p></blockquote></blockquote>
@@ -234,14 +235,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func emphasis() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func emphasis(baseUrl: String) {
 
         let input = #"""
             Lorem *ipsum* dolor _sit_ amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>Lorem <em>ipsum</em> dolor <em>sit</em> amet.</p>
@@ -252,14 +253,14 @@ struct HTMLVisitorTestSuite {
 
     // MARK: - headings
 
-    @Test
-    func h1() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func h1(baseUrl: String) {
 
         let input = #"""
             # Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <h1>Lorem ipsum dolor sit amet.</h1>
@@ -268,14 +269,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func h2() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func h2(baseUrl: String) {
 
         let input = #"""
             ## Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <h2 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h2>
@@ -284,14 +285,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func h3() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func h3(baseUrl: String) {
 
         let input = #"""
             ### Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <h3 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h3>
@@ -300,14 +301,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func h4() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func h4(baseUrl: String) {
 
         let input = #"""
             #### Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <h4>Lorem ipsum dolor sit amet.</h4>
@@ -316,14 +317,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func h5() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func h5(baseUrl: String) {
 
         let input = #"""
             ##### Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <h5>Lorem ipsum dolor sit amet.</h5>
@@ -332,14 +333,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func h6() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func h6(baseUrl: String) {
 
         let input = #"""
             ###### Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <h6>Lorem ipsum dolor sit amet.</h6>
@@ -348,15 +349,15 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func invalidHeading() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func invalidHeading(baseUrl: String) {
 
         /// NOTE: this should be treated as a paragraph
         let input = #"""
             ####### Lorem ipsum dolor sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>####### Lorem ipsum dolor sit amet.</p>
@@ -367,8 +368,8 @@ struct HTMLVisitorTestSuite {
 
     // MARK: - lists
 
-    @Test
-    func unorderedList() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func unorderedList(baseUrl: String) {
 
         let input = #"""
             - foo
@@ -376,7 +377,7 @@ struct HTMLVisitorTestSuite {
             - baz
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <ul><li>foo</li><li>bar</li><li>baz</li></ul>
@@ -385,8 +386,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func orderedList() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func orderedList(baseUrl: String) {
 
         let input = #"""
             1. foo
@@ -394,7 +395,7 @@ struct HTMLVisitorTestSuite {
             3. baz
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <ol><li>foo</li><li>bar</li><li>baz</li></ol>
@@ -403,8 +404,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func listWithCode() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func listWithCode(baseUrl: String) {
 
         let input = #"""
             - foo `aaa`
@@ -412,7 +413,7 @@ struct HTMLVisitorTestSuite {
             - baz
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <ul><li>foo <code>aaa</code></li><li>bar</li><li>baz</li></ul>
@@ -423,14 +424,14 @@ struct HTMLVisitorTestSuite {
 
     // MARK: - other elements
 
-    @Test
-    func inlineCode() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func inlineCode(baseUrl: String) {
 
         let input = #"""
             Lorem `ipsum dolor` sit amet.
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p>Lorem <code>ipsum dolor</code> sit amet.</p>
@@ -439,14 +440,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func link() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func link(baseUrl: String) {
 
         let input = #"""
             [Swift](https://swift.org/)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a href="https://swift.org/" target="_blank">Swift</a></p>
@@ -455,14 +456,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func emptyLink() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func emptyLink(baseUrl: String) {
 
         let input = #"""
             [Swift]()
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a>Swift</a></p>
@@ -471,14 +472,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func dotLink() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func dotLink(baseUrl: String) {
 
         let input = #"""
             [Swift](./foo)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a href="./foo">Swift</a></p>
@@ -487,14 +488,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func slashLink() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func slashLink(baseUrl: String) {
 
         let input = #"""
             [Swift](/foo)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a href="http://localhost:3000/foo">Swift</a></p>
@@ -503,14 +504,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func externalLink() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func externalLink(baseUrl: String) {
 
         let input = #"""
             [Swift](foo/bar)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a href="foo/bar" target="_blank">Swift</a></p>
@@ -519,14 +520,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func anchorLink() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func anchorLink(baseUrl: String) {
 
         let input = #"""
             [Swift](#anchor)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a href="#anchor">Swift</a></p>
@@ -535,14 +536,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func anchorName() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func anchorName(baseUrl: String) {
 
         let input = #"""
             [Swift](#[name]anchor)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><a name="anchor">Swift</a></p>
@@ -551,14 +552,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func image() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func image(baseUrl: String) {
 
         let input = #"""
             ![Lorem](lorem.jpg)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><img src="lorem.jpg" alt="Lorem"></p>
@@ -567,14 +568,14 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func imageAssetsPrefix() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageAssetsPrefix(baseUrl: String) {
 
         let input = #"""
             ![Lorem](./assets/lorem.jpg)
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <p><img src="http://localhost:3000/assets/slug/lorem.jpg" alt="Lorem"></p>
@@ -582,8 +583,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func codeBlock() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func codeBlock(baseUrl: String) {
 
         let input = #"""
             ```js
@@ -595,7 +596,7 @@ struct HTMLVisitorTestSuite {
             ```
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <pre><code class="language-js">Lorem
@@ -609,8 +610,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func codeBlockWithHighlight() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func codeBlockWithHighlight(baseUrl: String) {
 
         let input = #"""
             ```css
@@ -624,7 +625,7 @@ struct HTMLVisitorTestSuite {
             ```
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <pre><code class="language-css">Lorem
@@ -640,8 +641,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func codeBlockWithHighlightSwift() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func codeBlockWithHighlightSwift(baseUrl: String) {
 
         let input = #"""
             ```swift
@@ -652,7 +653,7 @@ struct HTMLVisitorTestSuite {
             ```
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <pre><code class="language-swift"><span class="highlight">func main() -&gt; String</span> {
@@ -665,8 +666,8 @@ struct HTMLVisitorTestSuite {
         #expect(output == expectation)
     }
 
-    @Test
-    func table() {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func table(baseUrl: String) {
 
         let input = #"""
             | Item              | In Stock | Price |
@@ -677,7 +678,7 @@ struct HTMLVisitorTestSuite {
             | Codecademy Hoodie |  False   | 42.99 |
             """#
 
-        let output = renderHTML(markdown: input)
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
 
         let expectation = #"""
             <table><thead><td>Item</td><td>In Stock</td><td>Price</td></thead><tbody><tr><td>Python Hat</td><td>True</td><td>23.99</td></tr><tr><td>SQL Hat</td><td>True</td><td>23.99</td></tr><tr><td>Codecademy Tee</td><td>False</td><td>19.99</td></tr><tr><td>Codecademy Hoodie</td><td>False</td><td>42.99</td></tr></tbody></table>
