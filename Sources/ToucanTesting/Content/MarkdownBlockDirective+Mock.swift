@@ -25,4 +25,19 @@ public extension MarkdownBlockDirective.Mocks {
                 )
             }
     }
+    
+    static func faq() -> MarkdownBlockDirective {
+        .init(
+            name: "FAQ",
+            parameters: nil,
+            requiresParentDirective: nil,
+            removesChildParagraph: nil,
+            tag: "div",
+            attributes: [
+                .init(name: "class", value: "faq")
+            ],
+            output: nil
+        )
+    }
+    
 }

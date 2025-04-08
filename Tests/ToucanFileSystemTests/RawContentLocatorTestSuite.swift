@@ -25,6 +25,7 @@ struct RawContentLocatorTestSuite {
             }
     }
 
+    @Test()
     func rawContentLocatorMarkdownOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -90,6 +91,7 @@ struct RawContentLocatorTestSuite {
         }
     }
 
+    @Test()
     func rawContentLocatorYamlOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -122,6 +124,7 @@ struct RawContentLocatorTestSuite {
         }
     }
 
+    @Test()
     func rawContentLocatorYmlOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -154,6 +157,7 @@ struct RawContentLocatorTestSuite {
         }
     }
 
+    @Test()
     func rawContentLocatorMarkdowns() async throws {
         try FileManagerPlayground {
             Directory("src") {
@@ -188,6 +192,7 @@ struct RawContentLocatorTestSuite {
         }
     }
 
+    @Test()
     func rawContentLocatorYamls() async throws {
         try FileManagerPlayground {
             Directory("src") {

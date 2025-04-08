@@ -17,8 +17,30 @@ import FileManagerKitTesting
 @Suite
 struct ConfigLoaderTestSuite {
     
+    static func getDefaultResult() -> Config {
+        return Config(
+            pipelines: .defaults,
+            contents: .defaults,
+            themes: .defaults,
+            dateFormats: .defaults,
+            contentConfigurations: .defaults
+        )
+    }
+    
+    static func getConfigLoader(url: URL, logger: Logger) -> ConfigLoader {
+        return ConfigLoader(
+            url: url,
+            locations: [
+                "config.yml"
+            ],
+            encoder: ToucanYAMLEncoder(),
+            decoder: ToucanYAMLDecoder(),
+            logger: logger
+        )
+    }
+    
     @Test
-    func config() throws {
+    func testWithNoDefaultValue() throws {
         let logger = Logger(label: "ConfigLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
@@ -26,11 +48,26 @@ struct ConfigLoaderTestSuite {
                     "config.yml",
                     string: """
                         pipelines:
-                            testKey: testValue
+                            path: pipelinesNotDefault
                         contents:
-                            path: contents
+                            path: contentsNotDefault
                             assets: 
-                                path: assets
+                                path: assetsNotDefault
+                        themes:
+                            location:
+                                path: themesNotDefault
+                            current:
+                                path: defaultNotDefault
+                            assets:
+                                path: assetsNotDefault
+                            templates:
+                                path: templatesNotDefault
+                            types:
+                                path: typesNotDefault
+                            overrides:
+                                path: overridesNotDefault
+                            blocks:
+                                path: blocksNotDefault
                         dateFormats:
                             input: 
                                 format: y
@@ -46,40 +83,43 @@ struct ConfigLoaderTestSuite {
                                 - 4
                             paragraphStyles:
                                 note: 
-                                    - note
+                                    - noteNotDefault
                                 warn:
-                                    - warn
-                                    - warning
+                                    - warnNotDefault
+                                    - warningNotDefault
                                 tip:
-                                    - tip
+                                    - tipNotDefault
                                 important:
-                                    - important
+                                    - importantNotDefault
                                 error:
-                                    - error
-                                    - caution
+                                    - errorNotDefault
+                                    - cautionNotDefault
                         """
                 )
             }
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoader(
-                url: url,
-                locations: [
-                    "config.yml"
-                ],
-                encoder: ToucanYAMLEncoder(),
-                decoder: ToucanYAMLDecoder(),
-                logger: logger
-            )
+            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
             let result = try loader.load()
 
             #expect(
                 result
                     == Config(
-                        pipelines: .defaults,
-                        contents: .defaults,
-                        themes: .defaults,
+                        pipelines: .init(path: "pipelinesNotDefault"),
+                        contents: .init(
+                            path: "contentsNotDefault",
+                            assets: .init(path: "assetsNotDefault")
+                        ),
+                        themes: .init(
+                            location: .init(path: "themesNotDefault"),
+                            current: .init(path: "defaultNotDefault"),
+                            assets: .init(path: "assetsNotDefault"),
+                            templates: .init(path: "templatesNotDefault"),
+                            types: .init(path: "typesNotDefault"),
+                            overrides: .init(path: "overridesNotDefault"),
+                            blocks: .init(path: "blocksNotDefault")
+                        ),
                         dateFormats: .init(
                             input: .init(format: "y"),
                             output: [
@@ -94,11 +134,11 @@ struct ConfigLoaderTestSuite {
                             wordsPerMinute: 240,
                             outlineLevels: [3, 4],
                             paragraphStyles: .init(
-                                note: ["note"],
-                                warn: ["warn", "warning"],
-                                tip: ["tip"],
-                                important: ["important"],
-                                error: ["error", "caution"]
+                                note: ["noteNotDefault"],
+                                warn: ["warnNotDefault", "warningNotDefault"],
+                                tip: ["tipNotDefault"],
+                                important: ["importantNotDefault"],
+                                error: ["errorNotDefault", "cautionNotDefault"]
                             )
                         )
                     )

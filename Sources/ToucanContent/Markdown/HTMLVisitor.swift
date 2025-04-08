@@ -343,13 +343,13 @@ struct HTMLVisitor: MarkupVisitor {
         guard let source = image.source, !source.isEmpty else {
             return ""
         }
-
-        if let result = imageOverride(image) {
-            return result
-        }
-
+        let imagePath = source.resolveAsset(
+            baseUrl: baseUrl,
+            assetsPath: assetsPath,
+            slug: slug
+        )
         var attributes: [HTML.Attribute] = [
-            .init(key: "src", value: source),
+            .init(key: "src", value: imagePath),
             .init(key: "alt", value: image.plainText),
         ]
         if let title = image.title {
@@ -451,7 +451,6 @@ struct HTMLVisitor: MarkupVisitor {
         let templateParams = parameters.mapKeys { "{{\($0)}}" }
 
         if let parent = block.requiresParentDirective, !parent.isEmpty {
-
             guard
                 let p = blockDirective.parent as? BlockDirective,
                 p.name.lowercased() == parent.lowercased()

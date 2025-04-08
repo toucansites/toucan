@@ -1,10 +1,10 @@
 //
-//  ConfigLoaderThemesTestSuite.swift
+//  ConfigLoaderContentConfigurationsTestSuite.swift
 //  Toucan
 //
-//  Created by gerp83 on 2025. 04. 04.
+//  Created by gerp83 on 2025. 04. 08.
 //
-
+    
 import Foundation
 import Testing
 import ToucanModels
@@ -15,18 +15,18 @@ import FileManagerKitTesting
 @testable import ToucanSDK
 
 @Suite
-struct ConfigLoaderThemesTestSuite {
+struct ConfigLoaderContentConfigurationsTestSuite {
     
     @Test
     func testParseDefaults() throws {
-        let logger = Logger(label: "ConfigLoaderThemesTestSuite")
+        let logger = Logger(label: "ConfigLoaderContentConfigurationsTestSuite")
         
         try FileManagerPlayground {
             Directory("src") {
                 File(
                     "config.yml",
                     string: """
-                        \(getThemes())
+                        \(getConfigarations())
                         """
                 )
             }
@@ -39,17 +39,13 @@ struct ConfigLoaderThemesTestSuite {
         }
     }
     
-    @Test("Test all theme paths", arguments: [
-        [false, true, true, true, true, true, true],
-        [true, false, true, true, true, true, true],
-        [true, true, false, true, true, true, true],
-        [true, true, true, false, true, true, true],
-        [true, true, true, true, false, true, true],
-        [true, true, true, true, true, false, true],
-        [true, true, true, true, true, true, false]
+    @Test("Test all content configurations", arguments: [
+        [false, true, true],
+        [true, false, true],
+        [true, true, false]
     ])
     func testParseOneMissing(_ values: [Bool]) throws {
-        let logger = Logger(label: "ConfigLoaderThemesTestSuite")
+        let logger = Logger(label: "ConfigLoaderContentConfigurationsTestSuite")
         
         try FileManagerPlayground {
             Directory("src") {
@@ -62,7 +58,7 @@ struct ConfigLoaderThemesTestSuite {
                             path: contents
                             assets: 
                                 path: assets
-                        \(getThemes(values))
+                        \(getConfigarations(values))
                         """
                 )
             }
@@ -75,38 +71,33 @@ struct ConfigLoaderThemesTestSuite {
         }
     }
     
-    private func getThemes(
-        _ values: [Bool] = [true, true, true, true, true, true, true]
+    private func getConfigarations(
+        _ values: [Bool] = [true, true, true]
     ) -> String {
         return """
-        themes:
+        contentConfigurations:
             \(values[0] ? """
-            location:
-                    path: themes
+            wordsPerMinute: 238
             """ : "")
             \(values[1] ? """
-            current:
-                    path: default
+            outlineLevels:
+                    - 2
+                    - 3
             """ : "")
             \(values[2] ? """
-            assets:
-                    path: assets
-            """ : "")
-            \(values[3] ? """
-            templates:
-                    path: templates
-            """ : "")
-            \(values[4] ? """
-            types:
-                    path: types
-            """ : "")
-            \(values[5] ? """
-            overrides:
-                    path: overrides 
-            """ : "")
-            \(values[6] ? """
-            blocks:
-                    path: blocks
+            paragraphStyles:
+                    note: 
+                        - note
+                    warn:
+                        - warn
+                        - warning
+                    tip:
+                        - tip
+                    important:
+                        - important
+                    error:
+                        - error
+                        - caution
             """ : "")
         """
     }

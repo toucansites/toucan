@@ -63,28 +63,3 @@ public extension String {
         return "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)/\(slug.resolveForPath())/\(src)"
     }
 }
-
-extension HTMLVisitor {
-
-    func imageOverride(_ image: Image) -> String? {
-        guard
-            let source = image.source
-        else {
-            return nil
-        }
-        let path = source.resolveAsset(
-            baseUrl: baseUrl,
-            assetsPath: assetsPath,
-            slug: slug
-        )
-
-        var title = ""
-        if let ttl = image.title {
-            title = #" title="\#(ttl)""#
-        }
-        return """
-            <img src="\(path)" alt="\(image.plainText)"\(title)>
-            """
-    }
-
-}

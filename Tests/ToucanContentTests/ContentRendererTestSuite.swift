@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 import Logging
+import ToucanTesting
 @testable import ToucanContent
 @testable import ToucanModels
 
@@ -14,17 +15,7 @@ struct ContentRendererTestSuite {
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [
-                        .init(
-                            name: "FAQ",
-                            parameters: nil,
-                            requiresParentDirective: nil,
-                            removesChildParagraph: nil,
-                            tag: "div",
-                            attributes: [
-                                .init(name: "class", value: "faq")
-                            ],
-                            output: nil
-                        )
+                        MarkdownBlockDirective.Mocks.faq()
                     ]
                 ),
                 outline: .init(

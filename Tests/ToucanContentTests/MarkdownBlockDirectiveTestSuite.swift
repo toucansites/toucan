@@ -1,26 +1,16 @@
 import Testing
+import ToucanTesting
 @testable import ToucanModels
 @testable import ToucanContent
 
 @Suite
-struct MarkdownRendererTestSuite {
+struct MarkdownBlockDirectiveTestSuite {
 
     @Test
     func simpleCustomBlockDirective() throws {
-
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                .init(
-                    name: "FAQ",
-                    parameters: nil,
-                    requiresParentDirective: nil,
-                    removesChildParagraph: nil,
-                    tag: "div",
-                    attributes: [
-                        .init(name: "class", value: "faq")
-                    ],
-                    output: nil
-                )
+                MarkdownBlockDirective.Mocks.faq()
             ],
             paragraphStyles: ParagraphStyles.defaults
         )
@@ -103,7 +93,7 @@ struct MarkdownRendererTestSuite {
                     attributes: [
                         .init(name: "columns", value: "grid-{{columns}}")
                     ],
-                    output: nil  //#"<div class="faq">{{contents}}</div>"#
+                    output: nil 
                 )
             ],
             paragraphStyles: ParagraphStyles.defaults

@@ -20,4 +20,8 @@ public extension String {
         return self
     }
     
+    var emptyToNil: String? {
+        isEmpty ? nil : self
+    }
+    
 }
