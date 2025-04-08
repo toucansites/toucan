@@ -37,8 +37,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentMarkdown() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentMarkdown(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -73,7 +73,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -99,8 +99,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentMd() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentMd(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -135,7 +135,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -161,8 +161,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentYaml() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentYaml(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -194,7 +194,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -217,8 +217,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentYml() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentYml(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -250,7 +250,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -273,8 +273,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentMarkdowns() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentMarkdowns(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -315,7 +315,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -337,8 +337,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentYamls() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentYamls(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -373,7 +373,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -394,8 +394,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentAllFormats() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentAllFormats(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -452,7 +452,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -477,8 +477,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func invalidNoindexFileExtension() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func invalidNoindexFileExtension(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
@@ -521,7 +521,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -543,8 +543,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentCoverImage() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentCoverImage(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -578,7 +578,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
@@ -604,8 +604,8 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    @Test
-    func rawContentJsCss() throws {
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentJsCss(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
         try testRawContentStructure {
             File(
@@ -640,7 +640,7 @@ struct RawContentLoaderTestSuite {
                 frontMatterParser: FrontMatterParser(decoder: decoder),
                 fileManager: $0,
                 logger: logger,
-                baseUrl: "http://localhost:3000"
+                baseUrl: baseUrl
             )
             let results = try loader.load()
 
