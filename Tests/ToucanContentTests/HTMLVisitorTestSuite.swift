@@ -7,7 +7,6 @@ import Logging
 @Suite
 struct HTMLVisitorTestSuite {
 
-    //@Test
     func renderHTML(
         baseUrl: String,
         markdown: String,
