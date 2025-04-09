@@ -24,7 +24,7 @@ extension Logger {
 }
 
 public struct MemoryLogHandler: LogHandler {
-    
+
     public var logLevel: Logger.Level = .info
     public var metadata: Logger.Metadata = [:]
 
@@ -50,7 +50,9 @@ public struct MemoryLogHandler: LogHandler {
     ) {
         let isoFormatter = ISO8601DateFormatter()
         let timestamp = isoFormatter.string(from: Date())
-        let mergedMetadata = self.metadata.merging(metadata ?? [:]) { _, new in new }
+        let mergedMetadata = self.metadata.merging(metadata ?? [:]) { _, new in
+            new
+        }
         let metadataText = formattedMetadata(mergedMetadata)
         let messageComponents = [
             timestamp,
@@ -59,25 +61,29 @@ public struct MemoryLogHandler: LogHandler {
             ":",
             metadataText,
             "[\(source)]",
-            "\(message)"
+            "\(message)",
         ]
-        let finalMessage = messageComponents
+        let finalMessage =
+            messageComponents
             .compactMap { $0 }
             .joined(separator: " ")
-        
+
         storage.append(.init(stringLiteral: finalMessage))
     }
 
-    public subscript(metadataKey metadataKey: String) -> Logger.Metadata.Value? {
+    public subscript(metadataKey metadataKey: String) -> Logger.Metadata.Value?
+    {
         get { metadata[metadataKey] }
         set { metadata[metadataKey] = newValue }
     }
 
     private func formattedMetadata(_ metadata: Logger.Metadata) -> String? {
         guard !metadata.isEmpty else { return nil }
-        let elements = metadata.map { key, value in
-            "\(key)=\(value)"
-        }.sorted()
+        let elements =
+            metadata.map { key, value in
+                "\(key)=\(value)"
+            }
+            .sorted()
         return elements.joined(separator: " ")
     }
 

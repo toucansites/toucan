@@ -66,14 +66,15 @@ struct ContentIteratorResolver {
                         total: numberOfPages,
                         &alteredContent.userDefined
                     )
-                    
+
                     if !alteredContent.rawValue.markdown.isEmpty {
                         alteredContent.rawValue.markdown = replace(
                             in: alteredContent.rawValue.markdown,
                             number: currentPageIndex,
-                            total: numberOfPages)
+                            total: numberOfPages
+                        )
                     }
-                    
+
                     let links = (0..<numberOfPages)
                         .map { i in
                             let pageIndex = i + 1
@@ -145,7 +146,7 @@ struct ContentIteratorResolver {
             }
         }
     }
-    
+
     private func replace(
         in value: String,
         number: Int,

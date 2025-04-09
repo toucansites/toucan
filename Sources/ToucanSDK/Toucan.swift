@@ -112,20 +112,20 @@ public struct Toucan {
             {
                 validate(dateFormat)
             }
-            
+
             /// Validate pipeline date formats
             for pipeline in sourceBundle.pipelines {
                 for dateFormat in pipeline.dataTypes.date.dateFormats.values {
                     validate(dateFormat)
                 }
             }
-            
+
             /// Validate slugs
             validateSlugs(sourceBundle)
-            
+
             /// Validate frontMatters
             validateFrontMatters(sourceBundle)
-            
+
             // MARK: - Render pipeline results
 
             var renderer = SourceBundleRenderer(
@@ -210,39 +210,44 @@ public struct Toucan {
             logger.warning("Invalid site time zone: \(value)")
         }
     }
-    
+
     func validateSlugs(_ sourceBundle: SourceBundle) {
         let slugs = sourceBundle.contents.map(\.slug)
         let slugCounts = Dictionary(grouping: slugs, by: { $0 })
             .mapValues { $0.count }
-        
+
         for (slug, count) in slugCounts where count > 1 {
             logger.error("Duplicate slug: \(slug)")
         }
     }
-    
+
     func validateFrontMatters(_ sourceBundle: SourceBundle) {
         for content in sourceBundle.contents {
             let metadata: Logger.Metadata = ["slug": "\(content.slug)"]
             let frontMatter = content.rawValue.frontMatter
-            
+
             let missingProperties = content.definition.properties
                 .filter { name, property in
-                    property.required &&
-                    frontMatter[name] == nil &&
-                    property.default?.value == nil
+                    property.required && frontMatter[name] == nil
+                        && property.default?.value == nil
                 }
-            
+
             for name in missingProperties.keys {
-                logger.warning("Missing content property: `\(name)`", metadata: metadata)
+                logger.warning(
+                    "Missing content property: `\(name)`",
+                    metadata: metadata
+                )
             }
-            
+
             let missingRelations = content.definition.relations.keys.filter {
                 frontMatter[$0] == nil
             }
-            
+
             for name in missingRelations {
-                logger.warning("Missing content relation: `\(name)`", metadata: metadata)
+                logger.warning(
+                    "Missing content relation: `\(name)`",
+                    metadata: metadata
+                )
             }
         }
     }
