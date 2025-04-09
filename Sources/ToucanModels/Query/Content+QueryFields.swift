@@ -15,8 +15,9 @@ public extension Content {
             case .one:
                 if relation.identifiers.isEmpty {
                     fields[key] = .init([])
-                    
-                } else {
+
+                }
+                else {
                     fields[key] = .init(relation.identifiers[0])
                 }
             case .many:

@@ -140,7 +140,7 @@ public struct SEOValidator {
                     metadata["title"] = "`\(title)`"
                     metadata["keyword"] = "`\(keyword)`"
                     logger.warning(
-                        "Title does not contain keyword: `\(keyword)`.",
+                        "Title does not contain keyword: `\(keyword)`",
                         metadata: metadata
                     )
                 }
@@ -148,7 +148,7 @@ public struct SEOValidator {
                     metadata["description"] = "`\(description)`"
                     metadata["keyword"] = "`\(keyword)`"
                     logger.warning(
-                        "Description does not contain keyword: `\(keyword)`.",
+                        "Description does not contain keyword: `\(keyword)`",
                         metadata: metadata
                     )
                 }
@@ -156,7 +156,7 @@ public struct SEOValidator {
                     metadata["h1"] = "`\(h1)`"
                     metadata["keyword"] = "`\(keyword)`"
                     logger.warning(
-                        "H1 does not contain keyword: `\(keyword)`.",
+                        "H1 does not contain keyword: `\(keyword)`",
                         metadata: metadata
                     )
                 }

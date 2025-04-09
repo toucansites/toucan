@@ -31,7 +31,7 @@ public struct SettingsLoader {
 
     func load() throws -> Settings {
         logger.debug(
-            "Loading settings files (\(locations) at: `\(url.absoluteString)`."
+            "Loading settings files (\(locations) at: `\(url.absoluteString)`"
         )
 
         var rawItems: [String] = []
