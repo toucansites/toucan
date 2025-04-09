@@ -28,7 +28,7 @@ public struct MustacheTemplateRenderer {
     public func render(
         template: String,
         with object: [String: AnyCodable]
-    ) throws -> String? {
+    ) -> String? {
         guard ids.contains(template) else {
             logger.error(
                 "Missing or invalid template file.",

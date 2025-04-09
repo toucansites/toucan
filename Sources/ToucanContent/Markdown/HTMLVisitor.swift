@@ -456,7 +456,7 @@ struct HTMLVisitor: MarkupVisitor {
                 p.name.lowercased() == parent.lowercased()
             else {
                 logger.warning(
-                    "Block directive `\(block.name)` requires parent block `\(parent)`."
+                    "Block directive `\(block.name)` requires parent block `\(parent)`"
                 )
                 return ""
             }

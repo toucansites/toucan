@@ -37,7 +37,7 @@ struct ContentDefinitionLoader {
         }
 
         let typeList = items.map(\.id).joined(separator: ", ")
-        logger.debug("Available content types: `\(typeList)`.")
+        logger.debug("Available content types: `\(typeList)`")
 
         return items
     }

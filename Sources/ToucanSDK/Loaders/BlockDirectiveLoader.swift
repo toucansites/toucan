@@ -46,7 +46,7 @@ struct BlockDirectiveLoader {
         }
 
         logger.debug(
-            "Available block directives: `\(items.map(\.name).joined(separator: ", "))`."
+            "Available block directives: `\(items.map(\.name).joined(separator: ", "))`"
         )
 
         return items

@@ -43,7 +43,7 @@ struct TemplateLoader {
         }
 
         logger.debug(
-            "Available templates: `\(items.map(\.key).joined(separator: ", "))`."
+            "Available templates: `\(items.map(\.key).joined(separator: ", "))`"
         )
 
         return items

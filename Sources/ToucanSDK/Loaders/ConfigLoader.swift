@@ -42,7 +42,7 @@ public struct ConfigLoader {
     /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> Config {
         logger.debug(
-            "Loading config files (\(locations) at: `\(url.absoluteString)`."
+            "Loading config files (\(locations) at: `\(url.absoluteString)`"
         )
 
         var rawItems: [String] = []
