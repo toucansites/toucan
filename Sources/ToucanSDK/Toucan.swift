@@ -212,7 +212,7 @@ public struct Toucan {
     }
 
     func validateSlugs(_ sourceBundle: SourceBundle) {
-        let slugs = sourceBundle.contents.map(\.slug)
+        let slugs = sourceBundle.contents.map(\.slug.value)
         let slugCounts = Dictionary(grouping: slugs, by: { $0 })
             .mapValues { $0.count }
 
@@ -223,7 +223,7 @@ public struct Toucan {
 
     func validateFrontMatters(_ sourceBundle: SourceBundle) {
         for content in sourceBundle.contents {
-            let metadata: Logger.Metadata = ["slug": "\(content.slug)"]
+            let metadata: Logger.Metadata = ["slug": "\(content.slug.value)"]
             let frontMatter = content.rawValue.frontMatter
 
             let missingProperties = content.definition.properties
