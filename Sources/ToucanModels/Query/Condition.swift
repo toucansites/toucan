@@ -17,7 +17,7 @@ public enum Condition: Decodable, Equatable {
         case and
         case or
     }
-
+ 
     // MARK: - decoder
 
     public init(

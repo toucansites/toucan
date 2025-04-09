@@ -140,7 +140,7 @@ public struct SourceBundleRenderer {
                 )
             default:
                 logger.error(
-                    "Unknown renderer engine `\(pipeline.engine.id)`."
+                    "Unknown renderer engine `\(pipeline.engine.id)`"
                 )
             }
         }
@@ -490,7 +490,7 @@ public struct SourceBundleRenderer {
             logger: logger
         )
 
-        return try contextBundles.compactMap {
+        return contextBundles.compactMap {
             let engineOptions = pipeline.engine.options
             let contentTypesOptions = engineOptions.dict("contentTypes")
             let bundleOptions = contentTypesOptions.dict(
@@ -513,10 +513,7 @@ public struct SourceBundleRenderer {
                 return nil
             }
 
-            let html = try renderer.render(
-                template: template,
-                with: $0.context
-            )
+            let html = renderer.render(template: template, with: $0.context)
 
             guard let html, !html.isEmpty else {
                 logger.warning(
@@ -530,10 +527,7 @@ public struct SourceBundleRenderer {
                 return nil
             }
 
-            return .init(
-                contents: html,
-                destination: $0.destination
-            )
+            return .init(contents: html, destination: $0.destination)
         }
     }
 }

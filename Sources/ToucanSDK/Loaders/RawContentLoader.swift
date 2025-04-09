@@ -44,7 +44,7 @@ struct RawContentLoader {
     /// - Returns: A `Config` object representing the loaded configuration.
     /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> [RawContent] {
-        logger.debug("Loading raw contents at: `\(url.absoluteString)`.")
+        logger.debug("Loading raw contents at: `\(url.absoluteString)`")
 
         var items: [RawContent] = []
         for location in locations {
