@@ -580,7 +580,7 @@ struct HTMLVisitorTestSuite {
             """#
         #expect(output == expectation)
     }
-    
+
     @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
     func imageEmptySource(baseUrl: String) {
 
@@ -595,7 +595,7 @@ struct HTMLVisitorTestSuite {
             """#
         #expect(output == expectation)
     }
-    
+
     @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
     func imageWithtitle(baseUrl: String) {
 

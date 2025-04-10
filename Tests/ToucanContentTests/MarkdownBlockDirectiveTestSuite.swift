@@ -93,7 +93,7 @@ struct MarkdownBlockDirectiveTestSuite {
                     attributes: [
                         .init(name: "columns", value: "grid-{{columns}}")
                     ],
-                    output: nil 
+                    output: nil
                 )
             ],
             paragraphStyles: ParagraphStyles.defaults

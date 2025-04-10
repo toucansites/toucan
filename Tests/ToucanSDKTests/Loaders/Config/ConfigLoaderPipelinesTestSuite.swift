@@ -16,11 +16,11 @@ import FileManagerKitTesting
 
 @Suite
 struct ConfigLoaderPipelinesTestSuite {
-    
+
     @Test
     func testParseDefaults() throws {
         let logger = Logger(label: "ConfigLoaderPipelinesTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -33,16 +33,19 @@ struct ConfigLoaderPipelinesTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
+
     @Test("Test all pipelines", arguments: [[false]])
     func testParseOneMissing(_ values: [Bool]) throws {
         let logger = Logger(label: "ConfigLoaderPipelinesTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -55,21 +58,24 @@ struct ConfigLoaderPipelinesTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
+
     private func getPipelines(
         _ values: [Bool] = [true]
     ) -> String {
         return """
-        pipelines:
-            \(values[0] ? """
+            pipelines:
+                \(values[0] ? """
             path: pipelines
             """ : "")
-        """
+            """
     }
-    
+
 }

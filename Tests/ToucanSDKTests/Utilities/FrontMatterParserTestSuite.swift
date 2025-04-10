@@ -23,7 +23,7 @@ struct FrontMatterParserTestSuite {
         #expect(metadata["slug"] == .init("lorem-ipsum"))
         #expect(metadata["title"] == .init("Lorem ipsum"))
     }
-    
+
     @Test
     func testFirstMissingSeparator() throws {
 
@@ -40,7 +40,7 @@ struct FrontMatterParserTestSuite {
 
         #expect(metadata.isEmpty)
     }
-    
+
     @Test
     func testSecondMissingSeparator() throws {
 
@@ -57,5 +57,5 @@ struct FrontMatterParserTestSuite {
 
         #expect(metadata.isEmpty)
     }
-    
+
 }

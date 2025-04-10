@@ -16,11 +16,11 @@ import FileManagerKitTesting
 
 @Suite
 struct ConfigLoaderContentsTestSuite {
-    
+
     @Test
     func testParseDefaults() throws {
         let logger = Logger(label: "ConfigLoaderContentsTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -33,19 +33,25 @@ struct ConfigLoaderContentsTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
-    @Test("Test all date formats", arguments: [
-        [false, true],
-        [true, false]
-    ])
+
+    @Test(
+        "Test all date formats",
+        arguments: [
+            [false, true],
+            [true, false],
+        ]
+    )
     func testParseOneMissing(_ values: [Bool]) throws {
         let logger = Logger(label: "ConfigLoaderContentsTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -58,25 +64,28 @@ struct ConfigLoaderContentsTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
+
     private func getContents(
         _ values: [Bool] = [true, true]
     ) -> String {
         return """
-        contents:
-            \(values[0] ? """
+            contents:
+                \(values[0] ? """
             path: contents
             """ : "")
-            \(values[1] ? """
+                \(values[1] ? """
             assets:
                     path: assets
             """ : "")
-        """
+            """
     }
-    
+
 }

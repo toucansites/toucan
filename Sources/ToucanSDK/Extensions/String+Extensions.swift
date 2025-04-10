@@ -9,7 +9,6 @@ import Foundation
 
 extension String {
 
-
     /// Removes the front matter from a string if it starts with a "---" delimiter.
     ///
     /// This method checks if the string starts with the "---" delimiter. If it does, it splits the string

@@ -173,5 +173,5 @@ struct ContentDefinitionConverterTestSuite {
 
         #expect(result.properties.isEmpty)
     }
-    
+
 }

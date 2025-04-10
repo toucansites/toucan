@@ -74,5 +74,5 @@ public struct OutlineParser {
             fragment: fragment
         )
     }
-    
+
 }

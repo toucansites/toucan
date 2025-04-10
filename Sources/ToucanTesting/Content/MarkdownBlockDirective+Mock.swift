@@ -25,7 +25,7 @@ public extension MarkdownBlockDirective.Mocks {
                 )
             }
     }
-    
+
     static func faq() -> MarkdownBlockDirective {
         .init(
             name: "FAQ",
@@ -39,5 +39,5 @@ public extension MarkdownBlockDirective.Mocks {
             output: nil
         )
     }
-    
+
 }

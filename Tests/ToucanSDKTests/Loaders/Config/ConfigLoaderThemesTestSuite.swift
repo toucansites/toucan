@@ -16,11 +16,11 @@ import FileManagerKitTesting
 
 @Suite
 struct ConfigLoaderThemesTestSuite {
-    
+
     @Test
     func testParseDefaults() throws {
         let logger = Logger(label: "ConfigLoaderThemesTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -33,24 +33,30 @@ struct ConfigLoaderThemesTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
-    @Test("Test all theme paths", arguments: [
-        [false, true, true, true, true, true, true],
-        [true, false, true, true, true, true, true],
-        [true, true, false, true, true, true, true],
-        [true, true, true, false, true, true, true],
-        [true, true, true, true, false, true, true],
-        [true, true, true, true, true, false, true],
-        [true, true, true, true, true, true, false]
-    ])
+
+    @Test(
+        "Test all theme paths",
+        arguments: [
+            [false, true, true, true, true, true, true],
+            [true, false, true, true, true, true, true],
+            [true, true, false, true, true, true, true],
+            [true, true, true, false, true, true, true],
+            [true, true, true, true, false, true, true],
+            [true, true, true, true, true, false, true],
+            [true, true, true, true, true, true, false],
+        ]
+    )
     func testParseOneMissing(_ values: [Bool]) throws {
         let logger = Logger(label: "ConfigLoaderThemesTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -69,46 +75,49 @@ struct ConfigLoaderThemesTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
+
     private func getThemes(
         _ values: [Bool] = [true, true, true, true, true, true, true]
     ) -> String {
         return """
-        themes:
-            \(values[0] ? """
+            themes:
+                \(values[0] ? """
             location:
                     path: themes
             """ : "")
-            \(values[1] ? """
+                \(values[1] ? """
             current:
                     path: default
             """ : "")
-            \(values[2] ? """
+                \(values[2] ? """
             assets:
                     path: assets
             """ : "")
-            \(values[3] ? """
+                \(values[3] ? """
             templates:
                     path: templates
             """ : "")
-            \(values[4] ? """
+                \(values[4] ? """
             types:
                     path: types
             """ : "")
-            \(values[5] ? """
+                \(values[5] ? """
             overrides:
                     path: overrides 
             """ : "")
-            \(values[6] ? """
+                \(values[6] ? """
             blocks:
                     path: blocks
             """ : "")
-        """
+            """
     }
-    
+
 }

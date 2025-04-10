@@ -17,17 +17,18 @@ import FileManagerKitTesting
 
 @Suite
 struct SourceLoaderTestSuite {
-    
+
     @Test("", arguments: [nil, "http://localhost:3000/"])
     func basicLoad(baseUrl: String?) throws {
         let logger = Logger(label: "SourceLoaderTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
                     Directory("home") {
-                        File("index.md",
-                             string: """
+                        File(
+                            "index.md",
+                            string: """
                                 ---
                                 slug: ""
                                 title: "Home"
@@ -60,29 +61,29 @@ struct SourceLoaderTestSuite {
                     File(
                         "404.yml",
                         string: """
-                        id: not-found
-                        contentTypes: 
-                            include:
-                                - "not-found"
-                        engine: 
-                            id: mustache
-                            options:
-                                contentTypes: 
-                                    not-found:
-                                        template: "pages.404"
-                        output:
-                            path: ""
-                            file: 404
-                            ext: html
-                        """
+                            id: not-found
+                            contentTypes: 
+                                include:
+                                    - "not-found"
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        not-found:
+                                            template: "pages.404"
+                            output:
+                                path: ""
+                                file: 404
+                                ext: html
+                            """
                     )
                 }
                 File(
                     "config.yml",
                     string: """
-                    pipelines:
-                        path: pipelines
-                    """
+                        pipelines:
+                            path: pipelines
+                        """
                 )
             }
         }
@@ -91,7 +92,7 @@ struct SourceLoaderTestSuite {
             let fs = ToucanFileSystem(fileManager: $0)
             let decoder = ToucanYAMLDecoder()
             let frontMatterParser = FrontMatterParser(decoder: decoder)
-            
+
             let sourceLoader = SourceLoader(
                 sourceUrl: sourceUrl,
                 baseUrl: baseUrl,
@@ -107,7 +108,7 @@ struct SourceLoaderTestSuite {
             #expect(sourceBundle.contents.count == 1)
             #expect(sourceBundle.pipelines.count == 1)
         }
-        
+
     }
 
 }

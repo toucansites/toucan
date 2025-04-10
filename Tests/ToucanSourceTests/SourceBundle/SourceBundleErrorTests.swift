@@ -64,7 +64,7 @@ struct SourceBundleErrorTests {
             )
             return converter.convert(rawContent: $0)
         }
-        
+
         let contents = pageContents
 
         let sourceBundle = SourceBundle(
@@ -84,10 +84,9 @@ struct SourceBundleErrorTests {
             fileManager: FileManager.default,
             logger: logger
         )
-        
-        
+
         let results = try renderer.render(now: now)
         #expect(results.count == 0)
     }
-    
+
 }

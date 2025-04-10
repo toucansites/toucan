@@ -17,7 +17,7 @@ import FileManagerKitTesting
 
 @Suite
 struct PipelineLoaderTestSuite {
-    
+
     @Test
     func basicLoad() throws {
         let logger = Logger(label: "PipelineLoaderTestSuite")
@@ -27,58 +27,76 @@ struct PipelineLoaderTestSuite {
                     File(
                         "404.yml",
                         string: """
-                        id: not-found
-                        contentTypes: 
-                            include:
-                                - "not-found"
-                        engine: 
-                            id: mustache
-                            options:
-                                contentTypes: 
-                                    not-found:
-                                        template: "pages.404"
-                        output:
-                            path: ""
-                            file: 404
-                            ext: html
-                        """
+                            id: not-found
+                            contentTypes: 
+                                include:
+                                    - "not-found"
+                            transformers:
+                                post:
+                                    run: 
+                                        - name: swiftinit
+                                          url: src/transformers
+                                          arguments: {}
+                                    isMarkdownResult: false
+                                issue:
+                                    run: 
+                                        - name: issue
+                                          arguments: {}
+                                    isMarkdownResult: false
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        not-found:
+                                            template: "pages.404"
+                            output:
+                                path: ""
+                                file: 404
+                                ext: html
+                            """
                     )
                     File(
                         "redirect.yml",
                         string: """
-                        id: redirect
-                        contentTypes: 
-                            include:
-                                - redirect
-                        engine: 
-                            id: mustache
-                            options:
-                                contentTypes: 
-                                    redirect:
-                                        template: "redirect"
-                        output:
-                            path: "{{slug}}"
-                            file: index
-                            ext: html
-                        """
+                            id: redirect
+                            contentTypes: 
+                                include:
+                                    - redirect
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        redirect:
+                                            template: "redirect"
+                            output:
+                                path: "{{slug}}"
+                                file: index
+                                ext: html
+                            """
                     )
                 }
                 File(
                     "config.yml",
                     string: """
-                    pipelines:
-                        path: pipelines
-                    """
+                        pipelines:
+                            path: pipelines
+                        """
                 )
             }
         }
         .test {
             let sourceUrl = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: sourceUrl, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: sourceUrl,
+                logger: logger
+            )
             let config = try loader.load()
-            
-            let sourceConfig = SourceConfig(sourceUrl: sourceUrl, config: config)
-            
+
+            let sourceConfig = SourceConfig(
+                sourceUrl: sourceUrl,
+                config: config
+            )
+
             let fs = ToucanFileSystem(fileManager: $0)
             let pipelineLocations = fs.pipelineLocator.locate(
                 at: sourceConfig.pipelinesUrl
@@ -91,8 +109,9 @@ struct PipelineLoaderTestSuite {
             )
             let pipelines = try pipelineLoader.load()
             #expect(pipelines.count == 2)
+            #expect(pipelines[1].transformers.count == 2)
         }
-        
+
     }
 
 }

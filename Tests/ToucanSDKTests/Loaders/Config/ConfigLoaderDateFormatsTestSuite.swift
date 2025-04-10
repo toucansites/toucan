@@ -16,11 +16,11 @@ import FileManagerKitTesting
 
 @Suite
 struct ConfigLoaderDateFormatsTestSuite {
-    
+
     @Test
     func testParseDefaults() throws {
         let logger = Logger(label: "ConfigLoaderDateFormatsTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -33,19 +33,25 @@ struct ConfigLoaderDateFormatsTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
-    @Test("Test all date formats", arguments: [
-        [false, true],
-        [true, false]
-    ])
+
+    @Test(
+        "Test all date formats",
+        arguments: [
+            [false, true],
+            [true, false],
+        ]
+    )
     func testParseOneMissing(_ values: [Bool]) throws {
         let logger = Logger(label: "ConfigLoaderDateFormatsTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 File(
@@ -58,25 +64,28 @@ struct ConfigLoaderDateFormatsTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
-    
+
     private func getDateFormats(
         _ values: [Bool] = [true, true]
     ) -> String {
         return """
-        dateFormats:
-            \(values[0] ? """
+            dateFormats:
+                \(values[0] ? """
             input:
                     format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
             """ : "")
-            \(values[1] ? """
+                \(values[1] ? """
             output:
             """ : "")
-        """
+            """
     }
-    
+
 }

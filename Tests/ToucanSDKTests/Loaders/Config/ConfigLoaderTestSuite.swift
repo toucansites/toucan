@@ -16,7 +16,7 @@ import FileManagerKitTesting
 
 @Suite
 struct ConfigLoaderTestSuite {
-    
+
     static func getDefaultResult() -> Config {
         return Config(
             pipelines: .defaults,
@@ -26,7 +26,7 @@ struct ConfigLoaderTestSuite {
             contentConfigurations: .defaults
         )
     }
-    
+
     static func getConfigLoader(url: URL, logger: Logger) -> ConfigLoader {
         return ConfigLoader(
             url: url,
@@ -38,7 +38,7 @@ struct ConfigLoaderTestSuite {
             logger: logger
         )
     }
-    
+
     @Test
     func testWithNoDefaultValue() throws {
         let logger = Logger(label: "ConfigLoaderTestSuite")
@@ -100,7 +100,10 @@ struct ConfigLoaderTestSuite {
         }
         .test {
             let url = $1.appending(path: "src")
-            let loader = ConfigLoaderTestSuite.getConfigLoader(url: url, logger: logger)
+            let loader = ConfigLoaderTestSuite.getConfigLoader(
+                url: url,
+                logger: logger
+            )
             let result = try loader.load()
 
             #expect(
@@ -145,5 +148,5 @@ struct ConfigLoaderTestSuite {
             )
         }
     }
-    
+
 }
