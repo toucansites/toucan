@@ -21,6 +21,20 @@ public extension String {
         return result
     }
 
+    func replacingFirstOccurrence(
+        of target: Character?,
+        with replacement: String
+    ) -> String {
+        guard let target = target, let index = self.firstIndex(of: target)
+        else {
+            return self
+        }
+
+        var modified = self
+        modified.replaceSubrange(index...index, with: replacement)
+        return modified
+    }
+
     func slugify() -> String {
         let allowed = CharacterSet(
             charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789-_."
@@ -50,7 +64,21 @@ public extension String {
         }
 
         if self.contains("{{baseUrl}}") {
-            return self.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
+            let baseUrlPath = baseUrl + baseUrl.suffixForPath()
+            var value = self
+            if let slashIndex = self.firstIndex(of: "/") {
+                let offset = self.distance(
+                    from: self.startIndex,
+                    to: slashIndex
+                )
+                if offset == 11 {
+                    value = value.replacingFirstOccurrence(of: "/", with: "")
+                }
+            }
+            return value.replacingOccurrences(
+                of: "{{baseUrl}}",
+                with: baseUrlPath
+            )
         }
 
         let prefix = "./\(assetsPath)/"

@@ -41,7 +41,7 @@ struct QueryTestSuite {
     }
 
     @Test
-    func equalsFilter() async throws {
+    func equalsFilterString() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
         let query = Query(
@@ -58,6 +58,63 @@ struct QueryTestSuite {
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
         )
+    }
+
+    @Test
+    func equalsFilterInt() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "age",
+                operator: .equals,
+                value: .init(22)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 1)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #2"
+        )
+    }
+
+    @Test
+    func equalsFilterDouble() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "height",
+                operator: .equals,
+                value: .init(183.0)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 1)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #3"
+        )
+    }
+
+    @Test
+    func equalsFilterNoResulr() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "height",
+                operator: .equals,
+                value: .init(666)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 0)
     }
 
     @Test
@@ -106,7 +163,7 @@ struct QueryTestSuite {
     }
 
     @Test
-    func lessThanOrEqualsFilter() async throws {
+    func lessThanOrEqualsFilterInt() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
         let query = Query(
@@ -131,6 +188,56 @@ struct QueryTestSuite {
         #expect(
             results[2].properties["title"]?.value(as: String.self)
                 == "Category #3"
+        )
+    }
+
+    @Test
+    func lessThanOrEqualsFilterDouble() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "height",
+                operator: .lessThanOrEquals,
+                value: .init(182.0)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 2)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Author #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Author #2"
+        )
+    }
+
+    @Test
+    func lessThanOrEqualsFilterString() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "name",
+                operator: .lessThanOrEquals,
+                value: .init("Author #2")
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 3)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Author #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Author #2"
         )
     }
 
@@ -160,7 +267,7 @@ struct QueryTestSuite {
     }
 
     @Test
-    func greaterThanOrEqualsFilter() async throws {
+    func greaterThanOrEqualsFilterInt() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
         let query = Query(
@@ -186,6 +293,73 @@ struct QueryTestSuite {
             results[2].properties["title"]?.value(as: String.self)
                 == "Category #10"
         )
+    }
+
+    @Test
+    func greaterThanOrEqualsFilterDouble() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "height",
+                operator: .greaterThanOrEquals,
+                value: .init(189.0)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 2)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Author #9"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Author #10"
+        )
+    }
+
+    @Test
+    func greaterThanOrEqualsFilterString() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "name",
+                operator: .greaterThanOrEquals,
+                value: .init("Author #7")
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 3)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self)
+                == "Author #7"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self)
+                == "Author #8"
+        )
+    }
+
+    @Test
+    func greaterThanNoResult() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "age",
+                operator: .greaterThanOrEquals,
+                value: .init("value")
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        #expect(results.count == 0)
     }
 
     @Test
@@ -279,7 +453,7 @@ struct QueryTestSuite {
     }
 
     @Test
-    func equalsFilterWithIn() async throws {
+    func equalsFilterWithInStringValue() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
         let query = Query(
@@ -301,6 +475,58 @@ struct QueryTestSuite {
         )
         #expect(
             results[1].properties["name"]?.value(as: String.self) == "Author #6"
+        )
+    }
+
+    @Test
+    func equalsFilterWithInIntValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "age",
+                operator: .in,
+                value: .init([21, 22])
+            ),
+            orderBy: [
+                .init(key: "name")
+            ]
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 2)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self) == "Author #2"
+        )
+    }
+
+    @Test
+    func equalsFilterWithIndoubleValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "height",
+                operator: .in,
+                value: .init([181.0, 182.0])
+            ),
+            orderBy: [
+                .init(key: "name")
+            ]
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 2)
+        #expect(
+            results[0].properties["name"]?.value(as: String.self) == "Author #1"
+        )
+        #expect(
+            results[1].properties["name"]?.value(as: String.self) == "Author #2"
         )
     }
 
@@ -329,6 +555,23 @@ struct QueryTestSuite {
     }
 
     @Test
+    func likeFilterWrongValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "name",
+                operator: .like,
+                value: .init(100)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 0)
+    }
+
+    @Test
     func caseInsensitiveLikeFilter() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
@@ -353,7 +596,24 @@ struct QueryTestSuite {
     }
 
     @Test
-    func contains() async throws {
+    func caseInsensitiveLikeFilterWrongValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "author",
+            filter: .field(
+                key: "name",
+                operator: .caseInsensitiveLike,
+                value: .init(100)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 0)
+    }
+
+    @Test
+    func containsStringValue() async throws {
         let sourceBundle = SourceBundle.Mocks.complete()
 
         let query = Query(
@@ -367,6 +627,125 @@ struct QueryTestSuite {
 
         let results = sourceBundle.contents.run(query: query)
         try #require(results.count == 8)
+    }
+
+    @Test
+    func containsIntValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "ages",
+                operator: .contains,
+                value: .init(22)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 10)
+    }
+
+    @Test
+    func containsDoubleValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "heights",
+                operator: .contains,
+                value: .init(182.0)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 10)
+    }
+
+    @Test
+    func containsNoValue() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "heights",
+                operator: .contains,
+                value: .init(666)
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 0)
+    }
+
+    @Test
+    func matchingWithString() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "authors",
+                operator: .matching,
+                value: ["author-1", "author-2"]
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 8)
+    }
+
+    @Test
+    func matchingWithInt() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "ages",
+                operator: .matching,
+                value: [21, 22]
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 10)
+    }
+
+    @Test
+    func matchingWithDouble() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "heights",
+                operator: .matching,
+                value: [182.0]
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 10)
+    }
+
+    @Test
+    func matchingWithNoResult() async throws {
+        let sourceBundle = SourceBundle.Mocks.complete()
+
+        let query = Query(
+            contentType: "post",
+            filter: .field(
+                key: "heights",
+                operator: .matching,
+                value: [666]
+            )
+        )
+
+        let results = sourceBundle.contents.run(query: query)
+        try #require(results.count == 0)
     }
 
     @Test
@@ -497,4 +876,5 @@ struct QueryTestSuite {
         let results = contents.run(query: query)
         try #require(results.count == 5)
     }
+
 }

@@ -304,7 +304,7 @@ extension RawContentLoader {
     }
 }
 
-extension AssetProperty {
+/*extension AssetProperty {
 
     func resolvedPath(
         baseUrl: String,
@@ -321,4 +321,4 @@ extension AssetProperty {
         }
         return "\(file.name).\(file.ext)"
     }
-}
+}*/

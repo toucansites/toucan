@@ -140,6 +140,33 @@ struct QueryDecodingTestSuite {
     }
 
     @Test
+    func wrongCondition() throws {
+
+        let data = """
+            wrong:
+                - key: name
+                  operator: equals
+                  value: hello
+            """
+            .dataValue()
+
+        let decoder = ToucanYAMLDecoder()
+        do {
+            _ = try decoder.decode(
+                Condition.self,
+                from: data
+            )
+        }
+        catch let error {
+            #expect(
+                error.localizedDescription.contains(
+                    "ToucanSource.ToucanDecoderError"
+                )
+            )
+        }
+    }
+
+    @Test
     func orCondition() throws {
 
         let data = """

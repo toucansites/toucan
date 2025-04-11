@@ -1,4 +1,5 @@
 import Testing
+import Logging
 import ToucanTesting
 @testable import ToucanModels
 @testable import ToucanContent
@@ -162,6 +163,103 @@ struct MarkdownBlockDirectiveTestSuite {
             """#
 
         #expect(output == expectation)
+    }
+
+    @Test
+    func unrecognizedDirective() throws {
+
+        let logging = Logger.inMemory(label: "MarkdownBlockDirectiveTestSuite")
+        let renderer = MarkdownToHTMLRenderer(
+            customBlockDirectives: [
+                MarkdownBlockDirective.Mocks.faq()
+            ],
+            paragraphStyles: ParagraphStyles.defaults,
+            logger: logging.logger
+        )
+
+        let input = #"""
+            @unrecognized {
+                Lorem ipsum
+            }
+            """#
+
+        let output = renderer.renderHTML(
+            markdown: input,
+            slug: .init(value: ""),
+            assetsPath: "",
+            baseUrl: ""
+        )
+
+        let results = logging.handler.messages.filter {
+            $0.description.contains("Unrecognized block directive")
+        }
+        #expect(results.count == 1)
+        #expect(output == "")
+    }
+
+    @Test
+    func parseError() throws {
+
+        let logging = Logger.inMemory(
+            label: "MarkdownBlockDirectiveTestSuite",
+            logLevel: .warning
+        )
+        let renderer = MarkdownToHTMLRenderer(
+            customBlockDirectives: [
+                MarkdownBlockDirective.Mocks.badDirective()
+            ],
+            paragraphStyles: ParagraphStyles.defaults,
+            logger: logging.logger
+        )
+        let input = #"""
+            @BAD(columns: bad, columns: bad) {
+                Lorem ipsum 
+            }
+            """#
+
+        _ = renderer.renderHTML(
+            markdown: input,
+            slug: .init(value: ""),
+            assetsPath: "",
+            baseUrl: ""
+        )
+        let results = logging.handler.messages.filter {
+            $0.description.contains("duplicateArgument")
+        }
+        #expect(results.count == 1)
+    }
+
+    @Test
+    func requiredParameterErrors() throws {
+
+        let logging = Logger.inMemory(
+            label: "MarkdownBlockDirectiveTestSuite",
+            logLevel: .warning
+        )
+        let renderer = MarkdownToHTMLRenderer(
+            customBlockDirectives: [
+                MarkdownBlockDirective.Mocks.badDirective()
+            ],
+            paragraphStyles: ParagraphStyles.defaults,
+            logger: logging.logger
+        )
+        let input = #"""
+            @BAD() {
+                Lorem ipsum 
+            }
+            """#
+
+        _ = renderer.renderHTML(
+            markdown: input,
+            slug: .init(value: ""),
+            assetsPath: "",
+            baseUrl: ""
+        )
+
+        let results = logging.handler.messages.filter {
+            $0.description.contains("require")
+        }
+        #expect(results.count == 2)
     }
 
 }

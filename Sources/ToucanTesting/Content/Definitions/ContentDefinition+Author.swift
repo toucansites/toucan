@@ -20,6 +20,16 @@ public extension ContentDefinition.Mocks {
                     required: false,
                     default: nil
                 ),
+                "age": .init(
+                    type: .int,
+                    required: false,
+                    default: nil
+                ),
+                "height": .init(
+                    type: .double,
+                    required: false,
+                    default: nil
+                ),
             ],
             relations: [:],
             queries: [

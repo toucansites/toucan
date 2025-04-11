@@ -11,9 +11,9 @@ import Foundation
 import FileManagerKitTesting
 import ToucanTesting
 @testable import ToucanSDK
-    
+
 extension ToucanTestSuite {
-    
+
     func type404() -> File {
         File(
             "not-found.yml",
@@ -29,7 +29,7 @@ extension ToucanTestSuite {
                 """
         )
     }
-    
+
     func typePage() -> File {
         File(
             "page.yml",
@@ -50,7 +50,7 @@ extension ToucanTestSuite {
                 """
         )
     }
-    
+
     func typePost() -> File {
         File(
             "post.yml",
@@ -91,7 +91,7 @@ extension ToucanTestSuite {
                 """
         )
     }
-    
+
     func typeRedirect() -> File {
         File(
             "redirect.yml",
@@ -108,7 +108,7 @@ extension ToucanTestSuite {
                 """
         )
     }
-    
+
     func typeRss() -> File {
         File(
             "rss.yml",
@@ -117,7 +117,7 @@ extension ToucanTestSuite {
                 """
         )
     }
-    
+
     func typeSitemap() -> File {
         File(
             "sitemap.yml",
@@ -126,5 +126,5 @@ extension ToucanTestSuite {
                 """
         )
     }
-    
+
 }

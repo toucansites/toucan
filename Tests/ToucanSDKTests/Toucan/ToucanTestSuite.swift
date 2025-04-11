@@ -84,14 +84,14 @@ struct ToucanTestSuite {
             #expect(results.count == 1)
         }
     }
-    
+
     @Test
     func transformerRunTest() async throws {
         let logging = Logger.inMemory(label: "ToucanTestSuite")
         let fileManager = FileManager.default
         let rootUrl = FileManager.default.temporaryDirectory
         let rootName = "FileManagerPlayground_\(UUID().uuidString)"
-        
+
         try FileManagerPlayground(
             rootUrl: rootUrl,
             rootName: rootName,
@@ -151,17 +151,17 @@ struct ToucanTestSuite {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
             try getToucan(input, output, logging.logger).generate()
-            
+
             let page1 = output.appending(path: "page1/index.html")
             let data = try page1.loadDataAsString()
             #expect(data.contains("Character to replace => -"))
         }
     }
-    
+
     @Test
     func sitemapAnd404Test() async throws {
         let logging = Logger.inMemory(label: "ToucanTestSuite")
-        try FileManagerPlayground() {
+        try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
                     contentAbout()
@@ -205,19 +205,19 @@ struct ToucanTestSuite {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
             try getToucan(input, output, logging.logger).generate()
-            
+
             let notfoundPath = output.appending(path: "404.html")
             #expect($0.fileExists(at: notfoundPath))
-            
+
             let sitemapPath = output.appending(path: "sitemap.xml")
             #expect($0.fileExists(at: sitemapPath))
         }
     }
-    
+
     @Test
     func postAndRssTest() async throws {
         let logging = Logger.inMemory(label: "ToucanTestSuite")
-        try FileManagerPlayground() {
+        try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
                     Directory("posts") {
@@ -260,16 +260,16 @@ struct ToucanTestSuite {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
             try getToucan(input, output, logging.logger).generate()
-            
+
             let rssPath = output.appending(path: "rss.xml")
             #expect($0.fileExists(at: rssPath))
         }
     }
-    
+
     @Test
     func redirectTest() async throws {
         let logging = Logger.inMemory(label: "ToucanTestSuite")
-        try FileManagerPlayground() {
+        try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
                     contentAbout()
@@ -310,12 +310,12 @@ struct ToucanTestSuite {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
             try getToucan(input, output, logging.logger).generate()
-            
+
             let htmlPath = output.appending(path: "redirectAbout/index.html")
             #expect($0.fileExists(at: htmlPath))
         }
     }
-    
+
     private func getToucan(
         _ input: URL,
         _ output: URL,
@@ -329,5 +329,5 @@ struct ToucanTestSuite {
         )
         return toucan
     }
-    
+
 }

@@ -35,4 +35,15 @@ struct ModelInitTests {
         #expect(transformerPipeline.run[0].name == "test")
     }
 
+    @Test
+    func testInitReservedFrontMatter() throws {
+        let reservedFrontMatter = ReservedFrontMatter(
+            type: "test"
+        )
+        #expect(reservedFrontMatter.type == "test")
+
+        let empty = ReservedFrontMatter.empty()
+        #expect(empty.type == nil)
+    }
+
 }

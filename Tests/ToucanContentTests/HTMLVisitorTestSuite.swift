@@ -597,7 +597,7 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
-    func imageWithtitle(baseUrl: String) {
+    func imageWithTitle(baseUrl: String) {
 
         let input = #"""
             ![Lorem](lorem.jpg "Image title")
@@ -607,6 +607,54 @@ struct HTMLVisitorTestSuite {
 
         let expectation = #"""
             <p><img src="lorem.jpg" alt="Lorem" title="Image title"></p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func imageWithEmptyBaseUrl() {
+
+        let input = #"""
+            ![Lorem](/lorem.jpg "Image title")
+            """#
+
+        let output = renderHTML(baseUrl: "", markdown: input)
+
+        let expectation = #"""
+            <p><img src="/lorem.jpg" alt="Lorem" title="Image title"></p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageWithBaseUrlMarkdownValue(baseUrl: String) {
+
+        let input = #"""
+            ![Lorem]({{baseUrl}}/lorem.jpg)
+            """#
+
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
+
+        let expectation = #"""
+            <p><img src="http://localhost:3000/lorem.jpg" alt="Lorem"></p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageWithBaseUrlMarkdownValueNoTraling(baseUrl: String) {
+
+        let input = #"""
+            ![Lorem]({{baseUrl}}lorem.jpg)
+            """#
+
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
+
+        let expectation = #"""
+            <p><img src="http://localhost:3000/lorem.jpg" alt="Lorem"></p>
             """#
 
         #expect(output == expectation)
