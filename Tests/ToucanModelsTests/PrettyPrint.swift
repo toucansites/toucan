@@ -20,14 +20,14 @@ public func prettyPrint(_ object: [String: AnyCodable]) {
         let data = try encoder.encode(object)
 
         guard
-            let jsonString = String(
+            let dataString = String(
                 data: data,
                 encoding: .utf8
             )
         else {
             return
         }
-        print(jsonString)
+        print(dataString)
     }
     catch {
         print("\(error)")

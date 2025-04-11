@@ -23,11 +23,10 @@ struct FrontMatterParser {
 
         let parts = contents.split(
             separator: "---",
-            maxSplits: 1,
             omittingEmptySubsequences: true
         )
 
-        guard let rawMetadata = parts.first else {
+        guard parts.count == 2, let rawMetadata = parts.first else {
             return [:]
         }
 

@@ -2,9 +2,10 @@ import ToucanModels
 
 public extension ContentDefinition.Mocks {
 
-    static func author() -> ContentDefinition {
+    static func author(isDefault: Bool = false) -> ContentDefinition {
         .init(
             id: "author",
+            default: isDefault,
             paths: [
                 "blog/authors"
             ],
@@ -16,6 +17,16 @@ public extension ContentDefinition.Mocks {
                 ),
                 "description": .init(
                     type: .string,
+                    required: false,
+                    default: nil
+                ),
+                "age": .init(
+                    type: .int,
+                    required: false,
+                    default: nil
+                ),
+                "height": .init(
+                    type: .double,
                     required: false,
                     default: nil
                 ),

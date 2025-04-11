@@ -27,6 +27,8 @@ public extension RawContent.Mocks {
                         "featured": .init((i % 2 == 0)),
                         "authors": .init((0...(i / 3)).map { "author-\($0)" }),
                         "tags": .init((0...(i / 3)).map { "tag-\($0)" }),
+                        "ages": .init([21, 22]),
+                        "heights": .init([182.0]),
                     ],
                     markdown: """
                         # Post #\(i)

@@ -9,12 +9,12 @@ public struct RelationValue {
 
     public var contentType: String
     public var type: RelationType
-    public var identifiers: [String]
+    public var identifiers: [Any]
 
     public init(
         contentType: String,
         type: RelationType,
-        identifiers: [String]
+        identifiers: [Any]
     ) {
         self.contentType = contentType
         self.type = type

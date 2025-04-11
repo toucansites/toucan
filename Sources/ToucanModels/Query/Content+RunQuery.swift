@@ -209,7 +209,6 @@ extension [Content] {
             }
             return false
         case .contains:
-
             if let fieldArray = fieldValue.value(as: [Int].self),
                 let value = value.value(as: Int.self)
             {

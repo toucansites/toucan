@@ -78,7 +78,9 @@ struct ContentIteratorResolver {
                     let links = (0..<numberOfPages)
                         .map { i in
                             let pageIndex = i + 1
-                            let permalink = content.slug.permalink(baseUrl: baseUrl)
+                            let permalink = content.slug.permalink(
+                                baseUrl: baseUrl
+                            )
                             return IteratorInfo.Link(
                                 number: pageIndex,
                                 permalink: permalink.replacingOccurrences(

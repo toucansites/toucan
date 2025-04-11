@@ -16,7 +16,7 @@ public extension MarkdownBlockDirective.Mocks {
                     removesChildParagraph: nil,
                     tag: "div",
                     attributes: [
-                        MarkdownBlockDirective.Attribute(
+                        .init(
                             name: "class",
                             value: "highlighted-text"
                         )
@@ -25,4 +25,38 @@ public extension MarkdownBlockDirective.Mocks {
                 )
             }
     }
+
+    static func faq() -> MarkdownBlockDirective {
+        .init(
+            name: "FAQ",
+            parameters: nil,
+            requiresParentDirective: nil,
+            removesChildParagraph: nil,
+            tag: "div",
+            attributes: [
+                .init(name: "class", value: "faq")
+            ],
+            output: nil
+        )
+    }
+
+    static func badDirective() -> MarkdownBlockDirective {
+        .init(
+            name: "BAD",
+            parameters: [
+                .init(
+                    label: "label",
+                    required: true
+                )
+            ],
+            requiresParentDirective: "true",
+            removesChildParagraph: nil,
+            tag: "div",
+            attributes: [
+                .init(name: "att", value: "none")
+            ],
+            output: nil
+        )
+    }
+
 }

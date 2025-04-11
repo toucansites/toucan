@@ -1,5 +1,5 @@
 {
-  "originHash" : "8793e7fdeb702e8a6865821a761e4b0618456f9c7e3c1daf9e6d044a91817bb3",
+  "originHash" : "df533dba1d6ef11f0837aad1608ddbcbf9073922ae85ab9cabc51f4d3dae5373",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/binarybirds/file-manager-kit",
       "state" : {
-        "revision" : "b9727729b18e3075a16a8233a2f8a0038e302445",
-        "version" : "0.2.1"
+        "revision" : "508cc7e79475d1da51e1388b0bdd5ba9b4056d4d",
+        "version" : "0.2.2"
       }
     },
     {

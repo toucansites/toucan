@@ -5,7 +5,7 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 21..
 //
 
-public struct AssetProperty: Codable, Equatable {
+/*public struct AssetProperty: Codable, Equatable {
     public let action: Action
     public let property: String
     public let resolvePath: Bool
@@ -22,4 +22,4 @@ public struct AssetProperty: Codable, Equatable {
             (try? container.decode(Bool.self, forKey: .resolvePath)) ?? false
         self.file = try container.decode(AssetProperty.File.self, forKey: .file)
     }
-}
+}*/

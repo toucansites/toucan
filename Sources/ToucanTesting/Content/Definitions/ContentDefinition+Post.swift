@@ -38,6 +38,16 @@ public extension ContentDefinition.Mocks {
                     type: .many,
                     order: .init(key: "title", direction: .asc)
                 ),
+                "ages": .init(
+                    references: "author",
+                    type: .many,
+                    order: .init(key: "age", direction: .asc)
+                ),
+                "heights": .init(
+                    references: "author",
+                    type: .many,
+                    order: .init(key: "height", direction: .asc)
+                ),
             ],
             queries: [
                 "prev": .init(
