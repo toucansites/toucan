@@ -12,11 +12,10 @@ import Logging
 struct FrontMatterParser {
 
     let decoder: ToucanDecoder
-    
+
     /// The logger instance
     let logger: Logger
-    
-    
+
     init(decoder: ToucanDecoder, logger: Logger) {
         self.decoder = decoder
         self.logger = logger
@@ -42,10 +41,11 @@ struct FrontMatterParser {
                 [String: AnyCodable].self,
                 from: String(parts.first!).dataValue()
             )
-        } catch let error{
+        }
+        catch let error {
             logger.error("\(error.localizedDescription)")
         }
-        
+
         return [:]
     }
 }

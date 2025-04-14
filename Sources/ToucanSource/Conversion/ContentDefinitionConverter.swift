@@ -60,25 +60,27 @@ public struct ContentDefinitionConverter {
 
             let rawValue = rawContent.frontMatter[key]
             var identifiers: AnyCodable? = nil
-            
+
             switch relation.type {
             case .one:
                 if let id = rawValue?.value as? String {
                     identifiers = .init(id)
-                } else if let id = rawValue?.value as? Int {
+                }
+                else if let id = rawValue?.value as? Int {
                     identifiers = .init(id)
-                } else if let id = rawValue?.value as? Double {
+                }
+                else if let id = rawValue?.value as? Double {
                     identifiers = .init(id)
                 }
             case .many:
                 if let ids = rawValue?.value as? [String] {
-                    identifiers = .init( ids.map { $0 })
+                    identifiers = .init(ids.map { $0 })
                 }
                 if let ids = rawValue?.value as? [Int] {
-                    identifiers = .init( ids.map { $0 })
+                    identifiers = .init(ids.map { $0 })
                 }
                 if let ids = rawValue?.value as? [Double] {
-                    identifiers = .init( ids.map { $0 })
+                    identifiers = .init(ids.map { $0 })
                 }
             }
 

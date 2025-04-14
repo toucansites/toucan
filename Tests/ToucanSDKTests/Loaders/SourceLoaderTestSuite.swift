@@ -91,7 +91,10 @@ struct SourceLoaderTestSuite {
             let sourceUrl = $1.appending(path: "src")
             let fs = ToucanFileSystem(fileManager: $0)
             let decoder = ToucanYAMLDecoder()
-            let frontMatterParser = FrontMatterParser(decoder: decoder, logger: logger)
+            let frontMatterParser = FrontMatterParser(
+                decoder: decoder,
+                logger: logger
+            )
 
             let sourceLoader = SourceLoader(
                 sourceUrl: sourceUrl,
