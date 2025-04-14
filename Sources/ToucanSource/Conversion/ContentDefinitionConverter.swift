@@ -59,7 +59,7 @@ public struct ContentDefinitionConverter {
         }) {
 
             let rawValue = rawContent.frontMatter[key]
-            var identifiers: AnyCodable = ""
+            var identifiers: AnyCodable? = nil
             
             switch relation.type {
             case .one:
