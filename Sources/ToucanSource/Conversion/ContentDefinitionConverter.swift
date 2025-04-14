@@ -59,21 +59,26 @@ public struct ContentDefinitionConverter {
         }) {
 
             let rawValue = rawContent.frontMatter[key]
-            var identifiers: [Any] = []
+            var identifiers: AnyCodable = ""
+            
             switch relation.type {
             case .one:
                 if let id = rawValue?.value as? String {
-                    identifiers.append(id)
+                    identifiers = .init(id)
+                } else if let id = rawValue?.value as? Int {
+                    identifiers = .init(id)
+                } else if let id = rawValue?.value as? Double {
+                    identifiers = .init(id)
                 }
             case .many:
                 if let ids = rawValue?.value as? [String] {
-                    identifiers.append(contentsOf: ids)
+                    identifiers = .init( ids.map { $0 })
                 }
                 if let ids = rawValue?.value as? [Int] {
-                    identifiers.append(contentsOf: ids)
+                    identifiers = .init( ids.map { $0 })
                 }
                 if let ids = rawValue?.value as? [Double] {
-                    identifiers.append(contentsOf: ids)
+                    identifiers = .init( ids.map { $0 })
                 }
             }
 

@@ -70,7 +70,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -132,7 +132,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -191,7 +191,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -247,7 +247,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -312,7 +312,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -370,7 +370,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -449,7 +449,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -518,7 +518,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -575,7 +575,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -637,7 +637,7 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(decoder: decoder, logger: logger),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
