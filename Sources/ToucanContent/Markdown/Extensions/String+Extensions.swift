@@ -35,7 +35,7 @@ public extension String {
             .filter { $0 != "" }
             .joined(separator: "-")
     }
-    
+
     func suffixForPath() -> String {
         return self.hasSuffix("/") ? "" : "/"
     }
@@ -60,7 +60,8 @@ public extension String {
 
         let src = String(self.dropFirst(prefix.count))
 
-        return "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)/\(slug.resolveForPath())/\(src)"
+        return
+            "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)/\(slug.resolveForPath())/\(src)"
     }
 }
 
