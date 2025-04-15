@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct ContentConfigurations: Decodable, Equatable {
+    public struct ContentConfigurations: Codable, Equatable {
 
         enum CodingKeys: CodingKey {
             case wordsPerMinute
