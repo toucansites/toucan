@@ -10,8 +10,16 @@ public extension Content {
     var queryFields: [String: AnyCodable] {
         var fields = properties
         for (key, relation) in relations {
-            if let identifiers = relation.identifiers {
-                fields[key] = identifiers
+            switch relation.type {
+            case .one:
+                if relation.identifiers.isEmpty {
+                    fields[key] = .init([])
+                }
+                else {
+                    fields[key] = .init(relation.identifiers[0])
+                }
+            case .many:
+                fields[key] = .init(relation.identifiers)
             }
         }
 

@@ -26,6 +26,16 @@ public extension ContentDefinition.Mocks {
                     required: true,
                     default: .init(false)
                 ),
+                "ages": .init(
+                    type: .array(of: .int),
+                    required: true,
+                    default: nil
+                ),
+                "heights": .init(
+                    type: .array(of: .double),
+                    required: true,
+                    default: nil
+                ),
             ],
             relations: [
                 "authors": .init(
@@ -37,16 +47,6 @@ public extension ContentDefinition.Mocks {
                     references: "tag",
                     type: .many,
                     order: .init(key: "title", direction: .asc)
-                ),
-                "ages": .init(
-                    references: "author",
-                    type: .many,
-                    order: .init(key: "age", direction: .asc)
-                ),
-                "heights": .init(
-                    references: "author",
-                    type: .many,
-                    order: .init(key: "height", direction: .asc)
                 ),
             ],
             queries: [
