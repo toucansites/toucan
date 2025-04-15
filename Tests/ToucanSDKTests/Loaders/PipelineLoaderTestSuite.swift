@@ -36,12 +36,10 @@ struct PipelineLoaderTestSuite {
                                     run: 
                                         - name: swiftinit
                                           url: src/transformers
-                                          arguments: {}
                                     isMarkdownResult: false
                                 issue:
                                     run: 
                                         - name: issue
-                                          arguments: {}
                                     isMarkdownResult: false
                             engine: 
                                 id: mustache

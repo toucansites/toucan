@@ -13,10 +13,7 @@ struct ModelInitTests {
 
     @Test
     func testInitContentTransformer() throws {
-        let contentTransformer = ContentTransformer(
-            name: "test",
-            arguments: [:]
-        )
+        let contentTransformer = ContentTransformer(name: "test")
         #expect(contentTransformer.name == "test")
     }
 
@@ -24,10 +21,7 @@ struct ModelInitTests {
     func testInitTransformerPipeline() throws {
         let transformerPipeline = TransformerPipeline(
             run: [
-                .init(
-                    name: "test",
-                    arguments: [:]
-                )
+                .init(name: "test")
             ],
             isMarkdownResult: false
         )
