@@ -9,7 +9,7 @@ import Foundation
 
 extension Config {
 
-    public struct Themes: Decodable, Equatable {
+    public struct Themes: Codable, Equatable {
 
         enum CodingKeys: CodingKey {
             case location

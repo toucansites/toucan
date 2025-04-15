@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Config: Decodable, Equatable {
+public struct Config: Codable, Equatable {
 
     enum CodingKeys: CodingKey {
         case pipelines
