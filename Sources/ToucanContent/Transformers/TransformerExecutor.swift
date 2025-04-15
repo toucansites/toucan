@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  TransformerExecutor.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2024. 10. 15..
 //
@@ -27,7 +27,7 @@ public struct TransformerExecutor {
         self.logger = logger
     }
 
-    public func transform(contents: String, slug: String) throws -> String {
+    public func transform(contents: String, slug: Slug) throws -> String {
         // Create a temporary directory URL
         let tempDirectoryURL = fileManager.temporaryDirectory
         let fileName = UUID().uuidString
@@ -36,13 +36,11 @@ public struct TransformerExecutor {
 
         for command in pipeline.run {
             do {
-                let contextAwareIdentifier = String(
-                    slug.split(separator: "/").last ?? ""
-                )
+                let contextAwareIdentifier = slug.contextAwareIdentifier()
                 let arguments: [String] = [
                     "--id", contextAwareIdentifier,
                     "--file", fileURL.path,
-                    "--slug", slug,
+                    "--slug", slug.value,
                 ]
                 let commandUrl = URL(fileURLWithPath: command.url)
                     .appendingPathComponent(command.name)
@@ -64,7 +62,7 @@ public struct TransformerExecutor {
         }
 
         do {
-            let finalContents = try String(contentsOf: fileURL, encoding: .utf8)
+            let finalContents = try fileURL.loadContents()
             try fileManager.delete(at: fileURL)
             return finalContents
         }

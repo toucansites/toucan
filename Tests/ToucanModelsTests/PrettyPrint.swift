@@ -1,33 +1,33 @@
 //
-//  File.swift
-//  toucan
+//  PrettyPrint.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 11..
 //
 
 import Foundation
-import ToucanModels
+@testable import ToucanModels
 
 public func prettyPrint(_ object: [String: AnyCodable]) {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [
         .prettyPrinted,
         .withoutEscapingSlashes,
-        //        .sortedKeys,
+        //.sortedKeys,
     ]
 
     do {
         let data = try encoder.encode(object)
 
         guard
-            let jsonString = String(
+            let dataString = String(
                 data: data,
                 encoding: .utf8
             )
         else {
             return
         }
-        print(jsonString)
+        print(dataString)
     }
     catch {
         print("\(error)")

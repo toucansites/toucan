@@ -43,7 +43,7 @@ struct TemplateLoader {
         }
 
         logger.debug(
-            "Available templates: `\(items.map(\.key).joined(separator: ", "))`."
+            "Available templates: `\(items.map(\.key).joined(separator: ", "))`"
         )
 
         return items
@@ -61,6 +61,6 @@ private extension TemplateLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
+        try url.loadContents()
     }
 }

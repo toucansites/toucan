@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  Toucan.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 03/05/2024.
 //
@@ -41,7 +41,10 @@ public struct Toucan {
         self.fs = ToucanFileSystem(fileManager: fileManager)
         self.encoder = ToucanYAMLEncoder()
         self.decoder = ToucanYAMLDecoder()
-        self.frontMatterParser = FrontMatterParser(decoder: decoder)
+        self.frontMatterParser = FrontMatterParser(
+            decoder: decoder,
+            logger: logger
+        )
 
         let home = fileManager.homeDirectoryForCurrentUser.path
 
@@ -78,6 +81,7 @@ public struct Toucan {
         try resetDirectory(at: workDirUrl)
 
         logger.debug("Working at: `\(workDirUrl.absoluteString)`.")
+        logger.debug("Working at: `\(workDirUrl.absoluteString)`")
 
         do {
             let sourceLoader = SourceLoader(
@@ -93,7 +97,7 @@ public struct Toucan {
 
             let sourceBundle = try sourceLoader.load()
 
-            // MARK: - Validate locales and time zones
+            // MARK: - Validation
 
             /// Validate site locale
             validate(
@@ -111,12 +115,19 @@ public struct Toucan {
             {
                 validate(dateFormat)
             }
+
             /// Validate pipeline date formats
             for pipeline in sourceBundle.pipelines {
                 for dateFormat in pipeline.dataTypes.date.dateFormats.values {
                     validate(dateFormat)
                 }
             }
+
+            /// Validate slugs
+            validateSlugs(sourceBundle)
+
+            /// Validate frontMatters
+            validateFrontMatters(sourceBundle)
 
             // MARK: - Render pipeline results
 
@@ -200,6 +211,47 @@ public struct Toucan {
         }
         if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {
             logger.warning("Invalid site time zone: \(value)")
+        }
+    }
+
+    func validateSlugs(_ sourceBundle: SourceBundle) {
+        let slugs = sourceBundle.contents.map(\.slug.value)
+        let slugCounts = Dictionary(grouping: slugs, by: { $0 })
+            .mapValues { $0.count }
+
+        for (slug, count) in slugCounts where count > 1 {
+            logger.error("Duplicate slug: \(slug)")
+        }
+    }
+
+    func validateFrontMatters(_ sourceBundle: SourceBundle) {
+        for content in sourceBundle.contents {
+            let metadata: Logger.Metadata = ["slug": "\(content.slug.value)"]
+            let frontMatter = content.rawValue.frontMatter
+
+            let missingProperties = content.definition.properties
+                .filter { name, property in
+                    property.required && frontMatter[name] == nil
+                        && property.default?.value == nil
+                }
+
+            for name in missingProperties.keys {
+                logger.warning(
+                    "Missing content property: `\(name)`",
+                    metadata: metadata
+                )
+            }
+
+            let missingRelations = content.definition.relations.keys.filter {
+                frontMatter[$0] == nil
+            }
+
+            for name in missingRelations {
+                logger.warning(
+                    "Missing content relation: `\(name)`",
+                    metadata: metadata
+                )
+            }
         }
     }
 }

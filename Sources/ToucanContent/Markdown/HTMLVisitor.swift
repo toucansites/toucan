@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  HTMLVisitor.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 19..
 //
@@ -34,7 +34,7 @@ struct HTMLVisitor: MarkupVisitor {
     var customBlockDirectives: [MarkdownBlockDirective]
     var paragraphStyles: ParagraphStyles
     var logger: Logger
-    var slug: String
+    var slug: Slug
     var assetsPath: String
     var baseUrl: String
 
@@ -42,7 +42,7 @@ struct HTMLVisitor: MarkupVisitor {
         blockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: ParagraphStyles,
         logger: Logger = .init(label: "HTMLVisitor"),
-        slug: String,
+        slug: Slug,
         assetsPath: String,
         baseUrl: String
     ) {
@@ -78,11 +78,11 @@ struct HTMLVisitor: MarkupVisitor {
         text.plainText
     }
 
-    mutating func visitHTMLBlock(
+    /*mutating func visitHTMLBlock(
         _ html: HTMLBlock
     ) -> Result {
         html.rawHTML
-    }
+    }*/
 
     mutating func visitInlineHTML(
         _ inlineHTML: InlineHTML
@@ -308,7 +308,7 @@ struct HTMLVisitor: MarkupVisitor {
                 var hrefDestination = destination
                 if destination.hasPrefix("/") {
                     hrefDestination =
-                        "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(destination.dropFirst())"
+                        "\(baseUrl)\(baseUrl.suffixForPath())\(destination.dropFirst())"
                 }
                 attributes.append(
                     .init(
@@ -343,13 +343,13 @@ struct HTMLVisitor: MarkupVisitor {
         guard let source = image.source, !source.isEmpty else {
             return ""
         }
-
-        if let result = imageOverride(image) {
-            return result
-        }
-
+        let imagePath = source.resolveAsset(
+            baseUrl: baseUrl,
+            assetsPath: assetsPath,
+            slug: slug
+        )
         var attributes: [HTML.Attribute] = [
-            .init(key: "src", value: source),
+            .init(key: "src", value: imagePath),
             .init(key: "alt", value: image.plainText),
         ]
         if let title = image.title {
@@ -451,13 +451,12 @@ struct HTMLVisitor: MarkupVisitor {
         let templateParams = parameters.mapKeys { "{{\($0)}}" }
 
         if let parent = block.requiresParentDirective, !parent.isEmpty {
-
             guard
                 let p = blockDirective.parent as? BlockDirective,
                 p.name.lowercased() == parent.lowercased()
             else {
                 logger.warning(
-                    "Block directive `\(block.name)` requires parent block `\(parent)`."
+                    "Block directive `\(block.name)` requires parent block `\(parent)`"
                 )
                 return ""
             }

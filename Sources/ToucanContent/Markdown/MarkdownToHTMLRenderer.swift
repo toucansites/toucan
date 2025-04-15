@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  MarkdownToHTMLRenderer.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 19..
 //
@@ -30,7 +30,7 @@ public struct MarkdownToHTMLRenderer {
     /// Render a Markdown string.
     public func renderHTML(
         markdown: String,
-        slug: String,
+        slug: Slug,
         assetsPath: String,
         baseUrl: String
     ) -> String {

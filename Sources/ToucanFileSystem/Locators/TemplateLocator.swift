@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  TemplateLocator.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 04..
 //

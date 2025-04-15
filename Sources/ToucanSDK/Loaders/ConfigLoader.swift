@@ -1,6 +1,6 @@
 //
-//  File.swift
-//
+//  ConfigLoader.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 27/06/2024.
 //
@@ -42,7 +42,7 @@ public struct ConfigLoader {
     /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> Config {
         logger.debug(
-            "Loading config files (\(locations) at: `\(url.absoluteString)`."
+            "Loading config files (\(locations) at: `\(url.absoluteString)`"
         )
 
         var rawItems: [String] = []
@@ -81,6 +81,6 @@ private extension ConfigLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
+        try url.loadContents()
     }
 }

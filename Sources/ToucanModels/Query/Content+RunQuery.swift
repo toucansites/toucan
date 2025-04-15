@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Content+RunQuey.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 31..
 //
@@ -209,7 +209,6 @@ extension [Content] {
             }
             return false
         case .contains:
-
             if let fieldArray = fieldValue.value(as: [Int].self),
                 let value = value.value(as: Int.self)
             {

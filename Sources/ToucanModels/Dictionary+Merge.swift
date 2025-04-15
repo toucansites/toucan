@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Dictionary+Merge.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 03..
 //

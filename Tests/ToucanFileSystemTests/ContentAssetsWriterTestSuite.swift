@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  ContentAssetsWriterTestSuite.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
 //
@@ -67,7 +67,7 @@ struct ContentAssetsWriterTestSuite {
             let contents = [
                 Content(
                     id: "home",
-                    slug: "",
+                    slug: .init(value: ""),
                     rawValue: RawContent(
                         origin: .init(path: "home/index.md", slug: "home"),
                         frontMatter: [:],
@@ -89,7 +89,7 @@ struct ContentAssetsWriterTestSuite {
                 ),
                 Content(
                     id: "user1",
-                    slug: "authors/user1",
+                    slug: .init(value: "authors/user1"),
                     rawValue: RawContent(
                         origin: .init(
                             path: "blog/authors/user1/index.md",
@@ -114,7 +114,7 @@ struct ContentAssetsWriterTestSuite {
                 ),
                 Content(
                     id: "user2",
-                    slug: "authors/user2",
+                    slug: .init(value: "authors/user2"),
                     rawValue: RawContent(
                         origin: .init(
                             path: "blog/authors/user2/index.md",
@@ -196,7 +196,7 @@ struct ContentAssetsWriterTestSuite {
             let contents = [
                 Content(
                     id: "home",
-                    slug: "",
+                    slug: .init(value: ""),
                     rawValue: RawContent(
                         origin: .init(path: "home/index.md", slug: "home"),
                         frontMatter: [:],

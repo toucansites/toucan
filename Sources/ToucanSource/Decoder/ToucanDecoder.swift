@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  ToucanDecoder.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 29..
 //
@@ -13,8 +13,4 @@ public protocol ToucanDecoder {
         _: T.Type,
         from: Data
     ) throws(ToucanDecoderError) -> T
-}
-
-public enum ToucanDecoderError: Error {
-    case decoding(Error, Any.Type)
 }

@@ -1,15 +1,11 @@
 //
-//  File.swift
-//  toucan
+//  Origin.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 30..
 //
 
-public struct Origin: Equatable, Comparable {
-
-    public static func < (lhs: Origin, rhs: Origin) -> Bool {
-        lhs.slug < rhs.slug
-    }
+public struct Origin: Equatable {
 
     /// The original path of the page bundle directory, also serves as the content identifier.
     public var path: String

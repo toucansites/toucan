@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  SettingsLoader.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 05..
 //
@@ -31,7 +31,7 @@ public struct SettingsLoader {
 
     func load() throws -> Settings {
         logger.debug(
-            "Loading settings files (\(locations) at: `\(url.absoluteString)`."
+            "Loading settings files (\(locations) at: `\(url.absoluteString)`"
         )
 
         var rawItems: [String] = []
@@ -75,6 +75,6 @@ private extension SettingsLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
+        try url.loadContents()
     }
 }

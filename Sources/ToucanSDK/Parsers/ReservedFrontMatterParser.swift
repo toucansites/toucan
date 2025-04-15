@@ -1,11 +1,11 @@
 //
-//  File.swift
-//  toucan
+//  ReservedFrontMatterParser.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
 //
 
-import ToucanModels
+/*import ToucanModels
 import ToucanSource
 
 struct ReservedFrontMatterParser {
@@ -32,4 +32,4 @@ struct ReservedFrontMatterParser {
             from: String(rawMetadata).dataValue()
         )
     }
-}
+}*/

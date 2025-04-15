@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  ContentDefinitionConverterTestSuite.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
 //
@@ -173,4 +173,69 @@ struct ContentDefinitionConverterTestSuite {
 
         #expect(result.properties.isEmpty)
     }
+
+    @Test()
+    func contentDefinitionConverter_rawDateNotString() async throws {
+
+        let logging = Logger.inMemory(
+            label: "ContentDefinitionConverterTestSuite"
+        )
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+        let now = Date()
+
+        let contentDefinition = ContentDefinition(
+            id: "definition",
+            paths: [],
+            properties: [
+                "customFormat": .init(
+                    type: .date(format: .init(format: "y-MM-d")),
+                    required: true,
+                    default: nil
+                ),
+                "customFormatDefaultValue": .init(
+                    type: .date(format: .init(format: "y-MM-d")),
+                    required: true,
+                    default: .init("2021-03-03")
+                ),
+                "defaultFormat": .init(
+                    type: .date(format: nil),
+                    required: true,
+                    default: nil
+                ),
+            ],
+            relations: [:],
+            queries: [:]
+        )
+        let rawContent = RawContent(
+            origin: .init(path: "test", slug: "test"),
+            frontMatter: [
+                "customFormat": .init(3000),
+                /// `customFormatDefaultValue` not provided on purpose
+                "defaultFormat": nil,
+            ],
+            markdown: "no content",
+            lastModificationDate: now.timeIntervalSince1970,
+            assets: []
+        )
+        let converter = ContentDefinitionConverter(
+            contentDefinition: contentDefinition,
+            dateFormatter: formatter,
+            logger: logging.logger
+        )
+
+        _ = converter.convert(rawContent: rawContent)
+        let logResults = logging.handler.messages.filter {
+            $0.description.contains("Raw date property is not a string")
+        }
+        #expect(logResults.count == 2)
+    }
+
 }

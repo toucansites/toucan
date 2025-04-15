@@ -1,23 +1,13 @@
 //
-//  File.swift
-//  toucan
+//  String+Extensions.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 19..
 //
 
 import Foundation
+import ToucanModels
 import Markdown
-
-extension Dictionary {
-
-    func mapKeys<Transformed>(
-        _ transform: (Key) throws -> Transformed
-    ) rethrows -> [Transformed: Value] {
-        .init(
-            uniqueKeysWithValues: try map { (try transform($0.key), $0.value) }
-        )
-    }
-}
 
 public extension String {
 
@@ -29,6 +19,20 @@ public extension String {
             result = result.replacingOccurrences(of: key, with: value)
         }
         return result
+    }
+
+    func replacingFirstOccurrence(
+        of target: Character?,
+        with replacement: String
+    ) -> String {
+        guard let target = target, let index = self.firstIndex(of: target)
+        else {
+            return self
+        }
+
+        var modified = self
+        modified.replaceSubrange(index...index, with: replacement)
+        return modified
     }
 
     func slugify() -> String {
@@ -46,17 +50,35 @@ public extension String {
             .joined(separator: "-")
     }
 
+    func suffixForPath() -> String {
+        return self.hasSuffix("/") ? "" : "/"
+    }
+
     func resolveAsset(
         baseUrl: String,
         assetsPath: String,
-        slug: String
+        slug: Slug
     ) -> String {
         if baseUrl.isEmpty || assetsPath.isEmpty {
             return self
         }
 
         if self.contains("{{baseUrl}}") {
-            return self.replacingOccurrences(of: "{{baseUrl}}", with: baseUrl)
+            let baseUrlPath = baseUrl + baseUrl.suffixForPath()
+            var value = self
+            if let slashIndex = self.firstIndex(of: "/") {
+                let offset = self.distance(
+                    from: self.startIndex,
+                    to: slashIndex
+                )
+                if offset == 11 {
+                    value = value.replacingFirstOccurrence(of: "/", with: "")
+                }
+            }
+            return value.replacingOccurrences(
+                of: "{{baseUrl}}",
+                with: baseUrlPath
+            )
         }
 
         let prefix = "./\(assetsPath)/"
@@ -67,31 +89,6 @@ public extension String {
         let src = String(self.dropFirst(prefix.count))
 
         return
-            "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(assetsPath)/\(slug.isEmpty ? "home" : slug)/\(src)"
+            "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)/\(slug.resolveForPath())/\(src)"
     }
-}
-
-extension HTMLVisitor {
-
-    func imageOverride(_ image: Image) -> String? {
-        guard
-            let source = image.source
-        else {
-            return nil
-        }
-        let path = source.resolveAsset(
-            baseUrl: baseUrl,
-            assetsPath: assetsPath,
-            slug: slug
-        )
-
-        var title = ""
-        if let ttl = image.title {
-            title = #" title="\#(ttl)""#
-        }
-        return """
-            <img src="\(path)" alt="\(image.plainText)"\(title)>
-            """
-    }
-
 }

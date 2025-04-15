@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Toucan+UserErros.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2024. 10. 07..
 //
@@ -24,10 +24,10 @@ extension Toucan {
         //            switch error {
         //            case .missing(let url):
         //                logger.error(
-        //                    "Missing file at: `\(url.absoluteString)`."
+        //                    "Missing file at: `\(url.absoluteString)`"
         //                )
         //            case .file(let error, let url):
-        //                let message = "File error at: `\(url.absoluteString)`."
+        //                let message = "File error at: `\(url.absoluteString)`"
         //                let metadata: Logger.Metadata = [
         //                    "description": "\(String(describing: error))"
         //                ]
@@ -38,7 +38,7 @@ extension Toucan {
         //            switch error {
         //            case .missing(let url):
         //                logger.error(
-        //                    "Missing `config.yml` file at: `\(url.absoluteString)`."
+        //                    "Missing `config.yml` file at: `\(url.absoluteString)`"
         //                )
         //            }
         //        }
@@ -90,7 +90,7 @@ extension Toucan {
         //            switch error {
         //            case .missing(let url):
         //                logger.error(
-        //                    "Missing site file at: `\(url.absoluteString)`."
+        //                    "Missing site file at: `\(url.absoluteString)`"
         //                )
         //            }
         //        }

@@ -9,21 +9,19 @@ struct HTMLVisitorTestSuite {
 
     func renderHTML(
         baseUrl: String,
-        markdown: String,
-        customBlockDirectives: [MarkdownBlockDirective] = []
+        markdown: String
     ) -> String {
         let logger = Logger(label: "HTMLVisitorTestSuite")
         let document = Document(
             parsing: markdown,
-            options: !customBlockDirectives.isEmpty
-                ? [.parseBlockDirectives] : []
+            options: []
         )
 
         var visitor = HTMLVisitor(
-            blockDirectives: customBlockDirectives,
+            blockDirectives: [],
             paragraphStyles: ParagraphStyles.defaults,
             logger: logger,
-            slug: "slug",
+            slug: .init(value: "slug"),
             assetsPath: "assets",
             baseUrl: baseUrl
         )
@@ -580,6 +578,85 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p><img src="http://localhost:3000/assets/slug/lorem.jpg" alt="Lorem"></p>
             """#
+        #expect(output == expectation)
+    }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageEmptySource(baseUrl: String) {
+
+        let input = #"""
+            ![Lorem]()
+            """#
+
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
+
+        let expectation = #"""
+            <p></p>
+            """#
+        #expect(output == expectation)
+    }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageWithTitle(baseUrl: String) {
+
+        let input = #"""
+            ![Lorem](lorem.jpg "Image title")
+            """#
+
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
+
+        let expectation = #"""
+            <p><img src="lorem.jpg" alt="Lorem" title="Image title"></p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func imageWithEmptyBaseUrl() {
+
+        let input = #"""
+            ![Lorem](/lorem.jpg "Image title")
+            """#
+
+        let output = renderHTML(baseUrl: "", markdown: input)
+
+        let expectation = #"""
+            <p><img src="/lorem.jpg" alt="Lorem" title="Image title"></p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageWithBaseUrlMarkdownValue(baseUrl: String) {
+
+        let input = #"""
+            ![Lorem]({{baseUrl}}/lorem.jpg)
+            """#
+
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
+
+        let expectation = #"""
+            <p><img src="http://localhost:3000/lorem.jpg" alt="Lorem"></p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func imageWithBaseUrlMarkdownValueNoTraling(baseUrl: String) {
+
+        let input = #"""
+            ![Lorem]({{baseUrl}}lorem.jpg)
+            """#
+
+        let output = renderHTML(baseUrl: baseUrl, markdown: input)
+
+        let expectation = #"""
+            <p><img src="http://localhost:3000/lorem.jpg" alt="Lorem"></p>
+            """#
+
         #expect(output == expectation)
     }
 

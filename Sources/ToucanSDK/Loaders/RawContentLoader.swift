@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  RawContentLoader.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 03..
 //
@@ -44,7 +44,7 @@ struct RawContentLoader {
     /// - Returns: A `Config` object representing the loaded configuration.
     /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
     func load() throws -> [RawContent] {
-        logger.debug("Loading raw contents at: `\(url.absoluteString)`.")
+        logger.debug("Loading raw contents at: `\(url.absoluteString)`")
 
         var items: [RawContent] = []
         for location in locations {
@@ -124,7 +124,7 @@ private extension RawContentLoader {
                 frontMatter: frontMatter,
                 assetsPath: assetsPath,
                 assetLocations: assetLocations,
-                slug: location.slug
+                slug: .init(value: location.slug)
             )
         )
 
@@ -174,7 +174,7 @@ private extension RawContentLoader {
                 $0.resolveAsset(
                     baseUrl: baseUrl,
                     assetsPath: assetsPath,
-                    slug: location.slug
+                    slug: .init(value: location.slug)
                 )
             }
         }
@@ -185,7 +185,7 @@ private extension RawContentLoader {
                     .resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: location.slug
+                        slug: .init(value: location.slug)
                     )
             )
         }
@@ -199,7 +199,7 @@ private extension RawContentLoader {
                 $0.resolveAsset(
                     baseUrl: baseUrl,
                     assetsPath: assetsPath,
-                    slug: location.slug
+                    slug: .init(value: location.slug)
                 )
             }
         }
@@ -210,7 +210,7 @@ private extension RawContentLoader {
                     .resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: location.slug
+                        slug: .init(value: location.slug)
                     )
             )
         }
@@ -228,7 +228,7 @@ private extension RawContentLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
+        try url.loadContents()
     }
 }
 
@@ -263,7 +263,7 @@ extension RawContentLoader {
         frontMatter: [String: AnyCodable],
         assetsPath: String,
         assetLocations: [String],
-        slug: String,
+        slug: Slug,
         imageKey: String = "image"
     ) -> String? {
         func resolveCoverImage(fileName: String) -> String {
@@ -280,7 +280,7 @@ extension RawContentLoader {
         if let imageValue = frontMatter[imageKey]?.stringValue() {
             if imageValue.hasPrefix("/") {
                 return .init(
-                    "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(imageValue.dropFirst())"
+                    "\(baseUrl)\(baseUrl.suffixForPath())\(imageValue.dropFirst())"
                 )
             }
             else {
@@ -304,12 +304,12 @@ extension RawContentLoader {
     }
 }
 
-extension AssetProperty {
+/*extension AssetProperty {
 
     func resolvedPath(
         baseUrl: String,
         assetsPath: String,
-        slug: String
+        slug: Slug
     ) -> String {
         if resolvePath {
             return "\(file.name).\(file.ext)"
@@ -321,4 +321,4 @@ extension AssetProperty {
         }
         return "\(file.name).\(file.ext)"
     }
-}
+}*/

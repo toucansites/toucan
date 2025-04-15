@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  ContentDefinitionConverter.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 21..
 //
@@ -39,7 +39,6 @@ public struct ContentDefinitionConverter {
             $0.key < $1.key
         }) {
             dateFormatter.config(with: defaultDateFormat)
-
             let rawValue = rawContent.frontMatter[key]
             let converter = PropertyConverter(
                 property: property,
@@ -58,9 +57,10 @@ public struct ContentDefinitionConverter {
         for (key, relation) in contentDefinition.relations.sorted(by: {
             $0.key < $1.key
         }) {
-            let rawValue = rawContent.frontMatter[key]
 
+            let rawValue = rawContent.frontMatter[key]
             var identifiers: [String] = []
+
             switch relation.type {
             case .one:
                 if let id = rawValue?.value as? String {
@@ -69,6 +69,7 @@ public struct ContentDefinitionConverter {
             case .many:
                 if let ids = rawValue?.value as? [String] {
                     identifiers.append(contentsOf: ids)
+
                 }
             }
 
@@ -110,7 +111,7 @@ public struct ContentDefinitionConverter {
 
         return Content(
             id: id,
-            slug: slug,
+            slug: .init(value: slug),
             rawValue: rawContent,
             definition: contentDefinition,
             properties: properties,

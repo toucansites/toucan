@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Content+QueryFields.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 31..
 //
@@ -9,14 +9,13 @@ public extension Content {
 
     var queryFields: [String: AnyCodable] {
         var fields = properties
-
         for (key, relation) in relations {
             switch relation.type {
             case .one:
                 if relation.identifiers.isEmpty {
                     fields[key] = .init([])
-                    
-                } else {
+                }
+                else {
                     fields[key] = .init(relation.identifiers[0])
                 }
             case .many:
@@ -26,7 +25,7 @@ public extension Content {
 
         // add some other fields explicitly
         fields["id"] = .init(id)
-        fields["slug"] = .init(slug)
+        fields["slug"] = .init(slug.value)
         fields["lastUpdate"] = .init(rawValue.lastModificationDate)
         fields["iterator"] = .init(isIterator)
 

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Any+AnyCodeable.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 03. 06..
 //

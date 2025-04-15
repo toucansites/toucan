@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  ContentDefinitionLoader.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 19/07/2024.
 //
@@ -37,7 +37,7 @@ struct ContentDefinitionLoader {
         }
 
         let typeList = items.map(\.id).joined(separator: ", ")
-        logger.debug("Available content types: `\(typeList)`.")
+        logger.debug("Available content types: `\(typeList)`")
 
         return items
     }

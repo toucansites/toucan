@@ -1,5 +1,6 @@
 //
-//  AssetsWriter.swift
+//  ContentAssetsWriter.swift
+//  Toucan
 //
 //  Created by gerp83 on 2025. 03. 05.
 //
@@ -32,7 +33,7 @@ public struct ContentAssetsWriter {
         if !content.rawValue.assets.isEmpty {
 
             let contentFolder = assetsFolder.appending(
-                path: content.slug.isEmpty ? "home" : content.slug
+                path: content.slug.resolveForPath()
             )
             try fileManager.createDirectory(at: contentFolder)
 

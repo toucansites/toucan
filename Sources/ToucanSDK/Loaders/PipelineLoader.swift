@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  PipelineLoader.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 01..
 //
@@ -27,8 +27,8 @@ struct PipelineLoader {
             items.append(item)
         }
 
-        let list = items.map(\.engine.id).joined(separator: ", ")
-        logger.debug("Available pipelines: `\(list)`.")
+        let list = items.map(\.id).joined(separator: ", ")
+        logger.debug("Available pipelines: `\(list)`")
 
         return items
     }

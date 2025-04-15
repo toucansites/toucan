@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  PropertyConverter.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 21..
 //
@@ -18,17 +18,13 @@ struct PropertyConverter {
     let logger: Logger
 
     func convert(rawValue: AnyCodable?, forKey key: String) -> AnyCodable? {
-        if property.required, rawValue == nil {
-            logger.debug("ERROR - property is missing: \(key).")
-        }
-
         let value = rawValue ?? property.default
 
         switch property.type {
         case .date(let dateFormat):
             guard let rawDateValue = value?.value(as: String.self) else {
-                logger.debug(
-                    "ERROR: property is not a string (\(key): \(value?.value ?? "nil"))."
+                logger.error(
+                    "Raw date property is not a string (\(key): \(value?.value ?? "nil"))."
                 )
                 return nil
             }
@@ -38,8 +34,8 @@ struct PropertyConverter {
             }
 
             guard let value = dateFormatter.date(from: rawDateValue) else {
-                logger.debug(
-                    "ERROR: property is not a date (\(key): \(value?.value ?? "nil"))."
+                logger.error(
+                    "Raw date property value is not a date (\(key): \(rawDateValue))."
                 )
                 return nil
             }

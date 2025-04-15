@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  SourceBundleRenderer.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 25..
 //
@@ -140,7 +140,7 @@ public struct SourceBundleRenderer {
                 )
             default:
                 logger.error(
-                    "Unknown renderer engine `\(pipeline.engine.id)`."
+                    "Unknown renderer engine `\(pipeline.engine.id)`"
                 )
             }
         }
@@ -164,7 +164,7 @@ public struct SourceBundleRenderer {
             let pipelineContext = getPipelineContext(
                 contents: contents,
                 pipeline: pipeline,
-                currentSlug: content.slug
+                currentSlug: content.slug.value
             )
             .recursivelyMerged(with: globalContext)
 
@@ -217,7 +217,7 @@ public struct SourceBundleRenderer {
                 for: $0,
                 pipeline: pipeline,
                 scopeKey: iteratorInfo.scope ?? "list",
-                currentSlug: content.slug
+                currentSlug: content.slug.value
             )
         }
         return [
@@ -245,7 +245,7 @@ public struct SourceBundleRenderer {
             for: content,
             pipeline: pipeline,
             scopeKey: "detail",
-            currentSlug: content.slug
+            currentSlug: content.slug.value
         )
 
         let iteratorContext = getIteratorContext(
@@ -262,7 +262,7 @@ public struct SourceBundleRenderer {
 
         let outputArgs: [String: String] = [
             "{{id}}": content.id,
-            "{{slug}}": content.slug,
+            "{{slug}}": content.slug.value,
         ]
 
         let path = pipeline.output.path.replacingOccurrences(outputArgs)
@@ -304,7 +304,7 @@ public struct SourceBundleRenderer {
 
         let cacheKey = [
             pipeline.id,
-            content.slug,
+            content.slug.value,
             //            currentSlug ?? "",  // still a bit slow due to this
             scopeKey,
             String(allowSubQueries),
@@ -490,7 +490,7 @@ public struct SourceBundleRenderer {
             logger: logger
         )
 
-        return try contextBundles.compactMap {
+        return contextBundles.compactMap {
             let engineOptions = pipeline.engine.options
             let contentTypesOptions = engineOptions.dict("contentTypes")
             let bundleOptions = contentTypesOptions.dict(
@@ -513,10 +513,7 @@ public struct SourceBundleRenderer {
                 return nil
             }
 
-            let html = try renderer.render(
-                template: template,
-                with: $0.context
-            )
+            let html = renderer.render(template: template, with: $0.context)
 
             guard let html, !html.isEmpty else {
                 logger.warning(
@@ -530,10 +527,7 @@ public struct SourceBundleRenderer {
                 return nil
             }
 
-            return .init(
-                contents: html,
-                destination: $0.destination
-            )
+            return .init(contents: html, destination: $0.destination)
         }
     }
 }

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  MustacheTemplateRenderer.swift
+//  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 16..
 //
@@ -28,7 +28,7 @@ public struct MustacheTemplateRenderer {
     public func render(
         template: String,
         with object: [String: AnyCodable]
-    ) throws -> String? {
+    ) -> String? {
         guard ids.contains(template) else {
             logger.error(
                 "Missing or invalid template file.",
