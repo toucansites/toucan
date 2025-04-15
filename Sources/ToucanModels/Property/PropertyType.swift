@@ -5,14 +5,16 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
-public enum PropertyType: Decodable, Equatable {
+public indirect enum PropertyType: Decodable, Equatable {
     case bool
     case int
     case double
     case string
     case date(format: LocalizedDateFormat?)
+    case array(of: PropertyType)
 
     private enum CodingKeys: String, CodingKey {
+        case of
         case type
         case dateFormat
     }
@@ -23,6 +25,7 @@ public enum PropertyType: Decodable, Equatable {
         case double
         case string
         case date
+        case array
     }
 
     // MARK: - decoder
@@ -42,6 +45,13 @@ public enum PropertyType: Decodable, Equatable {
             self = .double
         case .string:
             self = .string
+        case .array:
+            // TODO: test decoding
+            let itemType = try container.decode(
+                PropertyType.self,
+                forKey: .of
+            )
+            self = .array(of: itemType)
         case .date:
             let format = try container.decodeIfPresent(
                 LocalizedDateFormat.self,

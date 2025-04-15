@@ -16,7 +16,10 @@ public extension RawContent.Mocks {
                     frontMatter: [
                         "name": "Author #\(i)",
                         "description": "Author #\(i) description",
+                        "age": .init(20 + i),
+                        "height": .init(180.0 + Double(i)),
                     ],
+
                     markdown: """
                         # Author #\(i)
 

@@ -62,7 +62,7 @@ public struct TransformerExecutor {
         }
 
         do {
-            let finalContents = try String(contentsOf: fileURL, encoding: .utf8)
+            let finalContents = try fileURL.loadContents()
             try fileManager.delete(at: fileURL)
             return finalContents
         }

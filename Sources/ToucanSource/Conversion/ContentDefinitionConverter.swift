@@ -39,7 +39,6 @@ public struct ContentDefinitionConverter {
             $0.key < $1.key
         }) {
             dateFormatter.config(with: defaultDateFormat)
-
             let rawValue = rawContent.frontMatter[key]
             let converter = PropertyConverter(
                 property: property,
@@ -58,9 +57,10 @@ public struct ContentDefinitionConverter {
         for (key, relation) in contentDefinition.relations.sorted(by: {
             $0.key < $1.key
         }) {
-            let rawValue = rawContent.frontMatter[key]
 
+            let rawValue = rawContent.frontMatter[key]
             var identifiers: [String] = []
+
             switch relation.type {
             case .one:
                 if let id = rawValue?.value as? String {
@@ -69,6 +69,7 @@ public struct ContentDefinitionConverter {
             case .many:
                 if let ids = rawValue?.value as? [String] {
                     identifiers.append(contentsOf: ids)
+
                 }
             }
 

@@ -41,7 +41,10 @@ public struct Toucan {
         self.fs = ToucanFileSystem(fileManager: fileManager)
         self.encoder = ToucanYAMLEncoder()
         self.decoder = ToucanYAMLDecoder()
-        self.frontMatterParser = FrontMatterParser(decoder: decoder)
+        self.frontMatterParser = FrontMatterParser(
+            decoder: decoder,
+            logger: logger
+        )
 
         let home = fileManager.homeDirectoryForCurrentUser.path
 

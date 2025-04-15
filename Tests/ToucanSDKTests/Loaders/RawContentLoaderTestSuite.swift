@@ -70,7 +70,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -109,7 +112,7 @@ struct RawContentLoaderTestSuite {
                     ---
                     type: post
                     title: "First beta release"
-                    image: "./assets/cover.jpg"
+                    image: "./assets/cover.png"
                     ---
                     This is a dummy post!
                     """
@@ -132,7 +135,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -153,7 +159,7 @@ struct RawContentLoaderTestSuite {
             #expect(
                 result.frontMatter["image"]
                     == .init(
-                        "http://localhost:3000/assets/blog/first-beta-release/cover.jpg"
+                        "http://localhost:3000/assets/blog/first-beta-release/cover.png"
                     )
             )
             #expect(result.markdown == "\nThis is a dummy post!")
@@ -191,7 +197,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -247,7 +256,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -312,7 +324,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -370,7 +385,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -449,7 +467,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -518,7 +539,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -575,7 +599,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl
@@ -637,7 +664,10 @@ struct RawContentLoaderTestSuite {
                 url: url,
                 locations: locations,
                 sourceConfig: sourceConfig,
-                frontMatterParser: FrontMatterParser(decoder: decoder),
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
                 fileManager: $0,
                 logger: logger,
                 baseUrl: baseUrl

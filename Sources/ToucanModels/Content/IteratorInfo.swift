@@ -4,7 +4,7 @@
 //
 //  Created by gerp83 on 2025. 04. 03.
 //
-    
+
 public struct IteratorInfo {
 
     public struct Link: Codable {
@@ -48,4 +48,3 @@ public struct IteratorInfo {
         self.scope = scope
     }
 }
-

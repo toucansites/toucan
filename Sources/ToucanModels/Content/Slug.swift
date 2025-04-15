@@ -4,19 +4,19 @@
 //
 //  Created by gerp83 on 2025. 04. 03.
 //
-    
+
 public struct Slug: Codable, Equatable {
-    
+
     public var value: String
-    
+
     public init(value: String) {
         self.value = value
     }
-    
+
     public func resolveForPath() -> String {
         return value.isEmpty ? "home" : value
     }
-    
+
     public func extractIteratorId() -> String? {
         guard
             let startRange = value.range(of: "{{"),
@@ -29,7 +29,7 @@ public struct Slug: Codable, Equatable {
         }
         return .init(value[startRange.upperBound..<endRange.lowerBound])
     }
-    
+
     public func permalink(
         baseUrl: String
     ) -> String {
@@ -42,9 +42,9 @@ public struct Slug: Codable, Equatable {
         }
         return ([baseUrl] + components).joined(separator: "/") + "/"
     }
-    
+
     public func contextAwareIdentifier() -> String {
         return String(value.split(separator: "/").last ?? "")
     }
-    
+
 }
