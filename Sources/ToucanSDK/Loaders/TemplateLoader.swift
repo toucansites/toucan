@@ -61,6 +61,6 @@ private extension TemplateLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try url.loadDataAsString()
+        try url.loadContents()
     }
 }

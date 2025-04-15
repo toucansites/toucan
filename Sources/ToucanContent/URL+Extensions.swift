@@ -9,8 +9,9 @@ import Foundation
 
 public extension URL {
 
-    func loadDataAsString() throws -> String {
-        return try String(contentsOf: self, encoding: .utf8)
+    func loadContents(
+        using encoding: String.Encoding = .utf8
+    ) throws -> String {
+        try String(contentsOf: self, encoding: encoding)
     }
-
 }

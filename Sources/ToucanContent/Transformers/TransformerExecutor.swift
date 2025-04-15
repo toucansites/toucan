@@ -62,7 +62,7 @@ public struct TransformerExecutor {
         }
 
         do {
-            let finalContents = try fileURL.loadDataAsString()
+            let finalContents = try fileURL.loadContents()
             try fileManager.delete(at: fileURL)
             return finalContents
         }

@@ -153,7 +153,7 @@ struct ToucanTestSuite {
             try getToucan(input, output, logging.logger).generate()
 
             let page1 = output.appending(path: "page1/index.html")
-            let data = try page1.loadDataAsString()
+            let data = try page1.loadContents()
             #expect(data.contains("Character to replace => -"))
         }
     }
