@@ -8,16 +8,13 @@
 public struct ContentTransformer: Codable {
     public var url: String
     public var name: String
-    public var arguments: [String: String]
 
     public init(
         url: String = "/usr/local/bin",
-        name: String,
-        arguments: [String: String] = [:]
+        name: String
     ) {
         self.url = url
         self.name = name
-        self.arguments = arguments
     }
 
     public init(from decoder: any Decoder) throws {
@@ -26,9 +23,5 @@ public struct ContentTransformer: Codable {
             (try? container.decode(String.self, forKey: .url))
             ?? "/usr/local/bin"
         self.name = try container.decode(String.self, forKey: .name)
-        self.arguments = try container.decode(
-            [String: String].self,
-            forKey: .arguments
-        )
     }
 }

@@ -18,7 +18,7 @@ import FileManagerKitTesting
 @Suite
 struct SourceLoaderTestSuite {
 
-    @Test("", arguments: [nil, "http://localhost:3000/"])
+    @Test(arguments: [nil, "http://localhost:3000/"])
     func basicLoad(baseUrl: String?) throws {
         let logger = Logger(label: "SourceLoaderTestSuite")
 
