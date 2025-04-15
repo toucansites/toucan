@@ -25,7 +25,7 @@ public struct GeneratorInfo: Codable, Sendable {
 public extension GeneratorInfo {
 
     static var current: Self {
-        .v1_0_0_beta_3
+        .v1_0_0_beta_4
     }
 }
 

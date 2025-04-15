@@ -10,6 +10,7 @@ import Testing
 import ToucanModels
 import ToucanContent
 import ToucanTesting
+import ToucanInfo
 import Logging
 @testable import ToucanSource
 
@@ -292,7 +293,7 @@ struct SourceBundleContextTestSuite {
         let exp = try decoder.decode(Exp.self, from: data)
 
         #expect(exp.site.generator.name == "Toucan")
-        #expect(exp.site.generator.version == "1.0.0-beta.3")
+        #expect(exp.site.generator.version == GeneratorInfo.current.version)
         #expect(
             exp.site.generation.formats["iso8601"]
                 == isoFormatter.string(from: now)
