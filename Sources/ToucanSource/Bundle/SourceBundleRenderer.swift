@@ -10,6 +10,7 @@ import ToucanModels
 import ToucanContent
 import FileManagerKit
 import Logging
+import ToucanInfo
 
 public struct SourceBundleRenderer {
 
