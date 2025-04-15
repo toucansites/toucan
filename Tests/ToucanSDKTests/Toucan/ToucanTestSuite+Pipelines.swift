@@ -64,8 +64,7 @@ extension ToucanTestSuite {
                         page:
                             run:
                                 - name: replace
-                                  url: \(rootUrl ?? "")/\(rootName ?? "")/src/transformers
-                                  arguments: {}
+                                  path: \(rootUrl ?? "")/\(rootName ?? "")/src/transformers
                             isMarkdownResult: false
                 """ : "")
                 output:

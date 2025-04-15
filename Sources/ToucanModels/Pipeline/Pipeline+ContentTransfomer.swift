@@ -6,29 +6,22 @@
 //
 
 public struct ContentTransformer: Codable {
-    public var url: String
+    public var path: String
     public var name: String
-    public var arguments: [String: String]
 
     public init(
-        url: String = "/usr/local/bin",
-        name: String,
-        arguments: [String: String] = [:]
+        path: String = "/usr/local/bin",
+        name: String
     ) {
-        self.url = url
+        self.path = path
         self.name = name
-        self.arguments = arguments
     }
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.url =
-            (try? container.decode(String.self, forKey: .url))
+        self.path =
+            (try? container.decode(String.self, forKey: .path))
             ?? "/usr/local/bin"
         self.name = try container.decode(String.self, forKey: .name)
-        self.arguments = try container.decode(
-            [String: String].self,
-            forKey: .arguments
-        )
     }
 }
