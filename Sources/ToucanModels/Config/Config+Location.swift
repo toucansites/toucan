@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct Location: Decodable, Equatable {
+    public struct Location: Codable, Equatable {
         public var path: String
 
         // MARK: - init

@@ -5,7 +5,7 @@
 //  Created by gerp83 on 2025. 03. 28.
 //
 
-public struct ParagraphStyles: Decodable, Equatable {
+public struct ParagraphStyles: Codable, Equatable {
 
     enum CodingKeys: CodingKey {
         case note
