@@ -2,7 +2,8 @@ SHELL=/bin/bash
 
 .PHONY: docker
 
-baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/main/scripts
+#baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/main/scripts
+baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/feature/script-updates/scripts
 
 check: symlinks language deps lint
 
@@ -20,7 +21,7 @@ lint:
 
 format:
 	curl -s $(baseUrl)/run-swift-format.sh | bash -s -- --fix
-	
+
 build:
 	swift build
 
