@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct Contents: Decodable, Equatable {
+    public struct Contents: Codable, Equatable {
 
         enum CodingKeys: CodingKey {
             case path

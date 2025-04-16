@@ -75,6 +75,6 @@ private extension SettingsLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
+        try url.loadContents()
     }
 }

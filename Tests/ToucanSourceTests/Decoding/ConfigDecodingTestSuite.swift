@@ -72,4 +72,67 @@ struct ConfigDecodingTestSuite {
                 )
         )
     }
+    
+    @Test
+    func encoding() throws {
+
+        let encoder = ToucanYAMLEncoder()
+        let config = Config.defaults
+        
+        let yaml = try encoder.encode(config)
+        
+        let exp = """
+            pipelines:
+              path: pipelines
+            contents:
+              path: contents
+              assets:
+                path: assets
+            themes:
+              location:
+                path: themes
+              current:
+                path: default
+              assets:
+                path: assets
+              templates:
+                path: templates
+              types:
+                path: types
+              overrides:
+                path: overrides
+              blocks:
+                path: blocks
+            dateFormats:
+              input:
+                format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+              output: {}
+            contentConfigurations:
+              wordsPerMinute: 238
+              outlineLevels:
+              - 2
+              - 3
+              paragraphStyles:
+                note:
+                - note
+                warn:
+                - warn
+                - warning
+                tip:
+                - tip
+                important:
+                - important
+                error:
+                - error
+                - caution
+            """
+        
+        let trimmedYaml = yaml.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+        let trimmedExp = exp.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+        #expect(trimmedYaml == trimmedExp)
+    }
 }

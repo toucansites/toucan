@@ -2,6 +2,7 @@ import Foundation
 import ArgumentParser
 import Logging
 import FileManagerKit
+import ToucanInfo
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
@@ -18,7 +19,7 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
-        version: "1.0.0-beta.3"
+        version: GeneratorInfo.current.version
     )
 
     // MARK: - arguments

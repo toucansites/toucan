@@ -2,6 +2,7 @@ import Foundation
 import Dispatch
 import ArgumentParser
 import SwiftCommand
+import ToucanInfo
 
 extension Array {
 
@@ -23,7 +24,7 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
-        version: "1.0.0-beta.3"
+        version: GeneratorInfo.current.version
     )
 
     // MARK: - arguments

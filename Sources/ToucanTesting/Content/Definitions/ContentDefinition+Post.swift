@@ -26,6 +26,16 @@ public extension ContentDefinition.Mocks {
                     required: true,
                     default: .init(false)
                 ),
+                "ages": .init(
+                    type: .array(of: .int),
+                    required: true,
+                    default: nil
+                ),
+                "heights": .init(
+                    type: .array(of: .double),
+                    required: true,
+                    default: nil
+                ),
             ],
             relations: [
                 "authors": .init(

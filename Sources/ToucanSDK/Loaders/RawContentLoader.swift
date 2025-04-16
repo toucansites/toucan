@@ -228,7 +228,7 @@ private extension RawContentLoader {
     }
 
     func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
+        try url.loadContents()
     }
 }
 
@@ -280,7 +280,7 @@ extension RawContentLoader {
         if let imageValue = frontMatter[imageKey]?.stringValue() {
             if imageValue.hasPrefix("/") {
                 return .init(
-                    "\(baseUrl)\(baseUrl.hasSuffix("/") ? "" : "/")\(imageValue.dropFirst())"
+                    "\(baseUrl)\(baseUrl.suffixForPath())\(imageValue.dropFirst())"
                 )
             }
             else {
@@ -304,7 +304,7 @@ extension RawContentLoader {
     }
 }
 
-extension AssetProperty {
+/*extension AssetProperty {
 
     func resolvedPath(
         baseUrl: String,
@@ -321,4 +321,4 @@ extension AssetProperty {
         }
         return "\(file.name).\(file.ext)"
     }
-}
+}*/

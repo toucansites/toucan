@@ -20,26 +20,6 @@ public struct AnyCodable: Codable {
             try container.encode(bool)
         case let int as Int:
             try container.encode(int)
-        case let int8 as Int8:
-            try container.encode(int8)
-        case let int16 as Int16:
-            try container.encode(int16)
-        case let int32 as Int32:
-            try container.encode(int32)
-        case let int64 as Int64:
-            try container.encode(int64)
-        case let uint as UInt:
-            try container.encode(uint)
-        case let uint8 as UInt8:
-            try container.encode(uint8)
-        case let uint16 as UInt16:
-            try container.encode(uint16)
-        case let uint32 as UInt32:
-            try container.encode(uint32)
-        case let uint64 as UInt64:
-            try container.encode(uint64)
-        case let float as Float:
-            try container.encode(float)
         case let double as Double:
             try container.encode(double)
         case let string as String:
@@ -70,9 +50,6 @@ public struct AnyCodable: Codable {
         }
         else if let int = try? container.decode(Int.self) {
             self.init(int)
-        }
-        else if let uint = try? container.decode(UInt.self) {
-            self.init(uint)
         }
         else if let double = try? container.decode(Double.self) {
             self.init(double)
@@ -133,26 +110,6 @@ extension AnyCodable: Equatable {
         case let (lhs as Bool, rhs as Bool):
             return lhs == rhs
         case let (lhs as Int, rhs as Int):
-            return lhs == rhs
-        case let (lhs as Int8, rhs as Int8):
-            return lhs == rhs
-        case let (lhs as Int16, rhs as Int16):
-            return lhs == rhs
-        case let (lhs as Int32, rhs as Int32):
-            return lhs == rhs
-        case let (lhs as Int64, rhs as Int64):
-            return lhs == rhs
-        case let (lhs as UInt, rhs as UInt):
-            return lhs == rhs
-        case let (lhs as UInt8, rhs as UInt8):
-            return lhs == rhs
-        case let (lhs as UInt16, rhs as UInt16):
-            return lhs == rhs
-        case let (lhs as UInt32, rhs as UInt32):
-            return lhs == rhs
-        case let (lhs as UInt64, rhs as UInt64):
-            return lhs == rhs
-        case let (lhs as Float, rhs as Float):
             return lhs == rhs
         case let (lhs as Double, rhs as Double):
             return lhs == rhs
@@ -280,26 +237,6 @@ extension AnyCodable: Hashable {
         case let value as Bool:
             hasher.combine(value)
         case let value as Int:
-            hasher.combine(value)
-        case let value as Int8:
-            hasher.combine(value)
-        case let value as Int16:
-            hasher.combine(value)
-        case let value as Int32:
-            hasher.combine(value)
-        case let value as Int64:
-            hasher.combine(value)
-        case let value as UInt:
-            hasher.combine(value)
-        case let value as UInt8:
-            hasher.combine(value)
-        case let value as UInt16:
-            hasher.combine(value)
-        case let value as UInt32:
-            hasher.combine(value)
-        case let value as UInt64:
-            hasher.combine(value)
-        case let value as Float:
             hasher.combine(value)
         case let value as Double:
             hasher.combine(value)

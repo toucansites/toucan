@@ -27,12 +27,13 @@ let package = Package(
         .library(name: "ToucanSource", targets: ["ToucanSource"]),
         .library(name: "ToucanContent", targets: ["ToucanContent"]),
         .library(name: "ToucanTesting", targets: ["ToucanTesting"]),
+        .library(name: "ToucanInfo", targets: ["ToucanInfo"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
         .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
         .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
-        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.2.1"),
+        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.2.2"),
         .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.9.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
         .package(url: "https://github.com/jpsim/Yams", from: "5.3.0"),
@@ -48,6 +49,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
+                .target(name: "ToucanInfo"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -67,6 +69,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
+                .target(name: "ToucanInfo"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -76,6 +79,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
+                .target(name: "ToucanInfo"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -86,6 +90,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileMonitor", package: "FileMonitor"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
+                .target(name: "ToucanInfo"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -130,6 +135,7 @@ let package = Package(
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .target(name: "ToucanModels"),
                 .target(name: "ToucanContent"),
+                .target(name: "ToucanInfo"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -153,6 +159,12 @@ let package = Package(
             dependencies: [
                 .target(name: "ToucanModels"),
                 .target(name: "ToucanSource"),
+            ],
+            swiftSettings: swiftSettings
+        ),
+        .target(
+            name: "ToucanInfo",
+            dependencies: [
             ],
             swiftSettings: swiftSettings
         ),
@@ -188,6 +200,7 @@ let package = Package(
             name: "ToucanContentTests",
             dependencies: [
                 .target(name: "ToucanContent"),
+                .target(name: "ToucanTesting"),
             ]
         ),
     ]

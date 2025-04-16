@@ -2,6 +2,7 @@ import ArgumentParser
 import Logging
 import Hummingbird
 import Foundation
+import ToucanInfo
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
@@ -18,7 +19,7 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             Serves a directory over a local web-server.
             """,
-        version: "1.0.0-beta.3"
+        version: GeneratorInfo.current.version
     )
 
     // MARK: - arguments

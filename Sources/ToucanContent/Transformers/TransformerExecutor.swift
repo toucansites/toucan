@@ -42,7 +42,7 @@ public struct TransformerExecutor {
                     "--file", fileURL.path,
                     "--slug", slug.value,
                 ]
-                let commandUrl = URL(fileURLWithPath: command.url)
+                let commandUrl = URL(fileURLWithPath: command.path)
                     .appendingPathComponent(command.name)
                 let command = Command(executablePath: .init(commandUrl.path()))
                     .addArguments(arguments)
@@ -62,7 +62,7 @@ public struct TransformerExecutor {
         }
 
         do {
-            let finalContents = try String(contentsOf: fileURL, encoding: .utf8)
+            let finalContents = try fileURL.loadContents()
             try fileManager.delete(at: fileURL)
             return finalContents
         }
