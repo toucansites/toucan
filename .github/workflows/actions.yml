@@ -8,7 +8,7 @@ name: Actions
 on:
   push:
     branches:
-      -feature/update-scripts
+      - feature/update-scripts
 
 jobs:
 
