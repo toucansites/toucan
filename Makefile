@@ -2,8 +2,7 @@ SHELL=/bin/bash
 
 .PHONY: docker
 
-#baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/main/scripts
-baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/feature/script-updates/scripts
+baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/main/scripts
 
 check: symlinks language deps lint
 
