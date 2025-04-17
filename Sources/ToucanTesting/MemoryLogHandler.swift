@@ -1,6 +1,6 @@
 //
 //  MemoryLogHandler.swift
-//  toucan
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 04. 09..
 //

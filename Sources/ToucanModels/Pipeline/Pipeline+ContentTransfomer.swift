@@ -1,5 +1,5 @@
 //
-//  Pipeline+ContentTransformer.swift
+//  Pipeline+ContentTransfomer.swift
 //  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 21..

@@ -1,3 +1,9 @@
+//
+//  ContentDefinition+Guide.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import ToucanModels
 
 public extension ContentDefinition.Mocks {

@@ -2,7 +2,7 @@
 //  Slug.swift
 //  Toucan
 //
-//  Created by gerp83 on 2025. 04. 03.
+//  Created by gerp83 on 2025. 04. 17..
 //
 
 /// A value type representing a URL-friendly identifier for a content item.

@@ -2,7 +2,7 @@
 //  ToucanDecoderError.swift
 //  Toucan
 //
-//  Created by gerp83 on 2025. 04. 04.
+//  Created by gerp83 on 2025. 04. 17..
 //
 
 /// Errors thrown by a `ToucanDecoder` during the decoding process.

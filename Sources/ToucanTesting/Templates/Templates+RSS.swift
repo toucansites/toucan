@@ -1,3 +1,9 @@
+//
+//  Templates+RSS.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 03. 30..
+
 public extension Templates.Mocks {
 
     static func rss() -> String {

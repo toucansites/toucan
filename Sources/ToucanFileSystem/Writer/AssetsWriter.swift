@@ -2,7 +2,7 @@
 //  AssetsWriter.swift
 //  Toucan
 //
-//  Created by gerp83 on 2025. 03. 05.
+//  Created by gerp83 on 2025. 04. 17..
 //
 
 import Foundation

@@ -1,5 +1,5 @@
 //
-//  Pipeline.Scope+Context.swift
+//  Pipeline+Scope+Context.swift
 //  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 02. 03..

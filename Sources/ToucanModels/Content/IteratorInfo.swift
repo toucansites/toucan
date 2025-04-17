@@ -2,7 +2,7 @@
 //  IteratorInfo.swift
 //  Toucan
 //
-//  Created by gerp83 on 2025. 04. 03.
+//  Created by gerp83 on 2025. 04. 17..
 //
 
 /// Provides pagination and iteration metadata for a content collection,

@@ -1,5 +1,5 @@
 //
-//  Any+AnyCodeable.swift
+//  Any+AnyCodable.swift
 //  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 03. 06..

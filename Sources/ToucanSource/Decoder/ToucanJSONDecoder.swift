@@ -1,3 +1,9 @@
+//
+//  ToucanJSONDecoder.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import Foundation
 
 /// An implementation of `ToucanDecoder` that uses `JSONDecoder`.

@@ -1,3 +1,9 @@
+//
+//  AnyCodable.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import Foundation
 
 /// A type-erased wrapper for any `Codable` value, allowing serialization of

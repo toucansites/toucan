@@ -2,7 +2,7 @@
 //  ParagraphStyles.swift
 //  Toucan
 //
-//  Created by gerp83 on 2025. 03. 28.
+//  Created by gerp83 on 2025. 04. 17..
 //
 
 /// Defines paragraph style aliases for block-level directives

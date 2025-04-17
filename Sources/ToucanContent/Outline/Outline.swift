@@ -2,7 +2,7 @@
 //  Outline.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 22/07/2024.
+//  Created by Tibor Bodecs on 2025. 04. 17..
 //
 
 /// A hierarchical representation of an outline element, used for

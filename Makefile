@@ -22,6 +22,12 @@ lint:
 format:
 	curl -s $(baseUrl)/run-swift-format.sh | bash -s -- --fix
 
+headers:
+	curl -s $(baseUrl)/check-swift-headers.sh | bash
+
+fix-headers:
+	curl -s $(baseUrl)/check-swift-headers.sh | bash -s -- --fix
+
 build:
 	swift build
 
