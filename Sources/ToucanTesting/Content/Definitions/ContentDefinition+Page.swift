@@ -11,14 +11,14 @@ public extension ContentDefinition.Mocks {
             ],
             properties: [
                 "title": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "description": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],

@@ -36,9 +36,9 @@ public extension Content.Mocks {
                 paths: [],
                 properties: [
                     "title": Property(
-                        type: PropertyType.string,
-                        required: true,
-                        default: nil
+                        propertyType: PropertyType.string,
+                        isRequired: true,
+                        defaultValue: nil
                     )
                 ],
                 relations: [:],

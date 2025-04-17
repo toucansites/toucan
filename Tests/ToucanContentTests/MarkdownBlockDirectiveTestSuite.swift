@@ -84,8 +84,8 @@ struct MarkdownBlockDirectiveTestSuite {
                     parameters: [
                         .init(
                             label: "columns",
-                            required: true,
-                            default: nil
+                            isRequired: true,
+                            defaultValue: nil
                         )
                     ],
                     requiresParentDirective: nil,
@@ -130,8 +130,8 @@ struct MarkdownBlockDirectiveTestSuite {
                     parameters: [
                         .init(
                             label: "columns",
-                            required: true,
-                            default: nil
+                            isRequired: true,
+                            defaultValue: nil
                         )
                     ],
                     requiresParentDirective: nil,

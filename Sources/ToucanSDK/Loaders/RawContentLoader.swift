@@ -304,21 +304,21 @@ extension RawContentLoader {
     }
 }
 
-/*extension AssetProperty {
-
-    func resolvedPath(
-        baseUrl: String,
-        assetsPath: String,
-        slug: Slug
-    ) -> String {
-        if resolvePath {
-            return "\(file.name).\(file.ext)"
-                .resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: slug
-                )
-        }
-        return "\(file.name).\(file.ext)"
-    }
-}*/
+//extension AssetProperty {
+//
+//    func resolvedPath(
+//        baseUrl: String,
+//        assetsPath: String,
+//        slug: Slug
+//    ) -> String {
+//        if resolvePath {
+//            return "\(file.name).\(file.ext)"
+//                .resolveAsset(
+//                   baseUrl: baseUrl,
+//                    assetsPath: assetsPath,
+//                    slug: slug
+//                )
+//        }
+//        return "\(file.name).\(file.ext)"
+//    }
+//}

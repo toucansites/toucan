@@ -7,8 +7,12 @@ public extension ContentDefinition.Mocks {
             id: "redirect",
             paths: [],
             properties: [
-                "to": .init(type: .string, required: true),
-                "code": .init(type: .int, required: true, default: .init(301)),
+                "to": .init(propertyType: .string, isRequired: true),
+                "code": .init(
+                    propertyType: .int,
+                    isRequired: true,
+                    defaultValue: .init(301)
+                ),
             ],
             relations: [:],
             queries: [:]

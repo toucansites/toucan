@@ -46,7 +46,7 @@ public extension MarkdownBlockDirective.Mocks {
             parameters: [
                 .init(
                     label: "label",
-                    required: true
+                    isRequired: true
                 )
             ],
             requiresParentDirective: "true",

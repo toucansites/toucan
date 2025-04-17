@@ -1,11 +1,20 @@
 import Foundation
 
+/// An implementation of `ToucanDecoder` that uses `JSONDecoder`.
 public struct ToucanJSONDecoder: ToucanDecoder {
 
-    public init() {
+    /// Initializes a new instance of `ToucanJSONDecoder`.
+    ///
+    /// Uses a `JSONDecoder` that allows JSON5 parsing by default.
+    public init() {}
 
-    }
-
+    /// Decodes a JSON or JSON5-encoded `Data` object into a strongly-typed model.
+    ///
+    /// - Parameters:
+    ///   - type: The target `Decodable` type.
+    ///   - data: Raw data to decode.
+    /// - Returns: A decoded instance of the provided type.
+    /// - Throws: `ToucanDecoderError.decoding` if decoding fails.
     public func decode<T: Decodable>(
         _ type: T.Type,
         from data: Data
@@ -19,5 +28,4 @@ public struct ToucanJSONDecoder: ToucanDecoder {
             throw .decoding(error, T.self)
         }
     }
-
 }

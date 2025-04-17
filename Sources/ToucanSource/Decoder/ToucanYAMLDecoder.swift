@@ -1,12 +1,19 @@
 import Foundation
 import Yams
 
+/// An implementation of `ToucanDecoder` that uses `YAMLDecoder`.
 public struct ToucanYAMLDecoder: ToucanDecoder {
 
-    public init() {
+    /// Creates a new YAML decoder instance for use in the Toucan system.
+    public init() {}
 
-    }
-
+    /// Decodes a YAML-formatted `Data` object into a strongly typed model.
+    ///
+    /// - Parameters:
+    ///   - type: The expected `Decodable` type.
+    ///   - data: The raw YAML data to decode.
+    /// - Returns: A decoded instance of the specified type.
+    /// - Throws: `ToucanDecoderError.decoding` if the input cannot be decoded.
     public func decode<T: Decodable>(
         _ type: T.Type,
         from data: Data
@@ -19,5 +26,4 @@ public struct ToucanYAMLDecoder: ToucanDecoder {
             throw .decoding(error, T.self)
         }
     }
-
 }
