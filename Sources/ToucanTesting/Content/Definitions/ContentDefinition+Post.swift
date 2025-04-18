@@ -1,3 +1,9 @@
+//
+//  ContentDefinition+Post.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import ToucanModels
 
 public extension ContentDefinition.Mocks {
@@ -10,42 +16,42 @@ public extension ContentDefinition.Mocks {
             ],
             properties: [
                 "title": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "publication": .init(
-                    type: .date(
+                    propertyType: .date(
                         format: .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                     ),
-                    required: true,
-                    default: nil
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "featured": .init(
-                    type: .bool,
-                    required: true,
-                    default: .init(false)
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: .init(false)
                 ),
                 "ages": .init(
-                    type: .array(of: .int),
-                    required: true,
-                    default: nil
+                    propertyType: .array(of: .int),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "heights": .init(
-                    type: .array(of: .double),
-                    required: true,
-                    default: nil
+                    propertyType: .array(of: .double),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [
                 "authors": .init(
                     references: "author",
-                    type: .many,
+                    relationType: .many,
                     order: .init(key: "title", direction: .asc)
                 ),
                 "tags": .init(
                     references: "tag",
-                    type: .many,
+                    relationType: .many,
                     order: .init(key: "title", direction: .asc)
                 ),
             ],

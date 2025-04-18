@@ -1,3 +1,9 @@
+//
+//  ContentDefinition+Redirect.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import ToucanModels
 
 public extension ContentDefinition.Mocks {
@@ -7,8 +13,12 @@ public extension ContentDefinition.Mocks {
             id: "redirect",
             paths: [],
             properties: [
-                "to": .init(type: .string, required: true),
-                "code": .init(type: .int, required: true, default: .init(301)),
+                "to": .init(propertyType: .string, isRequired: true),
+                "code": .init(
+                    propertyType: .int,
+                    isRequired: true,
+                    defaultValue: .init(301)
+                ),
             ],
             relations: [:],
             queries: [:]

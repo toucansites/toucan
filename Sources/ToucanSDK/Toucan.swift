@@ -2,7 +2,7 @@
 //  Toucan.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 03/05/2024.
+//  Created by Tibor Bodecs on 2025. 04. 17..
 //
 
 import Foundation
@@ -13,6 +13,7 @@ import ToucanTesting
 import ToucanSource
 import ToucanModels
 
+/// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
 
     let inputUrl: URL
@@ -31,6 +32,7 @@ public struct Toucan {
     ///   - input: The input url as a path string.
     ///   - output: The output url as a path string.
     ///   - baseUrl: An optional baseUrl to override the config value.
+    ///   - logger: A logger instance for logging. Defaults to a logger labeled "toucan".
     public init(
         input: String,
         output: String,

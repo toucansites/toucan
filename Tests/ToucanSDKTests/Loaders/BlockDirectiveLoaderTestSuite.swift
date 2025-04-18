@@ -98,18 +98,18 @@ struct BlockDirectiveLoaderTestSuite {
                         parameters: [
                             MarkdownBlockDirective.Parameter(
                                 label: "url",
-                                required: nil,
-                                default: ""
+                                isRequired: nil,
+                                defaultValue: ""
                             ),
                             MarkdownBlockDirective.Parameter(
                                 label: "class",
-                                required: nil,
-                                default: "button"
+                                isRequired: nil,
+                                defaultValue: "button"
                             ),
                             MarkdownBlockDirective.Parameter(
                                 label: "target",
-                                required: nil,
-                                default: "_blank"
+                                isRequired: nil,
+                                defaultValue: "_blank"
                             ),
                         ],
                         requiresParentDirective: nil,
@@ -221,18 +221,18 @@ struct BlockDirectiveLoaderTestSuite {
                         parameters: [
                             MarkdownBlockDirective.Parameter(
                                 label: "url",
-                                required: nil,
-                                default: ""
+                                isRequired: nil,
+                                defaultValue: ""
                             ),
                             MarkdownBlockDirective.Parameter(
                                 label: "class",
-                                required: nil,
-                                default: "button"
+                                isRequired: nil,
+                                defaultValue: "button"
                             ),
                             MarkdownBlockDirective.Parameter(
                                 label: "target",
-                                required: nil,
-                                default: "_blank"
+                                isRequired: nil,
+                                defaultValue: "_blank"
                             ),
                         ],
                         requiresParentDirective: nil,
