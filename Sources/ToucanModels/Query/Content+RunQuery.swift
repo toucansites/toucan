@@ -18,7 +18,15 @@ public extension [Content] {
         let contents = self.filter {
             query.contentType == $0.definition.id
         }
-        return filter(contents: contents, using: query)
+        let now = Date().timeIntervalSince1970
+        return filter(
+            contents: contents,
+            using: query.resolveFilterParameters(
+                with: [
+                    "date.now": .init(now)
+                ]
+            )
+        )
     }
 
     /// Filters, sorts, and slices the given content array based on a query.

@@ -177,4 +177,174 @@ struct ContentFilterTestSuite {
         }
     }
 
+    @Test()
+    func globalDateFilter() async throws {
+
+        let logger = Logger.inMemory(
+            label: "ContentFilterTestSuite"
+        )
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+
+        let now = Date()
+        let future = now.addingTimeInterval(+86_400)
+        let past = now.addingTimeInterval(-86_400)
+
+        let contentDefinition = ContentDefinition(
+            id: "post",
+            paths: [],
+            properties: [
+                "publication": .init(
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
+                ),
+                "expiration": .init(
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
+                ),
+            ],
+            relations: [:],
+            queries: [:]
+        )
+        let converter = ContentDefinitionConverter(
+            contentDefinition: contentDefinition,
+            dateFormatter: formatter,
+            logger: logger.logger
+        )
+
+        let rawContent1 = RawContent(
+            origin: .init(path: "test1", slug: "test1"),
+            frontMatter: [
+                "publication": .init(formatter.string(from: past)),
+                "expiration": .init(formatter.string(from: future)),
+            ],
+            markdown: "no content",
+            lastModificationDate: now.timeIntervalSince1970,
+            assets: []
+        )
+        let post1 = converter.convert(rawContent: rawContent1)
+
+        let rawContent2 = RawContent(
+            origin: .init(path: "test2", slug: "test2"),
+            frontMatter: [
+                "publication": .init(formatter.string(from: future)),
+                "expiration": .init(formatter.string(from: future)),
+            ],
+            markdown: "no content",
+            lastModificationDate: now.timeIntervalSince1970,
+            assets: []
+        )
+        let post2 = converter.convert(rawContent: rawContent2)
+
+        #expect(logger.handler.messages.isEmpty)
+
+        let filter = ContentFilter(
+            filterRules: [
+                "post": .and(
+                    [
+                        .field(
+                            key: "publication",
+                            operator: .lessThan,
+                            value: "{{date.now}}"
+                        ),
+                        .field(
+                            key: "expiration",
+                            operator: .greaterThan,
+                            value: "{{date.now}}"
+                        ),
+                    ]
+                )
+            ]
+        )
+
+        let posts = [post1, post2]
+        let res = filter.applyRules(contents: posts)
+        #expect(res.count == 1)
+        #expect(res[0].slug.value == "test1")
+    }
+
+    @Test()
+    func draftFilter() async throws {
+
+        let logger = Logger.inMemory(
+            label: "ContentFilterTestSuite"
+        )
+        let settings = Settings.defaults
+        let config = Config.defaults
+        let sourceConfig = SourceConfig(
+            sourceUrl: .init(fileURLWithPath: ""),
+            config: config
+        )
+        let formatter = settings.dateFormatter(
+            sourceConfig.config.dateFormats.input
+        )
+
+        let contentDefinition = ContentDefinition(
+            id: "post",
+            paths: [],
+            properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: false,
+                    defaultValue: false
+                )
+            ],
+            relations: [:],
+            queries: [:]
+        )
+        let converter = ContentDefinitionConverter(
+            contentDefinition: contentDefinition,
+            dateFormatter: formatter,
+            logger: logger.logger
+        )
+
+        let now = Date()
+
+        let rawContent1 = RawContent(
+            origin: .init(path: "test1", slug: "test1"),
+            frontMatter: [:],
+            markdown: "no content",
+            lastModificationDate: now.timeIntervalSince1970,
+            assets: []
+        )
+        let post1 = converter.convert(rawContent: rawContent1)
+
+        let rawContent2 = RawContent(
+            origin: .init(path: "test2", slug: "test2"),
+            frontMatter: [
+                "draft": true
+            ],
+            markdown: "no content",
+            lastModificationDate: now.timeIntervalSince1970,
+            assets: []
+        )
+        let post2 = converter.convert(rawContent: rawContent2)
+
+        #expect(logger.handler.messages.isEmpty)
+
+        let filter = ContentFilter(
+            filterRules: [
+                "*": .field(
+                    key: "draft",
+                    operator: .equals,
+                    value: false
+                )
+            ]
+        )
+
+        let posts = [post1, post2]
+        let res = filter.applyRules(contents: posts)
+        #expect(res.count == 1)
+        #expect(res[0].slug.value == "test1")
+    }
+
 }
