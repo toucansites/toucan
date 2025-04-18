@@ -143,68 +143,15 @@ struct ToucanTestSuite {
         }
     }
 
-    @Test
-    func invalidMdFrontMatter() async throws {
-        let logging = Logger.inMemory(label: "ToucanTestSuite")
-        try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
-                        File(
-                            "index.md",
-                            string: """
-                                ---
-                                type: page
-                                title: Test1
-
-                                Content without closing frontMatter.
-                                """
-                        )
-                    }
-                }
-                Directory("pipelines") {
-                    pipelineHtml()
-                }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
-                                themeDefaultMustache()
-                            }
-                            themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
-                        }
-                    }
-                }
-                configFile()
-            }
-        }
-        .test {
-            let input = $1.appending(path: "src/")
-            let output = $1.appending(path: "docs/")
-            do {
-                try getToucan(input, output, logging.logger).generate()
-            }
-            catch let error as RawContentLoader.Error {
-                switch error {
-                case .invalidFrontMatter(let path):
-                    #expect(path == "page1/index.md")
-                }
-            }
-        }
-    }
-
-    @Test
-    func invalidYmlFrontMatter() async throws {
+    @Test(arguments: ["index.md", "index.yml"])
+    func invalidFrontMatter(_ file: String) async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
                     Directory("page1") {
                         File(
-                            "index.yml",
+                            file,
                             string: """
                                 type: page
                                 title missingColor
@@ -240,7 +187,7 @@ struct ToucanTestSuite {
             catch let error as RawContentLoader.Error {
                 switch error {
                 case .invalidFrontMatter(let path):
-                    #expect(path == "page1/index.yml")
+                    #expect(path == "page1/\(file)")
                 }
             }
         }
