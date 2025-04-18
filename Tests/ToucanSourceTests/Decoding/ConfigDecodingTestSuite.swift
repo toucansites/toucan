@@ -72,15 +72,15 @@ struct ConfigDecodingTestSuite {
                 )
         )
     }
-    
+
     @Test
     func encoding() throws {
 
         let encoder = ToucanYAMLEncoder()
         let config = Config.defaults
-        
+
         let yaml = try encoder.encode(config)
-        
+
         let exp = """
             pipelines:
               path: pipelines
@@ -126,7 +126,7 @@ struct ConfigDecodingTestSuite {
                 - error
                 - caution
             """
-        
+
         let trimmedYaml = yaml.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
