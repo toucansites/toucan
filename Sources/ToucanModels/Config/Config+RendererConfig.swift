@@ -1,5 +1,5 @@
 //
-//  Config+ContentConfigurations.swift
+//  Config+RendererConfig.swift
 //  Toucan
 //
 //  Created by gerp83 on 2025. 03. 28..
@@ -10,7 +10,7 @@ extension Config {
     /// Defines default configurations used when rendering content,
     /// including reading time settings, outline parsing depth, and
     /// paragraph styling rules for directive blocks.
-    public struct ContentConfigurations: Codable, Equatable {
+    public struct RendererConfig: Codable, Equatable {
 
         // MARK: - Coding Keys
 
