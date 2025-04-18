@@ -126,7 +126,7 @@ public struct Toucan {
             }
 
             /// Validate slugs
-            validateSlugs(sourceBundle)
+            try validateSlugs(sourceBundle)
 
             /// Validate frontMatters
             validateFrontMatters(sourceBundle)
@@ -216,13 +216,14 @@ public struct Toucan {
         }
     }
 
-    func validateSlugs(_ sourceBundle: SourceBundle) {
+    func validateSlugs(_ sourceBundle: SourceBundle) throws {
         let slugs = sourceBundle.contents.map(\.slug.value)
-        let slugCounts = Dictionary(grouping: slugs, by: { $0 })
+        let duplicatedSlugs = Dictionary(grouping: slugs, by: { $0 })
             .mapValues { $0.count }
+            .filter { $1 > 1 }
 
-        for (slug, count) in slugCounts where count > 1 {
-            logger.error("Duplicate slug: \(slug)")
+        if !duplicatedSlugs.isEmpty {
+            throw Error.duplicateSlugs(duplicatedSlugs.keys.map { String($0) })
         }
     }
 

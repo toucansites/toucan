@@ -31,16 +31,9 @@ struct FrontMatterParser {
             omittingEmptySubsequences: true
         )
 
-        do {
-            return try decoder.decode(
-                [String: AnyCodable].self,
-                from: String(parts.first!).dataValue()
-            )
-        }
-        catch let error {
-            logger.error("\(error.localizedDescription)")
-        }
-
-        return [:]
+        return try decoder.decode(
+            [String: AnyCodable].self,
+            from: String(parts.first!).dataValue()
+        )
     }
 }

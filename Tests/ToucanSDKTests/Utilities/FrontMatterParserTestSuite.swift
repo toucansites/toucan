@@ -131,9 +131,19 @@ struct FrontMatterParserTestSuite {
             decoder: ToucanYAMLDecoder(),
             logger: logger
         )
-        let metadata = try parser.parse(input)
 
-        #expect(metadata.isEmpty)
+        do {
+            let _ = try parser.parse(input)
+        }
+        catch ToucanDecoderError.decoding(let error, _) {
+            if case DecodingError.dataCorrupted(let context) = error {
+                let expected = "The given data was not valid YAML."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
     }
 
     @Test
@@ -151,9 +161,19 @@ struct FrontMatterParserTestSuite {
             decoder: ToucanYAMLDecoder(),
             logger: logger
         )
-        let metadata = try parser.parse(input)
 
-        #expect(metadata.isEmpty)
+        do {
+            let _ = try parser.parse(input)
+        }
+        catch ToucanDecoderError.decoding(let error, _) {
+            if case DecodingError.dataCorrupted(let context) = error {
+                let expected = "The given data was not valid YAML."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
     }
 
     @Test
@@ -172,9 +192,20 @@ struct FrontMatterParserTestSuite {
             decoder: ToucanYAMLDecoder(),
             logger: logger
         )
-        let metadata = try parser.parse(input)
 
-        #expect(metadata.isEmpty)
+        do {
+            let _ = try parser.parse(input)
+        }
+        catch ToucanDecoderError.decoding(let error, _) {
+            if case DecodingError.typeMismatch(_, let context) = error {
+                let expected =
+                    "Expected to decode Mapping but found Node instead."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
     }
 
 }
