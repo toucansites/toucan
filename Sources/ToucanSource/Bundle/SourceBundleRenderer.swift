@@ -376,17 +376,17 @@ public struct SourceBundleRenderer {
                         customBlockDirectives: sourceBundle.blockDirectives
                     ),
                     outline: .init(
-                        levels: sourceBundle.config.contentConfigurations
+                        levels: sourceBundle.config.renderer
                             .outlineLevels
                     ),
                     readingTime: .init(
                         wordsPerMinute: sourceBundle.config
-                            .contentConfigurations.wordsPerMinute
+                            .renderer.wordsPerMinute
                     ),
                     transformerPipeline: pipeline.transformers[
                         content.definition.id
                     ],
-                    paragraphStyles: sourceBundle.config.contentConfigurations
+                    paragraphStyles: sourceBundle.config.renderer
                         .paragraphStyles
                 ),
 

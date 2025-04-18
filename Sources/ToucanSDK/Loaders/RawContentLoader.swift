@@ -12,8 +12,11 @@ import ToucanFileSystem
 import ToucanSource
 import FileManagerKit
 
+/// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
 
+    /// Represents errors that can occur during the raw content loading process.
+    /// - `invalidFrontMatter`: Indicates that the front matter could not be parsed correctly at the specified file path.
     public enum Error: Swift.Error {
         case invalidFrontMatter(path: String)
     }

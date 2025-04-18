@@ -17,7 +17,7 @@ public struct Config: Codable, Equatable {
         case contents
         case themes
         case dateFormats
-        case contentConfigurations
+        case renderer
     }
 
     // MARK: - Properties
@@ -35,7 +35,7 @@ public struct Config: Codable, Equatable {
     public var dateFormats: DateFormats
 
     /// Additional content-specific overrides or configuration extensions.
-    public var contentConfigurations: ContentConfigurations
+    public var renderer: RendererConfig
 
     // MARK: - Defaults
 
@@ -48,7 +48,7 @@ public struct Config: Codable, Equatable {
             contents: .defaults,
             themes: .defaults,
             dateFormats: .defaults,
-            contentConfigurations: .defaults
+            renderer: .defaults
         )
     }
 
@@ -61,19 +61,19 @@ public struct Config: Codable, Equatable {
     ///   - contents: Content mapping configuration.
     ///   - themes: Theme layout and styling definitions.
     ///   - dateFormats: Global or localized date format settings.
-    ///   - contentConfigurations: Fine-grained control for specific content types.
+    ///   - renderer: Fine-grained control for specific content types.
     public init(
         pipelines: Pipelines,
         contents: Contents,
         themes: Themes,
         dateFormats: DateFormats,
-        contentConfigurations: ContentConfigurations
+        renderer: RendererConfig
     ) {
         self.pipelines = pipelines
         self.contents = contents
         self.themes = themes
         self.dateFormats = dateFormats
-        self.contentConfigurations = contentConfigurations
+        self.renderer = renderer
     }
 
     // MARK: - Decoding
@@ -111,11 +111,11 @@ public struct Config: Codable, Equatable {
             )
             ?? defaults.dateFormats
 
-        self.contentConfigurations =
+        self.renderer =
             try container.decodeIfPresent(
-                ContentConfigurations.self,
-                forKey: .contentConfigurations
-            )
-            ?? defaults.contentConfigurations
+                RendererConfig.self,
+                forKey: .renderer
+            ) ?? defaults.renderer
+
     }
 }
