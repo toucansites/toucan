@@ -52,7 +52,8 @@ public extension Pipeline.Mocks {
                     "sitemap"
                 ],
                 exclude: [],
-                lastUpdate: []
+                lastUpdate: [],
+                filterRules: [:]
             ),
             iterators: [
                 "post.pagination": .init(

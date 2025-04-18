@@ -47,11 +47,7 @@ struct SourceBundlePageLinkTestSuite {
                     )
                 ],
                 dataTypes: .defaults,
-                contentTypes: .init(
-                    include: [],
-                    exclude: [],
-                    lastUpdate: []
-                ),
+                contentTypes: .defaults,
                 iterators: [
                     "post.pagination": Query(
                         contentType: "post",

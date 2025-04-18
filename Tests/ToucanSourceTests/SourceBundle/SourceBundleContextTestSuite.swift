@@ -42,11 +42,7 @@ struct SourceBundleContextTestSuite {
                     )
                 ],
                 dataTypes: .defaults,
-                contentTypes: .init(
-                    include: [],
-                    exclude: [],
-                    lastUpdate: []
-                ),
+                contentTypes: .defaults,
                 iterators: [:],
                 transformers: [:],
                 engine: .init(
@@ -207,11 +203,7 @@ struct SourceBundleContextTestSuite {
                 scopes: [:],
                 queries: [:],
                 dataTypes: .defaults,
-                contentTypes: .init(
-                    include: [],
-                    exclude: [],
-                    lastUpdate: []
-                ),
+                contentTypes: .defaults,
                 iterators: [:],
                 transformers: [:],
                 engine: .init(

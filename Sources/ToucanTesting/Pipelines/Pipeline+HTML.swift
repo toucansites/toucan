@@ -37,7 +37,8 @@ public extension Pipeline.Mocks {
                     "rss",
                     "sitemap",
                 ],
-                lastUpdate: []
+                lastUpdate: [],
+                filterRules: [:]
             ),
             // are iterators always pages? iteratorPages? or segments? 🤔
             iterators: [
