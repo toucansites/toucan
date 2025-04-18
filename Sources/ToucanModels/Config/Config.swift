@@ -61,7 +61,7 @@ public struct Config: Codable, Equatable {
     ///   - contents: Content mapping configuration.
     ///   - themes: Theme layout and styling definitions.
     ///   - dateFormats: Global or localized date format settings.
-    ///   - contentConfigurations: Fine-grained control for specific content types.
+    ///   - renderer: Fine-grained control for specific content types.
     public init(
         pipelines: Pipelines,
         contents: Contents,
