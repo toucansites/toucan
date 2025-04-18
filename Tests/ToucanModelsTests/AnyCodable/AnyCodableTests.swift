@@ -173,4 +173,47 @@ struct AnyCodableTests {
 
         #expect(encodedJSONObject == expectedJSONObject)
     }
+    
+    @Test
+    func testValues() throws {
+        
+        let boolValue = AnyCodable(true)
+        let intValue = AnyCodable(100)
+        let doubleValue = AnyCodable(100.1)
+        let stringValue = AnyCodable("string")
+        let nilValue = AnyCodable(nil)
+        let arrayValue = AnyCodable(["string", "string2", "string3"])
+        let dictValue = AnyCodable(["key": AnyCodable("value")])
+        
+        // test values
+        #expect(boolValue.boolValue() == true)
+        #expect(intValue.intValue() == 100)
+        #expect(doubleValue.doubleValue() == 100.1)
+        #expect(stringValue.stringValue() == "string")
+        #expect(nilValue.stringValue() == nil)
+        #expect(arrayValue.arrayValue(as: String.self) == ["string", "string2", "string3"])
+        #expect(dictValue.dictValue() == ["key": AnyCodable("value")])
+        #expect(arrayValue.arrayValue(as: Int.self) == [])
+        #expect(arrayValue.dictValue() == [:])
+        
+        // test description/debugDescription
+        #expect(boolValue.description == "true")
+        #expect(boolValue.debugDescription == "AnyCodable(true)")
+        #expect(intValue.description == "100")
+        #expect(intValue.debugDescription == "AnyCodable(100)")
+        #expect(doubleValue.description == "100.1")
+        #expect(doubleValue.debugDescription == "AnyCodable(100.1)")
+        #expect(stringValue.description == "string")
+        #expect(stringValue.debugDescription == "AnyCodable(\"string\")")
+        #expect(nilValue.description == "nil")
+        #expect(nilValue.debugDescription == "AnyCodable(nil)")
+        #expect(arrayValue.description == "[\"string\", \"string2\", \"string3\"]")
+        #expect(arrayValue.debugDescription == "AnyCodable([\"string\", \"string2\", \"string3\"])")
+        #expect(dictValue.description == "[\"key\": AnyCodable(\"value\")]")
+        #expect(dictValue.debugDescription == "AnyCodable([\"key\": AnyCodable(\"value\")])")
+        
+        
+    }
+    
+    
 }

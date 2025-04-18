@@ -14,14 +14,14 @@ public struct Config: Codable, Equatable {
         case contents
         case themes
         case dateFormats
-        case contentConfigurations
+        case renderer
     }
 
     public var pipelines: Pipelines
     public var contents: Contents
     public var themes: Themes
     public var dateFormats: DateFormats
-    public var contentConfigurations: ContentConfigurations
+    public var renderer: RendererConfig
 
     // MARK: - defaults
 
@@ -31,7 +31,7 @@ public struct Config: Codable, Equatable {
             contents: .defaults,
             themes: .defaults,
             dateFormats: .defaults,
-            contentConfigurations: .defaults
+            renderer: .defaults
         )
     }
 
@@ -42,13 +42,13 @@ public struct Config: Codable, Equatable {
         contents: Contents,
         themes: Themes,
         dateFormats: DateFormats,
-        contentConfigurations: ContentConfigurations
+        renderer: RendererConfig
     ) {
         self.pipelines = pipelines
         self.contents = contents
         self.themes = themes
         self.dateFormats = dateFormats
-        self.contentConfigurations = contentConfigurations
+        self.renderer = renderer
     }
 
     // MARK: - decoder
@@ -86,10 +86,10 @@ public struct Config: Codable, Equatable {
                 forKey: .dateFormats
             ) ?? defaults.dateFormats
 
-        self.contentConfigurations =
+        self.renderer =
             try container.decodeIfPresent(
-                ContentConfigurations.self,
-                forKey: .contentConfigurations
-            ) ?? defaults.contentConfigurations
+                RendererConfig.self,
+                forKey: .renderer
+            ) ?? defaults.renderer
     }
 }

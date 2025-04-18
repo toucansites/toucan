@@ -1,5 +1,5 @@
 //
-//  ContentConfigurations.swift
+//  RendererConfig.swift
 //  Toucan
 //
 //  Created by gerp83 on 2025. 03. 28..
@@ -7,7 +7,7 @@
 
 extension Config {
 
-    public struct ContentConfigurations: Codable, Equatable {
+    public struct RendererConfig: Codable, Equatable {
 
         enum CodingKeys: CodingKey {
             case wordsPerMinute

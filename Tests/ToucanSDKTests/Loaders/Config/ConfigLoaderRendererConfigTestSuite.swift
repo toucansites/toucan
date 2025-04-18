@@ -1,5 +1,5 @@
 //
-//  ConfigLoaderContentConfigurationsTestSuite.swift
+//  ConfigLoaderRendererConfigTestSuite.swift
 //  Toucan
 //
 //  Created by gerp83 on 2025. 04. 08.
@@ -15,11 +15,11 @@ import FileManagerKitTesting
 @testable import ToucanSDK
 
 @Suite
-struct ConfigLoaderContentConfigurationsTestSuite {
+struct ConfigLoaderRendererConfigTestSuite {
 
     @Test
     func testParseDefaults() throws {
-        let logger = Logger(label: "ConfigLoaderContentConfigurationsTestSuite")
+        let logger = Logger(label: "ConfigLoaderRendererConfigTestSuite")
 
         try FileManagerPlayground {
             Directory("src") {
@@ -51,7 +51,7 @@ struct ConfigLoaderContentConfigurationsTestSuite {
         ]
     )
     func testParseOneMissing(_ values: [Bool]) throws {
-        let logger = Logger(label: "ConfigLoaderContentConfigurationsTestSuite")
+        let logger = Logger(label: "ConfigLoaderRendererConfigTestSuite")
 
         try FileManagerPlayground {
             Directory("src") {
@@ -84,7 +84,7 @@ struct ConfigLoaderContentConfigurationsTestSuite {
         _ values: [Bool] = [true, true, true]
     ) -> String {
         return """
-            contentConfigurations:
+            renderer:
                 \(values[0] ? """
             wordsPerMinute: 238
             """ : "")
