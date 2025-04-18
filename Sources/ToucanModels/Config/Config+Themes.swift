@@ -19,9 +19,7 @@ extension Config {
             case current
             case assets
             case templates
-            case types
             case overrides
-            case blocks
         }
 
         // MARK: - Properties
@@ -38,14 +36,8 @@ extension Config {
         /// The path to the folder containing template files (e.g., HTML or markup layouts).
         public var templates: Location
 
-        /// The folder where type-specific templates or definitions reside.
-        public var types: Location
-
         /// A folder for override files that replace core behavior or templates (optional).
         public var overrides: Location
-
-        /// A folder for reusable UI block components (e.g., hero, footer, card).
-        public var blocks: Location
 
         // MARK: - Defaults
 
@@ -57,9 +49,7 @@ extension Config {
         /// └── default/
         ///     ├── assets/
         ///     ├── templates/
-        ///     ├── types/
-        ///     ├── overrides/
-        ///     └── blocks/
+        ///     └── overrides/
         /// ```
         public static var defaults: Self {
             .init(
@@ -67,9 +57,7 @@ extension Config {
                 current: .init(path: "default"),
                 assets: .init(path: "assets"),
                 templates: .init(path: "templates"),
-                types: .init(path: "types"),
-                overrides: .init(path: "overrides"),
-                blocks: .init(path: "blocks")
+                overrides: .init(path: "overrides")
             )
         }
 
@@ -82,25 +70,19 @@ extension Config {
         ///   - current: The name or path of the active theme.
         ///   - assets: Folder path for theme assets.
         ///   - templates: Folder path for templates.
-        ///   - types: Folder path for type-specific templates or settings.
         ///   - overrides: Folder path for template or config overrides.
-        ///   - blocks: Folder path for reusable block templates.
         public init(
             location: Location,
             current: Location,
             assets: Location,
             templates: Location,
-            types: Location,
-            overrides: Location,
-            blocks: Location
+            overrides: Location
         ) {
             self.location = location
             self.current = current
             self.assets = assets
             self.templates = templates
-            self.types = types
             self.overrides = overrides
-            self.blocks = blocks
         }
 
         // MARK: - Decoding
@@ -130,18 +112,10 @@ extension Config {
             self.templates =
                 try container.decodeIfPresent(Location.self, forKey: .templates)
                 ?? defaults.templates
-
-            self.types =
-                try container.decodeIfPresent(Location.self, forKey: .types)
-                ?? defaults.types
-
+            
             self.overrides =
                 try container.decodeIfPresent(Location.self, forKey: .overrides)
                 ?? defaults.overrides
-
-            self.blocks =
-                try container.decodeIfPresent(Location.self, forKey: .blocks)
-                ?? defaults.blocks
         }
     }
 }

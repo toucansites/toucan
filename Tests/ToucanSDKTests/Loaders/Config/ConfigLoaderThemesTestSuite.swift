@@ -45,13 +45,11 @@ struct ConfigLoaderThemesTestSuite {
     @Test(
         "Test all theme paths",
         arguments: [
-            [false, true, true, true, true, true, true],
-            [true, false, true, true, true, true, true],
-            [true, true, false, true, true, true, true],
-            [true, true, true, false, true, true, true],
-            [true, true, true, true, false, true, true],
-            [true, true, true, true, true, false, true],
-            [true, true, true, true, true, true, false],
+            [false, true, true, true, true],
+            [true, false, true, true, true],
+            [true, true, false, true, true],
+            [true, true, true, false, true],
+            [true, true, true, true, false],
         ]
     )
     func testParseOneMissing(_ values: [Bool]) throws {
@@ -85,7 +83,7 @@ struct ConfigLoaderThemesTestSuite {
     }
 
     private func getThemes(
-        _ values: [Bool] = [true, true, true, true, true, true, true]
+        _ values: [Bool] = [true, true, true, true, true]
     ) -> String {
         return """
             themes:
@@ -106,16 +104,8 @@ struct ConfigLoaderThemesTestSuite {
                     path: templates
             """ : "")
                 \(values[4] ? """
-            types:
-                    path: types
-            """ : "")
-                \(values[5] ? """
             overrides:
                     path: overrides 
-            """ : "")
-                \(values[6] ? """
-            blocks:
-                    path: blocks
             """ : "")
             """
     }

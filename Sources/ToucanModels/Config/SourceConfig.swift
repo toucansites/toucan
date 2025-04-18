@@ -41,6 +41,20 @@ public struct SourceConfig {
     public var assetsUrl: URL {
         contentsUrl.appendingPathComponent(config.contents.assets.path)
     }
+    
+    // MARK: - Types URLs
+
+    /// The URL to the current theme's type-specific layouts or definitions.
+    public var typesUrl: URL {
+        sourceUrl.appendingPathComponent(config.types.path)
+    }
+
+    // MARK: - Blocks URLs
+
+    /// The URL to the current theme's reusable UI blocks directory.
+    public var blocksUrl: URL {
+        sourceUrl.appendingPathComponent(config.blocks.path)
+    }
 
     // MARK: - Pipeline URLs
 
@@ -71,16 +85,6 @@ public struct SourceConfig {
         currentThemeUrl.appendingPathComponent(config.themes.templates.path)
     }
 
-    /// The URL to the current theme's type-specific layouts or definitions.
-    public var currentThemeTypesUrl: URL {
-        currentThemeUrl.appendingPathComponent(config.themes.types.path)
-    }
-
-    /// The URL to the current theme's reusable UI blocks directory.
-    public var currentThemeBlocksUrl: URL {
-        currentThemeUrl.appendingPathComponent(config.themes.blocks.path)
-    }
-
     // MARK: - Theme Override URLs
 
     /// The base URL for override-specific theme folders.
@@ -100,15 +104,5 @@ public struct SourceConfig {
         currentThemeOverrideUrl.appendingPathComponent(
             config.themes.templates.path
         )
-    }
-
-    /// The override URL for type definitions or type templates (if present).
-    public var currentThemeOverrideTypesUrl: URL {
-        currentThemeOverrideUrl.appendingPathComponent(config.themes.types.path)
-    }
-
-    /// The override URL for reusable block templates (if present).
-    public var currentThemeOverrideBlocksUrl: URL {
-        currentThemeUrl.appendingPathComponent(config.themes.blocks.path)
     }
 }
