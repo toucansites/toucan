@@ -5,9 +5,15 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
+/// Describes a content type definition including schema, relations, and associated queries.
+///
+/// `ContentDefinition` is used to declare how a particular content type (e.g., blog, project, product)
+/// should be parsed, validated, and queried in the pipeline.
 public struct ContentDefinition: Decodable, Equatable {
 
-    enum CodingKeys: CodingKey {
+    // MARK: - Coding Keys
+
+    private enum CodingKeys: CodingKey {
         case id
         case `default`
         case paths
@@ -16,23 +22,48 @@ public struct ContentDefinition: Decodable, Equatable {
         case queries
     }
 
-    /// content type identifier
+    // MARK: - Properties
+
+    /// A unique identifier for this content type (e.g., `"blog"`, `"author"`).
     public var id: String
 
-    /// If `true`, the `ContentDefinition` will be used as the fallback type only when the user has not explicitly specified one
-    /// **and** the system cannot determine it from the provided `paths`.
-    /// An error is thrown if multiple types are marked as the default.
+    /// Indicates whether this is the default content type fallback.
+    ///
+    /// If `true`, this type will be used only when the content does not explicitly declare its type,
+    /// and no matching `paths` from other types apply.
+    ///
+    /// ⚠️ Only one content type in the system may be marked as `default`; otherwise, an error will occur.
     public var `default`: Bool
 
-    /// paths to lookup for contents
+    /// A list of file path patterns (globs or prefixes) used to associate source files with this content type.
+    ///
+    /// Example: `["posts/**", "blog/*.md"]`
     public var paths: [String]
 
+    /// A map of property names to their type definitions.
+    ///
+    /// These represent structured, typed fields such as `title`, `published`, `authorId`, etc.
     public var properties: [String: Property]
+
+    /// A map of relation names to their relationship configuration.
+    ///
+    /// These define links to other content (e.g., `author`, `relatedPosts`).
     public var relations: [String: Relation]
+
+    /// Named queries that can be used within scopes or as reusable filters for rendering this type.
     public var queries: [String: Query]
 
-    // MARK: - init
+    // MARK: - Initialization
 
+    /// Creates a new `ContentDefinition` instance.
+    ///
+    /// - Parameters:
+    ///   - id: Unique identifier for the content type.
+    ///   - default: Whether this is the fallback default type.
+    ///   - paths: Glob-like patterns that identify matching content files.
+    ///   - properties: Field definitions and types.
+    ///   - relations: Definitions of inter-content relationships.
+    ///   - queries: Reusable queries for list or scoped views.
     public init(
         id: String,
         default: Bool = false,
@@ -49,8 +80,10 @@ public struct ContentDefinition: Decodable, Equatable {
         self.queries = queries
     }
 
-    // MARK: - decoder
+    // MARK: - Decoding
 
+    /// Decodes a `ContentDefinition` from a structured format (e.g., YAML or JSON),
+    /// applying defaults for missing optional fields.
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 

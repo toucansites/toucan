@@ -2,7 +2,7 @@
 //  Toucan.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 03/05/2024.
+//  Created by Tibor Bodecs on 2025. 04. 17..
 //
 
 import Foundation
@@ -13,6 +13,7 @@ import ToucanTesting
 import ToucanSource
 import ToucanModels
 
+/// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
 
     let inputUrl: URL
@@ -31,6 +32,7 @@ public struct Toucan {
     ///   - input: The input url as a path string.
     ///   - output: The output url as a path string.
     ///   - baseUrl: An optional baseUrl to override the config value.
+    ///   - logger: A logger instance for logging. Defaults to a logger labeled "toucan".
     public init(
         input: String,
         output: String,
@@ -124,7 +126,7 @@ public struct Toucan {
             }
 
             /// Validate slugs
-            validateSlugs(sourceBundle)
+            try validateSlugs(sourceBundle)
 
             /// Validate frontMatters
             validateFrontMatters(sourceBundle)
@@ -214,13 +216,14 @@ public struct Toucan {
         }
     }
 
-    func validateSlugs(_ sourceBundle: SourceBundle) {
+    func validateSlugs(_ sourceBundle: SourceBundle) throws {
         let slugs = sourceBundle.contents.map(\.slug.value)
-        let slugCounts = Dictionary(grouping: slugs, by: { $0 })
+        let duplicatedSlugs = Dictionary(grouping: slugs, by: { $0 })
             .mapValues { $0.count }
+            .filter { $1 > 1 }
 
-        for (slug, count) in slugCounts where count > 1 {
-            logger.error("Duplicate slug: \(slug)")
+        if !duplicatedSlugs.isEmpty {
+            throw Error.duplicateSlugs(duplicatedSlugs.keys.map { String($0) })
         }
     }
 

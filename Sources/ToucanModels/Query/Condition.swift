@@ -5,10 +5,22 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
+/// Represents a logical condition used to filter content during a query.
+///
+/// `Condition` supports both field-based comparisons and compound logic (AND/OR),
+/// and can be resolved dynamically with parameters at runtime.
 public enum Condition: Decodable, Equatable {
+
+    /// A condition that compares a content field to a value using an operator.
     case field(key: String, operator: Operator, value: AnyCodable)
+
+    /// A logical AND of multiple conditions (all must be true).
     case and([Condition])
+
+    /// A logical OR of multiple conditions (at least one must be true).
     case or([Condition])
+
+    // MARK: - Internal Keys for Decoding
 
     private enum CodingKeys: CodingKey {
         case key
@@ -18,11 +30,12 @@ public enum Condition: Decodable, Equatable {
         case or
     }
 
-    // MARK: - decoder
+    // MARK: - Decoding
 
-    public init(
-        from decoder: any Decoder
-    ) throws {
+    /// Decodes a `Condition` from a decoder, supporting `.field`, `.and`, and `.or` branches.
+    ///
+    /// Throws a decoding error if none of the known variants are valid in the input.
+    public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let key = try? container.decode(String.self, forKey: .key),
@@ -59,6 +72,13 @@ public enum Condition: Decodable, Equatable {
 
 extension Condition {
 
+    /// Recursively resolves dynamic placeholders in the condition using a parameter map.
+    ///
+    /// Placeholders must be strings in the form `{{parameterKey}}` and will be
+    /// replaced by values from the given parameters dictionary.
+    ///
+    /// - Parameter parameters: A dictionary of key-value pairs to substitute into the condition.
+    /// - Returns: A new `Condition` with resolved values where applicable.
     public func resolve(with parameters: [String: AnyCodable]) -> Self {
         switch self {
         case .field(let key, let op, let value):
@@ -70,13 +90,17 @@ extension Condition {
             else {
                 return self
             }
+
             let paramKeyToUse = String(stringValue.dropFirst(2).dropLast(2))
             guard let newValue = parameters[paramKeyToUse] else {
                 return self
             }
+
             return .field(key: key, operator: op, value: newValue)
+
         case .and(let conditions):
             return .and(conditions.map { $0.resolve(with: parameters) })
+
         case .or(let conditions):
             return .or(conditions.map { $0.resolve(with: parameters) })
         }

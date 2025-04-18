@@ -34,6 +34,7 @@ public extension Config {
     enum Mocks {}
 }
 
+/// Templates
 public struct Templates {
 
 }

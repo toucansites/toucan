@@ -1,3 +1,9 @@
+//
+//  Download.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 03. 31..
+
 import Foundation
 import FileManagerKit
 import SwiftCommand

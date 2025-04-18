@@ -7,28 +7,43 @@
 
 extension Config {
 
+    /// Represents the location of pipeline configuration files.
     public struct Pipelines: Codable, Equatable {
 
-        enum CodingKeys: CodingKey {
+        // MARK: - Coding Keys
+
+        private enum CodingKeys: CodingKey {
             case path
         }
 
+        // MARK: - Properties
+
+        /// The relative or absolute path to the folder containing pipeline configuration files.
+        ///
+        /// Example: `"pipelines"` (default), or `"config/pipelines"`
         public var path: String
 
-        // MARK: - defaults
+        // MARK: - Defaults
 
+        /// Provides a default `Pipelines` configuration pointing to `"pipelines"`.
         public static var defaults: Self {
             .init(path: "pipelines")
         }
 
-        // MARK: - init
+        // MARK: - Initialization
 
+        /// Initializes a new pipelines configuration.
+        ///
+        /// - Parameter path: The directory where pipeline configuration files are stored.
         public init(path: String) {
             self.path = path
         }
 
-        // MARK: - decoder
+        // MARK: - Decoding
 
+        /// Decodes the `Pipelines` configuration from a structured source.
+        ///
+        /// Falls back to `.defaults` if no container is available or the field is missing.
         public init(from decoder: any Decoder) throws {
             let defaults = Self.defaults
             let container = try? decoder.container(keyedBy: CodingKeys.self)
@@ -37,11 +52,10 @@ extension Config {
                 self = defaults
                 return
             }
+
             self.path =
-                try container.decodeIfPresent(
-                    String.self,
-                    forKey: .path
-                ) ?? defaults.path
+                try container.decodeIfPresent(String.self, forKey: .path)
+                ?? defaults.path
         }
     }
 }

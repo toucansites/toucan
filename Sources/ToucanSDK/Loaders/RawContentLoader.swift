@@ -12,7 +12,11 @@ import ToucanFileSystem
 import ToucanSource
 import FileManagerKit
 
-struct RawContentLoader {
+public struct RawContentLoader {
+
+    public enum Error: Swift.Error {
+        case invalidFrontMatter(path: String)
+    }
 
     /// The URL of the source files.
     let url: URL
@@ -82,29 +86,37 @@ private extension RawContentLoader {
             in orderedPathResolvers
         {
             if let filePath = primaryPath ?? fallbackPath {
-                let result = try resolver(filePath)
-                frontMatter = frontMatter.recursivelyMerged(
-                    with: result.frontMatter
-                )
+                do {
+                    let result = try resolver(filePath)
 
-                /// Set contents if its a md resolver
-                if isMarkdown {
-                    markdown = result.markdown
-                }
-                /// Set path if its a md resolver or a yml resolver but there is no path yet
-                if isMarkdown || path == nil {
-                    path = filePath
-                }
-                /// Set modification date if there is no date yet (either md or yml) or if its more recent
-                let url = url.appendingPathComponent(path ?? "")
-                if let existingDate = modificationDate {
-                    modificationDate = max(
-                        existingDate,
-                        try fileManager.modificationDate(at: url)
+                    frontMatter = frontMatter.recursivelyMerged(
+                        with: result.frontMatter
                     )
+
+                    /// Set contents if its a md resolver
+                    if isMarkdown {
+                        markdown = result.markdown
+                    }
+                    /// Set path if its a md resolver or a yml resolver but there is no path yet
+                    if isMarkdown || path == nil {
+                        path = filePath
+                    }
+                    /// Set modification date if there is no date yet (either md or yml) or if its more recent
+                    let url = url.appendingPathComponent(path ?? "")
+                    if let existingDate = modificationDate {
+                        modificationDate = max(
+                            existingDate,
+                            try fileManager.modificationDate(at: url)
+                        )
+                    }
+                    else {
+                        modificationDate = try fileManager.modificationDate(
+                            at: url
+                        )
+                    }
                 }
-                else {
-                    modificationDate = try fileManager.modificationDate(at: url)
+                catch ToucanDecoderError.decoding(_, _) {
+                    throw Error.invalidFrontMatter(path: filePath)
                 }
             }
         }
@@ -304,21 +316,21 @@ extension RawContentLoader {
     }
 }
 
-/*extension AssetProperty {
-
-    func resolvedPath(
-        baseUrl: String,
-        assetsPath: String,
-        slug: Slug
-    ) -> String {
-        if resolvePath {
-            return "\(file.name).\(file.ext)"
-                .resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: slug
-                )
-        }
-        return "\(file.name).\(file.ext)"
-    }
-}*/
+//extension AssetProperty {
+//
+//    func resolvedPath(
+//        baseUrl: String,
+//        assetsPath: String,
+//        slug: Slug
+//    ) -> String {
+//        if resolvePath {
+//            return "\(file.name).\(file.ext)"
+//                .resolveAsset(
+//                   baseUrl: baseUrl,
+//                    assetsPath: assetsPath,
+//                    slug: slug
+//                )
+//        }
+//        return "\(file.name).\(file.ext)"
+//    }
+//}

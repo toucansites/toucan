@@ -2,7 +2,7 @@
 //  FrontMatterParser.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 03/05/2024.
+//  Created by Tibor Bodecs on 2025. 04. 17..
 //
 
 import ToucanModels
@@ -16,13 +16,8 @@ struct FrontMatterParser {
     /// The logger instance
     let logger: Logger
 
-    init(decoder: ToucanDecoder, logger: Logger) {
-        self.decoder = decoder
-        self.logger = logger
-    }
-
     /// Parses a given markdown string to extract metadata as a dictionary.
-    /// - Parameter markdown: The markdown content containing metadata enclosed within "---".
+    /// - Parameter contents: The markdown content containing metadata enclosed within "---".
     /// - Throws: An error if the YAML decoding fails.
     /// - Returns: A dictionary containing the parsed metadata if available, otherwise an empty dictionary.
     func parse(_ contents: String) throws -> [String: AnyCodable] {
@@ -36,16 +31,9 @@ struct FrontMatterParser {
             omittingEmptySubsequences: true
         )
 
-        do {
-            return try decoder.decode(
-                [String: AnyCodable].self,
-                from: String(parts.first!).dataValue()
-            )
-        }
-        catch let error {
-            logger.error("\(error.localizedDescription)")
-        }
-
-        return [:]
+        return try decoder.decode(
+            [String: AnyCodable].self,
+            from: String(parts.first!).dataValue()
+        )
     }
 }

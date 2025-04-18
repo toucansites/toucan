@@ -5,6 +5,7 @@
 //  Created by Tibor Bodecs on 2025. 01. 21..
 //
 
+/// Represents a comparison or filtering operator used in queries.
 public enum Operator: String, Decodable {
 
     // bool, int, double, string

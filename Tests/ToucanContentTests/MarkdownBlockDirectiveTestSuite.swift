@@ -1,3 +1,9 @@
+//
+//  MarkdownBlockDirectiveTestSuite.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import Testing
 import Logging
 import ToucanTesting
@@ -84,8 +90,8 @@ struct MarkdownBlockDirectiveTestSuite {
                     parameters: [
                         .init(
                             label: "columns",
-                            required: true,
-                            default: nil
+                            isRequired: true,
+                            defaultValue: nil
                         )
                     ],
                     requiresParentDirective: nil,
@@ -130,8 +136,8 @@ struct MarkdownBlockDirectiveTestSuite {
                     parameters: [
                         .init(
                             label: "columns",
-                            required: true,
-                            default: nil
+                            isRequired: true,
+                            defaultValue: nil
                         )
                     ],
                     requiresParentDirective: nil,

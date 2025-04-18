@@ -1,3 +1,9 @@
+//
+//  RawContent+Redirect.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 03. 01..
+
 import Foundation
 import ToucanModels
 

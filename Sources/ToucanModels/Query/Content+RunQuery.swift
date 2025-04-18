@@ -1,5 +1,5 @@
 //
-//  Content+RunQuey.swift
+//  Content+RunQuery.swift
 //  Toucan
 //
 //  Created by Tibor Bodecs on 2025. 01. 31..
@@ -7,51 +7,21 @@
 
 import Foundation
 
-extension [Content] {
+public extension [Content] {
 
-    public func run(query: Query) -> [Content] {
+    /// Executes a `Query` against the current content collection, applying filtering,
+    /// sorting, and pagination.
+    ///
+    /// - Parameter query: The `Query` object containing filtering, ordering, and limit logic.
+    /// - Returns: A filtered, sorted, and paginated array of `Content` items.
+    func run(query: Query) -> [Content] {
         let contents = self.filter {
             query.contentType == $0.definition.id
         }
         return filter(contents: contents, using: query)
     }
 
-    private func compare(
-        _ valueA: AnyCodable,
-        _ valueB: AnyCodable,
-        ascending: Bool,
-        isInclusive: Bool = false
-    ) -> Bool {
-        if let a = valueA.value(as: Int.self),
-            let b = valueB.value(as: Int.self)
-        {
-            if isInclusive {
-                return ascending ? a <= b : a >= b
-            }
-            return ascending ? a < b : a > b
-        }
-
-        if let a = valueA.value(as: Double.self),
-            let b = valueB.value(as: Double.self)
-        {
-            if isInclusive {
-                return ascending ? a <= b : a >= b
-            }
-            return ascending ? a < b : a > b
-        }
-
-        if let a = valueA.value(as: String.self),
-            let b = valueB.value(as: String.self)
-        {
-            if isInclusive {
-                return ascending ? a <= b : a >= b
-            }
-            return ascending ? a < b : a > b
-        }
-
-        return false
-    }
-
+    /// Filters, sorts, and slices the given content array based on a query.
     private func filter(
         contents: [Content],
         using query: Query
@@ -61,15 +31,11 @@ extension [Content] {
         }
 
         for order in query.orderBy.reversed() {
-            filteredContents.sort {
-                a,
-                b in
-                guard
-                    let valueA = a.properties[order.key],
+            filteredContents.sort { a, b in
+                guard let valueA = a.properties[order.key],
                     let valueB = b.properties[order.key]
-                else {
-                    return false
-                }
+                else { return false }
+
                 return compare(
                     valueA,
                     valueB,
@@ -88,13 +54,13 @@ extension [Content] {
         return filteredContents
     }
 
+    /// Recursively evaluates a `Condition` tree against a set of content fields.
     private func evaluate(
         condition: Condition?,
         with props: [String: AnyCodable]
     ) -> Bool {
-        guard let condition else {
-            return true
-        }
+        guard let condition else { return true }
+
         switch condition {
         case .field(let key, let `operator`, let value):
             guard let fieldValue = props[key] else { return false }
@@ -116,10 +82,8 @@ extension [Content] {
         }
     }
 
-    private func equals(
-        _ valueA: AnyCodable,
-        _ valueB: AnyCodable
-    ) -> Bool {
+    /// Compares two values for equality, supporting multiple types.
+    private func equals(_ valueA: AnyCodable, _ valueB: AnyCodable) -> Bool {
         if let a = valueA.value(as: Bool.self),
             let b = valueB.value(as: Bool.self)
         {
@@ -147,20 +111,48 @@ extension [Content] {
         return false
     }
 
+    /// Performs numeric or string comparison between two values, with optional inclusiveness.
+    private func compare(
+        _ valueA: AnyCodable,
+        _ valueB: AnyCodable,
+        ascending: Bool,
+        isInclusive: Bool = false
+    ) -> Bool {
+        if let a = valueA.value(as: Int.self),
+            let b = valueB.value(as: Int.self)
+        {
+            return isInclusive
+                ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
+        }
+
+        if let a = valueA.value(as: Double.self),
+            let b = valueB.value(as: Double.self)
+        {
+            return isInclusive
+                ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
+        }
+
+        if let a = valueA.value(as: String.self),
+            let b = valueB.value(as: String.self)
+        {
+            return isInclusive
+                ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
+        }
+
+        return false
+    }
+
+    /// Evaluates a field condition against a value using the provided operator.
     private func evaluateField(
         fieldValue: AnyCodable,
         operator: Operator,
         value: AnyCodable
     ) -> Bool {
         switch `operator` {
-        case .equals:
-            return equals(fieldValue, value)
-        case .notEquals:
-            return !equals(fieldValue, value)
-        case .lessThan:
-            return compare(fieldValue, value, ascending: true)
-        case .greaterThan:
-            return compare(fieldValue, value, ascending: false)
+        case .equals: return equals(fieldValue, value)
+        case .notEquals: return !equals(fieldValue, value)
+        case .lessThan: return compare(fieldValue, value, ascending: true)
+        case .greaterThan: return compare(fieldValue, value, ascending: false)
         case .lessThanOrEquals:
             return compare(
                 fieldValue,
@@ -175,73 +167,71 @@ extension [Content] {
                 ascending: false,
                 isInclusive: true
             )
+
         case .like:
-            guard
-                let fieldString = fieldValue.value(as: String.self),
-                let valueString = value.value(as: String.self)
-            else {
-                return false
-            }
-            return fieldString.contains(valueString)
+            return fieldValue.value(as: String.self)?
+                .contains(value.value(as: String.self) ?? "") ?? false
+
         case .caseInsensitiveLike:
-            guard
-                let fieldString = fieldValue.value(as: String.self),
-                let valueString = value.value(as: String.self)
-            else {
-                return false
-            }
-            return fieldString.lowercased().contains(valueString.lowercased())
+            return fieldValue.value(as: String.self)?
+                .lowercased()
+                .contains(value.value(as: String.self)?.lowercased() ?? "")
+                ?? false
+
         case .in:
-            if let fieldValue = fieldValue.value(as: Int.self),
-                let intArray = value.value(as: [Int].self)
+            if let v = fieldValue.value(as: Int.self),
+                let arr = value.value(as: [Int].self)
             {
-                return intArray.contains(fieldValue)
+                return arr.contains(v)
             }
-            if let fieldValue = fieldValue.value(as: Double.self),
-                let doubleArray = value.value(as: [Double].self)
+            if let v = fieldValue.value(as: Double.self),
+                let arr = value.value(as: [Double].self)
             {
-                return doubleArray.contains(fieldValue)
+                return arr.contains(v)
             }
-            if let fieldValue = fieldValue.value(as: String.self),
-                let stringArray = value.value(as: [String].self)
+            if let v = fieldValue.value(as: String.self),
+                let arr = value.value(as: [String].self)
             {
-                return stringArray.contains(fieldValue)
+                return arr.contains(v)
             }
             return false
+
         case .contains:
-            if let fieldArray = fieldValue.value(as: [Int].self),
-                let value = value.value(as: Int.self)
+            if let arr = fieldValue.value(as: [Int].self),
+                let v = value.value(as: Int.self)
             {
-                return fieldArray.contains(value)
+                return arr.contains(v)
             }
-            if let fieldArray = fieldValue.value(as: [Double].self),
-                let value = value.value(as: Double.self)
+            if let arr = fieldValue.value(as: [Double].self),
+                let v = value.value(as: Double.self)
             {
-                return fieldArray.contains(value)
+                return arr.contains(v)
             }
-            if let fieldArray = fieldValue.value(as: [String].self),
-                let value = value.value(as: String.self)
+            if let arr = fieldValue.value(as: [String].self),
+                let v = value.value(as: String.self)
             {
-                return fieldArray.contains(value)
+                return arr.contains(v)
             }
             return false
+
         case .matching:
-            if let fieldArray = fieldValue.value(as: [Int].self),
-                let valueArray = value.value(as: [Int].self)
+            if let arr = fieldValue.value(as: [Int].self),
+                let other = value.value(as: [Int].self)
             {
-                return !Set(fieldArray).intersection(valueArray).isEmpty
+                return !Set(arr).intersection(other).isEmpty
             }
-            if let fieldArray = fieldValue.value(as: [Double].self),
-                let valueArray = value.value(as: [Double].self)
+            if let arr = fieldValue.value(as: [Double].self),
+                let other = value.value(as: [Double].self)
             {
-                return !Set(fieldArray).intersection(valueArray).isEmpty
+                return !Set(arr).intersection(other).isEmpty
             }
-            if let fieldArray = fieldValue.value(as: [String].self),
-                let valueArray = value.value(as: [String].self)
+            if let arr = fieldValue.value(as: [String].self),
+                let other = value.value(as: [String].self)
             {
-                return !Set(fieldArray).intersection(valueArray).isEmpty
+                return !Set(arr).intersection(other).isEmpty
             }
             return false
         }
     }
+
 }
