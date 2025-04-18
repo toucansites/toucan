@@ -36,6 +36,15 @@ extension Pipeline {
         /// A list of content types that should be tracked for last update timestamps.
         public var lastUpdate: [String]
 
+        /// A mapping of content type keys to filtering conditions.
+        ///
+        /// Each key represents a content type (e.g., `"post"`, `"author"`), and its value
+        /// defines a condition that must be met for the content to be included in the pipeline.
+        /// This enables fine-grained control over which specific content items are published.
+        ///
+        /// If a content type is not listed in `filterRules`, it is not subject to condition-based filtering.
+        public var filterRules: [String: Condition]
+
         // MARK: - Defaults
 
         /// Default configuration with no filtering or update tracking.
@@ -43,7 +52,8 @@ extension Pipeline {
             .init(
                 include: [],
                 exclude: [],
-                lastUpdate: []
+                lastUpdate: [],
+                filterRules: [:]
             )
         }
 
@@ -55,14 +65,17 @@ extension Pipeline {
         ///   - include: List of explicitly allowed content types.
         ///   - exclude: List of content types to exclude from processing.
         ///   - lastUpdate: List of content types to monitor for timestamp changes.
+        ///   - filterRules: Mapping of content type keys to conditions used to filter content items.
         public init(
             include: [String],
             exclude: [String],
-            lastUpdate: [String]
+            lastUpdate: [String],
+            filterRules: [String: Condition]
         ) {
             self.include = include
             self.exclude = exclude
             self.lastUpdate = lastUpdate
+            self.filterRules = filterRules
         }
 
         // MARK: - Decoding
@@ -88,7 +101,8 @@ extension Pipeline {
             self.init(
                 include: include,
                 exclude: exclude,
-                lastUpdate: lastUpdate
+                lastUpdate: lastUpdate,
+                filterRules: [:]
             )
         }
 

@@ -126,8 +126,16 @@ public struct SourceBundleRenderer {
                 with: pipelineFormatters
             )
 
+            let filter = ContentFilter(
+                filterRules: pipeline.contentTypes.filterRules
+            )
+
+            let filteredContents = filter.applyRules(
+                contents: sourceBundle.contents
+            )
+
             let contents = iteratorResolver.resolve(
-                contents: sourceBundle.contents,
+                contents: filteredContents,
                 using: pipeline
             )
 
