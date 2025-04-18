@@ -1,3 +1,9 @@
+//
+//  ConfigDecodingTestSuite.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import Foundation
 import Testing
 import ToucanSource
@@ -72,15 +78,15 @@ struct ConfigDecodingTestSuite {
                 )
         )
     }
-    
+
     @Test
     func encoding() throws {
 
         let encoder = ToucanYAMLEncoder()
         let config = Config.defaults
-        
+
         let yaml = try encoder.encode(config)
-        
+
         let exp = """
             pipelines:
               path: pipelines
@@ -126,7 +132,7 @@ struct ConfigDecodingTestSuite {
                 - error
                 - caution
             """
-        
+
         let trimmedYaml = yaml.trimmingCharacters(
             in: .whitespacesAndNewlines
         )

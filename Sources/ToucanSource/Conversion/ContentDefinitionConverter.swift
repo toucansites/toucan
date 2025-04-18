@@ -9,14 +9,31 @@ import Foundation
 import ToucanModels
 import Logging
 
+/// Converts a `RawContent` instance into a structured `Content` object using a given content definition.
 public struct ContentDefinitionConverter {
 
+    // MARK: - Properties
+
+    /// The content definition that describes the schema for this content type.
     let contentDefinition: ContentDefinition
+
+    /// The date formatter used for parsing date-type properties.
     let dateFormatter: DateFormatter
+
+    /// The default localized date format (based on the formatter settings).
     let defaultDateFormat: LocalizedDateFormat
 
+    /// Logger for warnings or errors during conversion.
     let logger: Logger
 
+    // MARK: - Initialization
+
+    /// Creates a new converter with the given content definition and formatter.
+    ///
+    /// - Parameters:
+    ///   - contentDefinition: The schema describing expected fields and relations.
+    ///   - dateFormatter: A `DateFormatter` preconfigured for parsing dates.
+    ///   - logger: Logger for diagnostics during the conversion process.
     public init(
         contentDefinition: ContentDefinition,
         dateFormatter: DateFormatter,
@@ -32,9 +49,22 @@ public struct ContentDefinitionConverter {
         self.logger = logger
     }
 
+    // MARK: - Content Conversion
+
+    /// Converts a `RawContent` structure into a validated and normalized `Content` object.
+    ///
+    /// This includes:
+    /// - Converting all defined properties using `PropertyConverter`
+    /// - Resolving content relations (`.one` or `.many`)
+    /// - Extracting remaining user-defined front matter
+    /// - Normalizing the `id` and `slug` values
+    ///
+    /// - Parameter rawContent: The raw content input to convert.
+    /// - Returns: A fully structured `Content` object.
     public func convert(rawContent: RawContent) -> Content {
         var properties: [String: AnyCodable] = [:]
 
+        // Convert schema-defined properties
         for (key, property) in contentDefinition.properties.sorted(by: {
             $0.key < $1.key
         }) {
@@ -46,18 +76,17 @@ public struct ContentDefinitionConverter {
                 defaultDateFormat: defaultDateFormat,
                 logger: logger
             )
-
             properties[key] = converter.convert(
                 rawValue: rawValue,
                 forKey: key
             )
         }
 
+        // Convert schema-defined relations
         var relations: [String: RelationValue] = [:]
         for (key, relation) in contentDefinition.relations.sorted(by: {
             $0.key < $1.key
         }) {
-
             let rawValue = rawContent.frontMatter[key]
             var identifiers: [String] = []
 
@@ -69,7 +98,6 @@ public struct ContentDefinitionConverter {
             case .many:
                 if let ids = rawValue?.value as? [String] {
                     identifiers.append(contentsOf: ids)
-
                 }
             }
 
@@ -80,6 +108,7 @@ public struct ContentDefinitionConverter {
             )
         }
 
+        // Filter out reserved keys and schema-mapped fields to extract user-defined fields
         let keysToRemove =
             ["id", "type", "slug"]
             + contentDefinition.properties.keys
@@ -90,6 +119,7 @@ public struct ContentDefinitionConverter {
             userDefined.removeValue(forKey: key)
         }
 
+        // Extract `id` from front matter or fallback from origin path
         var id: String =
             rawContent.origin.path
             .split(separator: "/")
@@ -101,6 +131,7 @@ public struct ContentDefinitionConverter {
             id = rawId
         }
 
+        // Extract `slug` from front matter or fallback to origin slug
         var slug: String = rawContent.origin.slug
         if let rawSlug = rawContent.frontMatter.string(
             "slug",
@@ -109,6 +140,7 @@ public struct ContentDefinitionConverter {
             slug = rawSlug
         }
 
+        // Final assembled content object
         return Content(
             id: id,
             slug: .init(value: slug),

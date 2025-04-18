@@ -12,16 +12,33 @@ import FileManagerKit
 import Logging
 import ToucanInfo
 
+/// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
+///
+/// It processes content pipelines using the configured engine (Mustache, JSON, etc.),
+/// resolves content and site-level context, and outputs rendered content using templates
+/// or encoded formats.
 public struct SourceBundleRenderer {
 
+    /// Site configuration + all raw content
     let sourceBundle: SourceBundle
+    /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
+    /// Date formatters used across pipelines
     let formatters: [String: DateFormatter]
+    /// File system abstraction
     let fileManager: FileManagerKit
+    /// Logger for warnings and errors
     let logger: Logger
-
+    /// Cache
     var contentContextCache: [String: [String: AnyCodable]] = [:]
 
+    /// Initializes a renderer from a source bundle.
+    ///
+    /// - Parameters:
+    ///   - sourceBundle: The structured bundle containing settings, pipelines, and contents.
+    ///   - generatorInfo: Info about the content generator (defaults to `.current`).
+    ///   - fileManager: Filesystem API for use during rendering.
+    ///   - logger: Logger for reporting issues or metrics.
     public init(
         sourceBundle: SourceBundle,
         generatorInfo: GeneratorInfo = .current,
@@ -84,7 +101,11 @@ public struct SourceBundleRenderer {
             .sorted(by: >).first
     }
 
-    // MARK: -
+    /// Starts rendering the source bundle based on current time and pipeline configuration.
+    ///
+    /// - Parameter now: Current date, used for generation timestamps.
+    /// - Returns: A list of rendered `PipelineResult`s.
+    /// - Throws: Rendering or encoding-related errors.
     public mutating func render(
         now: Date
     ) throws -> [PipelineResult] {

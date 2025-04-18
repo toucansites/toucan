@@ -5,9 +5,15 @@
 //  Created by Tibor Bodecs on 2025. 01. 16..
 //
 
+/// Represents a full content transformation pipeline,
+/// including scopes, queries, content types, engines, and outputs.
+///
+/// A pipeline defines how data flows from content source to final rendered output.
 public struct Pipeline: Decodable {
 
-    enum CodingKeys: CodingKey {
+    // MARK: - Coding Keys
+
+    private enum CodingKeys: CodingKey {
         case id
         case scopes
         case queries
@@ -19,19 +25,40 @@ public struct Pipeline: Decodable {
         case output
     }
 
+    // MARK: - Properties
+
+    /// Unique identifier for the pipeline.
     public var id: String
-    // content type -> scope key -> scope
+
+    /// A nested map of content type → scope key → scope definition.
+    ///
+    /// This allows for per-content-type rendering rules (e.g., `detail`, `list`, `reference`).
     public var scopes: [String: [String: Scope]]
+
+    /// Named query definitions that can be reused in scopes or iterators.
     public var queries: [String: Query]
+
+    /// Definitions for global or scoped data types (e.g., formats, types).
     public var dataTypes: DataTypes
+
+    /// Definitions for all known content types in the system.
     public var contentTypes: ContentTypes
+
+    /// Special iterator queries used for generating repeated content structures (e.g., pages in a list).
     public var iterators: [String: Query]
+
+    /// Optional transformation pipelines, applied before rendering.
     public var transformers: [String: TransformerPipeline]
+
+    /// The rendering engine to use (e.g., HTML, JSON, RSS).
     public var engine: Engine
+
+    /// Output configuration for file generation and routing.
     public var output: Output
 
-    // MARK: - init
+    // MARK: - Initialization
 
+    /// Initializes a fully-defined `Pipeline` object.
     public init(
         id: String,
         scopes: [String: [String: Scope]],
@@ -54,26 +81,22 @@ public struct Pipeline: Decodable {
         self.output = output
     }
 
-    // MARK: - decoder
+    // MARK: - Decoding
 
-    public init(
-        from decoder: any Decoder
-    ) throws {
+    /// Decodes a pipeline from configuration, merging with defaults where applicable.
+    ///
+    /// Uses `Scope.default` as the baseline for scope resolution.
+    public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let id = try container.decode(
-            String.self,
-            forKey: .id
-        )
+        let id = try container.decode(String.self, forKey: .id)
 
         let defaultScopes = Scope.default
-
         let userScopes =
             try container.decodeIfPresent(
                 [String: [String: Scope]].self,
                 forKey: .scopes
             ) ?? [:]
-
         let scopes = defaultScopes.recursivelyMerged(with: userScopes)
 
         let queries =
@@ -106,15 +129,8 @@ public struct Pipeline: Decodable {
                 forKey: .transformers
             ) ?? [:]
 
-        let engine = try container.decode(
-            Engine.self,
-            forKey: .engine
-        )
-
-        let output = try container.decode(
-            Output.self,
-            forKey: .output
-        )
+        let engine = try container.decode(Engine.self, forKey: .engine)
+        let output = try container.decode(Output.self, forKey: .output)
 
         self.init(
             id: id,
@@ -129,23 +145,31 @@ public struct Pipeline: Decodable {
         )
     }
 
-    // MARK: -
+    // MARK: - Scope Helpers
 
-    public func getScopes(
-        for contentType: String
-    ) -> [String: Scope] {
+    /// Returns all scopes for a given content type.
+    ///
+    /// If no direct match is found, falls back to the wildcard `*` scopes.
+    ///
+    /// - Parameter contentType: The content type key (e.g., `"post"`).
+    /// - Returns: A map of scope keys (e.g., `"list"`, `"detail"`) to `Scope` values.
+    public func getScopes(for contentType: String) -> [String: Scope] {
         if let scopes = scopes[contentType] {
             return scopes
         }
         return scopes["*"] ?? [:]
     }
 
-    // - proper scope keys for reference, list, detail
-    // - what should we return if there's no scope definition?
-    public func getScope(
-        keyedBy key: String,
-        for contentType: String
-    ) -> Scope {
+    /// Returns a single scope for a given content type and scope key (e.g., `"list"`, `"detail"`).
+    ///
+    /// Defaults to `.detail` if no specific match is found.
+    ///
+    /// - Parameters:
+    ///   - key: The scope key (e.g., `"detail"`, `"reference"`).
+    ///   - contentType: The content type key.
+    /// - Returns: A `Scope` object.
+    public func getScope(keyedBy key: String, for contentType: String) -> Scope
+    {
         let scopes = getScopes(for: contentType)
         return scopes[key] ?? .detail
     }

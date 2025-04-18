@@ -5,8 +5,13 @@
 //  Created by Tibor Bodecs on 2025. 01. 15..
 //
 
+/// Represents a content query used to fetch or filter content entries
+/// based on content type, pagination, sorting, and filtering criteria.
 public struct Query: Decodable, Equatable {
 
+    // MARK: - Coding Keys
+
+    /// Keys used to decode the query from a structured format like YAML or JSON.
     enum CodingKeys: String, CodingKey {
         case contentType
         case scope
@@ -16,15 +21,37 @@ public struct Query: Decodable, Equatable {
         case orderBy
     }
 
+    // MARK: - Properties
+
+    /// The content type this query targets (e.g., `"blog"`, `"author"`, `"product"`).
     public var contentType: String
+
+    /// An optional named scope to apply custom context (e.g., `"homepage"`, `"featured"`).
     public var scope: String?
+
+    /// Optional limit for how many items to return.
     public var limit: Int?
+
+    /// Optional offset for pagination, defining how many items to skip.
     public var offset: Int?
+
+    /// An optional filter condition to narrow results (e.g., field comparison, boolean logic).
     public var filter: Condition?
+
+    /// A list of fields and directions for ordering results.
     public var orderBy: [Order]
 
-    // MARK: - init
+    // MARK: - Initialization
 
+    /// Initializes a `Query` with specified properties.
+    ///
+    /// - Parameters:
+    ///   - contentType: The name of the content type being queried.
+    ///   - scope: An optional named context or scope for this query.
+    ///   - limit: The number of results to limit to.
+    ///   - offset: The number of results to skip (for pagination).
+    ///   - filter: A filter condition to apply to the results.
+    ///   - orderBy: Sorting rules for the query results.
     public init(
         contentType: String,
         scope: String? = nil,
@@ -41,42 +68,25 @@ public struct Query: Decodable, Equatable {
         self.orderBy = orderBy
     }
 
-    // MARK: - decoder
+    // MARK: - Decoding
 
-    public init(
-        from decoder: any Decoder
-    ) throws {
+    /// Decodes a `Query` instance from a decoder, applying defaults for optional values.
+    public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
         let contentType = try container.decode(
             String.self,
             forKey: .contentType
         )
-
-        let scope = try container.decodeIfPresent(
-            String.self,
-            forKey: .scope
-        )
-
-        let limit = try container.decodeIfPresent(
-            Int.self,
-            forKey: .limit
-        )
-
-        let offset = try container.decodeIfPresent(
-            Int.self,
-            forKey: .offset
-        )
-
+        let scope = try container.decodeIfPresent(String.self, forKey: .scope)
+        let limit = try container.decodeIfPresent(Int.self, forKey: .limit)
+        let offset = try container.decodeIfPresent(Int.self, forKey: .offset)
         let filter = try container.decodeIfPresent(
             Condition.self,
             forKey: .filter
         )
-
         let orderBy =
-            try container.decodeIfPresent(
-                [Order].self,
-                forKey: .orderBy
-            ) ?? []
+            try container.decodeIfPresent([Order].self, forKey: .orderBy) ?? []
 
         self.init(
             contentType: contentType,
@@ -91,6 +101,12 @@ public struct Query: Decodable, Equatable {
 
 extension Query {
 
+    /// Resolves dynamic filter parameters by injecting values into the filter condition tree.
+    ///
+    /// This is useful when filters include placeholders that need to be resolved at runtime.
+    ///
+    /// - Parameter parameters: A dictionary of key-value pairs to replace placeholders in the filter.
+    /// - Returns: A new `Query` instance with resolved filter conditions.
     public func resolveFilterParameters(
         with parameters: [String: AnyCodable]
     ) -> Self {

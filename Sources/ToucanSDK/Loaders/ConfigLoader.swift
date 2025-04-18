@@ -2,7 +2,7 @@
 //  ConfigLoader.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 27/06/2024.
+//  Created by Tibor Bodecs on 2025. 04. 17..
 //
 
 import Foundation
@@ -12,37 +12,50 @@ import ToucanFileSystem
 import ToucanModels
 import ToucanSource
 
+/// Loads and merges configuration files from a source directory.
 public struct ConfigLoader {
 
-    /// The URL of the source files.
+    // MARK: - Properties
+
+    /// The base URL where configuration files are located.
     let url: URL
 
-    /// Config file paths
+    /// List of configuration file paths (relative to `url`) to load and merge.
     let locations: [String]
 
+    /// Encoder used for serializing merged raw data (for round-tripping).
     let encoder: ToucanEncoder
+
+    /// Decoder used for reading individual configuration files and the final merged config.
     let decoder: ToucanDecoder
 
-    /// The logger instance
+    /// Logger instance for debug and error logging.
     let logger: Logger
 
-    /// An enumeration representing possible errors that can occur while loading the configuration.
+    // MARK: - Error Types
+
+    /// An enumeration representing possible errors that can occur while loading configuration.
     public enum Error: Swift.Error {
-        /// Indicates that a required configuration file is missing at the specified URL.
+        /// Indicates that a required configuration file is missing at the specified path.
         case missing(URL)
     }
 
-    /// Loads the configuration.
+    // MARK: - Public API
+
+    /// Loads and decodes the configuration from one or more config files.
     ///
-    /// This function attempts to load a configuration file from a specified URL, parses the file contents,
-    /// and returns a `Config` object based on the file's data. If the file is missing or cannot be parsed,
-    /// an appropriate error is thrown.
+    /// This process:
+    /// - Reads each file path in `locations`
+    /// - Decodes each file into `[String: AnyCodable]`
+    /// - Merges all raw dictionaries (in order)
+    /// - Encodes the merged dictionary back into a string
+    /// - Decodes it into a typed `Config` object
     ///
-    /// - Returns: A `Config` object representing the loaded configuration.
-    /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
+    /// - Returns: A fully decoded `Config` object.
+    /// - Throws: `ConfigLoader.Error.missing` if any file is missing, or decoding errors.
     func load() throws -> Config {
         logger.debug(
-            "Loading config files (\(locations) at: `\(url.absoluteString)`"
+            "Loading config files (\(locations)) at: `\(url.absoluteString)`"
         )
 
         var rawItems: [String] = []
@@ -73,13 +86,21 @@ public struct ConfigLoader {
 
 private extension ConfigLoader {
 
-    func resolveItem(
-        _ location: String
-    ) throws -> String {
+    /// Resolves a single config item by appending the path to the base URL.
+    ///
+    /// - Parameter location: Relative path of the config file.
+    /// - Returns: The file content as a raw string.
+    /// - Throws: If loading the file fails.
+    func resolveItem(_ location: String) throws -> String {
         let url = url.appendingPathComponent(location)
         return try loadItem(at: url)
     }
 
+    /// Loads the content of a config file at the specified URL.
+    ///
+    /// - Parameter url: Absolute path to the file.
+    /// - Returns: The content as a string.
+    /// - Throws: If the file cannot be read.
     func loadItem(at url: URL) throws -> String {
         try url.loadContents()
     }

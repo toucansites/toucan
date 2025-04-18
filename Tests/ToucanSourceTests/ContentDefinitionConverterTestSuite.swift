@@ -35,19 +35,19 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "customFormat": .init(
-                    type: .date(format: .init(format: "y-MM-d")),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: .init(format: "y-MM-d")),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "customFormatDefaultValue": .init(
-                    type: .date(format: .init(format: "y-MM-d")),
-                    required: true,
-                    default: .init("2021-03-03")
+                    propertyType: .date(format: .init(format: "y-MM-d")),
+                    isRequired: true,
+                    defaultValue: .init("2021-03-03")
                 ),
                 "defaultFormat": .init(
-                    type: .date(format: nil),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],
@@ -98,9 +98,9 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "monthAndDay": .init(
-                    type: .date(format: .init(format: "MM-d")),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: .init(format: "MM-d")),
+                    isRequired: true,
+                    defaultValue: nil
                 )
             ],
             relations: [:],
@@ -146,9 +146,9 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "monthAndDay": .init(
-                    type: .date(format: .init(format: "MM-d")),
-                    required: true,
-                    default: .init("03-30")
+                    propertyType: .date(format: .init(format: "MM-d")),
+                    isRequired: true,
+                    defaultValue: .init("03-30")
                 )
             ],
             relations: [:],
@@ -196,19 +196,19 @@ struct ContentDefinitionConverterTestSuite {
             paths: [],
             properties: [
                 "customFormat": .init(
-                    type: .date(format: .init(format: "y-MM-d")),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: .init(format: "y-MM-d")),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "customFormatDefaultValue": .init(
-                    type: .date(format: .init(format: "y-MM-d")),
-                    required: true,
-                    default: .init("2021-03-03")
+                    propertyType: .date(format: .init(format: "y-MM-d")),
+                    isRequired: true,
+                    defaultValue: .init("2021-03-03")
                 ),
                 "defaultFormat": .init(
-                    type: .date(format: nil),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],

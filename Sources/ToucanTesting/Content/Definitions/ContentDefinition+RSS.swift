@@ -1,3 +1,9 @@
+//
+//  ContentDefinition+RSS.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 03. 11..
+
 import ToucanModels
 
 public extension ContentDefinition.Mocks {

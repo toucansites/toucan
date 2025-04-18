@@ -1,3 +1,9 @@
+//
+//  ContentDefinition+Page.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import ToucanModels
 
 public extension ContentDefinition.Mocks {
@@ -11,14 +17,14 @@ public extension ContentDefinition.Mocks {
             ],
             properties: [
                 "title": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "description": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],

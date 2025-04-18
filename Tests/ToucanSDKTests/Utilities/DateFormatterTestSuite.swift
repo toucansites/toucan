@@ -1,3 +1,9 @@
+//
+//  DateFormatterTestSuite.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 17..
+
 import Foundation
 import Testing
 import ToucanModels
@@ -61,14 +67,14 @@ struct DateFormatterTestSuite {
             paths: ["blog/posts"],
             properties: [
                 "title": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "publication": .init(
-                    type: .date(format: nil),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],
@@ -171,14 +177,14 @@ struct DateFormatterTestSuite {
             paths: ["blog/posts"],
             properties: [
                 "title": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "publication": .init(
-                    type: .date(format: nil),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],
@@ -289,14 +295,14 @@ struct DateFormatterTestSuite {
             paths: ["blog/posts"],
             properties: [
                 "title": .init(
-                    type: .string,
-                    required: true,
-                    default: nil
+                    propertyType: .string,
+                    isRequired: true,
+                    defaultValue: nil
                 ),
                 "publication": .init(
-                    type: .date(format: nil),
-                    required: true,
-                    default: nil
+                    propertyType: .date(format: nil),
+                    isRequired: true,
+                    defaultValue: nil
                 ),
             ],
             relations: [:],

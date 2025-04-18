@@ -1,3 +1,9 @@
+//
+//  Entrypoint.swift
+//  Toucan
+//
+//  Created by Binary Birds on 2025. 04. 15..
+
 import Foundation
 import Dispatch
 import ArgumentParser
