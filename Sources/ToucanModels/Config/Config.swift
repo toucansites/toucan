@@ -33,7 +33,7 @@ public struct Config: Codable, Equatable {
 
     /// Global date format settings for rendering and parsing dates.
     public var dateFormats: DateFormats
-    
+
     /// Additional content-specific overrides or configuration extensions.
     public var renderer: RendererConfig
 

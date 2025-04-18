@@ -692,7 +692,7 @@ struct RawContentLoaderTestSuite {
             )
         }
     }
-    
+
     @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
     func rawContentJsCssFrontMatter(baseUrl: String) throws {
         let logger = Logger(label: "RawContentLoaderTestSuite")
@@ -712,7 +712,7 @@ struct RawContentLoaderTestSuite {
                     """
             )
             Directory("assets") {
-                
+
             }
         }
         .test {
@@ -739,7 +739,7 @@ struct RawContentLoaderTestSuite {
             )
             let results = try loader.load()
             let result = try #require(results.first)
-            
+
             #expect(
                 result.origin
                     == .init(
@@ -747,12 +747,18 @@ struct RawContentLoaderTestSuite {
                         slug: "blog/first-beta-release"
                     )
             )
-  
+
             #expect(result.frontMatter["type"] == .init("post"))
             #expect(result.frontMatter["title"] == .init("First beta release"))
             #expect(result.frontMatter["image"] == .init(nil))
-            #expect(result.frontMatter["css"]?.arrayValue(as: String.self)[0] == "http://localhost:3000/style.css")
-            #expect(result.frontMatter["js"]?.arrayValue(as: String.self)[0]  == "http://localhost:3000/main.js")
+            #expect(
+                result.frontMatter["css"]?.arrayValue(as: String.self)[0]
+                    == "http://localhost:3000/style.css"
+            )
+            #expect(
+                result.frontMatter["js"]?.arrayValue(as: String.self)[0]
+                    == "http://localhost:3000/main.js"
+            )
             #expect(result.markdown == "\nThis is a dummy post!")
         }
     }
