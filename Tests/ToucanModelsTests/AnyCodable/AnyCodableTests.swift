@@ -175,14 +175,14 @@ struct AnyCodableTests {
     }
     
     @Test
-    func testValues() throws {
+    func testAllValues() throws {
         
         let boolValue = AnyCodable(true)
         let intValue = AnyCodable(100)
         let doubleValue = AnyCodable(100.1)
         let stringValue = AnyCodable("string")
         let nilValue = AnyCodable(nil)
-        let arrayValue = AnyCodable(["string", "string2", "string3"])
+        let arrayValue = AnyCodable([AnyCodable("string"), AnyCodable("string2")])
         let dictValue = AnyCodable(["key": AnyCodable("value")])
         
         // test values
@@ -191,7 +191,7 @@ struct AnyCodableTests {
         #expect(doubleValue.doubleValue() == 100.1)
         #expect(stringValue.stringValue() == "string")
         #expect(nilValue.stringValue() == nil)
-        #expect(arrayValue.arrayValue(as: String.self) == ["string", "string2", "string3"])
+        #expect(arrayValue.arrayValue(as: AnyCodable.self) == [AnyCodable("string"), AnyCodable("string2")])
         #expect(dictValue.dictValue() == ["key": AnyCodable("value")])
         #expect(arrayValue.arrayValue(as: Int.self) == [])
         #expect(arrayValue.dictValue() == [:])
@@ -207,13 +207,49 @@ struct AnyCodableTests {
         #expect(stringValue.debugDescription == "AnyCodable(\"string\")")
         #expect(nilValue.description == "nil")
         #expect(nilValue.debugDescription == "AnyCodable(nil)")
-        #expect(arrayValue.description == "[\"string\", \"string2\", \"string3\"]")
-        #expect(arrayValue.debugDescription == "AnyCodable([\"string\", \"string2\", \"string3\"])")
+        
+        // [AnyCodable("string"), AnyCodable("string2")]
+        
+        #expect(arrayValue.description == "[AnyCodable(\"string\"), AnyCodable(\"string2\")]")
+        #expect(arrayValue.debugDescription == "AnyCodable([AnyCodable(\"string\"), AnyCodable(\"string2\")])")
         #expect(dictValue.description == "[\"key\": AnyCodable(\"value\")]")
         #expect(dictValue.debugDescription == "AnyCodable([\"key\": AnyCodable(\"value\")])")
         
-        
+        // hash
+        _ = boolValue.hashValue
+        _ = intValue.hashValue
+        _ = doubleValue.hashValue
+        _ = stringValue.hashValue
+        _ = nilValue.hashValue
+        _ = arrayValue.hashValue
+        _ = dictValue.hashValue
     }
     
+    @Test
+    func testAllComparisons() throws {
+        let boolValue = AnyCodable(true)
+        let boolValue2 = AnyCodable(true)
+        let intValue = AnyCodable(100)
+        let intValue2 = AnyCodable(100)
+        let doubleValue = AnyCodable(100.1)
+        let doubleValue2 = AnyCodable(100.1)
+        let stringValue = AnyCodable("string")
+        let stringValue2 = AnyCodable("string")
+        let nilValue = AnyCodable(nil)
+        let nilValue2 = AnyCodable(nil)
+        let arrayValue = AnyCodable([AnyCodable("string"), AnyCodable("string2")])
+        let arrayValue2 = AnyCodable([AnyCodable("string"), AnyCodable("string2")])
+        let dictValue = AnyCodable(["key": AnyCodable("value")])
+        let dictValue2 = AnyCodable(["key": AnyCodable("value")])
+        
+        #expect(boolValue == boolValue2)
+        #expect(intValue == intValue2)
+        #expect(doubleValue == doubleValue2)
+        #expect(stringValue == stringValue2)
+        #expect(nilValue == nilValue2)
+        #expect(arrayValue == arrayValue2)
+        #expect(dictValue == dictValue2)
+        #expect(dictValue != arrayValue)
+    }
     
 }

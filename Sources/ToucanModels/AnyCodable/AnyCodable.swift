@@ -66,7 +66,6 @@ public struct AnyCodable: Codable {
             self.init(dictionary.mapValues { wrap($0) })
         }
         else {
-            print("throw DecodingError.dataCorruptedError")
             throw DecodingError.dataCorruptedError(
                 in: container,
                 debugDescription: "AnyCodable value cannot be decoded"
@@ -116,9 +115,9 @@ extension AnyCodable: Equatable {
             return lhs == rhs
         case let (lhs as String, rhs as String):
             return lhs == rhs
-        case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
-            return lhs == rhs
         case let (lhs as [AnyCodable], rhs as [AnyCodable]):
+            return lhs == rhs
+        case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
             return lhs == rhs
         default:
             return false
