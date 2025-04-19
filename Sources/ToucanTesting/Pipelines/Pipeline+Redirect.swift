@@ -23,6 +23,7 @@ public extension Pipeline.Mocks {
                 lastUpdate: []
             ),
             iterators: [:],
+            assets: .defaults,
             transformers: [:],
             engine: .init(
                 id: "mustache",

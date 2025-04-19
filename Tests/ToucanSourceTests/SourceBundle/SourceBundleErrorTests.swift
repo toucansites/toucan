@@ -42,6 +42,7 @@ struct SourceBundleErrorTests {
                     lastUpdate: []
                 ),
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "other",

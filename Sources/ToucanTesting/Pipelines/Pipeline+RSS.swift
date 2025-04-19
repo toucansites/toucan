@@ -27,6 +27,7 @@ public extension Pipeline.Mocks {
                 ]
             ),
             iterators: [:],
+            assets: .defaults,
             transformers: [:],
             engine: .init(
                 id: "mustache",

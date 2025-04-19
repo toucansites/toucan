@@ -67,6 +67,7 @@ struct SourceBundlePageLinkTestSuite {
                         ]
                     )
                 ],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "mustache",

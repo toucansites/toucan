@@ -48,6 +48,7 @@ struct SourceBundleContextTestSuite {
                     lastUpdate: []
                 ),
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "json",
@@ -213,6 +214,7 @@ struct SourceBundleContextTestSuite {
                     lastUpdate: []
                 ),
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "json",

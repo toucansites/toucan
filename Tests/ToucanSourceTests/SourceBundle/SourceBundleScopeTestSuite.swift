@@ -74,6 +74,7 @@ struct SourceBundleScopeTestSuite {
                     lastUpdate: []
                 ),
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "json",

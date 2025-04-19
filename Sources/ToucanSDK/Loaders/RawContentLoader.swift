@@ -78,16 +78,21 @@ private extension RawContentLoader {
 
         let orderedPathResolvers:
             [(
-                primaryPath: String?, fallbackPath: String?, resolver: Resolver,
+                primaryPath: String?,
+                fallbackPath: String?,
+                resolver: Resolver,
                 isMarkdown: Bool
             )] = [
                 (location.markdown, location.md, resolveMarkdown, true),
                 (location.yaml, location.yml, resolveYaml, false),
             ]
 
-        for (primaryPath, fallbackPath, resolver, isMarkdown)
-            in orderedPathResolvers
-        {
+        for (
+            primaryPath,
+            fallbackPath,
+            resolver,
+            isMarkdown
+        ) in orderedPathResolvers {
             if let filePath = primaryPath ?? fallbackPath {
                 do {
                     let result = try resolver(filePath)
@@ -142,45 +147,6 @@ private extension RawContentLoader {
                 slug: .init(value: location.slug)
             )
         )
-
-        //         TODO: implement asset properties, use them where: frontMatter. / frontMatter[
-        //        see: https://www.notion.so/binarybirds/Asset-properties-1b7947db00a680cc8bedcdd644c26698?pvs=4
-        //
-        //        let encoder: ToucanEncoder = ToucanYAMLEncoder()
-        //        let decoder: ToucanDecoder = ToucanYAMLDecoder()
-        //
-        //        let rawReservedFrontMatter = try encoder.encode(frontMatter)
-        //        let reservedFrontMatter = try decoder.decode(
-        //            ReservedFrontMatter.self,
-        //            from: rawReservedFrontMatter.dataValue()
-        //        )
-        //
-        //        var assets: [String] = []
-        //
-        //        if let assetProperties = reservedFrontMatter.assetProperties {
-        //            for assetProperty in assetProperties {
-        //                switch assetProperty.action {
-        //                case .add:
-        //                    let resolvedPath = assetProperty.resolvedPath(
-        //                        baseUrl: baseUrl,
-        //                        assetsPath: assetsPath,
-        //                        slug: origin.slug
-        //                    )
-        //                    assets.append(resolvedPath)
-        //                    print(resolvedPath)
-        //                case .set:
-        //                    assets.removeAll()
-        //
-        //                    let resolvedPath = assetProperty.resolvedPath(
-        //                        baseUrl: baseUrl,
-        //                        assetsPath: assetsPath,
-        //                        slug: origin.slug
-        //                    )
-        //                    assets.append(resolvedPath)
-        //                    print(resolvedPath)
-        //                }
-        //            }
-        //        }
 
         // resolve css context
         var css: [String] = []
