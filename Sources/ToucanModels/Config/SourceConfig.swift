@@ -41,7 +41,7 @@ public struct SourceConfig {
     public var assetsUrl: URL {
         contentsUrl.appendingPathComponent(config.contents.assets.path)
     }
-    
+
     // MARK: - Types URLs
 
     /// The URL to the current theme's type-specific layouts or definitions.

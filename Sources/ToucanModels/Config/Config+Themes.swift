@@ -112,7 +112,7 @@ extension Config {
             self.templates =
                 try container.decodeIfPresent(Location.self, forKey: .templates)
                 ?? defaults.templates
-            
+
             self.overrides =
                 try container.decodeIfPresent(Location.self, forKey: .overrides)
                 ?? defaults.overrides

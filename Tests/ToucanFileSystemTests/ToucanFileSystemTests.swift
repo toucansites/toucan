@@ -151,14 +151,14 @@ struct ToucanFileSystemTests {
                     ]
                     .sorted { $0 < $1 }
             )
-                        
+
             let blocksUrl = $1.appending(path: "src/blocks/")
             let blocks = fs.ymlFileLocator.locate(at: blocksUrl)
 
             #expect(
                 blocks.sorted { $0 < $1 }
                     == [
-                        "link.yml",
+                        "link.yml"
                     ]
                     .sorted { $0 < $1 }
             )

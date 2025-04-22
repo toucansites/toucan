@@ -50,14 +50,13 @@ struct SourceLoader {
 
         let sourceConfig = SourceConfig(sourceUrl: sourceUrl, config: config)
 
-        
         logger.trace(
             "Types url: `\(sourceConfig.typesUrl.absoluteString)`"
         )
         logger.trace(
             "Blocks url: `\(sourceConfig.blocksUrl.absoluteString)`"
         )
-        
+
         logger.trace(
             "Themes location url: `\(sourceConfig.themesUrl.absoluteString)`"
         )
@@ -70,7 +69,7 @@ struct SourceLoader {
         logger.trace(
             "Current theme templates url: `\(sourceConfig.currentThemeTemplatesUrl.absoluteString)`"
         )
-        
+
         logger.trace(
             "Theme override url: `\(sourceConfig.currentThemeOverrideUrl.absoluteString)`"
         )

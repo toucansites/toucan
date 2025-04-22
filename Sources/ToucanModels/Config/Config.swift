@@ -119,11 +119,11 @@ public struct Config: Codable, Equatable {
         self.types =
             try container.decodeIfPresent(Types.self, forKey: .types)
             ?? defaults.types
-        
+
         self.blocks =
             try container.decodeIfPresent(Blocks.self, forKey: .blocks)
             ?? defaults.blocks
-        
+
         self.themes =
             try container.decodeIfPresent(Themes.self, forKey: .themes)
             ?? defaults.themes
