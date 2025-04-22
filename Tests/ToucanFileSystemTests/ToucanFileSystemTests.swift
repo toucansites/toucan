@@ -27,10 +27,7 @@ struct ToucanFileSystemTests {
 
             #expect(fs.rawContentLocator.locate(at: url).isEmpty)
             #expect(fs.rawContentLocator.locate(at: url).isEmpty)
-            #expect(
-                fs.ymlFileLocator.locate(at: url, overrides: overrideUrl)
-                    .isEmpty
-            )
+            #expect(fs.ymlFileLocator.locate(at: url).isEmpty)
             #expect(
                 fs.templateLocator.locate(at: url, overrides: overrideUrl)
                     .isEmpty
@@ -71,15 +68,20 @@ struct ToucanFileSystemTests {
                         }
                     }
                 }
+                Directory("types") {
+                    "author.yml"
+                    "post.yml"
+                    "redirect.yml"
+                }
+                Directory("blocks") {
+                    "link.yml"
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("assets") {
                             Directory("css") {
                                 "base.css"
                             }
-                        }
-                        Directory("blocks") {
-                            "link.yml"
                         }
                         Directory("templates") {
                             "html.mustache"
@@ -104,20 +106,12 @@ struct ToucanFileSystemTests {
                                 }
                             }
                         }
-                        Directory("types") {
-                            "author.yml"
-                            "post.yml"
-                            "redirect.yml"
-                        }
                     }
                     Directory("overrides") {
                         Directory("templates") {
                             Directory("blog") {
                                 "posts.mustache"
                             }
-                        }
-                        Directory("types") {
-                            "author.yml"
                         }
                     }
                 }
@@ -145,26 +139,28 @@ struct ToucanFileSystemTests {
                     .sorted { $0.slug < $1.slug }
             )
 
-            let typesUrl = $1.appending(path: "src/themes/default/types/")
-            let typesOverridesUrl = $1.appending(
-                path: "src/themes/overrides/types/"
+            let typesUrl = $1.appending(path: "src/types/")
+
+            let contentTypes = fs.ymlFileLocator.locate(at: typesUrl)
+            #expect(
+                contentTypes.sorted { $0 < $1 }
+                    == [
+                        "author.yml",
+                        "post.yml",
+                        "redirect.yml",
+                    ]
+                    .sorted { $0 < $1 }
             )
 
-            let contentTypes = fs.ymlFileLocator.locate(
-                at: typesUrl,
-                overrides: typesOverridesUrl
-            )
+            let blocksUrl = $1.appending(path: "src/blocks/")
+            let blocks = fs.ymlFileLocator.locate(at: blocksUrl)
+
             #expect(
-                contentTypes.sorted { $0.path < $1.path }
+                blocks.sorted { $0 < $1 }
                     == [
-                        .init(
-                            path: "author.yml",
-                            overridePath: .some("author.yml")
-                        ),
-                        .init(path: "post.yml", overridePath: nil),
-                        .init(path: "redirect.yml", overridePath: nil),
+                        "link.yml"
                     ]
-                    .sorted { $0.path < $1.path }
+                    .sorted { $0 < $1 }
             )
 
             let templatesUrl = $1.appending(

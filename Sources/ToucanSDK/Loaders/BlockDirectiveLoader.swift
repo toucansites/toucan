@@ -23,10 +23,8 @@ struct BlockDirectiveLoader {
     /// The URL of the source files.
     let url: URL
 
-    let overridesUrl: URL
-
     /// Config file paths
-    let locations: [OverrideFileLocation]
+    let locations: [String]
 
     /// A parser responsible for processing YAML data.
     let decoder: ToucanDecoder
@@ -42,7 +40,7 @@ struct BlockDirectiveLoader {
 
     /// Loads and returns an array of MarkdownBlockDirectives
     ///
-    /// - Throws: An error if the content types could not be loaded.
+    /// - Throws: An error if the block directives could not be loaded.
     /// - Returns: An array of `MarkdownBlockDirective` objects.
     func load() throws -> [MarkdownBlockDirective] {
         var items: [MarkdownBlockDirective] = []
@@ -63,14 +61,9 @@ struct BlockDirectiveLoader {
 private extension BlockDirectiveLoader {
 
     func resolveItem(
-        _ location: OverrideFileLocation
+        _ location: String
     ) throws -> MarkdownBlockDirective {
-        if let path = location.overridePath {
-            let url = overridesUrl.appendingPathComponent(path)
-            return try loadItem(at: url)
-        }
-
-        let url = url.appendingPathComponent(location.path)
+        let url = url.appendingPathComponent(location)
         return try loadItem(at: url)
     }
 

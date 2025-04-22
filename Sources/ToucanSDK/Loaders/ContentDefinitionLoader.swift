@@ -15,9 +15,8 @@ import ToucanSource
 struct ContentDefinitionLoader {
 
     let url: URL
-    let overridesUrl: URL
 
-    let locations: [OverrideFileLocation]
+    let locations: [String]
 
     let decoder: ToucanDecoder
     let logger: Logger
@@ -46,14 +45,9 @@ struct ContentDefinitionLoader {
 private extension ContentDefinitionLoader {
 
     func resolveItem(
-        _ location: OverrideFileLocation
+        _ location: String
     ) throws -> ContentDefinition {
-        if let path = location.overridePath {
-            let url = overridesUrl.appendingPathComponent(path)
-            return try loadItem(at: url)
-        }
-
-        let url = url.appendingPathComponent(location.path)
+        let url = url.appendingPathComponent(location)
         return try loadItem(at: url)
     }
 

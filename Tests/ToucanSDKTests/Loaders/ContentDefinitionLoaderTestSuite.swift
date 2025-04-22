@@ -21,114 +21,38 @@ struct ContentDefinitionLoaderTestSuite {
     func contentDefinitions() throws {
         let logger = Logger(label: "ContentDefinitionLoaderTestSuite")
         try FileManagerPlayground {
-            Directory("themes") {
-                Directory("default") {
-                    Directory("types") {
-                        File(
-                            "foo.yml",
-                            string: """
-                                id: foo
-                                paths:
-                                properties:
-                                relations:
-                                queries:
-                                """
-                        )
-                        File(
-                            "bar.yml",
-                            string: """
-                                id: bar
-                                paths:
-                                properties:
-                                relations:
-                                queries:
-                                """
-                        )
-                    }
+            Directory("src") {
+                Directory("types") {
+                    File(
+                        "foo.yml",
+                        string: """
+                            id: foo
+                            paths:
+                            properties:
+                            relations:
+                            queries:
+                            """
+                    )
+                    File(
+                        "bar.yml",
+                        string: """
+                            id: bar
+                            paths:
+                            properties:
+                            relations:
+                            queries:
+                            """
+                    )
                 }
             }
         }
         .test {
-            let url = $1.appending(path: "themes/default/types/")
-            let overridesUrl = $1.appending(path: "themes/overrides/types/")
+            let url = $1.appending(path: "src/types/")
             let loader = ContentDefinitionLoader(
                 url: url,
-                overridesUrl: overridesUrl,
                 locations: [
-                    .init(path: "foo.yml", overridePath: nil),
-                    .init(path: "bar.yml", overridePath: nil),
-                ],
-                decoder: ToucanYAMLDecoder(),
-                logger: logger
-            )
-            let result = try loader.load()
-
-            #expect(
-                result == [
-                    .init(
-                        id: "foo",
-                        paths: [],
-                        properties: [:],
-                        relations: [:],
-                        queries: [:]
-                    ),
-                    .init(
-                        id: "bar",
-                        paths: [],
-                        properties: [:],
-                        relations: [:],
-                        queries: [:]
-                    ),
-                ]
-            )
-        }
-    }
-
-    @Test
-    func contentDefinitionsOverride() throws {
-        let logger = Logger(label: "ContentDefinitionLoaderTestSuite")
-        try FileManagerPlayground {
-            Directory("themes") {
-                Directory("default") {
-                    Directory("types") {
-                        File(
-                            "foo.yml",
-                            string: """
-                                id: foo
-                                paths:
-                                properties:
-                                relations:
-                                queries:
-                                """
-                        )
-                        File("bar.yml", string: "")
-                    }
-                }
-                Directory("overrides") {
-                    Directory("types") {
-                        File(
-                            "bar.yml",
-                            string: """
-                                id: bar
-                                paths:
-                                properties:
-                                relations:
-                                queries:
-                                """
-                        )
-                    }
-                }
-            }
-        }
-        .test {
-            let url = $1.appending(path: "themes/default/types/")
-            let overridesUrl = $1.appending(path: "themes/overrides/types/")
-            let loader = ContentDefinitionLoader(
-                url: url,
-                overridesUrl: overridesUrl,
-                locations: [
-                    .init(path: "foo.yml", overridePath: nil),
-                    .init(path: "bar.yml", overridePath: "bar.yml"),
+                    "foo.yml",
+                    "bar.yml",
                 ],
                 decoder: ToucanYAMLDecoder(),
                 logger: logger

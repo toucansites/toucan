@@ -25,8 +25,8 @@ public struct ToucanFileSystem {
     /// Locates pipeline configuration files, usually for defining content transformations or build steps.
     public let pipelineLocator: FileLocator
 
-    /// Locates overrideable YAML files, allowing downstream customization of upstream config.
-    public let ymlFileLocator: OverrideFileLocator
+    /// Locates content definition and block directive YAML files.
+    public let ymlFileLocator: FileLocator
 
     /// Locates raw Markdown or content source files.
     public let rawContentLocator: RawContentLocator
@@ -55,7 +55,7 @@ public struct ToucanFileSystem {
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
         )
-        self.ymlFileLocator = OverrideFileLocator(
+        self.ymlFileLocator = FileLocator(
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
         )

@@ -48,7 +48,7 @@ struct SourceLoaderTestSuite {
                             """
                     )
                 }
-                Directory("themes/default/types") {
+                Directory("types") {
                     File(
                         "page.yml",
                         string: """
