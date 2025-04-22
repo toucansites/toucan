@@ -6,6 +6,7 @@
 //
 
 import ToucanModels
+import Foundation
 
 /// A utility that filters content based on specified conditions.
 ///
@@ -18,10 +19,13 @@ struct ContentFilter {
 
     /// Applies the filtering rules to the provided content items.
     ///
-    /// - Parameter contents: The list of `Content` items to filter.
+    /// - Parameters:
+    ///   - contents: The list of `Content` items to filter.
+    ///   - now: The current timestamp used for time-based filtering.
     /// - Returns: A new list containing only the filtered content items.
     func applyRules(
-        contents: [Content]
+        contents: [Content],
+        now: TimeInterval
     ) -> [Content] {
         let groups = Dictionary(grouping: contents, by: { $0.definition.id })
 
@@ -32,7 +36,8 @@ struct ContentFilter {
                     query: .init(
                         contentType: id,
                         filter: condition,
-                    )
+                    ),
+                    now: now
                 )
                 result.append(contentsOf: items)
             }

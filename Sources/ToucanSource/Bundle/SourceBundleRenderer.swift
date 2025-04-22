@@ -73,7 +73,8 @@ public struct SourceBundleRenderer {
     /// Returns the last content update based on the pipeline config
     private func getLastContentUpdate(
         contents: [Content],
-        pipeline: Pipeline
+        pipeline: Pipeline,
+        now: TimeInterval
     ) -> TimeInterval? {
         var updateTypes = contents.map(\.definition.id)
         if !pipeline.contentTypes.lastUpdate.isEmpty {
@@ -94,7 +95,8 @@ public struct SourceBundleRenderer {
                                 direction: .desc
                             )
                         ]
-                    )
+                    ),
+                    now: now
                 )
                 return items.first?.rawValue.lastModificationDate
             }
@@ -113,7 +115,8 @@ public struct SourceBundleRenderer {
         var siteContext = getSiteContext(for: now)
         var results: [PipelineResult] = []
         let iteratorResolver = ContentIteratorResolver(
-            baseUrl: sourceBundle.settings.baseUrl
+            baseUrl: sourceBundle.settings.baseUrl,
+            now: now
         )
 
         for pipeline in sourceBundle.pipelines {
@@ -131,7 +134,8 @@ public struct SourceBundleRenderer {
             )
 
             let filteredContents = filter.applyRules(
-                contents: sourceBundle.contents
+                contents: sourceBundle.contents,
+                now: now
             )
 
             let contents = iteratorResolver.resolve(
@@ -142,7 +146,8 @@ public struct SourceBundleRenderer {
             let lastUpdate =
                 getLastContentUpdate(
                     contents: contents,
-                    pipeline: pipeline
+                    pipeline: pipeline,
+                    now: now
                 ) ?? now
 
             let lastUpdateContext = lastUpdate.toDateFormats(
@@ -155,7 +160,8 @@ public struct SourceBundleRenderer {
                 context: [
                     "site": .init(siteContext)
                 ],
-                pipeline: pipeline
+                pipeline: pipeline,
+                now: now
             )
 
             switch pipeline.engine.id {
@@ -181,7 +187,8 @@ public struct SourceBundleRenderer {
     mutating func getContextBundles(
         contents: [Content],
         context globalContext: [String: AnyCodable],
-        pipeline: Pipeline
+        pipeline: Pipeline,
+        now: TimeInterval
     ) throws -> [ContextBundle] {
         contents.compactMap { content in
             let isAllowed = pipeline.contentTypes.isAllowed(
@@ -194,7 +201,8 @@ public struct SourceBundleRenderer {
             let pipelineContext = getPipelineContext(
                 contents: contents,
                 pipeline: pipeline,
-                currentSlug: content.slug.value
+                currentSlug: content.slug.value,
+                now: now
             )
             .recursivelyMerged(with: globalContext)
 
@@ -202,7 +210,8 @@ public struct SourceBundleRenderer {
                 contents: contents,
                 content: content,
                 pipeline: pipeline,
-                pipelineContext: pipelineContext
+                pipelineContext: pipelineContext,
+                now: now
             )
         }
     }
@@ -210,11 +219,12 @@ public struct SourceBundleRenderer {
     mutating func getPipelineContext(
         contents: [Content],
         pipeline: Pipeline,
-        currentSlug: String
+        currentSlug: String,
+        now: TimeInterval
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
-            let results = contents.run(query: query)
+            let results = contents.run(query: query, now: now)
 
             rawContext[key] = .init(
                 results.map {
@@ -222,6 +232,7 @@ public struct SourceBundleRenderer {
                         contents: contents,
                         for: $0,
                         pipeline: pipeline,
+                        now: now,
                         scopeKey: query.scope ?? "list",
                         currentSlug: currentSlug
                     )
@@ -236,7 +247,8 @@ public struct SourceBundleRenderer {
     mutating func getIteratorContext(
         contents: [Content],
         content: Content,
-        pipeline: Pipeline
+        pipeline: Pipeline,
+        now: TimeInterval
     ) -> [String: AnyCodable] {
         guard let iteratorInfo = content.iteratorInfo else {
             return [:]
@@ -246,6 +258,7 @@ public struct SourceBundleRenderer {
                 contents: contents,
                 for: $0,
                 pipeline: pipeline,
+                now: now,
                 scopeKey: iteratorInfo.scope ?? "list",
                 currentSlug: content.slug.value
             )
@@ -267,13 +280,15 @@ public struct SourceBundleRenderer {
         contents: [Content],
         content: Content,
         pipeline: Pipeline,
-        pipelineContext: [String: AnyCodable]
+        pipelineContext: [String: AnyCodable],
+        now: TimeInterval
     ) -> ContextBundle {
 
         let pageContext = getContentContext(
             contents: contents,
             for: content,
             pipeline: pipeline,
+            now: now,
             scopeKey: "detail",
             currentSlug: content.slug.value
         )
@@ -281,7 +296,8 @@ public struct SourceBundleRenderer {
         let iteratorContext = getIteratorContext(
             contents: contents,
             content: content,
-            pipeline: pipeline
+            pipeline: pipeline,
+            now: now
         )
 
         let context: [String: AnyCodable] = [
@@ -314,6 +330,7 @@ public struct SourceBundleRenderer {
         contents: [Content],
         for content: Content,
         pipeline: Pipeline,
+        now: TimeInterval,
         scopeKey: String,
         currentSlug: String?,
         allowSubQueries: Bool = true  // allow top level queries only,
@@ -434,7 +451,8 @@ public struct SourceBundleRenderer {
                             )
                         ),
                         orderBy: orderBy
-                    )
+                    ),
+                    now: now
                 )
                 result[key] = .init(
                     relationContents.map {
@@ -442,6 +460,7 @@ public struct SourceBundleRenderer {
                             contents: contents,
                             for: $0,
                             pipeline: pipeline,
+                            now: now,
                             scopeKey: "reference",
                             currentSlug: currentSlug,
                             allowSubQueries: false
@@ -457,7 +476,8 @@ public struct SourceBundleRenderer {
                 let queryContents = contents.run(
                     query: query.resolveFilterParameters(
                         with: content.queryFields
-                    )
+                    ),
+                    now: now
                 )
 
                 result[key] = .init(
@@ -466,6 +486,7 @@ public struct SourceBundleRenderer {
                             contents: contents,
                             for: $0,
                             pipeline: pipeline,
+                            now: now,
                             scopeKey: query.scope ?? "list",
                             currentSlug: currentSlug,
                             allowSubQueries: false

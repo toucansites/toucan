@@ -22,7 +22,8 @@ struct QueryTestSuite {
             offset: 1
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -39,7 +40,8 @@ struct QueryTestSuite {
             offset: 3
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #4"
@@ -59,7 +61,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
@@ -79,7 +82,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -99,7 +103,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #3"
@@ -119,7 +124,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 0)
     }
 
@@ -136,7 +142,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 9)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -156,7 +163,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -181,7 +189,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 3)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -210,7 +219,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self)
@@ -235,7 +245,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 3)
         #expect(
             results[0].properties["name"]?.value(as: String.self)
@@ -260,7 +271,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -285,7 +297,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 3)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -314,7 +327,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self)
@@ -339,7 +353,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 3)
         #expect(
             results[0].properties["name"]?.value(as: String.self)
@@ -364,7 +379,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         #expect(results.count == 0)
     }
 
@@ -391,7 +407,8 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
@@ -424,7 +441,8 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         #expect(results.isEmpty)
     }
 
@@ -451,7 +469,8 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #6"
@@ -474,7 +493,8 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #4"
@@ -500,7 +520,8 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -526,7 +547,8 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -549,7 +571,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -573,7 +596,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 0)
     }
 
@@ -590,7 +614,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -614,7 +639,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 0)
     }
 
@@ -631,7 +657,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 8)
     }
 
@@ -648,7 +675,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 10)
     }
 
@@ -665,7 +693,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 10)
     }
 
@@ -682,7 +711,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 0)
     }
 
@@ -699,7 +729,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 8)
     }
 
@@ -716,7 +747,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 10)
     }
 
@@ -733,7 +765,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 10)
     }
 
@@ -750,7 +783,8 @@ struct QueryTestSuite {
             )
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let now = Date().timeIntervalSince1970
+        let results = sourceBundle.contents.run(query: query, now: now)
         try #require(results.count == 0)
     }
 
@@ -775,7 +809,10 @@ struct QueryTestSuite {
                 )
             ]
         )
-        let results1 = sourceBundle.contents.run(query: query1)
+        let results1 = sourceBundle.contents.run(
+            query: query1,
+            now: now.timeIntervalSince1970
+        )
         try #require(results1.count == 5)
 
         let query = Query(
@@ -794,7 +831,10 @@ struct QueryTestSuite {
             ]
         )
 
-        let results = sourceBundle.contents.run(query: query)
+        let results = sourceBundle.contents.run(
+            query: query,
+            now: now.timeIntervalSince1970
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["title"]?.value(as: String.self) == "Post #6"
@@ -828,7 +868,8 @@ struct QueryTestSuite {
                 )
             ]
         )
-        let results1 = sourceBundle.contents.run(query: query1)
+        let now = Date().timeIntervalSince1970
+        let results1 = sourceBundle.contents.run(query: query1, now: now)
         try #require(results1.count == 1)
     }
 
@@ -855,7 +896,8 @@ struct QueryTestSuite {
                 "id": "category-1"
             ]
         )
-        let results1 = sourceBundle.contents.run(query: query1)
+        let now = Date().timeIntervalSince1970
+        let results1 = sourceBundle.contents.run(query: query1, now: now)
         try #require(results1.count == 1)
     }
 
@@ -871,15 +913,16 @@ struct QueryTestSuite {
                 value: true
             )
         )
-
+        let now = Date().timeIntervalSince1970
         let resolver = ContentIteratorResolver(
-            baseUrl: "http://localhost:3000"
+            baseUrl: "http://localhost:3000",
+            now: now
         )
         let contents = resolver.resolve(
             contents: sourceBundle.contents,
             using: Pipeline.Mocks.html()
         )
-        let results = contents.run(query: query)
+        let results = contents.run(query: query, now: now)
         try #require(results.count == 5)
     }
 

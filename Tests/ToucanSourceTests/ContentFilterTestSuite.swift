@@ -40,7 +40,8 @@ struct ContentFilterTestSuite {
             ]
         )
 
-        let res = filter.applyRules(contents: posts)
+        let now = Date().timeIntervalSince1970
+        let res = filter.applyRules(contents: posts, now: now)
 
         let expGroups = Dictionary(
             grouping: sourceBundle.contents,
@@ -105,8 +106,8 @@ struct ContentFilterTestSuite {
                 ),
             ]
         )
-
-        let res = filter.applyRules(contents: posts)
+        let now = Date().timeIntervalSince1970
+        let res = filter.applyRules(contents: posts, now: now)
 
         let expGroups = Dictionary(
             grouping: sourceBundle.contents,
@@ -160,7 +161,8 @@ struct ContentFilterTestSuite {
             filterRules: [:]
         )
 
-        let res = filter.applyRules(contents: posts)
+        let now = Date().timeIntervalSince1970
+        let res = filter.applyRules(contents: posts, now: now)
 
         let expGroups = Dictionary(
             grouping: sourceBundle.contents,
@@ -267,7 +269,11 @@ struct ContentFilterTestSuite {
         )
 
         let posts = [post1, post2]
-        let res = filter.applyRules(contents: posts)
+
+        let res = filter.applyRules(
+            contents: posts,
+            now: now.timeIntervalSince1970
+        )
         #expect(res.count == 1)
         #expect(res[0].slug.value == "test1")
     }
@@ -342,7 +348,10 @@ struct ContentFilterTestSuite {
         )
 
         let posts = [post1, post2]
-        let res = filter.applyRules(contents: posts)
+        let res = filter.applyRules(
+            contents: posts,
+            now: now.timeIntervalSince1970
+        )
         #expect(res.count == 1)
         #expect(res[0].slug.value == "test1")
     }
