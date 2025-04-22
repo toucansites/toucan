@@ -51,6 +51,13 @@ struct SourceLoader {
         let sourceConfig = SourceConfig(sourceUrl: sourceUrl, config: config)
 
         logger.trace(
+            "Types url: `\(sourceConfig.typesUrl.absoluteString)`"
+        )
+        logger.trace(
+            "Blocks url: `\(sourceConfig.blocksUrl.absoluteString)`"
+        )
+
+        logger.trace(
             "Themes location url: `\(sourceConfig.themesUrl.absoluteString)`"
         )
         logger.trace(
@@ -62,12 +69,6 @@ struct SourceLoader {
         logger.trace(
             "Current theme templates url: `\(sourceConfig.currentThemeTemplatesUrl.absoluteString)`"
         )
-        logger.trace(
-            "Current theme types url: `\(sourceConfig.currentThemeTypesUrl.absoluteString)`"
-        )
-        logger.trace(
-            "Current theme blocks url: `\(sourceConfig.currentThemeBlocksUrl.absoluteString)`"
-        )
 
         logger.trace(
             "Theme override url: `\(sourceConfig.currentThemeOverrideUrl.absoluteString)`"
@@ -77,12 +78,6 @@ struct SourceLoader {
         )
         logger.trace(
             "Theme override templates url: `\(sourceConfig.currentThemeOverrideTemplatesUrl.absoluteString)`"
-        )
-        logger.trace(
-            "Theme override types url: `\(sourceConfig.currentThemeOverrideTypesUrl.absoluteString)`"
-        )
-        logger.trace(
-            "Current override blocks url: `\(sourceConfig.currentThemeOverrideBlocksUrl.absoluteString)`"
         )
 
         // MARK: - Settings
@@ -116,12 +111,10 @@ struct SourceLoader {
         // MARK: - Content definitions
 
         let contentDefinitionLocations = fs.ymlFileLocator.locate(
-            at: sourceConfig.currentThemeTypesUrl,
-            overrides: sourceConfig.currentThemeOverrideTypesUrl
+            at: sourceConfig.typesUrl
         )
         let contentDefinitionLoader = ContentDefinitionLoader(
-            url: sourceConfig.currentThemeTypesUrl,
-            overridesUrl: sourceConfig.currentThemeOverrideTypesUrl,
+            url: sourceConfig.typesUrl,
             locations: contentDefinitionLocations,
             decoder: decoder,
             logger: logger
@@ -131,12 +124,10 @@ struct SourceLoader {
         // MARK: - Block directives
 
         let blockDirectivesLocations = fs.ymlFileLocator.locate(
-            at: sourceConfig.currentThemeBlocksUrl,
-            overrides: sourceConfig.currentThemeOverrideBlocksUrl
+            at: sourceConfig.blocksUrl
         )
         let blockDirectivesLoader = BlockDirectiveLoader(
-            url: sourceConfig.currentThemeBlocksUrl,
-            overridesUrl: sourceConfig.currentThemeOverrideBlocksUrl,
+            url: sourceConfig.blocksUrl,
             locations: blockDirectivesLocations,
             decoder: decoder,
             logger: logger

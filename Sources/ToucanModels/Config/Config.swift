@@ -15,6 +15,8 @@ public struct Config: Codable, Equatable {
     private enum CodingKeys: CodingKey {
         case pipelines
         case contents
+        case types
+        case blocks
         case themes
         case dateFormats
         case renderer
@@ -27,6 +29,12 @@ public struct Config: Codable, Equatable {
 
     /// Configuration for mapping and locating raw content files.
     public var contents: Contents
+
+    /// The folder where type-specific templates or definitions reside.
+    public var types: Types
+
+    /// A folder for reusable UI block components (e.g., hero, footer, card).
+    public var blocks: Blocks
 
     /// Theme-related configuration, including layout templates and style resources.
     public var themes: Themes
@@ -46,6 +54,8 @@ public struct Config: Codable, Equatable {
         .init(
             pipelines: .defaults,
             contents: .defaults,
+            types: .defaults,
+            blocks: .defaults,
             themes: .defaults,
             dateFormats: .defaults,
             renderer: .defaults
@@ -59,18 +69,24 @@ public struct Config: Codable, Equatable {
     /// - Parameters:
     ///   - pipelines: Pipeline configurations.
     ///   - contents: Content mapping configuration.
+    ///   - types: Folder path for type definitions.
+    ///   - blocks: Folder path for reusable block templates.
     ///   - themes: Theme layout and styling definitions.
     ///   - dateFormats: Global or localized date format settings.
     ///   - renderer: Fine-grained control for specific content types.
     public init(
         pipelines: Pipelines,
         contents: Contents,
+        types: Types,
+        blocks: Blocks,
         themes: Themes,
         dateFormats: DateFormats,
         renderer: RendererConfig
     ) {
         self.pipelines = pipelines
         self.contents = contents
+        self.types = types
+        self.blocks = blocks
         self.themes = themes
         self.dateFormats = dateFormats
         self.renderer = renderer
@@ -99,6 +115,14 @@ public struct Config: Codable, Equatable {
         self.contents =
             try container.decodeIfPresent(Contents.self, forKey: .contents)
             ?? defaults.contents
+
+        self.types =
+            try container.decodeIfPresent(Types.self, forKey: .types)
+            ?? defaults.types
+
+        self.blocks =
+            try container.decodeIfPresent(Blocks.self, forKey: .blocks)
+            ?? defaults.blocks
 
         self.themes =
             try container.decodeIfPresent(Themes.self, forKey: .themes)

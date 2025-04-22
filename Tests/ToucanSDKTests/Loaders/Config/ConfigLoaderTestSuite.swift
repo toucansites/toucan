@@ -21,6 +21,8 @@ struct ConfigLoaderTestSuite {
         return Config(
             pipelines: .defaults,
             contents: .defaults,
+            types: .defaults,
+            blocks: .defaults,
             themes: .defaults,
             dateFormats: .defaults,
             renderer: .defaults
@@ -53,6 +55,10 @@ struct ConfigLoaderTestSuite {
                             path: contentsNotDefault
                             assets: 
                                 path: assetsNotDefault
+                        types:
+                            path: typesNotDefault
+                        blocks:
+                            path: blocksNotDefault
                         themes:
                             location:
                                 path: themesNotDefault
@@ -62,12 +68,8 @@ struct ConfigLoaderTestSuite {
                                 path: assetsNotDefault
                             templates:
                                 path: templatesNotDefault
-                            types:
-                                path: typesNotDefault
                             overrides:
                                 path: overridesNotDefault
-                            blocks:
-                                path: blocksNotDefault
                         dateFormats:
                             input: 
                                 format: y
@@ -114,14 +116,14 @@ struct ConfigLoaderTestSuite {
                             path: "contentsNotDefault",
                             assets: .init(path: "assetsNotDefault")
                         ),
+                        types: .init(path: "typesNotDefault"),
+                        blocks: .init(path: "blocksNotDefault"),
                         themes: .init(
                             location: .init(path: "themesNotDefault"),
                             current: .init(path: "defaultNotDefault"),
                             assets: .init(path: "assetsNotDefault"),
                             templates: .init(path: "templatesNotDefault"),
-                            types: .init(path: "typesNotDefault"),
-                            overrides: .init(path: "overridesNotDefault"),
-                            blocks: .init(path: "blocksNotDefault")
+                            overrides: .init(path: "overridesNotDefault")
                         ),
                         dateFormats: .init(
                             input: .init(format: "y"),

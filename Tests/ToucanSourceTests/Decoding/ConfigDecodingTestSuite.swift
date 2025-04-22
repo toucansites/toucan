@@ -28,6 +28,8 @@ struct ConfigDecodingTestSuite {
         #expect(result.pipelines.path == "pipelines")
         #expect(result.contents.path == "contents")
         #expect(result.contents.assets.path == "assets")
+        #expect(result.types.path == "types")
+        #expect(result.blocks.path == "blocks")
         #expect(
             result.dateFormats.input
                 == .init(
@@ -94,6 +96,10 @@ struct ConfigDecodingTestSuite {
               path: contents
               assets:
                 path: assets
+            types:
+              path: types
+            blocks:
+              path: blocks
             themes:
               location:
                 path: themes
@@ -103,12 +109,8 @@ struct ConfigDecodingTestSuite {
                 path: assets
               templates:
                 path: templates
-              types:
-                path: types
               overrides:
                 path: overrides
-              blocks:
-                path: blocks
             dateFormats:
               input:
                 format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
