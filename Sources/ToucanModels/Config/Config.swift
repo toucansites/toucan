@@ -19,7 +19,7 @@ public struct Config: Codable, Equatable {
         case blocks
         case themes
         case dateFormats
-        case contentConfigurations
+        case renderer
     }
 
     // MARK: - Properties
@@ -43,7 +43,7 @@ public struct Config: Codable, Equatable {
     public var dateFormats: DateFormats
 
     /// Additional content-specific overrides or configuration extensions.
-    public var contentConfigurations: ContentConfigurations
+    public var renderer: RendererConfig
 
     // MARK: - Defaults
 
@@ -58,7 +58,7 @@ public struct Config: Codable, Equatable {
             blocks: .defaults,
             themes: .defaults,
             dateFormats: .defaults,
-            contentConfigurations: .defaults
+            renderer: .defaults
         )
     }
 
@@ -73,7 +73,7 @@ public struct Config: Codable, Equatable {
     ///   - blocks: Folder path for reusable block templates.
     ///   - themes: Theme layout and styling definitions.
     ///   - dateFormats: Global or localized date format settings.
-    ///   - contentConfigurations: Fine-grained control for specific content types.
+    ///   - renderer: Fine-grained control for specific content types.
     public init(
         pipelines: Pipelines,
         contents: Contents,
@@ -81,7 +81,7 @@ public struct Config: Codable, Equatable {
         blocks: Blocks,
         themes: Themes,
         dateFormats: DateFormats,
-        contentConfigurations: ContentConfigurations
+        renderer: RendererConfig
     ) {
         self.pipelines = pipelines
         self.contents = contents
@@ -89,7 +89,7 @@ public struct Config: Codable, Equatable {
         self.blocks = blocks
         self.themes = themes
         self.dateFormats = dateFormats
-        self.contentConfigurations = contentConfigurations
+        self.renderer = renderer
     }
 
     // MARK: - Decoding
@@ -135,11 +135,11 @@ public struct Config: Codable, Equatable {
             )
             ?? defaults.dateFormats
 
-        self.contentConfigurations =
+        self.renderer =
             try container.decodeIfPresent(
-                ContentConfigurations.self,
-                forKey: .contentConfigurations
-            )
-            ?? defaults.contentConfigurations
+                RendererConfig.self,
+                forKey: .renderer
+            ) ?? defaults.renderer
+
     }
 }

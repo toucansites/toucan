@@ -692,4 +692,74 @@ struct RawContentLoaderTestSuite {
             )
         }
     }
+
+    @Test("", arguments: ["http://localhost:3000", "http://localhost:3000/"])
+    func rawContentJsCssFrontMatter(baseUrl: String) throws {
+        let logger = Logger(label: "RawContentLoaderTestSuite")
+        try testRawContentStructure {
+            File(
+                "index.md",
+                string: """
+                    ---
+                    type: post
+                    title: "First beta release"
+                    js: 
+                        - "{{baseUrl}}/main.js"
+                    css: 
+                        - "{{baseUrl}}/style.css"
+                    ---
+                    This is a dummy post!
+                    """
+            )
+            Directory("assets") {
+
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let locations = locator.locate(at: url)
+            let decoder = ToucanYAMLDecoder()
+            let sourceConfig = SourceConfig(
+                sourceUrl: $1.appending(path: "src/"),
+                config: .defaults
+            )
+
+            let loader = RawContentLoader(
+                url: url,
+                locations: locations,
+                sourceConfig: sourceConfig,
+                frontMatterParser: FrontMatterParser(
+                    decoder: decoder,
+                    logger: logger
+                ),
+                fileManager: $0,
+                logger: logger,
+                baseUrl: baseUrl
+            )
+            let results = try loader.load()
+            let result = try #require(results.first)
+
+            #expect(
+                result.origin
+                    == .init(
+                        path: "blog/articles/first-beta-release/index.md",
+                        slug: "blog/first-beta-release"
+                    )
+            )
+
+            #expect(result.frontMatter["type"] == .init("post"))
+            #expect(result.frontMatter["title"] == .init("First beta release"))
+            #expect(result.frontMatter["image"] == .init(nil))
+            #expect(
+                result.frontMatter["css"]?.arrayValue(as: String.self)[0]
+                    == "http://localhost:3000/style.css"
+            )
+            #expect(
+                result.frontMatter["js"]?.arrayValue(as: String.self)[0]
+                    == "http://localhost:3000/main.js"
+            )
+            #expect(result.markdown == "\nThis is a dummy post!")
+        }
+    }
 }

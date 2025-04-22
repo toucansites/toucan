@@ -145,9 +145,9 @@ extension AnyCodable: Equatable {
             return lhs == rhs
         case let (lhs as String, rhs as String):
             return lhs == rhs
-        case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
-            return lhs == rhs
         case let (lhs as [AnyCodable], rhs as [AnyCodable]):
+            return lhs == rhs
+        case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
             return lhs == rhs
         default:
             return false

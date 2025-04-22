@@ -115,7 +115,7 @@ struct ConfigDecodingTestSuite {
               input:
                 format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
               output: {}
-            contentConfigurations:
+            renderer:
               wordsPerMinute: 238
               outlineLevels:
               - 2

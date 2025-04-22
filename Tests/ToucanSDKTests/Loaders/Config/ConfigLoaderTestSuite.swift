@@ -25,7 +25,7 @@ struct ConfigLoaderTestSuite {
             blocks: .defaults,
             themes: .defaults,
             dateFormats: .defaults,
-            contentConfigurations: .defaults
+            renderer: .defaults
         )
     }
 
@@ -78,7 +78,7 @@ struct ConfigLoaderTestSuite {
                                     locale: hu-HU
                                     timeZone: CET
                                     format: "y.MM.dd"
-                        contentConfigurations:
+                        renderer:
                             wordsPerMinute: 240
                             outlineLevels:
                                 - 3
@@ -135,7 +135,7 @@ struct ConfigLoaderTestSuite {
                                 )
                             ]
                         ),
-                        contentConfigurations: .init(
+                        renderer: .init(
                             wordsPerMinute: 240,
                             outlineLevels: [3, 4],
                             paragraphStyles: .init(
