@@ -12,8 +12,12 @@ import ToucanFileSystem
 import ToucanSource
 import FileManagerKit
 
+/// Loads raw content items from a set of predefined locations.
+///
 public struct RawContentLoader {
 
+    /// Represents the possible errors that can occur within the system.
+    ///
     public enum Error: Swift.Error {
         case invalidFrontMatter(path: String)
     }
@@ -39,14 +43,13 @@ public struct RawContentLoader {
     // baseUrl for image asset resolve
     let baseUrl: String
 
-    /// Loads the configuration.
+    /// Loads raw content items from a set of predefined locations.
     ///
-    /// This function attempts to load a configuration file from a specified URL, parses the file contents,
-    /// and returns a `Config` object based on the file's data. If the file is missing or cannot be parsed,
-    /// an appropriate error is thrown.
+    /// This function iterates over a collection of locations, resolves each into a `RawContent` item,
+    /// and collects them into an array.
     ///
-    /// - Returns: A `Config` object representing the loaded configuration.
-    /// - Throws: An error if the configuration file is missing or if its contents cannot be decoded.
+    /// - Returns: An array of `RawContent` objects representing the loaded items.
+    /// - Throws: An error if any of the content items cannot be resolved.
     func load() throws -> [RawContent] {
         logger.debug("Loading raw contents at: `\(url.absoluteString)`")
 
