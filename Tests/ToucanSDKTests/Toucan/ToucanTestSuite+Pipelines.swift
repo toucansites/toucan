@@ -14,28 +14,6 @@ import ToucanTesting
 
 extension ToucanTestSuite {
 
-    func pipeline404() -> File {
-        File(
-            "404.yml",
-            string: """
-                id: not-found
-                contentTypes: 
-                    include:
-                        - not-found
-                engine: 
-                    id: mustache
-                    options:
-                        contentTypes: 
-                            not-found:
-                                template: "pages.404"
-                output:
-                    path: ""
-                    file: 404
-                    ext: html
-                """
-        )
-    }
-
     func pipelineHtml(
         needPost: Bool = false,
         rootUrl: String? = nil,
@@ -71,90 +49,6 @@ extension ToucanTestSuite {
                     path: "{{slug}}"
                     file: index
                     ext: html
-                """
-        )
-    }
-
-    func pipelineRedirect() -> File {
-        File(
-            "redirect.yml",
-            string: """
-                id: redirect
-                contentTypes: 
-                    include:
-                        - redirect
-                engine: 
-                    id: mustache
-                    options:
-                        contentTypes: 
-                            redirect:
-                                template: "redirect"
-                output:
-                    path: "{{slug}}"
-                    file: index
-                    ext: html
-                """
-        )
-    }
-
-    func pipelineRss() -> File {
-        File(
-            "rss.yml",
-            string: """
-                id: rss
-                queries:
-                    posts:
-                        contentType: post
-                        scope: list
-                        orderBy:
-                            - key: lastUpdate
-                              direction: desc
-                contentTypes: 
-                    include:
-                        - rss
-                    lastUpdate:
-                        - post
-                engine: 
-                    id: mustache
-                    options:
-                        contentTypes: 
-                            rss:
-                                template: "rss"
-                output:
-                    path: ""
-                    file: rss
-                    ext: xml
-                """
-        )
-    }
-
-    func pipelineSitemap() -> File {
-        File(
-            "sitemap.yml",
-            string: """
-                id: sitemap
-
-                queries:
-                    pages:
-                        contentType: page
-                        scope: list
-                        orderBy:
-                            - key: lastUpdate
-                              direction: desc
-
-                contentTypes: 
-                    include:
-                        - sitemap
-                engine: 
-                    id: mustache
-                    options:
-                        contentTypes: 
-                            sitemap:
-                                template: "sitemap"
-                output:
-                    path: ""
-                    file: sitemap
-                    ext: xml
                 """
         )
     }

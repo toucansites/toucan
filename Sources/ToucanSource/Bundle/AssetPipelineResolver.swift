@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  AssetPipelineResolver.swift
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 04. 19..
 //
@@ -45,6 +45,8 @@ struct AssetPipelineResolver {
                     from: content.rawValue.assets,
                     input: property.input
                 )
+
+                print(filteredAssets)
 
                 guard !filteredAssets.isEmpty else {
                     continue

@@ -12,7 +12,7 @@ import ToucanTesting
 @testable import ToucanSDK
 
 @Suite
-struct ToucanTestSuite {
+struct ToucanTestSuite: PipelineTestSuite {
 
     @Test
     func propertyValidationLogs() async throws {

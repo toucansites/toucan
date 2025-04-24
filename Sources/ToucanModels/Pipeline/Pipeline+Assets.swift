@@ -11,6 +11,18 @@ extension Pipeline {
 
         public struct Property: Decodable {
 
+            public init(
+                action: Action,
+                property: String,
+                resolvePath: Bool,
+                input: Input
+            ) {
+                self.action = action
+                self.property = property
+                self.resolvePath = resolvePath
+                self.input = input
+            }
+
             public enum Action: String, Decodable {
                 case add
                 case set
@@ -22,6 +34,12 @@ extension Pipeline {
                 public var path: String?
                 public var name: String
                 public var ext: String
+
+                public init(path: String? = nil, name: String, ext: String) {
+                    self.path = path
+                    self.name = name
+                    self.ext = ext
+                }
             }
 
             public var action: Action
