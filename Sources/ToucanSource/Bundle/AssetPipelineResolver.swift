@@ -25,6 +25,7 @@ struct AssetPipelineResolver {
         self.assetsPath = assetsPath
         self.baseUrl = baseUrl
         self.config = config
+        self.config.properties.append(contentsOf: Pipeline.Assets.getDefaultProperties())
     }
 
     func resolve(
@@ -45,8 +46,6 @@ struct AssetPipelineResolver {
                     from: content.rawValue.assets,
                     input: property.input
                 )
-
-                print(filteredAssets)
 
                 guard !filteredAssets.isEmpty else {
                     continue
@@ -69,6 +68,8 @@ struct AssetPipelineResolver {
 
                 let finalAssets =
                     property.resolvePath ? resolvedAssets : filteredAssets
+                
+                print("finalAssets", finalAssets)
 
                 switch property.action {
                 case .add:

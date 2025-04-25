@@ -128,9 +128,8 @@ private extension RawContentLoader {
                 }
             }
         }
-
+        
         let url = url.appendingPathComponent(path ?? "")
-
         let assetLocator = AssetLocator(fileManager: fileManager)
         let assetsPath = sourceConfig.config.contents.assets.path
         let assetsUrl = url.deletingLastPathComponent()
@@ -139,7 +138,7 @@ private extension RawContentLoader {
             )
         let assetLocations = assetLocator.locate(at: assetsUrl)
 
-        frontMatter["image"] = .init(
+        /*frontMatter["image"] = .init(
             resolveImage(
                 frontMatter: frontMatter,
                 assetsPath: assetsPath,
@@ -196,7 +195,7 @@ private extension RawContentLoader {
             )
         }
 
-        frontMatter["js"] = .init(Array(Set(js)))
+        frontMatter["js"] = .init(Array(Set(js)))*/
 
         return RawContent(
             origin: .init(path: path ?? "", slug: location.slug),
@@ -247,17 +246,7 @@ extension RawContentLoader {
         slug: Slug,
         imageKey: String = "image"
     ) -> String? {
-        func resolveCoverImage(fileName: String) -> String {
-            return .init(
-                "./\(assetsPath)/\(fileName)"
-                    .resolveAsset(
-                        baseUrl: baseUrl,
-                        assetsPath: assetsPath,
-                        slug: slug
-                    )
-            )
-        }
-
+        
         if let imageValue = frontMatter[imageKey]?.stringValue() {
             if imageValue.hasPrefix("/") {
                 return .init(
@@ -275,13 +264,24 @@ extension RawContentLoader {
             }
         }
         else if assetLocations.contains("cover.jpg") {
-            return resolveCoverImage(fileName: "cover.jpg")
+            return resolveCoverImage(slug: slug, assetsPath: assetsPath, fileName: "cover.jpg")
         }
         else if assetLocations.contains("cover.png") {
-            return resolveCoverImage(fileName: "cover.png")
+            return resolveCoverImage(slug: slug, assetsPath: assetsPath, fileName: "cover.png")
         }
 
         return nil
+    }
+    
+    private func resolveCoverImage(slug: Slug, assetsPath: String, fileName: String) -> String {
+        return .init(
+            "./\(assetsPath)/\(fileName)"
+                .resolveAsset(
+                    baseUrl: baseUrl,
+                    assetsPath: assetsPath,
+                    slug: slug
+                )
+        )
     }
 }
 

@@ -55,7 +55,46 @@ extension Pipeline {
         public var properties: [Property]
 
         public static var defaults: Self {
-            .init(properties: [])
+            .init(properties: getDefaultProperties())
+        }
+        
+        public static func getDefaultProperties() -> [Property] {
+            [
+                .init(
+                    action: .add,
+                    property: "js",
+                    resolvePath: true,
+                    input: .init(name: "main", ext: "js")
+                ),
+                .init(
+                    action: .add,
+                    property: "css",
+                    resolvePath: true,
+                    input: .init(name: "style", ext: "css")
+                ),
+                .init(
+                    action: .add,
+                    property: "image",
+                    resolvePath: true,
+                    input: .init(name: "cover", ext: "jpg")
+                ),
+                .init(
+                    action: .add,
+                    property: "image",
+                    resolvePath: true,
+                    input: .init(name: "cover", ext: "png")
+                )
+                
+                // image
+                
+                /*- action: set
+                      property: image
+                      resolvePath: true # => add base url, default false
+                      file:
+                            name: "cover"
+                            ext: "jpg"*/
+
+            ]
         }
 
         public init(

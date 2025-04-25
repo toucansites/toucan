@@ -136,7 +136,7 @@ public struct SourceBundleRenderer {
                 assetsPath: sourceBundle.sourceConfig.config.contents.assets
                     .path,
                 baseUrl: sourceBundle.baseUrl,
-                config: pipeline.assets
+                config: pipeline.assets     // TODO: add default here
             )
 
             let finalContents = try assetPipelineResolver.resolve(contents)
