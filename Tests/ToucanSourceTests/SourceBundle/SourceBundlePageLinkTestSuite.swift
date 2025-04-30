@@ -159,7 +159,7 @@ struct SourceBundlePageLinkTestSuite {
 
         let contents: [Content] = [postContent, paginationContent]
         let templates: [String: String] = [
-            "posts": Templates.Mocks.pageLink()
+            "posts": Templates.Mocks.page()
         ]
 
         let config = Config.defaults

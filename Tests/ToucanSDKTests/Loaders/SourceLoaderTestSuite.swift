@@ -16,7 +16,7 @@ import FileManagerKitTesting
 @testable import ToucanFileSystem
 
 @Suite
-struct SourceLoaderTestSuite: PipelineTestSuite {
+struct SourceLoaderTestSuite: ToucanTestSuite {
 
     @Test(arguments: [nil, "http://localhost:3000/"])
     func basicLoad(baseUrl: String?) throws {

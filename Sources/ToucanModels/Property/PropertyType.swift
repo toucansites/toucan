@@ -73,7 +73,6 @@ public indirect enum PropertyType: Decodable, Equatable {
             )
             self = .date(format: format)
         case .array:
-            // TODO: test decoding
             let itemType = try container.decode(PropertyType.self, forKey: .of)
             self = .array(of: itemType)
         }

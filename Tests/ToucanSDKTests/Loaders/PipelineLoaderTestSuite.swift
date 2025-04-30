@@ -16,7 +16,7 @@ import FileManagerKitTesting
 @testable import ToucanFileSystem
 
 @Suite
-struct PipelineLoaderTestSuite: PipelineTestSuite {
+struct PipelineLoaderTestSuite: ToucanTestSuite {
 
     @Test
     func basicLoad() throws {

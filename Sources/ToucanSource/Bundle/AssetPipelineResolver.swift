@@ -25,7 +25,9 @@ struct AssetPipelineResolver {
         self.assetsPath = assetsPath
         self.baseUrl = baseUrl
         self.config = config
-        self.config.properties.append(contentsOf: Pipeline.Assets.getDefaultProperties())
+        self.config.properties.append(
+            contentsOf: Pipeline.Assets.getDefaultProperties()
+        )
     }
 
     func resolve(
@@ -68,8 +70,6 @@ struct AssetPipelineResolver {
 
                 let finalAssets =
                     property.resolvePath ? resolvedAssets : filteredAssets
-                
-                print("finalAssets", finalAssets)
 
                 switch property.action {
                 case .add:
@@ -77,23 +77,33 @@ struct AssetPipelineResolver {
                         .arrayValue(as: String.self)
                     {
                         item.properties[property.property] = .init(
-                            Array(Set(originalItems + finalAssets))
+                            createValues(
+                                assetKeys: assetKeys,
+                                array: originalItems + finalAssets
+                            )
                         )
                     }
                     else {
-                        item.properties[property.property] = .init(finalAssets)
+                        item.properties[property.property] = .init(
+                            createValues(
+                                assetKeys: assetKeys,
+                                array: finalAssets
+                            )
+                        )
                     }
+
                 case .set:
                     if finalAssets.count == 1 {
                         let asset = finalAssets[0]
                         item.properties[property.property] = .init(asset)
                     }
                     else {
-                        var values: [String: AnyCodable] = [:]
-                        for i in 0..<finalAssets.count {
-                            values[assetKeys[i]] = .init(finalAssets[i])
-                        }
-                        item.properties[property.property] = .init(values)
+                        item.properties[property.property] = .init(
+                            createValues(
+                                assetKeys: assetKeys,
+                                array: finalAssets
+                            )
+                        )
                     }
                 case .load:
                     if finalAssets.count == 1 {
@@ -149,7 +159,18 @@ struct AssetPipelineResolver {
         return results
     }
 
-    func filterFilePaths(
+    private func createValues(
+        assetKeys: [String],
+        array: [String]
+    ) -> [String: AnyCodable] {
+        var values: [String: AnyCodable] = [:]
+        for i in 0..<array.count {
+            values[assetKeys[i]] = .init(array[i])
+        }
+        return values
+    }
+
+    private func filterFilePaths(
         from paths: [String],
         input: Pipeline.Assets.Property.Input
     ) -> [String] {
@@ -172,4 +193,5 @@ struct AssetPipelineResolver {
             return pathMatches && nameMatches && extMatches
         }
     }
+
 }

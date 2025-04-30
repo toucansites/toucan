@@ -45,6 +45,7 @@ public struct Pipeline: Decodable {
     /// Definitions for all known content types in the system.
     public var contentTypes: ContentTypes
 
+    /// Static and external assets (e.g., JavaScript, CSS, images) used in rendering.
     public var assets: Assets
 
     /// Special iterator queries used for generating repeated content structures (e.g., pages in a list).

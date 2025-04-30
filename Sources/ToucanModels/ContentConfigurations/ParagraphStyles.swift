@@ -77,19 +77,25 @@ public struct ParagraphStyles: Codable, Equatable {
     /// Decodes a `ParagraphStyles` configuration from input,
     /// with missing fields defaulting to empty arrays.
     public init(from decoder: any Decoder) throws {
+        let defaults = Self.defaults
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let note =
-            try container.decodeIfPresent([String].self, forKey: .note) ?? []
+            try container.decodeIfPresent([String].self, forKey: .note)
+            ?? defaults.note
         let warn =
-            try container.decodeIfPresent([String].self, forKey: .warn) ?? []
+            try container.decodeIfPresent([String].self, forKey: .warn)
+            ?? defaults.warn
         let tip =
-            try container.decodeIfPresent([String].self, forKey: .tip) ?? []
+            try container.decodeIfPresent([String].self, forKey: .tip)
+            ?? defaults.tip
         let important =
             try container.decodeIfPresent([String].self, forKey: .important)
-            ?? []
+            ?? defaults.important
         let error =
-            try container.decodeIfPresent([String].self, forKey: .error) ?? []
+            try container.decodeIfPresent([String].self, forKey: .error)
+            ?? defaults.error
 
         self.init(
             note: note,

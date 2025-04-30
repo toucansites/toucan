@@ -45,9 +45,14 @@ struct ConfigLoaderRendererConfigTestSuite {
     @Test(
         "Test all content configurations",
         arguments: [
-            [false, true, true],
-            [true, false, true],
-            [true, true, false],
+            [false, true, true, false, false, false, false, false],
+            [false, true, true, true, false, false, false, false],
+            [false, true, true, false, true, false, false, false],
+            [false, true, true, false, false, true, false, false],
+            [false, true, true, false, false, false, true, false],
+            [false, true, true, false, false, false, false, true],
+            [true, false, true, false, false, false, false, false],
+            [true, true, false, false, false, false, false, false],
         ]
     )
     func testParseOneMissing(_ values: [Bool]) throws {
@@ -81,7 +86,7 @@ struct ConfigLoaderRendererConfigTestSuite {
     }
 
     private func getConfigarations(
-        _ values: [Bool] = [true, true, true]
+        _ values: [Bool] = [true, true, true, true, true, true, true, true]
     ) -> String {
         return """
             renderer:
@@ -93,21 +98,37 @@ struct ConfigLoaderRendererConfigTestSuite {
                     - 2
                     - 3
             """ : "")
-                \(values[2] ? """
+                \(values[2] ? getParagraphStyles([values[3], values[4], values[5], values[6], values[7]]) : "")
+            """
+    }
+
+    private func getParagraphStyles(
+        _ values: [Bool]
+    ) -> String {
+        return """
             paragraphStyles:
-                    note: 
-                        - note
+                    \(values[0] ? """
+                    note:
+                            - note
+                    """ : "")
+                    \(values[1] ? """
                     warn:
-                        - warn
-                        - warning
+                            - warn
+                            - warning
+                    """ : "")
+                    \(values[2] ? """
                     tip:
-                        - tip
+                            - tip
+                    """ : "")
+                    \(values[3] ? """
                     important:
-                        - important
+                            - important
+                    """ : "")
+                    \(values[4] ? """
                     error:
-                        - error
-                        - caution
-            """ : "")
+                            - error
+                            - caution
+                    """ : "")
             """
     }
 

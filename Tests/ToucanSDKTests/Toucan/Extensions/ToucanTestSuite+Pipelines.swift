@@ -1,13 +1,8 @@
 //
-//  PipelineTestSuite.swift
+//  ToucanTestSuite+Pipelines.swift
 //  Toucan
 //
-//  Created by Binary Birds on ..
-
-//
-//  PipelineTestSuite.swift
-//
-//  Created by gerp83 on 2025. 04. 23.
+//  Created by gerp83 on 2025. 04. 15..
 //
 
 import Testing
@@ -17,9 +12,46 @@ import FileManagerKitTesting
 import ToucanTesting
 @testable import ToucanSDK
 
-protocol PipelineTestSuite {}
+extension ToucanTestSuite {
 
-extension PipelineTestSuite {
+    func pipelineHtml(
+        needPost: Bool = false,
+        rootUrl: String? = nil,
+        rootName: String? = nil
+    ) -> File {
+        File(
+            "html.yml",
+            string: """
+                id: html
+                contentTypes: 
+                    include:
+                        - page
+                        \(needPost ? "-post" : "")
+                engine: 
+                    id: mustache
+                    options:
+                        contentTypes: 
+                            page:
+                                template: "pages.default"
+                            \(needPost ? """
+                            post:
+                                    template: "pages.default"
+                            """ : "")
+                \(rootUrl != nil && rootName != nil ? """
+                transformers:
+                        page:
+                            run:
+                                - name: replace
+                                  path: \(rootUrl ?? "")/\(rootName ?? "")/src/transformers
+                            isMarkdownResult: false
+                """ : "")
+                output:
+                    path: "{{slug}}"
+                    file: index
+                    ext: html
+                """
+        )
+    }
 
     func pipeline404(addTransformers: Bool = false) -> File {
         File(

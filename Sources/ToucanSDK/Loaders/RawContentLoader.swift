@@ -128,7 +128,7 @@ private extension RawContentLoader {
                 }
             }
         }
-        
+
         let url = url.appendingPathComponent(path ?? "")
         let assetLocator = AssetLocator(fileManager: fileManager)
         let assetsPath = sourceConfig.config.contents.assets.path
@@ -138,7 +138,7 @@ private extension RawContentLoader {
             )
         let assetLocations = assetLocator.locate(at: assetsUrl)
 
-        /*frontMatter["image"] = .init(
+        frontMatter["image"] = .init(
             resolveImage(
                 frontMatter: frontMatter,
                 assetsPath: assetsPath,
@@ -146,56 +146,6 @@ private extension RawContentLoader {
                 slug: .init(value: location.slug)
             )
         )
-
-        // resolve css context
-        var css: [String] = []
-        if let config = frontMatter["css"]?.arrayValue(as: String.self) {
-            css = config.map {
-                $0.resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: .init(value: location.slug)
-                )
-            }
-        }
-
-        if assetLocations.contains("style.css") {
-            css.append(
-                "./\(assetsPath)/style.css"
-                    .resolveAsset(
-                        baseUrl: baseUrl,
-                        assetsPath: assetsPath,
-                        slug: .init(value: location.slug)
-                    )
-            )
-        }
-
-        frontMatter["css"] = .init(Array(Set(css)))
-
-        // resolve js context
-        var js: [String] = []
-        if let config = frontMatter["js"]?.arrayValue(as: String.self) {
-            js = config.map {
-                $0.resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: .init(value: location.slug)
-                )
-            }
-        }
-
-        if assetLocations.contains("main.js") {
-            js.append(
-                "./\(assetsPath)/main.js"
-                    .resolveAsset(
-                        baseUrl: baseUrl,
-                        assetsPath: assetsPath,
-                        slug: .init(value: location.slug)
-                    )
-            )
-        }
-
-        frontMatter["js"] = .init(Array(Set(js)))*/
 
         return RawContent(
             origin: .init(path: path ?? "", slug: location.slug),
@@ -246,7 +196,7 @@ extension RawContentLoader {
         slug: Slug,
         imageKey: String = "image"
     ) -> String? {
-        
+
         if let imageValue = frontMatter[imageKey]?.stringValue() {
             if imageValue.hasPrefix("/") {
                 return .init(
@@ -263,43 +213,8 @@ extension RawContentLoader {
                 )
             }
         }
-        else if assetLocations.contains("cover.jpg") {
-            return resolveCoverImage(slug: slug, assetsPath: assetsPath, fileName: "cover.jpg")
-        }
-        else if assetLocations.contains("cover.png") {
-            return resolveCoverImage(slug: slug, assetsPath: assetsPath, fileName: "cover.png")
-        }
 
         return nil
     }
-    
-    private func resolveCoverImage(slug: Slug, assetsPath: String, fileName: String) -> String {
-        return .init(
-            "./\(assetsPath)/\(fileName)"
-                .resolveAsset(
-                    baseUrl: baseUrl,
-                    assetsPath: assetsPath,
-                    slug: slug
-                )
-        )
-    }
-}
 
-//extension AssetProperty {
-//
-//    func resolvedPath(
-//        baseUrl: String,
-//        assetsPath: String,
-//        slug: Slug
-//    ) -> String {
-//        if resolvePath {
-//            return "\(file.name).\(file.ext)"
-//                .resolveAsset(
-//                   baseUrl: baseUrl,
-//                    assetsPath: assetsPath,
-//                    slug: slug
-//                )
-//        }
-//        return "\(file.name).\(file.ext)"
-//    }
-//}
+}
