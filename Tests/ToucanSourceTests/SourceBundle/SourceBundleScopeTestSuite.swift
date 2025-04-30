@@ -55,7 +55,6 @@ struct SourceBundleScopeTestSuite {
                             context: .detail,
                             fields: [
                                 "title",
-                                "description",
                                 "slug",
                             ]
                         )
@@ -203,7 +202,6 @@ struct SourceBundleScopeTestSuite {
             struct Page: Decodable {
                 let slug: Slug
                 let title: String
-                let description: String
                 let isCurrentURL: Bool?
             }
             let page: Page

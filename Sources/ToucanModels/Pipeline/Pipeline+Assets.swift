@@ -43,7 +43,7 @@ extension Pipeline {
                 case set
                 /// Load the asset from a specified path or resource.
                 case load
-                /// Parse the asset, typically used for dynamic formats (e.g., JSON).
+                /// Parse the asset, typically used for dynamic formats (e.g., JSON, YAML).
                 case parse
             }
 

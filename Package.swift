@@ -40,7 +40,7 @@ let package = Package(
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
         .package(url: "https://github.com/aus-der-Technik/FileMonitor", from: "1.2.0"),
         .package(url: "https://github.com/Zollerboy1/SwiftCommand", from: "1.4.0"),
-        .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0")
+//        .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0")
 //        .package(url: "https://github.com/swiftlang/swift-subprocess", branch: "main")
     ],
     targets: [
@@ -107,7 +107,7 @@ let package = Package(
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "Yams", package: "yams"),
-                .product(name: "DartSass", package: "swift-sass"),
+                //.product(name: "DartSass", package: "swift-sass"),
                 .target(name: "ToucanFileSystem"),
                 .target(name: "ToucanSource"),
                 .target(name: "ToucanTesting"),
