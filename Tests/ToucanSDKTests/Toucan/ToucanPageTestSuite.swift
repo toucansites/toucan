@@ -57,6 +57,9 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                 Directory("pipelines") {
                     pipelineHtml(rootUrl: rootUrl.path(), rootName: rootName)
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -64,9 +67,6 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                                 themeDefaultMustache()
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
@@ -104,6 +104,11 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                     pipelineSitemap()
                     pipeline404()
                 }
+                Directory("types") {
+                    type404()
+                    typePage()
+                    typeSitemap()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("assets") {
@@ -119,11 +124,6 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                             }
                             themeHtmlMustache()
                             themeSitemapMustache()
-                        }
-                        Directory("types") {
-                            type404()
-                            typePage()
-                            typeSitemap()
                         }
                     }
                 }
@@ -163,6 +163,11 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                     pipelineHtml()
                     pipelineRss()
                 }
+                Directory("types") {
+                    typePage()
+                    typePost()
+                    typeRss()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -174,11 +179,6 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                             }
                             themeRssMustache()
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
-                            typePost()
-                            typeRss()
                         }
                     }
                 }
@@ -217,6 +217,10 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                     pipelineHtml()
                     pipelineRedirect()
                 }
+                Directory("types") {
+                    typePage()
+                    typeRedirect()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -225,10 +229,6 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                             }
                             themeRedirectMustache()
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
-                            typeRedirect()
                         }
                     }
                 }

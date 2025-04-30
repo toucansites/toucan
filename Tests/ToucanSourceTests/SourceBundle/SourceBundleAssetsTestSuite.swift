@@ -28,7 +28,8 @@ struct SourceBundleAssetsTestSuite {
                 contentTypes: .init(
                     include: ["page"],
                     exclude: [],
-                    lastUpdate: []
+                    lastUpdate: [],
+                    filterRules: [:]
                 ),
                 iterators: [:],
                 assets: .init(properties: [
@@ -81,7 +82,8 @@ struct SourceBundleAssetsTestSuite {
                 contentTypes: .init(
                     include: ["page"],
                     exclude: [],
-                    lastUpdate: []
+                    lastUpdate: [],
+                    filterRules: [:]
                 ),
                 iterators: [:],
                 assets: .init(properties: [
@@ -145,7 +147,8 @@ struct SourceBundleAssetsTestSuite {
                 contentTypes: .init(
                     include: ["page"],
                     exclude: [],
-                    lastUpdate: []
+                    lastUpdate: [],
+                    filterRules: [:]
                 ),
                 iterators: [:],
                 assets: .init(properties: [
@@ -198,7 +201,8 @@ struct SourceBundleAssetsTestSuite {
                 contentTypes: .init(
                     include: ["page"],
                     exclude: [],
-                    lastUpdate: []
+                    lastUpdate: [],
+                    filterRules: [:]
                 ),
                 iterators: [:],
                 assets: .init(properties: [

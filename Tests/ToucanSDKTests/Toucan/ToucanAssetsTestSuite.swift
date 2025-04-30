@@ -65,6 +65,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -72,9 +75,6 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 themeDefaultMustache(svg: "{{page.svg}}")
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
@@ -149,6 +149,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -161,9 +164,6 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 )
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
@@ -240,6 +240,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -253,9 +256,6 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 )
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
@@ -331,6 +331,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -346,9 +349,6 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 )
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }

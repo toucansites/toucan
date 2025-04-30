@@ -58,6 +58,9 @@ struct ToucanErrorTestSuite: ToucanTestSuite {
                 Directory("pipelines") {
                     pipelineHtml()
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -65,9 +68,6 @@ struct ToucanErrorTestSuite: ToucanTestSuite {
                                 themeDefaultMustache()
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
@@ -121,6 +121,9 @@ struct ToucanErrorTestSuite: ToucanTestSuite {
                 Directory("pipelines") {
                     pipelineHtml()
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -128,9 +131,6 @@ struct ToucanErrorTestSuite: ToucanTestSuite {
                                 themeDefaultMustache()
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
@@ -168,6 +168,9 @@ struct ToucanErrorTestSuite: ToucanTestSuite {
                 Directory("pipelines") {
                     pipelineHtml()
                 }
+                Directory("types") {
+                    typePage()
+                }
                 Directory("themes") {
                     Directory("default") {
                         Directory("templates") {
@@ -175,9 +178,6 @@ struct ToucanErrorTestSuite: ToucanTestSuite {
                                 themeDefaultMustache()
                             }
                             themeHtmlMustache()
-                        }
-                        Directory("types") {
-                            typePage()
                         }
                     }
                 }
