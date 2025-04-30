@@ -12,13 +12,23 @@ public extension [Content] {
     /// Executes a `Query` against the current content collection, applying filtering,
     /// sorting, and pagination.
     ///
-    /// - Parameter query: The `Query` object containing filtering, ordering, and limit logic.
+    /// - Parameters:
+    ///   - query: The `Query` object containing filtering, ordering, and limit logic.
+    ///   - now: The current timestamp used for time-based filtering.
     /// - Returns: A filtered, sorted, and paginated array of `Content` items.
-    func run(query: Query) -> [Content] {
-        let contents = self.filter {
-            query.contentType == $0.definition.id
-        }
-        return filter(contents: contents, using: query)
+    func run(
+        query: Query,
+        now: TimeInterval
+    ) -> [Content] {
+        let contents = filter { query.contentType == $0.definition.id }
+        return filter(
+            contents: contents,
+            using: query.resolveFilterParameters(
+                with: [
+                    "date.now": .init(now)
+                ]
+            )
+        )
     }
 
     /// Filters, sorts, and slices the given content array based on a query.

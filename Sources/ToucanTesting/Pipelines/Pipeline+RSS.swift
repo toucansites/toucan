@@ -24,7 +24,8 @@ public extension Pipeline.Mocks {
                     "post",
                     "author",
                     "tag",
-                ]
+                ],
+                filterRules: [:]
             ),
             iterators: [:],
             assets: .defaults,

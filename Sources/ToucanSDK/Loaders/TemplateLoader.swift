@@ -32,7 +32,7 @@ struct TemplateLoader {
 
     /// Loads and returns a map of templates
     ///
-    /// - Throws: An error if the content types could not be loaded.
+    /// - Throws: An error if the templetes could not be loaded.
     /// - Returns: A map of `[String: String]` object.
     ///
     func load() throws -> [String: String] {

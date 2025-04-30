@@ -20,7 +20,8 @@ public extension Pipeline.Mocks {
                     "redirect"
                 ],
                 exclude: [],
-                lastUpdate: []
+                lastUpdate: [],
+                filterRules: [:]
             ),
             iterators: [:],
             assets: .defaults,

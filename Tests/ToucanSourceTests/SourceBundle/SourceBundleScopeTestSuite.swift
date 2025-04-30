@@ -68,11 +68,7 @@ struct SourceBundleScopeTestSuite {
                     )
                 ],
                 dataTypes: .defaults,
-                contentTypes: .init(
-                    include: [],
-                    exclude: [],
-                    lastUpdate: []
-                ),
+                contentTypes: .defaults,
                 iterators: [:],
                 assets: .defaults,
                 transformers: [:],
@@ -160,6 +156,9 @@ struct SourceBundleScopeTestSuite {
             logger: logger
         )
         let results = try renderer.render(now: now)
+            .sorted {
+                $0.destination.path < $1.destination.path
+            }
 
         #expect(results.count == 2)
 
@@ -213,7 +212,6 @@ struct SourceBundleScopeTestSuite {
 
         let data1 = try #require(results[1].contents.data(using: .utf8))
         let exp1 = try decoder.decode(Exp1.self, from: data1)
-
         #expect(exp1.context.featured.allSatisfy { $0.isCurrentURL == nil })
     }
 }

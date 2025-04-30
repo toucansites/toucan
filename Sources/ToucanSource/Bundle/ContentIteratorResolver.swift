@@ -13,6 +13,7 @@ import Logging
 struct ContentIteratorResolver {
 
     var baseUrl: String
+    var now: TimeInterval
 
     func resolve(
         contents: [Content],
@@ -37,7 +38,7 @@ struct ContentIteratorResolver {
                     orderBy: query.orderBy
                 )
 
-                let total = contents.run(query: countQuery).count
+                let total = contents.run(query: countQuery, now: now).count
                 let limit = max(1, query.limit ?? 10)
                 let numberOfPages = (total + limit - 1) / limit
 
@@ -96,7 +97,8 @@ struct ContentIteratorResolver {
                             offset: offset,
                             filter: query.filter,
                             orderBy: query.orderBy
-                        )
+                        ),
+                        now: now
                     )
 
                     alteredContent.iteratorInfo = .init(

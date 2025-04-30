@@ -36,11 +36,7 @@ struct SourceBundleErrorTests {
                 scopes: [:],
                 queries: [:],
                 dataTypes: .defaults,
-                contentTypes: .init(
-                    include: [],
-                    exclude: [],
-                    lastUpdate: []
-                ),
+                contentTypes: .defaults,
                 iterators: [:],
                 assets: .defaults,
                 transformers: [:],

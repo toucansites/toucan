@@ -50,11 +50,7 @@ public extension Pipeline.Mocks {
                     ]
                 )
             ),
-            contentTypes: .init(
-                include: [],
-                exclude: [],
-                lastUpdate: []
-            ),
+            contentTypes: .defaults,
             iterators: [
                 "post.pagination": .init(
                     contentType: "post",
