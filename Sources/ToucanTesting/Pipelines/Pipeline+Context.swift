@@ -57,6 +57,7 @@ public extension Pipeline.Mocks {
                     limit: 2
                 )
             ],
+            assets: .defaults,
             transformers: [:],
             engine: .init(
                 id: "context",

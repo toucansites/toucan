@@ -20,6 +20,7 @@ public struct Pipeline: Decodable {
         case dataTypes
         case contentTypes
         case iterators
+        case assets
         case transformers
         case engine
         case output
@@ -44,6 +45,9 @@ public struct Pipeline: Decodable {
     /// Definitions for all known content types in the system.
     public var contentTypes: ContentTypes
 
+    /// Static and external assets (e.g., JavaScript, CSS, images) used in rendering.
+    public var assets: Assets
+
     /// Special iterator queries used for generating repeated content structures (e.g., pages in a list).
     public var iterators: [String: Query]
 
@@ -66,6 +70,7 @@ public struct Pipeline: Decodable {
         dataTypes: DataTypes,
         contentTypes: ContentTypes,
         iterators: [String: Query],
+        assets: Assets,
         transformers: [String: TransformerPipeline],
         engine: Pipeline.Engine,
         output: Output
@@ -76,6 +81,7 @@ public struct Pipeline: Decodable {
         self.dataTypes = dataTypes
         self.contentTypes = contentTypes
         self.iterators = iterators
+        self.assets = assets
         self.transformers = transformers
         self.engine = engine
         self.output = output
@@ -123,6 +129,12 @@ public struct Pipeline: Decodable {
                 forKey: .iterators
             ) ?? [:]
 
+        let assets =
+            try container.decodeIfPresent(
+                Assets.self,
+                forKey: .assets
+            ) ?? .defaults
+
         let transformers =
             try container.decodeIfPresent(
                 [String: TransformerPipeline].self,
@@ -139,6 +151,7 @@ public struct Pipeline: Decodable {
             dataTypes: dataTypes,
             contentTypes: contentTypes,
             iterators: iterators,
+            assets: assets,
             transformers: transformers,
             engine: engine,
             output: output
@@ -153,7 +166,9 @@ public struct Pipeline: Decodable {
     ///
     /// - Parameter contentType: The content type key (e.g., `"post"`).
     /// - Returns: A map of scope keys (e.g., `"list"`, `"detail"`) to `Scope` values.
-    public func getScopes(for contentType: String) -> [String: Scope] {
+    public func getScopes(
+        for contentType: String
+    ) -> [String: Scope] {
         if let scopes = scopes[contentType] {
             return scopes
         }
@@ -168,8 +183,10 @@ public struct Pipeline: Decodable {
     ///   - key: The scope key (e.g., `"detail"`, `"reference"`).
     ///   - contentType: The content type key.
     /// - Returns: A `Scope` object.
-    public func getScope(keyedBy key: String, for contentType: String) -> Scope
-    {
+    public func getScope(
+        keyedBy key: String,
+        for contentType: String
+    ) -> Scope {
         let scopes = getScopes(for: contentType)
         return scopes[key] ?? .detail
     }

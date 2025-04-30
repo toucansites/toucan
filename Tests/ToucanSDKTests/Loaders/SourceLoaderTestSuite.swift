@@ -16,7 +16,7 @@ import FileManagerKitTesting
 @testable import ToucanFileSystem
 
 @Suite
-struct SourceLoaderTestSuite {
+struct SourceLoaderTestSuite: ToucanTestSuite {
 
     @Test(arguments: [nil, "http://localhost:3000/"])
     func basicLoad(baseUrl: String?) throws {
@@ -58,25 +58,7 @@ struct SourceLoaderTestSuite {
                     )
                 }
                 Directory("pipelines") {
-                    File(
-                        "404.yml",
-                        string: """
-                            id: not-found
-                            contentTypes: 
-                                include:
-                                    - "not-found"
-                            engine: 
-                                id: mustache
-                                options:
-                                    contentTypes: 
-                                        not-found:
-                                            template: "pages.404"
-                            output:
-                                path: ""
-                                file: 404
-                                ext: html
-                            """
-                    )
+                    pipeline404()
                 }
                 File(
                     "config.yml",

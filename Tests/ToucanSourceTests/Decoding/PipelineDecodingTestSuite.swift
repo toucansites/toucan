@@ -38,6 +38,14 @@ struct PipelineDecodingTestSuite {
                 id: test
                 options:
                     foo: bar
+                    foo2: 
+                    bool: false
+                    double: 2.0
+                    int: 100
+                    date: 01/16/2023
+                    array:
+                        - value1
+                        - value2
             output:
                 path: "{{slug}}"
                 file: "{{id}}"
@@ -55,9 +63,35 @@ struct PipelineDecodingTestSuite {
         #expect(result.contentTypes.include == ["page", "post"])
         let query = try #require(result.queries["featured"])
         #expect(query.contentType == "post")
-
         #expect(result.engine.id == "test")
+        #expect(result.engine.options.string("") == nil)
         #expect(result.engine.options.string("foo") == "bar")
+        #expect(result.engine.options.string("foo.foo2") == nil)
+        #expect(
+            result.engine.options.string("foo4", allowingEmptyValue: true)
+                == nil
+        )
+        #expect(result.engine.options.string("foo4") == nil)
+        #expect(result.engine.options.bool("bool") == false)
+        #expect(result.engine.options.double("double") == 2.0)
+        #expect(result.engine.options.int("int") == 100)
+
+        let formatter = DateFormatter.default
+        formatter.dateFormat = "MM/dd/yyyy"
+        #expect(
+            result.engine.options.date("date", formatter: formatter)?
+                .formatted() == "2023. 01. 16., 1:00"
+        )
+        #expect(
+            result.engine.options.date("date2", formatter: formatter)?
+                .formatted() == nil
+        )
+        #expect(
+            result.engine.options.array("array", as: String.self) == [
+                "value1", "value2",
+            ]
+        )
+        #expect(result.engine.options.array("array", as: Int.self) == [])
     }
 
     @Test

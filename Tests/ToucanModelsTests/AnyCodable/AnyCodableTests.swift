@@ -219,9 +219,6 @@ struct AnyCodableTests {
         #expect(stringValue.debugDescription == "AnyCodable(\"string\")")
         #expect(nilValue.description == "nil")
         #expect(nilValue.debugDescription == "AnyCodable(nil)")
-
-        // [AnyCodable("string"), AnyCodable("string2")]
-
         #expect(
             arrayValue.description
                 == "[AnyCodable(\"string\"), AnyCodable(\"string2\")]"

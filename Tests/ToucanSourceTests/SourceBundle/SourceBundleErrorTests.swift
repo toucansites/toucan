@@ -38,6 +38,7 @@ struct SourceBundleErrorTests {
                 dataTypes: .defaults,
                 contentTypes: .defaults,
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "other",

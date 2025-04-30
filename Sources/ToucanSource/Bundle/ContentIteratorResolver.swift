@@ -2,13 +2,7 @@
 //  ContentIteratorResolver.swift
 //  Toucan
 //
-//  Created by Binary Birds on 2025. 04. 15..
-
-//
-//  ContextBundleCreator.swift
-//
-//  Created by gerp83 on 2025. 03. 26.
-//
+//  Created by gerp83 on 2025. 03. 26..
 
 import Foundation
 import ToucanModels

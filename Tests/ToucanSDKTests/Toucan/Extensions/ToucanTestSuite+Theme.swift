@@ -49,28 +49,33 @@ extension ToucanTestSuite {
             string: """
                 {{<html}}
                 {{$main}}
-
                 <div id="not-found" class="page">
                     {{& page.contents.html}}
                 </div>
-
                 {{/main}}
                 {{/html}}
                 """
         )
     }
 
-    func themeDefaultMustache() -> File {
+    func themeDefaultMustache(
+        svg: String = "",
+        yaml: String = ""
+    ) -> File {
         File(
             "default.mustache",
             string: """
                 {{<html}}
                 {{$main}}
-
                 <div class="page">
+                    <div class="card">
+                        <img src="{{page.image}}">
+                    </div>
+                    \(svg)
+                    \(yaml)
+
                     {{& page.contents.html}}
                 </div>
-
                 {{/main}}
                 {{/html}}
                 """
@@ -83,13 +88,11 @@ extension ToucanTestSuite {
             string: """
                 {{<html}}
                 {{$main}}
-
                 <div class="page">
                     <div id="home">
                         {{& page.contents.html}}
                     </div>
                 </div>
-
                 {{/main}}
                 {{/html}}
                 """
@@ -121,7 +124,6 @@ extension ToucanTestSuite {
                             title="{{site.title}}"
                         >
                     </a>
-
                     <nav>
                         <div class="navigation">
                             {{#site.navigation}}
