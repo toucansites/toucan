@@ -44,6 +44,7 @@ struct SourceBundleContextTestSuite {
                 dataTypes: .defaults,
                 contentTypes: .defaults,
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "json",
@@ -205,6 +206,7 @@ struct SourceBundleContextTestSuite {
                 dataTypes: .defaults,
                 contentTypes: .defaults,
                 iterators: [:],
+                assets: .defaults,
                 transformers: [:],
                 engine: .init(
                     id: "json",

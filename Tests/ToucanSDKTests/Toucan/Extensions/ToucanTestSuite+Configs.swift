@@ -14,6 +14,20 @@ import ToucanTesting
 
 extension ToucanTestSuite {
 
+    func getToucan(
+        _ input: URL,
+        _ output: URL,
+        _ logger: Logger
+    ) -> Toucan {
+        let toucan = Toucan(
+            input: input.path(),
+            output: output.path(),
+            baseUrl: "http:localhost:3000",
+            logger: logger
+        )
+        return toucan
+    }
+
     func contentSiteFile() -> File {
         File(
             "site.yml",

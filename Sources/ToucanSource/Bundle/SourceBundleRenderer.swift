@@ -143,6 +143,16 @@ public struct SourceBundleRenderer {
                 using: pipeline
             )
 
+            let assetPipelineResolver = AssetPipelineResolver(
+                contentsUrl: sourceBundle.sourceConfig.contentsUrl,
+                assetsPath: sourceBundle.sourceConfig.config.contents.assets
+                    .path,
+                baseUrl: sourceBundle.baseUrl,
+                config: pipeline.assets
+            )
+
+            let finalContents = try assetPipelineResolver.resolve(contents)
+
             let lastUpdate =
                 getLastContentUpdate(
                     contents: contents,
@@ -156,7 +166,7 @@ public struct SourceBundleRenderer {
             siteContext["lastUpdate"] = .init(lastUpdateContext)
 
             let contextBundles = try getContextBundles(
-                contents: contents,
+                contents: finalContents,
                 context: [
                     "site": .init(siteContext)
                 ],

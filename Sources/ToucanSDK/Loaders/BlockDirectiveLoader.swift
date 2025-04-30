@@ -2,13 +2,7 @@
 //  BlockDirectiveLoader.swift
 //  Toucan
 //
-//  Created by Binary Birds on 2025. 04. 09..
-
-//
-//  BlockDirectiveLoader.swift
-//
-//  Created by gerp83 on 2025. 03. 04.
-//
+//  Created by gerp83 on 2025. 03. 04..
 
 import Foundation
 import Logging

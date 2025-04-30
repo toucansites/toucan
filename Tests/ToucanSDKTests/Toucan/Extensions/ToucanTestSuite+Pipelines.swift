@@ -14,28 +14,6 @@ import ToucanTesting
 
 extension ToucanTestSuite {
 
-    func pipeline404() -> File {
-        File(
-            "404.yml",
-            string: """
-                id: not-found
-                contentTypes: 
-                    include:
-                        - not-found
-                engine: 
-                    id: mustache
-                    options:
-                        contentTypes: 
-                            not-found:
-                                template: "pages.404"
-                output:
-                    path: ""
-                    file: 404
-                    ext: html
-                """
-        )
-    }
-
     func pipelineHtml(
         needPost: Bool = false,
         rootUrl: String? = nil,
@@ -71,6 +49,70 @@ extension ToucanTestSuite {
                     path: "{{slug}}"
                     file: index
                     ext: html
+                """
+        )
+    }
+
+    func pipeline404(addTransformers: Bool = false) -> File {
+        File(
+            "404.yml",
+            string: """
+                id: not-found
+                contentTypes: 
+                    include:
+                        - not-found
+                \(addTransformers ? """
+                transformers:
+                        post:
+                            run: 
+                                - name: swiftinit
+                                  url: src/transformers
+                            isMarkdownResult: false
+                        issue:
+                            run: 
+                                - name: issue
+                            isMarkdownResult: false
+                """ : "")
+                engine: 
+                    id: mustache
+                    options:
+                        contentTypes: 
+                            not-found:
+                                template: "pages.404"
+                output:
+                    path: ""
+                    file: 404
+                    ext: html
+                """
+        )
+    }
+
+    func pipelineSitemap(_ assets: String? = nil) -> File {
+        File(
+            "sitemap.yml",
+            string: """
+                id: sitemap
+                queries:
+                    pages:
+                        contentType: page
+                        scope: list
+                        orderBy:
+                            - key: lastUpdate
+                              direction: desc
+                contentTypes: 
+                    include:
+                        - sitemap
+                \(assets ?? "")
+                engine: 
+                    id: mustache
+                    options:
+                        contentTypes: 
+                            sitemap:
+                                template: "sitemap"
+                output:
+                    path: ""
+                    file: sitemap
+                    ext: xml
                 """
         )
     }
@@ -123,37 +165,6 @@ extension ToucanTestSuite {
                 output:
                     path: ""
                     file: rss
-                    ext: xml
-                """
-        )
-    }
-
-    func pipelineSitemap() -> File {
-        File(
-            "sitemap.yml",
-            string: """
-                id: sitemap
-
-                queries:
-                    pages:
-                        contentType: page
-                        scope: list
-                        orderBy:
-                            - key: lastUpdate
-                              direction: desc
-
-                contentTypes: 
-                    include:
-                        - sitemap
-                engine: 
-                    id: mustache
-                    options:
-                        contentTypes: 
-                            sitemap:
-                                template: "sitemap"
-                output:
-                    path: ""
-                    file: sitemap
                     ext: xml
                 """
         )
