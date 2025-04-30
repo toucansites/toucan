@@ -29,6 +29,9 @@ install:
 uninstall:
 	./scripts/uninstall-toucan.sh
 
+chmod:
+	./scripts/run-chmod.sh
+
 docker-image:
 	docker build -t toucan . -f ./Docker/Dockerfile
 
