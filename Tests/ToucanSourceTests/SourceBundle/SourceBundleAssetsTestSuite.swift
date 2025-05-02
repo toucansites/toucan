@@ -32,14 +32,19 @@ struct SourceBundleAssetsTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [:],
-                assets: .init(properties: [
-                    .init(
-                        action: .set,
-                        property: "image",
-                        resolvePath: false,
-                        input: .init(name: "cover", ext: "jpg")
-                    )
-                ]),
+                assets: .init(
+                    properties: [
+                        .init(
+                            action: .set,
+                            property: "image",
+                            resolvePath: true,
+                            input: .init(
+                                name: "cover",
+                                ext: "jpg"
+                            )
+                        )
+                    ]
+                ),
                 transformers: [:],
                 engine: .init(
                     id: "mustache",
