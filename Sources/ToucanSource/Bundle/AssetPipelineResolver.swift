@@ -77,21 +77,12 @@ struct AssetPipelineResolver {
                         .arrayValue(as: String.self)
                     {
                         item.properties[property.property] = .init(
-                            createValues(
-                                assetKeys: assetKeys,
-                                array: originalItems + finalAssets
-                            )
+                            originalItems + finalAssets
                         )
                     }
                     else {
-                        item.properties[property.property] = .init(
-                            createValues(
-                                assetKeys: assetKeys,
-                                array: finalAssets
-                            )
-                        )
+                        item.properties[property.property] = .init(finalAssets)
                     }
-
                 case .set:
                     if finalAssets.count == 1 {
                         let asset = finalAssets[0]
@@ -99,7 +90,7 @@ struct AssetPipelineResolver {
                     }
                     else {
                         item.properties[property.property] = .init(
-                            createValues(
+                            createDictionaryValues(
                                 assetKeys: assetKeys,
                                 array: finalAssets
                             )
@@ -159,7 +150,7 @@ struct AssetPipelineResolver {
         return results
     }
 
-    private func createValues(
+    private func createDictionaryValues(
         assetKeys: [String],
         array: [String]
     ) -> [String: AnyCodable] {

@@ -210,14 +210,19 @@ struct SourceBundleAssetsTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [:],
-                assets: .init(properties: [
-                    .init(
-                        action: .add,
-                        property: "image",
-                        resolvePath: true,
-                        input: .init(name: "*", ext: "png")
-                    )
-                ]),
+                assets: .init(
+                    properties: [
+                        .init(
+                            action: .add,
+                            property: "images",
+                            resolvePath: true,
+                            input: .init(
+                                name: "*",
+                                ext: "png"
+                            )
+                        )
+                    ]
+                ),
                 transformers: [:],
                 engine: .init(
                     id: "mustache",
@@ -243,8 +248,79 @@ struct SourceBundleAssetsTestSuite {
             pipelines,
             rawPageContents,
             """
-            <img src=\"{{page.image.custom1}}\">
-            <img src=\"{{page.image.custom2}}\">
+            {{#page.images}}
+            <img src=\"{{.}}\">
+            {{/page.images}}
+            """
+        )
+        let results = try renderer.render(now: Date())
+
+        #expect(results.count == 1)
+        #expect(
+            results[0].contents
+                .contains("http://localhost:3000/assets/slug/custom1.png")
+        )
+        #expect(
+            results[0].contents
+                .contains("http://localhost:3000/assets/slug/custom2.png")
+        )
+    }
+
+    @Test()
+    func testSetMoreKeys() async throws {
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "test",
+                scopes: [:],
+                queries: [:],
+                dataTypes: .defaults,
+                contentTypes: .init(
+                    include: ["page"],
+                    exclude: [],
+                    lastUpdate: [],
+                    filterRules: [:]
+                ),
+                iterators: [:],
+                assets: .init(
+                    properties: [
+                        .init(
+                            action: .set,
+                            property: "images",
+                            resolvePath: true,
+                            input: .init(
+                                name: "*",
+                                ext: "png"
+                            )
+                        )
+                    ]
+                ),
+                transformers: [:],
+                engine: .init(
+                    id: "mustache",
+                    options: [
+                        "contentTypes": [
+                            "page": [
+                                "template": "page"
+                            ]
+                        ]
+                    ]
+                ),
+                output: .init(
+                    path: "{{slug}}",
+                    file: "index",
+                    ext: "html"
+                )
+            )
+        ]
+        let rawPageContents: [RawContent] = [
+            getRawContent(["custom1.png", "custom2.png"])
+        ]
+        var renderer = getRenderer(
+            pipelines,
+            rawPageContents,
+            """
+            <img src=\"{{page.images.custom1}}\">
+            <img src=\"{{page.images.custom2}}\">
             """
         )
         let results = try renderer.render(now: Date())
