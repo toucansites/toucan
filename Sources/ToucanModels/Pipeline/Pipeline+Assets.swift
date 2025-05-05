@@ -93,38 +93,7 @@ extension Pipeline {
 
         /// Provides default `Property` values for a standard rendering pipeline.
         public static func getDefaultProperties() -> [Property] {
-            [
-                .init(
-                    action: .set,
-                    property: "js",
-                    resolvePath: true,
-                    input: .init(name: "main", ext: "js")
-                ),
-                .init(
-                    action: .set,
-                    property: "css",
-                    resolvePath: true,
-                    input: .init(name: "style", ext: "css")
-                ),
-                .init(
-                    action: .add,
-                    property: "image",
-                    resolvePath: true,
-                    input: .init(name: "cover", ext: "jpg")
-                ),
-                .init(
-                    action: .add,
-                    property: "image",
-                    resolvePath: true,
-                    input: .init(name: "cover", ext: "png")
-                ),
-                .init(
-                    action: .add,
-                    property: "image",
-                    resolvePath: true,
-                    input: .init(name: "cover", ext: "webp")
-                ),
-            ]
+            []
         }
 
         /// Initializes an `Assets` instance with a given set of properties.
