@@ -33,6 +33,7 @@ struct SourceBundleAssetsTestSuite {
                 ),
                 iterators: [:],
                 assets: .init(
+                    behaviors: [],
                     properties: [
                         .init(
                             action: .set,
@@ -91,14 +92,17 @@ struct SourceBundleAssetsTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [:],
-                assets: .init(properties: [
-                    .init(
-                        action: .set,
-                        property: "image",
-                        resolvePath: true,
-                        input: .init(name: "*", ext: "png")
-                    )
-                ]),
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .set,
+                            property: "image",
+                            resolvePath: true,
+                            input: .init(name: "*", ext: "png")
+                        )
+                    ]
+                ),
                 transformers: [:],
                 engine: .init(
                     id: "mustache",
@@ -156,14 +160,17 @@ struct SourceBundleAssetsTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [:],
-                assets: .init(properties: [
-                    .init(
-                        action: .add,
-                        property: "image",
-                        resolvePath: true,
-                        input: .init(name: "custom", ext: "jpg")
-                    )
-                ]),
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .add,
+                            property: "image",
+                            resolvePath: true,
+                            input: .init(name: "custom", ext: "jpg")
+                        )
+                    ]
+                ),
                 transformers: [:],
                 engine: .init(
                     id: "mustache",
@@ -211,6 +218,7 @@ struct SourceBundleAssetsTestSuite {
                 ),
                 iterators: [:],
                 assets: .init(
+                    behaviors: [],
                     properties: [
                         .init(
                             action: .add,
@@ -282,6 +290,7 @@ struct SourceBundleAssetsTestSuite {
                 ),
                 iterators: [:],
                 assets: .init(
+                    behaviors: [],
                     properties: [
                         .init(
                             action: .set,
