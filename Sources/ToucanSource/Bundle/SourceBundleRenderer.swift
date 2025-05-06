@@ -316,10 +316,16 @@ public struct SourceBundleRenderer {
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
 
-        let outputArgs: [String: String] = [
+        var outputArgs: [String: String] = [
             "{{id}}": content.id,
             "{{slug}}": content.slug.value,
         ]
+
+        if let info = content.iteratorInfo {
+            outputArgs["{{iterator.current}}"] = String(info.current)
+            outputArgs["{{iterator.total}}"] = String(info.total)
+            outputArgs["{{iterator.limit}}"] = String(info.limit)
+        }
 
         let path = pipeline.output.path.replacingOccurrences(outputArgs)
         let file = pipeline.output.file.replacingOccurrences(outputArgs)

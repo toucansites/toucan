@@ -54,8 +54,7 @@ struct ContentDefinitionLoaderTestSuite {
                     "foo.yml",
                     "bar.yml",
                 ],
-                decoder: ToucanYAMLDecoder(),
-                logger: logger
+                decoder: ToucanYAMLDecoder()
             )
             let result = try loader.load()
 

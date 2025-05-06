@@ -93,7 +93,5 @@ struct SourceLoaderTestSuite: ToucanTestSuite {
             #expect(sourceBundle.contents.count == 1)
             #expect(sourceBundle.pipelines.count == 1)
         }
-
     }
-
 }
