@@ -185,9 +185,15 @@ struct SourceBundlePageLinkTestSuite {
         let results = try renderer.render(now: now)
 
         #expect(results.count == 1)
-        #expect(results[0].contents.contains("<title>Posts - 1 / 1 - </title>"))
-        #expect(results[0].contents.contains("Values in markdown: 1 / 1"))
         #expect(results[0].destination.path == "posts/page/1")
+
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value.contains("<title>Posts - 1 / 1 - </title>"))
+            #expect(value.contains("Values in markdown: 1 / 1"))
+        }
     }
 
 }

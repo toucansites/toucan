@@ -147,29 +147,12 @@ public struct Toucan {
 
             // MARK: - Copy default assets
 
-//            let assetsWriter = AssetsWriter(
-//                fileManager: fileManager,
-//                sourceConfig: sourceBundle.sourceConfig,
-//                workDirUrl: workDirUrl
-//            )
-//            try assetsWriter.copyDefaultAssets()
-
-//            // MARK: - Copy content assets
-//
-//            let assetsPath = sourceBundle.config.contents.assets.path
-//            let assetsFolder = workDirUrl.appending(path: assetsPath)
-//            try fileManager.createDirectory(at: assetsFolder)
-//            let scrDirectory = sourceBundle.sourceConfig.contentsUrl
-//
-//            let contentAssetsWriter = ContentAssetsWriter(
-//                fileManager: fileManager,
-//                assetsPath: assetsPath,
-//                assetsFolder: assetsFolder,
-//                scrDirectory: scrDirectory
-//            )
-//            for content in sourceBundle.contents {
-//                try contentAssetsWriter.copyContentAssets(content: content)
-//            }
+            let assetsWriter = AssetsWriter(
+                fileManager: fileManager,
+                sourceConfig: sourceBundle.sourceConfig,
+                workDirUrl: workDirUrl
+            )
+            try assetsWriter.copyDefaultAssets()
 
             // MARK: - Writing results
 
@@ -184,11 +167,16 @@ public struct Toucan {
                     .appending(path: result.destination.file)
                     .appendingPathExtension(result.destination.ext)
 
-                try result.contents.write(
-                    to: outputUrl,
-                    atomically: true,
-                    encoding: .utf8
-                )
+                switch result.source {
+                case .asset(let string):
+                    print("TODO: copy asset")
+                case .content(let string):
+                    try string.write(
+                        to: outputUrl,
+                        atomically: true,
+                        encoding: .utf8
+                    )
+                }
             }
 
             // MARK: - Finalize and cleanup

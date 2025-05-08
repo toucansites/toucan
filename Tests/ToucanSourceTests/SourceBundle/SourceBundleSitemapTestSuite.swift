@@ -135,7 +135,12 @@ struct SourceBundleSitemapTestSuite {
             </urlset>
             """#
 
-        #expect(results[0].contents == expectation)
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value == expectation)
+        }
         #expect(results[0].destination.path == "")
         #expect(results[0].destination.file == "sitemap")
         #expect(results[0].destination.ext == "xml")
@@ -272,7 +277,12 @@ struct SourceBundleSitemapTestSuite {
                 </urlset>
                 """#
 
-            #expect(sitemap.contents == expectation)
+            switch results[0].source {
+            case .asset(_):
+                #expect(Bool(false))
+            case .content(let value):
+                #expect(value == expectation)
+            }
             #expect(sitemap.destination.path == "")
             #expect(sitemap.destination.file == "sitemap")
             #expect(sitemap.destination.ext == "xml")

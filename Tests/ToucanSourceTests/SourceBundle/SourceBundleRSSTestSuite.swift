@@ -115,9 +115,15 @@ struct SourceBundleRSSTestSuite {
             </rss>
             """#
 
-        #expect(results[0].contents == expectation)
         #expect(results[0].destination.path == "")
         #expect(results[0].destination.file == "rss")
         #expect(results[0].destination.ext == "xml")
+
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value == expectation)
+        }
     }
 }

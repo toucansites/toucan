@@ -50,10 +50,19 @@ extension Pipeline {
         ///   - output: The destination location for the processed asset.
         public struct Behavior: Decodable {
 
+            /// The unique identifier for the behavior.
             public var id: String
+            /// The input location for the behavior.
             public var input: Location
+            /// The output location for the behavior.
             public var output: Location
 
+            /// Initializes a behavior
+            ///
+            /// - Properties:
+            ///   - id: A unique identifier for the behavior.
+            ///   - input: The source location of the asset.
+            ///   - output: The destination location for the processed asset.
             public init(
                 id: String,
                 input: Location,
@@ -130,7 +139,9 @@ extension Pipeline {
 
         /// Initializes an `Assets` instance with a given set of properties.
         ///
-        /// - Parameter properties: The array of asset properties to include.
+        /// - Parameters:
+        ///   - behaviors: The array of asset behaviors.
+        ///   - properties: The array of asset properties to include.
         public init(
             behaviors: [Behavior],
             properties: [Property]

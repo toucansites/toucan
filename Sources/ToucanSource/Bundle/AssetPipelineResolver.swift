@@ -15,18 +15,6 @@ struct AssetPipelineResolver {
     var baseUrl: String
     var config: Pipeline.Assets
 
-    init(
-        contentsUrl: URL,
-        assetsPath: String,
-        baseUrl: String,
-        config: Pipeline.Assets
-    ) {
-        self.contentsUrl = contentsUrl
-        self.assetsPath = assetsPath
-        self.baseUrl = baseUrl
-        self.config = config
-    }
-
     func resolve(
         _ contents: [Content]
     ) throws -> [Content] {

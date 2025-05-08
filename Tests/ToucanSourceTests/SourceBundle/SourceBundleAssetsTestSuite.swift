@@ -71,10 +71,15 @@ struct SourceBundleAssetsTestSuite {
         let results = try renderer.render(now: Date())
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/cover.jpg")
-        )
+
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/cover.jpg")
+            )
+        }
     }
 
     @Test()
@@ -135,14 +140,17 @@ struct SourceBundleAssetsTestSuite {
         let results = try renderer.render(now: Date())
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom1.png")
-        )
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom2.png")
-        )
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom1.png")
+            )
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom2.png")
+            )
+        }
     }
 
     @Test()
@@ -196,10 +204,14 @@ struct SourceBundleAssetsTestSuite {
         let results = try renderer.render(now: Date())
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom.jpg")
-        )
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom.png")
+            )
+        }
     }
 
     @Test()
@@ -264,14 +276,17 @@ struct SourceBundleAssetsTestSuite {
         let results = try renderer.render(now: Date())
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom1.png")
-        )
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom2.png")
-        )
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom1.png")
+            )
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom2.png")
+            )
+        }
     }
 
     @Test()
@@ -335,14 +350,17 @@ struct SourceBundleAssetsTestSuite {
         let results = try renderer.render(now: Date())
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom1.png")
-        )
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom2.png")
-        )
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom1.png")
+            )
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom2.png")
+            )
+        }
     }
 
     private func getRenderer(

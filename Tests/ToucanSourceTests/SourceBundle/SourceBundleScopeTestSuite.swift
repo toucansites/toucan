@@ -182,10 +182,15 @@ struct SourceBundleScopeTestSuite {
             let context: Ctx
         }
 
-        let data0 = try #require(results[0].contents.data(using: .utf8))
-        let exp0 = try decoder.decode(Exp0.self, from: data0)
+        switch results[0].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            let data0 = try #require(value.data(using: .utf8))
+            let exp0 = try decoder.decode(Exp0.self, from: data0)
 
-        #expect(exp0.context.featured.allSatisfy { $0.isCurrentURL == nil })
+            #expect(exp0.context.featured.allSatisfy { $0.isCurrentURL == nil })
+        }
 
         struct Exp1: Decodable {
             struct Slug: Decodable {
@@ -208,8 +213,13 @@ struct SourceBundleScopeTestSuite {
             let context: Ctx
         }
 
-        let data1 = try #require(results[1].contents.data(using: .utf8))
-        let exp1 = try decoder.decode(Exp1.self, from: data1)
-        #expect(exp1.context.featured.allSatisfy { $0.isCurrentURL == nil })
+        switch results[1].source {
+        case .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            let data1 = try #require(value.data(using: .utf8))
+            let exp1 = try decoder.decode(Exp1.self, from: data1)
+            #expect(exp1.context.featured.allSatisfy { $0.isCurrentURL == nil })
+        }
     }
 }

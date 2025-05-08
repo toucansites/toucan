@@ -143,6 +143,104 @@ public struct SourceBundleRenderer {
                 using: pipeline
             )
 
+            func filterFilePaths(
+                from paths: [String],
+                input: Pipeline.Assets.Location
+            ) -> [String] {
+                paths.filter { filePath in
+                    guard let url = URL(string: filePath) else {
+                        return false
+                    }
+
+                    let path = url.deletingLastPathComponent().path
+                    let name = url.deletingPathExtension().lastPathComponent
+                    let ext = url.pathExtension
+
+                    let inputPath = input.path ?? ""
+                    let pathMatches =
+                        inputPath == "*" || inputPath.isEmpty
+                        || path == inputPath
+                    let nameMatches =
+                        input.name == "*" || input.name.isEmpty
+                        || name == input.name
+                    let extMatches =
+                        input.ext == "*" || input.ext.isEmpty
+                        || ext == input.ext
+                    return pathMatches && nameMatches && extMatches
+                }
+            }
+
+            for content in contents {
+                var assetsReady: Set<String> = .init()
+
+                var behaviors = pipeline.assets.behaviors
+                if behaviors.filter({ $0.id == "copy" }).isEmpty {
+                    behaviors.append(
+                        .init(
+                            id: "copy",
+                            input: .init(
+                                path: "*",
+                                name: "*",
+                                ext: "*"
+                            ),
+                            output: .init(
+                                path: "*",
+                                name: "*",
+                                ext: "*"
+                            )
+                        )
+                    )
+                }
+
+                for behavior in behaviors {
+                    let isAllowed = pipeline.contentTypes.isAllowed(
+                        contentType: content.definition.id
+                    )
+                    guard isAllowed else {
+                        continue
+                    }
+                    let remainingAssets = Set(content.rawValue.assets)
+                        .subtracting(assetsReady)
+                    let inputAssets = filterFilePaths(
+                        from: Array(remainingAssets),
+                        input: behavior.input
+                    )
+
+                    guard !inputAssets.isEmpty else {
+                        continue
+                    }
+
+                    switch behavior.id {
+                    case "compile-sass":
+                        // destination, code -> write
+                        print("sass")
+
+                    case "minify-css":
+                        // destination, code -> write
+                        print("css")
+
+                    default:  // copy equivalent
+                        // source, destination -> copy recursively
+
+                        print(content.rawValue.origin.path)
+
+                        results.append(
+                            .init(
+                                source: .asset(""),
+                                destination: .init(
+                                    path: "",
+                                    file: "",
+                                    ext: ""
+                                )
+                            )
+                        )
+                        print("COPY")
+                        print(content.slug)
+                        print(inputAssets.joined(separator: ", "))
+                    }
+                }
+            }
+
             let assetPipelineResolver = AssetPipelineResolver(
                 contentsUrl: sourceBundle.sourceConfig.contentsUrl,
                 assetsPath: sourceBundle.sourceConfig.config.contents.assets
@@ -534,7 +632,7 @@ public struct SourceBundleRenderer {
                 return nil
             }
             return .init(
-                contents: json,
+                source: .content(json),
                 destination: $0.destination
             )
         }
@@ -588,7 +686,7 @@ public struct SourceBundleRenderer {
                 return nil
             }
 
-            return .init(contents: html, destination: $0.destination)
+            return .init(source: .content(html), destination: $0.destination)
         }
     }
 }
