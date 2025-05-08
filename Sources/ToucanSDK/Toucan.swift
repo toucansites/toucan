@@ -147,29 +147,29 @@ public struct Toucan {
 
             // MARK: - Copy default assets
 
-            let assetsWriter = AssetsWriter(
-                fileManager: fileManager,
-                sourceConfig: sourceBundle.sourceConfig,
-                workDirUrl: workDirUrl
-            )
-            try assetsWriter.copyDefaultAssets()
+//            let assetsWriter = AssetsWriter(
+//                fileManager: fileManager,
+//                sourceConfig: sourceBundle.sourceConfig,
+//                workDirUrl: workDirUrl
+//            )
+//            try assetsWriter.copyDefaultAssets()
 
-            // MARK: - Copy content assets
-
-            let assetsPath = sourceBundle.config.contents.assets.path
-            let assetsFolder = workDirUrl.appending(path: assetsPath)
-            try fileManager.createDirectory(at: assetsFolder)
-            let scrDirectory = sourceBundle.sourceConfig.contentsUrl
-
-            let contentAssetsWriter = ContentAssetsWriter(
-                fileManager: fileManager,
-                assetsPath: assetsPath,
-                assetsFolder: assetsFolder,
-                scrDirectory: scrDirectory
-            )
-            for content in sourceBundle.contents {
-                try contentAssetsWriter.copyContentAssets(content: content)
-            }
+//            // MARK: - Copy content assets
+//
+//            let assetsPath = sourceBundle.config.contents.assets.path
+//            let assetsFolder = workDirUrl.appending(path: assetsPath)
+//            try fileManager.createDirectory(at: assetsFolder)
+//            let scrDirectory = sourceBundle.sourceConfig.contentsUrl
+//
+//            let contentAssetsWriter = ContentAssetsWriter(
+//                fileManager: fileManager,
+//                assetsPath: assetsPath,
+//                assetsFolder: assetsFolder,
+//                scrDirectory: scrDirectory
+//            )
+//            for content in sourceBundle.contents {
+//                try contentAssetsWriter.copyContentAssets(content: content)
+//            }
 
             // MARK: - Writing results
 
