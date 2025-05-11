@@ -110,9 +110,14 @@ public struct SourceBundleRenderer {
         from path: String
     ) -> (name: String, ext: String) {
 
-        let parts = path.split(separator: ".", omittingEmptySubsequences: false)
+        let safePath = path.split(separator: "/").last.map(String.init) ?? ""
+
+        let parts = safePath.split(
+            separator: ".",
+            omittingEmptySubsequences: false
+        )
         guard parts.count >= 2 else {
-            return (String(path), "")  // No extension
+            return (String(safePath), "")  // No extension
         }
 
         let ext = String(parts.last!)
@@ -231,7 +236,10 @@ public struct SourceBundleRenderer {
                     }
 
                     for inputAsset in inputAssets {
-                        let basePath = content.slug.resolveForPath()
+                        let basePath = content.rawValue.origin.path
+                            .split(separator: "/")
+                            .dropLast()
+                            .joined(separator: "/")
 
                         let sourcePath = [
                             basePath,
@@ -245,7 +253,11 @@ public struct SourceBundleRenderer {
                         let destPath = [
                             assetsPath,
                             basePath,
+                            inputAsset,
                         ]
+                        .joined(separator: "/")
+                        .split(separator: "/")
+                        .dropLast()
                         .joined(separator: "/")
 
                         switch behavior.id {
