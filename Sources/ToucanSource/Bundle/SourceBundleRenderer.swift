@@ -252,7 +252,7 @@ public struct SourceBundleRenderer {
 
                         let destPath = [
                             assetsPath,
-                            basePath,
+                            content.slug.resolveForPath(),
                             inputAsset,
                         ]
                         .joined(separator: "/")
