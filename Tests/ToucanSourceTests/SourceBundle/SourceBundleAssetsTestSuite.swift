@@ -68,7 +68,7 @@ struct SourceBundleAssetsTestSuite {
             getRawContent(["cover.jpg"])
         ]
         var renderer = getRenderer(pipelines, rawPageContents)
-        let results = try renderer.render(now: Date())
+        let results = try renderer.render(now: Date()).filter(\.isContent)
 
         #expect(results.count == 1)
 
@@ -137,7 +137,7 @@ struct SourceBundleAssetsTestSuite {
             <img src=\"{{page.image.custom2}}\">
             """
         )
-        let results = try renderer.render(now: Date())
+        let results = try renderer.render(now: Date()).filter(\.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
@@ -173,7 +173,7 @@ struct SourceBundleAssetsTestSuite {
                     properties: [
                         .init(
                             action: .add,
-                            property: "image",
+                            property: "images",
                             resolvePath: true,
                             input: .init(name: "custom", ext: "jpg")
                         )
@@ -200,8 +200,13 @@ struct SourceBundleAssetsTestSuite {
         let rawPageContents: [RawContent] = [
             getRawContent(["custom.jpg"])
         ]
-        var renderer = getRenderer(pipelines, rawPageContents)
-        let results = try renderer.render(now: Date())
+
+        var renderer = getRenderer(
+            pipelines,
+            rawPageContents,
+            "<img src=\"{{#page.images}}{{.}}{{/page.images}}\">"
+        )
+        let results = try renderer.render(now: Date()).filter(\.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
@@ -209,7 +214,7 @@ struct SourceBundleAssetsTestSuite {
             #expect(Bool(false))
         case .content(let value):
             #expect(
-                value.contains("http://localhost:3000/assets/slug/custom.png")
+                value.contains("http://localhost:3000/assets/slug/custom.jpg")
             )
         }
     }
@@ -273,7 +278,7 @@ struct SourceBundleAssetsTestSuite {
             {{/page.images}}
             """
         )
-        let results = try renderer.render(now: Date())
+        let results = try renderer.render(now: Date()).filter(\.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
@@ -347,7 +352,7 @@ struct SourceBundleAssetsTestSuite {
             <img src=\"{{page.images.custom2}}\">
             """
         )
-        let results = try renderer.render(now: Date())
+        let results = try renderer.render(now: Date()).filter(\.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {

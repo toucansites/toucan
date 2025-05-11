@@ -1,5 +1,5 @@
 //
-//  AssetPipelineResolver.swift
+//  AssetPropertyResolver.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 04. 19..
@@ -8,7 +8,7 @@
 import Foundation
 import ToucanModels
 
-struct AssetPipelineResolver {
+struct AssetPropertyResolver {
 
     var contentsUrl: URL
     var assetsPath: String

@@ -168,8 +168,10 @@ public struct Toucan {
                     .appendingPathExtension(result.destination.ext)
 
                 switch result.source {
-                case .asset(let string):
-                    print("TODO: copy asset")
+                case .asset(let path):
+                    let srcUrl = sourceBundle.sourceConfig.contentsUrl
+                        .appending(path: path)
+                    try fileManager.copy(from: srcUrl, to: outputUrl)
                 case .content(let string):
                     try string.write(
                         to: outputUrl,

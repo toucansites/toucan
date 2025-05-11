@@ -163,8 +163,7 @@ struct SourceBundleSitemapTestSuite {
         let nowString = sitemapFormatter.string(from: now)
 
         let pipelines = [
-            Pipeline.Mocks.html(),
-            Pipeline.Mocks.sitemap(),
+            Pipeline.Mocks.sitemap()
         ]
 
         let tagDefinition = ContentDefinition.Mocks.tag()

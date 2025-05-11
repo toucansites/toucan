@@ -22,4 +22,5 @@ public extension Templates.Mocks {
         </html>
         """
     }
+
 }

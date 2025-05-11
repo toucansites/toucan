@@ -103,6 +103,21 @@ public struct SourceBundleRenderer {
             .sorted(by: >).first
     }
 
+    private func getNameAndExtension(
+        from path: String
+    ) -> (name: String, ext: String) {
+
+        let parts = path.split(separator: ".", omittingEmptySubsequences: false)
+        guard parts.count >= 2 else {
+            return (String(path), "")  // No extension
+        }
+
+        let ext = String(parts.last!)
+        let filename = parts.dropLast().joined(separator: ".")
+
+        return (filename, ext)
+    }
+
     /// Starts rendering the source bundle based on current time and pipeline configuration.
     ///
     /// - Parameter now: Current date, used for generation timestamps.
@@ -170,6 +185,8 @@ public struct SourceBundleRenderer {
                 }
             }
 
+            let assetsPath = sourceBundle.config.contents.assets.path
+
             for content in contents {
                 var assetsReady: Set<String> = .init()
 
@@ -222,26 +239,41 @@ public struct SourceBundleRenderer {
                     default:  // copy equivalent
                         // source, destination -> copy recursively
 
-                        print(content.rawValue.origin.path)
+                        for inputAsset in inputAssets {
+                            let basePath = content.slug.resolveForPath()
 
-                        results.append(
-                            .init(
-                                source: .asset(""),
-                                destination: .init(
-                                    path: "",
-                                    file: "",
-                                    ext: ""
+                            let sourcePath = [
+                                basePath,
+                                assetsPath,
+                                inputAsset,
+                            ]
+                            .joined(separator: "/")
+
+                            let file = getNameAndExtension(from: inputAsset)
+
+                            let destPath = [
+                                assetsPath,
+                                basePath,
+                            ]
+                            .joined(separator: "/")
+
+                            results.append(
+                                .init(
+                                    source: .asset(sourcePath),
+                                    destination: .init(
+                                        path: destPath,
+                                        file: file.name,
+                                        ext: file.ext
+                                    )
                                 )
                             )
-                        )
-                        print("COPY")
-                        print(content.slug)
-                        print(inputAssets.joined(separator: ", "))
+                            assetsReady.insert(inputAsset)
+                        }
                     }
                 }
             }
 
-            let assetPipelineResolver = AssetPipelineResolver(
+            let assetPropertyResolver = AssetPropertyResolver(
                 contentsUrl: sourceBundle.sourceConfig.contentsUrl,
                 assetsPath: sourceBundle.sourceConfig.config.contents.assets
                     .path,
@@ -249,7 +281,7 @@ public struct SourceBundleRenderer {
                 config: pipeline.assets
             )
 
-            let finalContents = try assetPipelineResolver.resolve(contents)
+            let finalContents = try assetPropertyResolver.resolve(contents)
 
             let lastUpdate =
                 getLastContentUpdate(
