@@ -11,8 +11,8 @@ public struct PipelineResult: Sendable {
 
     /// The source material for the pipeline result.
     public enum Source: Sendable {
-        /// The original source material
-        case asset(String)
+        /// The original source material, source path and optional Contents
+        case asset(String, String?)
         /// The final transformed content (e.g., HTML, Markdown, etc.).
         case content(String)
     }
@@ -42,7 +42,7 @@ public struct PipelineResult: Sendable {
         switch source {
         case .content(_):
             return true
-        case .asset(_):
+        case .asset(_, _):
             return false
         }
     }

@@ -11,6 +11,9 @@ import ToucanContent
 import FileManagerKit
 import Logging
 import ToucanInfo
+import DartSass
+import Dispatch
+import SwiftCSSParser
 
 /// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
 ///
@@ -227,39 +230,106 @@ public struct SourceBundleRenderer {
                         continue
                     }
 
-                    switch behavior.id {
-                    case "compile-sass":
-                        // destination, code -> write
-                        print("sass")
+                    for inputAsset in inputAssets {
+                        let basePath = content.slug.resolveForPath()
 
-                    case "minify-css":
-                        // destination, code -> write
-                        print("css")
+                        let sourcePath = [
+                            basePath,
+                            assetsPath,
+                            inputAsset,
+                        ]
+                        .joined(separator: "/")
 
-                    default:  // copy equivalent
-                        // source, destination -> copy recursively
+                        let file = getNameAndExtension(from: inputAsset)
 
-                        for inputAsset in inputAssets {
-                            let basePath = content.slug.resolveForPath()
+                        let destPath = [
+                            assetsPath,
+                            basePath,
+                        ]
+                        .joined(separator: "/")
 
-                            let sourcePath = [
-                                basePath,
-                                assetsPath,
-                                inputAsset,
-                            ]
-                            .joined(separator: "/")
+                        switch behavior.id {
+                        case "compile-sass":
+                            // destination, code -> write
+                            let compiler = try Compiler()
 
-                            let file = getNameAndExtension(from: inputAsset)
+                            let fileUrl = sourceBundle.sourceConfig.contentsUrl
+                                .appending(
+                                    path: sourcePath
+                                )
 
-                            let destPath = [
-                                assetsPath,
-                                basePath,
-                            ]
-                            .joined(separator: "/")
+                            // This is horrible... but we can live with it for now.
+                            func performAsyncTask() -> String {
 
+                                final class Enclosure: @unchecked Sendable {
+                                    var value: CompilerResults!
+                                }
+
+                                let semaphore = DispatchSemaphore(value: 0)
+                                let enclosure = Enclosure()
+
+                                Task {
+                                    do {
+                                        enclosure.value =
+                                            try await compiler.compile(
+                                                fileURL: fileUrl
+                                            )
+                                    }
+                                    catch {
+                                        fatalError("\(error)")
+                                    }
+
+                                    semaphore.signal()
+                                }
+
+                                semaphore.wait()
+                                return enclosure.value.css
+                            }
+
+                            let css = performAsyncTask()
+
+                            // TODO: proper output management
                             results.append(
                                 .init(
-                                    source: .asset(sourcePath),
+                                    source: .asset(sourcePath, css),
+                                    destination: .init(
+                                        path: destPath,
+                                        file: behavior.output.name,
+                                        ext: behavior.output.ext
+                                    )
+                                )
+                            )
+
+                        case "minify-css":
+                            let fileUrl = sourceBundle.sourceConfig.contentsUrl
+                                .appending(
+                                    path: sourcePath
+                                )
+
+                            let src = try String(
+                                contentsOf: fileUrl
+                            )
+                            let stylesheet = try Stylesheet.parse(from: src)
+                            // TODO: proper output management
+                            results.append(
+                                .init(
+                                    source: .asset(
+                                        sourcePath,
+                                        stylesheet.minified()
+                                    ),
+                                    destination: .init(
+                                        path: destPath,
+                                        file: behavior.output.name,
+                                        ext: behavior.output.ext
+                                    )
+                                )
+                            )
+
+                        default:  // copy
+                            // source, destination -> copy recursively
+                            results.append(
+                                .init(
+                                    source: .asset(sourcePath, nil),
                                     destination: .init(
                                         path: destPath,
                                         file: file.name,
@@ -267,8 +337,9 @@ public struct SourceBundleRenderer {
                                     )
                                 )
                             )
-                            assetsReady.insert(inputAsset)
                         }
+
+                        assetsReady.insert(inputAsset)
                     }
                 }
             }

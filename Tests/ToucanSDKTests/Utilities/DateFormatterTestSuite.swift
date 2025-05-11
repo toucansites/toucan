@@ -144,7 +144,7 @@ struct DateFormatterTestSuite {
             """
 
         switch results[0].source {
-        case .asset(_):
+        case .asset(_, _):
             #expect(Bool(false))
         case .content(let value):
             #expect(value == expectation)
@@ -270,7 +270,7 @@ struct DateFormatterTestSuite {
             </html>
             """
         switch results[0].source {
-        case .asset(_):
+        case .asset(_, _):
             #expect(Bool(false))
         case .content(let value):
             #expect(value == expectation)
@@ -392,7 +392,7 @@ struct DateFormatterTestSuite {
             </html>
             """
         switch results[0].source {
-        case .asset(_):
+        case .asset(_, _):
             #expect(Bool(false))
         case .content(let value):
             #expect(value == expectation)
