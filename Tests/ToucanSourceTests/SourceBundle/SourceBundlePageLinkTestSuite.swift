@@ -188,7 +188,7 @@ struct SourceBundlePageLinkTestSuite {
         #expect(results[0].destination.path == "posts/page/1")
 
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(value.contains("<title>Posts - 1 / 1 - </title>"))

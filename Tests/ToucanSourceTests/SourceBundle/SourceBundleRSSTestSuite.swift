@@ -120,7 +120,7 @@ struct SourceBundleRSSTestSuite {
         #expect(results[0].destination.ext == "xml")
 
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(value == expectation)

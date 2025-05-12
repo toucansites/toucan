@@ -101,7 +101,7 @@ struct SourceBundleRedirectTestSuite {
             """#
 
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(value == expectation)

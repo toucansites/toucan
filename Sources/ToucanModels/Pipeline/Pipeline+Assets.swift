@@ -50,6 +50,12 @@ extension Pipeline {
         ///   - output: The destination location for the processed asset.
         public struct Behavior: Decodable {
 
+            private enum CodingKeys: CodingKey {
+                case id
+                case input
+                case output
+            }
+
             /// The unique identifier for the behavior.
             public var id: String
             /// The input location for the behavior.
@@ -71,6 +77,41 @@ extension Pipeline {
                 self.id = id
                 self.input = input
                 self.output = output
+            }
+
+            /// Decodes a `Behavior` instance from a configuration source (e.g., JSON/YAML).
+            ///
+            /// Missing fields default
+            public init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+
+                let id = try container.decode(String.self, forKey: .id)
+
+                let input =
+                    try container.decodeIfPresent(
+                        Location.self,
+                        forKey: .input
+                    )
+                    ?? .init(
+                        name: "*",
+                        ext: "*"
+                    )
+
+                let output =
+                    try container.decodeIfPresent(
+                        Location.self,
+                        forKey: .output
+                    )
+                    ?? .init(
+                        name: "*",
+                        ext: "*"
+                    )
+
+                self.init(
+                    id: id,
+                    input: input,
+                    output: output
+                )
             }
         }
 

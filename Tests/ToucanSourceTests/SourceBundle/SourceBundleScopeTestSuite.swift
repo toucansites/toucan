@@ -183,7 +183,7 @@ struct SourceBundleScopeTestSuite {
         }
 
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             let data0 = try #require(value.data(using: .utf8))
@@ -214,7 +214,7 @@ struct SourceBundleScopeTestSuite {
         }
 
         switch results[1].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             let data1 = try #require(value.data(using: .utf8))

@@ -303,7 +303,7 @@ public struct SourceBundleRenderer {
                             // TODO: proper output management
                             results.append(
                                 .init(
-                                    source: .asset(sourcePath, css),
+                                    source: .asset(css),
                                     destination: .init(
                                         path: destPath,
                                         file: behavior.output.name,
@@ -326,7 +326,6 @@ public struct SourceBundleRenderer {
                             results.append(
                                 .init(
                                     source: .asset(
-                                        sourcePath,
                                         stylesheet.minified()
                                     ),
                                     destination: .init(
@@ -341,7 +340,7 @@ public struct SourceBundleRenderer {
                             // source, destination -> copy recursively
                             results.append(
                                 .init(
-                                    source: .asset(sourcePath, nil),
+                                    source: .assetFile(sourcePath),
                                     destination: .init(
                                         path: destPath,
                                         file: file.name,

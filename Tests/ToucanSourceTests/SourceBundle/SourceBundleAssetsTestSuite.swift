@@ -68,12 +68,13 @@ struct SourceBundleAssetsTestSuite {
             getRawContent(["cover.jpg"])
         ]
         var renderer = getRenderer(pipelines, rawPageContents)
-        let results = try renderer.render(now: Date()).filter(\.isContent)
+        let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
 
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(
@@ -137,11 +138,12 @@ struct SourceBundleAssetsTestSuite {
             <img src=\"{{page.image.custom2}}\">
             """
         )
-        let results = try renderer.render(now: Date()).filter(\.isContent)
+        let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(
@@ -206,11 +208,12 @@ struct SourceBundleAssetsTestSuite {
             rawPageContents,
             "<img src=\"{{#page.images}}{{.}}{{/page.images}}\">"
         )
-        let results = try renderer.render(now: Date()).filter(\.isContent)
+        let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(
@@ -278,11 +281,12 @@ struct SourceBundleAssetsTestSuite {
             {{/page.images}}
             """
         )
-        let results = try renderer.render(now: Date()).filter(\.isContent)
+        let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(
@@ -352,11 +356,12 @@ struct SourceBundleAssetsTestSuite {
             <img src=\"{{page.images.custom2}}\">
             """
         )
-        let results = try renderer.render(now: Date()).filter(\.isContent)
+        let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
         switch results[0].source {
-        case .asset(_):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(

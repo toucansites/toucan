@@ -11,10 +11,31 @@ public struct PipelineResult: Sendable {
 
     /// The source material for the pipeline result.
     public enum Source: Sendable {
-        /// The original source material, source path and optional Contents
-        case asset(String, String?)
+        /// An asset source, that needs top be copied.
+        case assetFile(String)
+        /// A generated asset source
+        case asset(String)
         /// The final transformed content (e.g., HTML, Markdown, etc.).
         case content(String)
+
+        /// A Boolean value indicating whether the pipeline result's source is content-based.
+        /// Returns `true` if the source is `.content`, otherwise `false`.
+        public var isContent: Bool {
+            !isAsset
+        }
+
+        /// A Boolean value indicating whether the pipeline result's source is an asset.
+        /// Returns `true` if the source is `.asset`, otherwise `false`.
+        public var isAsset: Bool {
+            switch self {
+            case .content(_):
+                return false
+            case .assetFile(_):
+                return true
+            case .asset(_):
+                return true
+            }
+        }
     }
 
     /// The source material.
@@ -34,22 +55,5 @@ public struct PipelineResult: Sendable {
     ) {
         self.source = source
         self.destination = destination
-    }
-
-    /// A Boolean value indicating whether the pipeline result's source is content-based.
-    /// Returns `true` if the source is `.content`, otherwise `false`.
-    public var isContent: Bool {
-        switch source {
-        case .content(_):
-            return true
-        case .asset(_, _):
-            return false
-        }
-    }
-
-    /// A Boolean value indicating whether the pipeline result's source is an asset.
-    /// Returns `true` if the source is `.asset`, otherwise `false`.
-    public var isAsset: Bool {
-        !isContent
     }
 }

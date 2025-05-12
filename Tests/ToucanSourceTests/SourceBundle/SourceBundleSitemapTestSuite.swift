@@ -136,7 +136,7 @@ struct SourceBundleSitemapTestSuite {
             """#
 
         switch results[0].source {
-        case .asset(_, _):
+        case .assetFile(_), .asset(_):
             #expect(Bool(false))
         case .content(let value):
             #expect(value == expectation)
@@ -277,7 +277,9 @@ struct SourceBundleSitemapTestSuite {
                 """#
 
             switch results[0].source {
-            case .asset(_, _):
+            case .assetFile(_):
+                #expect(Bool(false))
+            case .asset(_):
                 #expect(Bool(false))
             case .content(let value):
                 #expect(value == expectation)
