@@ -19,7 +19,6 @@ struct ContentDefinitionLoaderTestSuite {
 
     @Test
     func contentDefinitions() throws {
-        let logger = Logger(label: "ContentDefinitionLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("types") {
