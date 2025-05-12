@@ -240,6 +240,7 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                         "html.yml",
                         string: """
                             id: html
+
                             contentTypes: 
                                 include:
                                     - page
@@ -250,6 +251,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: load
                                   property: svg
@@ -334,6 +337,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: load
                                   property: svg
@@ -425,6 +430,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: parse
                                   property: yaml
@@ -516,6 +523,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: parse
                                   property: yaml

@@ -11,7 +11,6 @@ import ToucanContent
 import FileManagerKit
 import Logging
 import ToucanInfo
-import DartSass
 import Dispatch
 import SwiftCSSParser
 
@@ -198,26 +197,7 @@ public struct SourceBundleRenderer {
             for content in contents {
                 var assetsReady: Set<String> = .init()
 
-                var behaviors = pipeline.assets.behaviors
-                if behaviors.filter({ $0.id == "copy" }).isEmpty {
-                    behaviors.append(
-                        .init(
-                            id: "copy",
-                            input: .init(
-                                path: "*",
-                                name: "*",
-                                ext: "*"
-                            ),
-                            output: .init(
-                                path: "*",
-                                name: "*",
-                                ext: "*"
-                            )
-                        )
-                    )
-                }
-
-                for behavior in behaviors {
+                for behavior in pipeline.assets.behaviors {
                     let isAllowed = pipeline.contentTypes.isAllowed(
                         contentType: content.definition.id
                     )
@@ -226,16 +206,17 @@ public struct SourceBundleRenderer {
                     }
                     let remainingAssets = Set(content.rawValue.assets)
                         .subtracting(assetsReady)
-                    let inputAssets = filterFilePaths(
+
+                    let matchingRemainingAssets = filterFilePaths(
                         from: Array(remainingAssets),
                         input: behavior.input
                     )
 
-                    guard !inputAssets.isEmpty else {
+                    guard !matchingRemainingAssets.isEmpty else {
                         continue
                     }
 
-                    for inputAsset in inputAssets {
+                    for inputAsset in matchingRemainingAssets {
                         let basePath = content.rawValue.origin.path
                             .split(separator: "/")
                             .dropLast()
@@ -262,45 +243,15 @@ public struct SourceBundleRenderer {
 
                         switch behavior.id {
                         case "compile-sass":
-                            // destination, code -> write
-                            let compiler = try Compiler()
-
                             let fileUrl = sourceBundle.sourceConfig.contentsUrl
                                 .appending(
                                     path: sourcePath
                                 )
 
-                            // This is horrible... but we can live with it for now.
-                            func performAsyncTask() -> String {
+                            let script = try CompileSASSBehavior()
+                            let css = try script.compile(fileUrl: fileUrl)
 
-                                final class Enclosure: @unchecked Sendable {
-                                    var value: CompilerResults!
-                                }
-
-                                let semaphore = DispatchSemaphore(value: 0)
-                                let enclosure = Enclosure()
-
-                                Task {
-                                    do {
-                                        enclosure.value =
-                                            try await compiler.compile(
-                                                fileURL: fileUrl
-                                            )
-                                    }
-                                    catch {
-                                        fatalError("\(error)")
-                                    }
-
-                                    semaphore.signal()
-                                }
-
-                                semaphore.wait()
-                                return enclosure.value.css
-                            }
-
-                            let css = performAsyncTask()
-
-                            // TODO: proper output management
+                            // TODO: proper output management later on
                             results.append(
                                 .init(
                                     source: .asset(css),
@@ -318,16 +269,12 @@ public struct SourceBundleRenderer {
                                     path: sourcePath
                                 )
 
-                            let src = try String(
-                                contentsOf: fileUrl
-                            )
-                            let stylesheet = try Stylesheet.parse(from: src)
-                            // TODO: proper output management
+                            let script = MinifyCSSBehavior()
+                            let css = try script.minify(fileUrl: fileUrl)
+
                             results.append(
                                 .init(
-                                    source: .asset(
-                                        stylesheet.minified()
-                                    ),
+                                    source: .asset(css),
                                     destination: .init(
                                         path: destPath,
                                         file: behavior.output.name,
@@ -337,7 +284,6 @@ public struct SourceBundleRenderer {
                             )
 
                         default:  // copy
-                            // source, destination -> copy recursively
                             results.append(
                                 .init(
                                     source: .assetFile(sourcePath),
