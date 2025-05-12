@@ -1,5 +1,5 @@
 //
-//  ToucanPageTestSuite.swift
+//  ToucanApiTestSuite.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 04. 15..
@@ -14,11 +14,11 @@ import ToucanTesting
 
 @Suite
 struct ToucanApiTestSuite: ToucanTestSuite {
-    
+
     @Test(arguments: [true, false])
     func basic(definesApiTypeManually: Bool) throws {
         let logger = Logger(label: "ToucanApiTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -58,7 +58,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
             try getToucan(input, output, logger).generate()
-            
+
             struct Expected: Decodable {
                 struct Item: Decodable {
                     let title: String
@@ -69,21 +69,21 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                 }
                 let context: Context
             }
-            
+
             let decoder = JSONDecoder()
 
             let resultUrl = output.appending(path: "api/posts.json")
             let data = try Data(contentsOf: resultUrl)
             let result = try decoder.decode(Expected.self, from: data)
-            
+
             #expect(result.context.posts.count == 3)
         }
     }
-    
+
     @Test(arguments: [true, false])
     func paginated(definesApiTypeManually: Bool) throws {
         let logger = Logger(label: "ToucanApiTestSuite")
-        
+
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
@@ -133,7 +133,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
             try getToucan(input, output, logger).generate()
-            
+
             struct Expected: Decodable {
                 struct Item: Decodable {
                     let title: String
@@ -145,7 +145,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                 }
                 let iterator: Iterator
             }
-            
+
             let decoder = JSONDecoder()
 
             let page1Url = output.appending(path: "api/1.json")
@@ -154,7 +154,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
 
             #expect(page1Result.iterator.current == 1)
             #expect(page1Result.iterator.items.count == 2)
-            
+
             let page2Url = output.appending(path: "api/2.json")
             let page2Data = try Data(contentsOf: page2Url)
             let page2Result = try decoder.decode(Expected.self, from: page2Data)
