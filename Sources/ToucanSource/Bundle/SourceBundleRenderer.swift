@@ -541,7 +541,7 @@ public struct SourceBundleRenderer {
             as: [String: AnyCodable].self
         )
 
-        return try contextBundles.compactMap {
+        return contextBundles.compactMap {
             let metadata: Logger.Metadata = [
                 "slug": "\($0.content.slug.value)"
             ]
@@ -549,7 +549,7 @@ public struct SourceBundleRenderer {
             let context = $0.context
             let unboxedContext = context.unboxed(encoder)
 
-            let encodedData = try firstSucceeding([
+            let encodedData = firstSucceeding([
                 {
                     try data(
                         from: unboxedContext,

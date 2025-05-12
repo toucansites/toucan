@@ -35,7 +35,7 @@ struct ContentFilter {
                 let items = contents.run(
                     query: .init(
                         contentType: id,
-                        filter: condition,
+                        filter: condition
                     ),
                     now: now
                 )
