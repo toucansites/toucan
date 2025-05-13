@@ -6,8 +6,8 @@
 
 import Foundation
 import Testing
-import ToucanSource
-@testable import ToucanModels
+import ToucanSerialization
+import ToucanModels
 
 @Suite
 struct QueryDecodingTestSuite {
@@ -166,7 +166,7 @@ struct QueryDecodingTestSuite {
         catch let error {
             #expect(
                 error.localizedDescription.contains(
-                    "ToucanSource.ToucanDecoderError"
+                    "ToucanDecoderError"
                 )
             )
         }

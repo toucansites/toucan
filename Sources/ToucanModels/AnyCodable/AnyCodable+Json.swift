@@ -5,7 +5,6 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 05. 12..
 //
 
-import ToucanModels
 import Foundation
 
 extension AnyCodable {

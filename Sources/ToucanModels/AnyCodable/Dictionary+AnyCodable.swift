@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import ToucanModels
 
-extension [String: AnyCodable] {
+public extension [String: AnyCodable] {
 
     func value<T>(_ keyPath: String, as type: T.Type) -> T? {
         let keys = keyPath.split(separator: ".").map { String($0) }

@@ -8,6 +8,7 @@
 import ToucanSDK
 import ToucanSource
 import Logging
+import ToucanSerialization
 
 extension Toucan {
 

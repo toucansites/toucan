@@ -8,6 +8,7 @@
 import ToucanModels
 import ToucanSource
 import Logging
+import ToucanSerialization
 
 struct FrontMatterParser {
 
