@@ -119,11 +119,11 @@ struct SourceLoader {
             decoder: decoder
         )
         let loadedContentDefinitions = try contentDefinitionLoader.load()
-        
+
         let virtualContentDefinitions = pipelines.compactMap {
             $0.definesType ? ContentDefinition(id: $0.id) : nil
         }
-        
+
         let contentDefinitions =
             loadedContentDefinitions + virtualContentDefinitions
 
