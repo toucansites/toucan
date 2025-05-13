@@ -116,10 +116,22 @@ struct SourceLoader {
         let contentDefinitionLoader = ContentDefinitionLoader(
             url: sourceConfig.typesUrl,
             locations: contentDefinitionLocations,
-            decoder: decoder,
-            logger: logger
+            decoder: decoder
         )
-        let contentDefinitions = try contentDefinitionLoader.load()
+        let loadedContentDefinitions = try contentDefinitionLoader.load()
+
+        let virtualContentDefinitions = pipelines.compactMap {
+            $0.definesType ? ContentDefinition(id: $0.id) : nil
+        }
+
+        let contentDefinitions =
+            loadedContentDefinitions + virtualContentDefinitions
+
+        let contentDefinitionList =
+            contentDefinitions
+            .map(\.id)
+            .joined(separator: ", ")
+        logger.debug("Available content types: `\(contentDefinitionList)`")
 
         // MARK: - Block directives
 

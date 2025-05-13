@@ -13,7 +13,6 @@ struct PropertyConverter {
 
     let property: Property
     let dateFormatter: DateFormatter
-    let defaultDateFormat: LocalizedDateFormat
 
     let logger: Logger
 

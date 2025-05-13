@@ -15,6 +15,7 @@ public struct Pipeline: Decodable {
 
     private enum CodingKeys: CodingKey {
         case id
+        case definesType
         case scopes
         case queries
         case dataTypes
@@ -30,6 +31,9 @@ public struct Pipeline: Decodable {
 
     /// Unique identifier for the pipeline.
     public var id: String
+
+    /// A Boolean value indicating whether the pipeline defines a virual type.
+    public var definesType: Bool
 
     /// A nested map of content type → scope key → scope definition.
     ///
@@ -65,6 +69,7 @@ public struct Pipeline: Decodable {
     /// Initializes a fully-defined `Pipeline` object.
     public init(
         id: String,
+        definesType: Bool = false,
         scopes: [String: [String: Scope]],
         queries: [String: Query],
         dataTypes: DataTypes,
@@ -76,6 +81,7 @@ public struct Pipeline: Decodable {
         output: Output
     ) {
         self.id = id
+        self.definesType = definesType
         self.scopes = scopes
         self.queries = queries
         self.dataTypes = dataTypes
@@ -96,6 +102,9 @@ public struct Pipeline: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let id = try container.decode(String.self, forKey: .id)
+        let definesType =
+            try container.decodeIfPresent(Bool.self, forKey: .definesType)
+            ?? false
 
         let defaultScopes = Scope.default
         let userScopes =
@@ -146,6 +155,7 @@ public struct Pipeline: Decodable {
 
         self.init(
             id: id,
+            definesType: definesType,
             scopes: scopes,
             queries: queries,
             dataTypes: dataTypes,

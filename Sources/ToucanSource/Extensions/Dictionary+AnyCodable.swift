@@ -8,7 +8,7 @@
 import Foundation
 import ToucanModels
 
-extension Dictionary where Key == String, Value == AnyCodable {
+extension [String: AnyCodable] {
 
     func value<T>(_ keyPath: String, as type: T.Type) -> T? {
         let keys = keyPath.split(separator: ".").map { String($0) }
@@ -66,5 +66,16 @@ extension Dictionary where Key == String, Value == AnyCodable {
     func dict(_ keyPath: String) -> [String: AnyCodable] {
         value(keyPath, as: [String: AnyCodable].self) ?? [:]
     }
+}
 
+public extension [String: AnyCodable] {
+
+    /// Returns a dictionary with the same keys as the original, where each value has been unwrapped or transformed using the `unboxed` method.
+    ///
+    /// - Returns: A `[String: Any]` dictionary with unboxed values.
+    func unboxed(_ encoder: JSONEncoder) -> [String: Any] {
+        reduce(into: [:]) { result, element in
+            result[element.key] = element.value.unboxed(encoder)
+        }
+    }
 }

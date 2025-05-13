@@ -176,14 +176,19 @@ public struct SourceBundleRenderer {
 
             switch pipeline.engine.id {
             case "json", "context":
-                results += try renderAsJSON(
-                    contextBundles: contextBundles
+                let renderer = ContextBundleToJSONRenderer(
+                    pipeline: pipeline,
+                    logger: logger
                 )
+                results += renderer.render(contextBundles)
+
             case "mustache":
-                results += try renderAsHTML(
-                    contextBundles: contextBundles,
-                    pipeline: pipeline
+                let renderer = try ContextBundleToHTMLRenderer(
+                    pipeline: pipeline,
+                    templates: sourceBundle.templates,
+                    logger: logger
                 )
+                results += renderer.render(contextBundles)
             default:
                 logger.error(
                     "Unknown renderer engine `\(pipeline.engine.id)`"
@@ -316,10 +321,16 @@ public struct SourceBundleRenderer {
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
 
-        let outputArgs: [String: String] = [
+        var outputArgs: [String: String] = [
             "{{id}}": content.id,
             "{{slug}}": content.slug.value,
         ]
+
+        if let info = content.iteratorInfo {
+            outputArgs["{{iterator.current}}"] = String(info.current)
+            outputArgs["{{iterator.total}}"] = String(info.total)
+            outputArgs["{{iterator.limit}}"] = String(info.limit)
+        }
 
         let path = pipeline.output.path.replacingOccurrences(outputArgs)
         let file = pipeline.output.file.replacingOccurrences(outputArgs)
@@ -512,84 +523,6 @@ public struct SourceBundleRenderer {
         }
         contentContextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
-    }
-
-    // MARK: - rendering
-
-    private func renderAsJSON(
-        contextBundles: [ContextBundle]
-    ) throws -> [PipelineResult] {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [
-            .prettyPrinted,
-            .withoutEscapingSlashes,
-            .sortedKeys,
-        ]
-
-        return try contextBundles.compactMap {
-            let data = try encoder.encode($0.context)
-            let json = String(data: data, encoding: .utf8)
-            guard let json else {
-                logger.warning("Could not encode context data as JSON output.")
-                return nil
-            }
-            return .init(
-                contents: json,
-                destination: $0.destination
-            )
-        }
-    }
-
-    private func renderAsHTML(
-        contextBundles: [ContextBundle],
-        pipeline: Pipeline
-    ) throws -> [PipelineResult] {
-        let renderer = MustacheTemplateRenderer(
-            templates: try sourceBundle.templates.mapValues {
-                try .init(string: $0)
-            },
-            logger: logger
-        )
-
-        return contextBundles.compactMap {
-            let engineOptions = pipeline.engine.options
-            let contentTypesOptions = engineOptions.dict("contentTypes")
-            let bundleOptions = contentTypesOptions.dict(
-                $0.content.definition.id
-            )
-
-            let contentTypeTemplate = bundleOptions.string("template")
-            let contentTemplate = $0.content.rawValue.frontMatter
-                .string("template")
-            let template = contentTemplate ?? contentTypeTemplate
-
-            guard let template, !template.isEmpty else {
-                logger.warning(
-                    "Missing mustache template file.",
-                    metadata: [
-                        "slug": "\($0.content.slug)",
-                        "type": "\($0.content.definition.id)",
-                    ]
-                )
-                return nil
-            }
-
-            let html = renderer.render(template: template, with: $0.context)
-
-            guard let html, !html.isEmpty else {
-                logger.warning(
-                    "Could not get valid HTML from content using template.",
-                    metadata: [
-                        "slug": "\($0.content.slug)",
-                        "type": "\($0.content.definition.id)",
-                        "template": "\(template)",
-                    ]
-                )
-                return nil
-            }
-
-            return .init(contents: html, destination: $0.destination)
-        }
     }
 }
 

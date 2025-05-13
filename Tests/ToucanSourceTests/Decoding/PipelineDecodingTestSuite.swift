@@ -80,7 +80,7 @@ struct PipelineDecodingTestSuite {
         formatter.dateFormat = "MM/dd/yyyy"
         #expect(
             result.engine.options.date("date", formatter: formatter)?
-                .formatted() == "2023. 01. 16., 1:00"
+                .formatted(.iso8601) == "2023-01-16T00:00:00Z"
         )
         #expect(
             result.engine.options.date("date2", formatter: formatter)?
