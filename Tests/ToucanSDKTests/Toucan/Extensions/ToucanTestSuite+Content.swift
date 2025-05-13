@@ -69,24 +69,22 @@ extension ToucanTestSuite {
         }
     }
 
-    func contentHome() -> Directory {
-        Directory("home") {
-            File(
-                "index.md",
-                string: """
-                    ---
-                    slug: ""
-                    title: "Home"
-                    description: "Welcome to the home page."
-                    template: pages.home
-                    ---
+    func contentHome() -> File {
+        File(
+            "index.md",
+            string: """
+                ---
+                slug: ""
+                title: "Home"
+                description: "Welcome to the home page."
+                template: pages.home
+                ---
 
-                    # Home
+                # Home
 
-                    Welcome to the home page.
-                    """
-            )
-        }
+                Welcome to the home page.
+                """
+        )
     }
 
     func contentPost(index: Int) -> Directory {

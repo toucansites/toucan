@@ -96,23 +96,33 @@ private extension RawContentLocator {
         var result: [RawContentLocation] = []
 
         let p = path.joined(separator: "/")
-        let url = contentsUrl.appendingPathComponent(p)
+        var url = contentsUrl
+        if !p.isEmpty {
+            url = url.appendingPathComponent(p)
+        }
+
+        func join(_ pathComponents: String...) -> String {
+            pathComponents.filter {
+                !$0.isEmpty
+            }
+            .joined(separator: "/")
+        }
 
         // Attempt to locate index files in the current folder
         var rawContentLocation = RawContentLocation(
             slug: slug.joined(separator: "/")
         )
         if let value = indexMarkdownLocator.locate(at: url).first {
-            rawContentLocation.markdown = p + "/" + value
+            rawContentLocation.markdown = join(p, value)
         }
         if let value = indexMdLocator.locate(at: url).first {
-            rawContentLocation.md = p + "/" + value
+            rawContentLocation.md = join(p, value)
         }
         if let value = indexYamlLocator.locate(at: url).first {
-            rawContentLocation.yaml = p + "/" + value
+            rawContentLocation.yaml = join(p, value)
         }
         if let value = indexYmlLocator.locate(at: url).first {
-            rawContentLocation.yml = p + "/" + value
+            rawContentLocation.yml = join(p, value)
         }
 
         if !rawContentLocation.isEmpty {
@@ -138,8 +148,6 @@ private extension RawContentLocator {
                 path: newPath
             )
         }
-
-        // Filter out any entries that result in empty slugs (e.g., root-level noise)
-        return result.filter { !$0.slug.isEmpty }
+        return result
     }
 }

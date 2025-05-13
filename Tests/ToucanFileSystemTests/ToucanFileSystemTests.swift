@@ -6,6 +6,7 @@
 
 import Testing
 import Foundation
+import ToucanModels
 @testable import ToucanFileSystem
 @testable import FileManagerKitTesting
 
@@ -39,16 +40,22 @@ struct ToucanFileSystemTests {
     func fileSystem_Typical() async throws {
         try FileManagerPlayground {
             Directory("src") {
+                Directory("assets") {
+                    "CNAME"
+                    Directory("icons") {
+                        "favicon.png"
+                    }
+                }
+
                 Directory("contents") {
+                    "index.md"
+                    Directory("assets") {
+                        "main.js"
+                    }
                     Directory("404") {
                         "index.md"
                     }
-                    Directory("home") {
-                        "index.md"
-                        Directory("assets") {
-                            "main.js"
-                        }
-                    }
+
                     Directory("blog") {
                         "noindex.yml"
                         Directory("authors") {
@@ -59,12 +66,6 @@ struct ToucanFileSystemTests {
                         "noindex.yml"
                         Directory("home-old") {
                             "index.md"
-                        }
-                    }
-                    Directory("assets") {
-                        "CNAME"
-                        Directory("icons") {
-                            "favicon.png"
                         }
                     }
                 }
@@ -125,18 +126,19 @@ struct ToucanFileSystemTests {
                 at: contentsUrl
             )
 
+            let expectation: [RawContentLocation] = [
+                .init(slug: "", md: "index.md"),
+                .init(slug: "404", md: "404/index.md"),
+                .init(slug: "authors", md: "blog/authors/index.md"),
+                .init(
+                    slug: "home-old",
+                    md: "redirects/home-old/index.md"
+                ),
+            ]
+            .sorted { $0.slug < $1.slug }
+
             #expect(
-                rawContentLocations.sorted { $0.slug < $1.slug }
-                    == [
-                        .init(slug: "404", md: "404/index.md"),
-                        .init(slug: "home", md: "home/index.md"),
-                        .init(slug: "authors", md: "blog/authors/index.md"),
-                        .init(
-                            slug: "home-old",
-                            md: "redirects/home-old/index.md"
-                        ),
-                    ]
-                    .sorted { $0.slug < $1.slug }
+                rawContentLocations.sorted { $0.slug < $1.slug } == expectation
             )
 
             let typesUrl = $1.appending(path: "src/types/")

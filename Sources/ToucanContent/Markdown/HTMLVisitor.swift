@@ -78,11 +78,11 @@ struct HTMLVisitor: MarkupVisitor {
         text.plainText
     }
 
-    //mutating func visitHTMLBlock(
-    //    _ html: HTMLBlock
-    //) -> Result {
-    //    html.rawHTML
-    //}
+    mutating func visitHTMLBlock(
+        _ html: HTMLBlock
+    ) -> Result {
+        html.rawHTML
+    }
 
     mutating func visitInlineHTML(
         _ inlineHTML: InlineHTML

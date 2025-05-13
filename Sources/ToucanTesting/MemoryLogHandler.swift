@@ -67,7 +67,7 @@ public struct MemoryLogHandler: LogHandler {
     public func log(
         level: Logger.Level,
         message: Logger.Message,
-        metadata: Logger.Metadata?,
+        metadata metadataInput: Logger.Metadata?,
         source: String,
         file: String,
         function: String,
@@ -76,7 +76,7 @@ public struct MemoryLogHandler: LogHandler {
         let isoFormatter = ISO8601DateFormatter()
         let timestamp = isoFormatter.string(from: Date())
 
-        let mergedMetadata = self.metadata.merging(metadata ?? [:]) { _, new in
+        let mergedMetadata = metadata.merging(metadataInput ?? [:]) { _, new in
             new
         }
         let metadataText = formattedMetadata(mergedMetadata)
