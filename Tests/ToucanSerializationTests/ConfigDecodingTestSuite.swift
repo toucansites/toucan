@@ -90,6 +90,9 @@ struct ConfigDecodingTestSuite {
         let yaml = try encoder.encode(config)
 
         let exp = """
+            site:
+              assets:
+                path: assets
             pipelines:
               path: pipelines
             contents:

@@ -84,10 +84,16 @@ struct SourceLoader {
         // MARK: - Settings
 
         let settingsLocations = fs.settingsLocator.locate(
-            at: sourceConfig.contentsUrl
+            at: sourceConfig.siteSettingsURL
         )
+        if config.site.settings != nil, settingsLocations.isEmpty {
+            logger.warning(
+                "Missing `site.yml` file at url: `\(sourceConfig.siteSettingsURL.absoluteString)`"
+            )
+        }
+
         let settingsLoader = SettingsLoader(
-            url: sourceConfig.contentsUrl,
+            url: sourceConfig.siteSettingsURL,
             baseUrl: baseUrl,
             locations: settingsLocations,
             encoder: encoder,

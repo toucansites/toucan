@@ -138,6 +138,7 @@ private extension RawContentLoader {
             )
         let assetLocations = assetLocator.locate(at: assetsUrl)
 
+        #warning("double check this")
         frontMatter["image"] = .init(
             resolveImage(
                 frontMatter: frontMatter,

@@ -18,16 +18,14 @@ struct AssetsWriterTestSuite {
     func testAssetsWriter() async throws {
         try FileManagerPlayground {
             Directory("src") {
-                Directory("contents") {
-                    Directory("assets") {
-                        Directory("icons") {
-                            "image.png"
-                            "cover.png"
-                        }
-                        Directory("images") {
-                            "image.png"
-                            "cover.png"
-                        }
+                Directory("assets") {
+                    Directory("icons") {
+                        "image.png"
+                        "cover.png"
+                    }
+                    Directory("images") {
+                        "image.png"
+                        "cover.png"
                     }
                 }
             }

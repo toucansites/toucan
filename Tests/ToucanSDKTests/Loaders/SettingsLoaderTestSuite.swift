@@ -24,19 +24,17 @@ struct SettingsLoaderTestSuite {
         let logger = Logger(label: "SettingsLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
-                Directory("contents") {
-                    File(
-                        "site.yml",
-                        string: """
-                            baseUrl: http://localhost:8080/
-                            name: Test
-                            """
-                    )
-                }
+                File(
+                    "site.yml",
+                    string: """
+                        baseUrl: http://localhost:8080/
+                        name: Test
+                        """
+                )
             }
         }
         .test {
-            let url = $1.appending(path: "src/contents/")
+            let url = $1.appending(path: "src/")
             let loader = SettingsLoader(
                 url: url,
                 baseUrl: nil,
@@ -64,19 +62,17 @@ struct SettingsLoaderTestSuite {
         let logger = Logger(label: "SettingsLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
-                Directory("contents") {
-                    File(
-                        "site.yml",
-                        string: """
-                            baseUrl: http://localhost:8080/
-                            name: Test
-                            """
-                    )
-                }
+                File(
+                    "site.yml",
+                    string: """
+                        baseUrl: http://localhost:8080/
+                        name: Test
+                        """
+                )
             }
         }
         .test {
-            let url = $1.appending(path: "src/contents/")
+            let url = $1.appending(path: "src/")
             let loader = SettingsLoader(
                 url: url,
                 baseUrl: "http://localhost:3000",

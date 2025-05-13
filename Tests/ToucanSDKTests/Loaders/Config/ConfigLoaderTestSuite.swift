@@ -19,15 +19,7 @@ import ToucanSerialization
 struct ConfigLoaderTestSuite {
 
     static func getDefaultResult() -> Config {
-        return Config(
-            pipelines: .defaults,
-            contents: .defaults,
-            types: .defaults,
-            blocks: .defaults,
-            themes: .defaults,
-            dateFormats: .defaults,
-            renderer: .defaults
-        )
+        .defaults
     }
 
     static func getConfigLoader(url: URL, logger: Logger) -> ConfigLoader {
@@ -112,6 +104,7 @@ struct ConfigLoaderTestSuite {
             #expect(
                 result
                     == Config(
+                        site: .defaults,
                         pipelines: .init(path: "pipelinesNotDefault"),
                         contents: .init(
                             path: "contentsNotDefault",

@@ -37,9 +37,14 @@ public struct SourceConfig {
         sourceUrl.appendingPathComponent(config.contents.path)
     }
 
-    /// The absolute URL to the global (non-theme) assets directory.
-    public var assetsUrl: URL {
-        contentsUrl.appendingPathComponent(config.contents.assets.path)
+    /// The URL to the site settings location
+    public var siteSettingsURL: URL {
+        sourceUrl.appendingPathComponent(config.site.settings?.path ?? "")
+    }
+
+    /// The absolute URL to the global site assets directory.
+    public var siteAssetsUrl: URL {
+        sourceUrl.appendingPathComponent(config.site.assets.path)
     }
 
     // MARK: - Types URLs

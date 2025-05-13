@@ -13,6 +13,7 @@ public struct Config: Codable, Equatable {
     // MARK: - Coding Keys
 
     private enum CodingKeys: CodingKey {
+        case site
         case pipelines
         case contents
         case types
@@ -23,6 +24,9 @@ public struct Config: Codable, Equatable {
     }
 
     // MARK: - Properties
+
+    /// Global site configuration.
+    public var site: Site
 
     /// Pipeline configuration used to transform and render content.
     public var pipelines: Pipelines
@@ -52,6 +56,7 @@ public struct Config: Codable, Equatable {
     /// This is used when configuration fields are missing or omitted.
     public static var defaults: Self {
         .init(
+            site: .defaults,
             pipelines: .defaults,
             contents: .defaults,
             types: .defaults,
@@ -67,6 +72,7 @@ public struct Config: Codable, Equatable {
     /// Initializes a full `Config` instance.
     ///
     /// - Parameters:
+    ///   - site: Site configuration.
     ///   - pipelines: Pipeline configurations.
     ///   - contents: Content mapping configuration.
     ///   - types: Folder path for type definitions.
@@ -75,6 +81,7 @@ public struct Config: Codable, Equatable {
     ///   - dateFormats: Global or localized date format settings.
     ///   - renderer: Fine-grained control for specific content types.
     public init(
+        site: Site,
         pipelines: Pipelines,
         contents: Contents,
         types: Types,
@@ -83,6 +90,7 @@ public struct Config: Codable, Equatable {
         dateFormats: DateFormats,
         renderer: RendererConfig
     ) {
+        self.site = site
         self.pipelines = pipelines
         self.contents = contents
         self.types = types
@@ -108,32 +116,47 @@ public struct Config: Codable, Equatable {
             return
         }
 
+        self.site =
+            try container.decodeIfPresent(
+                Site.self,
+                forKey: .site
+            ) ?? defaults.site
+
         self.pipelines =
-            try container.decodeIfPresent(Pipelines.self, forKey: .pipelines)
-            ?? defaults.pipelines
+            try container.decodeIfPresent(
+                Pipelines.self,
+                forKey: .pipelines
+            ) ?? defaults.pipelines
 
         self.contents =
-            try container.decodeIfPresent(Contents.self, forKey: .contents)
-            ?? defaults.contents
+            try container.decodeIfPresent(
+                Contents.self,
+                forKey: .contents
+            ) ?? defaults.contents
 
         self.types =
-            try container.decodeIfPresent(Types.self, forKey: .types)
-            ?? defaults.types
+            try container.decodeIfPresent(
+                Types.self,
+                forKey: .types
+            ) ?? defaults.types
 
         self.blocks =
-            try container.decodeIfPresent(Blocks.self, forKey: .blocks)
-            ?? defaults.blocks
+            try container.decodeIfPresent(
+                Blocks.self,
+                forKey: .blocks
+            ) ?? defaults.blocks
 
         self.themes =
-            try container.decodeIfPresent(Themes.self, forKey: .themes)
-            ?? defaults.themes
+            try container.decodeIfPresent(
+                Themes.self,
+                forKey: .themes
+            ) ?? defaults.themes
 
         self.dateFormats =
             try container.decodeIfPresent(
                 DateFormats.self,
                 forKey: .dateFormats
-            )
-            ?? defaults.dateFormats
+            ) ?? defaults.dateFormats
 
         self.renderer =
             try container.decodeIfPresent(
