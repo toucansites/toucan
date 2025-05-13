@@ -128,9 +128,8 @@ struct DateFormatterTestSuite {
 
         let results = try sourceBundleRenderer.render(now: now)
         #expect(results.count == 1)
-        let first = try #require(results.first)
 
-        let expected = """
+        let expectation = """
             <html>
                 <head>
                 </head>
@@ -143,7 +142,13 @@ struct DateFormatterTestSuite {
                 </body>
             </html>
             """
-        #expect(first.contents == expected)
+
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value == expectation)
+        }
     }
 
     @Test
@@ -250,9 +255,8 @@ struct DateFormatterTestSuite {
 
         let results = try sourceBundleRenderer.render(now: now)
         #expect(results.count == 1)
-        let first = try #require(results.first)
 
-        let expected = """
+        let expectation = """
             <html>
                 <head>
                 </head>
@@ -265,7 +269,12 @@ struct DateFormatterTestSuite {
                 </body>
             </html>
             """
-        #expect(first.contents == expected)
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value == expectation)
+        }
     }
 
     @Test
@@ -368,9 +377,8 @@ struct DateFormatterTestSuite {
 
         let results = try sourceBundleRenderer.render(now: now)
         #expect(results.count == 1)
-        let first = try #require(results.first)
 
-        let expected = """
+        let expectation = """
             <html>
                 <head>
                 </head>
@@ -383,6 +391,11 @@ struct DateFormatterTestSuite {
                 </body>
             </html>
             """
-        #expect(first.contents == expected)
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value == expectation)
+        }
     }
 }

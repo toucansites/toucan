@@ -154,23 +154,6 @@ public struct Toucan {
             )
             try assetsWriter.copyDefaultAssets()
 
-            // MARK: - Copy content assets
-
-            let assetsPath = sourceBundle.config.contents.assets.path
-            let assetsFolder = workDirUrl.appending(path: assetsPath)
-            try fileManager.createDirectory(at: assetsFolder)
-            let scrDirectory = sourceBundle.sourceConfig.contentsUrl
-
-            let contentAssetsWriter = ContentAssetsWriter(
-                fileManager: fileManager,
-                assetsPath: assetsPath,
-                assetsFolder: assetsFolder,
-                scrDirectory: scrDirectory
-            )
-            for content in sourceBundle.contents {
-                try contentAssetsWriter.copyContentAssets(content: content)
-            }
-
             // MARK: - Writing results
 
             for result in results {
@@ -184,11 +167,18 @@ public struct Toucan {
                     .appending(path: result.destination.file)
                     .appendingPathExtension(result.destination.ext)
 
-                try result.contents.write(
-                    to: outputUrl,
-                    atomically: true,
-                    encoding: .utf8
-                )
+                switch result.source {
+                case .assetFile(let path):
+                    let srcUrl = sourceBundle.sourceConfig.contentsUrl
+                        .appending(path: path)
+                    try fileManager.copy(from: srcUrl, to: outputUrl)
+                case .asset(let string), .content(let string):
+                    try string.write(
+                        to: outputUrl,
+                        atomically: true,
+                        encoding: .utf8
+                    )
+                }
             }
 
             // MARK: - Finalize and cleanup

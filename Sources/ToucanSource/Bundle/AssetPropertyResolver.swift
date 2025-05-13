@@ -1,5 +1,5 @@
 //
-//  AssetPipelineResolver.swift
+//  AssetPropertyResolver.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 04. 19..
@@ -8,27 +8,12 @@
 import Foundation
 import ToucanModels
 
-struct AssetPipelineResolver {
+struct AssetPropertyResolver {
 
     var contentsUrl: URL
     var assetsPath: String
     var baseUrl: String
     var config: Pipeline.Assets
-
-    init(
-        contentsUrl: URL,
-        assetsPath: String,
-        baseUrl: String,
-        config: Pipeline.Assets
-    ) {
-        self.contentsUrl = contentsUrl
-        self.assetsPath = assetsPath
-        self.baseUrl = baseUrl
-        self.config = config
-        self.config.properties.append(
-            contentsOf: Pipeline.Assets.getDefaultProperties()
-        )
-    }
 
     func resolve(
         _ contents: [Content]
@@ -163,7 +148,7 @@ struct AssetPipelineResolver {
 
     private func filterFilePaths(
         from paths: [String],
-        input: Pipeline.Assets.Property.Input
+        input: Pipeline.Assets.Location
     ) -> [String] {
         paths.filter { filePath in
             guard let url = URL(string: filePath) else {

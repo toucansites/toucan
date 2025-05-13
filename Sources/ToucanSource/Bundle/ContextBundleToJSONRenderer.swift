@@ -85,7 +85,7 @@ struct ContextBundleToJSONRenderer {
             return nil
         }
         return .init(
-            contents: json,
+            source: .content(json),
             destination: contextBundle.destination
         )
     }

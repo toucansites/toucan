@@ -119,6 +119,8 @@ public struct SourceBundleRenderer {
             now: now
         )
 
+        let executor = AssetBehaviorExecutor(sourceBundle: sourceBundle)
+
         for pipeline in sourceBundle.pipelines {
 
             let pipelineFormatters = pipeline.dataTypes.date.dateFormats
@@ -143,7 +145,13 @@ public struct SourceBundleRenderer {
                 using: pipeline
             )
 
-            let assetPipelineResolver = AssetPipelineResolver(
+            let assetResults = try executor.execute(
+                pipeline: pipeline,
+                contents: contents
+            )
+            results.append(contentsOf: assetResults)
+
+            let assetPropertyResolver = AssetPropertyResolver(
                 contentsUrl: sourceBundle.sourceConfig.contentsUrl,
                 assetsPath: sourceBundle.sourceConfig.config.contents.assets
                     .path,
@@ -151,7 +159,7 @@ public struct SourceBundleRenderer {
                 config: pipeline.assets
             )
 
-            let finalContents = try assetPipelineResolver.resolve(contents)
+            let finalContents = try assetPropertyResolver.resolve(contents)
 
             let lastUpdate =
                 getLastContentUpdate(
