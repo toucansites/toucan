@@ -25,7 +25,7 @@ public extension String {
         of target: Character?,
         with replacement: String
     ) -> String {
-        guard let target = target, let index = firstIndex(of: target)
+        guard let target, let index = firstIndex(of: target)
         else {
             return self
         }
