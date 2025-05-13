@@ -25,7 +25,7 @@ public extension String {
         of target: Character?,
         with replacement: String
     ) -> String {
-        guard let target = target, let index = self.firstIndex(of: target)
+        guard let target = target, let index = firstIndex(of: target)
         else {
             return self
         }
@@ -51,7 +51,7 @@ public extension String {
     }
 
     func suffixForPath() -> String {
-        return self.hasSuffix("/") ? "" : "/"
+        hasSuffix("/") ? "" : "/"
     }
 
     func resolveAsset(
@@ -63,12 +63,12 @@ public extension String {
             return self
         }
 
-        if self.contains("{{baseUrl}}") {
+        if contains("{{baseUrl}}") {
             let baseUrlPath = baseUrl + baseUrl.suffixForPath()
             var value = self
-            if let slashIndex = self.firstIndex(of: "/") {
-                let offset = self.distance(
-                    from: self.startIndex,
+            if let slashIndex = firstIndex(of: "/") {
+                let offset = distance(
+                    from: startIndex,
                     to: slashIndex
                 )
                 if offset == 11 {
@@ -82,13 +82,17 @@ public extension String {
         }
 
         let prefix = "./\(assetsPath)/"
-        guard self.hasPrefix(prefix) else {
+        guard hasPrefix(prefix) else {
             return self
         }
 
-        let src = String(self.dropFirst(prefix.count))
+        let src = String(dropFirst(prefix.count))
 
-        return
-            "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)/\(slug.resolveForPath())/\(src)"
+        return [
+            "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)",
+            slug.value,
+            src,
+        ]
+        .filter { !$0.isEmpty }.joined(separator: "/")
     }
 }

@@ -11,18 +11,6 @@ import Testing
 struct SlugTests {
 
     @Test
-    func testPathResolve() throws {
-        let slug = Slug(value: "slug")
-        #expect(slug.resolveForPath() == "slug")
-    }
-
-    @Test
-    func testHomePathResolve() throws {
-        let slug = Slug(value: "")
-        #expect(slug.resolveForPath() == "home")
-    }
-
-    @Test
     func testExtractIteratorId() throws {
         let slug = Slug(value: "posts/page/{{post.pagination}}")
         #expect(slug.extractIteratorId() == "post.pagination")
@@ -40,6 +28,15 @@ struct SlugTests {
         #expect(
             slug.permalink(baseUrl: "http://localhost:3000")
                 == "http://localhost:3000/slug/"
+        )
+    }
+
+    @Test
+    func testPermalinkForHomePage() throws {
+        let slug = Slug(value: "")
+        #expect(
+            slug.permalink(baseUrl: "http://localhost:3000")
+                == "http://localhost:3000/"
         )
     }
 

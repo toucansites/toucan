@@ -42,9 +42,9 @@ public struct FileLocator {
         fileManager
             .listDirectory(at: url)
             .filter { fileName in
-                let url = URL(fileURLWithPath: fileName)
-                let baseName = url.deletingPathExtension().lastPathComponent
-                let ext = url.pathExtension
+                let fileUrl = URL(fileURLWithPath: fileName)
+                let baseName = fileUrl.deletingPathExtension().lastPathComponent
+                let ext = fileUrl.pathExtension
 
                 switch (name, extensions) {
                 case (nil, nil):

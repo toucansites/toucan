@@ -18,16 +18,14 @@ struct AssetsLocatorTestSuite {
     func testAssetsLocator() async throws {
         try FileManagerPlayground {
             Directory("src") {
-                Directory("contents") {
-                    Directory("assets") {
-                        "image.png"
-                        "cover.png"
-                    }
+                Directory("assets") {
+                    "image.png"
+                    "cover.png"
                 }
             }
         }
         .test {
-            let url = $1.appending(path: "src/contents/")
+            let url = $1.appending(path: "src/")
             let locator = AssetLocator(fileManager: $0)
             let results = locator.locate(at: url)
 

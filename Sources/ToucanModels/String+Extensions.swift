@@ -20,6 +20,13 @@ public extension String {
         return self
     }
 
+    func ensureTrailingSlash() -> String {
+        if hasSuffix("/") {
+            return self
+        }
+        return self + "/"
+    }
+
     var emptyToNil: String? {
         isEmpty ? nil : self
     }

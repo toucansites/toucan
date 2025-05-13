@@ -33,20 +33,18 @@ struct SourceLoaderTestSuite: ToucanTestSuite {
                         """
                 )
                 Directory("contents") {
-                    Directory("home") {
-                        File(
-                            "index.md",
-                            string: """
-                                ---
-                                slug: ""
-                                title: "Home"
-                                ---
-                                """
-                        )
-                        Directory("assets") {
-                            "image.png"
-                            "cover.png"
-                        }
+                    File(
+                        "index.md",
+                        string: """
+                            ---
+                            slug: ""
+                            title: "Home"
+                            ---
+                            """
+                    )
+                    Directory("assets") {
+                        "image.png"
+                        "cover.png"
                     }
 
                 }

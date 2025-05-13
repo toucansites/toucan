@@ -63,7 +63,7 @@ public struct ContentAssetsWriter {
 
             // Create slug-based output folder for content assets
             let contentFolder = assetsFolder.appending(
-                path: content.slug.resolveForPath()
+                path: content.slug.value
             )
             try fileManager.createDirectory(at: contentFolder)
 

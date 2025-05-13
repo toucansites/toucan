@@ -106,9 +106,10 @@ struct AssetBehaviorExecutor {
 
                     let destPath = [
                         assetsPath,
-                        content.slug.resolveForPath(),
+                        content.slug.value,
                         inputAsset,
                     ]
+                    .filter { !$0.isEmpty }
                     .joined(separator: "/")
                     .split(separator: "/")
                     .dropLast()

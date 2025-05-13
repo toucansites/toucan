@@ -8,7 +8,7 @@
 /// A value type representing a URL-friendly identifier for a content item.
 public struct Slug: Codable, Equatable {
 
-    /// The raw slug string (e.g., `"blog/welcome"`, `"about"`).
+    /// The raw slug string (e.g., `"blog/welcome"`, `"about"`, `""`).
     public var value: String
 
     /// Initializes a new slug.
@@ -16,17 +16,6 @@ public struct Slug: Codable, Equatable {
     /// - Parameter value: The raw slug string.
     public init(value: String) {
         self.value = value
-    }
-
-    // MARK: - Path Resolution
-
-    /// Resolves the slug to a filesystem-safe path segment.
-    ///
-    /// Returns `"home"` if the slug is empty.
-    ///
-    /// - Returns: A non-empty string suitable for file output paths.
-    public func resolveForPath() -> String {
-        return value.isEmpty ? "home" : value
     }
 
     // MARK: - Iterator ID Extraction
@@ -57,13 +46,15 @@ public struct Slug: Codable, Equatable {
     public func permalink(baseUrl: String) -> String {
         let components = value.split(separator: "/").map(String.init)
         if components.isEmpty {
-            return baseUrl
+            return baseUrl.ensureTrailingSlash()
         }
         if components.last?.split(separator: ".").count ?? 0 > 1 {
             // If last segment has a file extension, return without trailing slash
             return ([baseUrl] + components).joined(separator: "/")
         }
-        return ([baseUrl] + components).joined(separator: "/") + "/"
+        return ([baseUrl] + components)
+            .joined(separator: "/")
+            .ensureTrailingSlash()
     }
 
     // MARK: - Identifier
