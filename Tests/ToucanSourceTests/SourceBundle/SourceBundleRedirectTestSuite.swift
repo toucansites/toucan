@@ -100,7 +100,12 @@ struct SourceBundleRedirectTestSuite {
             </html>
             """#
 
-        #expect(results[0].contents == expectation)
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(value == expectation)
+        }
         #expect(results[0].destination.path == "home-2")
         #expect(results[0].destination.file == "index")
         #expect(results[0].destination.ext == "html")

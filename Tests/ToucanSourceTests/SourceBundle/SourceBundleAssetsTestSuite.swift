@@ -33,6 +33,7 @@ struct SourceBundleAssetsTestSuite {
                 ),
                 iterators: [:],
                 assets: .init(
+                    behaviors: [],
                     properties: [
                         .init(
                             action: .set,
@@ -68,12 +69,18 @@ struct SourceBundleAssetsTestSuite {
         ]
         var renderer = getRenderer(pipelines, rawPageContents)
         let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/cover.jpg")
-        )
+
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/cover.jpg")
+            )
+        }
     }
 
     @Test()
@@ -91,14 +98,17 @@ struct SourceBundleAssetsTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [:],
-                assets: .init(properties: [
-                    .init(
-                        action: .set,
-                        property: "image",
-                        resolvePath: true,
-                        input: .init(name: "*", ext: "png")
-                    )
-                ]),
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .set,
+                            property: "image",
+                            resolvePath: true,
+                            input: .init(name: "*", ext: "png")
+                        )
+                    ]
+                ),
                 transformers: [:],
                 engine: .init(
                     id: "mustache",
@@ -129,16 +139,20 @@ struct SourceBundleAssetsTestSuite {
             """
         )
         let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom1.png")
-        )
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom2.png")
-        )
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom1.png")
+            )
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom2.png")
+            )
+        }
     }
 
     @Test()
@@ -156,14 +170,17 @@ struct SourceBundleAssetsTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [:],
-                assets: .init(properties: [
-                    .init(
-                        action: .add,
-                        property: "image",
-                        resolvePath: true,
-                        input: .init(name: "custom", ext: "jpg")
-                    )
-                ]),
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .add,
+                            property: "images",
+                            resolvePath: true,
+                            input: .init(name: "custom", ext: "jpg")
+                        )
+                    ]
+                ),
                 transformers: [:],
                 engine: .init(
                     id: "mustache",
@@ -185,14 +202,24 @@ struct SourceBundleAssetsTestSuite {
         let rawPageContents: [RawContent] = [
             getRawContent(["custom.jpg"])
         ]
-        var renderer = getRenderer(pipelines, rawPageContents)
+
+        var renderer = getRenderer(
+            pipelines,
+            rawPageContents,
+            "<img src=\"{{#page.images}}{{.}}{{/page.images}}\">"
+        )
         let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom.jpg")
-        )
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom.jpg")
+            )
+        }
     }
 
     @Test()
@@ -211,6 +238,7 @@ struct SourceBundleAssetsTestSuite {
                 ),
                 iterators: [:],
                 assets: .init(
+                    behaviors: [],
                     properties: [
                         .init(
                             action: .add,
@@ -254,16 +282,20 @@ struct SourceBundleAssetsTestSuite {
             """
         )
         let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom1.png")
-        )
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom2.png")
-        )
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom1.png")
+            )
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom2.png")
+            )
+        }
     }
 
     @Test()
@@ -282,6 +314,7 @@ struct SourceBundleAssetsTestSuite {
                 ),
                 iterators: [:],
                 assets: .init(
+                    behaviors: [],
                     properties: [
                         .init(
                             action: .set,
@@ -324,16 +357,20 @@ struct SourceBundleAssetsTestSuite {
             """
         )
         let results = try renderer.render(now: Date())
+            .filter(\.source.isContent)
 
         #expect(results.count == 1)
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom1.png")
-        )
-        #expect(
-            results[0].contents
-                .contains("http://localhost:3000/assets/slug/custom2.png")
-        )
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom1.png")
+            )
+            #expect(
+                value.contains("http://localhost:3000/assets/slug/custom2.png")
+            )
+        }
     }
 
     private func getRenderer(

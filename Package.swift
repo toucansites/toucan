@@ -40,8 +40,9 @@ let package = Package(
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
         .package(url: "https://github.com/aus-der-Technik/FileMonitor", from: "1.2.0"),
         .package(url: "https://github.com/Zollerboy1/SwiftCommand", from: "1.4.0"),
-//        .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0")
-//        .package(url: "https://github.com/swiftlang/swift-subprocess", branch: "main")
+        .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0"),
+        .package(url: "https://github.com/stackotter/swift-css-parser", from: "0.1.2"),
+//        .package(url: "https://github.com/swiftlang/swift-subprocess", branch: "main"),
     ],
     targets: [
         // MARK: - executable targets
@@ -107,7 +108,6 @@ let package = Package(
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 .product(name: "Yams", package: "yams"),
-                //.product(name: "DartSass", package: "swift-sass"),
                 .target(name: "ToucanFileSystem"),
                 .target(name: "ToucanSource"),
                 .target(name: "ToucanTesting"),
@@ -137,6 +137,8 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .product(name: "DartSass", package: "swift-sass"),
+                .product(name: "SwiftCSSParser", package: "swift-css-parser"),
                 .target(name: "ToucanModels"),
                 .target(name: "ToucanContent"),
                 .target(name: "ToucanInfo"),

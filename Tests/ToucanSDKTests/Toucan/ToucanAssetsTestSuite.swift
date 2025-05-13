@@ -15,6 +15,314 @@ import ToucanTesting
 struct ToucanAssetsTestSuite: ToucanTestSuite {
 
     @Test
+    func testMinifyCSSAsset() async throws {
+        let logger = Logger(label: "ToucanTestSuite")
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("page1") {
+                        File(
+                            "index.yaml",
+                            string: """
+                                title: title
+                                type: page
+                                description: Desc1
+                                label: label1
+                                """
+                        )
+                        Directory("assets") {
+                            File(
+                                "style.css",
+                                string: """
+                                    html {
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                    body {
+                                        background: red;
+                                    }
+                                    """
+                            )
+                        }
+                    }
+                }
+                Directory("pipelines") {
+                    File(
+                        "html.yml",
+                        string: """
+                            id: html
+                            assets:
+                                behaviors:
+                                    - id: minify-css
+                                      input:
+                                        name: "style" 
+                                        ext: "css"
+                                      output:
+                                        name: "style.min"
+                                        ext: "css"
+
+                            contentTypes: 
+                                include:
+                                    - page
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        page:
+                                            template: "pages.default"
+                            output:
+                                path: "{{slug}}"
+                                file: index
+                                ext: html
+                            """
+                    )
+                }
+                Directory("types") {
+                    typePage()
+                }
+                Directory("themes") {
+                    Directory("default") {
+                        Directory("templates") {
+                            Directory("pages") {
+                                themeDefaultMustache(svg: "{{page.svg}}")
+                            }
+                            themeHtmlMustache()
+                        }
+                    }
+                }
+                configFile()
+            }
+        }
+        .test {
+            let input = $1.appending(path: "src/")
+            let output = $1.appending(path: "docs/")
+            try getToucan(input, output, logger).generate()
+
+            let cssPath = output.appending(path: "assets/page1/style.min.css")
+            #expect($0.fileExists(at: cssPath))
+
+            let contents = try cssPath.loadContents()
+            #expect(
+                contents.contains(
+                    "html{margin:0;padding:0}body{background:red}"
+                )
+            )
+        }
+    }
+
+    @Test
+    func testSASSAsset() async throws {
+        let logger = Logger(label: "ToucanTestSuite")
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("page1") {
+                        File(
+                            "index.yaml",
+                            string: """
+                                title: title
+                                type: page
+                                description: Desc1
+                                label: label1
+                                """
+                        )
+                        Directory("assets") {
+                            File(
+                                "style.sass",
+                                string: """
+                                    $font-stack: Helvetica, sans-serif
+                                    $primary-color: #333
+
+                                    body
+                                      font: 100% $font-stack
+                                      color: $primary-color
+                                    """
+                            )
+                        }
+                    }
+                }
+                Directory("pipelines") {
+                    File(
+                        "html.yml",
+                        string: """
+                            id: html
+                            assets:
+                                behaviors:
+                                    - id: compile-sass
+                                      input:
+                                        name: "style" 
+                                        ext: "sass"
+                                      output:
+                                        name: "style.min"
+                                        ext: "css"
+
+                            contentTypes: 
+                                include:
+                                    - page
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        page:
+                                            template: "pages.default"
+                            output:
+                                path: "{{slug}}"
+                                file: index
+                                ext: html
+                            """
+                    )
+                }
+                Directory("types") {
+                    typePage()
+                }
+                Directory("themes") {
+                    Directory("default") {
+                        Directory("templates") {
+                            Directory("pages") {
+                                themeDefaultMustache(svg: "{{page.svg}}")
+                            }
+                            themeHtmlMustache()
+                        }
+                    }
+                }
+                configFile()
+            }
+        }
+        .test {
+            let input = $1.appending(path: "src/")
+            let output = $1.appending(path: "docs/")
+            try getToucan(input, output, logger).generate()
+
+            let assetsPath = output.appending(path: "assets/page1/")
+
+            #expect($0.listDirectory(at: assetsPath).count == 1)
+
+            let cssPath = assetsPath.appending(path: "style.min.css")
+            #expect($0.fileExists(at: cssPath))
+
+            let contents = try cssPath.loadContents()
+            #expect(
+                contents.contains(
+                    """
+                    body {
+                      font: 100% Helvetica, sans-serif;
+                      color: #333;
+                    }
+                    """
+                )
+            )
+        }
+    }
+
+    @Test
+    func testSASSAssetModuleLoader() async throws {
+        let logger = Logger(label: "ToucanTestSuite")
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("page1") {
+                        File(
+                            "index.yaml",
+                            string: """
+                                title: title
+                                type: page
+                                description: Desc1
+                                label: label1
+                                """
+                        )
+                        Directory("assets") {
+                            File(
+                                "_colors.scss",
+                                string: """
+                                    $primary: blue;
+                                    """
+                            )
+                            File(
+                                "style.scss",
+                                string: """
+                                    @use "colors";
+
+                                    body {
+                                      color: colors.$primary;
+                                    }
+                                    """
+                            )
+                        }
+                    }
+                }
+                Directory("pipelines") {
+                    File(
+                        "html.yml",
+                        string: """
+                            id: html
+                            assets:
+                                behaviors:
+                                    - id: compile-sass
+                                      input:
+                                        name: "style" 
+                                        ext: "scss"
+                                      output:
+                                        name: "style.min"
+                                        ext: "css"
+
+                            contentTypes: 
+                                include:
+                                    - page
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        page:
+                                            template: "pages.default"
+                            output:
+                                path: "{{slug}}"
+                                file: index
+                                ext: html
+                            """
+                    )
+                }
+                Directory("types") {
+                    typePage()
+                }
+                Directory("themes") {
+                    Directory("default") {
+                        Directory("templates") {
+                            Directory("pages") {
+                                themeDefaultMustache(svg: "{{page.svg}}")
+                            }
+                            themeHtmlMustache()
+                        }
+                    }
+                }
+                configFile()
+            }
+        }
+        .test {
+            let input = $1.appending(path: "src/")
+            let output = $1.appending(path: "docs/")
+            try getToucan(input, output, logger).generate()
+
+            let assetsPath = output.appending(path: "assets/page1/")
+
+            #expect($0.listDirectory(at: assetsPath).count == 1)
+
+            let cssPath = assetsPath.appending(path: "style.min.css")
+            #expect($0.fileExists(at: cssPath))
+
+            let contents = try cssPath.loadContents()
+            #expect(
+                contents.contains(
+                    """
+                    body {
+                      color: blue;
+                    }
+                    """
+                )
+            )
+        }
+    }
+
+    @Test
     func testLoadSvg() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
@@ -40,6 +348,7 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                         "html.yml",
                         string: """
                             id: html
+
                             contentTypes: 
                                 include:
                                     - page
@@ -50,6 +359,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: load
                                   property: svg
@@ -134,6 +445,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: load
                                   property: svg
@@ -225,6 +538,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: parse
                                   property: yaml
@@ -316,6 +631,8 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                         page:
                                             template: "pages.default"
                             assets:
+                              behaviors:
+                                - id: copy
                               properties:
                                 - action: parse
                                   property: yaml

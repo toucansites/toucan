@@ -75,6 +75,9 @@ struct ContextBundleToHTMLRenderer {
             return nil
         }
 
-        return .init(contents: html, destination: contextBundle.destination)
+        return .init(
+            source: .content(html),
+            destination: contextBundle.destination
+        )
     }
 }

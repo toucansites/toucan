@@ -151,12 +151,17 @@ struct SourceBundleContextTestSuite {
             let context: Ctx
         }
 
-        let data0 = try #require(results[0].contents.data(using: .utf8))
-        let exp0 = try decoder.decode(Exp0.self, from: data0)
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            let data0 = try #require(value.data(using: .utf8))
+            let exp0 = try decoder.decode(Exp0.self, from: data0)
 
-        #expect(exp0.page.isCurrentURL)
-        for item in exp0.context.featured {
-            #expect(item.isCurrentURL == (exp0.page.slug == item.slug))
+            #expect(exp0.page.isCurrentURL)
+            for item in exp0.context.featured {
+                #expect(item.isCurrentURL == (exp0.page.slug == item.slug))
+            }
         }
 
         struct Exp1: Decodable {
@@ -174,11 +179,17 @@ struct SourceBundleContextTestSuite {
             let context: Ctx
         }
 
-        let data1 = try #require(results[1].contents.data(using: .utf8))
-        let exp1 = try decoder.decode(Exp1.self, from: data1)
+        switch results[1].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            let data1 = try #require(value.data(using: .utf8))
+            let exp1 = try decoder.decode(Exp1.self, from: data1)
 
-        #expect(exp1.page.isCurrentURL)
-        #expect(exp1.context.featured.allSatisfy { !$0.isCurrentURL })
+            #expect(exp1.page.isCurrentURL)
+            #expect(exp1.context.featured.allSatisfy { !$0.isCurrentURL })
+        }
+
     }
 
     @Test()
@@ -283,14 +294,19 @@ struct SourceBundleContextTestSuite {
             let site: Site
         }
 
-        let data = try #require(results[0].contents.data(using: .utf8))
-        let exp = try decoder.decode(Exp.self, from: data)
+        switch results[0].source {
+        case .assetFile(_), .asset(_):
+            #expect(Bool(false))
+        case .content(let value):
+            let data = try #require(value.data(using: .utf8))
+            let exp = try decoder.decode(Exp.self, from: data)
 
-        #expect(exp.site.generator.name == "Toucan")
-        #expect(exp.site.generator.version == GeneratorInfo.current.version)
-        #expect(
-            exp.site.generation.formats["iso8601"]
-                == isoFormatter.string(from: now)
-        )
+            #expect(exp.site.generator.name == "Toucan")
+            #expect(exp.site.generator.version == GeneratorInfo.current.version)
+            #expect(
+                exp.site.generation.formats["iso8601"]
+                    == isoFormatter.string(from: now)
+            )
+        }
     }
 }
