@@ -69,12 +69,16 @@ extension Config {
             }
 
             self.path =
-                try container.decodeIfPresent(String.self, forKey: .path)
-                ?? defaults.path
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .path
+                ) ?? defaults.path
 
             self.assets =
-                try container.decodeIfPresent(Location.self, forKey: .assets)
-                ?? defaults.assets
+                try container.decodeIfPresent(
+                    Location.self,
+                    forKey: .assets
+                ) ?? defaults.assets
         }
     }
 }

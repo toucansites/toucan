@@ -25,6 +25,13 @@ struct SourceLoaderTestSuite: ToucanTestSuite {
 
         try FileManagerPlayground {
             Directory("src") {
+                File(
+                    "site.yml",
+                    string: """
+                        baseUrl: http://localhost:3000/
+                        name: Test
+                        """
+                )
                 Directory("contents") {
                     Directory("home") {
                         File(
@@ -41,13 +48,7 @@ struct SourceLoaderTestSuite: ToucanTestSuite {
                             "cover.png"
                         }
                     }
-                    File(
-                        "site.yml",
-                        string: """
-                            baseUrl: http://localhost:3000/
-                            name: Test
-                            """
-                    )
+
                 }
                 Directory("types") {
                     File(

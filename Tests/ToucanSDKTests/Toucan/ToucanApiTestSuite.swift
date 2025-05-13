@@ -21,6 +21,12 @@ struct ToucanApiTestSuite: ToucanTestSuite {
 
         try FileManagerPlayground {
             Directory("src") {
+                File(
+                    "site.yml",
+                    string: """
+                        name: Test
+                        """
+                )
                 Directory("contents") {
                     Directory("api.json") {
                         File(
@@ -35,12 +41,6 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
-                    File(
-                        "site.yml",
-                        string: """
-                            name: Test
-                            """
-                    )
                 }
                 Directory("types") {
                     typePost()
@@ -86,6 +86,12 @@ struct ToucanApiTestSuite: ToucanTestSuite {
 
         try FileManagerPlayground {
             Directory("src") {
+                File(
+                    "site.yml",
+                    string: """
+                        name: Test
+                        """
+                )
                 Directory("contents") {
                     Directory("{{api.posts.pagination}}") {
                         File(
@@ -110,12 +116,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
-                    File(
-                        "site.yml",
-                        string: """
-                            name: Test
-                            """
-                    )
+
                 }
                 Directory("types") {
                     typePost()
@@ -170,6 +171,12 @@ struct ToucanApiTestSuite: ToucanTestSuite {
 
         try FileManagerPlayground {
             Directory("src") {
+                File(
+                    "site.yml",
+                    string: """
+                        name: Test
+                        """
+                )
                 Directory("contents") {
                     Directory("api.json") {
                         File(
@@ -184,12 +191,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
-                    File(
-                        "site.yml",
-                        string: """
-                            name: Test
-                            """
-                    )
+
                 }
                 Directory("types") {
                     typePost()
@@ -242,6 +244,12 @@ struct ToucanApiTestSuite: ToucanTestSuite {
 
         try FileManagerPlayground {
             Directory("src") {
+                File(
+                    "site.yml",
+                    string: """
+                        name: Test
+                        """
+                )
                 Directory("contents") {
                     Directory("api.json") {
                         File(
@@ -256,12 +264,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
-                    File(
-                        "site.yml",
-                        string: """
-                            name: Test
-                            """
-                    )
+
                 }
                 Directory("types") {
                     typePost()

@@ -66,7 +66,7 @@ public struct AssetsWriter {
 
         // Copy global/static site-level assets
         try fileManager.copyRecursively(
-            from: sourceConfig.assetsUrl,
+            from: sourceConfig.siteAssetsUrl,
             to: workDirUrl
         )
     }
