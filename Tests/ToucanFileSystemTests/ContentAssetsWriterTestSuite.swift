@@ -19,24 +19,23 @@ struct ContentAssetsWriterTestSuite {
     func testContentAssetsWriter() async throws {
         try FileManagerPlayground {
             Directory("src") {
+                Directory("assets") {
+                    Directory("icons") {
+                        "image.png"
+                        "cover.png"
+                    }
+                    Directory("images") {
+                        "image.png"
+                        "cover.png"
+                    }
+                }
                 Directory("contents") {
+                    File("index.md", string: "")
                     Directory("assets") {
-                        Directory("icons") {
-                            "image.png"
-                            "cover.png"
-                        }
-                        Directory("images") {
-                            "image.png"
-                            "cover.png"
-                        }
+                        "image.png"
+                        "cover.png"
                     }
-                    Directory("home") {
-                        File("index.md", string: "")
-                        Directory("assets") {
-                            "image.png"
-                            "cover.png"
-                        }
-                    }
+
                     Directory("blog") {
                         Directory("authors") {
                             Directory("user1") {
@@ -66,10 +65,10 @@ struct ContentAssetsWriterTestSuite {
         .test {
             let contents = [
                 Content(
-                    id: "home",
+                    id: "",
                     slug: .init(value: ""),
                     rawValue: RawContent(
-                        origin: .init(path: "home/index.md", slug: "home"),
+                        origin: .init(path: "index.md", slug: ""),
                         frontMatter: [:],
                         markdown: "",
                         lastModificationDate: 1741879656.033987,
@@ -156,9 +155,9 @@ struct ContentAssetsWriterTestSuite {
             let locator = FileLocator(fileManager: $0)
 
             var locations =
-                locator.locate(at: workDirUrl.appending(path: "assets/home"))
+                locator.locate(at: workDirUrl.appending(path: "assets/"))
                 .sorted()
-            #expect(locations == ["cover.png", "image.png"])
+            #expect(locations == ["authors", "cover.png", "image.png"])
 
             locations =
                 locator.locate(
@@ -181,9 +180,7 @@ struct ContentAssetsWriterTestSuite {
         try FileManagerPlayground {
             Directory("src") {
                 Directory("contents") {
-                    Directory("home") {
-                        File("index.md", string: "")
-                    }
+                    File("index.md", string: "")
                 }
             }
             Directory("workDir") {
@@ -198,7 +195,7 @@ struct ContentAssetsWriterTestSuite {
                     id: "home",
                     slug: .init(value: ""),
                     rawValue: RawContent(
-                        origin: .init(path: "home/index.md", slug: "home"),
+                        origin: .init(path: "index.md", slug: ""),
                         frontMatter: [:],
                         markdown: "",
                         lastModificationDate: 1741879656.033987,
@@ -234,7 +231,7 @@ struct ContentAssetsWriterTestSuite {
 
             let locator = FileLocator(fileManager: $0)
             let locations =
-                locator.locate(at: workDirUrl.appending(path: "assets/home"))
+                locator.locate(at: workDirUrl.appending(path: "assets"))
                 .sorted()
             #expect(locations.isEmpty)
         }

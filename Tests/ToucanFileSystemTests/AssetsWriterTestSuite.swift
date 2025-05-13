@@ -63,9 +63,7 @@ struct AssetsWriterTestSuite {
     func testAssetsWriterEmpty() async throws {
         try FileManagerPlayground {
             Directory("src") {
-                Directory("contents") {
-                    Directory("assets") {
-                    }
+                Directory("assets") {
                 }
             }
             Directory("workDir") {}
