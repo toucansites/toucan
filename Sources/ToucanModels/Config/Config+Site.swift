@@ -44,7 +44,7 @@ extension Config {
         ///   - settings: The settings (site.yml) file location.
         public init(
             assets: Location,
-            settings: Location?,
+            settings: Location?
         ) {
             self.assets = assets
             self.settings = settings
