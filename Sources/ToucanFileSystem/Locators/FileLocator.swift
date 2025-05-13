@@ -39,7 +39,8 @@ public struct FileLocator {
     /// - Parameters: url: The URL of the directory to search.
     /// - Returns: An array of file names that match the specified criteria.
     public func locate(at url: URL) -> [String] {
-        fileManager
+        return
+            fileManager
             .listDirectory(at: url)
             .filter { fileName in
                 let fileUrl = URL(fileURLWithPath: fileName)
