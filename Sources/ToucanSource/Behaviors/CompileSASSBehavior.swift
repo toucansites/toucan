@@ -41,7 +41,7 @@ struct CompileSASSBehavior {
                     )
             }
             catch {
-                fatalError("\(error)")
+                fatalError("\(error) - \(fileUrl.path())")
             }
 
             semaphore.signal()

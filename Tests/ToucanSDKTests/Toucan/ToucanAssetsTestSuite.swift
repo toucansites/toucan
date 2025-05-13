@@ -215,6 +215,114 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     }
 
     @Test
+    func testSASSAssetModuleLoader() async throws {
+        let logger = Logger(label: "ToucanTestSuite")
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("page1") {
+                        File(
+                            "index.yaml",
+                            string: """
+                                title: title
+                                type: page
+                                description: Desc1
+                                label: label1
+                                """
+                        )
+                        Directory("assets") {
+                            File(
+                                "_colors.scss",
+                                string: """
+                                    $primary: blue;
+                                    """
+                            )
+                            File(
+                                "style.scss",
+                                string: """
+                                    @use "colors";
+
+                                    body {
+                                      color: colors.$primary;
+                                    }
+                                    """
+                            )
+                        }
+                    }
+                }
+                Directory("pipelines") {
+                    File(
+                        "html.yml",
+                        string: """
+                            id: html
+                            assets:
+                                behaviors:
+                                    - id: compile-sass
+                                      input:
+                                        name: "style" 
+                                        ext: "scss"
+                                      output:
+                                        name: "style.min"
+                                        ext: "css"
+
+                            contentTypes: 
+                                include:
+                                    - page
+                            engine: 
+                                id: mustache
+                                options:
+                                    contentTypes: 
+                                        page:
+                                            template: "pages.default"
+                            output:
+                                path: "{{slug}}"
+                                file: index
+                                ext: html
+                            """
+                    )
+                }
+                Directory("types") {
+                    typePage()
+                }
+                Directory("themes") {
+                    Directory("default") {
+                        Directory("templates") {
+                            Directory("pages") {
+                                themeDefaultMustache(svg: "{{page.svg}}")
+                            }
+                            themeHtmlMustache()
+                        }
+                    }
+                }
+                configFile()
+            }
+        }
+        .test {
+            let input = $1.appending(path: "src/")
+            let output = $1.appending(path: "docs/")
+            try getToucan(input, output, logger).generate()
+
+            let assetsPath = output.appending(path: "assets/page1/")
+
+            #expect($0.listDirectory(at: assetsPath).count == 1)
+
+            let cssPath = assetsPath.appending(path: "style.min.css")
+            #expect($0.fileExists(at: cssPath))
+
+            let contents = try cssPath.loadContents()
+            #expect(
+                contents.contains(
+                    """
+                    body {
+                      color: blue;
+                    }
+                    """
+                )
+            )
+        }
+    }
+
+    @Test
     func testLoadSvg() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
