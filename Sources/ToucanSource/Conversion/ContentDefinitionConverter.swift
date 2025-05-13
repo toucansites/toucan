@@ -73,7 +73,6 @@ public struct ContentDefinitionConverter {
             let converter = PropertyConverter(
                 property: property,
                 dateFormatter: dateFormatter,
-                defaultDateFormat: defaultDateFormat,
                 logger: logger
             )
             properties[key] = converter.convert(

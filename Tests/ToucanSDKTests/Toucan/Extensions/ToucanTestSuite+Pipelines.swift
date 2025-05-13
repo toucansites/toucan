@@ -53,6 +53,71 @@ extension ToucanTestSuite {
         )
     }
 
+    func pipelineApi(
+        definesType: Bool = true,
+        engineOptions: String? = nil
+    ) -> File {
+        File(
+            "api.yml",
+            string: """
+                id: api
+                definesType: \(definesType ? "true" : "false")
+
+                queries: 
+                    posts:
+                        contentType: post
+                        scope: detail
+                        orderBy:
+                            - key: publication
+                              direction: desc
+
+                contentTypes:
+                    include:
+                        - api
+
+                engine: 
+                    id: json
+                    \(engineOptions == nil ? "" : engineOptions!)
+
+                output:
+                    path: "api"
+                    file: posts
+                    ext: json
+                """
+        )
+    }
+
+    func pipelinePaginatedApi(definesType: Bool = true) -> File {
+        File(
+            "api.yml",
+            string: """
+                id: api
+                definesType: \(definesType ? "true" : "false")
+
+                iterators:
+                    api.posts.pagination:
+                        contentType: post
+                        scope: detail
+                        limit: 2
+                        orderBy:
+                            - key: title
+                              direction: asc
+
+                contentTypes:
+                    include:
+                        - api
+
+                engine: 
+                    id: json
+
+                output:
+                    path: "api"
+                    file: "{{iterator.current}}"
+                    ext: json
+                """
+        )
+    }
+
     func pipeline404(addTransformers: Bool = false) -> File {
         File(
             "404.yml",

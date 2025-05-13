@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Logging
 import ToucanFileSystem
 import ToucanModels
 import ToucanSource
@@ -19,7 +18,6 @@ struct ContentDefinitionLoader {
     let locations: [String]
 
     let decoder: ToucanDecoder
-    let logger: Logger
 
     /// Loads and returns an array of content types.
     ///
@@ -34,9 +32,6 @@ struct ContentDefinitionLoader {
                 items.append(item)
             }
         }
-
-        let typeList = items.map(\.id).joined(separator: ", ")
-        logger.debug("Available content types: `\(typeList)`")
 
         return items
     }
