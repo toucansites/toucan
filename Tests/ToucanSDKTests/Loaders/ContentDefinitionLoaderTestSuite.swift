@@ -19,7 +19,6 @@ struct ContentDefinitionLoaderTestSuite {
 
     @Test
     func contentDefinitions() throws {
-        let logger = Logger(label: "ContentDefinitionLoaderTestSuite")
         try FileManagerPlayground {
             Directory("src") {
                 Directory("types") {
@@ -54,8 +53,7 @@ struct ContentDefinitionLoaderTestSuite {
                     "foo.yml",
                     "bar.yml",
                 ],
-                decoder: ToucanYAMLDecoder(),
-                logger: logger
+                decoder: ToucanYAMLDecoder()
             )
             let result = try loader.load()
 

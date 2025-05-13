@@ -67,10 +67,10 @@ public struct ContentDefinition: Decodable, Equatable {
     public init(
         id: String,
         default: Bool = false,
-        paths: [String],
-        properties: [String: Property],
-        relations: [String: Relation],
-        queries: [String: Query]
+        paths: [String] = [],
+        properties: [String: Property] = [:],
+        relations: [String: Relation] = [:],
+        queries: [String: Query] = [:]
     ) {
         self.id = id
         self.default = `default`
