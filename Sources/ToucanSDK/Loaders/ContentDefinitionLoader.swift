@@ -9,6 +9,7 @@ import Foundation
 import ToucanFileSystem
 import ToucanModels
 import ToucanSource
+import ToucanSerialization
 
 /// A struct responsible for loading and managing content types.
 struct ContentDefinitionLoader {

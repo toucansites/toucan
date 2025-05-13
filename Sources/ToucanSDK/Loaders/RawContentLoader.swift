@@ -11,6 +11,7 @@ import ToucanModels
 import ToucanFileSystem
 import ToucanSource
 import FileManagerKit
+import ToucanSerialization
 
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {

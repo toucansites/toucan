@@ -7,7 +7,7 @@
 import Foundation
 import Testing
 import ToucanModels
-@testable import ToucanSource
+import ToucanSerialization
 
 @Suite
 struct ContextDecodingTestSuite {

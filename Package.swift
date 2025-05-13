@@ -24,6 +24,7 @@ let package = Package(
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
         .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
         .library(name: "ToucanModels", targets: ["ToucanModels"]),
+        .library(name: "ToucanSerialization", targets: ["ToucanSerialization"]),
         .library(name: "ToucanSource", targets: ["ToucanSource"]),
         .library(name: "ToucanContent", targets: ["ToucanContent"]),
         .library(name: "ToucanTesting", targets: ["ToucanTesting"]),
@@ -131,15 +132,22 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .target(
-            name: "ToucanSource",
+            name: "ToucanSerialization",
             dependencies: [
                 .product(name: "Yams", package: "yams"),
+            ],
+            swiftSettings: swiftSettings
+        ),
+        .target(
+            name: "ToucanSource",
+            dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "DartSass", package: "swift-sass"),
                 .product(name: "SwiftCSSParser", package: "swift-css-parser"),
                 .target(name: "ToucanModels"),
+                .target(name: "ToucanSerialization"),
                 .target(name: "ToucanContent"),
                 .target(name: "ToucanInfo"),
             ],
@@ -193,6 +201,13 @@ let package = Package(
             name: "ToucanModelsTests",
             dependencies: [
                 .target(name: "ToucanModels"),
+            ]
+        ),
+        .testTarget(
+            name: "ToucanSerializationTests",
+            dependencies: [
+                .target(name: "ToucanModels"),
+                .target(name: "ToucanSerialization"),
             ]
         ),
         .testTarget(

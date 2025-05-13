@@ -11,6 +11,7 @@ import ToucanModels
 import ToucanSource
 import ToucanFileSystem
 import FileManagerKit
+import ToucanSerialization
 
 struct SourceLoader {
 

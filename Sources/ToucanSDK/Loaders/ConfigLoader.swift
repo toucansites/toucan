@@ -11,6 +11,7 @@ import Logging
 import ToucanFileSystem
 import ToucanModels
 import ToucanSource
+import ToucanSerialization
 
 /// Loads and merges configuration files from a source directory.
 public struct ConfigLoader {

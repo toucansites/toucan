@@ -12,6 +12,7 @@ import ToucanFileSystem
 import ToucanTesting
 import ToucanSource
 import ToucanModels
+import ToucanSerialization
 
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {

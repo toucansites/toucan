@@ -7,7 +7,7 @@
 import Foundation
 import Testing
 import ToucanModels
-@testable import ToucanSource
+import ToucanSerialization
 
 @Suite
 struct PipelineDecodingTestSuite {
@@ -76,7 +76,10 @@ struct PipelineDecodingTestSuite {
         #expect(result.engine.options.double("double") == 2.0)
         #expect(result.engine.options.int("int") == 100)
 
-        let formatter = DateFormatter.default
+        let formatter = DateFormatter()
+        formatter.locale = .init(identifier: "en-US")
+        formatter.timeZone = .init(secondsFromGMT: 0)!
+
         formatter.dateFormat = "MM/dd/yyyy"
         #expect(
             result.engine.options.date("date", formatter: formatter)?
