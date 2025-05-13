@@ -53,7 +53,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func pipelineApi(definesType: Bool = true) -> File {
+    func pipelineApi(
+        definesType: Bool = true,
+        engineOptions: String? = nil
+    ) -> File {
         File(
             "api.yml",
             string: """
@@ -74,6 +77,7 @@ extension ToucanTestSuite {
 
                 engine: 
                     id: json
+                    \(engineOptions == nil ? "" : engineOptions!)
 
                 output:
                     path: "api"

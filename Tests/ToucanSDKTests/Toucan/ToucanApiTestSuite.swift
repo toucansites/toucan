@@ -51,8 +51,8 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                 Directory("pipelines") {
                     pipelineApi(definesType: !definesApiTypeManually)
                 }
+                configFile()
             }
-            configFile()
         }
         .test {
             let input = $1.appending(path: "src/")
@@ -126,8 +126,8 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                 Directory("pipelines") {
                     pipelinePaginatedApi(definesType: !definesApiTypeManually)
                 }
+                configFile()
             }
-            configFile()
         }
         .test {
             let input = $1.appending(path: "src/")
@@ -161,6 +161,139 @@ struct ToucanApiTestSuite: ToucanTestSuite {
 
             #expect(page2Result.iterator.current == 2)
             #expect(page2Result.iterator.items.count == 1)
+        }
+    }
+
+    @Test()
+    func engineOptionsKeyPaths() throws {
+        let logger = Logger(label: "ToucanApiTestSuite")
+
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("api.json") {
+                        File(
+                            "index.yml",
+                            string: """
+                                type: api
+                                """
+                        )
+                    }
+                    Directory("posts") {
+                        contentPost(index: 1)
+                        contentPost(index: 2)
+                        contentPost(index: 3)
+                    }
+                    File(
+                        "site.yml",
+                        string: """
+                            name: Test
+                            """
+                    )
+                }
+                Directory("types") {
+                    typePost()
+                }
+                Directory("pipelines") {
+                    pipelineApi(
+                        engineOptions: """
+                            options:
+                                    keyPaths:
+                                        "context.posts": "items"
+                                        "site.generator": "info"
+                            """
+                    )
+                }
+                configFile()
+            }
+        }
+        .test {
+            let input = $1.appending(path: "src/")
+            let output = $1.appending(path: "docs/")
+            try getToucan(input, output, logger).generate()
+
+            struct Expected: Decodable {
+                struct Item: Decodable {
+                    let title: String
+                    let slug: Slug
+                }
+                struct Info: Decodable {
+                    let name: String
+                    let version: String
+                }
+                let items: [Item]
+                let info: Info
+            }
+
+            let decoder = JSONDecoder()
+
+            let resultUrl = output.appending(path: "api/posts.json")
+            let data = try Data(contentsOf: resultUrl)
+            let result = try decoder.decode(Expected.self, from: data)
+
+            #expect(result.items.count == 3)
+            #expect(result.info.name == "Toucan")
+        }
+    }
+
+    @Test()
+    func engineOptionsKeypPath() throws {
+        let logger = Logger(label: "ToucanApiTestSuite")
+
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("api.json") {
+                        File(
+                            "index.yml",
+                            string: """
+                                type: api
+                                """
+                        )
+                    }
+                    Directory("posts") {
+                        contentPost(index: 1)
+                        contentPost(index: 2)
+                        contentPost(index: 3)
+                    }
+                    File(
+                        "site.yml",
+                        string: """
+                            name: Test
+                            """
+                    )
+                }
+                Directory("types") {
+                    typePost()
+                }
+                Directory("pipelines") {
+                    pipelineApi(
+                        engineOptions: """
+                            options:
+                                    keyPath: "context.posts"
+                            """
+                    )
+                }
+                configFile()
+            }
+        }
+        .test {
+            let input = $1.appending(path: "src/")
+            let output = $1.appending(path: "docs/")
+            try getToucan(input, output, logger).generate()
+
+            struct Expected: Decodable {
+                let title: String
+                let slug: Slug
+            }
+
+            let decoder = JSONDecoder()
+
+            let resultUrl = output.appending(path: "api/posts.json")
+            let data = try Data(contentsOf: resultUrl)
+            let result = try decoder.decode([Expected].self, from: data)
+
+            #expect(result.count == 3)
         }
     }
 }

@@ -62,6 +62,8 @@ public struct AnyCodable: Codable {
             try container.encode(dictionary.mapValues { AnyCodable($0) })
         case let encodable as Encodable:
             try encodable.encode(to: encoder)
+        case _ as NSNull:
+            try container.encodeNil()
         default:
             throw EncodingError.invalidValue(
                 value!,
