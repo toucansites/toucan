@@ -11,6 +11,7 @@ import Logging
 import ToucanFileSystem
 import ToucanModels
 import ToucanSource
+import ToucanSerialization
 
 /// Loads and merges settings files from a given source directory into a unified `Settings` object.
 public struct SettingsLoader {

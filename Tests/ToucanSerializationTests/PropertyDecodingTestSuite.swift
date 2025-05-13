@@ -6,8 +6,8 @@
 
 import Foundation
 import Testing
-import ToucanSource
 import ToucanModels
+import ToucanSerialization
 
 @Suite
 struct PropertyDecodingTestSuite {

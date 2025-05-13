@@ -7,6 +7,7 @@
 
 import Foundation
 import ToucanModels
+import ToucanSerialization
 
 struct AssetPropertyResolver {
 

@@ -10,6 +10,7 @@ import Logging
 import ToucanFileSystem
 import ToucanModels
 import ToucanSource
+import ToucanSerialization
 
 struct PipelineLoader {
 
