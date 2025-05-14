@@ -124,7 +124,8 @@ public struct ContentDefinitionConverter {
             .split(separator: "/")
             .dropLast()
             .last
-            .map(String.init) ?? ""
+            .map(String.init)?
+            .trimmingBracketsContent() ?? ""
 
         if let rawId = rawContent.frontMatter.string("id") {
             id = rawId
