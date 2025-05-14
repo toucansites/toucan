@@ -9,6 +9,26 @@ import Foundation
 
 extension String {
 
+    func trimmingBracketsContent() -> String {
+        var result = ""
+        var insideBrackets = false
+
+        let decoded = self.removingPercentEncoding ?? self
+
+        for char in decoded {
+            if char == "[" {
+                insideBrackets = true
+            }
+            else if char == "]" {
+                insideBrackets = false
+            }
+            else if !insideBrackets {
+                result.append(char)
+            }
+        }
+        return result
+    }
+
     var baseName: String {
         URL(fileURLWithPath: self).deletingPathExtension().lastPathComponent
     }
