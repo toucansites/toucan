@@ -79,6 +79,29 @@ public struct RawContentLocator {
     }
 }
 
+private extension String {
+
+    func trimmingBracketsContent() -> String {
+        var result = ""
+        var insideBrackets = false
+
+        let decoded = self.removingPercentEncoding ?? self
+
+        for char in decoded {
+            if char == "[" {
+                insideBrackets = true
+            }
+            else if char == "]" {
+                insideBrackets = false
+            }
+            else if !insideBrackets {
+                result.append(char)
+            }
+        }
+        return result
+    }
+}
+
 private extension RawContentLocator {
 
     /// Recursively traverses the content directory to locate index-based content definitions.
@@ -110,7 +133,7 @@ private extension RawContentLocator {
 
         // Attempt to locate index files in the current folder
         var rawContentLocation = RawContentLocation(
-            slug: slug.joined(separator: "/")
+            slug: slug.joined(separator: "/").trimmingBracketsContent()
         )
         if let value = indexMarkdownLocator.locate(at: url).first {
             rawContentLocation.markdown = join(p, value)
@@ -137,7 +160,10 @@ private extension RawContentLocator {
 
             // Skip folders that have a noindex marker
             let noindexFilePaths = noindexFileLocator.locate(at: childUrl)
-            if noindexFilePaths.isEmpty {
+            let decodedItem = item.removingPercentEncoding ?? ""
+            let skip = decodedItem.hasPrefix("[") && decodedItem.hasSuffix("]")
+
+            if noindexFilePaths.isEmpty && !skip {
                 newSlug += [item]
             }
 
