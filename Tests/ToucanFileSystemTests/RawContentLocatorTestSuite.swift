@@ -26,6 +26,74 @@ struct RawContentLocatorTestSuite {
     }
 
     @Test()
+    func rawContentLocatorTrimmingBrackets() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("[01]blog") {
+                        Directory("[01]articles") {
+                            Directory("[01]first-beta-release") {
+                                File("index.markdown")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/articles/first-beta-release",
+                markdown:
+                    "[01]blog/[01]articles/[01]first-beta-release/index.markdown"
+                    .replacingOccurrences(["[": "%5B", "]": "%5D"])
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    @Test()
+    func rawContentLocatorNoindexBrackets() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("[01]blog") {
+                        Directory("[articles]") {
+                            Directory("[01]first-beta-release") {
+                                File("index.markdown")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/contents/")
+            let locator = RawContentLocator(fileManager: $0)
+            let results = locator.locate(at: url)
+
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = RawContentLocation(
+                slug: "blog/first-beta-release",
+                markdown:
+                    "[01]blog/[articles]/[01]first-beta-release/index.markdown"
+                    .replacingOccurrences(["[": "%5B", "]": "%5D"])
+            )
+
+            #expect(result == expected)
+        }
+    }
+
+    @Test()
     func rawContentLocatorMarkdownOnly() async throws {
         try FileManagerPlayground {
             Directory("src") {
