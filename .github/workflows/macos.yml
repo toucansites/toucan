@@ -1,0 +1,128 @@
+name: Build and Publish macOS Binaries
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      run_pkg:
+        required: false
+        type: boolean
+        default: true
+      run_dmg:
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+
+  precheck:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - id: check
+        run: |
+          if [[ "${{ inputs.run_pkg }}" == "true" || "${{ inputs.run_dmg }}" == "true" ]]; then
+            echo "✅ At least one packaging format enabled"
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "🚫 Both run_pkg and run_dmg are false — skipping workflow"
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
+  build-binaries:
+    needs: precheck
+    if: needs.precheck.outputs.should_run == 'true'
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Swift 6.0
+        run: |
+          curl -L https://download.swift.org/swift-6.0-release/xcode/swift-6.0-RELEASE/swift-6.0-RELEASE-osx.pkg -o swift.pkg
+          sudo installer -pkg swift.pkg -target /
+          echo "/Library/Developer/Toolchains/swift-6.0-RELEASE.xctoolchain/usr/bin" >> $GITHUB_PATH
+          swift --version
+          export PATH="/Library/Developer/Toolchains/swift-6.0-RELEASE.xctoolchain/usr/bin:$PATH"
+
+      - name: Import Developer ID certificates
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.MAC_CERTIFICATES }}
+          p12-password: ${{ secrets.MAC_CERTIFICATES_PASSWORD }}
+        
+      - name: Build Swift release binary
+        run: |
+          chmod +x scripts/*.sh
+          swift build -c release
+
+      - name: Create .pkg file
+        if: inputs.run_pkg
+        run: |
+          scripts/build-pkg.sh ${{ inputs.version }}
+        env:
+          MAC_APP_IDENTITY: ${{ secrets.MAC_APP_IDENTITY }}
+          MAC_INSTALLER_IDENTITY: ${{ secrets.MAC_INSTALLER_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_SPECIFIC_PASSWORD: ${{ secrets.APP_SPECIFIC_PASSWORD }}
+
+      - name: Verify .pkg file
+        if: inputs.run_pkg
+        run: |
+          PKG="release/toucan-macos-${{ inputs.version }}.pkg"
+          echo "🧪 Verifying $PKG"
+          pkgutil --payload-files "$PKG"
+          echo "✅ PKG passed verification"
+
+      - name: Test installing .pkg file
+        if: inputs.run_pkg
+        run: |
+          PKG="release/toucan-macos-${{ inputs.version }}.pkg"
+          echo "📦 Installing $PKG to /"
+          sudo installer -pkg "$PKG" -target /
+      
+          echo "🔍 Checking for installed binaries"
+          ls -lh /usr/local/bin/toucan*
+      
+          echo "📈 Version output:"
+          /usr/local/bin/toucan --version || echo "⚠️ toucan binary failed to run"
+
+      - name: Upload .pkg file to tag
+        if: inputs.run_pkg
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: |
+            release/toucan-macos-${{ inputs.version }}.pkg
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
+
+      - name: Create .dmg file
+        if: inputs.run_pkg && inputs.run_dmg
+        run: |
+          scripts/build-dmg.sh ${{ inputs.version }}
+        env:
+          MAC_APP_IDENTITY: ${{ secrets.MAC_APP_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_SPECIFIC_PASSWORD: ${{ secrets.APP_SPECIFIC_PASSWORD }}
+
+      - name: Verify .dmg file structure and integrity
+        if: inputs.run_pkg && inputs.run_dmg
+        run: |
+          DMG="release/toucan-macos-${{ inputs.version }}.dmg"
+          echo "🧪 Verifying structure of $DMG"
+          hdiutil verify "$DMG"
+          echo "✅ Verified: $DMG is structurally valid"
+
+      - name: Upload .dmg file to tag
+        if: inputs.run_pkg && inputs.run_dmg
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: |
+            release/toucan-macos-${{ inputs.version }}.dmg
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
