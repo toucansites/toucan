@@ -47,6 +47,7 @@ jobs:
 
       - name: Install required Swift tools
         run: |
+          chmod +x ./scripts/packaging/*.sh
           apt-get update
           apt-get install -y curl git clang libcurl4-openssl-dev libssl-dev libatomic1
 
@@ -61,20 +62,18 @@ jobs:
       - name: Build with static stdlib
         if: inputs.static_stdlib
         run: |
-          chmod +x scripts/*.sh
           echo "🔧 Building with static Swift stdlib"
           swift build -c release -Xswiftc -static-stdlib
       
       - name: Build without static stdlib
         if: ${{ !inputs.static_stdlib }}
         run: |
-          chmod +x scripts/*.sh
           echo "🔧 Building without static Swift stdlib"
           swift build -c release
 
       - name: Build RPM
         if: inputs.run_rpm
-        run: ./scripts/build-rpm.sh ${{ inputs.version }}
+        run: ./scripts/packaging/rpm.sh ${{ inputs.version }}
 
       - name: Verify RPM
         if: inputs.run_rpm
@@ -87,7 +86,7 @@ jobs:
 
       - name: Build DEB
         if: inputs.run_deb
-        run: ./scripts/build-deb.sh ${{ inputs.version }}
+        run: ./scripts/packaging/deb.sh ${{ inputs.version }}
 
       - name: Verify DEB
         if: inputs.run_deb

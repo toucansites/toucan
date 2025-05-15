@@ -56,13 +56,12 @@ jobs:
         
       - name: Build Swift release binary
         run: |
-          chmod +x scripts/*.sh
+          chmod +x ./scripts/packaging/*.sh
           swift build -c release
 
       - name: Create .pkg file
         if: inputs.run_pkg
-        run: |
-          scripts/build-pkg.sh ${{ inputs.version }}
+        run: ./scripts/packaging/pkg.sh ${{ inputs.version }}
         env:
           MAC_APP_IDENTITY: ${{ secrets.MAC_APP_IDENTITY }}
           MAC_INSTALLER_IDENTITY: ${{ secrets.MAC_INSTALLER_IDENTITY }}
@@ -102,8 +101,7 @@ jobs:
 
       - name: Create .dmg file
         if: inputs.run_pkg && inputs.run_dmg
-        run: |
-          scripts/build-dmg.sh ${{ inputs.version }}
+        run: ./scripts/packaging/dmg.sh ${{ inputs.version }}
         env:
           MAC_APP_IDENTITY: ${{ secrets.MAC_APP_IDENTITY }}
           APPLE_ID: ${{ secrets.APPLE_ID }}

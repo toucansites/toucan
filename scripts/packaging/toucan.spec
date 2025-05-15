@@ -1,7 +1,7 @@
 Name:           toucan
 Version:        %{ver}
 Release:        1
-Summary:        SSG tools
+Summary:        A static site generator (SSG) written in Swift
 
 License:        MIT
 URL:            https://github.com/toucansites/toucan
