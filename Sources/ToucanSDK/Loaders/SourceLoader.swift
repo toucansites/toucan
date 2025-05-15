@@ -37,6 +37,7 @@ struct SourceLoader {
 
         // MARK: - Config
 
+        // TODO: sourceUrl.append target.config
         let configLocations = fs.configLocator.locate(at: sourceUrl)
         let configLoader = ConfigLoader(
             url: sourceUrl,

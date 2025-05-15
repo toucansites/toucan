@@ -130,7 +130,7 @@ struct TargetsDecodingTestSuite {
             .dataValue()
 
         let decoder = ToucanYAMLDecoder()
-        #expect(throws: (any Error).self) { 
+        #expect(throws: (any Error).self) {
             _ = try decoder.decode(Targets.self, from: data)
         }
     }
@@ -145,7 +145,7 @@ struct TargetsDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(Targets.self, from: data)
-        
+
         #expect(!result.all.isEmpty)
         #expect(result.default == Target.default)
     }

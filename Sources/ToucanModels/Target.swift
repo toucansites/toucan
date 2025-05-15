@@ -52,7 +52,7 @@ public struct Target: Decodable, Equatable {
         target.isDefault = true
         return target
     }
-    
+
     /// Default values used when decoding fails or fields are missing.
     public static var `defaults`: Self {
         .init(

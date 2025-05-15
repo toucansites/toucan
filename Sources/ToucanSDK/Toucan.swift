@@ -14,12 +14,23 @@ import ToucanSource
 import ToucanModels
 import ToucanSerialization
 
+private func getSafeUrl(
+    for path: String,
+    using fileManager: FileManagerKit
+) -> URL {
+    let home = fileManager.homeDirectoryForCurrentUser.path
+    return
+        .init(
+            fileURLWithPath: path.replacingOccurrences(["~": home])
+        )
+        .standardized
+}
+
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
 
     let inputUrl: URL
-    let outputUrl: URL
-    let baseUrl: String?
+    let targetsToBuild: [String]
     let logger: Logger
 
     let fileManager: FileManagerKit
@@ -31,13 +42,11 @@ public struct Toucan {
     /// Initialize a new instance.
     /// - Parameters:
     ///   - input: The input url as a path string.
-    ///   - output: The output url as a path string.
-    ///   - baseUrl: An optional baseUrl to override the config value.
+    ///   - targetsToBuild: The list of target names to build.
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "toucan".
     public init(
         input: String,
-        output: String,
-        baseUrl: String?,
+        targetsToBuild: [String],
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
@@ -49,18 +58,8 @@ public struct Toucan {
             logger: logger
         )
 
-        let home = fileManager.homeDirectoryForCurrentUser.path
-
-        func getSafeUrl(_ path: String, home: String) -> URL {
-            .init(
-                fileURLWithPath: path.replacingOccurrences(["~": home])
-            )
-            .standardized
-        }
-
-        self.inputUrl = getSafeUrl(input, home: home)
-        self.outputUrl = getSafeUrl(output, home: home)
-        self.baseUrl = baseUrl
+        self.inputUrl = getSafeUrl(for: input, using: fileManager)
+        self.targetsToBuild = targetsToBuild
         self.logger = logger
     }
 
@@ -87,106 +86,145 @@ public struct Toucan {
         logger.debug("Working at: `\(workDirUrl.absoluteString)`")
 
         do {
-            let sourceLoader = SourceLoader(
-                sourceUrl: inputUrl,
-                baseUrl: baseUrl,
-                fileManager: fileManager,
-                fs: fs,
-                frontMatterParser: frontMatterParser,
-                encoder: encoder,
+
+            let targetsLoader = TargetsLoader(
+                url: inputUrl,
+                fileName: "toucan.yml",
                 decoder: decoder,
                 logger: logger
             )
 
-            let sourceBundle = try sourceLoader.load()
+            let targets = try targetsLoader.load()
 
-            // MARK: - Validation
-
-            /// Validate site locale
-            validate(
-                .init(
-                    locale: sourceBundle.settings.locale,
-                    timeZone: sourceBundle.settings.timeZone,
-                    format: ""
-                )
-            )
-
-            /// Validate config date formats
-            validate(sourceBundle.config.dateFormats.input)
-            for dateFormat in sourceBundle.sourceConfig.config.dateFormats
-                .output.values
-            {
-                validate(dateFormat)
+            // TODO: support --targets flag
+            var buildTargets = targets.all.filter {
+                targetsToBuild.contains($0.name)
             }
 
-            /// Validate pipeline date formats
-            for pipeline in sourceBundle.pipelines {
-                for dateFormat in pipeline.dataTypes.date.dateFormats.values {
+            if buildTargets.isEmpty {
+                buildTargets.append(targets.all[0])
+            }
+
+            for target in buildTargets {
+                logger.info(
+                    "Building target: \(target.name)",
+                    metadata: [
+                        "target.name": "\(target.name)",
+                        "target.config": "\(target.config)",
+                        "target.locale": "\(target.locale ?? "nil")",
+                        "target.timeZone": "\(target.timeZone ?? "nil")",
+                        "target.default": "\(target.isDefault)",
+                        "target.output": "\(target.output)",
+                    ]
+                )
+
+                let outputUrl = getSafeUrl(
+                    for: target.output,
+                    using: fileManager
+                )
+
+                let sourceLoader = SourceLoader(
+                    sourceUrl: inputUrl,
+                    baseUrl: target.url,
+                    fileManager: fileManager,
+                    fs: fs,
+                    frontMatterParser: frontMatterParser,
+                    encoder: encoder,
+                    decoder: decoder,
+                    logger: logger
+                )
+
+                let sourceBundle = try sourceLoader.load()
+
+                // MARK: - Validation
+
+                /// Validate site locale
+                validate(
+                    .init(
+                        locale: sourceBundle.settings.locale,
+                        timeZone: sourceBundle.settings.timeZone,
+                        format: ""
+                    )
+                )
+
+                /// Validate config date formats
+                validate(sourceBundle.config.dateFormats.input)
+                for dateFormat in sourceBundle.sourceConfig.config.dateFormats
+                    .output.values
+                {
                     validate(dateFormat)
                 }
-            }
 
-            /// Validate slugs
-            try validateSlugs(sourceBundle)
-
-            /// Validate frontMatters
-            validateFrontMatters(sourceBundle)
-
-            // MARK: - Render pipeline results
-
-            var renderer = SourceBundleRenderer(
-                sourceBundle: sourceBundle,
-                fileManager: fileManager,
-                logger: logger
-            )
-
-            let results = try renderer.render(now: Date())
-
-            // MARK: - Preparing work dir
-
-            try resetDirectory(at: workDirUrl)
-
-            // MARK: - Copy default assets
-
-            let assetsWriter = AssetsWriter(
-                fileManager: fileManager,
-                sourceConfig: sourceBundle.sourceConfig,
-                workDirUrl: workDirUrl
-            )
-            try assetsWriter.copyDefaultAssets()
-
-            // MARK: - Writing results
-
-            for result in results {
-                let destinationFolder = workDirUrl.appending(
-                    path: result.destination.path
-                )
-                try fileManager.createDirectory(at: destinationFolder)
-
-                let outputUrl =
-                    destinationFolder
-                    .appending(path: result.destination.file)
-                    .appendingPathExtension(result.destination.ext)
-
-                switch result.source {
-                case .assetFile(let path):
-                    let srcUrl = sourceBundle.sourceConfig.contentsUrl
-                        .appending(path: path)
-                    try fileManager.copy(from: srcUrl, to: outputUrl)
-                case .asset(let string), .content(let string):
-                    try string.write(
-                        to: outputUrl,
-                        atomically: true,
-                        encoding: .utf8
-                    )
+                /// Validate pipeline date formats
+                for pipeline in sourceBundle.pipelines {
+                    for dateFormat in pipeline.dataTypes.date.dateFormats.values
+                    {
+                        validate(dateFormat)
+                    }
                 }
+
+                /// Validate slugs
+                try validateSlugs(sourceBundle)
+
+                /// Validate frontMatters
+                validateFrontMatters(sourceBundle)
+
+                // MARK: - Render pipeline results
+
+                var renderer = SourceBundleRenderer(
+                    sourceBundle: sourceBundle,
+                    fileManager: fileManager,
+                    logger: logger
+                )
+
+                let results = try renderer.render(now: Date())
+
+                // MARK: - Preparing work dir
+
+                try resetDirectory(at: workDirUrl)
+
+                // MARK: - Copy default assets
+
+                let assetsWriter = AssetsWriter(
+                    fileManager: fileManager,
+                    sourceConfig: sourceBundle.sourceConfig,
+                    workDirUrl: workDirUrl
+                )
+                try assetsWriter.copyDefaultAssets()
+
+                // MARK: - Writing results
+
+                for result in results {
+                    let destinationFolder = workDirUrl.appending(
+                        path: result.destination.path
+                    )
+                    try fileManager.createDirectory(at: destinationFolder)
+
+                    let outputUrl =
+                        destinationFolder
+                        .appending(path: result.destination.file)
+                        .appendingPathExtension(result.destination.ext)
+
+                    switch result.source {
+                    case .assetFile(let path):
+                        let srcUrl = sourceBundle.sourceConfig.contentsUrl
+                            .appending(path: path)
+                        try fileManager.copy(from: srcUrl, to: outputUrl)
+                    case .asset(let string), .content(let string):
+                        try string.write(
+                            to: outputUrl,
+                            atomically: true,
+                            encoding: .utf8
+                        )
+                    }
+                }
+
+                // MARK: - Finalize and cleanup
+
+                try resetDirectory(at: outputUrl)
+                try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
+                try? fileManager.delete(at: workDirUrl)
             }
-
-            // MARK: - Finalize and cleanup
-
-            try resetDirectory(at: outputUrl)
-            try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
-            try? fileManager.delete(at: workDirUrl)
         }
         catch {
             try? fileManager.delete(at: workDirUrl)

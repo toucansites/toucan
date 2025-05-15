@@ -38,11 +38,12 @@ public struct Targets: Decodable, Equatable {
     /// - Parameter all: An array of deployment targets.
     /// - Precondition: Only one target may have `isDefault == true`.
     public init(all: [Target]) {
-        print(all);
         let defaultCount = all.filter(\.isDefault).count
-        print(defaultCount)
-        precondition(defaultCount <= 1, "Only one target can be marked as default.")
-        
+        precondition(
+            defaultCount <= 1,
+            "Only one target can be marked as default."
+        )
+
         var all = all
         if !all.isEmpty, defaultCount == 0 {
             all[0].isDefault = true
@@ -55,17 +56,20 @@ public struct Targets: Decodable, Equatable {
     /// Custom decoder with fallback values and default validation.
     public init(from decoder: any Decoder) throws {
         let container = try? decoder.container(keyedBy: CodingKeys.self)
-        let all = try container?.decodeIfPresent(
-            [Target].self,
-            forKey: .targets
-        ) ?? []
+        let all =
+            try container?
+            .decodeIfPresent(
+                [Target].self,
+                forKey: .targets
+            ) ?? []
 
         let defaultCount = all.filter(\.isDefault).count
         guard defaultCount <= 1 else {
             throw DecodingError.dataCorrupted(
                 .init(
                     codingPath: container?.codingPath ?? [],
-                    debugDescription: "Only one target can be marked as default."
+                    debugDescription:
+                        "Only one target can be marked as default."
                 )
             )
         }
