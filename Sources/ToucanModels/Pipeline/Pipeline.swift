@@ -2,7 +2,7 @@
 //  Pipeline.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 16..
+//  Created by Tibor Bödecs on 2025. 01. 16..
 //
 
 /// Represents a full content transformation pipeline,

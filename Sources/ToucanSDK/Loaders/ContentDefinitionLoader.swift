@@ -2,7 +2,7 @@
 //  ContentDefinitionLoader.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 04. 09..
+//  Created by Tibor Bödecs on 2025. 04. 09..
 //
 
 import Foundation

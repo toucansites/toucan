@@ -2,7 +2,7 @@
 //  RelationValue.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 30..
+//  Created by Tibor Bödecs on 2025. 01. 30..
 //
 
 /// Represents the resolved value of a relation in content, including the target content type,

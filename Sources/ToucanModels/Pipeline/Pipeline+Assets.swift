@@ -2,7 +2,7 @@
 //  Pipeline+Assets.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 04. 19..
+//  Created by Tibor Bödecs on 2025. 04. 19..
 //
 
 extension Pipeline {

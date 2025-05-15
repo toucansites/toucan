@@ -2,7 +2,7 @@
 //  Direction.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 21..
+//  Created by Tibor Bödecs on 2025. 01. 21..
 //
 
 /// Represents the direction for sorting query results: ascending or descending.
@@ -15,7 +15,7 @@ public enum Direction: String, Decodable, Equatable {
     case desc
 
     /// The default sorting direction. Defaults to `.asc`.
-    public static var defaults: Direction {
+    public static var defaults: Self {
         .asc
     }
 }

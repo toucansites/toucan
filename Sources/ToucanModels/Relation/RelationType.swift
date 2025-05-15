@@ -2,7 +2,7 @@
 //  RelationType.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 21..
+//  Created by Tibor Bödecs on 2025. 01. 21..
 //
 
 /// Defines the cardinality of a content relation, indicating whether it links to one or multiple items.

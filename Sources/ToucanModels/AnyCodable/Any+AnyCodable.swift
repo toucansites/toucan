@@ -2,7 +2,7 @@
 //  Any+AnyCodable.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 03. 06..
+//  Created by Tibor Bödecs on 2025. 03. 06..
 //
 
 /// Recursively unwraps a value that may contain `AnyCodable` types into native Swift types.

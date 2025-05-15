@@ -2,7 +2,7 @@
 //  FrontMatterParser.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 04. 17..
+//  Created by Tibor Bödecs on 2025. 04. 17..
 //
 
 import ToucanModels

@@ -2,7 +2,7 @@
 //  Destination.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 21..
+//  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
 /// Represents the destination location and filename for rendered or transformed content.

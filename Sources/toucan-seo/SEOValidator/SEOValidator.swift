@@ -2,7 +2,7 @@
 //  SEOValidator.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2024. 10. 28..
+//  Created by Tibor Bödecs on 2024. 10. 28..
 //
 
 import Foundation

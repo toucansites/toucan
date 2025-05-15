@@ -2,7 +2,7 @@
 //  HTMLVisitor.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 19..
+//  Created by Tibor Bödecs on 2025. 02. 19..
 //
 
 import Markdown

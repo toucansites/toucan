@@ -2,7 +2,7 @@
 //  MustacheTemplateRenderer.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 16..
+//  Created by Tibor Bödecs on 2025. 02. 16..
 //
 
 import Mustache

@@ -2,7 +2,7 @@
 //  Mocks.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 30..
+//  Created by Tibor Bödecs on 2025. 01. 30..
 //
 
 import ToucanContent

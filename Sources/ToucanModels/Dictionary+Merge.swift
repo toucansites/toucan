@@ -2,7 +2,7 @@
 //  Dictionary+Merge.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 03..
+//  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
 /// This extension allows recursive merging of dictionaries with String keys and Any values.

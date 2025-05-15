@@ -2,7 +2,7 @@
 //  Settings.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 11..
+//  Created by Tibor Bödecs on 2025. 02. 11..
 //
 
 /// Represents site-wide configuration settings for a Toucan project,

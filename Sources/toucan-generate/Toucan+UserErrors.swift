@@ -2,7 +2,7 @@
 //  Toucan+UserErrors.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2024. 10. 07..
+//  Created by Tibor Bödecs on 2024. 10. 07..
 //
 
 import ToucanSDK

@@ -2,7 +2,7 @@
 //  NotFoundMiddleware.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 23..
+//  Created by Tibor Bödecs on 2025. 01. 23..
 //
 
 import Hummingbird

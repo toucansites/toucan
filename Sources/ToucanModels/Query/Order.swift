@@ -2,7 +2,7 @@
 //  Order.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 15..
+//  Created by Tibor Bödecs on 2025. 01. 15..
 //
 
 /// Represents a sorting rule for ordering content query results.

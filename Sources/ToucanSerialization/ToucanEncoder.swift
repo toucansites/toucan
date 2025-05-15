@@ -2,7 +2,7 @@
 //  ToucanEncoder.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 03. 06..
+//  Created by Tibor Bödecs on 2025. 03. 06..
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  ContentDefinition.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 15..
+//  Created by Tibor Bödecs on 2025. 01. 15..
 //
 
 /// Describes a content type definition including schema, relations, and associated queries.

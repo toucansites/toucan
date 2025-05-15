@@ -2,7 +2,7 @@
 //  RawContent.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 30..
+//  Created by Tibor Bödecs on 2025. 01. 30..
 //
 
 /// Represents the raw, unprocessed state of a content file, typically sourced from a page bundle.

@@ -2,7 +2,7 @@
 //  Pipeline+Scope.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 03..
+//  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
 extension Pipeline {

@@ -2,7 +2,7 @@
 //  Relation.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 21..
+//  Created by Tibor Bödecs on 2025. 01. 21..
 //
 
 /// Represents a relationship between a content item and one or more other content items.

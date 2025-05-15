@@ -2,7 +2,7 @@
 //  MarkdownBlockDirective.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 02. 19..
+//  Created by Tibor Bödecs on 2025. 02. 19..
 //
 
 /// A representation of a custom block directive in Markdown, used for extending Markdown syntax with special tags or behaviors.

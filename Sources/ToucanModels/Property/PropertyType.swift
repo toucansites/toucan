@@ -2,7 +2,7 @@
 //  PropertyType.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 21..
+//  Created by Tibor Bödecs on 2025. 01. 21..
 //
 
 /// Represents the type of a content property, used in defining content schemas or type-safe metadata fields.

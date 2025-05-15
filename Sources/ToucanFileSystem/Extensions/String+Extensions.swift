@@ -2,7 +2,7 @@
 //  String+Extensions.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 31..
+//  Created by Tibor Bödecs on 2025. 01. 31..
 //
 
 import Foundation
