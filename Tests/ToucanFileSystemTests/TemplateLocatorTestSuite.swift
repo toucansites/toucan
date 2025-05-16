@@ -30,6 +30,7 @@ struct TemplateLocatorTestSuite {
                     Directory("templates") {
                         Directory("foo") {
                             "baz.mustache"
+                            "lol.mustache"
                         }
                     }
                 }

@@ -29,7 +29,7 @@ public struct Target: Codable, Equatable {
     /// The path to the configuration file.
     public var config: String
 
-    /// The base URL of the site or project (e.g., `"https://example.com"`).
+    /// The base URL of the site or project without a trailing slash (e.g., `"https://example.com"`).
     public var url: String
 
     /// The locale identifier used for date/time formatting and content localization (e.g., `"en-US"`).
@@ -88,7 +88,7 @@ public struct Target: Codable, Equatable {
     ) {
         self.name = name
         self.config = config
-        self.url = url
+        self.url = url.dropTrailingSlash()
         self.locale = locale
         self.timeZone = timeZone
         self.output = output
@@ -114,8 +114,12 @@ public struct Target: Codable, Equatable {
             ?? base.config
 
         self.url =
-            try container.decodeIfPresent(String.self, forKey: .url)
-            ?? base.url
+            try container
+            .decodeIfPresent(
+                String.self,
+                forKey: .url
+            )?
+            .dropTrailingSlash() ?? base.url.dropTrailingSlash()
 
         self.locale =
             try container.decodeIfPresent(String.self, forKey: .locale)

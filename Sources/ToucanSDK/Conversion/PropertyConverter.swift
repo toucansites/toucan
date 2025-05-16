@@ -22,7 +22,7 @@ struct PropertyConverter {
         switch property.type {
         case .date(let dateFormat):
             guard let rawDateValue = value?.value(as: String.self) else {
-                logger.error(
+                logger.warning(
                     "Raw date property is not a string (\(key): \(value?.value ?? "nil"))."
                 )
                 return nil
@@ -33,7 +33,7 @@ struct PropertyConverter {
             }
 
             guard let value = dateFormatter.date(from: rawDateValue) else {
-                logger.error(
+                logger.warning(
                     "Raw date property value is not a date (\(key): \(rawDateValue))."
                 )
                 return nil

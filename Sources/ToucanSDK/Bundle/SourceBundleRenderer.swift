@@ -54,7 +54,6 @@ public struct SourceBundleRenderer {
 
     // MARK: -
 
-    #warning("Make sure baseURL trailing slash")
     /// Returns the site context based on the source bundle settings and the generator info
     private func getSiteContext(
         for now: TimeInterval
