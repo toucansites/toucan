@@ -37,7 +37,7 @@ struct ConfigLoaderPipelinesTestSuite {
                 url: url,
                 logger: logger
             )
-            let result = try loader.load()
+            let result = try loader.load(Config.self)
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }
@@ -62,7 +62,7 @@ struct ConfigLoaderPipelinesTestSuite {
                 url: url,
                 logger: logger
             )
-            let result = try loader.load()
+            let result = try loader.load(Config.self)
             #expect(result == ConfigLoaderTestSuite.getDefaultResult())
         }
     }

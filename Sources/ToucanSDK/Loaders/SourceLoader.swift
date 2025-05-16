@@ -37,16 +37,21 @@ struct SourceLoader {
 
         // MARK: - Config
 
-        let configUrl = sourceUrl.appending(path: target.config)
-        let configLocations = fs.configLocator.locate(at: configUrl)
-        let configLoader = ConfigLoader(
-            url: sourceUrl,
-            locations: configLocations,
+        let configUrl = sourceUrl.appending(
+            path: target.config
+        )
+        let config = try YAMLLoader(
+            url: configUrl,
+            locations: fileManager.find(
+                name: "config",
+                extensions: ["yaml", "yml"],
+                at: configUrl
+            ),
             encoder: encoder,
             decoder: decoder,
             logger: logger
         )
-        let config = try configLoader.load()
+        .load(Config.self)
 
         // MARK: - Source URLs
 

@@ -43,7 +43,7 @@ struct PipelineLoaderTestSuite: ToucanTestSuite {
                 url: sourceUrl,
                 logger: logger
             )
-            let config = try loader.load()
+            let config = try loader.load(Config.self)
 
             let sourceConfig = SourceConfig(
                 sourceUrl: sourceUrl,
@@ -119,7 +119,7 @@ struct PipelineLoaderTestSuite: ToucanTestSuite {
                 url: sourceUrl,
                 logger: logger
             )
-            let config = try loader.load()
+            let config = try loader.load(Config.self)
 
             let sourceConfig = SourceConfig(
                 sourceUrl: sourceUrl,

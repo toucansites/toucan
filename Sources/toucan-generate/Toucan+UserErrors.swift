@@ -35,14 +35,6 @@ extension Toucan {
         //                logger.error(.init(stringLiteral: message), metadata: metadata)
         //            }
         //        }
-        //        catch let error as ConfigLoader.Error {
-        //            switch error {
-        //            case .missing(let url):
-        //                logger.error(
-        //                    "Missing `config.yml` file at: `\(url.absoluteString)`"
-        //                )
-        //            }
-        //        }
         catch let error as Toucan.Error {
             switch error {
             case .duplicateSlugs(let slugs):

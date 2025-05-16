@@ -22,12 +22,17 @@ struct ConfigLoaderTestSuite {
         .defaults
     }
 
-    static func getConfigLoader(url: URL, logger: Logger) -> ConfigLoader {
-        return ConfigLoader(
+    static func getConfigLoader(
+        url: URL,
+        logger: Logger
+    ) -> YAMLLoader {
+        YAMLLoader(
             url: url,
-            locations: [
-                "config.yml"
-            ],
+            locations: FileManager.default.find(
+                name: "config",
+                extensions: ["yaml", "yml"],
+                at: url
+            ),
             encoder: ToucanYAMLEncoder(),
             decoder: ToucanYAMLDecoder(),
             logger: logger
@@ -99,7 +104,7 @@ struct ConfigLoaderTestSuite {
                 url: url,
                 logger: logger
             )
-            let result = try loader.load()
+            let result = try loader.load(Config.self)
 
             #expect(
                 result

@@ -13,9 +13,6 @@ public struct ToucanFileSystem {
 
     // MARK: - File Locators
 
-    /// Locates configuration files typically named `"config.yml"` or `"config.yaml"`.
-    public let configLocator: FileLocator
-
     /// Locates site settings files, commonly named `"site.yml"` or `"site.yaml"`.
     public let settingsLocator: FileLocator
 
@@ -40,11 +37,6 @@ public struct ToucanFileSystem {
     ///
     /// - Parameter fileManager: A file manager abstraction used by each internal locator.
     public init(fileManager: FileManagerKit) {
-        self.configLocator = FileLocator(
-            fileManager: fileManager,
-            name: "config",
-            extensions: ["yml", "yaml"]
-        )
         self.settingsLocator = FileLocator(
             fileManager: fileManager,
             name: "site",
