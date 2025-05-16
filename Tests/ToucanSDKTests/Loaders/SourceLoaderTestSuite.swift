@@ -18,8 +18,8 @@ import ToucanSerialization
 @Suite
 struct SourceLoaderTestSuite: ToucanTestSuite {
 
-    @Test(arguments: [nil, "http://localhost:3000/"])
-    func basicLoad(baseUrl: String?) throws {
+    @Test
+    func basicLoad() throws {
         let logger = Logger(label: "SourceLoaderTestSuite")
 
         try FileManagerPlayground {

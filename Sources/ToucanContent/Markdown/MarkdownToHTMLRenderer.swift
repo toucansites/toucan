@@ -65,10 +65,10 @@ public struct MarkdownToHTMLRenderer {
         var htmlVisitor = HTMLVisitor(
             blockDirectives: customBlockDirectives,
             paragraphStyles: paragraphStyles,
-            logger: logger,
             slug: slug.value,
             assetsPath: assetsPath,
-            baseUrl: baseUrl
+            baseUrl: baseUrl,
+            logger: logger,
         )
 
         // Generate HTML by visiting the document tree.

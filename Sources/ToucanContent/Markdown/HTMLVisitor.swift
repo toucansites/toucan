@@ -40,17 +40,17 @@ struct HTMLVisitor: MarkupVisitor {
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: [String: [String]],
-        logger: Logger = .init(label: "HTMLVisitor"),
         slug: String,
         assetsPath: String,
-        baseUrl: String
+        baseUrl: String,
+        logger: Logger = .init(label: "HTMLVisitor"),
     ) {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
-        self.logger = logger
         self.slug = slug
         self.assetsPath = assetsPath
         self.baseUrl = baseUrl
+        self.logger = logger
     }
 
     // MARK: - visitor functions

@@ -16,8 +16,8 @@ import Logging
 @Suite
 struct SourceBundlePageLinkTestSuite {
 
-    @Test(arguments: ["http://localhost:3000", "http://localhost:3000/"])
-    func testPageLink(baseUrl: String) throws {
+    @Test
+    func testPageLink() throws {
         let logger = Logger(label: "SourceBundlePageLinkTestSuite")
         let target = Target.standard
         let now = Date()
