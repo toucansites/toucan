@@ -31,7 +31,7 @@ struct SourceLoader {
         let configUrl = sourceUrl.appending(
             path: target.config
         )
-        let config = try CombinedYAMLLoader(
+        let config = try ObjectLoader(
             url: configUrl,
             locations: fileManager.find(
                 name: "config",
@@ -57,7 +57,7 @@ struct SourceLoader {
         //            )
         //        }
 
-        let settings = try CombinedYAMLLoader(
+        let settings = try ObjectLoader(
             url: url,
             locations: fileManager.find(
                 name: "site",
@@ -124,12 +124,13 @@ struct SourceLoader {
 
         // MARK: - Pipelines
 
-        let pipelines = try YAMLLoader(
+        let pipelines = try ObjectLoader(
             url: sourceConfig.pipelinesUrl,
             locations: fileManager.find(
                 extensions: ["yml", "yaml"],
                 at: sourceConfig.pipelinesUrl
             ),
+            encoder: encoder,
             decoder: decoder,
             logger: logger
         )
@@ -137,12 +138,13 @@ struct SourceLoader {
 
         // MARK: - Content definitions
 
-        let loadedContentDefinitions = try YAMLLoader(
+        let loadedContentDefinitions = try ObjectLoader(
             url: sourceConfig.typesUrl,
             locations: fileManager.find(
                 extensions: ["yml", "yaml"],
                 at: sourceConfig.typesUrl
             ),
+            encoder: encoder,
             decoder: decoder,
             logger: logger
         )
@@ -164,12 +166,13 @@ struct SourceLoader {
 
         // MARK: - Block directives
 
-        let blockDirectives = try YAMLLoader(
+        let blockDirectives: [MarkdownBlockDirective] = try ObjectLoader(
             url: sourceConfig.blocksUrl,
             locations: fileManager.find(
                 extensions: ["yml", "yaml"],
                 at: sourceConfig.blocksUrl
             ),
+            encoder: encoder,
             decoder: decoder,
             logger: logger
         )

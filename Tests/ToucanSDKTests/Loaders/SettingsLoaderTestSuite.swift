@@ -35,7 +35,7 @@ struct SettingsLoaderTestSuite {
         .test {
             let url = $1.appending(path: "src/")
 
-            let settings = try CombinedYAMLLoader(
+            let settings = try ObjectLoader(
                 url: url,
                 locations: $0.find(
                     name: "site",

@@ -24,8 +24,8 @@ struct ConfigLoaderTestSuite {
     static func getConfigLoader(
         url: URL,
         logger: Logger
-    ) -> CombinedYAMLLoader {
-        CombinedYAMLLoader(
+    ) -> ObjectLoader {
+        ObjectLoader(
             url: url,
             locations: FileManager.default.find(
                 name: "config",
