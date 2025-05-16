@@ -1,0 +1,40 @@
+name: Dispatch macOS and Linux Builds on new tag
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - '[0-9]*'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+    steps:
+      - name: Extract version from tag
+        id: extract
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION//-/.}"  # Replace hyphens for RPM compatibility
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+  linux:
+    needs: prepare
+    uses: ./.github/workflows/linux.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+      run_rpm: true
+      run_deb: true
+      static_stdlib: true
+    secrets: inherit
+
+  macos:
+    needs: prepare
+    uses: ./.github/workflows/macos.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+      run_pkg: true
+      run_dmg: false
+    secrets: inherit
