@@ -12,7 +12,6 @@ import ToucanModels
 import ToucanTesting
 import Logging
 import FileManagerKitTesting
-@testable import ToucanSource
 @testable import ToucanSDK
 @testable import ToucanFileSystem
 

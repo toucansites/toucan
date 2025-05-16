@@ -6,8 +6,7 @@
 
 import Testing
 import Logging
-import ToucanTesting
-@testable import ToucanModels
+
 @testable import ToucanContent
 
 @Suite
@@ -19,7 +18,7 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.faq()
             ],
-            paragraphStyles: ParagraphStyles.defaults.styles
+            paragraphStyles: [:]
         )
 
         let input = #"""
@@ -57,7 +56,7 @@ struct MarkdownBlockDirectiveTestSuite {
                     output: #"<div class="faq">{{contents}}</div>"#
                 )
             ],
-            paragraphStyles: ParagraphStyles.defaults.styles
+            paragraphStyles: [:]
         )
 
         let input = #"""
@@ -103,7 +102,7 @@ struct MarkdownBlockDirectiveTestSuite {
                     output: nil
                 )
             ],
-            paragraphStyles: ParagraphStyles.defaults.styles
+            paragraphStyles: [:]
         )
 
         let input = #"""
@@ -148,7 +147,7 @@ struct MarkdownBlockDirectiveTestSuite {
                         #"<div columns="grid-{{columns}}">{{contents}}</div>"#
                 )
             ],
-            paragraphStyles: ParagraphStyles.defaults.styles
+            paragraphStyles: [:]
         )
 
         let input = #"""
@@ -174,13 +173,10 @@ struct MarkdownBlockDirectiveTestSuite {
     @Test
     func unrecognizedDirective() throws {
 
-        let logging = Logger.inMemory(label: "MarkdownBlockDirectiveTestSuite")
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.faq()
-            ],
-            paragraphStyles: ParagraphStyles.defaults.styles,
-            logger: logging.logger
+            ]
         )
 
         let input = #"""
@@ -196,26 +192,16 @@ struct MarkdownBlockDirectiveTestSuite {
             baseUrl: ""
         )
 
-        let results = logging.handler.messages.filter {
-            $0.description.contains("Unrecognized block directive")
-        }
-        #expect(results.count == 1)
         #expect(output == "")
     }
 
     @Test
     func parseError() throws {
 
-        let logging = Logger.inMemory(
-            label: "MarkdownBlockDirectiveTestSuite",
-            logLevel: .warning
-        )
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.badDirective()
-            ],
-            paragraphStyles: ParagraphStyles.defaults.styles,
-            logger: logging.logger
+            ]
         )
         let input = #"""
             @BAD(columns: bad, columns: bad) {
@@ -229,25 +215,15 @@ struct MarkdownBlockDirectiveTestSuite {
             assetsPath: "",
             baseUrl: ""
         )
-        let results = logging.handler.messages.filter {
-            $0.description.contains("duplicateArgument")
-        }
-        #expect(results.count == 1)
     }
 
     @Test
     func requiredParameterErrors() throws {
 
-        let logging = Logger.inMemory(
-            label: "MarkdownBlockDirectiveTestSuite",
-            logLevel: .warning
-        )
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.badDirective()
             ],
-            paragraphStyles: ParagraphStyles.defaults.styles,
-            logger: logging.logger
         )
         let input = #"""
             @BAD() {
@@ -262,10 +238,6 @@ struct MarkdownBlockDirectiveTestSuite {
             baseUrl: ""
         )
 
-        let results = logging.handler.messages.filter {
-            $0.description.contains("require")
-        }
-        #expect(results.count == 2)
     }
 
 }

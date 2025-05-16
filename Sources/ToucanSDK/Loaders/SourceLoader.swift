@@ -8,7 +8,6 @@
 import Foundation
 import Logging
 import ToucanModels
-import ToucanSource
 import ToucanFileSystem
 import FileManagerKit
 import ToucanSerialization

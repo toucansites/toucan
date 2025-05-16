@@ -12,7 +12,7 @@ import ToucanModels
 import ToucanFileSystem
 import FileManagerKitTesting
 import ToucanSerialization
-import ToucanSource
+import ToucanSDK
 import Logging
 @testable import ToucanSDK
 

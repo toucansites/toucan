@@ -5,9 +5,7 @@
 //  Created by Tibor Bödecs on 2025. 01. 30..
 //
 
-import ToucanContent
 import ToucanModels
-import ToucanSource
 import Foundation
 
 public extension RawContent {
@@ -19,10 +17,6 @@ public extension Content {
 }
 
 public extension ContentDefinition {
-    enum Mocks {}
-}
-
-public extension SourceBundle {
     enum Mocks {}
 }
 
@@ -40,9 +34,5 @@ public struct Templates {
 }
 
 public extension Templates {
-    enum Mocks {}
-}
-
-public extension MarkdownBlockDirective {
     enum Mocks {}
 }

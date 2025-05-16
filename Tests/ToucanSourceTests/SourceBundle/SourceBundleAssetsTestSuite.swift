@@ -12,7 +12,7 @@ import ToucanContent
 import ToucanTesting
 import ToucanInfo
 import Logging
-@testable import ToucanSource
+@testable import ToucanSDK
 
 @Suite
 struct SourceBundleAssetsTestSuite {

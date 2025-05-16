@@ -12,7 +12,6 @@ import ToucanTesting
 import Logging
 import FileManagerKitTesting
 import ToucanSerialization
-@testable import ToucanSource
 @testable import ToucanSDK
 
 @Suite

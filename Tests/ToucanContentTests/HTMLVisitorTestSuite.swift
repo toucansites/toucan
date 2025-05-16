@@ -7,8 +7,10 @@
 import Testing
 import Markdown
 import Logging
+
+import ToucanModels
+
 @testable import ToucanContent
-@testable import ToucanModels
 
 @Suite
 struct HTMLVisitorTestSuite {

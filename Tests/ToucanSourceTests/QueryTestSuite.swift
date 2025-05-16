@@ -7,7 +7,7 @@
 import Foundation
 import Testing
 import ToucanModels
-@testable import ToucanSource
+@testable import ToucanSDK
 
 @Suite
 struct QueryTestSuite {

@@ -29,7 +29,7 @@ public struct MarkdownToHTMLRenderer {
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "MarkdownToHTMLRenderer".
     public init(
         customBlockDirectives: [MarkdownBlockDirective] = [],
-        paragraphStyles: [String: [String]],
+        paragraphStyles: [String: [String]] = [:],
         logger: Logger = .init(label: "MarkdownToHTMLRenderer")
     ) {
         self.customBlockDirectives = customBlockDirectives

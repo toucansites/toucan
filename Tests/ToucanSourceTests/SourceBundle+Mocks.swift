@@ -6,9 +6,11 @@
 
 import Foundation
 import ToucanModels
-import ToucanContent
-import ToucanSource
 import Logging
+
+public extension SourceBundle {
+    enum Mocks {}
+}
 
 public extension SourceBundle.Mocks {
 

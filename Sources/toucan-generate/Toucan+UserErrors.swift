@@ -6,7 +6,6 @@
 //
 
 import ToucanSDK
-import ToucanSource
 import Logging
 import ToucanSerialization
 

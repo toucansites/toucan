@@ -2,10 +2,8 @@
 //  String+Extensions.swift
 //  Toucan
 //
-//  Created by Tibor Bödecs on 2025. 02. 12..
+//  Created by Tibor Bödecs on 2025. 05. 14..
 //
-
-import Foundation
 
 extension String {
 
@@ -40,4 +38,23 @@ extension String {
         return self
     }
 
+    func trimmingBracketsContent() -> String {
+        var result = ""
+        var insideBrackets = false
+
+        let decoded = self.removingPercentEncoding ?? self
+
+        for char in decoded {
+            if char == "[" {
+                insideBrackets = true
+            }
+            else if char == "]" {
+                insideBrackets = false
+            }
+            else if !insideBrackets {
+                result.append(char)
+            }
+        }
+        return result
+    }
 }

@@ -7,7 +7,7 @@
 import Foundation
 import Testing
 import ToucanModels
-import ToucanSource
+import ToucanSDK
 import ToucanTesting
 import Testing
 import Logging

@@ -7,7 +7,6 @@
 import Testing
 import Logging
 @testable import ToucanSDK
-@testable import ToucanSource
 import ToucanSerialization
 
 @Suite

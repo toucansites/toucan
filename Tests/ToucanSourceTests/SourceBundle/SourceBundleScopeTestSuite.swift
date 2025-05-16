@@ -11,7 +11,7 @@ import ToucanModels
 import ToucanContent
 import ToucanTesting
 import Logging
-@testable import ToucanSource
+@testable import ToucanSDK
 
 @Suite
 struct SourceBundleScopeTestSuite {

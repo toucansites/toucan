@@ -10,7 +10,6 @@ import ToucanModels
 import ToucanContent
 import ToucanFileSystem
 import FileManagerKit
-import ToucanSource
 import ToucanSerialization
 
 struct BlockDirectiveLoader {
