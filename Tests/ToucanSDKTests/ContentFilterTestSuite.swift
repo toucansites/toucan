@@ -9,7 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanContent
-import ToucanTesting
+
 import Logging
 @testable import ToucanSDK
 
@@ -182,7 +182,7 @@ struct ContentFilterTestSuite {
     @Test()
     func globalDateFilter() async throws {
 
-        let logger = Logger.inMemory(
+        let logger = Logger(
             label: "ContentFilterTestSuite"
         )
         let target = Target.standard
@@ -220,7 +220,7 @@ struct ContentFilterTestSuite {
         let converter = ContentDefinitionConverter(
             contentDefinition: contentDefinition,
             dateFormatter: formatter,
-            logger: logger.logger
+            logger: logger
         )
 
         let rawContent1 = RawContent(
@@ -246,8 +246,6 @@ struct ContentFilterTestSuite {
             assets: []
         )
         let post2 = converter.convert(rawContent: rawContent2)
-
-        #expect(logger.handler.messages.isEmpty)
 
         let filter = ContentFilter(
             filterRules: [
@@ -281,7 +279,7 @@ struct ContentFilterTestSuite {
     @Test()
     func draftFilter() async throws {
 
-        let logger = Logger.inMemory(
+        let logger = Logger(
             label: "ContentFilterTestSuite"
         )
         let target = Target.standard
@@ -310,7 +308,7 @@ struct ContentFilterTestSuite {
         let converter = ContentDefinitionConverter(
             contentDefinition: contentDefinition,
             dateFormatter: formatter,
-            logger: logger.logger
+            logger: logger
         )
 
         let now = Date()
@@ -334,8 +332,6 @@ struct ContentFilterTestSuite {
             assets: []
         )
         let post2 = converter.convert(rawContent: rawContent2)
-
-        #expect(logger.handler.messages.isEmpty)
 
         let filter = ContentFilter(
             filterRules: [

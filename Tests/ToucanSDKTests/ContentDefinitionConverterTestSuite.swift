@@ -9,7 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanContent
-import ToucanTesting
+
 import Logging
 @testable import ToucanSDK
 
@@ -228,7 +228,7 @@ struct ContentDefinitionConverterTestSuite {
         let converter = ContentDefinitionConverter(
             contentDefinition: contentDefinition,
             dateFormatter: formatter,
-            logger: logging.logger
+            logger: .init(label: "test")
         )
 
         _ = converter.convert(rawContent: rawContent)

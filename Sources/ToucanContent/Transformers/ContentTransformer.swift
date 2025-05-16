@@ -1,12 +1,12 @@
 //
-//  Pipeline+ContentTransfomer.swift
+//  ContentTransformer.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
 /// Represents a content transformer command used in a transformation pipeline.
-public struct ContentTransformer: Codable {
+public struct ContentTransformer {
 
     /// The directory path where the executable is located.
     /// Defaults to `"/usr/local/bin"` if not explicitly specified.
@@ -26,22 +26,5 @@ public struct ContentTransformer: Codable {
     ) {
         self.path = path
         self.name = name
-    }
-
-    /// Decodes a `ContentTransformer` from a decoder, falling back to default path if missing.
-    ///
-    /// - Throws: A decoding error if the required `name` is not present.
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.path =
-            (try? container.decode(String.self, forKey: .path))
-            ?? "/usr/local/bin"
-        self.name = try container.decode(String.self, forKey: .name)
-    }
-
-    /// Coding keys for decoding path and name properties.
-    private enum CodingKeys: String, CodingKey {
-        case path
-        case name
     }
 }

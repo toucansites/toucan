@@ -6,7 +6,6 @@
 //
 
 import Markdown
-import ToucanModels
 import Logging
 
 /// A renderer that converts Markdown text to HTML, with support for custom block directives and paragraph styling.
@@ -50,7 +49,7 @@ public struct MarkdownToHTMLRenderer {
     /// - Returns: A fully rendered HTML string.
     public func renderHTML(
         markdown: String,
-        slug: Slug,
+        slug: String,
         assetsPath: String,
         baseUrl: String
     ) -> String {
@@ -65,7 +64,7 @@ public struct MarkdownToHTMLRenderer {
         var htmlVisitor = HTMLVisitor(
             blockDirectives: customBlockDirectives,
             paragraphStyles: paragraphStyles,
-            slug: slug.value,
+            slug: slug,
             assetsPath: assetsPath,
             baseUrl: baseUrl,
             logger: logger,

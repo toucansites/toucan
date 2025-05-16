@@ -224,7 +224,6 @@ public struct SourceBundleRenderer {
             let pipelineContext = getPipelineContext(
                 contents: contents,
                 pipeline: pipeline,
-                currentSlug: content.slug.value,
                 now: now
             )
             .recursivelyMerged(with: globalContext)
@@ -242,7 +241,6 @@ public struct SourceBundleRenderer {
     mutating func getPipelineContext(
         contents: [Content],
         pipeline: Pipeline,
-        currentSlug: String,
         now: TimeInterval
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
@@ -256,8 +254,7 @@ public struct SourceBundleRenderer {
                         for: $0,
                         pipeline: pipeline,
                         now: now,
-                        scopeKey: query.scope ?? "list",
-                        currentSlug: currentSlug
+                        scopeKey: query.scope ?? "list"
                     )
                 }
             )
@@ -282,8 +279,7 @@ public struct SourceBundleRenderer {
                 for: $0,
                 pipeline: pipeline,
                 now: now,
-                scopeKey: iteratorInfo.scope ?? "list",
-                currentSlug: content.slug.value
+                scopeKey: iteratorInfo.scope ?? "list"
             )
         }
         return [
@@ -312,8 +308,7 @@ public struct SourceBundleRenderer {
             for: content,
             pipeline: pipeline,
             now: now,
-            scopeKey: "detail",
-            currentSlug: content.slug.value
+            scopeKey: "detail"
         )
 
         let iteratorContext = getIteratorContext(
@@ -361,7 +356,6 @@ public struct SourceBundleRenderer {
         pipeline: Pipeline,
         now: TimeInterval,
         scopeKey: String,
-        currentSlug: String?,
         allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
@@ -381,7 +375,6 @@ public struct SourceBundleRenderer {
         let cacheKey = [
             pipeline.id,
             content.slug.value,
-            //            currentSlug ?? "",  // still a bit slow due to this
             scopeKey,
             String(allowSubQueries),
         ]
@@ -414,8 +407,6 @@ public struct SourceBundleRenderer {
             result["permalink"] = .init(
                 content.slug.permalink(baseUrl: sourceBundle.target.url)
             )
-
-            // result["isCurrentURL"] = .init(content.slug == currentSlug)
             result["lastUpdate"] = .init(
                 content.rawValue.lastModificationDate.toDateFormats(
                     formatters: allFormatters
@@ -424,6 +415,9 @@ public struct SourceBundleRenderer {
         }
 
         if scope.context.contains(.contents) {
+            let transformers = pipeline.transformers[
+                content.definition.id
+            ]
             let renderer = ContentRenderer(
                 configuration: .init(
                     markdown: .init(
@@ -437,10 +431,16 @@ public struct SourceBundleRenderer {
                         wordsPerMinute: sourceBundle.config
                             .renderer.wordsPerMinute
                     ),
-                    transformerPipeline: pipeline.transformers[
-                        content.definition.id
-                    ],
-                    paragraphStyles: [:]  // TODO: fix this
+                    transformerPipeline: transformers.map {
+                        .init(
+                            run: $0.run.map {
+                                .init(path: $0.path, name: $0.name)
+                            },
+                            isMarkdownResult: $0.isMarkdownResult
+                        )
+                    },
+                    paragraphStyles: sourceBundle.config.renderer
+                        .paragraphStyles.styles
                 ),
 
                 fileManager: fileManager,
@@ -449,7 +449,7 @@ public struct SourceBundleRenderer {
 
             let contents = renderer.render(
                 content: content.rawValue.markdown,
-                slug: content.slug,
+                slug: content.slug.value,
                 assetsPath: sourceBundle.config.contents.assets.path,
                 baseUrl: sourceBundle.baseUrl
             )
@@ -490,7 +490,6 @@ public struct SourceBundleRenderer {
                             pipeline: pipeline,
                             now: now,
                             scopeKey: "reference",
-                            currentSlug: currentSlug,
                             allowSubQueries: false
                         )
                     }
@@ -516,7 +515,6 @@ public struct SourceBundleRenderer {
                             pipeline: pipeline,
                             now: now,
                             scopeKey: query.scope ?? "list",
-                            currentSlug: currentSlug,
                             allowSubQueries: false
                         )
                     }

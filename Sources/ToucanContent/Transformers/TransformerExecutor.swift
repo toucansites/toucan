@@ -8,8 +8,15 @@
 import Foundation
 import SwiftCommand
 import Logging
-import ToucanModels
 import FileManagerKit
+
+// NOTE: duplicate
+fileprivate extension String {
+
+    func contextAwareIdentifier() -> String {
+        return String(split(separator: "/").last ?? "")
+    }
+}
 
 /// Executes a sequence of shell-based transformation commands defined in a `TransformerPipeline`,
 /// allowing content to be programmatically modified.
@@ -54,7 +61,7 @@ public struct TransformerExecutor {
     ///
     /// - Throws: Rethrows any error encountered during reading, writing, or transformation.
     /// - Returns: The final transformed content string.
-    public func transform(contents: String, slug: Slug) throws -> String {
+    public func transform(contents: String, slug: String) throws -> String {
         // Step 1: Write the content to a temp file
         let tempDirectoryURL = fileManager.temporaryDirectory
         let fileName = UUID().uuidString
@@ -68,7 +75,7 @@ public struct TransformerExecutor {
                 let arguments: [String] = [
                     "--id", contextAwareIdentifier,
                     "--file", fileURL.path,
-                    "--slug", slug.value,
+                    "--slug", slug,
                 ]
                 let commandUrl = URL(fileURLWithPath: command.path)
                     .appendingPathComponent(command.name)

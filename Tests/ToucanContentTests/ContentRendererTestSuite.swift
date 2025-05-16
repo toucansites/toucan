@@ -45,7 +45,7 @@ struct ContentRendererTestSuite {
 
         let contents = renderer.render(
             content: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )

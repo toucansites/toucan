@@ -29,7 +29,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )
@@ -67,7 +67,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )
@@ -113,7 +113,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )
@@ -158,7 +158,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )
@@ -187,7 +187,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         let output = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )
@@ -211,7 +211,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         _ = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )
@@ -233,7 +233,7 @@ struct MarkdownBlockDirectiveTestSuite {
 
         _ = renderer.renderHTML(
             markdown: input,
-            slug: .init(value: ""),
+            slug: "",
             assetsPath: "",
             baseUrl: ""
         )

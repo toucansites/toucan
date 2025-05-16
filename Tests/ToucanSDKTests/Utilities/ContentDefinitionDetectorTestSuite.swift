@@ -9,7 +9,7 @@ import Foundation
 import Testing
 import Logging
 import ToucanModels
-import ToucanTesting
+
 @testable import ToucanSDK
 
 @Suite

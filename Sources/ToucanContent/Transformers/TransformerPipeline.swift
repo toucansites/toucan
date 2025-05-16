@@ -1,5 +1,5 @@
 //
-//  Pipeline+TransformerPipeline.swift
+//  TransformerPipeline.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 21..
@@ -7,7 +7,7 @@
 
 /// Represents a sequence of content transformers to run before rendering,
 /// along with an indicator of whether the final result is Markdown.
-public struct TransformerPipeline: Decodable {
+public struct TransformerPipeline {
 
     /// An ordered list of transformers (external commands or scripts) to execute.
     ///

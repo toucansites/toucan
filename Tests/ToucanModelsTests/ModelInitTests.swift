@@ -13,13 +13,13 @@ struct ModelInitTests {
 
     @Test
     func testInitContentTransformer() throws {
-        let contentTransformer = ContentTransformer(name: "test")
+        let contentTransformer = Pipeline.Transformers.Transformer(name: "test")
         #expect(contentTransformer.name == "test")
     }
 
     @Test
     func testInitTransformerPipeline() throws {
-        let transformerPipeline = TransformerPipeline(
+        let transformerPipeline = Pipeline.Transformers(
             run: [
                 .init(name: "test")
             ],

@@ -27,8 +27,6 @@ let package = Package(
         .library(name: "ToucanContent", targets: ["ToucanContent"]),
         .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
-        .library(name: "ToucanTesting", targets: ["ToucanTesting"]),
-        
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
@@ -102,14 +100,7 @@ let package = Package(
         
         // MARK: - regular targets
         .target(
-            name: "ToucanSource",
-            dependencies: [
-                
-            ],
-            swiftSettings: swiftSettings
-        ),
-        .target(
-            name: "ToucanInfo",
+            name: "ToucanInfo", // => ToucanCommon?
             swiftSettings: swiftSettings
         ),
         .target(
@@ -134,8 +125,6 @@ let package = Package(
                 // for transformers
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
-                
-                .target(name: "ToucanModels"), // TODO: remove this
             ],
             swiftSettings: swiftSettings
         ),
@@ -170,13 +159,6 @@ let package = Package(
             ],
             swiftSettings: swiftSettings
         ),
-        .target(
-            name: "ToucanTesting",
-            dependencies: [
-                .target(name: "ToucanModels"),
-            ],
-            swiftSettings: swiftSettings
-        ),
         
         // MARK: - test targets
 
@@ -193,13 +175,6 @@ let package = Package(
                 .target(name: "ToucanSerialization"),
             ]
         ),
-//        .testTarget(
-//            name: "ToucanSourceTests",
-//            dependencies: [
-//                .target(name: "ToucanSource"),
-//                .target(name: "ToucanTesting"),
-//            ]
-//        ),
         .testTarget(
             name: "ToucanContentTests",
             dependencies: [
@@ -217,7 +192,6 @@ let package = Package(
             name: "ToucanSDKTests",
             dependencies: [
                 .target(name: "ToucanSDK"),
-                .target(name: "ToucanTesting"),
                 .product(name: "FileManagerKitTesting", package: "file-manager-kit")
             ]
         ),

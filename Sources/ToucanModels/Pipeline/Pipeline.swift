@@ -56,7 +56,7 @@ public struct Pipeline: Decodable {
     public var iterators: [String: Query]
 
     /// Optional transformation pipelines, applied before rendering.
-    public var transformers: [String: TransformerPipeline]
+    public var transformers: [String: Transformers]
 
     /// The rendering engine to use (e.g., HTML, JSON, RSS).
     public var engine: Engine
@@ -76,7 +76,7 @@ public struct Pipeline: Decodable {
         contentTypes: ContentTypes,
         iterators: [String: Query],
         assets: Assets,
-        transformers: [String: TransformerPipeline],
+        transformers: [String: Transformers],
         engine: Pipeline.Engine,
         output: Output
     ) {
@@ -146,7 +146,7 @@ public struct Pipeline: Decodable {
 
         let transformers =
             try container.decodeIfPresent(
-                [String: TransformerPipeline].self,
+                [String: Transformers].self,
                 forKey: .transformers
             ) ?? [:]
 

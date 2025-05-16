@@ -9,7 +9,7 @@ import Foundation
 import Testing
 import ToucanModels
 import ToucanContent
-import ToucanTesting
+
 import Logging
 @testable import ToucanSDK
 
@@ -175,7 +175,7 @@ struct SourceBundlePageLinkTestSuite {
             contents: contents,
             blockDirectives: [],
             templates: templates,
-            baseUrl: baseUrl
+            baseUrl: "http://localhost:3000"
         )
 
         var renderer = SourceBundleRenderer(

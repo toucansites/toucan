@@ -178,7 +178,7 @@ public struct ContentRenderer {
     /// - Returns: A structured `Output` containing HTML, reading time, and outline.
     public func render(
         content: String,
-        slug: Slug,
+        slug: String,
         assetsPath: String,
         baseUrl: String
     ) -> Output {
