@@ -26,12 +26,10 @@ struct AssetsLocatorTestSuite {
         }
         .test {
             let url = $1.appending(path: "src/")
-            let locator = FileLocator(
-                fileManager: $0,
-                recursively: true
+            let results = $0.find(
+                recursively: true,
+                at: url
             )
-            let results = locator.locate(at: url)
-
             #expect(results.count == 2)
         }
     }
@@ -40,12 +38,10 @@ struct AssetsLocatorTestSuite {
     func testAssetsLocatorEmpty() async throws {
         try FileManagerPlayground()
             .test {
-                let locator = FileLocator(
-                    fileManager: $0,
-                    recursively: true
+                let locations = $0.find(
+                    recursively: true,
+                    at: $1
                 )
-                let locations = locator.locate(at: $1)
-
                 #expect(locations.isEmpty)
             }
     }

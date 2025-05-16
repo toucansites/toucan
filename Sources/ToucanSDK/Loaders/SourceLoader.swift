@@ -19,7 +19,6 @@ struct SourceLoader {
     let target: Target
 
     let fileManager: FileManagerKit
-    let fs: ToucanFileSystem
     let frontMatterParser: FrontMatterParser
 
     let encoder: ToucanEncoder
@@ -184,7 +183,10 @@ struct SourceLoader {
 
         // MARK: - RawContents
 
-        let rawContentLocations = fs.rawContentLocator.locate(
+        let rawContentLocations = RawContentLocator(
+            fileManager: fileManager
+        )
+        .locate(
             at: sourceConfig.contentsUrl
         )
         let rawContentsLoader = RawContentLoader(
@@ -229,7 +231,10 @@ struct SourceLoader {
 
         // MARK: - Templates
 
-        let templateLocations = fs.templateLocator.locate(
+        let templateLocations = TemplateLocator(
+            fileManager: fileManager
+        )
+        .locate(
             at: sourceConfig.currentThemeTemplatesUrl,
             overrides: sourceConfig.currentThemeOverrideTemplatesUrl
         )

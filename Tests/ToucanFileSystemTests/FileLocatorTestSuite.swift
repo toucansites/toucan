@@ -9,16 +9,14 @@ import Foundation
 @testable import ToucanFileSystem
 @testable import FileManagerKitTesting
 
-@Suite(.serialized)
+@Suite
 struct FileLocatorTestSuite {
 
     @Test()
     func fileLocator_emptyRootDirectory() async throws {
         try FileManagerPlayground()
             .test {
-                let locator = FileLocator(fileManager: $0)
-                let locations = locator.locate(at: $1)
-
+                let locations = $0.find(at: $1)
                 #expect(locations.isEmpty)
             }
     }
@@ -35,8 +33,7 @@ struct FileLocatorTestSuite {
         }
         .test {
             let url = $1.appending(path: "foo/bar/")
-            let locator = FileLocator(fileManager: $0)
-            let locations = locator.locate(at: url).sorted()
+            let locations = $0.find(at: url).sorted()
 
             #expect(locations == ["baz.yaml", "qux.yml"])
         }
@@ -53,8 +50,7 @@ struct FileLocatorTestSuite {
         }
         .test {
             let url = $1.appending(path: "foo/")
-            let locator = FileLocator(fileManager: $0)
-            let locations = locator.locate(at: url).sorted()
+            let locations = $0.find(at: url).sorted()
 
             #expect(locations == ["bar", "baz.yaml", "qux.yml"])
         }
@@ -73,11 +69,15 @@ struct FileLocatorTestSuite {
         }
         .test {
             let url = $1.appending(path: "foo/bar/")
-            let locator = FileLocator(
-                fileManager: $0,
-                extensions: ["yaml", "yml"]
-            )
-            let locations = locator.locate(at: url).sorted()
+            let locations =
+                $0.find(
+                    extensions: [
+                        "yml",
+                        "yaml",
+                    ],
+                    at: url
+                )
+                .sorted()
 
             #expect(locations == ["baz.yaml", "qux.yml"])
         }

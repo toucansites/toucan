@@ -33,7 +33,6 @@ public struct Toucan {
     let logger: Logger
 
     let fileManager: FileManagerKit
-    let fs: ToucanFileSystem
     let frontMatterParser: FrontMatterParser
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
@@ -49,7 +48,6 @@ public struct Toucan {
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default
-        self.fs = ToucanFileSystem(fileManager: fileManager)
         self.encoder = ToucanYAMLEncoder()
         self.decoder = ToucanYAMLDecoder()
         self.frontMatterParser = FrontMatterParser(
@@ -141,7 +139,6 @@ public struct Toucan {
                     sourceUrl: inputUrl,
                     target: target,
                     fileManager: fileManager,
-                    fs: fs,
                     frontMatterParser: frontMatterParser,
                     encoder: encoder,
                     decoder: decoder,

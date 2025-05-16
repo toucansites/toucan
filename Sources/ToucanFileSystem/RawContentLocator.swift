@@ -17,15 +17,6 @@ public struct RawContentLocator {
     /// Underlying file system abstraction.
     private let fileManager: FileManagerKit
 
-    /// Locators for different index file types.
-    private let indexMarkdownLocator: FileLocator
-    private let indexMdLocator: FileLocator
-    private let indexYamlLocator: FileLocator
-    private let indexYmlLocator: FileLocator
-
-    /// Locator for noindex marker files (used to skip subdirectories).
-    private let noindexFileLocator: FileLocator
-
     /// Filename for index and noindex markers.
     private let indexName = "index"
     private let noindexName = "noindex"
@@ -38,31 +29,31 @@ public struct RawContentLocator {
     public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
 
-        self.indexMarkdownLocator = .init(
-            fileManager: fileManager,
-            name: indexName,
-            extensions: ["markdown"]
-        )
-        self.indexMdLocator = .init(
-            fileManager: fileManager,
-            name: indexName,
-            extensions: ["md"]
-        )
-        self.indexYamlLocator = .init(
-            fileManager: fileManager,
-            name: indexName,
-            extensions: ["yaml"]
-        )
-        self.indexYmlLocator = .init(
-            fileManager: fileManager,
-            name: indexName,
-            extensions: ["yml"]
-        )
-        self.noindexFileLocator = .init(
-            fileManager: fileManager,
-            name: noindexName,
-            extensions: ["yaml", "yml"]
-        )
+        //        self.indexMarkdownLocator = .init(
+        //            fileManager: fileManager,
+        //            name: indexName,
+        //            extensions: ["markdown"]
+        //        )
+        //        self.indexMdLocator = .init(
+        //            fileManager: fileManager,
+        //            name: indexName,
+        //            extensions: ["md"]
+        //        )
+        //        self.indexYamlLocator = .init(
+        //            fileManager: fileManager,
+        //            name: indexName,
+        //            extensions: ["yaml"]
+        //        )
+        //        self.indexYmlLocator = .init(
+        //            fileManager: fileManager,
+        //            name: indexName,
+        //            extensions: ["yml"]
+        //        )
+        //        self.noindexFileLocator = .init(
+        //            fileManager: fileManager,
+        //            name: noindexName,
+        //            extensions: ["yaml", "yml"]
+        //        )
     }
 
     // MARK: - Public API
@@ -112,16 +103,45 @@ private extension RawContentLocator {
         var rawContentLocation = RawContentLocation(
             slug: slug.joined(separator: "/").trimmingBracketsContent()
         )
-        if let value = indexMarkdownLocator.locate(at: url).first {
+
+        if let value =
+            fileManager.find(
+                name: indexName,
+                extensions: ["markdown"],
+                at: url
+            )
+            .first
+        {
             rawContentLocation.markdown = join(p, value)
         }
-        if let value = indexMdLocator.locate(at: url).first {
+        if let value =
+            fileManager.find(
+                name: indexName,
+                extensions: ["md"],
+                at: url
+            )
+            .first
+        {
             rawContentLocation.md = join(p, value)
         }
-        if let value = indexYamlLocator.locate(at: url).first {
+        if let value =
+            fileManager.find(
+                name: indexName,
+                extensions: ["yaml"],
+                at: url
+            )
+            .first
+        {
             rawContentLocation.yaml = join(p, value)
         }
-        if let value = indexYmlLocator.locate(at: url).first {
+        if let value =
+            fileManager.find(
+                name: indexName,
+                extensions: ["yml"],
+                at: url
+            )
+            .first
+        {
             rawContentLocation.yml = join(p, value)
         }
 
@@ -136,7 +156,11 @@ private extension RawContentLocator {
             let childUrl = url.appendingPathComponent(item)
 
             // Skip folders that have a noindex marker
-            let noindexFilePaths = noindexFileLocator.locate(at: childUrl)
+            let noindexFilePaths = fileManager.find(
+                name: noindexName,
+                extensions: ["yaml", "yml"],
+                at: childUrl
+            )
             let decodedItem = item.removingPercentEncoding ?? ""
             let skip = decodedItem.hasPrefix("[") && decodedItem.hasSuffix("]")
 

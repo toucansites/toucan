@@ -10,7 +10,7 @@ import ToucanModels
 @testable import ToucanFileSystem
 @testable import FileManagerKitTesting
 
-@Suite(.serialized)
+@Suite
 struct ToucanFileSystemTests {
 
     @Test()
@@ -24,14 +24,14 @@ struct ToucanFileSystemTests {
         .test {
             let url = $1.appending(path: "foo/bar/")
             let overrideUrl = $1.appending(path: "foo/bar/")
-            let fs = ToucanFileSystem(fileManager: $0)
+            let rawContentLocator = RawContentLocator(fileManager: $0)
+            let templateLocator = TemplateLocator(fileManager: $0)
 
-            #expect(fs.rawContentLocator.locate(at: url).isEmpty)
-            #expect(fs.rawContentLocator.locate(at: url).isEmpty)
-            #expect(fs.ymlFileLocator.locate(at: url).isEmpty)
+            #expect(rawContentLocator.locate(at: url).isEmpty)
+            #expect(rawContentLocator.locate(at: url).isEmpty)
+            #expect($0.find(extensions: ["yml", "yaml"], at: url).isEmpty)
             #expect(
-                fs.templateLocator.locate(at: url, overrides: overrideUrl)
-                    .isEmpty
+                templateLocator.locate(at: url, overrides: overrideUrl).isEmpty
             )
         }
     }
@@ -119,10 +119,11 @@ struct ToucanFileSystemTests {
             }
         }
         .test {
-            let fs = ToucanFileSystem(fileManager: $0)
-            let contentsUrl = $1.appending(path: "src/contents/")
 
-            let rawContentLocations = fs.rawContentLocator.locate(
+            let contentsUrl = $1.appending(path: "src/contents/")
+            let rawContentLocator = RawContentLocator(fileManager: $0)
+            let templateLocator = TemplateLocator(fileManager: $0)
+            let rawContentLocations = rawContentLocator.locate(
                 at: contentsUrl
             )
 
@@ -143,7 +144,10 @@ struct ToucanFileSystemTests {
 
             let typesUrl = $1.appending(path: "src/types/")
 
-            let contentTypes = fs.ymlFileLocator.locate(at: typesUrl)
+            let contentTypes = $0.find(
+                extensions: ["yml", "yaml"],
+                at: typesUrl
+            )
             #expect(
                 contentTypes.sorted { $0 < $1 }
                     == [
@@ -155,7 +159,10 @@ struct ToucanFileSystemTests {
             )
 
             let blocksUrl = $1.appending(path: "src/blocks/")
-            let blocks = fs.ymlFileLocator.locate(at: blocksUrl)
+            let blocks = $0.find(
+                extensions: ["yml", "yaml"],
+                at: blocksUrl
+            )
 
             #expect(
                 blocks.sorted { $0 < $1 }
@@ -172,7 +179,7 @@ struct ToucanFileSystemTests {
                 path: "src/themes/overrides/templates/"
             )
 
-            let templates = fs.templateLocator.locate(
+            let templates = templateLocator.locate(
                 at: templatesUrl,
                 overrides: templatesOverridesUrl
             )

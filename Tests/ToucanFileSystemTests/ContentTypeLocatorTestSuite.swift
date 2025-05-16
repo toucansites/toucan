@@ -12,7 +12,7 @@ import Foundation
 
 import Testing
 
-@Suite(.serialized)
+@Suite
 struct ContentTypeLocatorTestSuite {
 
     @Test()
@@ -27,11 +27,11 @@ struct ContentTypeLocatorTestSuite {
         }
         .test {
             let typesUrl = $1.appending(path: "src/types/")
-            let locator = FileLocator(
-                fileManager: $0,
-                extensions: ["yml", "yaml"]
+
+            let locations = $0.find(
+                extensions: ["yml", "yaml"],
+                at: typesUrl
             )
-            let locations = locator.locate(at: typesUrl)
             let expected: [String] = [
                 "post.yaml",
                 "tag.yml",
@@ -48,12 +48,10 @@ struct ContentTypeLocatorTestSuite {
         try FileManagerPlayground()
             .test {
                 let typesUrl = $1.appending(path: "src/types/")
-                let locator = FileLocator(
-                    fileManager: $0,
-                    extensions: ["yml", "yaml"]
+                let locations = $0.find(
+                    extensions: ["yml", "yaml"],
+                    at: typesUrl
                 )
-                let locations = locator.locate(at: typesUrl)
-
                 #expect(locations.isEmpty)
             }
     }

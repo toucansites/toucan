@@ -49,15 +49,16 @@ struct CopyManagerTestSuite {
             try copyManager.copy()
 
             let expectation = ["cover.png", "image.png"]
-            let locator = FileLocator(fileManager: $0)
 
             var locations =
-                locator.locate(at: workDirUrl.appending(path: "icons/"))
+                $0
+                .find(at: workDirUrl.appending(path: "icons/"))
                 .sorted()
             #expect(locations == expectation)
 
             locations =
-                locator.locate(at: workDirUrl.appending(path: "images/"))
+                $0
+                .find(at: workDirUrl.appending(path: "images/"))
                 .sorted()
             #expect(locations == expectation)
         }
@@ -89,8 +90,7 @@ struct CopyManagerTestSuite {
             )
             try copyManager.copy()
 
-            let locator = FileLocator(fileManager: $0)
-            let locations = locator.locate(at: workDirUrl).sorted()
+            let locations = $0.find(at: workDirUrl).sorted()
             #expect(locations.isEmpty)
         }
     }

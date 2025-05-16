@@ -9,7 +9,7 @@ import Foundation
 @testable import ToucanFileSystem
 @testable import FileManagerKitTesting
 
-@Suite(.serialized)
+@Suite
 struct TemplateLocatorTestSuite {
 
     @Test()

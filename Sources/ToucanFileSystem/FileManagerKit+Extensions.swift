@@ -1,31 +1,42 @@
 //
-//  FileManagerKit+Find.swift
+//  FileManagerKit+Extensions.swift
 //  Toucan
 //
-//  Created by Tibor Bödecs on 2025. 05. 16..
+//  Created by Binary Birds on 2025. 04. 17..
 
 import Foundation
 import FileManagerKit
 
 extension FileManagerKit {
 
-    /// Searches for files in the specified directory that match the given name and/or file extensions.
+    /// Find files in the specified directory that match the given name and extensions criteria.
     ///
-    /// This method filters the contents of the directory at the provided URL, returning only those
-    /// files whose base name and/or extension match the given criteria.
-    ///
-    /// - Parameters:
-    ///   - name: An optional base name to match (without extension). If `nil`, any name is accepted.
-    ///   - extensions: An optional array of file extensions to match (e.g., `["json", "txt"]`). If `nil`, any extension is accepted.
-    ///   - url: The URL of the directory to search.
-    ///
-    /// - Returns: An array of file names (as strings) that match the given criteria.
+    /// - Parameters: url: The URL of the directory to search.
+    /// - Returns: An array of file names that match the specified criteria.
     public func find(
         name: String? = nil,
         extensions: [String]? = nil,
+        recursively: Bool = false,
+        skipHiddenFiles: Bool = true,
         at url: URL
     ) -> [String] {
-        listDirectory(at: url)
+        var items: [String] = []
+        if recursively {
+            items = listDirectoryRecursively(at: url)
+                .map {
+                    // Convert to a relative path based on the root URL
+                    $0.relativePath(to: url)
+                }
+        }
+        else {
+            items = listDirectory(at: url)
+        }
+
+        if skipHiddenFiles {
+            items = items.filter { !$0.hasPrefix(".") }
+        }
+        return
+            items
             .filter { fileName in
                 let fileUrl = URL(fileURLWithPath: fileName)
                 let baseName = fileUrl.deletingPathExtension().lastPathComponent
@@ -43,4 +54,5 @@ extension FileManagerKit {
                 }
             }
     }
+
 }

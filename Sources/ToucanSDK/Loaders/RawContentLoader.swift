@@ -129,16 +129,17 @@ private extension RawContentLoader {
         }
 
         let url = url.appendingPathComponent(path ?? "")
-        let assetLocator = FileLocator(
-            fileManager: fileManager,
-            recursively: true
-        )
+
         let assetsPath = sourceConfig.config.contents.assets.path
-        let assetsUrl = url.deletingLastPathComponent()
-            .appending(
-                path: assetsPath
-            )
-        let assetLocations = assetLocator.locate(at: assetsUrl)
+        let assetsUrl =
+            url
+            .deletingLastPathComponent()
+            .appending(path: assetsPath)
+
+        let assetLocations = fileManager.find(
+            recursively: true,
+            at: assetsUrl
+        )
 
         // TODO: check if we need this or not.
         frontMatter["image"] = .init(
