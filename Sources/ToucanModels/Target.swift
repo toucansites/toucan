@@ -6,7 +6,7 @@
 //
 
 /// Represents a deployment target configuration for a Toucan project.
-public struct Target: Decodable, Equatable {
+public struct Target: Codable, Equatable {
 
     // MARK: - Coding Keys
 
@@ -57,11 +57,11 @@ public struct Target: Decodable, Equatable {
     public static var `defaults`: Self {
         .init(
             name: "dev",
-            config: "./config.yml",
+            config: "",
             url: "http://localhost:3000",
             locale: nil,
             timeZone: nil,
-            output: "./docs/",
+            output: "docs",
             isDefault: false
         )
     }
@@ -130,5 +130,21 @@ public struct Target: Decodable, Equatable {
         self.isDefault =
             try container.decodeIfPresent(Bool.self, forKey: .default)
             ?? defaults.isDefault
+    }
+
+    /// Encodes this instance into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if any values are invalid for the given encoder’s format.
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(name, forKey: .name)
+        try container.encode(config, forKey: .config)
+        try container.encode(url, forKey: .url)
+        try container.encodeIfPresent(locale, forKey: .locale)
+        try container.encodeIfPresent(timeZone, forKey: .timeZone)
+        try container.encode(output, forKey: .output)
+        try container.encode(isDefault, forKey: .default)
     }
 }

@@ -16,7 +16,7 @@ import ToucanSerialization
 struct SourceLoader {
 
     let sourceUrl: URL
-    let baseUrl: String?
+    let target: Target
 
     let fileManager: FileManagerKit
     let fs: ToucanFileSystem
@@ -37,8 +37,8 @@ struct SourceLoader {
 
         // MARK: - Config
 
-        // TODO: sourceUrl.append target.config
-        let configLocations = fs.configLocator.locate(at: sourceUrl)
+        let configUrl = sourceUrl.appending(path: target.config)
+        let configLocations = fs.configLocator.locate(at: configUrl)
         let configLoader = ConfigLoader(
             url: sourceUrl,
             locations: configLocations,
@@ -95,7 +95,7 @@ struct SourceLoader {
 
         let settingsLoader = SettingsLoader(
             url: sourceConfig.siteSettingsURL,
-            baseUrl: baseUrl,
+            baseUrl: target.url,
             locations: settingsLocations,
             encoder: encoder,
             decoder: decoder,
@@ -166,7 +166,7 @@ struct SourceLoader {
             frontMatterParser: frontMatterParser,
             fileManager: fileManager,
             logger: logger,
-            baseUrl: baseUrl ?? settings.baseUrl
+            baseUrl: target.url
         )
         let rawContents = try rawContentsLoader.load()
 
@@ -222,7 +222,7 @@ struct SourceLoader {
             contents: contents,
             blockDirectives: blockDirectives,
             templates: templates,
-            baseUrl: baseUrl ?? settings.baseUrl
+            baseUrl: target.url
         )
     }
 }

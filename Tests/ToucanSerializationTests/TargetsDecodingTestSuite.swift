@@ -33,7 +33,7 @@ struct TargetsDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            Targets.self,
+            TargetConfig.self,
             from: data
         )
 
@@ -55,7 +55,7 @@ struct TargetsDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            Targets.self,
+            TargetConfig.self,
             from: data
         )
 
@@ -74,7 +74,7 @@ struct TargetsDecodingTestSuite {
         let decoder = ToucanYAMLDecoder()
 
         let result = try decoder.decode(
-            Targets.self,
+            TargetConfig.self,
             from: data
         )
 
@@ -94,7 +94,7 @@ struct TargetsDecodingTestSuite {
 
         let decoder = ToucanYAMLDecoder()
 
-        let result = try decoder.decode(Targets.self, from: data)
+        let result = try decoder.decode(TargetConfig.self, from: data)
 
         #expect(result.all.count == 2)
         #expect(result.default.name == "one")
@@ -111,7 +111,7 @@ struct TargetsDecodingTestSuite {
 
         let decoder = ToucanYAMLDecoder()
 
-        let result = try decoder.decode(Targets.self, from: data)
+        let result = try decoder.decode(TargetConfig.self, from: data)
 
         #expect(result.all.count == 2)
         #expect(result.default.name == "alpha")
@@ -131,7 +131,7 @@ struct TargetsDecodingTestSuite {
 
         let decoder = ToucanYAMLDecoder()
         #expect(throws: (any Error).self) {
-            _ = try decoder.decode(Targets.self, from: data)
+            _ = try decoder.decode(TargetConfig.self, from: data)
         }
     }
 
@@ -144,7 +144,7 @@ struct TargetsDecodingTestSuite {
 
         let decoder = ToucanYAMLDecoder()
 
-        let result = try decoder.decode(Targets.self, from: data)
+        let result = try decoder.decode(TargetConfig.self, from: data)
 
         #expect(!result.all.isEmpty)
         #expect(result.default == Target.default)
@@ -159,7 +159,7 @@ struct TargetsDecodingTestSuite {
 
         let decoder = ToucanYAMLDecoder()
 
-        let result = try decoder.decode(Targets.self, from: data)
+        let result = try decoder.decode(TargetConfig.self, from: data)
 
         #expect(result.all.count == 1)
         #expect(result.default.name == "dev")

@@ -61,11 +61,11 @@ struct TargetDecodingTestSuite {
         )
 
         #expect(result.name == "dev")
-        #expect(result.config == "./config.yml")
+        #expect(result.config == "")
         #expect(result.url == "http://localhost:3000")
         #expect(result.locale == nil)
         #expect(result.timeZone == nil)
-        #expect(result.output == "./docs/")
+        #expect(result.output == "docs")
         #expect(result.isDefault == false)
     }
 }

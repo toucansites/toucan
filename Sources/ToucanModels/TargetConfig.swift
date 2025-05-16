@@ -1,12 +1,12 @@
 //
-//  Targets.swift
+//  TargetConfig.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 15..
 //
 
 /// A structure that holds a list of deployment targets and resolves the default one.
-public struct Targets: Decodable, Equatable {
+public struct TargetConfig: Codable, Equatable {
 
     // MARK: - Coding Keys
 
@@ -74,5 +74,14 @@ public struct Targets: Decodable, Equatable {
             )
         }
         self.init(all: all)
+    }
+
+    /// Encodes this instance into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if any values are invalid for the given encoder’s format.
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(all, forKey: .targets)
     }
 }

@@ -63,7 +63,7 @@ public struct Toucan {
         self.logger = logger
     }
 
-    // MARK: - directory management
+    // MARK: - helpers
 
     func resetDirectory(at url: URL) throws {
         if fileManager.exists(at: url) {
@@ -72,38 +72,58 @@ public struct Toucan {
         try fileManager.createDirectory(at: url)
     }
 
-    /// generates the static site
-    public func generate() throws {
-        let processId = UUID()
-        let workDirUrl = fileManager
+    func prepareWorkingDirectory() throws -> URL {
+        let url = fileManager
             .temporaryDirectory
             .appendingPathComponent("toucan")
-            .appendingPathComponent(processId.uuidString)
+            .appendingPathComponent(UUID().uuidString)
 
-        try resetDirectory(at: workDirUrl)
+        try resetDirectory(at: url)
 
-        logger.debug("Working at: `\(workDirUrl.absoluteString)`.")
-        logger.debug("Working at: `\(workDirUrl.absoluteString)`")
+        logger.debug("Working at: `\(url.absoluteString)`.")
+
+        return url
+    }
+
+    // MARK: -
+
+    func loadTargetConfig() throws -> TargetConfig {
+        try YAMLLoader(
+            url: inputUrl,
+            locations:
+                fileManager
+                .find(
+                    name: "toucan",
+                    extensions: ["yml", "yaml"],
+                    at: inputUrl
+                ),
+            encoder: encoder,
+            decoder: decoder,
+            logger: logger
+        )
+        .load(TargetConfig.self)
+    }
+
+    func getActiveBuildTargets(_ targets: TargetConfig) -> [Target] {
+        // TODO: support --targets flag
+        var buildTargets = targets.all.filter {
+            targetsToBuild.contains($0.name)
+        }
+        if buildTargets.isEmpty {
+            buildTargets.append(targets.default)
+        }
+        return buildTargets
+    }
+
+    // MARK: - api
+
+    /// generates the static site
+    public func generate() throws {
+        let workDirUrl = try prepareWorkingDirectory()
 
         do {
-
-            let targetsLoader = TargetsLoader(
-                url: inputUrl,
-                fileName: "toucan.yml",
-                decoder: decoder,
-                logger: logger
-            )
-
-            let targets = try targetsLoader.load()
-
-            // TODO: support --targets flag
-            var buildTargets = targets.all.filter {
-                targetsToBuild.contains($0.name)
-            }
-
-            if buildTargets.isEmpty {
-                buildTargets.append(targets.all[0])
-            }
+            let targetConfig = try loadTargetConfig()
+            let buildTargets = getActiveBuildTargets(targetConfig)
 
             for target in buildTargets {
                 logger.info(
@@ -118,14 +138,9 @@ public struct Toucan {
                     ]
                 )
 
-                let outputUrl = getSafeUrl(
-                    for: target.output,
-                    using: fileManager
-                )
-
                 let sourceLoader = SourceLoader(
                     sourceUrl: inputUrl,
-                    baseUrl: target.url,
+                    target: target,
                     fileManager: fileManager,
                     fs: fs,
                     frontMatterParser: frontMatterParser,
@@ -200,7 +215,7 @@ public struct Toucan {
                     )
                     try fileManager.createDirectory(at: destinationFolder)
 
-                    let outputUrl =
+                    let resultOutputUrl =
                         destinationFolder
                         .appending(path: result.destination.file)
                         .appendingPathExtension(result.destination.ext)
@@ -209,10 +224,10 @@ public struct Toucan {
                     case .assetFile(let path):
                         let srcUrl = sourceBundle.sourceConfig.contentsUrl
                             .appending(path: path)
-                        try fileManager.copy(from: srcUrl, to: outputUrl)
+                        try fileManager.copy(from: srcUrl, to: resultOutputUrl)
                     case .asset(let string), .content(let string):
                         try string.write(
-                            to: outputUrl,
+                            to: resultOutputUrl,
                             atomically: true,
                             encoding: .utf8
                         )
@@ -220,6 +235,18 @@ public struct Toucan {
                 }
 
                 // MARK: - Finalize and cleanup
+
+                // TODO: make sure output url works well in all cases
+                var outputUrl = getSafeUrl(
+                    for: target.output,
+                    using: fileManager
+                )
+                if !outputUrl.path().hasPrefix("/") {
+                    outputUrl = inputUrl.deletingLastPathComponent()
+                        .appending(
+                            path: target.output
+                        )
+                }
 
                 try resetDirectory(at: outputUrl)
                 try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)

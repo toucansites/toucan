@@ -80,7 +80,7 @@ struct SourceLoaderTestSuite: ToucanTestSuite {
 
             let sourceLoader = SourceLoader(
                 sourceUrl: sourceUrl,
-                baseUrl: baseUrl,
+                target: .default,
                 fileManager: $0,
                 fs: fs,
                 frontMatterParser: frontMatterParser,

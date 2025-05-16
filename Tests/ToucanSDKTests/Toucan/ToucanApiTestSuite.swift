@@ -57,6 +57,7 @@ struct ToucanApiTestSuite: ToucanTestSuite {
         .test {
             let input = $1.appending(path: "src/")
             let output = $1.appending(path: "docs/")
+
             try getToucan(input, output, logger).generate()
 
             struct Expected: Decodable {

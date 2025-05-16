@@ -21,8 +21,7 @@ extension ToucanTestSuite {
     ) -> Toucan {
         let toucan = Toucan(
             input: input.path(),
-            output: output.path(),
-            baseUrl: "http:localhost:3000",
+            targetsToBuild: [],
             logger: logger
         )
         return toucan
