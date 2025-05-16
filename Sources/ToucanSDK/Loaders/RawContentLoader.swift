@@ -129,7 +129,10 @@ private extension RawContentLoader {
         }
 
         let url = url.appendingPathComponent(path ?? "")
-        let assetLocator = AssetLocator(fileManager: fileManager)
+        let assetLocator = FileLocator(
+            fileManager: fileManager,
+            recursively: true
+        )
         let assetsPath = sourceConfig.config.contents.assets.path
         let assetsUrl = url.deletingLastPathComponent()
             .appending(

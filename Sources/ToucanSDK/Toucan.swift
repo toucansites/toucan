@@ -199,12 +199,16 @@ public struct Toucan {
 
                 // MARK: - Copy default assets
 
-                let assetsWriter = AssetsWriter(
+                let copyManager = CopyManager(
                     fileManager: fileManager,
-                    sourceConfig: sourceBundle.sourceConfig,
-                    workDirUrl: workDirUrl
+                    sources: [
+                        sourceBundle.sourceConfig.currentThemeAssetsUrl,
+                        sourceBundle.sourceConfig.currentThemeOverrideAssetsUrl,
+                        sourceBundle.sourceConfig.siteAssetsUrl,
+                    ],
+                    destination: workDirUrl
                 )
-                try assetsWriter.copyDefaultAssets()
+                try copyManager.copy()
 
                 // MARK: - Writing results
 

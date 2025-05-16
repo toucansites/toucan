@@ -12,7 +12,7 @@ import ToucanModels
 public struct ToucanFileSystem {
 
     /// Locates static assets like images, JS, or CSS files under the project directory.
-    public let assetLocator: AssetLocator
+    public let assetLocator: FileLocator
 
     /// Locates pipeline configuration files, usually for defining content transformations or build steps.
     public let pipelineLocator: FileLocator
@@ -32,7 +32,10 @@ public struct ToucanFileSystem {
     ///
     /// - Parameter fileManager: A file manager abstraction used by each internal locator.
     public init(fileManager: FileManagerKit) {
-        self.assetLocator = AssetLocator(fileManager: fileManager)
+        self.assetLocator = FileLocator(
+            fileManager: fileManager,
+            recursively: true
+        )
         self.pipelineLocator = FileLocator(
             fileManager: fileManager,
             extensions: ["yml", "yaml"]

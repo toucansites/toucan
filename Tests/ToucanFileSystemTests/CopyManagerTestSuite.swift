@@ -1,5 +1,5 @@
 //
-//  AssetsWriterTestSuite.swift
+//  CopyManagerTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
@@ -12,10 +12,10 @@ import FileManagerKitTesting
 import ToucanModels
 
 @Suite
-struct AssetsWriterTestSuite {
+struct CopyManagerTestSuite {
 
     @Test()
-    func testAssetsWriter() async throws {
+    func copyItemsRecursively() async throws {
         try FileManagerPlayground {
             Directory("src") {
                 Directory("assets") {
@@ -37,12 +37,16 @@ struct AssetsWriterTestSuite {
                 config: .defaults
             )
             let workDirUrl = $1.appending(path: "workDir/")
-            let assetsWriter = AssetsWriter(
+            let copyManager = CopyManager(
                 fileManager: $0,
-                sourceConfig: sourceConfig,
-                workDirUrl: workDirUrl
+                sources: [
+                    sourceConfig.currentThemeAssetsUrl,
+                    sourceConfig.currentThemeOverrideAssetsUrl,
+                    sourceConfig.siteAssetsUrl,
+                ],
+                destination: workDirUrl
             )
-            try assetsWriter.copyDefaultAssets()
+            try copyManager.copy()
 
             let expectation = ["cover.png", "image.png"]
             let locator = FileLocator(fileManager: $0)
@@ -60,7 +64,7 @@ struct AssetsWriterTestSuite {
     }
 
     @Test()
-    func testAssetsWriterEmpty() async throws {
+    func copyEmptyDirectory() async throws {
         try FileManagerPlayground {
             Directory("src") {
                 Directory("assets") {
@@ -74,12 +78,16 @@ struct AssetsWriterTestSuite {
                 config: .defaults
             )
             let workDirUrl = $1.appending(path: "workDir/")
-            let assetsWriter = AssetsWriter(
+            let copyManager = CopyManager(
                 fileManager: $0,
-                sourceConfig: sourceConfig,
-                workDirUrl: workDirUrl
+                sources: [
+                    sourceConfig.currentThemeAssetsUrl,
+                    sourceConfig.currentThemeOverrideAssetsUrl,
+                    sourceConfig.siteAssetsUrl,
+                ],
+                destination: workDirUrl
             )
-            try assetsWriter.copyDefaultAssets()
+            try copyManager.copy()
 
             let locator = FileLocator(fileManager: $0)
             let locations = locator.locate(at: workDirUrl).sorted()
