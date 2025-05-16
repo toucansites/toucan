@@ -20,16 +20,16 @@ struct SourceBundleRSSTestSuite {
     func rss() throws {
         let logger = Logger(label: "SourceBundleRSSTestSuite")
         let now = Date()
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
-        let rssFormatter = settings.dateFormatter("EEE, dd MMM yyyy HH:mm:ss Z")
+        let rssFormatter = target.dateFormatter("EEE, dd MMM yyyy HH:mm:ss Z")
         let nowString = rssFormatter.string(from: now)
 
         let pipelines = [
@@ -73,9 +73,10 @@ struct SourceBundleRSSTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,

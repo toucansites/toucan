@@ -12,6 +12,8 @@ import FileManagerKit
 import Logging
 import ToucanInfo
 
+
+
 /// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
 ///
 /// It processes content pipelines using the configured engine (Mustache, JSON, etc.),
@@ -54,16 +56,16 @@ public struct SourceBundleRenderer {
 
     // MARK: -
 
+    #warning("Make sure baseURL trailing slash")
     /// Returns the site context based on the source bundle settings and the generator info
     private func getSiteContext(
         for now: TimeInterval
     ) -> [String: AnyCodable] {
         sourceBundle.settings.userDefined.recursivelyMerged(
             with: [
-                "baseUrl": .init(sourceBundle.settings.baseUrl),
-                "name": .init(sourceBundle.settings.name),
-                "locale": .init(sourceBundle.settings.locale),
-                "timeZone": .init(sourceBundle.settings.timeZone),
+                "baseUrl": .init(sourceBundle.target.url),
+                "locale": .init(sourceBundle.target.locale),
+                "timeZone": .init(sourceBundle.target.timeZone),
                 "generation": .init(now.toDateFormats(formatters: formatters)),
                 "generator": .init(generatorInfo),
             ]
@@ -115,7 +117,7 @@ public struct SourceBundleRenderer {
         var siteContext = getSiteContext(for: now)
         var results: [PipelineResult] = []
         let iteratorResolver = ContentIteratorResolver(
-            baseUrl: sourceBundle.settings.baseUrl,
+            baseUrl: sourceBundle.target.url,
             now: now
         )
 
@@ -125,7 +127,7 @@ public struct SourceBundleRenderer {
 
             let pipelineFormatters = pipeline.dataTypes.date.dateFormats
                 .mapValues {
-                    sourceBundle.settings.dateFormatter($0)
+                    sourceBundle.target.dateFormatter($0)
                 }
             let allFormatters = formatters.recursivelyMerged(
                 with: pipelineFormatters
@@ -367,7 +369,7 @@ public struct SourceBundleRenderer {
         var result: [String: AnyCodable] = [:]
 
         let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
-            sourceBundle.settings.dateFormatter($0)
+            sourceBundle.target.dateFormatter($0)
         }
         let allFormatters = formatters.recursivelyMerged(
             with: pipelineFormatters
@@ -412,7 +414,7 @@ public struct SourceBundleRenderer {
 
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
-                content.slug.permalink(baseUrl: sourceBundle.settings.baseUrl)
+                content.slug.permalink(baseUrl: sourceBundle.target.url)
             )
 
             // result["isCurrentURL"] = .init(content.slug == currentSlug)
@@ -548,12 +550,12 @@ extension SourceBundleRenderer {
         ]
 
         for (key, style) in styles {
-            let dateFormatter = sourceBundle.settings.dateFormatter()
+            let dateFormatter = sourceBundle.target.dateFormatter()
             dateFormatter.dateStyle = style
             dateFormatter.timeStyle = .none
             formatters["date.\(key)"] = dateFormatter
 
-            let timeFormatter = sourceBundle.settings.dateFormatter()
+            let timeFormatter = sourceBundle.target.dateFormatter()
             timeFormatter.dateStyle = .none
             timeFormatter.timeStyle = style
             formatters["time.\(key)"] = timeFormatter
@@ -568,7 +570,7 @@ extension SourceBundleRenderer {
         for (key, dateFormat) in standard.recursivelyMerged(
             with: sourceBundle.config.dateFormats.output
         ) {
-            let formatter = sourceBundle.settings.dateFormatter()
+            let formatter = sourceBundle.target.dateFormatter()
             formatter.config(with: dateFormat)
             formatters[key] = formatter
         }

@@ -21,6 +21,8 @@ public struct SourceBundle {
     /// The root location of the source on the filesystem.
     /// This usually points to the folder where the source content resides.
     public var location: URL
+    
+    public var target: Target
 
     /// Global configuration for the project, often loaded from `config.yml`.
     public var config: Config
@@ -63,6 +65,7 @@ public struct SourceBundle {
     ///   - baseUrl: The base URL to be used for link resolution.
     public init(
         location: URL,
+        target: Target,
         config: Config,
         sourceConfig: SourceConfig,
         settings: Settings,
@@ -73,6 +76,7 @@ public struct SourceBundle {
         baseUrl: String
     ) {
         self.location = location
+        self.target = target
         self.config = config
         self.sourceConfig = sourceConfig
         self.settings = settings

@@ -19,6 +19,7 @@ struct SourceBundlePageLinkTestSuite {
     @Test(arguments: ["http://localhost:3000", "http://localhost:3000/"])
     func testPageLink(baseUrl: String) throws {
         let logger = Logger(label: "SourceBundlePageLinkTestSuite")
+        let target = Target.default
         let now = Date()
 
         let pipelines: [Pipeline] = [
@@ -166,9 +167,10 @@ struct SourceBundlePageLinkTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .defaults,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

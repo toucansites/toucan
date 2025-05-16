@@ -19,13 +19,13 @@ struct SourceBundleErrorTests {
     @Test()
     func testWrongRendererEngine() async throws {
         let logger = Logger(label: "SourceBundleErrorTests")
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
         let now = Date()
@@ -66,9 +66,10 @@ struct SourceBundleErrorTests {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

@@ -18,17 +18,18 @@ struct DateFormatterTestSuite {
 
     @Test
     func locale_DE_Formatter() throws {
-        var settings = Settings.defaults
-        settings.locale = "de-DE"
+        var target = Target.default
+        target.locale = "de-DE"
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: .defaults,
             sourceConfig: SourceConfig(
                 sourceUrl: .init(fileURLWithPath: ""),
                 config: .defaults
             ),
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: [],
             contents: [],
             blockDirectives: [],
@@ -37,7 +38,7 @@ struct DateFormatterTestSuite {
         )
 
         let date = Date.init(timeIntervalSinceReferenceDate: 0)
-        let formatter = sourceBundle.settings.dateFormatter()
+        let formatter = sourceBundle.target.dateFormatter()
         formatter.dateStyle = .full
 
         #expect(formatter.locale.identifier == "de-DE")
@@ -50,15 +51,15 @@ struct DateFormatterTestSuite {
         let now = Date()
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
-        var settings = Settings.defaults
-        settings.locale = "de-DE"
+        var target = Target.default
+        target.locale = "de-DE"
 
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: .defaults
         )
 
-        let inputFormatter = settings.dateFormatter(
+        let inputFormatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
 
@@ -110,9 +111,10 @@ struct DateFormatterTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: sourceConfig.config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: [Pipeline.Mocks.html()],
             contents: [postContent],
             blockDirectives: [],
@@ -157,8 +159,8 @@ struct DateFormatterTestSuite {
         let now = Date()
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
-        var settings = Settings.defaults
-        settings.locale = "de-DE"
+        var target = Target.default
+        target.locale = "de-DE"
 
         var config = Config.defaults
         config.dateFormats.output = [
@@ -175,7 +177,7 @@ struct DateFormatterTestSuite {
             config: config
         )
 
-        let inputFormatter = settings.dateFormatter(config.dateFormats.input)
+        let inputFormatter = target.dateFormatter(config.dateFormats.input)
 
         let postDefinition = ContentDefinition(
             id: "post",
@@ -237,9 +239,10 @@ struct DateFormatterTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: [Pipeline.Mocks.html()],
             contents: [postContent],
             blockDirectives: [],
@@ -283,8 +286,8 @@ struct DateFormatterTestSuite {
         let now = Date()
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
-        var settings = Settings.defaults
-        settings.locale = "de-DE"
+        var target = Target.default
+        target.locale = "de-DE"
 
         var config = Config.defaults
         config.dateFormats.output = [
@@ -297,7 +300,7 @@ struct DateFormatterTestSuite {
             config: config
         )
 
-        let inputFormatter = settings.dateFormatter(config.dateFormats.input)
+        let inputFormatter = target.dateFormatter(config.dateFormats.input)
 
         let postDefinition = ContentDefinition(
             id: "post",
@@ -359,9 +362,10 @@ struct DateFormatterTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: [Pipeline.Mocks.html()],
             contents: [postContent],
             blockDirectives: [],

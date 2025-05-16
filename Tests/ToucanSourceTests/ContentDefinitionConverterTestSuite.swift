@@ -19,13 +19,13 @@ struct ContentDefinitionConverterTestSuite {
     @Test()
     func contentDefinitionConverter() async throws {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
         let now = Date()
@@ -82,13 +82,13 @@ struct ContentDefinitionConverterTestSuite {
     @Test()
     func contentDefinitionConverter_InvalidValue() async throws {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
         let now = Date()
@@ -130,13 +130,13 @@ struct ContentDefinitionConverterTestSuite {
     func contentDefinitionConverter_InvalidValueWithDefaultValue() async throws
     {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
         let now = Date()
@@ -180,13 +180,13 @@ struct ContentDefinitionConverterTestSuite {
         let logging = Logger.inMemory(
             label: "ContentDefinitionConverterTestSuite"
         )
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
         let now = Date()

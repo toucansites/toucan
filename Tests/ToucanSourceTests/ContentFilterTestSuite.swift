@@ -185,13 +185,13 @@ struct ContentFilterTestSuite {
         let logger = Logger.inMemory(
             label: "ContentFilterTestSuite"
         )
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
 
@@ -284,13 +284,13 @@ struct ContentFilterTestSuite {
         let logger = Logger.inMemory(
             label: "ContentFilterTestSuite"
         )
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
 

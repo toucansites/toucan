@@ -197,7 +197,7 @@ struct SourceLoader {
 
             let contentDefinitionConverter = ContentDefinitionConverter(
                 contentDefinition: contentDefinition,
-                dateFormatter: settings.dateFormatter(config.dateFormats.input),
+                dateFormatter: target.dateFormatter(config.dateFormats.input),
                 logger: logger
             )
 
@@ -220,6 +220,7 @@ struct SourceLoader {
 
         return .init(
             location: sourceUrl,
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
             settings: settings,

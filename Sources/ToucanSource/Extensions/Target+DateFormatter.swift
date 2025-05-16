@@ -1,5 +1,5 @@
 //
-//  Settings+DateFormatter.swift
+//  Target+DateFormatter.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 26..
@@ -8,7 +8,7 @@
 import Foundation
 import ToucanModels
 
-public extension Settings {
+public extension Target {
 
     func dateFormatter(_ dateFormat: LocalizedDateFormat) -> DateFormatter {
         let formatter = DateFormatter.default

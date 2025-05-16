@@ -20,13 +20,13 @@ struct SourceBundleContextTestSuite {
     @Test(.disabled("Disable for now to speed up generation process"))
     func isCurrentUrl() throws {
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
         let now = Date()
@@ -112,11 +112,13 @@ struct SourceBundleContextTestSuite {
             "sitemap": Templates.Mocks.sitemap()
         ]
 
+        
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
@@ -195,16 +197,16 @@ struct SourceBundleContextTestSuite {
     @Test()
     func generatorMetadata() async throws {
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
-        let isoFormatter = settings.dateFormatter(
+        let isoFormatter = target.dateFormatter(
             "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         )
         let now = Date()
@@ -265,9 +267,10 @@ struct SourceBundleContextTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

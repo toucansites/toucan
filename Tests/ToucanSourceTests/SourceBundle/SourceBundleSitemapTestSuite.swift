@@ -20,16 +20,16 @@ struct SourceBundleSitemapTestSuite {
     func sitemap() throws {
         let logger = Logger(label: "SourceBundleSitemapTestSuite")
         let now = Date()
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
-        let sitemapFormatter = settings.dateFormatter("Y-MM-dd")
+        let sitemapFormatter = target.dateFormatter("Y-MM-dd")
         let nowString = sitemapFormatter.string(from: now)
 
         let pipelines = [
@@ -94,9 +94,10 @@ struct SourceBundleSitemapTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],
@@ -150,16 +151,16 @@ struct SourceBundleSitemapTestSuite {
     func sitemapWithPagination() throws {
         let logger = Logger(label: "SourceBundleSitemapTestSuite")
         let now = Date()
-        let settings = Settings.defaults
+        let target = Target.default
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
             config: config
         )
-        let formatter = settings.dateFormatter(
+        let formatter = target.dateFormatter(
             sourceConfig.config.dateFormats.input
         )
-        let sitemapFormatter = settings.dateFormatter("Y-MM-dd")
+        let sitemapFormatter = target.dateFormatter("Y-MM-dd")
         let nowString = sitemapFormatter.string(from: now)
 
         let pipelines = [
@@ -227,9 +228,10 @@ struct SourceBundleSitemapTestSuite {
 
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
+            target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: settings,
+            settings: .init(userDefined: [:]),
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

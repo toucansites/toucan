@@ -15,10 +15,7 @@ struct SettingsDecodingTestSuite {
     @Test
     func full() throws {
         let data = """
-            baseUrl: "lorem1"
             name: "lorem2"
-            locale: "lorem3"
-            timeZone: "lorem4"
             foo:
                 bar: baz
             """
@@ -31,21 +28,16 @@ struct SettingsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.baseUrl == "lorem1")
-        #expect(result.name == "lorem2")
-        #expect(result.locale == "lorem3")
-        #expect(result.timeZone == "lorem4")
         let foo = try #require(
             result.userDefined["foo"]?.value as? [String: AnyCodable]
         )
         #expect(foo["bar"] == "baz")
-        #expect(result.userDefined["name"] == nil)
+        #expect(result.userDefined["name"] == "lorem2")
     }
 
     @Test
     func defaults() throws {
         let data = """
-            baseUrl: https://toucansites.com/
             """
             .dataValue()
 
@@ -56,10 +48,6 @@ struct SettingsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.baseUrl == "https://toucansites.com")
-        #expect(result.name == "localhost")
-        #expect(result.locale == "en-US")
-        #expect(result.timeZone == "UTC")
         #expect(result.userDefined.isEmpty)
     }
 }

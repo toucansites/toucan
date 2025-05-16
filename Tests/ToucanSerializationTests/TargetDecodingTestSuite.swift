@@ -63,8 +63,8 @@ struct TargetDecodingTestSuite {
         #expect(result.name == "dev")
         #expect(result.config == "")
         #expect(result.url == "http://localhost:3000")
-        #expect(result.locale == nil)
-        #expect(result.timeZone == nil)
+        #expect(result.locale == "en-US")
+        #expect(result.timeZone == "UTC")
         #expect(result.output == "docs")
         #expect(result.isDefault == false)
     }

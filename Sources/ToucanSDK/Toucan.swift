@@ -131,8 +131,8 @@ public struct Toucan {
                     metadata: [
                         "target.name": "\(target.name)",
                         "target.config": "\(target.config)",
-                        "target.locale": "\(target.locale ?? "nil")",
-                        "target.timeZone": "\(target.timeZone ?? "nil")",
+                        "target.locale": "\(target.locale)",
+                        "target.timeZone": "\(target.timeZone)",
                         "target.default": "\(target.isDefault)",
                         "target.output": "\(target.output)",
                     ]
@@ -156,8 +156,8 @@ public struct Toucan {
                 /// Validate site locale
                 validate(
                     .init(
-                        locale: sourceBundle.settings.locale,
-                        timeZone: sourceBundle.settings.timeZone,
+                        locale: target.locale,
+                        timeZone: target.timeZone,
                         format: ""
                     )
                 )

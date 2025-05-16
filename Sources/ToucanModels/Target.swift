@@ -29,14 +29,14 @@ public struct Target: Codable, Equatable {
     /// The path to the configuration file.
     public var config: String
 
-    /// The base URL for the target.
+    /// The base URL of the site or project (e.g., `"https://example.com"`).
     public var url: String
 
-    /// The locale identifier for the target (e.g., "en-US").
-    public var locale: String?
+    /// The locale identifier used for date/time formatting and content localization (e.g., `"en-US"`).
+    public var locale: String
 
-    /// The time zone identifier (e.g., "Europe/Budapest").
-    public var timeZone: String?
+    /// The time zone used for formatting timestamps (e.g., `"UTC"`, `"Europe/Berlin"`).
+    public var timeZone: String
 
     /// The output path for generated files.
     public var output: String
@@ -59,8 +59,8 @@ public struct Target: Codable, Equatable {
             name: "dev",
             config: "",
             url: "http://localhost:3000",
-            locale: nil,
-            timeZone: nil,
+            locale: "en-US",
+            timeZone: "UTC",
             output: "docs",
             isDefault: false
         )
@@ -81,8 +81,8 @@ public struct Target: Codable, Equatable {
         name: String,
         config: String,
         url: String,
-        locale: String?,
-        timeZone: String?,
+        locale: String,
+        timeZone: String,
         output: String,
         isDefault: Bool
     ) {

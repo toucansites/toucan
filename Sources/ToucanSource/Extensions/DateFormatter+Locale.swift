@@ -17,9 +17,9 @@ extension DateFormatter {
         return formatter
     }
 
-    func config(with settings: Settings) {
-        locale = .init(identifier: settings.locale)
-        if let value = TimeZone(identifier: settings.timeZone) {
+    func config(with target: Target) {
+        locale = .init(identifier: target.locale)
+        if let value = TimeZone(identifier: target.timeZone) {
             timeZone = value
         }
     }
