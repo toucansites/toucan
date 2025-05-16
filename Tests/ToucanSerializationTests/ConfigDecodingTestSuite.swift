@@ -85,7 +85,12 @@ struct ConfigDecodingTestSuite {
     func encoding() throws {
 
         let encoder = ToucanYAMLEncoder()
-        let config = Config.defaults
+        var config = Config.defaults
+        config.renderer.paragraphStyles = .init(
+            styles: [
+                "note": ["note"]
+            ]
+        )
 
         let yaml = try encoder.encode(config)
 
@@ -126,16 +131,6 @@ struct ConfigDecodingTestSuite {
               paragraphStyles:
                 note:
                 - note
-                warn:
-                - warn
-                - warning
-                tip:
-                - tip
-                important:
-                - important
-                error:
-                - error
-                - caution
             """
 
         let trimmedYaml = yaml.trimmingCharacters(

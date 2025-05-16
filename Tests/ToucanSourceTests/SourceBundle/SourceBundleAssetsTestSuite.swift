@@ -380,7 +380,7 @@ struct SourceBundleAssetsTestSuite {
     ) -> SourceBundleRenderer {
 
         let logger = Logger(label: "SourceBundleAssetsTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -402,7 +402,7 @@ struct SourceBundleAssetsTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: pageContents,
             blockDirectives: [],

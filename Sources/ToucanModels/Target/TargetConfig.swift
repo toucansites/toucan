@@ -18,43 +18,50 @@ public struct TargetConfig: Codable, Equatable {
     // MARK: - Properties
 
     /// All defined targets.
-    public var all: [Target]
+    public var targets: [Target]
 
     /// The default target (first one with `isDefault == true`, or first in the list, or fallback).
     public var `default`: Target {
-        all.first(where: { $0.isDefault }) ?? all[0]
+        targets.first(where: { $0.isDefault }) ?? targets[0]
     }
 
     // MARK: - Defaults
 
     /// Default values used when decoding fails or fields are missing.
-    public static var defaults: Self {
-        .init(all: [Target.default])
+    private static var base: Self {
+        .init(targets: [Target.standard])
     }
 
     // MARK: - Initialization
 
     /// Creates a new `Targets` object.
-    /// - Parameter all: An array of deployment targets.
+    /// - Parameter targets: An array of deployment targets.
     /// - Precondition: Only one target may have `isDefault == true`.
-    public init(all: [Target]) {
-        let defaultCount = all.filter(\.isDefault).count
+    public init(
+        targets: [Target]
+    ) {
+        let defaultCount = targets.filter(\.isDefault).count
         precondition(
             defaultCount <= 1,
             "Only one target can be marked as default."
         )
 
-        var all = all
+        var all = targets
         if !all.isEmpty, defaultCount == 0 {
             all[0].isDefault = true
         }
-        self.all = all.isEmpty ? Self.defaults.all : all
+        self.targets = all.isEmpty ? Self.base.targets : all
     }
 
     // MARK: - Decoding Logic
 
     /// Custom decoder with fallback values and default validation.
-    public init(from decoder: any Decoder) throws {
+    ///
+    /// - Parameter decoder: The decoer used to decode values.
+    /// - Throws: An error if any values are invalid for the given encoder’s format.
+    public init(
+        from decoder: any Decoder
+    ) throws {
         let container = try? decoder.container(keyedBy: CodingKeys.self)
         let all =
             try container?
@@ -73,15 +80,17 @@ public struct TargetConfig: Codable, Equatable {
                 )
             )
         }
-        self.init(all: all)
+        self.init(targets: all)
     }
 
     /// Encodes this instance into the given encoder.
     ///
     /// - Parameter encoder: The encoder to write data to.
     /// - Throws: An error if any values are invalid for the given encoder’s format.
-    public func encode(to encoder: any Encoder) throws {
+    public func encode(
+        to encoder: any Encoder
+    ) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(all, forKey: .targets)
+        try container.encode(targets, forKey: .targets)
     }
 }

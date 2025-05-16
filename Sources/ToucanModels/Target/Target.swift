@@ -46,15 +46,15 @@ public struct Target: Codable, Equatable {
 
     // MARK: - Defaults
 
-    /// Default values used when decoding fails or fields are missing.
-    public static var `default`: Self {
-        var target = Self.defaults
+    /// Standard target value
+    public static var standard: Self {
+        var target = Self.base
         target.isDefault = true
         return target
     }
 
-    /// Default values used when decoding fails or fields are missing.
-    public static var `defaults`: Self {
+    /// Base values used when decoding fails or fields are missing.
+    private static var base: Self {
         .init(
             name: "dev",
             config: "",
@@ -98,45 +98,49 @@ public struct Target: Codable, Equatable {
     // MARK: - Decoding Logic
 
     /// Custom decoder with fallback values.
-    public init(from decoder: any Decoder) throws {
-        let defaults = Self.defaults
+    public init(
+        from decoder: any Decoder
+    ) throws {
+        let base = Self.base
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         self.name =
             try container.decodeIfPresent(String.self, forKey: .name)
-            ?? defaults.name
+            ?? base.name
 
         self.config =
             try container.decodeIfPresent(String.self, forKey: .config)
-            ?? defaults.config
+            ?? base.config
 
         self.url =
             try container.decodeIfPresent(String.self, forKey: .url)
-            ?? defaults.url
+            ?? base.url
 
         self.locale =
             try container.decodeIfPresent(String.self, forKey: .locale)
-            ?? defaults.locale
+            ?? base.locale
 
         self.timeZone =
             try container.decodeIfPresent(String.self, forKey: .timeZone)
-            ?? defaults.timeZone
+            ?? base.timeZone
 
         self.output =
             try container.decodeIfPresent(String.self, forKey: .output)
-            ?? defaults.output
+            ?? base.output
 
         self.isDefault =
             try container.decodeIfPresent(Bool.self, forKey: .default)
-            ?? defaults.isDefault
+            ?? base.isDefault
     }
 
     /// Encodes this instance into the given encoder.
     ///
     /// - Parameter encoder: The encoder to write data to.
     /// - Throws: An error if any values are invalid for the given encoder’s format.
-    public func encode(to encoder: any Encoder) throws {
+    public func encode(
+        to encoder: any Encoder
+    ) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         try container.encode(name, forKey: .name)

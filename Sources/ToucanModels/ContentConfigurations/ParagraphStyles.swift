@@ -8,101 +8,64 @@
 /// Defines paragraph style aliases for block-level directives
 public struct ParagraphStyles: Codable, Equatable {
 
-    // MARK: - Coding Keys
-
-    private enum CodingKeys: CodingKey {
-        case note
-        case warn
-        case tip
-        case important
-        case error
-    }
-
     // MARK: - Properties
 
-    /// Aliases for informational notes
-    public var note: [String]
-
-    /// Aliases for warnings
-    public var warn: [String]
-
-    /// Aliases for tips
-    public var tip: [String]
-
-    /// Aliases for important information
-    public var important: [String]
-
-    /// Aliases for error messages or cautionary content
-    public var error: [String]
+    /// A dictionary mapping style group names to arrays of individual paragraph styles.
+    public var styles: [String: [String]]
 
     // MARK: - Defaults
 
     /// Returns a standard `ParagraphStyles` configuration with common alias values.
     public static var defaults: Self {
         .init(
-            note: ["note"],
-            warn: ["warn", "warning"],
-            tip: ["tip"],
-            important: ["important"],
-            error: ["error", "caution"]
+            styles: [
+                "note": ["note"],
+                "warning": ["warn", "warning"],
+                "tip": ["tip"],
+                "important": ["important"],
+                "error": ["error", "caution"],
+            ]
         )
     }
 
     // MARK: - Initialization
 
-    /// Initializes a `ParagraphStyles` object with custom alias mappings.
+    /// Initializes a new object with custom style mappings.
     ///
-    /// - Parameters:
-    ///   - note: Aliases for the "note" style.
-    ///   - warn: Aliases for the "warn" style.
-    ///   - tip: Aliases for the "tip" style.
-    ///   - important: Aliases for the "important" style.
-    ///   - error: Aliases for the "error" style.
+    /// - Parameter styles: A style group representing the paragraph styles.
     public init(
-        note: [String],
-        warn: [String],
-        tip: [String],
-        important: [String],
-        error: [String]
+        styles: [String: [String]],
     ) {
-        self.note = note
-        self.warn = warn
-        self.tip = tip
-        self.important = important
-        self.error = error
+        self.styles = styles
     }
 
-    // MARK: - Decoding
+    /// Initializes a new instance by decoding from the given decoder.
+    ///
+    /// - Parameter decoder: The decoder to read data from.
+    /// - Throws: Only throws if the underlying decoding attempt throws unexpectedly;
+    ///           otherwise silently falls back to defaults.
+    public init(
+        from decoder: Decoder
+    ) throws {
+        guard
+            let container = try? decoder.singleValueContainer(),
+            let styles = try? container.decode([String: [String]].self)
+        else {
+            self.styles = Self.defaults.styles
+            return
+        }
+        self.styles = styles
 
-    /// Decodes a `ParagraphStyles` configuration from input,
-    /// with missing fields defaulting to empty arrays.
-    public init(from decoder: any Decoder) throws {
-        let defaults = Self.defaults
+    }
 
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        let note =
-            try container.decodeIfPresent([String].self, forKey: .note)
-            ?? defaults.note
-        let warn =
-            try container.decodeIfPresent([String].self, forKey: .warn)
-            ?? defaults.warn
-        let tip =
-            try container.decodeIfPresent([String].self, forKey: .tip)
-            ?? defaults.tip
-        let important =
-            try container.decodeIfPresent([String].self, forKey: .important)
-            ?? defaults.important
-        let error =
-            try container.decodeIfPresent([String].self, forKey: .error)
-            ?? defaults.error
-
-        self.init(
-            note: note,
-            warn: warn,
-            tip: tip,
-            important: important,
-            error: error
-        )
+    /// Encodes this  instance into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if any value is invalid for the given encoder’s format.
+    public func encode(
+        to encoder: Encoder
+    ) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(styles)
     }
 }

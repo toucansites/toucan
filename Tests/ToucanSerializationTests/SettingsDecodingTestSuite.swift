@@ -29,10 +29,10 @@ struct SettingsDecodingTestSuite {
         )
 
         let foo = try #require(
-            result.userDefined["foo"]?.value as? [String: AnyCodable]
+            result.values["foo"]?.value as? [String: AnyCodable]
         )
         #expect(foo["bar"] == "baz")
-        #expect(result.userDefined["name"] == "lorem2")
+        #expect(result.values["name"] == "lorem2")
     }
 
     @Test
@@ -48,6 +48,6 @@ struct SettingsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.userDefined.isEmpty)
+        #expect(result.values.isEmpty)
     }
 }

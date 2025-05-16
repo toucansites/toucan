@@ -19,7 +19,7 @@ struct SourceBundleRedirectTestSuite {
     @Test
     func redirect() throws {
         let logger = Logger(label: "SourceBundleRedirectTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -70,7 +70,7 @@ struct SourceBundleRedirectTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,

@@ -11,11 +11,6 @@ import ToucanModels
 /// A structured filesystem accessor for locating various types of files used in the Toucan content pipeline.
 public struct ToucanFileSystem {
 
-    // MARK: - File Locators
-
-    /// Locates site settings files, commonly named `"site.yml"` or `"site.yaml"`.
-    public let settingsLocator: FileLocator
-
     /// Locates static assets like images, JS, or CSS files under the project directory.
     public let assetLocator: AssetLocator
 
@@ -37,11 +32,6 @@ public struct ToucanFileSystem {
     ///
     /// - Parameter fileManager: A file manager abstraction used by each internal locator.
     public init(fileManager: FileManagerKit) {
-        self.settingsLocator = FileLocator(
-            fileManager: fileManager,
-            name: "site",
-            extensions: ["yml", "yaml"]
-        )
         self.assetLocator = AssetLocator(fileManager: fileManager)
         self.pipelineLocator = FileLocator(
             fileManager: fileManager,
@@ -51,7 +41,11 @@ public struct ToucanFileSystem {
             fileManager: fileManager,
             extensions: ["yml", "yaml"]
         )
-        self.rawContentLocator = RawContentLocator(fileManager: fileManager)
-        self.templateLocator = TemplateLocator(fileManager: fileManager)
+        self.rawContentLocator = RawContentLocator(
+            fileManager: fileManager
+        )
+        self.templateLocator = TemplateLocator(
+            fileManager: fileManager
+        )
     }
 }

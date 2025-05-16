@@ -50,7 +50,7 @@ struct AssetPropertyResolver {
                         .resolveAsset(
                             baseUrl: baseUrl,
                             assetsPath: assetsPath,
-                            slug: content.slug
+                            slug: content.slug.value
                         )
                 }
 

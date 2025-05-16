@@ -6,7 +6,6 @@
 //
 
 import Markdown
-import ToucanModels
 import Logging
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
@@ -32,17 +31,17 @@ struct HTMLVisitor: MarkupVisitor {
     typealias Result = String
 
     var customBlockDirectives: [MarkdownBlockDirective]
-    var paragraphStyles: ParagraphStyles
+    var paragraphStyles: [String: [String]]
     var logger: Logger
-    var slug: Slug
+    var slug: String
     var assetsPath: String
     var baseUrl: String
 
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
-        paragraphStyles: ParagraphStyles,
+        paragraphStyles: [String: [String]],
         logger: Logger = .init(label: "HTMLVisitor"),
-        slug: Slug,
+        slug: String,
         assetsPath: String,
         baseUrl: String
     ) {
@@ -179,14 +178,6 @@ struct HTMLVisitor: MarkupVisitor {
         var paragraphCount = 0
         var otherCount = 0
 
-        let types: [String: [String]] = [
-            "note": paragraphStyles.note,
-            "warning": paragraphStyles.warn,
-            "tip": paragraphStyles.tip,
-            "important": paragraphStyles.important,
-            "error": paragraphStyles.error,
-        ]
-
         var type: String?
         var dropCount = 0
 
@@ -195,9 +186,9 @@ struct HTMLVisitor: MarkupVisitor {
                 paragraphCount += 1
                 let text = p.plainText.lowercased()
 
-                typeLoop: for (typeValue, prefixes) in types {
+                typeLoop: for (typeValue, prefixes) in paragraphStyles {
                     for prefix in prefixes {
-                        let fullPrefix = "\(prefix): "
+                        let fullPrefix = "\(prefix): ".lowercased()
                         if text.hasPrefix(fullPrefix) {
                             type = typeValue
                             dropCount = fullPrefix.count

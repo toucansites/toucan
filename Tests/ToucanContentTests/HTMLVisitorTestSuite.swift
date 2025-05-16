@@ -25,9 +25,9 @@ struct HTMLVisitorTestSuite {
 
         var visitor = HTMLVisitor(
             blockDirectives: [],
-            paragraphStyles: ParagraphStyles.defaults,
+            paragraphStyles: ParagraphStyles.defaults.styles,
             logger: logger,
-            slug: .init(value: "slug"),
+            slug: "slug",
             assetsPath: "assets",
             baseUrl: baseUrl
         )

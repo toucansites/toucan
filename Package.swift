@@ -101,33 +101,33 @@ let package = Package(
         ),
         // MARK: - regular targets
         .target(
-            name: "ToucanSDK",
-            dependencies: [
-                .product(name: "Markdown", package: "swift-markdown"),
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "FileManagerKit", package: "file-manager-kit"),
-                .product(name: "Mustache", package: "swift-mustache"),
-                .product(name: "SwiftSoup", package: "SwiftSoup"),
-                .product(name: "Yams", package: "yams"),
-                .target(name: "ToucanFileSystem"),
-                .target(name: "ToucanSource"),
-                .target(name: "ToucanTesting"),
-            ],
+            name: "ToucanInfo",
             swiftSettings: swiftSettings
         ),
         .target(
             name: "ToucanModels",
+            swiftSettings: swiftSettings
+        ),
+        .target(
+            name: "ToucanContent",
             dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                // for outline
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+                // for markdown to html
+                .product(name: "Markdown", package: "swift-markdown"),
+                // for transformers
+                .product(name: "SwiftCommand", package: "SwiftCommand"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
             ],
             swiftSettings: swiftSettings
         ),
         .target(
             name: "ToucanFileSystem",
             dependencies: [
-                .target(name: "ToucanModels"),
-                .target(name: "ToucanContent"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .target(name: "ToucanModels"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -153,18 +153,19 @@ let package = Package(
             ],
             swiftSettings: swiftSettings
         ),
+        
         .target(
-            name: "ToucanContent",
+            name: "ToucanSDK",
             dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                // for outline
-                .product(name: "SwiftSoup", package: "SwiftSoup"),
-                // for markdown to html
                 .product(name: "Markdown", package: "swift-markdown"),
-                // for transformers
-                .product(name: "SwiftCommand", package: "SwiftCommand"),
-                .target(name: "ToucanModels"),
+                .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .product(name: "Mustache", package: "swift-mustache"),
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+                .product(name: "Yams", package: "yams"),
+                .target(name: "ToucanFileSystem"),
+                .target(name: "ToucanSource"),
+                .target(name: "ToucanTesting"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -176,12 +177,7 @@ let package = Package(
             ],
             swiftSettings: swiftSettings
         ),
-        .target(
-            name: "ToucanInfo",
-            dependencies: [
-            ],
-            swiftSettings: swiftSettings
-        ),
+        
         // MARK: - test targets
         .testTarget(
             name: "ToucanSDKTests",

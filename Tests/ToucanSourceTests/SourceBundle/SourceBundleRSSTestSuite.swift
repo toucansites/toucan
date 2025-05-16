@@ -20,7 +20,7 @@ struct SourceBundleRSSTestSuite {
     func rss() throws {
         let logger = Logger(label: "SourceBundleRSSTestSuite")
         let now = Date()
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -76,7 +76,7 @@ struct SourceBundleRSSTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,

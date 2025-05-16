@@ -20,7 +20,7 @@ struct SourceBundleContextTestSuite {
     @Test(.disabled("Disable for now to speed up generation process"))
     func isCurrentUrl() throws {
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -112,13 +112,12 @@ struct SourceBundleContextTestSuite {
             "sitemap": Templates.Mocks.sitemap()
         ]
 
-        
         let sourceBundle = SourceBundle(
             location: .init(filePath: ""),
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
@@ -197,7 +196,7 @@ struct SourceBundleContextTestSuite {
     @Test()
     func generatorMetadata() async throws {
         let logger = Logger(label: "SourceBundleContextTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -270,7 +269,7 @@ struct SourceBundleContextTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

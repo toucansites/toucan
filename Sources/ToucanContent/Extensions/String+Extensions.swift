@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import ToucanModels
-import Markdown
 
 public extension String {
 
@@ -57,7 +55,7 @@ public extension String {
     func resolveAsset(
         baseUrl: String,
         assetsPath: String,
-        slug: Slug
+        slug: String
     ) -> String {
         if baseUrl.isEmpty || assetsPath.isEmpty {
             return self
@@ -90,7 +88,7 @@ public extension String {
 
         return [
             "\(baseUrl)\(baseUrl.suffixForPath())\(assetsPath)",
-            slug.value,
+            slug,
             src,
         ]
         .filter { !$0.isEmpty }.joined(separator: "/")

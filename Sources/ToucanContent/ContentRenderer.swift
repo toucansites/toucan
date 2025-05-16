@@ -70,7 +70,7 @@ public struct ContentRenderer {
         public var transformerPipeline: TransformerPipeline?
 
         /// Paragraph styles for customizing the HTML rendering.
-        public var paragraphStyles: ParagraphStyles
+        public var paragraphStyles: [String: [String]]
 
         /// Initializes a new rendering configuration.
         ///
@@ -85,7 +85,7 @@ public struct ContentRenderer {
             outline: Outline,
             readingTime: ReadingTime,
             transformerPipeline: TransformerPipeline?,
-            paragraphStyles: ParagraphStyles
+            paragraphStyles: [String: [String]]
         ) {
             self.markdown = markdown
             self.outline = outline

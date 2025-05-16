@@ -37,10 +37,10 @@ struct TargetsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.all.count == 2)
+        #expect(result.targets.count == 2)
         #expect(result.default.name == "dev")
         #expect(result.default.isDefault == true)
-        #expect(result.all[1].name == "live")
+        #expect(result.targets[1].name == "live")
     }
 
     @Test
@@ -59,7 +59,7 @@ struct TargetsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.all.count == 2)
+        #expect(result.targets.count == 2)
         #expect(result.default.name == "fallback")
         #expect(result.default.isDefault == true)
     }
@@ -78,7 +78,7 @@ struct TargetsDecodingTestSuite {
             from: data
         )
 
-        #expect(result.all.count == 1)
+        #expect(result.targets.count == 1)
         #expect(result.default.name == "dev")
     }
 
@@ -96,7 +96,7 @@ struct TargetsDecodingTestSuite {
 
         let result = try decoder.decode(TargetConfig.self, from: data)
 
-        #expect(result.all.count == 2)
+        #expect(result.targets.count == 2)
         #expect(result.default.name == "one")
     }
 
@@ -113,7 +113,7 @@ struct TargetsDecodingTestSuite {
 
         let result = try decoder.decode(TargetConfig.self, from: data)
 
-        #expect(result.all.count == 2)
+        #expect(result.targets.count == 2)
         #expect(result.default.name == "alpha")
         #expect(result.default.isDefault == true)
     }
@@ -146,8 +146,8 @@ struct TargetsDecodingTestSuite {
 
         let result = try decoder.decode(TargetConfig.self, from: data)
 
-        #expect(!result.all.isEmpty)
-        #expect(result.default == Target.default)
+        #expect(!result.targets.isEmpty)
+        #expect(result.default == Target.standard)
     }
 
     @Test
@@ -161,7 +161,7 @@ struct TargetsDecodingTestSuite {
 
         let result = try decoder.decode(TargetConfig.self, from: data)
 
-        #expect(result.all.count == 1)
+        #expect(result.targets.count == 1)
         #expect(result.default.name == "dev")
     }
 }

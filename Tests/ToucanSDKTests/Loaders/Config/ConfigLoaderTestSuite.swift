@@ -138,11 +138,17 @@ struct ConfigLoaderTestSuite {
                             wordsPerMinute: 240,
                             outlineLevels: [3, 4],
                             paragraphStyles: .init(
-                                note: ["noteNotDefault"],
-                                warn: ["warnNotDefault", "warningNotDefault"],
-                                tip: ["tipNotDefault"],
-                                important: ["importantNotDefault"],
-                                error: ["errorNotDefault", "cautionNotDefault"]
+                                styles: [
+                                    "note": ["noteNotDefault"],
+                                    "warn": [
+                                        "warnNotDefault", "warningNotDefault",
+                                    ],
+                                    "tip": ["tipNotDefault"],
+                                    "important": ["importantNotDefault"],
+                                    "error": [
+                                        "errorNotDefault", "cautionNotDefault",
+                                    ],
+                                ]
                             )
                         )
                     )

@@ -70,4 +70,5 @@ public struct YAMLLoader {
         }
         return try decoder.decode(T.self, from: data)
     }
+
 }

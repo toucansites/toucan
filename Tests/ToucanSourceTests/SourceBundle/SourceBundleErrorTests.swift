@@ -19,7 +19,7 @@ struct SourceBundleErrorTests {
     @Test()
     func testWrongRendererEngine() async throws {
         let logger = Logger(label: "SourceBundleErrorTests")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -69,7 +69,7 @@ struct SourceBundleErrorTests {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: [],

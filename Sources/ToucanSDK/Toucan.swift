@@ -106,7 +106,7 @@ public struct Toucan {
 
     func getActiveBuildTargets(_ targets: TargetConfig) -> [Target] {
         // TODO: support --targets flag
-        var buildTargets = targets.all.filter {
+        var buildTargets = targets.targets.filter {
             targetsToBuild.contains($0.name)
         }
         if buildTargets.isEmpty {

@@ -19,7 +19,7 @@ struct ContentDefinitionConverterTestSuite {
     @Test()
     func contentDefinitionConverter() async throws {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -82,7 +82,7 @@ struct ContentDefinitionConverterTestSuite {
     @Test()
     func contentDefinitionConverter_InvalidValue() async throws {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -130,7 +130,7 @@ struct ContentDefinitionConverterTestSuite {
     func contentDefinitionConverter_InvalidValueWithDefaultValue() async throws
     {
         let logger = Logger(label: "ContentDefinitionConverterTestSuite")
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -180,7 +180,7 @@ struct ContentDefinitionConverterTestSuite {
         let logging = Logger.inMemory(
             label: "ContentDefinitionConverterTestSuite"
         )
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),

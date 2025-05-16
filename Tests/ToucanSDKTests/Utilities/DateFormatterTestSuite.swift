@@ -18,7 +18,7 @@ struct DateFormatterTestSuite {
 
     @Test
     func locale_DE_Formatter() throws {
-        var target = Target.default
+        var target = Target.standard
         target.locale = "de-DE"
 
         let sourceBundle = SourceBundle(
@@ -29,7 +29,7 @@ struct DateFormatterTestSuite {
                 sourceUrl: .init(fileURLWithPath: ""),
                 config: .defaults
             ),
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: [],
             contents: [],
             blockDirectives: [],
@@ -51,7 +51,7 @@ struct DateFormatterTestSuite {
         let now = Date()
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
-        var target = Target.default
+        var target = Target.standard
         target.locale = "de-DE"
 
         let sourceConfig = SourceConfig(
@@ -114,7 +114,7 @@ struct DateFormatterTestSuite {
             target: target,
             config: sourceConfig.config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: [Pipeline.Mocks.html()],
             contents: [postContent],
             blockDirectives: [],
@@ -159,7 +159,7 @@ struct DateFormatterTestSuite {
         let now = Date()
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
-        var target = Target.default
+        var target = Target.standard
         target.locale = "de-DE"
 
         var config = Config.defaults
@@ -242,7 +242,7 @@ struct DateFormatterTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: [Pipeline.Mocks.html()],
             contents: [postContent],
             blockDirectives: [],
@@ -286,7 +286,7 @@ struct DateFormatterTestSuite {
         let now = Date()
         let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
 
-        var target = Target.default
+        var target = Target.standard
         target.locale = "de-DE"
 
         var config = Config.defaults
@@ -365,7 +365,7 @@ struct DateFormatterTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: [Pipeline.Mocks.html()],
             contents: [postContent],
             blockDirectives: [],

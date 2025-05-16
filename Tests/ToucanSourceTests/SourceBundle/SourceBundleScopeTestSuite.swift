@@ -21,7 +21,7 @@ struct SourceBundleScopeTestSuite {
         let logger = Logger(label: "SourceBundleScopeTestSuite")
         let now = Date()
 
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -142,7 +142,7 @@ struct SourceBundleScopeTestSuite {
             target: target,
             config: config,
             sourceConfig: sourceConfig,
-            settings: .init(userDefined: [:]),
+            settings: .standard,
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,

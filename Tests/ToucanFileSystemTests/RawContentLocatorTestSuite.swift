@@ -11,6 +11,20 @@ import FileManagerKitTesting
 @testable import ToucanFileSystem
 import ToucanModels
 
+// TODO: fix this duplication
+
+extension String {
+    func replacingOccurrences(
+        _ dictionary: [String: String]
+    ) -> String {
+        var result = self
+        for (key, value) in dictionary {
+            result = result.replacingOccurrences(of: key, with: value)
+        }
+        return result
+    }
+}
+
 @Suite
 struct RawContentLocatorTestSuite {
 

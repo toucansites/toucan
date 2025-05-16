@@ -19,7 +19,7 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.faq()
             ],
-            paragraphStyles: ParagraphStyles.defaults
+            paragraphStyles: ParagraphStyles.defaults.styles
         )
 
         let input = #"""
@@ -57,7 +57,7 @@ struct MarkdownBlockDirectiveTestSuite {
                     output: #"<div class="faq">{{contents}}</div>"#
                 )
             ],
-            paragraphStyles: ParagraphStyles.defaults
+            paragraphStyles: ParagraphStyles.defaults.styles
         )
 
         let input = #"""
@@ -103,7 +103,7 @@ struct MarkdownBlockDirectiveTestSuite {
                     output: nil
                 )
             ],
-            paragraphStyles: ParagraphStyles.defaults
+            paragraphStyles: ParagraphStyles.defaults.styles
         )
 
         let input = #"""
@@ -148,7 +148,7 @@ struct MarkdownBlockDirectiveTestSuite {
                         #"<div columns="grid-{{columns}}">{{contents}}</div>"#
                 )
             ],
-            paragraphStyles: ParagraphStyles.defaults
+            paragraphStyles: ParagraphStyles.defaults.styles
         )
 
         let input = #"""
@@ -179,7 +179,7 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.faq()
             ],
-            paragraphStyles: ParagraphStyles.defaults,
+            paragraphStyles: ParagraphStyles.defaults.styles,
             logger: logging.logger
         )
 
@@ -214,7 +214,7 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.badDirective()
             ],
-            paragraphStyles: ParagraphStyles.defaults,
+            paragraphStyles: ParagraphStyles.defaults.styles,
             logger: logging.logger
         )
         let input = #"""
@@ -246,7 +246,7 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 MarkdownBlockDirective.Mocks.badDirective()
             ],
-            paragraphStyles: ParagraphStyles.defaults,
+            paragraphStyles: ParagraphStyles.defaults.styles,
             logger: logging.logger
         )
         let input = #"""

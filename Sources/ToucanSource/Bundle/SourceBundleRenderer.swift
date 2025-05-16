@@ -12,8 +12,6 @@ import FileManagerKit
 import Logging
 import ToucanInfo
 
-
-
 /// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
 ///
 /// It processes content pipelines using the configured engine (Mustache, JSON, etc.),
@@ -61,7 +59,7 @@ public struct SourceBundleRenderer {
     private func getSiteContext(
         for now: TimeInterval
     ) -> [String: AnyCodable] {
-        sourceBundle.settings.userDefined.recursivelyMerged(
+        sourceBundle.settings.values.recursivelyMerged(
             with: [
                 "baseUrl": .init(sourceBundle.target.url),
                 "locale": .init(sourceBundle.target.locale),
@@ -442,8 +440,7 @@ public struct SourceBundleRenderer {
                     transformerPipeline: pipeline.transformers[
                         content.definition.id
                     ],
-                    paragraphStyles: sourceBundle.config.renderer
-                        .paragraphStyles
+                    paragraphStyles: [:]  // TODO: fix this
                 ),
 
                 fileManager: fileManager,

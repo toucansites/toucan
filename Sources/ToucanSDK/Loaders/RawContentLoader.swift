@@ -209,7 +209,7 @@ extension RawContentLoader {
                     imageValue.resolveAsset(
                         baseUrl: baseUrl,
                         assetsPath: assetsPath,
-                        slug: slug
+                        slug: slug.value
                     )
                 )
             }

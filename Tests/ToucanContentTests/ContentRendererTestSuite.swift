@@ -31,7 +31,7 @@ struct ContentRendererTestSuite {
                     wordsPerMinute: 238
                 ),
                 transformerPipeline: nil,
-                paragraphStyles: ParagraphStyles.defaults
+                paragraphStyles: ParagraphStyles.defaults.styles
             ),
             fileManager: FileManager.default,
             logger: logger

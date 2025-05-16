@@ -21,7 +21,8 @@ public struct SourceBundle {
     /// The root location of the source on the filesystem.
     /// This usually points to the folder where the source content resides.
     public var location: URL
-    
+
+    /// The target to use to build the site.
     public var target: Target
 
     /// Global configuration for the project, often loaded from `config.yml`.
@@ -55,6 +56,7 @@ public struct SourceBundle {
     ///
     /// - Parameters:
     ///   - location: Filesystem URL of the source root.
+    ///   - target: The target to use to build the site.
     ///   - config: The main configuration for the site/project.
     ///   - sourceConfig: Configuration specific to this source group.
     ///   - settings: Site-level metadata like title, language, etc.

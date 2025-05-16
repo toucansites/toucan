@@ -27,16 +27,7 @@ struct SourceLoader {
 
     let logger: Logger
 
-    /// Loads and processes source content from the specified source URL.
-    /// This function retrieves configuration, settings, content definitions, block directives,
-    /// and raw contents, then transforms them into structured content.
-    ///
-    /// - Returns: A `SourceBundle` containing the loaded and processed data.
-    /// - Throws: An error if any of the loading operations fail.
-    func load() throws -> SourceBundle {
-
-        // MARK: - Config
-
+    private func loadConfig() throws -> Config {
         let configUrl = sourceUrl.appending(
             path: target.config
         )
@@ -53,9 +44,53 @@ struct SourceLoader {
         )
         .load(Config.self)
 
-        // MARK: - Source URLs
+        return config
+    }
 
-        let sourceConfig = SourceConfig(sourceUrl: sourceUrl, config: config)
+    private func loadSettings(
+        at url: URL
+    ) throws -> Settings {
+
+        //        if config.site.settings != nil, settingsLocations.isEmpty {
+        //            logger.warning(
+        //                "Missing `site.yml` file at url: `\(sourceConfig.siteSettingsURL.absoluteString)`"
+        //            )
+        //        }
+
+        let settings = try YAMLLoader(
+            url: url,
+            locations: fileManager.find(
+                name: "site",
+                extensions: ["yaml", "yml"],
+                at: url
+            ),
+            encoder: encoder,
+            decoder: decoder,
+            logger: logger
+        )
+        .load(Settings.self)
+
+        return settings
+    }
+
+    /// Loads and processes source content from the specified source URL.
+    /// This function retrieves configuration, settings, content definitions, block directives,
+    /// and raw contents, then transforms them into structured content.
+    ///
+    /// - Returns: A `SourceBundle` containing the loaded and processed data.
+    /// - Throws: An error if any of the loading operations fail.
+    func load() throws -> SourceBundle {
+
+        let config = try loadConfig()
+
+        let sourceConfig = SourceConfig(
+            sourceUrl: sourceUrl,
+            config: config
+        )
+
+        let settings = try loadSettings(
+            at: sourceConfig.siteSettingsURL
+        )
 
         logger.trace(
             "Types url: `\(sourceConfig.typesUrl.absoluteString)`"
@@ -86,27 +121,6 @@ struct SourceLoader {
         logger.trace(
             "Theme override templates url: `\(sourceConfig.currentThemeOverrideTemplatesUrl.absoluteString)`"
         )
-
-        // MARK: - Settings
-
-        let settingsLocations = fs.settingsLocator.locate(
-            at: sourceConfig.siteSettingsURL
-        )
-        if config.site.settings != nil, settingsLocations.isEmpty {
-            logger.warning(
-                "Missing `site.yml` file at url: `\(sourceConfig.siteSettingsURL.absoluteString)`"
-            )
-        }
-
-        let settingsLoader = SettingsLoader(
-            url: sourceConfig.siteSettingsURL,
-            baseUrl: target.url,
-            locations: settingsLocations,
-            encoder: encoder,
-            decoder: decoder,
-            logger: logger
-        )
-        let settings = try settingsLoader.load()
 
         // MARK: - Pipelines
 

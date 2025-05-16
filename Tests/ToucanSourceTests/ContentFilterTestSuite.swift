@@ -185,7 +185,7 @@ struct ContentFilterTestSuite {
         let logger = Logger.inMemory(
             label: "ContentFilterTestSuite"
         )
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),
@@ -284,7 +284,7 @@ struct ContentFilterTestSuite {
         let logger = Logger.inMemory(
             label: "ContentFilterTestSuite"
         )
-        let target = Target.default
+        let target = Target.standard
         let config = Config.defaults
         let sourceConfig = SourceConfig(
             sourceUrl: .init(fileURLWithPath: ""),

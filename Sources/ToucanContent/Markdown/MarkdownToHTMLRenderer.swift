@@ -16,7 +16,7 @@ public struct MarkdownToHTMLRenderer {
     public let customBlockDirectives: [MarkdownBlockDirective]
 
     /// A collection of paragraph styles.
-    public let paragraphStyles: ParagraphStyles
+    public let paragraphStyles: [String: [String]]
 
     /// Logger instance
     public let logger: Logger
@@ -29,7 +29,7 @@ public struct MarkdownToHTMLRenderer {
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "MarkdownToHTMLRenderer".
     public init(
         customBlockDirectives: [MarkdownBlockDirective] = [],
-        paragraphStyles: ParagraphStyles,
+        paragraphStyles: [String: [String]],
         logger: Logger = .init(label: "MarkdownToHTMLRenderer")
     ) {
         self.customBlockDirectives = customBlockDirectives
@@ -66,7 +66,7 @@ public struct MarkdownToHTMLRenderer {
             blockDirectives: customBlockDirectives,
             paragraphStyles: paragraphStyles,
             logger: logger,
-            slug: slug,
+            slug: slug.value,
             assetsPath: assetsPath,
             baseUrl: baseUrl
         )

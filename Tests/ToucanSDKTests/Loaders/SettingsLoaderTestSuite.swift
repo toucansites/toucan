@@ -35,24 +35,27 @@ struct SettingsLoaderTestSuite {
         }
         .test {
             let url = $1.appending(path: "src/")
-            let loader = SettingsLoader(
+
+            let settings = try YAMLLoader(
                 url: url,
-                baseUrl: nil,
-                locations: [
-                    "site.yml"
-                ],
+                locations: $0.find(
+                    name: "site",
+                    extensions: ["yaml", "yml"],
+                    at: url
+                ),
                 encoder: ToucanYAMLEncoder(),
                 decoder: ToucanYAMLDecoder(),
                 logger: logger
             )
-            let result = try loader.load()
+            .load(Settings.self)
+
             let expectation = Settings(
-                userDefined: [
+                [
                     "baseUrl": "http://localhost:8080/",
                     "name": "Test",
                 ]
             )
-            #expect(result == expectation)
+            #expect(settings == expectation)
         }
     }
 }
