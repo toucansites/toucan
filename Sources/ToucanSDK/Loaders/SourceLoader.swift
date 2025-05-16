@@ -8,6 +8,7 @@
 import Foundation
 import Logging
 import ToucanModels
+import ToucanContent
 import ToucanFileSystem
 import FileManagerKit
 import ToucanSerialization
@@ -30,7 +31,7 @@ struct SourceLoader {
         let configUrl = sourceUrl.appending(
             path: target.config
         )
-        let config = try YAMLLoader(
+        let config = try CombinedYAMLLoader(
             url: configUrl,
             locations: fileManager.find(
                 name: "config",
@@ -56,7 +57,7 @@ struct SourceLoader {
         //            )
         //        }
 
-        let settings = try YAMLLoader(
+        let settings = try CombinedYAMLLoader(
             url: url,
             locations: fileManager.find(
                 name: "site",
@@ -123,28 +124,29 @@ struct SourceLoader {
 
         // MARK: - Pipelines
 
-        let pipelineLocations = fs.pipelineLocator.locate(
-            at: sourceConfig.pipelinesUrl
-        )
-        let pipelineLoader = PipelineLoader(
+        let pipelines = try YAMLLoader(
             url: sourceConfig.pipelinesUrl,
-            locations: pipelineLocations,
+            locations: fileManager.find(
+                extensions: ["yml", "yaml"],
+                at: sourceConfig.pipelinesUrl
+            ),
             decoder: decoder,
             logger: logger
         )
-        let pipelines = try pipelineLoader.load()
+        .load(Pipeline.self)
 
         // MARK: - Content definitions
 
-        let contentDefinitionLocations = fs.ymlFileLocator.locate(
-            at: sourceConfig.typesUrl
-        )
-        let contentDefinitionLoader = ContentDefinitionLoader(
+        let loadedContentDefinitions = try YAMLLoader(
             url: sourceConfig.typesUrl,
-            locations: contentDefinitionLocations,
-            decoder: decoder
+            locations: fileManager.find(
+                extensions: ["yml", "yaml"],
+                at: sourceConfig.typesUrl
+            ),
+            decoder: decoder,
+            logger: logger
         )
-        let loadedContentDefinitions = try contentDefinitionLoader.load()
+        .load(ContentDefinition.self)
 
         let virtualContentDefinitions = pipelines.compactMap {
             $0.definesType ? ContentDefinition(id: $0.id) : nil
@@ -157,20 +159,25 @@ struct SourceLoader {
             contentDefinitions
             .map(\.id)
             .joined(separator: ", ")
+
         logger.debug("Available content types: `\(contentDefinitionList)`")
 
         // MARK: - Block directives
 
-        let blockDirectivesLocations = fs.ymlFileLocator.locate(
-            at: sourceConfig.blocksUrl
-        )
-        let blockDirectivesLoader = BlockDirectiveLoader(
+        let blockDirectives = try YAMLLoader(
             url: sourceConfig.blocksUrl,
-            locations: blockDirectivesLocations,
+            locations: fileManager.find(
+                extensions: ["yml", "yaml"],
+                at: sourceConfig.blocksUrl
+            ),
             decoder: decoder,
             logger: logger
         )
-        let blockDirectives = try blockDirectivesLoader.load()
+        .load(MarkdownBlockDirective.self)
+
+        logger.debug(
+            "Available block directives: `\(blockDirectives.map(\.name).joined(separator: ", "))`"
+        )
 
         // MARK: - RawContents
 

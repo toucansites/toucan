@@ -98,25 +98,3 @@ public struct Query: Decodable, Equatable {
         )
     }
 }
-
-extension Query {
-
-    /// Resolves dynamic filter parameters by injecting values into the filter condition tree.
-    ///
-    /// This is useful when filters include placeholders that need to be resolved at runtime.
-    ///
-    /// - Parameter parameters: A dictionary of key-value pairs to replace placeholders in the filter.
-    /// - Returns: A new `Query` instance with resolved filter conditions.
-    public func resolveFilterParameters(
-        with parameters: [String: AnyCodable]
-    ) -> Self {
-        .init(
-            contentType: contentType,
-            scope: scope,
-            limit: limit,
-            offset: offset,
-            filter: filter?.resolve(with: parameters),
-            orderBy: orderBy
-        )
-    }
-}

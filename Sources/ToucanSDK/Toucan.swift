@@ -87,7 +87,7 @@ public struct Toucan {
     // MARK: -
 
     func loadTargetConfig() throws -> TargetConfig {
-        try YAMLLoader(
+        try CombinedYAMLLoader(
             url: inputUrl,
             locations:
                 fileManager
