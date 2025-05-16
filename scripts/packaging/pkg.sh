@@ -9,62 +9,52 @@ if [ -z "$VERSION" ]; then
   exit 1
 fi
 
-echo "📦 Creating .pkg for version $VERSION"
+echo "📦 Creating .pkg and .zip for $NAME version $VERSION"
 
 # Paths
 ROOT_DIR=$(pwd)
-PKGROOT="$ROOT_DIR/pkg-root"
+UNIVERSAL_DIR="$ROOT_DIR/.build/universal"
 RELEASE_DIR="$ROOT_DIR/release"
-PKGFILE="$RELEASE_DIR/toucan-macos-${VERSION}.pkg"
-BIN_DIR=".build/release"
-BINARY_NAMES=("toucan" "toucan-generate" "toucan-init" "toucan-serve" "toucan-watch")
+PKGROOT="$ROOT_DIR/pkg-root"
+PKGFILE="$RELEASE_DIR/${NAME}-macos-${VERSION}.pkg"
+ZIPFILE="$RELEASE_DIR/${NAME}-macos-${VERSION}.zip"
+SHAFILE="$RELEASE_DIR/${NAME}-macos-${VERSION}.sha256"
+BINARIES=("toucan" "toucan-generate" "toucan-init" "toucan-serve" "toucan-watch")
 
-# Collect matching executables
-EXECUTABLES=""
-for NAME in "${BINARY_NAMES[@]}"; do
-  CANDIDATE="$BIN_DIR/$NAME"
-  if [ -f "$CANDIDATE" ] && [ -x "$CANDIDATE" ]; then
-    EXECUTABLES+="$CANDIDATE"$'\n'
-  fi
-done
+# Cleanup
+rm -rf "$UNIVERSAL_DIR" "$PKGROOT"
+mkdir -p "$UNIVERSAL_DIR" "$PKGROOT/usr/local/bin" "$RELEASE_DIR"
 
-if [ -z "$EXECUTABLES" ]; then
-  echo "❌ No executable binaries found"
-  exit 1
-fi
+# Build universal binaries
+for BIN in "${BINARIES[@]}"; do
+  ARM64_BIN=".build/arm64-apple-macosx/release/$BIN"
+  X86_64_BIN=".build/x86_64-apple-macosx/release/$BIN"
+  OUT="$UNIVERSAL_DIR/$BIN"
 
-# Prepare packaging structure
-rm -rf "$PKGROOT"
-mkdir -p "$PKGROOT/usr/local/bin"
-mkdir -p "$RELEASE_DIR"
+  if [[ -x "$ARM64_BIN" && -x "$X86_64_BIN" ]]; then
+    lipo -create "$ARM64_BIN" "$X86_64_BIN" -output "$OUT"
+    echo "✅ Universal binary created: $BIN"
 
-# Sign each binary before packaging
-for BIN in $EXECUTABLES; do
-  BASENAME=$(basename "$BIN")
-  DEST="$PKGROOT/usr/local/bin/$BASENAME"
-  cp "$BIN" "$DEST"
-  chmod +x "$DEST"
+    if [[ -n "$MAC_APP_IDENTITY" ]]; then
+      codesign --sign "$MAC_APP_IDENTITY" \
+               --options runtime \
+               --timestamp \
+               --verbose \
+               --force "$OUT"
+      echo "🔏 Signed: $BIN"
+    fi
 
-  if [[ -n "$MAC_APP_IDENTITY" ]]; then
-    echo "🔏 Signing $DEST with identity: $MAC_APP_IDENTITY"
-    codesign --sign "$MAC_APP_IDENTITY" \
-             --options runtime \
-             --timestamp \
-             --verbose \
-             --force "$DEST"
+    cp "$OUT" "$PKGROOT/usr/local/bin/"
   else
-    echo "⚠️ No MAC_APP_IDENTITY provided. $BASENAME will not be signed."
+    echo "⚠️ Skipping $BIN — missing architecture binary"
   fi
-
-  echo "✅ Prepared $BASENAME"
 done
 
-# Add LICENSE file
-echo "📄 Adding LICENSE file"
+# Add LICENSE
 mkdir -p "$PKGROOT/usr/local/share/$NAME"
-cp LICENSE "$PKGROOT/usr/local/share/$NAME/LICENSE"
+cp LICENSE "$PKGROOT/usr/local/share/$NAME/LICENSE" || echo "⚠️ LICENSE not found"
 
-# Create unsigned .pkg
+# Create .pkg
 pkgbuild \
   --identifier "com.yourcompany.${NAME}" \
   --version "$VERSION" \
@@ -72,30 +62,35 @@ pkgbuild \
   --root "$PKGROOT" \
   "$PKGFILE"
 
-
 # Sign .pkg
 if [[ -n "$MAC_INSTALLER_IDENTITY" ]]; then
-  echo "🔏 Signing .pkg with identity: $MAC_INSTALLER_IDENTITY"
   TMPFILE="${PKGFILE}.tmp"
   productsign --sign "$MAC_INSTALLER_IDENTITY" "$PKGFILE" "$TMPFILE"
   mv "$TMPFILE" "$PKGFILE"
   echo "✅ Signed .pkg: $PKGFILE"
 else
-  echo "⚠️ No MAC_INSTALLER_IDENTITY provided. .pkg will remain unsigned."
+  echo "⚠️ No MAC_INSTALLER_IDENTITY provided"
 fi
 
 # Notarize .pkg
 if [[ -n "$APPLE_ID" && -n "$APPLE_TEAM_ID" && -n "$APP_SPECIFIC_PASSWORD" ]]; then
-  echo "📤 Submitting $PKGFILE for notarization..."
+  echo "📤 Notarizing .pkg"
   xcrun notarytool submit "$PKGFILE" \
     --apple-id "$APPLE_ID" \
     --team-id "$APPLE_TEAM_ID" \
     --password "$APP_SPECIFIC_PASSWORD" \
     --wait
-
-  echo "📎 Stapling notarization ticket to $PKGFILE"
   xcrun stapler staple "$PKGFILE"
-  echo "✅ Notarization and stapling complete"
+  echo "✅ Notarization complete"
 else
-  echo "⚠️ Notarization skipped — missing APPLE_ID, TEAM_ID, or APP_SPECIFIC_PASSWORD"
+  echo "⚠️ Notarization skipped"
 fi
+
+# Zip universal binaries
+cd "$UNIVERSAL_DIR"
+zip -r "$ZIPFILE" ./*
+cd "$ROOT_DIR"
+
+# SHA256 hash
+shasum -a 256 "$ZIPFILE" > "$SHAFILE"
+echo "✅ SHA256 written: $SHAFILE"

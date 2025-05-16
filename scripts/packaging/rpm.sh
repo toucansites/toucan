@@ -12,62 +12,77 @@ fi
 TARBALL="${NAME}-${VERSION}.tar.gz"
 TOPDIR="$HOME/rpmbuild"
 BIN_DIR=".build/release"
+BUILD_DIR="build-rpm"
 BINARY_NAMES=("toucan" "toucan-generate" "toucan-init" "toucan-serve" "toucan-watch")
 
 echo "📦 Building RPM for $NAME version $VERSION"
 
-# Ensure RPM build directories exist
+# Prepare RPM directories
 mkdir -p "$TOPDIR"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+mkdir -p "$BUILD_DIR"
 WORKDIR=$(mktemp -d)
 trap 'rm -rf "$WORKDIR"' EXIT
 
-# Create packaging root
-PKG_ROOT="$WORKDIR/${NAME}-${VERSION}"
-APP_ROOT="$PKG_ROOT/usr/local/bin"
-mkdir -p "$APP_ROOT"
+# Stage binaries
+SRC_DIR="$WORKDIR/${NAME}-${VERSION}/usr/local/bin"
+mkdir -p "$SRC_DIR"
+EXECUTABLES=()
 
-# Collect matching executables
-EXECUTABLES=""
-for BINNAME in "${BINARY_NAMES[@]}"; do
-  CANDIDATE="$BIN_DIR/$BINNAME"
-  if [ -f "$CANDIDATE" ] && [ -x "$CANDIDATE" ]; then
-    EXECUTABLES+="$CANDIDATE"$'\n'
+for BIN in "${BINARY_NAMES[@]}"; do
+  SRC="$BIN_DIR/$BIN"
+  if [ -x "$SRC" ]; then
+    cp "$SRC" "$SRC_DIR/"
+    chmod +x "$SRC_DIR/$BIN"
+    EXECUTABLES+=("$BIN")
+    echo "✅ Staged: $BIN"
   else
-    echo "⚠️  Skipping missing or non-executable: $BINNAME"
+    echo "⚠️ Skipped: $BIN"
   fi
 done
 
-if [ -z "$EXECUTABLES" ]; then
-  echo "❌ No executables found"
+if [ ${#EXECUTABLES[@]} -eq 0 ]; then
+  echo "❌ No valid executables found"
   exit 1
 fi
 
-# Copy executables to staging, skipping empty lines
-while IFS= read -r BIN; do
-  [ -z "$BIN" ] && continue
-  BASENAME=$(basename "$BIN")
-  cp "$BIN" "$APP_ROOT/"
-  chmod +x "$APP_ROOT/$BASENAME"
-  echo "✅ Added $BASENAME"
-done <<< "$EXECUTABLES"
+# Optionally include docs
+cp -f LICENSE README.md "$WORKDIR/${NAME}-${VERSION}/" 2>/dev/null || echo "ℹ️ Docs not found"
 
-# Optionally copy docs
-cp -f README.md LICENSE "$WORKDIR/${NAME}-${VERSION}/" 2>/dev/null || echo "ℹ️ Skipping docs (optional)"
-
-# Create tarball
+# Create source tarball for rpmbuild
 tar -czf "$TOPDIR/SOURCES/$TARBALL" -C "$WORKDIR" "${NAME}-${VERSION}"
 
 # Copy .spec file
 cp "./scripts/packaging/${NAME}.spec" "$TOPDIR/SPECS/"
 
-# Build RPM
+# Build the RPM
 rpmbuild -ba "$TOPDIR/SPECS/${NAME}.spec" --define "ver $VERSION"
 
-# Move RPM to build-rpm folder with custom name
-[ -e build-rpm ] && [ ! -d build-rpm ] && rm build-rpm
+# Copy and rename RPM
 FINAL_RPM=$(find "$TOPDIR/RPMS" -type f -name "*.rpm" | head -n1)
-CUSTOM_NAME="toucan-linux-x8664-${VERSION}.rpm"
-mkdir -p build-rpm
-mv "$FINAL_RPM" "build-rpm/$CUSTOM_NAME"
+RPM_OUTPUT="$BUILD_DIR/${NAME}-linux-x86_64-${VERSION}.rpm"
+cp "$FINAL_RPM" "$RPM_OUTPUT"
+echo "🎉 RPM created: $RPM_OUTPUT"
 
-echo "🎉 RPM created: build-rpm/$CUSTOM_NAME"
+# Create ZIP of raw binaries
+ZIP_NAME="${NAME}-linux-${VERSION}.zip"
+SHA_NAME="${NAME}-linux-${VERSION}.sha256"
+ZIP_DIR="$BUILD_DIR/bin"
+
+rm -rf "$ZIP_DIR"
+mkdir -p "$ZIP_DIR"
+
+for BIN in "${EXECUTABLES[@]}"; do
+  cp "$BIN_DIR/$BIN" "$ZIP_DIR/"
+done
+
+cd "$ZIP_DIR"
+zip "../$ZIP_NAME" ./*
+cd - >/dev/null
+
+# Create SHA256
+cd "$BUILD_DIR"
+shasum -a 256 "$ZIP_NAME" > "$SHA_NAME"
+cd - >/dev/null
+
+echo "✅ ZIP created: $BUILD_DIR/$ZIP_NAME"
+echo "✅ SHA256 created: $BUILD_DIR/$SHA_NAME"

@@ -49,7 +49,7 @@ jobs:
         run: |
           chmod +x ./scripts/packaging/*.sh
           apt-get update
-          apt-get install -y curl git clang libcurl4-openssl-dev libssl-dev libatomic1
+          apt-get install -y curl git clang libcurl4-openssl-dev libssl-dev libatomic1 zip
 
       - name: Install RPM tooling
         if: inputs.run_rpm
@@ -78,7 +78,7 @@ jobs:
       - name: Verify RPM
         if: inputs.run_rpm
         run: |
-          RPM="build-rpm/toucan-linux-x8664-${{ inputs.version }}.rpm"
+          RPM="build-rpm/toucan-linux-x86_64-${{ inputs.version }}.rpm"
           echo "🧪 Verifying $RPM"
           rpm -Kv "$RPM"
           rpm -qp "$RPM"
@@ -103,7 +103,9 @@ jobs:
         with:
           name: linux-artifacts
           path: |
-            ${{ inputs.run_rpm && format('build-rpm/toucan-linux-x8664-{0}.rpm', inputs.version) || '' }}
+            ${{ inputs.run_rpm && format('build-rpm/toucan-linux-x86_64-{0}.rpm', inputs.version) || '' }}
+            ${{ inputs.run_rpm && format('build-rpm/toucan-linux-{0}.zip', inputs.version) || '' }}
+            ${{ inputs.run_rpm && format('build-rpm/toucan-linux-{0}.sha256', inputs.version) || '' }}
             ${{ inputs.run_deb && format('build-deb/toucan-linux-amd64-{0}.deb', inputs.version) || '' }}
 
   test-and-upload:
@@ -123,13 +125,29 @@ jobs:
         if: inputs.run_rpm
         run: |
           docker run --rm -v "$PWD/packages:/packages" fedora \
-            bash -c "dnf install -y /packages/build-rpm/toucan-linux-x8664-${{ inputs.version }}.rpm && toucan --version"
+            bash -c "dnf install -y /packages/build-rpm/toucan-linux-x86_64-${{ inputs.version }}.rpm && toucan --version"
 
       - name: Upload RPM binary to tag
         if: inputs.run_rpm
         uses: AButler/upload-release-assets@v3.0
         with:
-          files: packages/build-rpm/toucan-linux-x8664-${{ inputs.version }}.rpm
+          files: packages/build-rpm/toucan-linux-x86_64-${{ inputs.version }}.rpm
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
+
+      - name: Upload zipped Linux binaries
+        if: inputs.run_rpm
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: packages/build-rpm/toucan-linux-${{ inputs.version }}.zip
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
+
+      - name: Upload SHA256 for zipped Linux binaries
+        if: inputs.run_rpm
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: packages/build-rpm/toucan-linux-${{ inputs.version }}.sha256
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           release-tag: ${{ github.ref_name }}
 

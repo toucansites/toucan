@@ -54,14 +54,16 @@ jobs:
           p12-file-base64: ${{ secrets.MAC_CERTIFICATES }}
           p12-password: ${{ secrets.MAC_CERTIFICATES_PASSWORD }}
         
-      - name: Build Swift release binary
-        run: |
-          chmod +x ./scripts/packaging/*.sh
-          swift build -c release
-
-      - name: Create .pkg file
+      - name: Build Swift binaries for arm64 and x86_64
         if: inputs.run_pkg
-        run: ./scripts/packaging/pkg.sh ${{ inputs.version }}
+        run: |
+          chmod +x scripts/packaging/pkg.sh
+          swift build -c release --arch arm64
+          swift build -c release --arch x86_64
+
+      - name: Package .pkg and .zip
+        if: inputs.run_pkg
+        run: scripts/packaging/pkg.sh ${{ inputs.version }}
         env:
           MAC_APP_IDENTITY: ${{ secrets.MAC_APP_IDENTITY }}
           MAC_INSTALLER_IDENTITY: ${{ secrets.MAC_INSTALLER_IDENTITY }}
@@ -96,6 +98,22 @@ jobs:
         with:
           files: |
             release/toucan-macos-${{ inputs.version }}.pkg
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
+
+      - name: Upload .zip to tag
+        if: inputs.run_pkg
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: release/toucan-macos-${{ inputs.version }}.zip
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ github.ref_name }}
+
+      - name: Upload SHA256 to tag
+        if: inputs.run_pkg
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          files: release/toucan-macos-${{ inputs.version }}.sha256
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           release-tag: ${{ github.ref_name }}
 
