@@ -7,7 +7,7 @@
 import Testing
 import Logging
 
-@testable import ToucanContent
+@testable import ToucanMarkdown
 
 @Suite
 struct MarkdownBlockDirectiveTestSuite {

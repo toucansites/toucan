@@ -1,5 +1,5 @@
 //
-//  ContentRenderer.swift
+//  MarkdownRenderer.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 20..
@@ -11,7 +11,7 @@ import FileManagerKit
 
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
-public struct ContentRenderer {
+public struct MarkdownRenderer {
 
     // MARK: - Configuration
 

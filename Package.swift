@@ -24,7 +24,7 @@ let package = Package(
         .library(name: "ToucanCore", targets: ["ToucanCore"]),
         .library(name: "ToucanModels", targets: ["ToucanModels"]),
         .library(name: "ToucanSerialization", targets: ["ToucanSerialization"]),
-        .library(name: "ToucanContent", targets: ["ToucanContent"]),
+        .library(name: "ToucanMarkdown", targets: ["ToucanMarkdown"]),
         .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
     ],
@@ -115,7 +115,7 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .target(
-            name: "ToucanContent",
+            name: "ToucanMarkdown",
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 // for outline
@@ -139,21 +139,15 @@ let package = Package(
         .target(
             name: "ToucanSDK",
             dependencies: [
-                .product(name: "Markdown", package: "swift-markdown"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "Mustache", package: "swift-mustache"),
-                .product(name: "SwiftSoup", package: "SwiftSoup"),
-                .product(name: "Yams", package: "yams"),
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "Mustache", package: "swift-mustache"),
-                .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "DartSass", package: "swift-sass"),
                 .product(name: "SwiftCSSParser", package: "swift-css-parser"),
                 .target(name: "ToucanCore"),
                 .target(name: "ToucanModels"),
                 .target(name: "ToucanSerialization"),
-                .target(name: "ToucanContent"),
+                .target(name: "ToucanMarkdown"),
                 .target(name: "ToucanFileSystem"),
             ],
             swiftSettings: swiftSettings
@@ -181,9 +175,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "ToucanContentTests",
+            name: "ToucanMarkdownTests",
             dependencies: [
-                .target(name: "ToucanContent"),
+                .target(name: "ToucanMarkdown"),
             ]
         ),
         .testTarget(

@@ -8,7 +8,7 @@
 import Foundation
 import Logging
 import ToucanModels
-import ToucanContent
+import ToucanMarkdown
 import ToucanFileSystem
 import FileManagerKit
 import ToucanSerialization

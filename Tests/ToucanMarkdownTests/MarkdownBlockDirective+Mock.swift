@@ -5,7 +5,7 @@
 //  Created by Binary Birds on 2025. 04. 17..
 
 import Foundation
-import ToucanContent
+import ToucanMarkdown
 
 public extension MarkdownBlockDirective {
     enum Mocks {}

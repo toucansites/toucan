@@ -7,7 +7,7 @@
 
 import Foundation
 import ToucanModels
-import ToucanContent
+import ToucanMarkdown
 import FileManagerKit
 import Logging
 import ToucanCore
@@ -417,7 +417,7 @@ public struct SourceBundleRenderer {
             let transformers = pipeline.transformers[
                 content.definition.id
             ]
-            let renderer = ContentRenderer(
+            let renderer = MarkdownRenderer(
                 configuration: .init(
                     markdown: .init(
                         customBlockDirectives: sourceBundle.blockDirectives

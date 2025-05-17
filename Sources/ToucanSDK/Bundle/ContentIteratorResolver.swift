@@ -6,7 +6,7 @@
 
 import Foundation
 import ToucanModels
-import ToucanContent
+import ToucanMarkdown
 import FileManagerKit
 import Logging
 

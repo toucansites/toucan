@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ToucanContent
+import ToucanMarkdown
 import ToucanModels
 
 /// A complete in-memory representation of a content source bundle,

@@ -8,15 +8,15 @@ import Foundation
 import Testing
 import Logging
 
-@testable import ToucanContent
+@testable import ToucanMarkdown
 
 @Suite
-struct ContentRendererTestSuite {
+struct MarkdownRendererTestSuite {
 
     @Test
     func basicRendering() throws {
         let logger = Logger(label: "ContentRendererTestSuite")
-        let renderer = ContentRenderer(
+        let renderer = MarkdownRenderer(
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [

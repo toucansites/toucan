@@ -1,10 +1,10 @@
-////
-////  PipelineLoaderTestSuite.swift
-////  Toucan
-////
-////  Created by gerp83 on 2025. 04. 08..
-////
 //
+//  PipelineLoaderTestSuite.swift
+//  Toucan
+//
+//  Created by gerp83 on 2025. 04. 08..
+//
+
 //import Foundation
 //import Testing
 //import ToucanModels

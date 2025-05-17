@@ -10,7 +10,7 @@ import Logging
 
 import ToucanModels
 
-@testable import ToucanContent
+@testable import ToucanMarkdown
 
 @Suite
 struct HTMLVisitorTestSuite {

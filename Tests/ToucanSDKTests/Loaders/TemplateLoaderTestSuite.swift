@@ -7,7 +7,7 @@
 
 import Foundation
 import Testing
-import ToucanContent
+import ToucanMarkdown
 import ToucanModels
 import Logging
 import FileManagerKitTesting

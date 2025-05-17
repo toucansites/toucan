@@ -6,7 +6,7 @@
 
 import Testing
 
-@testable import ToucanContent
+@testable import ToucanMarkdown
 
 @Suite
 struct ToucanToCTestSuite {
