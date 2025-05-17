@@ -7,8 +7,8 @@
 
 import Foundation
 import Testing
-@testable import ToucanModels
-@testable import ToucanContent
+import ToucanModels
+import ToucanContent
 
 @Suite
 struct UnboxingTests {

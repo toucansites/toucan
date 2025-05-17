@@ -8,9 +8,8 @@ import Testing
 import Logging
 import Foundation
 import FileManagerKitTesting
-
+import ToucanModels
 @testable import ToucanSDK
-@testable import ToucanModels
 
 @Suite
 struct ToucanApiTestSuite: ToucanTestSuite {

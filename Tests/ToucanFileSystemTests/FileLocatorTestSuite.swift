@@ -6,8 +6,8 @@
 
 import Testing
 import Foundation
+import FileManagerKitTesting
 @testable import ToucanFileSystem
-@testable import FileManagerKitTesting
 
 @Suite
 struct FileLocatorTestSuite {

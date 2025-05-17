@@ -12,8 +12,6 @@ import ToucanModels
 /// and skipping directories that are explicitly marked as excluded (via `noindex.yml` or `noindex.yaml`).
 public struct RawContentLocator {
 
-    // MARK: - Internal Locators
-
     /// Underlying file system abstraction.
     private let fileManager: FileManagerKit
 
@@ -28,32 +26,6 @@ public struct RawContentLocator {
     /// - Parameter fileManager: File system handler used for discovery.
     public init(fileManager: FileManagerKit) {
         self.fileManager = fileManager
-
-        //        self.indexMarkdownLocator = .init(
-        //            fileManager: fileManager,
-        //            name: indexName,
-        //            extensions: ["markdown"]
-        //        )
-        //        self.indexMdLocator = .init(
-        //            fileManager: fileManager,
-        //            name: indexName,
-        //            extensions: ["md"]
-        //        )
-        //        self.indexYamlLocator = .init(
-        //            fileManager: fileManager,
-        //            name: indexName,
-        //            extensions: ["yaml"]
-        //        )
-        //        self.indexYmlLocator = .init(
-        //            fileManager: fileManager,
-        //            name: indexName,
-        //            extensions: ["yml"]
-        //        )
-        //        self.noindexFileLocator = .init(
-        //            fileManager: fileManager,
-        //            name: noindexName,
-        //            extensions: ["yaml", "yml"]
-        //        )
     }
 
     // MARK: - Public API

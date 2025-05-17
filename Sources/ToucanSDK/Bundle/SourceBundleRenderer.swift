@@ -10,7 +10,7 @@ import ToucanModels
 import ToucanContent
 import FileManagerKit
 import Logging
-import ToucanInfo
+import ToucanCore
 
 /// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
 ///

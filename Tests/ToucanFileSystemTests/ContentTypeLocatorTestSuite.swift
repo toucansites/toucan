@@ -6,11 +6,9 @@
 
 import Testing
 import Foundation
-@testable import ToucanFileSystem
-@testable import ToucanModels
-@testable import FileManagerKitTesting
+import FileManagerKitTesting
 
-import Testing
+@testable import ToucanFileSystem
 
 @Suite
 struct ContentTypeLocatorTestSuite {

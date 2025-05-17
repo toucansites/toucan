@@ -8,7 +8,7 @@ import Foundation
 import Dispatch
 import ArgumentParser
 import SwiftCommand
-import ToucanInfo
+import ToucanCore
 
 extension Array {
 

@@ -21,7 +21,7 @@ let package = Package(
         .executable(name: "toucan-watch", targets: ["toucan-watch"]),
         .executable(name: "toucan-serve", targets: ["toucan-serve"]),
         
-        .library(name: "ToucanInfo", targets: ["ToucanInfo"]),
+        .library(name: "ToucanCore", targets: ["ToucanCore"]),
         .library(name: "ToucanModels", targets: ["ToucanModels"]),
         .library(name: "ToucanSerialization", targets: ["ToucanSerialization"]),
         .library(name: "ToucanContent", targets: ["ToucanContent"]),
@@ -52,7 +52,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
 //                .product(name: "Subprocess", package: "swift-subprocess")
-                .target(name: "ToucanInfo"),
+                .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -63,7 +63,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
-                .target(name: "ToucanInfo"),
+                .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -83,7 +83,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileMonitor", package: "FileMonitor"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
-                .target(name: "ToucanInfo"),
+                .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -93,14 +93,14 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
-                .target(name: "ToucanInfo"),
+                .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),
         
         // MARK: - regular targets
         .target(
-            name: "ToucanInfo", // => ToucanCommon?
+            name: "ToucanCore",
             swiftSettings: swiftSettings
         ),
         .target(
@@ -133,7 +133,6 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
-                .target(name: "ToucanModels"), // TODO: remove this
             ],
             swiftSettings: swiftSettings
         ),
@@ -151,7 +150,7 @@ let package = Package(
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "DartSass", package: "swift-sass"),
                 .product(name: "SwiftCSSParser", package: "swift-css-parser"),
-                .target(name: "ToucanInfo"),
+                .target(name: "ToucanCore"),
                 .target(name: "ToucanModels"),
                 .target(name: "ToucanSerialization"),
                 .target(name: "ToucanContent"),
@@ -162,6 +161,12 @@ let package = Package(
         
         // MARK: - test targets
 
+        .testTarget(
+            name: "ToucanCoreTests",
+            dependencies: [
+                .target(name: "ToucanCore"),
+            ]
+        ),
         .testTarget(
             name: "ToucanModelsTests",
             dependencies: [

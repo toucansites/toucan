@@ -10,7 +10,7 @@ import Testing
 import ToucanModels
 import ToucanContent
 
-import ToucanInfo
+import ToucanCore
 import Logging
 @testable import ToucanSDK
 

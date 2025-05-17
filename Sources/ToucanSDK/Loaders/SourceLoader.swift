@@ -230,21 +230,21 @@ struct SourceLoader {
         }
 
         // MARK: - Templates
-
-        let templateLocations = TemplateLocator(
-            fileManager: fileManager
-        )
-        .locate(
-            at: sourceConfig.currentThemeTemplatesUrl,
-            overrides: sourceConfig.currentThemeOverrideTemplatesUrl
-        )
-        let templateLoader = TemplateLoader(
-            url: sourceConfig.currentThemeTemplatesUrl,
-            overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl,
-            locations: templateLocations,
-            logger: logger
-        )
-        let templates = try templateLoader.load()
+        #warning("fixme")
+        //        let templateLocations = TemplateLocator(
+        //            fileManager: fileManager
+        //        )
+        //        .locate(
+        //            at: sourceConfig.currentThemeTemplatesUrl,
+        //            overrides: sourceConfig.currentThemeOverrideTemplatesUrl
+        //        )
+        //        let templateLoader = TemplateLoader(
+        //            url: sourceConfig.currentThemeTemplatesUrl,
+        //            overridesUrl: sourceConfig.currentThemeOverrideTemplatesUrl,
+        //            locations: templateLocations,
+        //            logger: logger
+        //        )
+        //        let templates = try templateLoader.load()
 
         return .init(
             location: sourceUrl,
@@ -255,7 +255,7 @@ struct SourceLoader {
             pipelines: pipelines,
             contents: contents,
             blockDirectives: blockDirectives,
-            templates: templates,
+            templates: [:],
             baseUrl: target.url
         )
     }

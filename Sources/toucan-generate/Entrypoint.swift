@@ -7,7 +7,7 @@
 import ArgumentParser
 import ToucanSDK
 import Logging
-import ToucanInfo
+import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 

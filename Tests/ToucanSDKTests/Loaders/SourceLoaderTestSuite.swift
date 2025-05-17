@@ -8,12 +8,11 @@
 import Foundation
 import Testing
 import ToucanModels
-
 import Logging
 import FileManagerKitTesting
 import ToucanSerialization
+import ToucanFileSystem
 @testable import ToucanSDK
-@testable import ToucanFileSystem
 
 @Suite
 struct SourceLoaderTestSuite: ToucanTestSuite {

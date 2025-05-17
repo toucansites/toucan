@@ -13,7 +13,7 @@
 //import FileManagerKitTesting
 //import ToucanSerialization
 //@testable import ToucanSDK
-//@testable import ToucanFileSystem
+//import ToucanFileSystem
 //
 //@Suite
 //struct PipelineLoaderTestSuite: ToucanTestSuite {

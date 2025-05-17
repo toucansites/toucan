@@ -9,7 +9,7 @@ import Logging
 import FileMonitor
 import Foundation
 import SwiftCommand
-import ToucanInfo
+import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 

@@ -8,7 +8,7 @@ import ArgumentParser
 import Logging
 import Hummingbird
 import Foundation
-import ToucanInfo
+import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
