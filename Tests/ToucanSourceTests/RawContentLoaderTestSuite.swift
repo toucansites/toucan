@@ -56,119 +56,136 @@ struct RawContentLoaderTestSuite {
             }
     }
 
-    // MARK: -
+    // MARK: - origins
 
-    //    @Test()
-    //    func rawContentLocatorEmpty() async throws {
-    //        try FileManagerPlayground()
-    //            .test {
-    //                let locator = RawContentLocator(fileManager: $0)
-    //                let locations = locator.locate(at: $1)
-    //
-    //                #expect(locations.isEmpty)
-    //            }
-    //    }
-    //
-    //    @Test()
-    //    func rawContentLocatorTrimmingBrackets() async throws {
-    //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("contents") {
-    //                    Directory("[01]blog") {
-    //                        Directory("[01]articles") {
-    //                            Directory("[01]first-beta-release") {
-    //                                File("index.markdown")
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        .test {
-    //            let url = $1.appending(path: "src/contents/")
-    //            let locator = RawContentLocator(fileManager: $0)
-    //            let results = locator.locate(at: url)
-    //
-    //            #expect(results.count == 1)
-    //
-    //            let result = try #require(results.first)
-    //            let expected = RawContentLocation(
-    //                slug: "blog/articles/first-beta-release",
-    //                markdown:
-    //                    "[01]blog/[01]articles/[01]first-beta-release/index.markdown"
-    //                    .replacingOccurrences(["[": "%5B", "]": "%5D"])
-    //            )
-    //
-    //            #expect(result == expected)
-    //        }
-    //    }
-    //
-    //    @Test()
-    //    func rawContentLocatorNoindexBrackets() async throws {
-    //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("contents") {
-    //                    Directory("[01]blog") {
-    //                        Directory("[articles]") {
-    //                            Directory("[01]first-beta-release") {
-    //                                File("index.markdown")
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        .test {
-    //            let url = $1.appending(path: "src/contents/")
-    //            let locator = RawContentLocator(fileManager: $0)
-    //            let results = locator.locate(at: url)
-    //
-    //            #expect(results.count == 1)
-    //
-    //            let result = try #require(results.first)
-    //            let expected = RawContentLocation(
-    //                slug: "blog/first-beta-release",
-    //                markdown:
-    //                    "[01]blog/[articles]/[01]first-beta-release/index.markdown"
-    //                    .replacingOccurrences(["[": "%5B", "]": "%5D"])
-    //            )
-    //
-    //            #expect(result == expected)
-    //        }
-    //    }
-    //
-    //    @Test()
-    //    func rawContentLocatorMarkdownOnly() async throws {
-    //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("contents") {
-    //                    Directory("blog") {
-    //                        Directory("articles") {
-    //                            "noindex.yaml"
-    //                            Directory("first-beta-release") {
-    //                                File("index.markdown")
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        .test {
-    //            let url = $1.appending(path: "src/contents/")
-    //            let locator = RawContentLocator(fileManager: $0)
-    //            let results = locator.locate(at: url)
-    //
-    //            #expect(results.count == 1)
-    //
-    //            let result = try #require(results.first)
-    //            let expected = RawContentLocation(
-    //                slug: "blog/first-beta-release",
-    //                markdown: "blog/articles/first-beta-release/index.markdown"
-    //            )
-    //
-    //            #expect(result == expected)
-    //        }
-    //    }
+    @Test()
+    func locateOriginsEmptyResults() async throws {
+        try FileManagerPlayground()
+            .test {
+                let url = $1.appending(path: "src/")
+                let decoder = ToucanYAMLDecoder()
+                let loader = RawContentLoader(
+                    locations: .init(sourceUrl: url, config: .defaults),
+                    markdownParser: .init(decoder: decoder),
+                    fileManager: $0,
+                )
+                let results = loader.locateOrigins()
+                #expect(results.isEmpty)
+            }
+    }
+
+    @Test()
+    func locateOriginsNoIndexFile() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("blog") {
+                        Directory("articles") {
+                            "noindex.yaml"
+                            Directory("first-beta-release") {
+                                "index.md"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/")
+            let decoder = ToucanYAMLDecoder()
+            let loader = RawContentLoader(
+                locations: .init(sourceUrl: url, config: .defaults),
+                markdownParser: .init(decoder: decoder),
+                fileManager: $0,
+            )
+            let results = loader.locateOrigins()
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = Origin(
+                path: "blog/articles/first-beta-release",
+                slug: "blog/first-beta-release"
+            )
+            #expect(result == expected)
+        }
+    }
+
+    @Test()
+    func locateOriginsIgnoreSlugBrackets() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("[01]blog") {
+                        Directory("[01]articles") {
+                            Directory("[01]first-beta-release") {
+                                "index.md"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/")
+            let decoder = ToucanYAMLDecoder()
+            let loader = RawContentLoader(
+                locations: .init(sourceUrl: url, config: .defaults),
+                markdownParser: .init(decoder: decoder),
+                fileManager: $0,
+            )
+            let results = loader.locateOrigins()
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = Origin(
+                path: "[01]blog/[01]articles/[01]first-beta-release"
+                    .replacingOccurrences(of: "[", with: "%5B")
+                    .replacingOccurrences(of: "]", with: "%5D"),
+                slug: "blog/articles/first-beta-release",
+            )
+            #expect(result == expected)
+        }
+    }
+
+    @Test()
+    func locateOriginsNoIndexBrackets() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("contents") {
+                    Directory("[01]blog") {
+                        Directory("[articles]") {
+                            Directory("[02]first-beta-release") {
+                                "index.md"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/")
+            let decoder = ToucanYAMLDecoder()
+            let loader = RawContentLoader(
+                locations: .init(sourceUrl: url, config: .defaults),
+                markdownParser: .init(decoder: decoder),
+                fileManager: $0,
+            )
+            let results = loader.locateOrigins()
+            #expect(results.count == 1)
+
+            let result = try #require(results.first)
+            let expected = Origin(
+                path: "[01]blog/[articles]/[02]first-beta-release"
+                    .replacingOccurrences(of: "[", with: "%5B")
+                    .replacingOccurrences(of: "]", with: "%5D"),
+                slug: "blog/first-beta-release",
+            )
+            #expect(result == expected)
+        }
+    }
+
+    // MARK: - locate origin index file types
+
     //
     //    @Test()
     //    func rawContentLocatorMdOnly() async throws {

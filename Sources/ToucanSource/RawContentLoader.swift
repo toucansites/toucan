@@ -95,8 +95,11 @@ public struct RawContentLoader {
     ///
     /// - Parameter url: The root content directory to scan.
     /// - Returns: A list of `RawContentLocation` objects, sorted by slug.
-    func locate(at url: URL) -> [Origin] {
-        locateRawContentsOrigins(at: url).sorted { $0.slug < $1.slug }
+    func locateOrigins() -> [Origin] {
+        locateRawContentsOrigins(
+            at: locations.contentsUrl
+        )
+        .sorted { $0.slug < $1.slug }
     }
 }
 
@@ -116,12 +119,30 @@ extension RawContentLoader {
     ) -> [Origin] {
         var result: [Origin] = []
         let currentPath = path.joined(separator: "/")
+        let currentSlug = slug.joined(separator: "/").trimmingBracketsContent()
         let currentUrl = contentsUrl.appendingPathIfPresent(currentPath)
+
+        logger.trace(
+            "Trying to locate raw content item.",
+            metadata: [
+                "contentsURL": .string(contentsUrl.absoluteString),
+                "path": .string(currentPath),
+                "slug": .string(currentSlug),
+            ]
+        )
 
         if hasIndex(at: currentUrl) {
             let origin = Origin(
                 path: currentPath,
-                slug: slug.joined(separator: "/").trimmingBracketsContent()
+                slug: currentSlug
+            )
+            logger.debug(
+                "Raw content item found with index.",
+                metadata: [
+                    "contentsURL": .string(contentsUrl.absoluteString),
+                    "path": .string(currentPath),
+                    "slug": .string(currentSlug),
+                ]
             )
             result.append(origin)
         }
@@ -132,7 +153,15 @@ extension RawContentLoader {
             let newPath = path + [item]
             let childUrl = currentUrl.appendingPathIfPresent(item)
 
-            if !isNoIndexFolder(name: item, at: childUrl) {
+            if !hasNoIndex(item: item, at: childUrl) {
+                logger.trace(
+                    "Raw content item has no index file or bracket.",
+                    metadata: [
+                        "contentsURL": .string(contentsUrl.absoluteString),
+                        "path": .string(currentPath),
+                        "slug": .string(currentSlug),
+                    ]
+                )
                 newSlug += [item]
             }
 
@@ -145,7 +174,9 @@ extension RawContentLoader {
         return result
     }
 
-    private func hasIndex(at url: URL) -> Bool {
+    private func hasIndex(
+        at url: URL
+    ) -> Bool {
         !fileManager.find(
             name: "index",
             extensions: ["yml", "yaml", "md", "markdown"],
@@ -154,20 +185,20 @@ extension RawContentLoader {
         .isEmpty
     }
 
-    private func isNoIndexFolder(
-        name: String,
+    private func hasNoIndex(
+        item: String,
         at url: URL
     ) -> Bool {
-        // Skip folders that have a noindex marker
+        // Skip folders that have a noindex file or bracket marker
         let noindexFilePaths = fileManager.find(
             name: "noindex",
             extensions: ["yaml", "yml"],
             at: url
         )
-        let decodedItem = name.removingPercentEncoding ?? ""
+        let decodedItem = item.removingPercentEncoding ?? ""
         let skip = decodedItem.hasPrefix("[") && decodedItem.hasSuffix("]")
 
-        return noindexFilePaths.isEmpty && !skip
+        return skip || !noindexFilePaths.isEmpty
     }
 
     func locateAssets(at url: URL) -> [String] {
