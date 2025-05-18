@@ -5,16 +5,16 @@
 //  Created by Tibor Bödecs on 2025. 01. 30..
 //
 
-import ToucanModels
 import Foundation
+import ToucanSource
 
 public extension RawContent {
     enum Mocks {}
 }
 
-public extension Content {
-    enum Mocks {}
-}
+//public extension Content {
+//    enum Mocks {}
+//}
 
 public extension ContentDefinition {
     enum Mocks {}

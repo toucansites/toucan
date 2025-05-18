@@ -7,8 +7,8 @@
 
 import Mustache
 import Foundation
-import ToucanModels
 import Logging
+import ToucanSource
 
 /// Renders Mustache templates using a predefined template library and a dynamic context object.
 public struct MustacheTemplateRenderer {

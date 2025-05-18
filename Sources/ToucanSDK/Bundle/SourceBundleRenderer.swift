@@ -6,11 +6,12 @@
 //
 
 import Foundation
-import ToucanModels
+
 import ToucanMarkdown
 import FileManagerKit
 import Logging
 import ToucanCore
+import ToucanSource
 
 /// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
 ///
@@ -20,7 +21,7 @@ import ToucanCore
 public struct SourceBundleRenderer {
 
     /// Site configuration + all raw content
-    let sourceBundle: SourceBundle
+    let sourceBundle: BuildTargetSource
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
     /// Date formatters used across pipelines
@@ -40,7 +41,7 @@ public struct SourceBundleRenderer {
     ///   - fileManager: Filesystem API for use during rendering.
     ///   - logger: Logger for reporting issues or metrics.
     public init(
-        sourceBundle: SourceBundle,
+        sourceBundle: BuildTargetSource,
         generatorInfo: GeneratorInfo = .current,
         fileManager: FileManagerKit,
         logger: Logger
@@ -122,85 +123,85 @@ public struct SourceBundleRenderer {
 
         for pipeline in sourceBundle.pipelines {
 
-            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
-                .mapValues {
-                    sourceBundle.target.dateFormatter($0)
-                }
-            let allFormatters = formatters.recursivelyMerged(
-                with: pipelineFormatters
-            )
-
-            let filter = ContentFilter(
-                filterRules: pipeline.contentTypes.filterRules
-            )
-
-            let filteredContents = filter.applyRules(
-                contents: sourceBundle.contents,
-                now: now
-            )
-
-            let contents = iteratorResolver.resolve(
-                contents: filteredContents,
-                using: pipeline
-            )
-
-            let assetResults = try executor.execute(
-                pipeline: pipeline,
-                contents: contents
-            )
-            results.append(contentsOf: assetResults)
-
-            let assetPropertyResolver = AssetPropertyResolver(
-                contentsUrl: sourceBundle.sourceConfig.contentsUrl,
-                assetsPath: sourceBundle.sourceConfig.config.contents.assets
-                    .path,
-                baseUrl: sourceBundle.baseUrl,
-                config: pipeline.assets
-            )
-
-            let finalContents = try assetPropertyResolver.resolve(contents)
-
-            let lastUpdate =
-                getLastContentUpdate(
-                    contents: contents,
-                    pipeline: pipeline,
-                    now: now
-                ) ?? now
-
-            let lastUpdateContext = lastUpdate.toDateFormats(
-                formatters: allFormatters
-            )
-            siteContext["lastUpdate"] = .init(lastUpdateContext)
-
-            let contextBundles = try getContextBundles(
-                contents: finalContents,
-                context: [
-                    "site": .init(siteContext)
-                ],
-                pipeline: pipeline,
-                now: now
-            )
-
-            switch pipeline.engine.id {
-            case "json", "context":
-                let renderer = ContextBundleToJSONRenderer(
-                    pipeline: pipeline,
-                    logger: logger
-                )
-                results += renderer.render(contextBundles)
-
-            case "mustache":
-                let renderer = try ContextBundleToHTMLRenderer(
-                    pipeline: pipeline,
-                    templates: sourceBundle.templates,
-                    logger: logger
-                )
-                results += renderer.render(contextBundles)
-            default:
-                logger.error(
-                    "Unknown renderer engine `\(pipeline.engine.id)`"
-                )
-            }
+            //            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
+            //                .mapValues {
+            //                    sourceBundle.target.dateFormatter($0)
+            //                }
+            //            let allFormatters = formatters.recursivelyMerged(
+            //                with: pipelineFormatters
+            //            )
+            //
+            //            let filter = ContentFilter(
+            //                filterRules: pipeline.contentTypes.filterRules
+            //            )
+            //
+            //            let filteredContents = filter.applyRules(
+            //                contents: sourceBundle.contents,
+            //                now: now
+            //            )
+            //
+            //            let contents = iteratorResolver.resolve(
+            //                contents: filteredContents,
+            //                using: pipeline
+            //            )
+            //
+            //            let assetResults = try executor.execute(
+            //                pipeline: pipeline,
+            //                contents: contents
+            //            )
+            //            results.append(contentsOf: assetResults)
+            //
+            //            let assetPropertyResolver = AssetPropertyResolver(
+            //                contentsUrl: sourceBundle.sourceConfig.contentsUrl,
+            //                assetsPath: sourceBundle.sourceConfig.config.contents.assets
+            //                    .path,
+            //                baseUrl: sourceBundle.baseUrl,
+            //                config: pipeline.assets
+            //            )
+            //
+            //            let finalContents = try assetPropertyResolver.resolve(contents)
+            //
+            //            let lastUpdate =
+            //                getLastContentUpdate(
+            //                    contents: contents,
+            //                    pipeline: pipeline,
+            //                    now: now
+            //                ) ?? now
+            //
+            //            let lastUpdateContext = lastUpdate.toDateFormats(
+            //                formatters: allFormatters
+            //            )
+            //            siteContext["lastUpdate"] = .init(lastUpdateContext)
+            //
+            //            let contextBundles = try getContextBundles(
+            //                contents: finalContents,
+            //                context: [
+            //                    "site": .init(siteContext)
+            //                ],
+            //                pipeline: pipeline,
+            //                now: now
+            //            )
+            //
+            //            switch pipeline.engine.id {
+            //            case "json", "context":
+            //                let renderer = ContextBundleToJSONRenderer(
+            //                    pipeline: pipeline,
+            //                    logger: logger
+            //                )
+            //                results += renderer.render(contextBundles)
+            //
+            //            case "mustache":
+            //                let renderer = try ContextBundleToHTMLRenderer(
+            //                    pipeline: pipeline,
+            //                    templates: sourceBundle.templates,
+            //                    logger: logger
+            //                )
+            //                results += renderer.render(contextBundles)
+            //            default:
+            //                logger.error(
+            //                    "Unknown renderer engine `\(pipeline.engine.id)`"
+            //                )
+            //            }
         }
         return results
     }
@@ -404,7 +405,8 @@ public struct SourceBundleRenderer {
 
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
-                content.slug.permalink(baseUrl: sourceBundle.target.url)
+                ""
+                //                content.slug.permalink(baseUrl: sourceBundle.target.url)
             )
             result["lastUpdate"] = .init(
                 content.rawValue.lastModificationDate.toDateFormats(
@@ -420,7 +422,7 @@ public struct SourceBundleRenderer {
             let renderer = MarkdownRenderer(
                 configuration: .init(
                     markdown: .init(
-                        customBlockDirectives: sourceBundle.blockDirectives
+                        customBlockDirectives: []
                     ),
                     outline: .init(
                         levels: sourceBundle.config.renderer
@@ -450,7 +452,7 @@ public struct SourceBundleRenderer {
                 content: content.rawValue.markdown,
                 slug: content.slug.value,
                 assetsPath: sourceBundle.config.contents.assets.path,
-                baseUrl: sourceBundle.baseUrl
+                baseUrl: "sourceBundle.baseUrl"
             )
 
             result["contents"] = [
@@ -533,7 +535,7 @@ public struct SourceBundleRenderer {
 extension SourceBundleRenderer {
 
     static func prepareFormatters(
-        _ sourceBundle: SourceBundle
+        _ sourceBundle: BuildTargetSource
     ) -> [String: DateFormatter] {
         var formatters: [String: DateFormatter] = [:]
         let styles: [(String, DateFormatter.Style)] = [

@@ -5,9 +5,9 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 05. 13..
 //
 
-import ToucanModels
 import Foundation
 import Logging
+import ToucanSource
 
 struct ContextBundleToJSONRenderer {
 

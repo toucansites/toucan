@@ -5,8 +5,8 @@
 //  Created by Tibor Bödecs on 2025. 04. 18..
 //
 
-import ToucanModels
 import Foundation
+import ToucanSource
 
 /// A utility that filters content based on specified conditions.
 ///

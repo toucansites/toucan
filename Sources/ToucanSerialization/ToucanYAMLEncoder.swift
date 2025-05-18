@@ -5,8 +5,8 @@
 //  Created by Tibor Bödecs on 2025. 03. 06..
 //
 
-import Foundation
-import Yams
+import struct Foundation.Data
+import class Yams.YAMLEncoder
 
 /// A n implementation of `ToucanEncoder` that uses `YAMLEncoder`.
 public struct ToucanYAMLEncoder: ToucanEncoder {
@@ -24,6 +24,7 @@ public struct ToucanYAMLEncoder: ToucanEncoder {
     ) throws(ToucanEncoderError) -> String {
         do {
             let encoder = YAMLEncoder()
+            encoder.options.sortKeys = true
             return try encoder.encode(object)
         }
         catch {

@@ -4,7 +4,8 @@
 //
 //  Created by Binary Birds on 2025. 04. 17..
 
-import Foundation
+import struct Foundation.Data
+import class Foundation.JSONDecoder
 
 /// An implementation of `ToucanDecoder` that uses `JSONDecoder`.
 public struct ToucanJSONDecoder: ToucanDecoder {

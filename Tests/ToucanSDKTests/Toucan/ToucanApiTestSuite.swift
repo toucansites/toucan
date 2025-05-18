@@ -8,7 +8,7 @@ import Testing
 import Logging
 import Foundation
 import FileManagerKitTesting
-import ToucanModels
+
 @testable import ToucanSDK
 
 @Suite

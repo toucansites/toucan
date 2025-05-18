@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ToucanModels
+import ToucanSource
 import Logging
 
 /// Converts a `RawContent` instance into a structured `Content` object using a given content definition.

@@ -20,12 +20,11 @@ let package = Package(
         .executable(name: "toucan-generate", targets: ["toucan-generate"]),
         .executable(name: "toucan-watch", targets: ["toucan-watch"]),
         .executable(name: "toucan-serve", targets: ["toucan-serve"]),
-        
+
         .library(name: "ToucanCore", targets: ["ToucanCore"]),
-        .library(name: "ToucanModels", targets: ["ToucanModels"]),
         .library(name: "ToucanSerialization", targets: ["ToucanSerialization"]),
         .library(name: "ToucanMarkdown", targets: ["ToucanMarkdown"]),
-        .library(name: "ToucanFileSystem", targets: ["ToucanFileSystem"]),
+        .library(name: "ToucanSource", targets: ["ToucanSource"]),
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
     ],
     dependencies: [
@@ -101,10 +100,10 @@ let package = Package(
         // MARK: - regular targets
         .target(
             name: "ToucanCore",
-            swiftSettings: swiftSettings
-        ),
-        .target(
-            name: "ToucanModels",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "FileManagerKit", package: "file-manager-kit"),
+            ],
             swiftSettings: swiftSettings
         ),
         .target(
@@ -117,38 +116,34 @@ let package = Package(
         .target(
             name: "ToucanMarkdown",
             dependencies: [
-                .product(name: "Logging", package: "swift-log"),
                 // for outline
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
                 // for markdown to html
                 .product(name: "Markdown", package: "swift-markdown"),
                 // for transformers
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
-                .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),
         .target(
-            name: "ToucanFileSystem",
+            name: "ToucanSource",
             dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .target(name: "ToucanCore"),
+                .target(name: "ToucanSerialization"),
             ],
             swiftSettings: swiftSettings
         ),
         .target(
             name: "ToucanSDK",
             dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "DartSass", package: "swift-sass"),
                 .product(name: "SwiftCSSParser", package: "swift-css-parser"),
                 .target(name: "ToucanCore"),
-                .target(name: "ToucanModels"),
                 .target(name: "ToucanSerialization"),
                 .target(name: "ToucanMarkdown"),
-                .target(name: "ToucanFileSystem"),
+                .target(name: "ToucanSource")
             ],
             swiftSettings: swiftSettings
         ),
@@ -162,15 +157,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "ToucanModelsTests",
-            dependencies: [
-                .target(name: "ToucanModels"),
-            ]
-        ),
-        .testTarget(
             name: "ToucanSerializationTests",
             dependencies: [
-                .target(name: "ToucanModels"),
                 .target(name: "ToucanSerialization"),
             ]
         ),
@@ -181,9 +169,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "ToucanFileSystemTests",
+            name: "ToucanSourceTests",
             dependencies: [
-                .target(name: "ToucanFileSystem"),
+                .target(name: "ToucanSource"),
                 .product(name: "FileManagerKitTesting", package: "file-manager-kit")
             ]
         ),

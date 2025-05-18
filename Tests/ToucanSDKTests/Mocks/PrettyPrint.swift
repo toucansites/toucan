@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ToucanModels
+import ToucanSource
 
 /// Pretty prints a `[String: AnyCodable]` dictionary as JSON to standard output.
 /// - Parameter object: A dictionary of key-value pairs with dynamic `AnyCodable` values.

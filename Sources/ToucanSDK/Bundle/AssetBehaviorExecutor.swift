@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import ToucanModels
+import ToucanSource
 
 struct AssetBehaviorExecutor {
 
-    var sourceBundle: SourceBundle
+    var sourceBundle: BuildTargetSource
 
     private func getNameAndExtension(
         from path: String
@@ -117,18 +117,18 @@ struct AssetBehaviorExecutor {
 
                     switch behavior.id {
                     case "compile-sass":
-                        let fileUrl = sourceBundle.sourceConfig.contentsUrl
-                            .appending(
-                                path: sourcePath
-                            )
-
-                        let script = try CompileSASSBehavior()
-                        let css = try script.compile(fileUrl: fileUrl)
+                        //                        let fileUrl = sourceBundle.sourceConfig.contentsUrl
+                        //                            .appending(
+                        //                                path: sourcePath
+                        //                            )
+                        //
+                        //                        let script = try CompileSASSBehavior()
+                        //                        let css = try script.compile(fileUrl: fileUrl)
 
                         // TODO: proper output management later on
                         results.append(
                             .init(
-                                source: .asset(css),
+                                source: .asset("css"),
                                 destination: .init(
                                     path: destPath,
                                     file: behavior.output.name,
@@ -138,17 +138,17 @@ struct AssetBehaviorExecutor {
                         )
 
                     case "minify-css":
-                        let fileUrl = sourceBundle.sourceConfig.contentsUrl
-                            .appending(
-                                path: sourcePath
-                            )
-
-                        let script = MinifyCSSBehavior()
-                        let css = try script.minify(fileUrl: fileUrl)
+                        //                        let fileUrl = sourceBundle.sourceConfig.contentsUrl
+                        //                            .appending(
+                        //                                path: sourcePath
+                        //                            )
+                        //
+                        //                        let script = MinifyCSSBehavior()
+                        //                        let css = try script.minify(fileUrl: fileUrl)
 
                         results.append(
                             .init(
-                                source: .asset(css),
+                                source: .asset("css"),
                                 destination: .init(
                                     path: destPath,
                                     file: behavior.output.name,

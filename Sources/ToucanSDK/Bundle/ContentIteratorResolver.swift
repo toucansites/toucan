@@ -5,10 +5,11 @@
 //  Created by gerp83 on 2025. 03. 26..
 
 import Foundation
-import ToucanModels
+
 import ToucanMarkdown
 import FileManagerKit
 import Logging
+import ToucanSource
 
 struct ContentIteratorResolver {
 
@@ -76,19 +77,19 @@ struct ContentIteratorResolver {
                         )
                     }
 
-                    let links = (0..<numberOfPages)
-                        .map { i in
-                            let pageIndex = i + 1
-                            let permalink = content.slug.permalink(
-                                baseUrl: baseUrl
-                            )
-                            return IteratorInfo.Link(
-                                number: pageIndex,
-                                permalink: permalink.replacingOccurrences(
-                                    ["{{\(iteratorId)}}": String(pageIndex)]),
-                                isCurrent: pageIndex == currentPageIndex
-                            )
-                        }
+                    //                    let links = (0..<numberOfPages)
+                    //                        .map { i in
+                    //                            let pageIndex = i + 1
+                    //                            let permalink = content.slug.permalink(
+                    //                                baseUrl: baseUrl
+                    //                            )
+                    //                            return IteratorInfo.Link(
+                    //                                number: pageIndex,
+                    //                                permalink: permalink.replacingOccurrences(
+                    //                                    ["{{\(iteratorId)}}": String(pageIndex)]),
+                    //                                isCurrent: pageIndex == currentPageIndex
+                    //                            )
+                    //                        }
 
                     let items = contents.run(
                         query: .init(
@@ -106,7 +107,7 @@ struct ContentIteratorResolver {
                         total: numberOfPages,
                         limit: limit,
                         items: items,
-                        links: links,
+                        links: [],
                         scope: query.scope
                     )
 

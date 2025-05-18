@@ -5,7 +5,7 @@
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-import ToucanModels
+import ToucanSource
 
 /// A bundle containing a single content item, its rendering context, and its destination metadata.
 ///

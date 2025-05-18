@@ -4,8 +4,8 @@
 //
 //  Created by Binary Birds on 2025. 04. 17..
 
-import Foundation
-import Yams
+import struct Foundation.Data
+import class Yams.YAMLDecoder
 
 /// An implementation of `ToucanDecoder` that uses `YAMLDecoder`.
 public struct ToucanYAMLDecoder: ToucanDecoder {
@@ -32,4 +32,5 @@ public struct ToucanYAMLDecoder: ToucanDecoder {
             throw .decoding(error, T.self)
         }
     }
+
 }

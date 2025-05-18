@@ -4,17 +4,15 @@
 //
 //  Created by Binary Birds on 2025. 03. 28..
 
-import ToucanModels
-
-public extension ContentDefinition.Mocks {
-
-    static func sitemap() -> ContentDefinition {
-        .init(
-            id: "sitemap",
-            paths: [],
-            properties: [:],
-            relations: [:],
-            queries: [:]
-        )
-    }
-}
+//public extension ContentDefinition.Mocks {
+//
+//    static func sitemap() -> ContentDefinition {
+//        .init(
+//            id: "sitemap",
+//            paths: [],
+//            properties: [:],
+//            relations: [:],
+//            queries: [:]
+//        )
+//    }
+//}
