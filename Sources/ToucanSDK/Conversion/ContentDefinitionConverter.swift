@@ -69,7 +69,7 @@ public struct ContentDefinitionConverter {
             $0.key < $1.key
         }) {
             dateFormatter.config(with: defaultDateFormat)
-            let rawValue = rawContent.frontMatter[key]
+            let rawValue = rawContent.markdown.frontMatter[key]
             let converter = PropertyConverter(
                 property: property,
                 dateFormatter: dateFormatter,
@@ -86,7 +86,7 @@ public struct ContentDefinitionConverter {
         for (key, relation) in contentDefinition.relations.sorted(by: {
             $0.key < $1.key
         }) {
-            let rawValue = rawContent.frontMatter[key]
+            let rawValue = rawContent.markdown.frontMatter[key]
             var identifiers: [String] = []
 
             switch relation.type {
@@ -113,7 +113,7 @@ public struct ContentDefinitionConverter {
             + contentDefinition.properties.keys
             + contentDefinition.relations.keys
 
-        var userDefined = rawContent.frontMatter
+        var userDefined = rawContent.markdown.frontMatter
         for key in keysToRemove {
             userDefined.removeValue(forKey: key)
         }
@@ -127,13 +127,13 @@ public struct ContentDefinitionConverter {
             .map(String.init)?
             .trimmingBracketsContent() ?? ""
 
-        if let rawId = rawContent.frontMatter.string("id") {
+        if let rawId = rawContent.markdown.frontMatter.string("id") {
             id = rawId
         }
 
         // Extract `slug` from front matter or fallback to origin slug
         var slug: String = rawContent.origin.slug
-        if let rawSlug = rawContent.frontMatter.string(
+        if let rawSlug = rawContent.markdown.frontMatter.string(
             "slug",
             allowingEmptyValue: true
         ) {

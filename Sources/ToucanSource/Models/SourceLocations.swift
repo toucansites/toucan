@@ -5,7 +5,8 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 01..
 //
 
-import Foundation
+import struct Foundation.URL
+import Logging
 import ToucanCore
 
 /// A computed mapping of project-relative URLs based on the loaded configuration and project root.
@@ -113,5 +114,14 @@ public struct SourceLocations {
         currentThemeOverrideUrl.appendingPathComponent(
             config.themes.templates.path
         )
+    }
+}
+
+extension SourceLocations: LoggerMetadataRepresentable {
+
+    public var logMetadata: [String: Logger.MetadataValue] {
+        [
+            "baseUrl": .string(baseUrl.absoluteString)
+        ]
     }
 }

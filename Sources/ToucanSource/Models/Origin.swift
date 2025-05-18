@@ -23,7 +23,10 @@ public struct Origin: Equatable {
     /// - Parameters:
     ///   - path: The source directory of the content.
     ///   - slug: The derived slug based on the path and metadata.
-    public init(path: String, slug: String) {
+    public init(
+        path: String,
+        slug: String
+    ) {
         self.path = path
         self.slug = slug
     }

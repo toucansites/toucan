@@ -7,11 +7,14 @@
 import Testing
 import Foundation
 import FileManagerKitTesting
+
+@testable import ToucanSource
+
 @Suite
-struct FileLocatorTestSuite {
+struct FileManagerKitExtensionsTestSuite {
 
     @Test()
-    func fileLocator_emptyRootDirectory() async throws {
+    func findEmpty() throws {
         try FileManagerPlayground()
             .test {
                 let locations = $0.find(at: $1)
@@ -20,7 +23,7 @@ struct FileLocatorTestSuite {
     }
 
     @Test()
-    func fileLocator_allFiles() async throws {
+    func findAllFiles() throws {
         try FileManagerPlayground {
             Directory("foo") {
                 Directory("bar") {
@@ -38,7 +41,7 @@ struct FileLocatorTestSuite {
     }
 
     @Test()
-    func fileLocator_directoriesAndFiles() async throws {
+    func findDirectoriesAndFiles() throws {
         try FileManagerPlayground {
             Directory("foo") {
                 Directory("bar")
@@ -55,7 +58,7 @@ struct FileLocatorTestSuite {
     }
 
     @Test()
-    func fileLocator_multipleExtensions() async throws {
+    func findMultipleExtensions() async throws {
         try FileManagerPlayground {
             Directory("foo") {
                 Directory("bar") {

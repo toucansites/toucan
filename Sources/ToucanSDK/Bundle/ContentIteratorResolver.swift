@@ -69,9 +69,9 @@ struct ContentIteratorResolver {
                         &alteredContent.userDefined
                     )
 
-                    if !alteredContent.rawValue.markdown.isEmpty {
-                        alteredContent.rawValue.markdown = replace(
-                            in: alteredContent.rawValue.markdown,
+                    if !alteredContent.rawValue.markdown.contents.isEmpty {
+                        alteredContent.rawValue.markdown.contents = replace(
+                            in: alteredContent.rawValue.markdown.contents,
                             number: currentPageIndex,
                             total: numberOfPages
                         )

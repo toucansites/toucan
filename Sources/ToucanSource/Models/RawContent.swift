@@ -13,13 +13,8 @@ public struct RawContent: Equatable {
     /// The origin of the content file, including its path and slug.
     public var origin: Origin
 
-    /// The front matter metadata as a dictionary of key-value pairs.
-    ///
-    /// These fields are defined at the top of a Markdown file.
-    public var frontMatter: [String: AnyCodable]
-
     /// The raw Markdown content body.
-    public var markdown: String
+    public var markdown: Markdown
 
     /// The last modification timestamp (e.g., from file metadata), in Unix epoch format.
     public var lastModificationDate: Double
@@ -37,13 +32,11 @@ public struct RawContent: Equatable {
     ///   - assets: List of asset file paths linked with this content.
     public init(
         origin: Origin,
-        frontMatter: [String: AnyCodable],
-        markdown: String,
+        markdown: Markdown,
         lastModificationDate: Double,
         assets: [String]
     ) {
         self.origin = origin
-        self.frontMatter = frontMatter
         self.markdown = markdown
         self.lastModificationDate = lastModificationDate
         self.assets = assets

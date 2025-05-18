@@ -449,7 +449,7 @@ public struct SourceBundleRenderer {
             )
 
             let contents = renderer.render(
-                content: content.rawValue.markdown,
+                content: content.rawValue.markdown.contents,
                 slug: content.slug.value,
                 assetsPath: sourceBundle.config.contents.assets.path,
                 baseUrl: "sourceBundle.baseUrl"

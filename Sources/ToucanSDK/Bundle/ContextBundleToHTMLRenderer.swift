@@ -43,7 +43,8 @@ struct ContextBundleToHTMLRenderer {
         )
 
         let contentTypeTemplate = bundleOptions.string("template")
-        let contentTemplate = contextBundle.content.rawValue.frontMatter
+        let contentTemplate = contextBundle.content.rawValue.markdown
+            .frontMatter
             .string("template")
         let template = contentTemplate ?? contentTypeTemplate
 

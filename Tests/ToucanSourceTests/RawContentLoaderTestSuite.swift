@@ -1,30 +1,62 @@
 //
-//  RawContentLocatorTestSuite.swift
+//  RawContentLoaderTestSuite.swift
 //  Toucan
 //
-//  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
+//  Created by Tibor Bödecs on 2025. 05. 19..
 //
 
-import Foundation
 import Testing
+import Foundation
+import ToucanSerialization
 import FileManagerKitTesting
-// TODO: fix this duplication
-#warning("fix this")
 
-extension String {
-    func replacingOccurrences(
-        _ dictionary: [String: String]
-    ) -> String {
-        var result = self
-        for (key, value) in dictionary {
-            result = result.replacingOccurrences(of: key, with: value)
-        }
-        return result
-    }
-}
+@testable import ToucanSource
 
 @Suite
-struct RawContentLocatorTestSuite {
+struct RawContentLoaderTestSuite {
+
+    // MARK: - assets
+
+    @Test()
+    func locateAssetsStandardResult() async throws {
+        try FileManagerPlayground {
+            Directory("src") {
+                Directory("assets") {
+                    "image.png"
+                    "cover.png"
+                }
+            }
+        }
+        .test {
+            let url = $1.appending(path: "src/")
+            let decoder = ToucanYAMLDecoder()
+            let loader = RawContentLoader(
+                locations: .init(sourceUrl: url, config: .defaults),
+                markdownParser: .init(decoder: decoder),
+                fileManager: $0,
+            )
+            let results = loader.locateAssets(at: url)
+            #expect(results.count == 2)
+        }
+    }
+
+    @Test()
+    func locateAssetsEmptyResult() async throws {
+        try FileManagerPlayground()
+            .test {
+                let url = $1.appending(path: "src/")
+                let decoder = ToucanYAMLDecoder()
+                let loader = RawContentLoader(
+                    locations: .init(sourceUrl: url, config: .defaults),
+                    markdownParser: .init(decoder: decoder),
+                    fileManager: $0,
+                )
+                let results = loader.locateAssets(at: url)
+                #expect(results.isEmpty)
+            }
+    }
+
+    // MARK: -
 
     //    @Test()
     //    func rawContentLocatorEmpty() async throws {
@@ -345,4 +377,5 @@ struct RawContentLocatorTestSuite {
     //            #expect(result == expected)
     //        }
     //    }
+
 }

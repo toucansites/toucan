@@ -7,9 +7,32 @@
 
 import Foundation
 import Logging
-
 import FileManagerKit
+import ToucanCore
 import ToucanSerialization
+
+fileprivate extension String {
+
+    func trimmingBracketsContent() -> String {
+        var result = ""
+        var insideBrackets = false
+
+        let decoded = self.removingPercentEncoding ?? self
+
+        for char in decoded {
+            if char == "[" {
+                insideBrackets = true
+            }
+            else if char == "]" {
+                insideBrackets = false
+            }
+            else if !insideBrackets {
+                result.append(char)
+            }
+        }
+        return result
+    }
+}
 
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
@@ -20,14 +43,8 @@ public struct RawContentLoader {
         case invalidFrontMatter(path: String)
     }
 
-    /// The URL of the source files.
-    let url: URL
-
-    /// Content file paths
-    let locations: [RawContentLocation]
-
-    //    /// Source configuration.
-    let sourceConfig: SourceLocations
+    /// Source configuration.
+    let locations: SourceLocations
 
     /// A parser responsible for processing front matter data.
     let markdownParser: MarkdownParser
@@ -38,8 +55,17 @@ public struct RawContentLoader {
     /// The logger instance
     let logger: Logger
 
-    // baseUrl for image asset resolve
-    let baseUrl: String
+    public init(
+        locations: SourceLocations,
+        markdownParser: MarkdownParser,
+        fileManager: FileManagerKit,
+        logger: Logger = .subsystem("raw-content-loader")
+    ) {
+        self.locations = locations
+        self.markdownParser = markdownParser
+        self.fileManager = fileManager
+        self.logger = logger
+    }
 
     /// Loads raw content items from a set of predefined locations.
     ///
@@ -49,87 +75,175 @@ public struct RawContentLoader {
     /// - Returns: An array of `RawContent` objects representing the loaded items.
     /// - Throws: An error if any of the content items cannot be resolved.
     func load() throws -> [RawContent] {
-        logger.debug("Loading raw contents at: `\(url.absoluteString)`")
+        logger.debug(
+            "Loading raw contents at: `\(locations.contentsUrl.absoluteString)`"
+        )
 
         var items: [RawContent] = []
-        for location in locations {
-            let item = try resolveItem(location)
-            items.append(item)
-        }
+        //        for location in locations {
+        //            let item = try resolveItem(location)
+        //            items.append(item)
+        //        }
 
         return items
     }
+
+    /// Locates all raw content entries under a specified base URL.
+    ///
+    /// Each entry is derived from a folder containing one or more valid index files (Markdown/YAML).
+    /// Subdirectories marked with `noindex.yaml|yml` are skipped.
+    ///
+    /// - Parameter url: The root content directory to scan.
+    /// - Returns: A list of `RawContentLocation` objects, sorted by slug.
+    func locate(at url: URL) -> [Origin] {
+        locateRawContentsOrigins(at: url).sorted { $0.slug < $1.slug }
+    }
 }
 
-private extension RawContentLoader {
+extension RawContentLoader {
 
-    func resolveItem(_ location: RawContentLocation) throws -> RawContent {
+    /// Recursively traverses the content directory to locate index-based content definitions.
+    ///
+    /// - Parameters:
+    ///   - contentsUrl: The base directory for contents.
+    ///   - slug: The accumulated slug segments (used to form the output slug).
+    ///   - path: The accumulated path segments (used to navigate the file system).
+    /// - Returns: A list of discovered `RawContentLocation` objects.
+    func locateRawContentsOrigins(
+        at contentsUrl: URL,
+        slug: [String] = [],
+        path: [String] = []
+    ) -> [Origin] {
+        var result: [Origin] = []
+        let currentPath = path.joined(separator: "/")
+        let currentUrl = contentsUrl.appendingPathIfPresent(currentPath)
+
+        if hasIndex(at: currentUrl) {
+            let origin = Origin(
+                path: currentPath,
+                slug: slug.joined(separator: "/").trimmingBracketsContent()
+            )
+            result.append(origin)
+        }
+
+        let list = fileManager.listDirectory(at: currentUrl)
+        for item in list {
+            var newSlug = slug
+            let newPath = path + [item]
+            let childUrl = currentUrl.appendingPathIfPresent(item)
+
+            if !isNoIndexFolder(name: item, at: childUrl) {
+                newSlug += [item]
+            }
+
+            result += locateRawContentsOrigins(
+                at: contentsUrl,
+                slug: newSlug,
+                path: newPath
+            )
+        }
+        return result
+    }
+
+    private func hasIndex(at url: URL) -> Bool {
+        !fileManager.find(
+            name: "index",
+            extensions: ["yml", "yaml", "md", "markdown"],
+            at: url
+        )
+        .isEmpty
+    }
+
+    private func isNoIndexFolder(
+        name: String,
+        at url: URL
+    ) -> Bool {
+        // Skip folders that have a noindex marker
+        let noindexFilePaths = fileManager.find(
+            name: "noindex",
+            extensions: ["yaml", "yml"],
+            at: url
+        )
+        let decodedItem = name.removingPercentEncoding ?? ""
+        let skip = decodedItem.hasPrefix("[") && decodedItem.hasSuffix("]")
+
+        return noindexFilePaths.isEmpty && !skip
+    }
+
+    func locateAssets(at url: URL) -> [String] {
+        fileManager.find(
+            recursively: true,
+            at: url
+        )
+    }
+
+    func resolveItem(_ location: Origin) throws -> RawContent {
         var frontMatter: [String: AnyCodable] = [:]
         var markdown: String?
         var path: String?
         var modificationDate: Date?
 
-        typealias Resolver = (String) throws -> (
-            frontMatter: [String: AnyCodable],
-            markdown: String
-        )
+        //        typealias Resolver = (String) throws -> (
+        //            frontMatter: [String: AnyCodable],
+        //            markdown: String
+        //        )
+        //
+        //        let orderedPathResolvers:
+        //            [(
+        //                primaryPath: String?,
+        //                fallbackPath: String?,
+        //                resolver: Resolver,
+        //                isMarkdown: Bool
+        //            )] = [
+        //                //                (location.markdown, location.md, resolveMarkdown, true),
+        //                (location.yaml, location.yml, resolveYaml, false)
+        //            ]
+        //
+        //        for (
+        //            primaryPath,
+        //            fallbackPath,
+        //            resolver,
+        //            isMarkdown
+        //        ) in orderedPathResolvers {
+        //            if let filePath = primaryPath ?? fallbackPath {
+        //                do {
+        //                    let result = try resolver(filePath)
+        //
+        //                    frontMatter = frontMatter.recursivelyMerged(
+        //                        with: result.frontMatter
+        //                    )
+        //
+        //                    /// Set contents if its a md resolver
+        //                    if isMarkdown {
+        //                        markdown = result.markdown
+        //                    }
+        //                    /// Set path if its a md resolver or a yml resolver but there is no path yet
+        //                    if isMarkdown || path == nil {
+        //                        path = filePath
+        //                    }
+        //                    /// Set modification date if there is no date yet (either md or yml) or if its more recent
+        //                    let url = url.appendingPathComponent(path ?? "")
+        //                    if let existingDate = modificationDate {
+        //                        modificationDate = max(
+        //                            existingDate,
+        //                            try fileManager.modificationDate(at: url)
+        //                        )
+        //                    }
+        //                    else {
+        //                        modificationDate = try fileManager.modificationDate(
+        //                            at: url
+        //                        )
+        //                    }
+        //                }
+        //                catch ToucanDecoderError.decoding(_, _) {
+        //                    throw Error.invalidFrontMatter(path: filePath)
+        //                }
+        //            }
+        //        }
 
-        let orderedPathResolvers:
-            [(
-                primaryPath: String?,
-                fallbackPath: String?,
-                resolver: Resolver,
-                isMarkdown: Bool
-            )] = [
-                //                (location.markdown, location.md, resolveMarkdown, true),
-                (location.yaml, location.yml, resolveYaml, false)
-            ]
+        let url = locations.contentsUrl.appendingPathComponent(path ?? "")
 
-        for (
-            primaryPath,
-            fallbackPath,
-            resolver,
-            isMarkdown
-        ) in orderedPathResolvers {
-            if let filePath = primaryPath ?? fallbackPath {
-                do {
-                    let result = try resolver(filePath)
-
-                    frontMatter = frontMatter.recursivelyMerged(
-                        with: result.frontMatter
-                    )
-
-                    /// Set contents if its a md resolver
-                    if isMarkdown {
-                        markdown = result.markdown
-                    }
-                    /// Set path if its a md resolver or a yml resolver but there is no path yet
-                    if isMarkdown || path == nil {
-                        path = filePath
-                    }
-                    /// Set modification date if there is no date yet (either md or yml) or if its more recent
-                    let url = url.appendingPathComponent(path ?? "")
-                    if let existingDate = modificationDate {
-                        modificationDate = max(
-                            existingDate,
-                            try fileManager.modificationDate(at: url)
-                        )
-                    }
-                    else {
-                        modificationDate = try fileManager.modificationDate(
-                            at: url
-                        )
-                    }
-                }
-                catch ToucanDecoderError.decoding(_, _) {
-                    throw Error.invalidFrontMatter(path: filePath)
-                }
-            }
-        }
-
-        let url = url.appendingPathComponent(path ?? "")
-
-        let assetsPath = sourceConfig.config.contents.assets.path
+        let assetsPath = locations.config.contents.assets.path
         let assetsUrl =
             url
             .deletingLastPathComponent()
@@ -141,12 +255,17 @@ private extension RawContentLoader {
         )
 
         return RawContent(
-            origin: .init(path: path ?? "", slug: location.slug),
-            frontMatter: frontMatter,
-            markdown: markdown ?? "",
+            origin: .init(
+                path: path ?? "",
+                slug: location.slug
+            ),
+            markdown: .init(
+                frontMatter: frontMatter,
+                contents: markdown ?? ""
+            ),
             lastModificationDate: (modificationDate ?? Date())
                 .timeIntervalSince1970,
-            assets: []  //assetLocations
+            assets: assetLocations
         )
     }
 
@@ -160,7 +279,7 @@ extension RawContentLoader {
     func resolveMarkdown(
         at path: String
     ) throws -> Markdown {
-        let url = url.appendingPathComponent(path)
+        let url = locations.contentsUrl.appendingPathComponent(path)
         let markdown = try loadItem(at: url)
         return try markdownParser.parse(markdown)
     }
@@ -168,7 +287,7 @@ extension RawContentLoader {
     func resolveYaml(
         at path: String
     ) throws -> (frontMatter: [String: AnyCodable], markdown: String) {
-        let url = url.appendingPathComponent(path)
+        let url = locations.contentsUrl.appendingPathComponent(path)
         let rawContents = try loadItem(at: url)
         return (
             frontMatter: try markdownParser.decoder.decode(

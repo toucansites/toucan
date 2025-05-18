@@ -11,15 +11,6 @@ import Logging
 import FileManagerKit
 import ToucanSerialization
 
-//extension SourceLocations: LoggerMetadataRepresentable {
-//
-//    var logMetadata: [String: Logger.MetadataValue] {
-//        [
-//            "baseUrl": .string(baseUrl.absoluteString),
-//        ]
-//    }
-//}
-
 struct SourceLoader {
 
     let sourceUrl: URL
@@ -160,22 +151,22 @@ struct SourceLoader {
 
         // MARK: - RawContents
 
-        let rawContentLocations = RawContentLocator(
-            fileManager: fileManager
-        )
-        .locate(
-            at: sourceConfig.contentsUrl
-        )
-        let rawContentsLoader = RawContentLoader(
-            url: sourceConfig.contentsUrl,
-            locations: rawContentLocations,
-            sourceConfig: sourceConfig,
-            markdownParser: markdownParser,
-            fileManager: fileManager,
-            logger: logger,
-            baseUrl: target.url
-        )
-        let rawContents = try rawContentsLoader.load()
+        //        let rawContentLocations = RawContentLocator(
+        //            fileManager: fileManager
+        //        )
+        //        .locate(
+        //            at: sourceConfig.contentsUrl
+        //        )
+        //        let rawContentsLoader = RawContentLoader(
+        //            url: sourceConfig.contentsUrl,
+        //            locations: rawContentLocations,
+        //            sourceConfig: sourceConfig,
+        //            markdownParser: markdownParser,
+        //            fileManager: fileManager,
+        //            logger: logger,
+        //            baseUrl: target.url
+        //        )
+        //        let rawContents = try rawContentsLoader.load()
 
         // MARK: - Create Contents from RawContents
 
@@ -213,7 +204,7 @@ struct SourceLoader {
             settings: settings,
             pipelines: pipelines,
             contentDefinitions: contentDefinitions,
-            rawContents: rawContents,
+            rawContents: [],
             blockDirectives: blockDirectives
         )
     }

@@ -7,7 +7,6 @@
 
 import Foundation
 import Logging
-
 import ToucanSerialization
 
 /// `ObjectLoader` is designed to load objects from files.
@@ -33,6 +32,20 @@ struct ObjectLoader {
 
     /// Logger instance for emitting debug output during loading.
     let logger: Logger
+
+    init(
+        url: URL,
+        locations: [String],
+        encoder: ToucanEncoder,
+        decoder: ToucanDecoder,
+        logger: Logger = .subsystem("object-loader")
+    ) {
+        self.url = url
+        self.locations = locations
+        self.encoder = encoder
+        self.decoder = decoder
+        self.logger = logger
+    }
 
     /// Loads and decodes files into a specific `Codable` type.
     ///

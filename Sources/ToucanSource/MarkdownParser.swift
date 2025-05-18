@@ -6,15 +6,26 @@
 //
 
 import Logging
+import ToucanCore
 import ToucanSerialization
 
-struct MarkdownParser {
+public struct MarkdownParser {
 
-    var separator: String = "---"
+    var separator: String
     var decoder: ToucanDecoder
     var logger: Logger
 
-    private func dropFrontMatter(
+    public init(
+        separator: String = "---",
+        decoder: ToucanDecoder,
+        logger: Logger = .subsystem("markdown-parser")
+    ) {
+        self.separator = separator
+        self.decoder = decoder
+        self.logger = logger
+    }
+
+    func dropFrontMatter(
         _ markdown: String
     ) -> String {
         if markdown.starts(with: separator) {
@@ -27,10 +38,11 @@ struct MarkdownParser {
         return markdown
     }
 
-    func parse(
+    public func parse(
         _ markdown: String
     ) throws -> Markdown {
         guard markdown.starts(with: separator) else {
+            logger.debug("The markdown string has no front matter.")
             return .init(
                 frontMatter: [:],
                 contents: markdown
