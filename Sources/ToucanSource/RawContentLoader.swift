@@ -46,6 +46,9 @@ public struct RawContentLoader {
     /// Source configuration.
     let locations: SourceLocations
 
+    /// Decoder used to decode YAML files.
+    let decoder: ToucanYAMLDecoder
+
     /// A parser responsible for processing front matter data.
     let markdownParser: MarkdownParser
 
@@ -57,11 +60,13 @@ public struct RawContentLoader {
 
     public init(
         locations: SourceLocations,
+        decoder: ToucanYAMLDecoder,
         markdownParser: MarkdownParser,
         fileManager: FileManagerKit,
         logger: Logger = .subsystem("raw-content-loader")
     ) {
         self.locations = locations
+        self.decoder = decoder
         self.markdownParser = markdownParser
         self.fileManager = fileManager
         self.logger = logger
@@ -201,6 +206,7 @@ extension RawContentLoader {
         return skip || !noindexFilePaths.isEmpty
     }
 
+    // TODO: check if url in base url
     func locateAssets(at url: URL) -> [String] {
         fileManager.find(
             recursively: true,
@@ -208,34 +214,39 @@ extension RawContentLoader {
         )
     }
 
-    func resolveItem(_ location: Origin) throws -> RawContent {
-        var frontMatter: [String: AnyCodable] = [:]
-        var markdown: String?
-        var path: String?
+    func loadContentsOfFile(
+        at url: URL
+    ) throws -> String {
+        try String(contentsOf: url, encoding: .utf8)
+    }
+
+    func parseMarkdown(
+        at url: URL
+    ) throws -> Markdown {
+        let rawMarkdown = try loadContentsOfFile(at: url)
+        return try markdownParser.parse(rawMarkdown)
+    }
+
+    func resolveYaml(
+        at url: URL
+    ) throws -> [String: AnyCodable] {
+        let rawContents = try loadContentsOfFile(at: url)
+        return try decoder.decode([String: AnyCodable].self, from: rawContents)
+        //        return (
+        //            frontMatter: try markdownParser.decoder.decode(
+        //                [String: AnyCodable].self,
+        //                from: rawContents.data(using: .utf8)!
+        //            ),
+        //            markdown: ""
+        //        )
+    }
+
+    func loadRawContent(
+        at origin: Origin
+    ) throws -> RawContent {
+        var markdown: Markdown
         var modificationDate: Date?
 
-        //        typealias Resolver = (String) throws -> (
-        //            frontMatter: [String: AnyCodable],
-        //            markdown: String
-        //        )
-        //
-        //        let orderedPathResolvers:
-        //            [(
-        //                primaryPath: String?,
-        //                fallbackPath: String?,
-        //                resolver: Resolver,
-        //                isMarkdown: Bool
-        //            )] = [
-        //                //                (location.markdown, location.md, resolveMarkdown, true),
-        //                (location.yaml, location.yml, resolveYaml, false)
-        //            ]
-        //
-        //        for (
-        //            primaryPath,
-        //            fallbackPath,
-        //            resolver,
-        //            isMarkdown
-        //        ) in orderedPathResolvers {
         //            if let filePath = primaryPath ?? fallbackPath {
         //                do {
         //                    let result = try resolver(filePath)
@@ -269,10 +280,8 @@ extension RawContentLoader {
         //                catch ToucanDecoderError.decoding(_, _) {
         //                    throw Error.invalidFrontMatter(path: filePath)
         //                }
-        //            }
-        //        }
 
-        let url = locations.contentsUrl.appendingPathComponent(path ?? "")
+        let url = locations.contentsUrl.appendingPathIfPresent(origin.path)
 
         let assetsPath = locations.config.contents.assets.path
         let assetsUrl =
@@ -286,13 +295,10 @@ extension RawContentLoader {
         )
 
         return RawContent(
-            origin: .init(
-                path: path ?? "",
-                slug: location.slug
-            ),
+            origin: origin,
             markdown: .init(
-                frontMatter: frontMatter,
-                contents: markdown ?? ""
+                frontMatter: [:],
+                contents: ""
             ),
             lastModificationDate: (modificationDate ?? Date())
                 .timeIntervalSince1970,
@@ -300,34 +306,10 @@ extension RawContentLoader {
         )
     }
 
-    func loadItem(at url: URL) throws -> String {
-        try String(contentsOf: url, encoding: .utf8)
-    }
 }
 
 extension RawContentLoader {
 
-    func resolveMarkdown(
-        at path: String
-    ) throws -> Markdown {
-        let url = locations.contentsUrl.appendingPathComponent(path)
-        let markdown = try loadItem(at: url)
-        return try markdownParser.parse(markdown)
-    }
-
-    func resolveYaml(
-        at path: String
-    ) throws -> (frontMatter: [String: AnyCodable], markdown: String) {
-        let url = locations.contentsUrl.appendingPathComponent(path)
-        let rawContents = try loadItem(at: url)
-        return (
-            frontMatter: try markdownParser.decoder.decode(
-                [String: AnyCodable].self,
-                from: rawContents.data(using: .utf8)!
-            ),
-            markdown: ""
-        )
-    }
     //
     //    func resolveImage(
     //        frontMatter: [String: AnyCodable],

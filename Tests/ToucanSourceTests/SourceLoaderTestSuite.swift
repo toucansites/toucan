@@ -7,6 +7,7 @@
 import Testing
 import Foundation
 import ToucanSerialization
+import FileManagerKit
 import FileManagerKitTesting
 
 @testable import ToucanSource
@@ -14,16 +15,47 @@ import FileManagerKitTesting
 @Suite
 struct SourceLoaderTestSuite {
 
-    // MARK: - content type
+    // MARK: - private helpers
+
+    private func testSourceHierarchy(
+        @FileManagerPlayground.DirectoryBuilder
+        _ builder: () -> [FileManagerPlayground.Item]
+    ) -> Directory {
+        Directory("src", builder)
+    }
+
+    private func testSourceTypesHierarchy(
+        @FileManagerPlayground.DirectoryBuilder
+        _ builder: () -> [FileManagerPlayground.Item]
+    ) -> Directory {
+        testSourceHierarchy {
+            Directory("types", builder)
+        }
+    }
+
+    private func testRawContentLoader(
+        fileManager: FileManagerKit,
+        url: URL
+    ) -> RawContentLoader {
+        let url = url.appending(path: "src/")
+        let decoder = ToucanYAMLDecoder()
+        let loader = RawContentLoader(
+            locations: .init(sourceUrl: url, config: .defaults),
+            decoder: .init(),
+            markdownParser: .init(decoder: decoder),
+            fileManager: fileManager,
+        )
+        return loader
+    }
+
+    // MARK: -
 
     @Test()
     func contentType() async throws {
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("types") {
-                    "post.yaml"
-                    "tag.yml"
-                }
+            testSourceTypesHierarchy {
+                "post.yaml"
+                "tag.yml"
             }
         }
         .test {
