@@ -64,6 +64,9 @@ public struct MarkdownParser {
         return .init(
             frontMatter: frontMatter,
             contents: dropFrontMatter(markdown)
+                .trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
         )
     }
 }

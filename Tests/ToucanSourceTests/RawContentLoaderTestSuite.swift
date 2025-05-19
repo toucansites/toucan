@@ -298,4 +298,111 @@ struct RawContentLoaderTestSuite {
             try testExpectationRequirements(fileManager: $0, url: $1)
         }
     }
+
+    // MARK: - loading contents
+
+    @Test()
+    func loadMDFileContents() async throws {
+        let modificationDate = Date()
+
+        try FileManagerPlayground {
+            testBlogArticleHierarchy {
+                Directory("assets") {
+                    "cover.png"
+                    "style.css"
+                    "main.js"
+                }
+                File(
+                    "index.md",
+                    attributes: [
+                        .modificationDate: modificationDate
+                    ],
+                    string: """
+                        ---
+                        title: "Hello md"
+                        ---
+
+                        # Hello md
+
+                        Lorem ipsum dolor sit amet
+                        """
+                )
+                File(
+                    "index.markdown",
+                    attributes: [
+                        .modificationDate: modificationDate
+                    ],
+                    string: """
+                        ---
+                        title: "Hello markdown"
+                        ---
+
+                        # Hello markdown
+
+                        Lorem ipsum dolor sit amet
+                        """
+                )
+                File(
+                    "index.yml",
+                    attributes: [
+                        .modificationDate: modificationDate
+                    ],
+                    string: """
+                        title: "Hello yml"
+                        """
+                )
+                File(
+                    "index.yaml",
+                    attributes: [
+                        .modificationDate: modificationDate
+                    ],
+                    string: """
+                        title: "Hello yaml"
+                        """
+                )
+            }
+        }
+        .test {
+            let loader = testRawContentLoader(fileManager: $0, url: $1)
+            let results = loader.locateOrigins()
+            #expect(results.count == 1)
+
+            let origin = try #require(results.first)
+            let content = try loader.loadRawContent(at: origin)
+
+            let expectation = RawContent(
+                origin: testBlogArticleOrigin(),
+                markdown: .init(
+                    frontMatter: [
+                        "title": "Hello yml"
+                    ],
+                    contents: """
+                        # Hello md
+
+                        Lorem ipsum dolor sit amet
+                        """
+                ),
+                lastModificationDate: modificationDate.timeIntervalSince1970,
+                assets: [
+                    "cover.png",
+                    "main.js",
+                    "style.css",
+                ]
+                .sorted()
+            )
+
+            #expect(content.origin == expectation.origin)
+            #expect(content.markdown == expectation.markdown)
+            #expect(
+                content.markdown.frontMatter == expectation.markdown.frontMatter
+            )
+            #expect(content.markdown.contents == expectation.markdown.contents)
+            #expect(
+                content.lastModificationDate == expectation.lastModificationDate
+            )
+            #expect(content.assets == expectation.assets)
+            #expect(content == expectation)
+        }
+    }
+
 }
