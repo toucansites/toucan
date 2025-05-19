@@ -10,6 +10,7 @@ import Foundation
 import ToucanSerialization
 import FileManagerKit
 import FileManagerKitTesting
+import Logging
 
 @testable import ToucanSource
 
@@ -29,6 +30,8 @@ struct RawContentLoaderTestSuite {
         fileManager: FileManagerKit,
         url: URL
     ) -> RawContentLoader {
+        var logger = Logger(label: "test")
+        logger.logLevel = .trace
         let url = url.appending(path: "src/")
         let decoder = ToucanYAMLDecoder()
         let loader = RawContentLoader(
@@ -36,42 +39,9 @@ struct RawContentLoaderTestSuite {
             decoder: .init(),
             markdownParser: .init(decoder: decoder),
             fileManager: fileManager,
+            logger: logger
         )
         return loader
-    }
-
-    // MARK: - assets
-
-    @Test()
-    func locateAssetsStandardResult() async throws {
-        try FileManagerPlayground {
-            testSourceContentsHierarchy {
-                Directory("example") {
-                    Directory("assets") {
-                        "image.png"
-                        "cover.png"
-                    }
-                    "index.md"
-                }
-            }
-        }
-        .test {
-            let url = $1.appending(path: "src/contents/example/assets")
-            let loader = testRawContentLoader(fileManager: $0, url: $1)
-            let results = loader.locateAssets(at: url)
-            #expect(results.count == 2)
-        }
-    }
-
-    @Test()
-    func locateAssetsEmptyResult() async throws {
-        try FileManagerPlayground()
-            .test {
-                let url = $1.appending(path: "src/contents/example/assets")
-                let loader = testRawContentLoader(fileManager: $0, url: $1)
-                let results = loader.locateAssets(at: url)
-                #expect(results.isEmpty)
-            }
     }
 
     // MARK: - origins
@@ -426,4 +396,59 @@ struct RawContentLoaderTestSuite {
             #expect(content == exp)
         }
     }
+
+    @Test()
+    func loadMultipleRawContents() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            testSourceContentsHierarchy {
+                Directory("example-1") {
+                    testMarkdownFile(ext: "md", modificationDate: now)
+                }
+                Directory("example-2") {
+                    testYAMLFile(ext: "yml", modificationDate: now)
+                }
+            }
+        }
+        .test {
+            let loader = testRawContentLoader(fileManager: $0, url: $1)
+            let results = try loader.load()
+            #expect(results.count == 2)
+
+            let expected: [RawContent] = [
+                .init(
+                    origin: .init(
+                        path: "example-1",
+                        slug: "example-1"
+                    ),
+                    markdown: .init(
+                        frontMatter: ["title": "Hello index.md"],
+                        contents: """
+                            # Hello index.md
+
+                            Lorem ipsum dolor sit amet
+                            """
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assets: []
+                ),
+                .init(
+                    origin: .init(
+                        path: "example-2",
+                        slug: "example-2"
+                    ),
+                    markdown: .init(
+                        frontMatter: ["title": "Hello index.yml"],
+                        contents: ""
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assets: []
+                ),
+            ]
+
+            #expect(results == expected)
+        }
+    }
+
 }

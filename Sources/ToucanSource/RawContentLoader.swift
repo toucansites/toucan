@@ -79,18 +79,17 @@ public struct RawContentLoader {
     ///
     /// - Returns: An array of `RawContent` objects representing the loaded items.
     /// - Throws: An error if any of the content items cannot be resolved.
-    func load() throws -> [RawContent] {
+    public func load() throws -> [RawContent] {
         logger.debug(
-            "Loading raw contents at: `\(locations.contentsUrl.absoluteString)`"
+            "Loading raw contents.",
+            metadata: [
+                "path": .string(locations.contentsUrl.absoluteString)
+            ]
         )
-
-        var items: [RawContent] = []
-        //        for location in locations {
-        //            let item = try resolveItem(location)
-        //            items.append(item)
-        //        }
-
-        return items
+        return try locateOrigins()
+            .map {
+                try loadRawContent(at: $0)
+            }
     }
 
     // MARK: - locate
@@ -109,12 +108,96 @@ public struct RawContentLoader {
         .sorted { $0.slug < $1.slug }
     }
 
-    // TODO: check if url in base url
-    func locateAssets(at url: URL) -> [String] {
-        fileManager.find(
-            recursively: true,
-            at: url
+    func loadRawContent(
+        at origin: Origin
+    ) throws -> RawContent {
+
+        var frontMatter: [String: AnyCodable] = [:]
+        var contents: String = ""
+        var lastModificationDate: Date?
+
+        let contentUrl = locations.contentsUrl.appendingPathIfPresent(
+            origin.path
         )
+
+        let indexFiles = getIndexes(at: contentUrl).sorted()
+
+        for indexFile in indexFiles {
+
+            let indexUrl = contentUrl.appendingPathIfPresent(indexFile)
+
+            if let existingDate = lastModificationDate {
+                lastModificationDate = max(
+                    existingDate,
+                    try fileManager.modificationDate(at: indexUrl)
+                )
+            }
+            else {
+                lastModificationDate = try fileManager.modificationDate(
+                    at: indexUrl
+                )
+            }
+
+            switch true {
+            case indexFile.hasSuffix("markdown"),
+                indexFile.hasSuffix("md"):
+                logger.trace(
+                    "Loading index Markdown file",
+                    metadata: [
+                        "path": .string(origin.path),
+                        "slug": .string(origin.slug),
+                        "file": .string(indexFile),
+                    ]
+                )
+
+                let markdown = try loadMarkdownFile(at: indexUrl)
+                frontMatter = frontMatter.recursivelyMerged(
+                    with: markdown.frontMatter
+                )
+                contents = markdown.contents
+            case indexFile.hasSuffix("yaml"),
+                indexFile.hasSuffix("yml"):
+                logger.trace(
+                    "Loading index YAML file",
+                    metadata: [
+                        "path": .string(origin.path),
+                        "slug": .string(origin.slug),
+                        "file": .string(indexFile),
+                    ]
+                )
+
+                let yaml = try loadYAMLFile(at: indexUrl)
+                frontMatter = frontMatter.recursivelyMerged(with: yaml)
+            default:
+                logger.warning(
+                    "The content has no index file.",
+                    metadata: [
+                        "path": .string(origin.path),
+                        "slug": .string(origin.slug),
+                    ]
+                )
+                continue
+            }
+        }
+
+        let modificationDate = lastModificationDate ?? Date()
+        let assetsPath = locations.config.contents.assets.path
+        let assetsUrl = contentUrl.appendingPathIfPresent(assetsPath)
+        let assets = locateAssets(at: assetsUrl)
+
+        return RawContent(
+            origin: origin,
+            markdown: .init(
+                frontMatter: frontMatter,
+                contents: contents
+            ),
+            lastModificationDate: modificationDate.timeIntervalSince1970,
+            assets: assets.sorted()
+        )
+    }
+
+    private func locateAssets(at url: URL) -> [String] {
+        fileManager.find(recursively: true, at: url).sorted()
     }
 
     /// Recursively traverses the content directory to locate index-based content definitions.
@@ -124,7 +207,7 @@ public struct RawContentLoader {
     ///   - slug: The accumulated slug segments (used to form the output slug).
     ///   - path: The accumulated path segments (used to navigate the file system).
     /// - Returns: A list of discovered `RawContentLocation` objects.
-    func locateRawContentsOrigins(
+    private func locateRawContentsOrigins(
         at contentsUrl: URL,
         slug: [String] = [],
         path: [String] = []
@@ -222,117 +305,24 @@ public struct RawContentLoader {
 
     // MARK: - file load
 
-    func loadContentsOfFile(
+    private func loadContentsOfFile(
         at url: URL
     ) throws -> String {
         try String(contentsOf: url, encoding: .utf8)
     }
 
-    func loadMarkdownFile(
+    private func loadMarkdownFile(
         at url: URL
     ) throws -> Markdown {
         let rawMarkdown = try loadContentsOfFile(at: url)
         return try markdownParser.parse(rawMarkdown)
     }
 
-    func loadYAMLFile(
+    private func loadYAMLFile(
         at url: URL
     ) throws -> [String: AnyCodable] {
         let rawContents = try loadContentsOfFile(at: url)
         return try decoder.decode([String: AnyCodable].self, from: rawContents)
-    }
-
-    func loadRawContent(
-        at origin: Origin
-    ) throws -> RawContent {
-
-        var frontMatter: [String: AnyCodable] = [:]
-        var contents: String = ""
-        var lastModificationDate: Date?
-
-        let contentUrl = locations.contentsUrl.appendingPathIfPresent(
-            origin.path
-        )
-
-        let indexFiles = getIndexes(at: contentUrl).sorted()
-
-        for indexFile in indexFiles {
-
-            let indexUrl = contentUrl.appendingPathIfPresent(indexFile)
-
-            if let existingDate = lastModificationDate {
-                lastModificationDate = max(
-                    existingDate,
-                    try fileManager.modificationDate(at: indexUrl)
-                )
-            }
-            else {
-                lastModificationDate = try fileManager.modificationDate(
-                    at: indexUrl
-                )
-            }
-
-            switch true {
-            case indexFile.hasSuffix("markdown"),
-                indexFile.hasSuffix("md"):
-                logger.trace(
-                    "Loading index Markdown file",
-                    metadata: [
-                        "path": .string(origin.path),
-                        "slug": .string(origin.slug),
-                        "file": .string(indexFile),
-                    ]
-                )
-
-                let rawMarkdown = try String(contentsOf: indexUrl)
-                let markdown = try markdownParser.parse(rawMarkdown)
-                frontMatter = frontMatter.recursivelyMerged(
-                    with: markdown.frontMatter
-                )
-                contents = markdown.contents
-            case indexFile.hasSuffix("yaml"),
-                indexFile.hasSuffix("yml"):
-                logger.trace(
-                    "Loading index YAML file",
-                    metadata: [
-                        "path": .string(origin.path),
-                        "slug": .string(origin.slug),
-                        "file": .string(indexFile),
-                    ]
-                )
-
-                let data = try Data(contentsOf: indexUrl)
-                let yaml = try decoder.decode(
-                    [String: AnyCodable].self,
-                    from: data
-                )
-                frontMatter = frontMatter.recursivelyMerged(with: yaml)
-            default:
-                logger.warning(
-                    "The content has no index file.",
-                    metadata: [
-                        "path": .string(origin.path),
-                        "slug": .string(origin.slug),
-                    ]
-                )
-                continue
-            }
-        }
-
-        let modificationDate = lastModificationDate ?? Date()
-        let assetsPath = locations.config.contents.assets.path
-        let assetsUrl = contentUrl.appendingPathIfPresent(assetsPath)
-        let assets = fileManager.find(recursively: true, at: assetsUrl)
-
-        return RawContent(
-            origin: origin,
-            markdown: .init(
-                frontMatter: frontMatter,
-                contents: contents
-            ),
-            lastModificationDate: modificationDate.timeIntervalSince1970,
-            assets: assets.sorted()
-        )
     }
 
 }
