@@ -6,7 +6,6 @@
 
 import Foundation
 import FileManagerKit
-import ToucanModels
 
 /// A structured filesystem accessor for locating various types of files used in the Toucan content pipeline.
 public struct ToucanFileSystem {

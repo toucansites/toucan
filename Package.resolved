@@ -58,7 +58,7 @@
     {
       "identity" : "swift-algorithms",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-algorithms",
+      "location" : "https://github.com/apple/swift-algorithms.git",
       "state" : {
         "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
         "version" : "1.2.1"
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-structured-headers.git",
       "state" : {
-        "revision" : "f280fc7676b9940ff2c6598642751ea333c6544f",
-        "version" : "1.2.2"
+        "revision" : "db6eea3692638a65e2124990155cd220c2915903",
+        "version" : "1.3.0"
       }
     },
     {
@@ -247,7 +247,7 @@
     {
       "identity" : "swift-sass",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnfairh/swift-sass.git",
+      "location" : "https://github.com/johnfairh/swift-sass",
       "state" : {
         "revision" : "e2c9c4e18c08f0b31f9ddbd3677a7a37460ad132",
         "version" : "3.1.0"

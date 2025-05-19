@@ -55,11 +55,14 @@ struct Entrypoint: AsyncParsableCommand {
         )
 
         if generator.generateAndLogErrors(logger) {
-            let metadata: Logger.Metadata = [
+            var metadata: Logger.Metadata = [
                 "input": "\(input)",
-                "output": "\(output)",
-                "baseUrl": "\(String(describing: baseUrl?.description))",
+                "output": "\(output)"
             ]
+            if let baseUrl {
+                metadata["baseUrl"] = "\(baseUrl)"
+            }
+            
             logger.info("Site generated successfully.", metadata: metadata)
         }
     }

@@ -19,6 +19,7 @@ extension Pipeline {
             case include
             case exclude
             case lastUpdate
+            case filterRules
         }
 
         // MARK: - Properties
@@ -97,12 +98,18 @@ extension Pipeline {
                     [String].self,
                     forKey: .lastUpdate
                 ) ?? []
+            
+            let filterRules: [String: Condition] =
+                try container.decodeIfPresent(
+                    [String: Condition].self,
+                    forKey: .filterRules
+                ) ?? [:]
 
             self.init(
                 include: include,
                 exclude: exclude,
                 lastUpdate: lastUpdate,
-                filterRules: [:]
+                filterRules: filterRules
             )
         }
 
