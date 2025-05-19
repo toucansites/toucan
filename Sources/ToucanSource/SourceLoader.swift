@@ -7,11 +7,11 @@
 
 import Foundation
 import Logging
-
 import FileManagerKit
+import ToucanCore
 import ToucanSerialization
 
-struct SourceLoader {
+public struct SourceLoader {
 
     let sourceUrl: URL
     let target: Target
@@ -24,50 +24,24 @@ struct SourceLoader {
 
     let logger: Logger
 
-    private func loadConfig() throws -> Config {
-        let configUrl = sourceUrl.appending(
-            path: target.config
-        )
-        let config = try ObjectLoader(
-            url: configUrl,
-            locations: fileManager.find(
-                name: "config",
-                extensions: ["yaml", "yml"],
-                at: configUrl
-            ),
-            encoder: encoder,
-            decoder: decoder,
-            logger: logger
-        )
-        .load(Config.self)
+    // MARK: -
 
-        return config
-    }
-
-    private func loadSettings(
-        at url: URL
-    ) throws -> Settings {
-
-        //        if config.site.settings != nil, settingsLocations.isEmpty {
-        //            logger.warning(
-        //                "Missing `site.yml` file at url: `\(sourceConfig.siteSettingsURL.absoluteString)`"
-        //            )
-        //        }
-
-        let settings = try ObjectLoader(
-            url: url,
-            locations: fileManager.find(
-                name: "site",
-                extensions: ["yaml", "yml"],
-                at: url
-            ),
-            encoder: encoder,
-            decoder: decoder,
-            logger: logger
-        )
-        .load(Settings.self)
-
-        return settings
+    public init(
+        sourceUrl: URL,
+        target: Target,
+        fileManager: FileManagerKit,
+        markdownParser: MarkdownParser,
+        encoder: ToucanEncoder,
+        decoder: ToucanDecoder,
+        logger: Logger = .subsystem("source-loader")
+    ) {
+        self.sourceUrl = sourceUrl
+        self.target = target
+        self.fileManager = fileManager
+        self.markdownParser = markdownParser
+        self.encoder = encoder
+        self.decoder = decoder
+        self.logger = logger
     }
 
     /// Loads and processes source content from the specified source URL.
@@ -76,126 +50,54 @@ struct SourceLoader {
     ///
     /// - Returns: A `SourceBundle` containing the loaded and processed data.
     /// - Throws: An error if any of the loading operations fail.
-    func load() throws -> BuildTargetSource {
+    public func load() throws -> BuildTargetSource {
 
-        let config = try loadConfig()
+        let configUrl = sourceUrl.appendingPathIfPresent(target.config)
 
-        let sourceConfig = SourceLocations(
+        let config = try load(
+            type: Config.self,
+            named: "config",
+            at: configUrl
+        )
+
+        let locations = SourceLocations(
             sourceUrl: sourceUrl,
             config: config
         )
 
-        let settings = try loadSettings(
-            at: sourceConfig.siteSettingsURL
+        let settings = try load(
+            type: Settings.self,
+            named: "site",
+            at: locations.siteSettingsURL
         )
 
-        // MARK: - Pipelines
-
-        let pipelines = try ObjectLoader(
-            url: sourceConfig.pipelinesUrl,
-            locations: fileManager.find(
-                extensions: ["yml", "yaml"],
-                at: sourceConfig.pipelinesUrl
-            ),
-            encoder: encoder,
-            decoder: decoder,
-            logger: logger
+        let pipelines = try load(
+            type: Pipeline.self,
+            at: locations.pipelinesUrl
         )
-        .load(Pipeline.self)
 
-        // MARK: - Content definitions
-
-        let loadedContentDefinitions = try ObjectLoader(
-            url: sourceConfig.typesUrl,
-            locations: fileManager.find(
-                extensions: ["yml", "yaml"],
-                at: sourceConfig.typesUrl
-            ),
-            encoder: encoder,
-            decoder: decoder,
-            logger: logger
+        let loadedTypes = try load(
+            type: ContentDefinition.self,
+            at: locations.typesUrl
         )
-        .load(ContentDefinition.self)
-
-        let virtualContentDefinitions = pipelines.compactMap {
+        let virtualTypes = pipelines.compactMap {
             $0.definesType ? ContentDefinition(id: $0.id) : nil
         }
+        let finalTypes = loadedTypes + virtualTypes
 
-        let contentDefinitions =
-            loadedContentDefinitions + virtualContentDefinitions
+        let blockDirectives = try load(
+            type: Block.self,
+            at: locations.blocksUrl
+        )
 
-        let contentDefinitionList =
-            contentDefinitions
-            .map(\.id)
-            .joined(separator: ", ")
-
-        logger.debug("Available content types: `\(contentDefinitionList)`")
-
-        // MARK: - Block directives
-
-        let blockDirectives: [Block] = try ObjectLoader(
-            url: sourceConfig.blocksUrl,
-            locations: fileManager.find(
-                extensions: ["yml", "yaml"],
-                at: sourceConfig.blocksUrl
-            ),
-            encoder: encoder,
-            decoder: decoder,
+        let rawContentsLoader = RawContentLoader(
+            locations: .init(sourceUrl: sourceUrl, config: config),
+            decoder: .init(),
+            markdownParser: .init(decoder: decoder),
+            fileManager: fileManager,
             logger: logger
         )
-        .load(Block.self)
-
-        logger.debug(
-            "Available block directives: `\(blockDirectives.map(\.name).joined(separator: ", "))`"
-        )
-
-        // MARK: - RawContents
-
-        //        let rawContentLocations = RawContentLocator(
-        //            fileManager: fileManager
-        //        )
-        //        .locate(
-        //            at: sourceConfig.contentsUrl
-        //        )
-        //        let rawContentsLoader = RawContentLoader(
-        //            url: sourceConfig.contentsUrl,
-        //            locations: rawContentLocations,
-        //            sourceConfig: sourceConfig,
-        //            markdownParser: markdownParser,
-        //            fileManager: fileManager,
-        //            logger: logger,
-        //            baseUrl: target.url
-        //        )
-        //        let rawContents = try rawContentsLoader.load()
-
-        // MARK: - Create Contents from RawContents
-
-        //        let contents: [Content] = try rawContents.compactMap {
-        //            /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
-        //            let rawReservedFrontMatter = try encoder.encode($0.frontMatter)
-        //            let reservedFrontMatter = try decoder.decode(
-        //                ReservedFrontMatter.self,
-        //                from: rawReservedFrontMatter.data(using: .utf8)!
-        //            )
-        //
-        //            let detector = ContentDefinitionDetector(
-        //                definitions: contentDefinitions,
-        //                origin: $0.origin,
-        //                logger: logger
-        //            )
-        //
-        //            let contentDefinition = try detector.detect(
-        //                explicitType: reservedFrontMatter.type
-        //            )
-        //
-        //            let contentDefinitionConverter = ContentDefinitionConverter(
-        //                contentDefinition: contentDefinition,
-        //                dateFormatter: target.dateFormatter(config.dateFormats.input),
-        //                logger: logger
-        //            )
-        //
-        //            return contentDefinitionConverter.convert(rawContent: $0)
-        //        }
+        let rawContents = try rawContentsLoader.load()
 
         return .init(
             location: sourceUrl,
@@ -203,9 +105,74 @@ struct SourceLoader {
             config: config,
             settings: settings,
             pipelines: pipelines,
-            contentDefinitions: contentDefinitions,
-            rawContents: [],
+            contentDefinitions: finalTypes,
+            rawContents: rawContents,
             blockDirectives: blockDirectives
         )
     }
+
+    func load<T: Codable>(
+        type: T.Type,
+        named name: String,
+        at url: URL
+    ) throws -> T {
+        try ObjectLoader(
+            url: url,
+            locations: fileManager.find(
+                name: name,
+                extensions: ["yml", "yaml"],
+                at: url
+            ),
+            encoder: encoder,
+            decoder: decoder,
+            logger: logger
+        )
+        .load(type)
+    }
+
+    func load<T: Decodable>(
+        type: T.Type,
+        at url: URL
+    ) throws -> [T] {
+        try ObjectLoader(
+            url: url,
+            locations: fileManager.find(
+                extensions: ["yml", "yaml"],
+                at: url
+            ),
+            encoder: encoder,
+            decoder: decoder,
+            logger: logger
+        )
+        .load(type)
+    }
 }
+
+// MARK: - Create Contents from RawContents
+
+//        let contents: [Content] = try rawContents.compactMap {
+//            /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
+//            let rawReservedFrontMatter = try encoder.encode($0.frontMatter)
+//            let reservedFrontMatter = try decoder.decode(
+//                ReservedFrontMatter.self,
+//                from: rawReservedFrontMatter.data(using: .utf8)!
+//            )
+//
+//            let detector = ContentDefinitionDetector(
+//                definitions: contentDefinitions,
+//                origin: $0.origin,
+//                logger: logger
+//            )
+//
+//            let contentDefinition = try detector.detect(
+//                explicitType: reservedFrontMatter.type
+//            )
+//
+//            let contentDefinitionConverter = ContentDefinitionConverter(
+//                contentDefinition: contentDefinition,
+//                dateFormatter: target.dateFormatter(config.dateFormats.input),
+//                logger: logger
+//            )
+//
+//            return contentDefinitionConverter.convert(rawContent: $0)
+//        }
