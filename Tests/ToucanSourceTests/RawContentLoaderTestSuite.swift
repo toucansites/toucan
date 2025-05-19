@@ -210,89 +210,20 @@ struct RawContentLoaderTestSuite {
         #expect(result == expected)
     }
 
-    @Test()
-    func locateMDFileOnly() async throws {
+    @Test(
+        arguments: [
+            ["index.md"],
+            ["index.markdown"],
+            ["index.yml"],
+            ["index.yaml"],
+            ["index.yml", "index.yaml"],
+            ["index.md", "index.markdown"],
+            ["index.md", "index.markdown", "index.yml", "index.yaml"],
+        ]
+    )
+    func locateFiles(files: [String]) async throws {
         try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.md"
-            }
-        }
-        .test {
-            try testExpectationRequirements(fileManager: $0, url: $1)
-        }
-    }
-
-    @Test()
-    func locateMarkdownFileOnly() async throws {
-        try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.markdown"
-            }
-        }
-        .test {
-            try testExpectationRequirements(fileManager: $0, url: $1)
-        }
-    }
-
-    @Test()
-    func locateYMLFileOnly() async throws {
-        try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.yml"
-            }
-        }
-        .test {
-            try testExpectationRequirements(fileManager: $0, url: $1)
-        }
-    }
-
-    @Test()
-    func locateYAMLFileOnly() async throws {
-        try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.yaml"
-            }
-        }
-        .test {
-            try testExpectationRequirements(fileManager: $0, url: $1)
-        }
-    }
-
-    @Test()
-    func locateMutlipleYAMLFiles() async throws {
-        try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.yaml"
-                "index.yml"
-            }
-        }
-        .test {
-            try testExpectationRequirements(fileManager: $0, url: $1)
-        }
-    }
-
-    @Test()
-    func locateMutlipleMDFiles() async throws {
-        try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.markdown"
-                "index.md"
-            }
-        }
-        .test {
-            try testExpectationRequirements(fileManager: $0, url: $1)
-        }
-    }
-
-    @Test()
-    func locateAllIndexFiles() async throws {
-        try FileManagerPlayground {
-            testBlogArticleHierarchy {
-                "index.markdown"
-                "index.md"
-                "index.yaml"
-                "index.yml"
-            }
+            testBlogArticleHierarchy({ files.map { .file(.init($0)) } })
         }
         .test {
             try testExpectationRequirements(fileManager: $0, url: $1)
@@ -301,65 +232,92 @@ struct RawContentLoaderTestSuite {
 
     // MARK: - loading contents
 
-    @Test()
-    func loadMDFileContents() async throws {
-        let modificationDate = Date()
+    func testMarkdownFile(
+        ext: String,
+        modificationDate: Date
+    ) -> File {
+        File(
+            "index.\(ext)",
+            attributes: [
+                .modificationDate: modificationDate
+            ],
+            string: """
+                ---
+                title: "Hello index.\(ext)"
+                ---
+
+                # Hello index.\(ext)
+
+                Lorem ipsum dolor sit amet
+                """
+        )
+    }
+
+    func testYAMLFile(
+        ext: String,
+        modificationDate: Date
+    ) -> File {
+        File(
+            "index.\(ext)",
+            attributes: [
+                .modificationDate: modificationDate
+            ],
+            string: """
+                title: "Hello index.\(ext)"
+                """
+        )
+    }
+
+    func testAssetsDirectory() -> Directory {
+        Directory("assets") {
+            "cover.png"
+            "main.js"
+            "style.css"
+        }
+    }
+
+    func testExpectedRawContent(
+        ext: String,
+        emptyContents: Bool,
+        modificationDate: Date
+    ) -> RawContent {
+        .init(
+            origin: testBlogArticleOrigin(),
+            markdown: .init(
+                frontMatter: [
+                    "title": "Hello index.\(ext)"
+                ],
+                contents: emptyContents
+                    ? ""
+                    : """
+                    # Hello index.\(ext)
+
+                    Lorem ipsum dolor sit amet
+                    """
+            ),
+            lastModificationDate: modificationDate.timeIntervalSince1970,
+            assets: [
+                "cover.png",
+                "main.js",
+                "style.css",
+            ]
+            .sorted()
+        )
+    }
+
+    @Test(
+        arguments: [
+            "md",
+            "markdown",
+        ]
+    )
+    func loadMarkdownContents(ext: String) async throws {
+        let now = Date()
 
         try FileManagerPlayground {
             testBlogArticleHierarchy {
-                Directory("assets") {
-                    "cover.png"
-                    "style.css"
-                    "main.js"
-                }
-                File(
-                    "index.md",
-                    attributes: [
-                        .modificationDate: modificationDate
-                    ],
-                    string: """
-                        ---
-                        title: "Hello md"
-                        ---
-
-                        # Hello md
-
-                        Lorem ipsum dolor sit amet
-                        """
-                )
-                File(
-                    "index.markdown",
-                    attributes: [
-                        .modificationDate: modificationDate
-                    ],
-                    string: """
-                        ---
-                        title: "Hello markdown"
-                        ---
-
-                        # Hello markdown
-
-                        Lorem ipsum dolor sit amet
-                        """
-                )
-                File(
-                    "index.yml",
-                    attributes: [
-                        .modificationDate: modificationDate
-                    ],
-                    string: """
-                        title: "Hello yml"
-                        """
-                )
-                File(
-                    "index.yaml",
-                    attributes: [
-                        .modificationDate: modificationDate
-                    ],
-                    string: """
-                        title: "Hello yaml"
-                        """
-                )
+                testAssetsDirectory()
+                testMarkdownFile(ext: ext, modificationDate: now)
             }
         }
         .test {
@@ -370,19 +328,87 @@ struct RawContentLoaderTestSuite {
             let origin = try #require(results.first)
             let content = try loader.loadRawContent(at: origin)
 
-            let expectation = RawContent(
+            let expectation = testExpectedRawContent(
+                ext: ext,
+                emptyContents: false,
+                modificationDate: now
+            )
+
+            #expect(content == expectation)
+        }
+    }
+
+    @Test(
+        arguments: [
+            "yml",
+            "yaml",
+        ]
+    )
+    func loadYAMLContents(ext: String) async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            testBlogArticleHierarchy {
+                testAssetsDirectory()
+                testYAMLFile(ext: ext, modificationDate: now)
+            }
+        }
+        .test {
+            let loader = testRawContentLoader(fileManager: $0, url: $1)
+            let results = loader.locateOrigins()
+            #expect(results.count == 1)
+
+            let origin = try #require(results.first)
+            let content = try loader.loadRawContent(at: origin)
+
+            let expectation = testExpectedRawContent(
+                ext: ext,
+                emptyContents: true,
+                modificationDate: now
+            )
+
+            #expect(content == expectation)
+        }
+    }
+
+    @Test()
+    func loadMergedFileContents() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            testBlogArticleHierarchy {
+                Directory("assets") {
+                    "cover.png"
+                    "style.css"
+                    "main.js"
+                }
+                testMarkdownFile(ext: "md", modificationDate: now)
+                testMarkdownFile(ext: "markdown", modificationDate: now)
+                testYAMLFile(ext: "yml", modificationDate: now)
+                testYAMLFile(ext: "yaml", modificationDate: now)
+            }
+        }
+        .test {
+            let loader = testRawContentLoader(fileManager: $0, url: $1)
+            let results = loader.locateOrigins()
+            #expect(results.count == 1)
+
+            let origin = try #require(results.first)
+            let content = try loader.loadRawContent(at: origin)
+
+            let exp = RawContent(
                 origin: testBlogArticleOrigin(),
                 markdown: .init(
                     frontMatter: [
-                        "title": "Hello yml"
+                        "title": "Hello index.yml"
                     ],
                     contents: """
-                        # Hello md
+                        # Hello index.md
 
                         Lorem ipsum dolor sit amet
                         """
                 ),
-                lastModificationDate: modificationDate.timeIntervalSince1970,
+                lastModificationDate: now.timeIntervalSince1970,
                 assets: [
                     "cover.png",
                     "main.js",
@@ -391,18 +417,13 @@ struct RawContentLoaderTestSuite {
                 .sorted()
             )
 
-            #expect(content.origin == expectation.origin)
-            #expect(content.markdown == expectation.markdown)
-            #expect(
-                content.markdown.frontMatter == expectation.markdown.frontMatter
-            )
-            #expect(content.markdown.contents == expectation.markdown.contents)
-            #expect(
-                content.lastModificationDate == expectation.lastModificationDate
-            )
-            #expect(content.assets == expectation.assets)
-            #expect(content == expectation)
+            #expect(content.origin == exp.origin)
+            #expect(content.markdown == exp.markdown)
+            #expect(content.markdown.frontMatter == exp.markdown.frontMatter)
+            #expect(content.markdown.contents == exp.markdown.contents)
+            #expect(content.lastModificationDate == exp.lastModificationDate)
+            #expect(content.assets == exp.assets)
+            #expect(content == exp)
         }
     }
-
 }
