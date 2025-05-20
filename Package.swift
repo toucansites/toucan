@@ -110,6 +110,7 @@ let package = Package(
             name: "ToucanSerialization",
             dependencies: [
                 .product(name: "Yams", package: "yams"),
+                .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),

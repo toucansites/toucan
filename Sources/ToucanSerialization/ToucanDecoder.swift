@@ -42,15 +42,15 @@ extension ToucanDecoder {
         from string: String
     ) throws(ToucanDecoderError) -> T {
         guard let data = string.data(using: .utf8) else {
-            throw ToucanDecoderError.decoding(
-                DecodingError.dataCorrupted(
+            throw .init(
+                type: T.self,
+                error: DecodingError.dataCorrupted(
                     .init(
                         codingPath: [],
                         debugDescription:
                             "The string cannot be represented as UTF-8 encoded data."
                     )
-                ),
-                T.self
+                )
             )
         }
         return try decode(type, from: data)

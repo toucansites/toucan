@@ -8,15 +8,36 @@
 import Foundation
 import Logging
 import ToucanSerialization
+import ToucanCore
+
+public struct ObjectLoaderError: ToucanError {
+
+    let url: URL
+    let error: Error?
+
+    init(
+        url: URL,
+        error: Error? = nil
+    ) {
+        self.url = url
+        self.error = error
+    }
+
+    public var underlyingErrors: [Error] {
+        error.map { [$0] } ?? []
+    }
+
+    public var logMessage: String {
+        "File issue at: `\(url.path())`."
+    }
+
+    public var userFriendlyMessage: String {
+        "Could not load object."
+    }
+}
 
 /// `ObjectLoader` is designed to load objects from files.
 struct ObjectLoader {
-
-    /// Internal errors that can be thrown by the loader.
-    enum Error: Swift.Error {
-        /// Indicates a failure to convert a string into UTF-8 encoded data.
-        case encoding
-    }
 
     /// The base directory where the files are located.
     let url: URL
@@ -54,16 +75,29 @@ struct ObjectLoader {
     /// - Throws: An error if reading files fails, decoding fails.
     func load<T: Decodable>(
         _ value: T.Type
-    ) throws -> [T] {
+    ) throws(ObjectLoaderError) -> [T] {
         logger.debug(
             "Loading each \(type(of: value)) files (\(locations)) at: `\(url.absoluteString)`"
         )
 
-        return
-            try locations
-            .map { url.appendingPathComponent($0) }
-            .map { try Data(contentsOf: $0) }
-            .map { try decoder.decode(T.self, from: $0) }
+        var lastUrl: URL?
+        do {
+            return
+                try locations
+                .map {
+                    let fileUrl = url.appendingPathComponent($0)
+                    lastUrl = fileUrl
+                    return fileUrl
+                }
+                .map { try Data(contentsOf: $0) }
+                .map { try decoder.decode(T.self, from: $0) }
+        }
+        catch {
+            throw .init(
+                url: lastUrl ?? url,
+                error: error
+            )
+        }
     }
 
     /// Loads and decodes files into a specific `Codable` type.
@@ -73,20 +107,33 @@ struct ObjectLoader {
     /// - Throws: An error if reading files fails, decoding fails.
     func load<T: Codable>(
         _ value: T.Type
-    ) throws -> T {
+    ) throws(ObjectLoaderError) -> T {
         logger.debug(
             "Loading and combining \(type(of: value)) files (\(locations)) at: `\(url.absoluteString)`"
         )
 
-        let combinedRawCodableObject =
-            try locations
-            .map { url.appendingPathComponent($0) }
-            .map { try Data(contentsOf: $0) }
-            .map { try decoder.decode([String: AnyCodable].self, from: $0) }
-            .reduce([:]) { $0.recursivelyMerged(with: $1) }
+        var lastUrl: URL?
+        do {
+            let combinedRawCodableObject =
+                try locations
+                .map {
+                    let fileUrl = url.appendingPathComponent($0)
+                    lastUrl = fileUrl
+                    return fileUrl
+                }
+                .map { try Data(contentsOf: $0) }
+                .map { try decoder.decode([String: AnyCodable].self, from: $0) }
+                .reduce([:]) { $0.recursivelyMerged(with: $1) }
 
-        let data: Data = try encoder.encode(combinedRawCodableObject)
-        return try decoder.decode(T.self, from: data)
+            let data: Data = try encoder.encode(combinedRawCodableObject)
+            return try decoder.decode(T.self, from: data)
+
+        }
+        catch {
+            throw .init(
+                url: lastUrl ?? url,
+                error: error
+            )
+        }
     }
-
 }

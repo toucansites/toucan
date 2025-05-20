@@ -37,16 +37,16 @@ extension ToucanEncoder {
         let string: String = try encode(object)
 
         guard let data = string.data(using: .utf8) else {
-            throw ToucanEncoderError.encoding(
-                EncodingError.invalidValue(
+            throw ToucanEncoderError(
+                type: T.self,
+                error: EncodingError.invalidValue(
                     string,
                     .init(
                         codingPath: [],
                         debugDescription:
                             "The string cannot be represetned as UTF-8 encoded data."
                     )
-                ),
-                T.self
+                )
             )
         }
         return data

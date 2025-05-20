@@ -9,7 +9,7 @@
 ///
 /// `ContentDefinition` is used to declare how a particular content type (e.g., blog, project, product)
 /// should be parsed, validated, and queried in the pipeline.
-public struct ContentDefinition: Decodable, Equatable {
+public struct ContentDefinition: Codable, Equatable {
 
     // MARK: - Coding Keys
 

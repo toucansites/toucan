@@ -48,16 +48,10 @@ extension Toucan {
             }
         }
         catch let error as ToucanDecoderError {
-            switch error {
-            case .decoding(let error, let type):
-                logger.error("`\(type)` - Decoding error: `\(error)`")
-            }
+            logger.error("\(error.logMessageStack())")
         }
         catch let error as ToucanEncoderError {
-            switch error {
-            case .encoding(let error, let type):
-                logger.error("`\(type)` - Encoding error: `\(error)`")
-            }
+            logger.error("\(error.logMessageStack())")
         }
         catch let error as DecodingError {
             switch error {

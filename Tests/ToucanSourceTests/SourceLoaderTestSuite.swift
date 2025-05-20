@@ -6,6 +6,7 @@
 
 import Testing
 import Foundation
+import ToucanCore
 import ToucanSerialization
 import FileManagerKit
 import FileManagerKitTesting
@@ -48,83 +49,119 @@ struct SourceLoaderTestSuite {
         return loader
     }
 
-    // MARK: -
+    private func testSourceLoader(
+        fileManager: FileManagerKit,
+        url: URL
+    ) -> SourceLoader {
+        let url = url.appending(path: "src/")
+        let target = Target.standard
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let loader = SourceLoader(
+            sourceUrl: url,
+            target: target,
+            fileManager: fileManager,
+            encoder: encoder,
+            decoder: decoder
+        )
+        return loader
+    }
+
+    // MARK: - content types
 
     @Test()
-    func contentType() async throws {
+    func validContentTypes() async throws {
+        let type1 = ContentDefinition(
+            id: "post"
+        )
+        let type2 = ContentDefinition(
+            id: "tag"
+        )
         try FileManagerPlayground {
             testSourceTypesHierarchy {
-                "post.yaml"
-                "tag.yml"
+                YAML(name: "post", contents: type1).file
+                YAML(name: "tag", contents: type2).file
             }
         }
         .test {
-            let typesUrl = $1.appending(path: "src/types/")
-
-            let locations = $0.find(
-                extensions: ["yml", "yaml"],
-                at: typesUrl
+            let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
+            let config = try sourceLoader.loadConfig()
+            let locations = sourceLoader.getLocations(using: config)
+            let results = try sourceLoader.loadTypes(
+                using: locations,
+                pipelines: []
             )
-            let expected: [String] = [
-                "post.yaml",
-                "tag.yml",
-            ]
 
-            #expect(
-                locations.sorted { $0 < $1 } == expected.sorted { $0 < $1 }
-            )
+            let exp: [ContentDefinition] = [type1, type2]
+                .sorted(by: { $0.id < $1.id })
+
+            #expect(results == exp)
         }
     }
 
     @Test()
-    func contentType_empty() async throws {
-        try FileManagerPlayground()
-            .test {
-                let typesUrl = $1.appending(path: "src/types/")
-                let locations = $0.find(
-                    extensions: ["yml", "yaml"],
-                    at: typesUrl
+    func emptyContentTypes() async throws {
+        try FileManagerPlayground {
+            testSourceTypesHierarchy {}
+        }
+        .test {
+            let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
+            let config = try sourceLoader.loadConfig()
+            let locations = sourceLoader.getLocations(using: config)
+            let results = try sourceLoader.loadTypes(
+                using: locations,
+                pipelines: []
+            )
+            #expect(results.isEmpty)
+        }
+    }
+
+    @Test()
+    func invalidContentTypes() async throws {
+        try FileManagerPlayground {
+            testSourceTypesHierarchy {
+                File(
+                    "invalid.yaml",
+                    string: """
+                        """
                 )
-                #expect(locations.isEmpty)
-            }
-    }
-
-    // MARK: -
-
-    @Test()
-    func fileSystem_NoFiles() async throws {
-        try FileManagerPlayground {
-            Directory("foo") {
-                Directory("bar")
-                Directory("baz")
             }
         }
         .test {
-            let url = $1.appending(path: "foo/bar/")
-            let overrideUrl = $1.appending(path: "foo/bar/")
-            //            let rawContentLocator = RawContentLocator(fileManager: $0)
-            //
-            //
-            //            #expect(rawContentLocator.locate(at: url).isEmpty)
-            //            #expect(rawContentLocator.locate(at: url).isEmpty)
-            #expect($0.find(extensions: ["yml", "yaml"], at: url).isEmpty)
-            //            #expect(
-            //                templateLocator.locate(at: url, overrides: overrideUrl).isEmpty
-            //            )
+            do {
+                let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
+                let config = try sourceLoader.loadConfig()
+                let locations = sourceLoader.getLocations(using: config)
+                _ = try sourceLoader.loadTypes(
+                    using: locations,
+                    pipelines: []
+                )
+            }
+            catch let error as SourceLoaderError {
+                #expect(
+                    error.logMessage == "Could not load: `ContentDefinition`."
+                )
+                // print(error.logMessageStack())
+            }
+            catch {
+                Issue.record("Invalid error type: `\(type(of: error))`.")
+            }
         }
     }
 
-    @Test()
-    func fileSystem_Typical() async throws {
-        try FileManagerPlayground {
-            Directory("src") {
-                Directory("assets") {
-                    "CNAME"
-                    Directory("icons") {
-                        "favicon.png"
-                    }
-                }
+    // MARK: - source files
 
+    @Test()
+    func validSource() async throws {
+        let type1 = ContentDefinition(
+            id: "post"
+        )
+        let type2 = ContentDefinition(
+            id: "tag"
+        )
+
+        try FileManagerPlayground {
+            testSourceHierarchy {
                 Directory("contents") {
                     "index.md"
                     Directory("assets") {
@@ -148,162 +185,25 @@ struct SourceLoaderTestSuite {
                     }
                 }
                 Directory("types") {
-                    "author.yml"
-                    "post.yml"
-                    "redirect.yml"
+                    YAML(name: "post", contents: type1).file
+                    YAML(name: "tag", contents: type2).file
                 }
                 Directory("blocks") {
                     "link.yml"
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("assets") {
-                            Directory("css") {
-                                "base.css"
-                            }
-                        }
-                        Directory("templates") {
-                            "html.mustache"
-                            "redirect.mustache"
-                            Directory("partials") {
-                                "navigation.mustache"
-                                "footer.mustache"
-                                Directory("blog") {
-                                    "author.mustache"
-                                    "post.mustache"
-                                }
-                                Directory("pages") {
-                                    "home.mustache"
-                                    "404.mustache"
-                                    "default.mustache"
-                                }
-                            }
-                            Directory("blog") {
-                                "posts.mustache"
-                                Directory("post") {
-                                    "default.mustache"
-                                }
-                            }
-                        }
-                    }
-                    Directory("overrides") {
-                        Directory("templates") {
-                            Directory("blog") {
-                                "posts.mustache"
-                            }
-                        }
-                    }
-                }
             }
         }
         .test {
-            #warning("fixme")
-            let contentsUrl = $1.appending(path: "src/contents/")
-            //            let rawContentLocator = RawContentLocator(fileManager: $0)
-            //            let templateLocator = TemplateLocator(fileManager: $0)
-            //            let rawContentLocations = rawContentLocator.locate(
-            //                at: contentsUrl
-            //            )
+            let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
+            do {
+                let source = try sourceLoader.load()
+                print(source)
+            }
+            catch let error as SourceLoaderError {
+                print(error.logMessageStack())
+                Issue.record(error)
+            }
 
-            //            let expectation: [RawContentLocation] = [
-            //                .init(slug: "", md: "index.md"),
-            //                .init(slug: "404", md: "404/index.md"),
-            //                .init(slug: "authors", md: "blog/authors/index.md"),
-            //                .init(
-            //                    slug: "home-old",
-            //                    md: "redirects/home-old/index.md"
-            //                ),
-            //            ]
-            //            .sorted { $0.slug < $1.slug }
-            //
-            //            #expect(
-            //                rawContentLocations.sorted { $0.slug < $1.slug } == expectation
-            //            )
-
-            let typesUrl = $1.appending(path: "src/types/")
-
-            let contentTypes = $0.find(
-                extensions: ["yml", "yaml"],
-                at: typesUrl
-            )
-            #expect(
-                contentTypes.sorted { $0 < $1 }
-                    == [
-                        "author.yml",
-                        "post.yml",
-                        "redirect.yml",
-                    ]
-                    .sorted { $0 < $1 }
-            )
-
-            let blocksUrl = $1.appending(path: "src/blocks/")
-            let blocks = $0.find(
-                extensions: ["yml", "yaml"],
-                at: blocksUrl
-            )
-
-            #expect(
-                blocks.sorted { $0 < $1 }
-                    == [
-                        "link.yml"
-                    ]
-                    .sorted { $0 < $1 }
-            )
-
-            let templatesUrl = $1.appending(
-                path: "src/themes/default/templates/"
-            )
-            let templatesOverridesUrl = $1.appending(
-                path: "src/themes/overrides/templates/"
-            )
-
-            //            let templates = templateLocator.locate(
-            //                at: templatesUrl,
-            //                overrides: templatesOverridesUrl
-            //            )
-
-            //            #expect(
-            //                templates
-            //                    == [
-            //                        .init(
-            //                            id: "blog.post.default",
-            //                            path: "blog/post/default.mustache"
-            //                        ),
-            //                        .init(id: "blog.posts", path: "blog/posts.mustache"),
-            //                        .init(id: "html", path: "html.mustache"),
-            //                        .init(
-            //                            id: "partials.blog.author",
-            //                            path: "partials/blog/author.mustache"
-            //                        ),
-            //                        .init(
-            //                            id: "partials.blog.post",
-            //                            path: "partials/blog/post.mustache"
-            //                        ),
-            //                        .init(
-            //                            id: "partials.footer",
-            //                            path: "partials/footer.mustache"
-            //                        ),
-            //                        .init(
-            //                            id: "partials.navigation",
-            //                            path: "partials/navigation.mustache"
-            //                        ),
-            //                        .init(
-            //                            id: "partials.pages.404",
-            //                            path: "partials/pages/404.mustache"
-            //                        ),
-            //                        .init(
-            //                            id: "partials.pages.default",
-            //                            path: "partials/pages/default.mustache"
-            //                        ),
-            //                        .init(
-            //                            id: "partials.pages.home",
-            //                            path: "partials/pages/home.mustache"
-            //                        ),
-            //                        .init(id: "redirect", path: "redirect.mustache"),
-            //                    ]
-            //                    .sorted { $0.path < $1.path }
-            //            )
-            //        }
         }
 
         //    @Test()

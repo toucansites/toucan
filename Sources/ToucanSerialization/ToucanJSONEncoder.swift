@@ -31,23 +31,22 @@ public struct ToucanJSONEncoder: ToucanEncoder {
             ]
             let data = try encoder.encode(object)
             guard let string = String(data: data, encoding: .utf8) else {
-                throw ToucanEncoderError.encoding(
-                    EncodingError.invalidValue(
+                throw ToucanEncoderError(
+                    type: T.self,
+                    error: EncodingError.invalidValue(
                         data,
                         .init(
                             codingPath: [],
                             debugDescription:
                                 "The data cannot be represetned as UTF-8 encoded string."
                         )
-                    ),
-                    T.self
+                    )
                 )
             }
             return string
         }
         catch {
-            throw .encoding(error, T.self)
+            throw .init(type: T.self, error: error)
         }
     }
-
 }

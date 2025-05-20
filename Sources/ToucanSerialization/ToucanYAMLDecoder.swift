@@ -29,7 +29,7 @@ public struct ToucanYAMLDecoder: ToucanDecoder {
             return try decoder.decode(type, from: data)
         }
         catch {
-            throw .decoding(error, T.self)
+            throw .init(type: T.self, error: error)
         }
     }
 

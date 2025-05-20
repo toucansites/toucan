@@ -57,7 +57,7 @@ struct RawContentLoaderTestSuite {
     }
 
     @Test()
-    func locateOriginsNoIndexFile() async throws {
+    func locateOriginsWithNoIndexFile() async throws {
         try FileManagerPlayground {
             testSourceContentsHierarchy {
                 Directory("blog") {
