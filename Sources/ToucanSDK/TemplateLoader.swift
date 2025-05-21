@@ -17,7 +17,7 @@ struct TemplateLoader {
     let overridesUrl: URL
 
     /// Config file paths
-    let locations: [TemplateLocation]
+    let locations: [Template]
 
     /// The logger instance
     let logger: Logger

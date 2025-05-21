@@ -37,17 +37,17 @@ public struct SourceLoaderError: ToucanError {
     }
 }
 
-public struct SourceLoader {
+public struct BuildTargetSourceLoader {
 
-    let sourceUrl: URL
-    let target: Target
+    var sourceUrl: URL
+    var target: Target
 
-    let fileManager: FileManagerKit
+    var fileManager: FileManagerKit
 
-    let encoder: ToucanEncoder
-    let decoder: ToucanDecoder
+    var encoder: ToucanEncoder
+    var decoder: ToucanDecoder
 
-    let logger: Logger
+    var logger: Logger
 
     // MARK: -
 
@@ -83,6 +83,7 @@ public struct SourceLoader {
         let blocks = try loadBlocks(using: locations)
         let rawContents = try loadRawContents(using: config)
 
+        #warning("use locations")
         return .init(
             location: sourceUrl,
             target: target,
@@ -99,8 +100,13 @@ public struct SourceLoader {
         using config: Config
     ) throws(SourceLoaderError) -> [RawContent] {
         do {
+            let locations = BuiltTargetSourceLocations(
+                sourceUrl: sourceUrl,
+                config: config
+            )
             let rawContentsLoader = RawContentLoader(
-                locations: .init(sourceUrl: sourceUrl, config: config),
+                contentsURL: locations.contentsUrl,
+                assetsPath: config.contents.assets.path,
                 decoder: .init(),
                 markdownParser: .init(decoder: decoder),
                 fileManager: fileManager,
@@ -176,7 +182,7 @@ public struct SourceLoader {
 
     func getLocations(
         using config: Config
-    ) -> SourceLocations {
+    ) -> BuiltTargetSourceLocations {
         .init(
             sourceUrl: sourceUrl,
             config: config
@@ -184,7 +190,7 @@ public struct SourceLoader {
     }
 
     func loadSettings(
-        using locations: SourceLocations
+        using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> Settings {
         do {
             return try load(
@@ -199,7 +205,7 @@ public struct SourceLoader {
     }
 
     func loadPipelines(
-        using locations: SourceLocations
+        using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> [Pipeline] {
         try load(
             type: Pipeline.self,
@@ -208,7 +214,7 @@ public struct SourceLoader {
     }
 
     func loadTypes(
-        using locations: SourceLocations,
+        using locations: BuiltTargetSourceLocations,
         pipelines: [Pipeline]
     ) throws(SourceLoaderError) -> [ContentDefinition] {
         let loadedTypes = try load(
@@ -222,7 +228,7 @@ public struct SourceLoader {
     }
 
     func loadBlocks(
-        using locations: SourceLocations
+        using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> [Block] {
         try load(
             type: Block.self,

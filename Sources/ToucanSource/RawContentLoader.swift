@@ -44,7 +44,9 @@ public struct RawContentLoader {
     }
 
     /// Source configuration.
-    let locations: SourceLocations
+    let contentsURL: URL
+
+    let assetsPath: String
 
     /// Decoder used to decode YAML files.
     let decoder: ToucanYAMLDecoder
@@ -59,13 +61,15 @@ public struct RawContentLoader {
     let logger: Logger
 
     public init(
-        locations: SourceLocations,
+        contentsURL: URL,
+        assetsPath: String,
         decoder: ToucanYAMLDecoder,
         markdownParser: MarkdownParser,
         fileManager: FileManagerKit,
         logger: Logger = .subsystem("raw-content-loader")
     ) {
-        self.locations = locations
+        self.contentsURL = contentsURL
+        self.assetsPath = assetsPath
         self.decoder = decoder
         self.markdownParser = markdownParser
         self.fileManager = fileManager
@@ -83,7 +87,7 @@ public struct RawContentLoader {
         logger.debug(
             "Loading raw contents.",
             metadata: [
-                "path": .string(locations.contentsUrl.absoluteString)
+                "path": .string(contentsURL.path())
             ]
         )
         return try locateOrigins()
@@ -103,7 +107,7 @@ public struct RawContentLoader {
     /// - Returns: A list of `RawContentLocation` objects, sorted by slug.
     func locateOrigins() -> [Origin] {
         locateRawContentsOrigins(
-            at: locations.contentsUrl
+            at: contentsURL
         )
         .sorted { $0.slug < $1.slug }
     }
@@ -116,15 +120,15 @@ public struct RawContentLoader {
         var contents: String = ""
         var lastModificationDate: Date?
 
-        let contentUrl = locations.contentsUrl.appendingPathIfPresent(
+        let currentURL = contentsURL.appendingPathIfPresent(
             origin.path
         )
 
-        let indexFiles = getIndexes(at: contentUrl).sorted()
+        let indexFiles = getIndexes(at: currentURL).sorted()
 
         for indexFile in indexFiles {
 
-            let indexUrl = contentUrl.appendingPathIfPresent(indexFile)
+            let indexUrl = currentURL.appendingPathIfPresent(indexFile)
 
             if let existingDate = lastModificationDate {
                 lastModificationDate = max(
@@ -181,9 +185,8 @@ public struct RawContentLoader {
         }
 
         let modificationDate = lastModificationDate ?? Date()
-        let assetsPath = locations.config.contents.assets.path
-        let assetsUrl = contentUrl.appendingPathIfPresent(assetsPath)
-        let assets = locateAssets(at: assetsUrl)
+        let assetsURL = currentURL.appendingPathIfPresent(assetsPath)
+        let assets = locateAssets(at: assetsURL)
 
         return RawContent(
             origin: origin,
@@ -196,7 +199,9 @@ public struct RawContentLoader {
         )
     }
 
-    private func locateAssets(at url: URL) -> [String] {
+    private func locateAssets(
+        at url: URL
+    ) -> [String] {
         fileManager.find(recursively: true, at: url).sorted()
     }
 

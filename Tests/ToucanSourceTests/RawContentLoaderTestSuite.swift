@@ -34,8 +34,14 @@ struct RawContentLoaderTestSuite {
         logger.logLevel = .trace
         let url = url.appending(path: "src/")
         let decoder = ToucanYAMLDecoder()
+        let config = Config.defaults
+        let locations = BuiltTargetSourceLocations(
+            sourceUrl: url,
+            config: config
+        )
         let loader = RawContentLoader(
-            locations: .init(sourceUrl: url, config: .defaults),
+            contentsURL: locations.contentsUrl,
+            assetsPath: config.contents.assets.path,
             decoder: .init(),
             markdownParser: .init(decoder: decoder),
             fileManager: fileManager,

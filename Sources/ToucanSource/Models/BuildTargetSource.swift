@@ -18,27 +18,27 @@ public struct BuildTargetSource {
 
     /// The root location of the source on the filesystem.
     /// This usually points to the folder where the source content resides.
-    public let location: URL
+    public var location: URL
 
     /// The target to use to build the site.
-    public let target: Target
+    public var target: Target
 
     /// Global configuration for the project, often loaded from `config.yml`.
-    public let config: Config
+    public var config: Config
 
     /// Site-wide settings, often defined in `site.yml`.
-    public let settings: Settings
+    public var settings: Settings
 
     /// List of content pipelines.
-    public let pipelines: [Pipeline]
+    public var pipelines: [Pipeline]
 
-    public let contentDefinitions: [ContentDefinition]
+    public var contentDefinitions: [ContentDefinition]
 
     /// All parsed content entries within the source.
-    public let rawContents: [RawContent]
+    public var rawContents: [RawContent]
 
     /// A collection of custom Markdown block directives to be supported in rendering.
-    public let blockDirectives: [Block]
+    public var blockDirectives: [Block]
 
     // MARK: - Initialization
 

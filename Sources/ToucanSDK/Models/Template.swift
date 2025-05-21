@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents the physical location of a template file, identified by a logical ID.
-public struct TemplateLocation: Equatable {
+public struct Template: Equatable {
 
     /// A unique identifier for the template
     public let id: String

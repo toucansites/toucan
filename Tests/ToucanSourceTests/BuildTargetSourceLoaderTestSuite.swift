@@ -1,5 +1,5 @@
 //
-//  SourceLoaderTestSuite.swift
+//  BuildTargetSourceLoaderTestSuite.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 03. 04..
@@ -14,7 +14,7 @@ import FileManagerKitTesting
 @testable import ToucanSource
 
 @Suite
-struct SourceLoaderTestSuite {
+struct BuildTargetSourceLoaderTestSuite {
 
     // MARK: - private helpers
 
@@ -40,8 +40,14 @@ struct SourceLoaderTestSuite {
     ) -> RawContentLoader {
         let url = url.appending(path: "src/")
         let decoder = ToucanYAMLDecoder()
+        let config = Config.defaults
+        let locations = BuiltTargetSourceLocations(
+            sourceUrl: url,
+            config: config
+        )
         let loader = RawContentLoader(
-            locations: .init(sourceUrl: url, config: .defaults),
+            contentsURL: locations.contentsUrl,
+            assetsPath: config.contents.assets.path,
             decoder: .init(),
             markdownParser: .init(decoder: decoder),
             fileManager: fileManager,
@@ -52,12 +58,12 @@ struct SourceLoaderTestSuite {
     private func testSourceLoader(
         fileManager: FileManagerKit,
         url: URL
-    ) -> SourceLoader {
+    ) -> BuildTargetSourceLoader {
         let url = url.appending(path: "src/")
         let target = Target.standard
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let loader = SourceLoader(
+        let loader = BuildTargetSourceLoader(
             sourceUrl: url,
             target: target,
             fileManager: fileManager,
@@ -185,11 +191,25 @@ struct SourceLoaderTestSuite {
                     }
                 }
                 Directory("types") {
-                    YAML(name: "post", contents: type1).file
-                    YAML(name: "tag", contents: type2).file
+                    YAML(
+                        name: "post",
+                        contents: type1
+                    )
+                    .file
+                    YAML(
+                        name: "tag",
+                        contents: type2
+                    )
+                    .file
                 }
                 Directory("blocks") {
-                    "link.yml"
+                    YAML(
+                        name: "link",
+                        contents: Block(
+                            name: "link"
+                        )
+                    )
+                    .file
                 }
             }
         }
