@@ -277,32 +277,3 @@ public struct BuildTargetSourceLoader {
         )
     }
 }
-
-// MARK: - Create Contents from RawContents
-
-//        let contents: [Content] = try rawContents.compactMap {
-//            /// If this is slow or overkill we can still use $0.frontMatter["type"], maybe with a Keys enum?
-//            let rawReservedFrontMatter = try encoder.encode($0.frontMatter)
-//            let reservedFrontMatter = try decoder.decode(
-//                ReservedFrontMatter.self,
-//                from: rawReservedFrontMatter.data(using: .utf8)!
-//            )
-//
-//            let detector = ContentDefinitionDetector(
-//                definitions: contentDefinitions,
-//                origin: $0.origin,
-//                logger: logger
-//            )
-//
-//            let contentDefinition = try detector.detect(
-//                explicitType: reservedFrontMatter.type
-//            )
-//
-//            let contentDefinitionConverter = ContentDefinitionConverter(
-//                contentDefinition: contentDefinition,
-//                dateFormatter: target.dateFormatter(config.dateFormats.input),
-//                logger: logger
-//            )
-//
-//            return contentDefinitionConverter.convert(rawContent: $0)
-//        }

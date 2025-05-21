@@ -48,11 +48,6 @@ public struct Toucan {
         self.fileManager = FileManager.default
         self.encoder = ToucanYAMLEncoder()
         self.decoder = ToucanYAMLDecoder()
-        //        self.markdownParser = MarkdownParser(
-        //            decoder: decoder,
-        //            logger: logger
-        //        )
-
         self.inputUrl = getSafeUrl(for: input, using: fileManager)
         self.targetsToBuild = targetsToBuild
         self.logger = logger
@@ -82,30 +77,32 @@ public struct Toucan {
 
     // MARK: -
 
-    //    func loadTargetConfig() throws -> TargetConfig {
-    //        try ObjectLoader(
-    //            url: inputUrl,
-    //            locations:
-    //                fileManager
-    //                .find(
-    //                    name: "toucan",
-    //                    extensions: ["yml", "yaml"],
-    //                    at: inputUrl
-    //                ),
-    //            encoder: encoder,
-    //            decoder: decoder,
-    //            logger: logger
-    //        )
-    //        .load(TargetConfig.self)
-    //    }
+    func loadTargetConfig() throws -> TargetConfig {
+        try ObjectLoader(
+            url: inputUrl,
+            locations:
+                fileManager
+                .find(
+                    name: "toucan",
+                    extensions: ["yml", "yaml"],
+                    at: inputUrl
+                ),
+            encoder: encoder,
+            decoder: decoder,
+            logger: logger
+        )
+        .load(TargetConfig.self)
+    }
 
-    func getActiveBuildTargets(_ targets: TargetConfig) -> [Target] {
-        // TODO: support --targets flag
-        var buildTargets = targets.targets.filter {
+    func getActiveBuildTargets(
+        _ targetConfig: TargetConfig
+    ) -> [Target] {
+        // TODO: maybe support --targets flag
+        var buildTargets = targetConfig.targets.filter {
             targetsToBuild.contains($0.name)
         }
         if buildTargets.isEmpty {
-            buildTargets.append(targets.default)
+            buildTargets.append(targetConfig.default)
         }
         return buildTargets
     }
@@ -117,34 +114,26 @@ public struct Toucan {
         let workDirUrl = try prepareWorkingDirectory()
 
         do {
-            //            let targetConfig = try loadTargetConfig()
-            //            let buildTargets = getActiveBuildTargets(targetConfig)
+            let targetConfig = try loadTargetConfig()
+            let activeBuildTargets = getActiveBuildTargets(targetConfig)
 
-            //            for target in buildTargets {
-            //                logger.info(
-            //                    "Building target: \(target.name)",
-            //                    metadata: [
-            //                        "target.name": "\(target.name)",
-            //                        "target.config": "\(target.config)",
-            //                        "target.locale": "\(target.locale)",
-            //                        "target.timeZone": "\(target.timeZone)",
-            //                        "target.default": "\(target.isDefault)",
-            //                        "target.output": "\(target.output)",
-            //                    ]
-            //                )
+            for target in activeBuildTargets {
+                logger.info(
+                    "Building target: \(target.name)",
+                    metadata: [:]
+                )
+                let buildTargetSourceLoader = BuildTargetSourceLoader(
+                    sourceUrl: inputUrl,
+                    target: target,
+                    fileManager: fileManager,
+                    encoder: encoder,
+                    decoder: decoder,
+                    logger: logger
+                )
 
-            //                let sourceLoader = SourceLoader(
-            //                    sourceUrl: inputUrl,
-            //                    target: target,
-            //                    fileManager: fileManager,
-            //                    markdownParser: markdownParser,
-            //                    encoder: encoder,
-            //                    decoder: decoder,
-            //                    logger: logger
-            //                )
-            //
-            //                let sourceBundle = try sourceLoader.load()
-
+                let buildTargetSource = try buildTargetSourceLoader.load()
+                dump(buildTargetSource)
+            }
             // MARK: - Validation
 
             //                /// Validate site locale
@@ -230,7 +219,7 @@ public struct Toucan {
             //                            encoding: .utf8
             //                        )
             //                    }
-            //                }
+            //                            }
             //
             //                // MARK: - Finalize and cleanup
             //

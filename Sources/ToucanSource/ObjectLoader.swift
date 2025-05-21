@@ -11,7 +11,7 @@ import ToucanSerialization
 import ToucanCore
 
 /// A utility to load and decode objects from files using a specified set of encoders and decoders.
-struct ObjectLoader {
+public struct ObjectLoader {
 
     /// The base directory where the files are located.
     let url: URL
@@ -36,7 +36,7 @@ struct ObjectLoader {
     ///   - encoder: Encoder for serializing intermediate data.
     ///   - decoder: Decoder for parsing file contents into models.
     ///   - logger: Optional logger for debugging purposes.
-    init(
+    public init(
         url: URL,
         locations: [String],
         encoder: ToucanEncoder,
@@ -55,7 +55,7 @@ struct ObjectLoader {
     /// - Parameter value: The `Codable` type to decode each file into.
     /// - Returns: An array of decoded objects.
     /// - Throws: An `ObjectLoaderError` if reading or decoding any file fails.
-    func load<T: Decodable>(
+    public func load<T: Decodable>(
         _ value: T.Type
     ) throws(ObjectLoaderError) -> [T] {
         logger.debug(
@@ -87,7 +87,7 @@ struct ObjectLoader {
     /// - Parameter value: The `Codable` type to decode the combined YAML data into.
     /// - Returns: A decoded object of the specified type.
     /// - Throws: An `ObjectLoaderError` if reading, merging, or decoding fails.
-    func load<T: Codable>(
+    public func load<T: Codable>(
         _ value: T.Type
     ) throws(ObjectLoaderError) -> T {
         logger.debug(

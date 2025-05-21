@@ -5,34 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 01. 30..
 //
 
-import Foundation
-import ToucanSource
-
-public extension RawContent {
-    enum Mocks {}
-}
-
-//public extension Content {
-//    enum Mocks {}
-//}
-
-public extension ContentDefinition {
-    enum Mocks {}
-}
-
-public extension Pipeline {
-    enum Mocks {}
-}
-
-public extension Config {
-    enum Mocks {}
-}
-
-/// Templates
-public struct Templates {
-
-}
-
-public extension Templates {
-    enum Mocks {}
+public enum Mocks {
+    public enum ContentDefinitions {}
+    public enum RawContents {}
+    public enum Pipelines {}
+    public enum Templates {}
+    public enum Blocks {}
 }

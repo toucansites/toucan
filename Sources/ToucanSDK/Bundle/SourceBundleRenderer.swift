@@ -50,7 +50,7 @@ public struct SourceBundleRenderer {
         self.generatorInfo = generatorInfo
         self.fileManager = fileManager
         self.logger = logger
-        self.formatters = Self.prepareFormatters(sourceBundle)
+        self.formatters = sourceBundle.prepareFormatters()
     }
 
     // MARK: -
@@ -123,18 +123,18 @@ public struct SourceBundleRenderer {
 
         for pipeline in sourceBundle.pipelines {
 
-            //            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
-            //                .mapValues {
-            //                    sourceBundle.target.dateFormatter($0)
-            //                }
-            //            let allFormatters = formatters.recursivelyMerged(
-            //                with: pipelineFormatters
-            //            )
-            //
-            //            let filter = ContentFilter(
-            //                filterRules: pipeline.contentTypes.filterRules
-            //            )
-            //
+            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
+                .mapValues {
+                    sourceBundle.target.dateFormatter($0)
+                }
+            let allFormatters = formatters.recursivelyMerged(
+                with: pipelineFormatters
+            )
+
+            let filter = ContentFilter(
+                filterRules: pipeline.contentTypes.filterRules
+            )
+
             //            let filteredContents = filter.applyRules(
             //                contents: sourceBundle.contents,
             //                now: now
@@ -529,47 +529,5 @@ public struct SourceBundleRenderer {
         }
         contentContextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
-    }
-}
-
-extension SourceBundleRenderer {
-
-    static func prepareFormatters(
-        _ sourceBundle: BuildTargetSource
-    ) -> [String: DateFormatter] {
-        var formatters: [String: DateFormatter] = [:]
-        let styles: [(String, DateFormatter.Style)] = [
-            ("full", .full),
-            ("long", .long),
-            ("medium", .medium),
-            ("short", .short),
-        ]
-
-        for (key, style) in styles {
-            let dateFormatter = sourceBundle.target.dateFormatter()
-            dateFormatter.dateStyle = style
-            dateFormatter.timeStyle = .none
-            formatters["date.\(key)"] = dateFormatter
-
-            let timeFormatter = sourceBundle.target.dateFormatter()
-            timeFormatter.dateStyle = .none
-            timeFormatter.timeStyle = style
-            formatters["time.\(key)"] = timeFormatter
-        }
-
-        let standard: [String: LocalizedDateFormat] = [
-            "iso8601": .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
-            "rss": .init(format: "EEE, dd MMM yyyy HH:mm:ss Z"),
-            "sitemap": .init(format: "yyyy-MM-dd"),
-        ]
-
-        for (key, dateFormat) in standard.recursivelyMerged(
-            with: sourceBundle.config.dateFormats.output
-        ) {
-            let formatter = sourceBundle.target.dateFormatter()
-            formatter.config(with: dateFormat)
-            formatters[key] = formatter
-        }
-        return formatters
     }
 }
