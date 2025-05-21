@@ -59,8 +59,8 @@ struct BuildTargetSourceLocationsTestSuite {
         let themeAssetsPath = locations.currentThemeAssetsUrl.path()
         let themeTemplatesPath = locations.currentThemeTemplatesUrl.path()
         let overridesPathValue = locations.currentThemeOverridesUrl.path()
-        let overrideAssetsPath = locations.currentThemeOverridesAssetsUrl.path()
-        let overrideTemplatesPath = locations.currentThemeOverridesTemplatesUrl
+        let overrideAssetsPath = locations.currentThemeAssetOverridesUrl.path()
+        let overrideTemplatesPath = locations.currentThemeTemplateOverridesUrl
             .path()
 
         #expect(basePath == expectedBase)

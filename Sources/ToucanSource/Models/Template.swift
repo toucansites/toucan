@@ -11,18 +11,27 @@ import Foundation
 public struct Template: Equatable {
 
     /// A unique identifier for the template
-    public let id: String
+    public var id: String
 
     /// The full file system path to the template file.
-    public let path: String
+    public var path: String
 
     /// Initializes a new `TemplateLocation` with a logical ID and file path.
     ///
     /// - Parameters:
-    ///   - id: A unique string identifier for referencing the template.
     ///   - path: The file path pointing to the template file.
-    public init(id: String, path: String) {
-        self.id = id
+    public init(
+        path: String
+    ) {
+        let basePath =
+            path
+            .split(separator: ".")
+            .dropLast()
+            .joined(separator: ".")
+
+        self.id =
+            basePath
+            .replacingOccurrences(of: "/", with: ".")
         self.path = path
     }
 }

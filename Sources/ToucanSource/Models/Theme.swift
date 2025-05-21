@@ -29,6 +29,7 @@ struct Theme {
     var location: URL
     var components: Components
     var overrides: Components
+    var content: Components
 }
 
 struct ThemeLoader {
@@ -41,7 +42,8 @@ struct ThemeLoader {
         self.locations = locations
     }
 
-    func load() throws {
+    func load() throws -> [Theme] {
 
+        return []
     }
 }

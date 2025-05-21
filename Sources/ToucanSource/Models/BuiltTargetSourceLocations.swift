@@ -26,8 +26,8 @@ public struct BuiltTargetSourceLocations {
     public var currentThemeAssetsUrl: URL
     public var currentThemeTemplatesUrl: URL
     public var currentThemeOverridesUrl: URL
-    public var currentThemeOverridesAssetsUrl: URL
-    public var currentThemeOverridesTemplatesUrl: URL
+    public var currentThemeAssetOverridesUrl: URL
+    public var currentThemeTemplateOverridesUrl: URL
 
     // MARK: - Initialization
 
@@ -64,22 +64,22 @@ public struct BuiltTargetSourceLocations {
         let currentTheme =
             themes
             .appendingPathIfPresent(config.themes.current.path)
-        let themeAssets =
+        let currentThemeAssets =
             currentTheme
             .appendingPathIfPresent(config.themes.assets.path)
-        let themeTemplates =
+        let currentThemeTemplates =
             currentTheme
             .appendingPathIfPresent(config.themes.templates.path)
 
-        let themeOverrides =
+        let currentThemeOverrides =
             themes
             .appendingPathIfPresent(config.themes.overrides.path)
             .appendingPathIfPresent(config.themes.current.path)
-        let themeOverridesAssets =
-            themeOverrides
+        let currentThemeAssetOverrides =
+            currentThemeOverrides
             .appendingPathIfPresent(config.themes.assets.path)
-        let themeOverridesTemplates =
-            themeOverrides
+        let currentThemeTemplateOverrides =
+            currentThemeOverrides
             .appendingPathIfPresent(config.themes.templates.path)
 
         baseUrl = base
@@ -91,11 +91,11 @@ public struct BuiltTargetSourceLocations {
         pipelinesUrl = pipelines
         themesUrl = themes
         currentThemeUrl = currentTheme
-        currentThemeAssetsUrl = themeAssets
-        currentThemeTemplatesUrl = themeTemplates
-        currentThemeOverridesUrl = themeOverrides
-        currentThemeOverridesAssetsUrl = themeOverridesAssets
-        currentThemeOverridesTemplatesUrl = themeOverridesTemplates
+        currentThemeAssetsUrl = currentThemeAssets
+        currentThemeTemplatesUrl = currentThemeTemplates
+        currentThemeOverridesUrl = currentThemeOverrides
+        currentThemeAssetOverridesUrl = currentThemeAssetOverrides
+        currentThemeTemplateOverridesUrl = currentThemeTemplateOverrides
     }
 }
 

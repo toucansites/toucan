@@ -155,7 +155,355 @@ struct BuildTargetSourceLoaderTestSuite {
         }
     }
 
-    // MARK: - source files
+    //    @Test
+    //    func contentDefinitions() throws {
+    //        try FileManagerPlayground {
+    //            Directory("src") {
+    //                Directory("types") {
+    //                    File(
+    //                        "foo.yml",
+    //                        string: """
+    //                            id: foo
+    //                            paths:
+    //                            properties:
+    //                            relations:
+    //                            queries:
+    //                            """
+    //                    )
+    //                    File(
+    //                        "bar.yml",
+    //                        string: """
+    //                            id: bar
+    //                            paths:
+    //                            properties:
+    //                            relations:
+    //                            queries:
+    //                            """
+    //                    )
+    //                }
+    //            }
+    //        }
+    //        .test {
+    //            let url = $1.appending(path: "src/types/")
+    //            let loader = ContentDefinitionLoader(
+    //                url: url,
+    //                locations: [
+    //                    "foo.yml",
+    //                    "bar.yml",
+    //                ],
+    //                decoder: ToucanYAMLDecoder()
+    //            )
+    //            let result = try loader.load()
+    //
+    //            #expect(
+    //                result == [
+    //                    .init(
+    //                        id: "foo",
+    //                        paths: [],
+    //                        properties: [:],
+    //                        relations: [:],
+    //                        queries: [:]
+    //                    ),
+    //                    .init(
+    //                        id: "bar",
+    //                        paths: [],
+    //                        properties: [:],
+    //                        relations: [:],
+    //                        queries: [:]
+    //                    ),
+    //                ]
+    //            )
+    //        }
+    //    }
+
+    // MARK: - blocks
+
+    //    @Test
+    //    func loadMarkdownBlockDirectives() throws {
+    //        let logger = Logger(label: "BlockDirectiveLoaderTests")
+    //        try FileManagerPlayground {
+    //            Directory("src") {
+    //                Directory("blocks") {
+    //                    File(
+    //                        "highlighted-text.yml",
+    //                        string: """
+    //                            name: HighlightedText
+    //                            tag: div
+    //                            attributes:
+    //                              - name: class
+    //                                value: highlighted-text
+    //                            """
+    //                    )
+    //                    File(
+    //                        "button.yml",
+    //                        string: """
+    //                            name: Button
+    //                            tag: a
+    //                            parameters:
+    //                              - label: url
+    //                                default: ""
+    //                              - label: class
+    //                                default: "button"
+    //                              - label: target
+    //                                default: "_blank"
+    //                            removesChildParagraph: true
+    //                            attributes:
+    //                              - name: href
+    //                                value: "{{url}}"
+    //                              - name: target
+    //                                value: "{{target}}"
+    //                              - name: class
+    //                                value: "{{class}}"
+    //                            """
+    //                    )
+    //                }
+    //            }
+    //        }
+    //        .test {
+    //            let url = $1.appending(path: "src/blocks/")
+    //
+    //            let loader = BlockDirectiveLoader(
+    //                url: url,
+    //                locations: [
+    //                    "highlighted-text.yml",
+    //                    "button.yml",
+    //                ],
+    //                decoder: ToucanYAMLDecoder(),
+    //                logger: logger
+    //            )
+    //            let result = try loader.load()
+    //
+    //            #expect(
+    //                result == [
+    //                    .init(
+    //                        name: "HighlightedText",
+    //                        parameters: nil,
+    //                        requiresParentDirective: nil,
+    //                        removesChildParagraph: nil,
+    //                        tag: "div",
+    //                        attributes: [
+    //                            MarkdownBlockDirective.Attribute(
+    //                                name: "class",
+    //                                value: "highlighted-text"
+    //                            )
+    //                        ],
+    //                        output: nil
+    //                    ),
+    //                    .init(
+    //                        name: "Button",
+    //                        parameters: [
+    //                            MarkdownBlockDirective.Parameter(
+    //                                label: "url",
+    //                                isRequired: nil,
+    //                                defaultValue: ""
+    //                            ),
+    //                            MarkdownBlockDirective.Parameter(
+    //                                label: "class",
+    //                                isRequired: nil,
+    //                                defaultValue: "button"
+    //                            ),
+    //                            MarkdownBlockDirective.Parameter(
+    //                                label: "target",
+    //                                isRequired: nil,
+    //                                defaultValue: "_blank"
+    //                            ),
+    //                        ],
+    //                        requiresParentDirective: nil,
+    //                        removesChildParagraph: true,
+    //                        tag: "a",
+    //                        attributes: [
+    //                            MarkdownBlockDirective.Attribute(
+    //                                name: "href",
+    //                                value: "{{url}}"
+    //                            ),
+    //                            MarkdownBlockDirective.Attribute(
+    //                                name: "target",
+    //                                value: "{{target}}"
+    //                            ),
+    //                            MarkdownBlockDirective.Attribute(
+    //                                name: "class",
+    //                                value: "{{class}}"
+    //                            ),
+    //                        ],
+    //                        output: nil
+    //                    ),
+    //                ]
+    //            )
+    //        }
+    //    }
+
+    // MARK: - pipelines
+
+    //    @Test
+    //    func basicLoad() throws {
+    //        let logger = Logger(label: "PipelineLoaderTestSuite")
+    //        try FileManagerPlayground {
+    //            Directory("src") {
+    //                Directory("pipelines") {
+    //                    pipeline404(addTransformers: true)
+    //                    pipelineRedirect()
+    //                }
+    //                File(
+    //                    "config.yml",
+    //                    string: """
+    //                        pipelines:
+    //                            path: pipelines
+    //                        """
+    //                )
+    //            }
+    //        }
+    //        .test {
+    //            let sourceUrl = $1.appending(path: "src")
+    //            let loader = ConfigLoaderTestSuite.getConfigLoader(
+    //                url: sourceUrl,
+    //                logger: logger
+    //            )
+    //            let config = try loader.load(Config.self)
+    //
+    //            let sourceConfig = SourceConfig(
+    //                sourceUrl: sourceUrl,
+    //                config: config
+    //            )
+    //
+    //            let fs = ToucanFileSystem(fileManager: $0)
+    //            let pipelineLocations = fs.pipelineLocator.locate(
+    //                at: sourceConfig.pipelinesUrl
+    //            )
+    //            let pipelineLoader = PipelineLoader(
+    //                url: sourceConfig.pipelinesUrl,
+    //                locations: pipelineLocations,
+    //                decoder: ToucanYAMLDecoder(),
+    //                logger: logger
+    //            )
+    //            let pipelines = try pipelineLoader.load()
+    //            #expect(pipelines.count == 2)
+    //            #expect(pipelines[1].transformers.count == 2)
+    //        }
+    //
+    //    }
+    //
+    //    @Test
+    //    func loadAssets() throws {
+    //        let logger = Logger(label: "PipelineLoaderTestSuite")
+    //        try FileManagerPlayground {
+    //            Directory("src") {
+    //                Directory("pipelines") {
+    //                    pipelineSitemap(
+    //                        """
+    //                        assets:
+    //                          properties:
+    //                            - action: add
+    //                              property: js
+    //                              resolvePath: false
+    //                              input:
+    //                                name: main
+    //                                ext: js
+    //                            - action: set
+    //                              property: image
+    //                              resolvePath: true
+    //                              input:
+    //                                name: cover
+    //                                ext: jpg
+    //                            - action: load
+    //                              property: svgs
+    //                              resolvePath: false
+    //                              input:
+    //                                name: "*"
+    //                                ext: svg
+    //                            - action: parse
+    //                              property: data
+    //                              resolvePath: false
+    //                              input:
+    //                                name: "*"
+    //                                ext: json
+    //                        """
+    //                    )
+    //                }
+    //                File(
+    //                    "config.yml",
+    //                    string: """
+    //                        pipelines:
+    //                            path: pipelines
+    //                        """
+    //                )
+    //            }
+    //        }
+    //        .test {
+    //            let sourceUrl = $1.appending(path: "src")
+    //            let loader = ConfigLoaderTestSuite.getConfigLoader(
+    //                url: sourceUrl,
+    //                logger: logger
+    //            )
+    //            let config = try loader.load(Config.self)
+    //
+    //            let sourceConfig = SourceConfig(
+    //                sourceUrl: sourceUrl,
+    //                config: config
+    //            )
+    //
+    //            let fs = ToucanFileSystem(fileManager: $0)
+    //            let pipelineLocations = fs.pipelineLocator.locate(
+    //                at: sourceConfig.pipelinesUrl
+    //            )
+    //            let pipelineLoader = PipelineLoader(
+    //                url: sourceConfig.pipelinesUrl,
+    //                locations: pipelineLocations,
+    //                decoder: ToucanYAMLDecoder(),
+    //                logger: logger
+    //            )
+    //            let pipelines = try pipelineLoader.load()
+    //            #expect(pipelines.count == 1)
+    //            #expect(pipelines[0].assets.properties.count == 4)
+    //            #expect(pipelines[0].assets.properties[0].action == .add)
+    //            #expect(pipelines[0].assets.properties[1].action == .set)
+    //            #expect(pipelines[0].assets.properties[2].action == .load)
+    //            #expect(pipelines[0].assets.properties[3].action == .parse)
+    //        }
+    //    }
+
+    // MARK: - settings
+
+    //    @Test
+    //    func basicSettings() throws {
+    //        let logger = Logger(label: "SettingsLoaderTestSuite")
+    //        try FileManagerPlayground {
+    //            Directory("src") {
+    //                File(
+    //                    "site.yml",
+    //                    string: """
+    //                        baseUrl: http://localhost:8080/
+    //                        name: Test
+    //                        """
+    //                )
+    //            }
+    //        }
+    //        .test {
+    //            let url = $1.appending(path: "src/")
+    //
+    //            let settings = try ObjectLoader(
+    //                url: url,
+    //                locations: $0.find(
+    //                    name: "site",
+    //                    extensions: ["yaml", "yml"],
+    //                    at: url
+    //                ),
+    //                encoder: ToucanYAMLEncoder(),
+    //                decoder: ToucanYAMLDecoder(),
+    //                logger: logger
+    //            )
+    //            .load(Settings.self)
+    //
+    //            let expectation = Settings(
+    //                [
+    //                    "baseUrl": "http://localhost:8080/",
+    //                    "name": "Test",
+    //                ]
+    //            )
+    //            #expect(settings == expectation)
+    //        }
+    //    }
+
+    // MARK: - valid source files
 
     @Test()
     func validSource() async throws {
