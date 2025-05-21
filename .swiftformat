@@ -1,0 +1,40 @@
+--swiftversion 6
+
+
+--indent 4
+--maxwidth 80
+--trimwhitespace always
+--self init-only
+--elseposition next-line
+--guardelse next-line
+
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--wrapconditions before-first
+
+
+--enable trailingclosures
+--enable todos
+--enable preferKeyPath
+
+--enable organizeDeclarations
+    --organizationmode type
+    --visibilityorder private, fileprivate, internal, package, public, open
+    --categorymark "MARK: - %c"
+
+--enable wrapAttributes
+    --funcattributes prev-line
+    --typeattributes prev-line
+    --storedvarattrs prev-line
+    --computedvarattrs prev-line
+    --complexattrs prev-line
+
+
+--disable wrapSingleLineComments
+
+--enable yodaConditions
+
+--enable acronyms
+    --acronyms "ID,URL,UUID,HTTP,YML,YAML,JSON,XML"
+
