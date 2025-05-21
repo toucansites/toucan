@@ -1,9 +1,9 @@
-////
-////  SourceBundleScopeTestSuite.swift
-////  Toucan
-////
-////  Created by Tibor Bödecs on 2025. 02. 21..
-////
+//
+//  SourceBundleScopeTestSuite.swift
+//  Toucan
+//
+//  Created by Tibor Bödecs on 2025. 02. 21..
+//
 //
 //import Foundation
 //import Testing

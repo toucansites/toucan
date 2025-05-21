@@ -5,38 +5,39 @@
 //  Created by Tibor Bödecs on 2025. 01. 21..
 //
 
-/// Represents the type of a content property, used in defining content schemas or type-safe metadata fields.
+/// Represents the type of a content property.
 ///
-/// Supports primitive types (`bool`, `int`, `double`, `string`, `date`) and nested structures like arrays of types.
+/// Used in defining content schemas or type-safe metadata fields.
+/// Supports primitive types (`bool`, `int`, `double`, `string`, `date`)
+/// and complex structures like arrays of types.
 public indirect enum PropertyType: Sendable, Codable, Equatable {
 
-    /// A Boolean property type (`true` or `false`).
+    /// Boolean type (`true` or `false`).
     case bool
 
-    /// An integer property type (`Int`).
+    /// Integer type (`Int`).
     case int
 
-    /// A double/decimal number property type (`Double`).
+    /// Floating-point number type (`Double`).
     case double
 
-    /// A string/text property type (`String`).
+    /// Text/string type (`String`).
     case string
 
-    /// A date property type with optional localized formatting.
+    /// Date type with optional localized formatting.
     case date(format: LocalizedDateFormat?)
 
-    /// An array of values with a consistent inner property type.
+    /// Array type with elements of a consistent `PropertyType`.
     case array(of: PropertyType)
 
-    // MARK: - Internal Coding Keys
-
+    /// Coding keys used for encoding and decoding `PropertyType`.
     private enum CodingKeys: String, CodingKey {
         case of
         case type
         case dateFormat
     }
 
-    /// Recognized type tags for decoding.
+    /// Type discriminator used during encoding and decoding.
     private enum TypeKey: String, Sendable, Codable, Equatable, CaseIterable {
         case bool
         case int
@@ -46,13 +47,12 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         case array
     }
 
-    // MARK: - Decoder
-
-    /// Decodes a `PropertyType` from a structured definition.
+    /// Creates a new instance by decoding from the given decoder.
     ///
-    /// Supports nested types for arrays and optional date formatting.
+    /// Supports primitive and nested types with optional date formatting.
     ///
-    /// - Throws: A decoding error if required keys are missing or invalid.
+    /// - Parameter decoder: The decoder to read data from.
+    /// - Throws: An error if decoding fails.
     public init(
         from decoder: Decoder
     ) throws {
@@ -80,6 +80,10 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         }
     }
 
+    /// Encodes this value into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if encoding fails.
     public func encode(
         to encoder: Encoder
     ) throws {

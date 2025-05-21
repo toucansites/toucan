@@ -1,9 +1,9 @@
-////
-////  SourceBundleRSSTestSuite.swift
-////  Toucan
-////
-////  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
-////
+//
+//  SourceBundleRSSTestSuite.swift
+//  Toucan
+//
+//  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
+//
 //
 //import Foundation
 //import Testing

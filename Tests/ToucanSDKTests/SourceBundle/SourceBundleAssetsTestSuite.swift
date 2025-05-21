@@ -1,9 +1,9 @@
-////
-////  SourceBundleAssetsTestSuite.swift
-////  Toucan
-////
-////  Created by gerp83 on 2025. 04. 24..
-////
+//
+//  SourceBundleAssetsTestSuite.swift
+//  Toucan
+//
+//  Created by gerp83 on 2025. 04. 24..
+//
 //
 //import Foundation
 //import Testing

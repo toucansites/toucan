@@ -12,6 +12,7 @@ public struct Order: Sendable, Codable, Equatable {
 
     // MARK: - Coding Keys
 
+    /// Internal keys used for encoding and decoding `Order` instances.
     /// Keys used for decoding an `Order` from external sources (e.g., YAML, JSON).
     enum CodingKeys: CodingKey {
         case key
@@ -61,6 +62,10 @@ public struct Order: Sendable, Codable, Equatable {
         )
     }
 
+    /// Encodes this `Order` instance into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if encoding fails.
     public func encode(
         to encoder: any Encoder
     ) throws {

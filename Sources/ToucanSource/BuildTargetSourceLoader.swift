@@ -1,5 +1,5 @@
 //
-//  SourceLoader.swift
+//  BuildTargetSourceLoader.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 04. 04..
@@ -11,46 +11,37 @@ import FileManagerKit
 import ToucanCore
 import ToucanSerialization
 
-public struct SourceLoaderError: ToucanError {
-
-    let type: String
-    let error: Error?
-
-    init(
-        type: String,
-        error: Error? = nil
-    ) {
-        self.type = type
-        self.error = error
-    }
-
-    public var underlyingErrors: [Error] {
-        error.map { [$0] } ?? []
-    }
-
-    public var logMessage: String {
-        "Could not load: `\(type)`."
-    }
-
-    public var userFriendlyMessage: String {
-        "Could not load source."
-    }
-}
-
+/// Loads and processes various parts of a build target's source bundle.
+///
+/// Uses dependency-injected tools to fetch, decode, and construct structured data from source files.
 public struct BuildTargetSourceLoader {
 
+    /// The URL of the root source directory.
     var sourceUrl: URL
+    /// Metadata describing the current build target.
     var target: Target
 
+    /// A utility for accessing and searching the file system.
     var fileManager: FileManagerKit
 
+    /// Encoder and decoder for serializing and deserializing content.
     var encoder: ToucanEncoder
     var decoder: ToucanDecoder
 
+    /// Logger instance for emitting structured debug information.
     var logger: Logger
 
     // MARK: -
 
+    /// Initializes a new instance of `BuildTargetSourceLoader`.
+    ///
+    /// - Parameters:
+    ///   - sourceUrl: The root directory containing source files.
+    ///   - target: The build target metadata.
+    ///   - fileManager: File system access helper.
+    ///   - encoder: The encoder used for serialization.
+    ///   - decoder: The decoder used for deserialization.
+    ///   - logger: Optional logger for debugging and diagnostics.
     public init(
         sourceUrl: URL,
         target: Target,
@@ -96,6 +87,11 @@ public struct BuildTargetSourceLoader {
         )
     }
 
+    /// Loads raw contents from the source using the provided configuration.
+    ///
+    /// - Parameter config: The configuration object used to determine content locations.
+    /// - Returns: An array of `RawContent` objects.
+    /// - Throws: A `SourceLoaderError` if loading fails.
     private func loadRawContents(
         using config: Config
     ) throws(SourceLoaderError) -> [RawContent] {
@@ -119,6 +115,14 @@ public struct BuildTargetSourceLoader {
         }
     }
 
+    /// Loads a single Codable object of the specified type from a named file at a given URL.
+    ///
+    /// - Parameters:
+    ///   - type: The type to decode.
+    ///   - name: The name of the file to load.
+    ///   - url: The directory URL to search within.
+    /// - Returns: An instance of the decoded type.
+    /// - Throws: A `SourceLoaderError` if loading or decoding fails.
     private func load<T: Codable>(
         type: T.Type,
         named name: String,
@@ -143,6 +147,13 @@ public struct BuildTargetSourceLoader {
         }
     }
 
+    /// Loads an array of Decodable objects of the specified type from YAML files at a given URL.
+    ///
+    /// - Parameters:
+    ///   - type: The type to decode.
+    ///   - url: The directory URL to search within.
+    /// - Returns: An array of decoded objects.
+    /// - Throws: A `SourceLoaderError` if loading or decoding fails.
     private func load<T: Decodable>(
         type: T.Type,
         at url: URL
@@ -165,6 +176,10 @@ public struct BuildTargetSourceLoader {
         }
     }
 
+    /// Loads the main configuration object from the source.
+    ///
+    /// - Returns: A `Config` object loaded from the source.
+    /// - Throws: A `SourceLoaderError` if loading fails.
     func loadConfig() throws(SourceLoaderError) -> Config {
         do {
             let configUrl = sourceUrl.appendingPathIfPresent(target.config)
@@ -180,6 +195,10 @@ public struct BuildTargetSourceLoader {
         }
     }
 
+    /// Constructs the locations object based on the configuration.
+    ///
+    /// - Parameter config: The loaded configuration.
+    /// - Returns: A `BuiltTargetSourceLocations` instance.
     func getLocations(
         using config: Config
     ) -> BuiltTargetSourceLocations {
@@ -189,6 +208,11 @@ public struct BuildTargetSourceLoader {
         )
     }
 
+    /// Loads the site settings from the specified locations.
+    ///
+    /// - Parameter locations: The source locations to use.
+    /// - Returns: A `Settings` object.
+    /// - Throws: A `SourceLoaderError` if loading fails.
     func loadSettings(
         using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> Settings {
@@ -204,6 +228,11 @@ public struct BuildTargetSourceLoader {
         }
     }
 
+    /// Loads pipeline definitions from the specified locations.
+    ///
+    /// - Parameter locations: The source locations to use.
+    /// - Returns: An array of `Pipeline` objects.
+    /// - Throws: A `SourceLoaderError` if loading fails.
     func loadPipelines(
         using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> [Pipeline] {
@@ -213,6 +242,13 @@ public struct BuildTargetSourceLoader {
         )
     }
 
+    /// Loads content definitions and merges with virtual types defined by pipelines.
+    ///
+    /// - Parameters:
+    ///   - locations: The source locations to use.
+    ///   - pipelines: The pipelines to consider for virtual types.
+    /// - Returns: A sorted array of `ContentDefinition` objects.
+    /// - Throws: A `SourceLoaderError` if loading fails.
     func loadTypes(
         using locations: BuiltTargetSourceLocations,
         pipelines: [Pipeline]
@@ -227,6 +263,11 @@ public struct BuildTargetSourceLoader {
         return (loadedTypes + virtualTypes).sorted(by: { $0.id < $1.id })
     }
 
+    /// Loads block directives from the specified locations.
+    ///
+    /// - Parameter locations: The source locations to use.
+    /// - Returns: An array of `Block` objects.
+    /// - Throws: A `SourceLoaderError` if loading fails.
     func loadBlocks(
         using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> [Block] {

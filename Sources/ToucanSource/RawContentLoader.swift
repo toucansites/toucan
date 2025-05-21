@@ -13,6 +13,9 @@ import ToucanSerialization
 
 fileprivate extension String {
 
+    /// Returns a version of the string with any content inside square brackets removed.
+    ///
+    /// This is typically used to sanitize paths by omitting bracketed segments.
     func trimmingBracketsContent() -> String {
         var result = ""
         var insideBrackets = false
@@ -37,15 +40,10 @@ fileprivate extension String {
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
 
-    /// Represents errors that can occur during the raw content loading process.
-    /// - `invalidFrontMatter`: Indicates that the front matter could not be parsed correctly at the specified file path.
-    public enum Error: Swift.Error {
-        case invalidFrontMatter(path: String)
-    }
-
     /// Source configuration.
     let contentsURL: URL
 
+    /// The relative path where asset files are expected to be found.
     let assetsPath: String
 
     /// Decoder used to decode YAML files.
@@ -60,6 +58,15 @@ public struct RawContentLoader {
     /// The logger instance
     let logger: Logger
 
+    /// Creates a new instance of `RawContentLoader` with the provided dependencies.
+    ///
+    /// - Parameters:
+    ///   - contentsURL: The base URL where content files are located.
+    ///   - assetsPath: The relative path to the directory containing asset files.
+    ///   - decoder: A decoder used to parse YAML content from files.
+    ///   - markdownParser: A parser used to extract front matter and body from Markdown files.
+    ///   - fileManager: An instance responsible for file system operations.
+    ///   - logger: A logger instance used for recording diagnostic messages. Defaults to a subsystem-specific logger.
     public init(
         contentsURL: URL,
         assetsPath: String,
@@ -103,8 +110,7 @@ public struct RawContentLoader {
     /// Each entry is derived from a folder containing one or more valid index files (Markdown/YAML).
     /// Subdirectories marked with `noindex.yaml|yml` are skipped.
     ///
-    /// - Parameter url: The root content directory to scan.
-    /// - Returns: A list of `RawContentLocation` objects, sorted by slug.
+    /// - Returns: A list of `Origin` objects, sorted by slug.
     func locateOrigins() -> [Origin] {
         locateRawContentsOrigins(
             at: contentsURL
@@ -112,6 +118,11 @@ public struct RawContentLoader {
         .sorted { $0.slug < $1.slug }
     }
 
+    /// Loads a single raw content item from the specified origin.
+    ///
+    /// - Parameter origin: The origin metadata from which to load the content.
+    /// - Returns: A populated `RawContent` instance.
+    /// - Throws: An error if the content cannot be loaded or parsed.
     func loadRawContent(
         at origin: Origin
     ) throws -> RawContent {
@@ -199,6 +210,10 @@ public struct RawContentLoader {
         )
     }
 
+    /// Recursively finds all assets in the given directory.
+    ///
+    /// - Parameter url: The URL of the directory to search.
+    /// - Returns: A sorted list of relative asset file paths.
     private func locateAssets(
         at url: URL
     ) -> [String] {
@@ -276,6 +291,10 @@ public struct RawContentLoader {
 
     // MARK: - index helpers
 
+    /// Finds index files within a directory.
+    ///
+    /// - Parameter url: The directory URL to search in.
+    /// - Returns: A list of index filenames matching supported extensions.
     private func getIndexes(
         at url: URL
     ) -> [String] {
@@ -286,12 +305,22 @@ public struct RawContentLoader {
         )
     }
 
+    /// Checks whether a given directory contains index files.
+    ///
+    /// - Parameter url: The directory URL to check.
+    /// - Returns: `true` if index files exist, `false` otherwise.
     private func hasIndex(
         at url: URL
     ) -> Bool {
         !getIndexes(at: url).isEmpty
     }
 
+    /// Determines if a directory should be excluded based on a noindex marker or name brackets.
+    ///
+    /// - Parameters:
+    ///   - item: The name of the directory.
+    ///   - url: The URL of the directory.
+    /// - Returns: `true` if the directory should be skipped, `false` otherwise.
     private func hasNoIndex(
         item: String,
         at url: URL
@@ -310,12 +339,22 @@ public struct RawContentLoader {
 
     // MARK: - file load
 
+    /// Loads the contents of a file as a UTF-8 string.
+    ///
+    /// - Parameter url: The URL of the file to read.
+    /// - Returns: The file content as a string.
+    /// - Throws: An error if the file cannot be read.
     private func loadContentsOfFile(
         at url: URL
     ) throws -> String {
         try String(contentsOf: url, encoding: .utf8)
     }
 
+    /// Loads and parses a Markdown file, extracting front matter and content.
+    ///
+    /// - Parameter url: The URL of the Markdown file.
+    /// - Returns: A `Markdown` object with parsed content.
+    /// - Throws: An error if the file cannot be read or parsed.
     private func loadMarkdownFile(
         at url: URL
     ) throws -> Markdown {
@@ -323,6 +362,11 @@ public struct RawContentLoader {
         return try markdownParser.parse(rawMarkdown)
     }
 
+    /// Loads and decodes a YAML file into a dictionary.
+    ///
+    /// - Parameter url: The URL of the YAML file.
+    /// - Returns: A dictionary of key-value pairs from the YAML content.
+    /// - Throws: An error if the file cannot be read or decoded.
     private func loadYAMLFile(
         at url: URL
     ) throws -> [String: AnyCodable] {

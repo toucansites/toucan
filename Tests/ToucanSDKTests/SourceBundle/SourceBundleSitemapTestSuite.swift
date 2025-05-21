@@ -1,9 +1,9 @@
-////
-////  SourceBundleSitemapTestSuite.swift
-////  Toucan
-////
-////  Created by Lengyel Gábor on 2025. 03. 26..
-////
+//
+//  SourceBundleSitemapTestSuite.swift
+//  Toucan
+//
+//  Created by Lengyel Gábor on 2025. 03. 26..
+//
 //
 //import Foundation
 //import Testing

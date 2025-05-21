@@ -31,6 +31,11 @@ public protocol ToucanEncoder {
 
 extension ToucanEncoder {
 
+    /// Encodes an object conforming to `Encodable` into a `Data` representation.
+    ///
+    /// - Parameter object: The value to encode.
+    /// - Returns: The Data representation of the Encodable.
+    /// - Throws: `ToucanEncoderError` if encoding fails.
     public func encode<T: Encodable>(
         _ object: T
     ) throws(ToucanEncoderError) -> Data {

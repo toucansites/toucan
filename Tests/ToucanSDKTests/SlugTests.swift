@@ -1,8 +1,8 @@
-////
-////  SlugTests.swift
-////  Toucan
-////
-////  Created by gerp83 on 2025. 04. 04..
+//
+//  SlugTests.swift
+//  Toucan
+//
+//  Created by gerp83 on 2025. 04. 04..
 //
 //import Testing
 //@Suite

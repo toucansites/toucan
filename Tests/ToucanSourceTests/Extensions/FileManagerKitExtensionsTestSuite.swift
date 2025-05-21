@@ -1,5 +1,5 @@
 //
-//  FileLocatorTestSuite.swift
+//  FileManagerKitExtensionsTestSuite.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 03. 04..

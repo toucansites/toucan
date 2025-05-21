@@ -1,9 +1,9 @@
-////
-////  ContentFilterTestSuite.swift
-////  Toucan
-////
-////  Created by Tibor Bödecs on 2025. 04. 18..
-////
+//
+//  ContentFilterTestSuite.swift
+//  Toucan
+//
+//  Created by Tibor Bödecs on 2025. 04. 18..
+//
 //
 //import Foundation
 //import Testing

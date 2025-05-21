@@ -1,5 +1,5 @@
 //
-//  SourceBundle.swift
+//  BuildTargetSource.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 01. 31..
@@ -32,12 +32,13 @@ public struct BuildTargetSource {
     /// List of content pipelines.
     public var pipelines: [Pipeline]
 
+    /// Definitions for content types, typically used to classify and validate content entries.
     public var contentDefinitions: [ContentDefinition]
 
-    /// All parsed content entries within the source.
+    /// A list of raw content items parsed from the source directory.
     public var rawContents: [RawContent]
 
-    /// A collection of custom Markdown block directives to be supported in rendering.
+    /// A list of custom block directives used in Markdown rendering.
     public var blockDirectives: [Block]
 
     // MARK: - Initialization
@@ -48,13 +49,11 @@ public struct BuildTargetSource {
     ///   - location: Filesystem URL of the source root.
     ///   - target: The target to use to build the site.
     ///   - config: The main configuration for the site/project.
-    ///   - sourceConfig: Configuration specific to this source group.
     ///   - settings: Site-level metadata like title, language, etc.
     ///   - pipelines: Any content transformation pipelines to apply.
-    ///   - contents: Parsed content entries.
-    ///   - blockDirectives: Custom block directive definitions.
-    ///   - templates: Named templates used for rendering.
-    ///   - baseUrl: The base URL to be used for link resolution.
+    ///   - contentDefinitions: Definitions for content types in this source.
+    ///   - rawContents: Parsed content entries from the source.
+    ///   - blockDirectives: Definitions of custom Markdown block directives.
     public init(
         location: URL,
         target: Target,

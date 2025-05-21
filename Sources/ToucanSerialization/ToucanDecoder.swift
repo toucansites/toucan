@@ -14,12 +14,12 @@ public protocol ToucanDecoder {
     ///
     /// - Parameters:
     ///   - type: The expected type to decode (conforms to `Decodable`).
-    ///   - from: The raw `String` input (e.g., file contents as String).
+    ///   - string: The raw `String` input (e.g., file contents as String).
     /// - Returns: A decoded instance of the specified type.
     /// - Throws: `ToucanDecoderError` if decoding fails or data is invalid.
     func decode<T: Decodable>(
         _ type: T.Type,
-        from: String
+        from string: String
     ) throws(ToucanDecoderError) -> T
 
     /// Decodes a `Decodable` type from raw data.
@@ -37,6 +37,13 @@ public protocol ToucanDecoder {
 
 extension ToucanDecoder {
 
+    /// Decodes a `Decodable` type from raw data.
+    ///
+    /// - Parameters:
+    ///   - type: The expected type to decode (conforms to `Decodable`).
+    ///   - string: The raw `String` input (e.g., file contents as String).
+    /// - Returns: A decoded instance of the specified type.
+    /// - Throws: `ToucanDecoderError` if decoding fails or data is invalid.
     public func decode<T: Decodable>(
         _ type: T.Type,
         from string: String

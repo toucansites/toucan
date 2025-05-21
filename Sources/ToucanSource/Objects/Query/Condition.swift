@@ -22,6 +22,7 @@ public enum Condition: Codable, Equatable {
 
     // MARK: - Internal Keys for Decoding
 
+    /// Internal keys used for encoding and decoding `Condition` enum cases.
     private enum CodingKeys: CodingKey {
         case key
         case `operator`
@@ -71,6 +72,10 @@ public enum Condition: Codable, Equatable {
         }
     }
 
+    /// Encodes this `Condition` instance into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if encoding fails.
     public func encode(
         to encoder: Encoder
     ) throws {

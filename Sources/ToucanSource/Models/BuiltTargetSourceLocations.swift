@@ -1,5 +1,5 @@
 //
-//  SourceLocations.swift
+//  BuiltTargetSourceLocations.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 01..
@@ -14,23 +14,42 @@ public struct BuiltTargetSourceLocations {
 
     // MARK: - Properties
 
+    /// The base URL of the source directory.
     public var baseUrl: URL
+    /// The URL where content files are located.
     public var contentsUrl: URL
+    /// The URL of the site settings configuration file.
     public var siteSettingsURL: URL
+    /// The URL pointing to site-wide asset resources.
     public var siteAssetsUrl: URL
+    /// The URL containing content type definitions.
     public var typesUrl: URL
+    /// The URL containing block directive definitions.
     public var blocksUrl: URL
+    /// The URL pointing to the pipeline configuration files.
     public var pipelinesUrl: URL
+    /// The URL where theme definitions are located.
     public var themesUrl: URL
+    /// The URL of the currently active theme.
     public var currentThemeUrl: URL
+    /// The URL containing assets for the current theme.
     public var currentThemeAssetsUrl: URL
+    /// The URL pointing to template files of the current theme.
     public var currentThemeTemplatesUrl: URL
+    /// The URL pointing to the override directory of the current theme.
     public var currentThemeOverridesUrl: URL
+    /// The URL for overridden assets in the current theme.
     public var currentThemeAssetOverridesUrl: URL
+    /// The URL for overridden templates in the current theme.
     public var currentThemeTemplateOverridesUrl: URL
 
     // MARK: - Initialization
 
+    /// Creates a new `BuiltTargetSourceLocations` instance by computing file paths based on the project configuration.
+    ///
+    /// - Parameters:
+    ///   - sourceUrl: The base URL of the source directory.
+    ///   - config: The configuration object describing relative paths for various components.
     public init(
         sourceUrl: URL,
         config: Config
@@ -101,6 +120,7 @@ public struct BuiltTargetSourceLocations {
 
 extension BuiltTargetSourceLocations: LoggerMetadataRepresentable {
 
+    /// This metadata can be used to provide additional context in log output.
     public var logMetadata: [String: Logger.MetadataValue] {
         [
             "baseUrl": .string(baseUrl.absoluteString)

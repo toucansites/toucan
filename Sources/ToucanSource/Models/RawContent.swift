@@ -26,8 +26,7 @@ public struct RawContent: Equatable {
     ///
     /// - Parameters:
     ///   - origin: The origin information of the content file.
-    ///   - frontMatter: Metadata fields parsed from the file's front matter.
-    ///   - markdown: The body content in raw Markdown format.
+    ///   - markdown: The contents using the `Markdown` type.
     ///   - lastModificationDate: The file's last modification time (Unix timestamp).
     ///   - assets: List of asset file paths linked with this content.
     public init(

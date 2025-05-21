@@ -5,6 +5,7 @@
 //  Created by Tibor Bödecs on 2025. 02. 11..
 //
 
+/// A custom coding key type for encoding and decoding dynamic keys.
 private struct DynamicCodingKeys: CodingKey {
 
     var stringValue: String
@@ -19,22 +20,22 @@ private struct DynamicCodingKeys: CodingKey {
     }
 }
 
-/// Represents site  settings.
+/// Represents site-wide configuration settings, allowing for dynamic, user-defined values.
 public struct Settings: Codable, Equatable {
 
-    /// A dictionary of user-defined settings values.
+    /// A dictionary holding arbitrary user-defined settings keyed by strings.
     public var values: [String: AnyCodable]
 
     // MARK: - Initialization
 
-    /// Standard settings value
+    /// The default, empty settings instance.
     public static var defaults: Self {
         .init([:])
     }
 
-    /// Initializes a new object with explicit values.
+    /// Creates a new `Settings` instance with the specified key-value pairs.
     ///
-    /// - Parameters values: A dictionary of additional custom settings.
+    /// - Parameter values: A dictionary of custom settings.
     public init(
         _ values: [String: AnyCodable]
     ) {
@@ -43,9 +44,12 @@ public struct Settings: Codable, Equatable {
 
     // MARK: - Decoding Logic
 
-    /// Custom decoder that decodes key-value pairs.
+    /// Initializes a `Settings` instance by decoding from the given decoder.
     ///
-    /// All keys are captured in the underlying dictionary.
+    /// If decoding fails, initializes with default empty settings.
+    ///
+    /// - Parameter decoder: The decoder to read data from.
+    /// - Throws: An error if decoding fails unexpectedly.
     public init(
         from decoder: any Decoder
     ) throws {
@@ -59,6 +63,10 @@ public struct Settings: Codable, Equatable {
         self.values = value
     }
 
+    /// Encodes the `Settings` instance into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if any value fails to encode.
     public func encode(
         to encoder: any Encoder
     ) throws {

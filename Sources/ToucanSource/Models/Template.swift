@@ -1,5 +1,5 @@
 //
-//  TemplateLocation.swift
+//  Template.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 01. 31..
@@ -13,13 +13,12 @@ public struct Template: Equatable {
     /// A unique identifier for the template
     public var id: String
 
-    /// The full file system path to the template file.
+    /// The file system path to the template file relative from the selected template directory.
     public var path: String
 
     /// Initializes a new `TemplateLocation` with a logical ID and file path.
     ///
-    /// - Parameters:
-    ///   - path: The file path pointing to the template file.
+    /// - Parameter path: The file path pointing to the template file.
     public init(
         path: String
     ) {

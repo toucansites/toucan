@@ -1,9 +1,9 @@
-////
-////  ConfigLoaderTestSuite.swift
-////  Toucan
-////
-////  Created by Viasz-Kádi Ferenc on 2025. 02. 28..
-////
+//
+//  ConfigLoaderTestSuite.swift
+//  Toucan
+//
+//  Created by Viasz-Kádi Ferenc on 2025. 02. 28..
+//
 //
 //import Foundation
 //import Testing

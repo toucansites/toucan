@@ -41,12 +41,6 @@ extension Toucan {
                 logger.error("Duplicate slugs: \(slugs)")
             }
         }
-        catch let error as RawContentLoader.Error {
-            switch error {
-            case .invalidFrontMatter(let path):
-                logger.error("Invalid frontMatter: \(path)")
-            }
-        }
         catch let error as ToucanDecoderError {
             logger.error("\(error.logMessageStack())")
         }

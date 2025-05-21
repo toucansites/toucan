@@ -1,9 +1,9 @@
-////
-////  ConfigLoaderDateFormatsTestSuite.swift
-////  Toucan
-////
-////  Created by gerp83 on 2025. 04. 15..
-////
+//
+//  ConfigLoaderDateFormatsTestSuite.swift
+//  Toucan
+//
+//  Created by gerp83 on 2025. 04. 15..
+//
 //
 //import Foundation
 //import Testing

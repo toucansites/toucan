@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  PipelineTransformersTestSuite.swift
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 18..
 //

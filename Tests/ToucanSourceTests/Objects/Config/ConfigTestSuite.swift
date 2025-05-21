@@ -1,5 +1,5 @@
 //
-//  ConfigDecodingTestSuite.swift
+//  ConfigTestSuite.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 04. 17..
