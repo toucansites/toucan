@@ -6,6 +6,9 @@ on:
       - 'v*'
       - '[0-9]*'
 
+permissions:
+  contents: write
+
 jobs:
   prepare:
     runs-on: ubuntu-latest
