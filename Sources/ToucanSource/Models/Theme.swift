@@ -5,8 +5,7 @@
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
 
-import Foundation
-import ToucanSource
+import struct Foundation.URL
 
 /*
  themes
@@ -18,6 +17,7 @@ import ToucanSource
             assets
             components
  */
+
 struct Theme {
 
     struct Components {
@@ -25,25 +25,8 @@ struct Theme {
         var templates: [Template]
     }
 
-    var name: String
-    var location: URL
+    var baseUrl: URL
     var components: Components
     var overrides: Components
     var content: Components
-}
-
-struct ThemeLoader {
-
-    let locations: BuiltTargetSourceLocations
-
-    init(
-        locations: BuiltTargetSourceLocations
-    ) {
-        self.locations = locations
-    }
-
-    func load() throws -> [Theme] {
-
-        return []
-    }
 }

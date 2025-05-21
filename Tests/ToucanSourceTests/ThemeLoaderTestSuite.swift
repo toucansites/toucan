@@ -17,7 +17,7 @@ import Logging
 struct ThemeLoaderTestSuite {
 
     @Test()
-    func template() async throws {
+    func standardThemeLoading() async throws {
         try FileManagerPlayground {
             Directory("src") {
                 Directory("assets") {
@@ -37,6 +37,7 @@ struct ThemeLoaderTestSuite {
                             Directory("pages") {
                                 "default.mustache"
                                 "about.mustache"
+                                "test.html"
                             }
                             "html.mustache"
                             "README.md"
@@ -68,147 +69,61 @@ struct ThemeLoaderTestSuite {
                 config: config
             )
 
-            let loader = ThemeLoader(locations: locations)
-
-            let assets = $0.find(
-                recursively: true,
-                at: locations.currentThemeAssetsUrl
+            let loader = ThemeLoader(
+                locations: locations,
+                fileManager: $0
             )
-            let templates = $0.find(
-                extensions: ["mustache"],
-                recursively: true,
-                at: locations.currentThemeTemplatesUrl
-            )
+            let theme = try loader.load()
 
-            let assetOverrides = $0.find(
-                recursively: true,
-                at: locations.currentThemeAssetOverridesUrl
-            )
+            #expect(theme.baseUrl == locations.themesUrl)
 
-            let templateOverrides = $0.find(
-                extensions: ["mustache"],
-                recursively: true,
-                at: locations.currentThemeTemplateOverridesUrl
+            #expect(
+                theme.components.assets.sorted()
+                    == [
+                        "theme.css"
+                    ]
+                    .sorted()
             )
-
-            let contentAssetOverrides = $0.find(
-                recursively: true,
-                at: locations.siteAssetsUrl
+            #expect(
+                theme.components.templates.sorted(by: { $0.id < $1.id })
+                    == [
+                        .init(path: "pages/default.mustache"),
+                        .init(path: "pages/about.mustache"),
+                        .init(path: "pages/test.html"),
+                        .init(path: "html.mustache"),
+                    ]
+                    .sorted(by: { $0.id < $1.id })
             )
 
-            let contentTemplateOverrides = $0.find(
-                extensions: ["mustache"],
-                recursively: true,
-                at: locations.contentsUrl
+            #expect(
+                theme.overrides.assets.sorted()
+                    == [
+                        "theme.css"
+                    ]
+                    .sorted()
+            )
+            #expect(
+                theme.overrides.templates.sorted(by: { $0.id < $1.id })
+                    == [
+                        .init(path: "pages/default.mustache")
+                    ]
+                    .sorted(by: { $0.id < $1.id })
             )
 
-            let theme = Theme(
-                name: config.themes.current.path,
-                location: locations.themesUrl,
-                components: .init(
-                    assets: assets,
-                    templates: templates.map { .init(path: $0) }
-                ),
-                overrides: .init(
-                    assets: assetOverrides,
-                    templates: templateOverrides.map { .init(path: $0) }
-                ),
-                content: .init(
-                    assets: contentAssetOverrides,
-                    templates: contentTemplateOverrides.map { .init(path: $0) }
-                )
+            #expect(
+                theme.content.assets.sorted()
+                    == [
+                        "style.css"
+                    ]
+                    .sorted()
             )
-
-            dump(theme)
-
-            //            #expect(
-            //                result == [
-            //                    .init(id: "foo.bar", path: "foo/bar.mustache"),
-            //                    .init(id: "foo.baz", path: "foo/baz.mustache"),
-            //                    .init(id: "qux", path: "qux.mustache"),
-            //                ]
-            //            )
+            #expect(
+                theme.content.templates.sorted(by: { $0.id < $1.id })
+                    == [
+                        .init(path: "about/about.mustache")
+                    ]
+                    .sorted(by: { $0.id < $1.id })
+            )
         }
     }
-
-    //    @Test
-    //    func loadTemplates() throws {
-    //        let logger = Logger(label: "TemplateLoaderTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory("themes") {
-    //                Directory("default") {
-    //                    Directory("templates") {
-    //                        File(
-    //                            "sitemap.mustache",
-    //                            string: Templates.Mocks.sitemap()
-    //                        )
-    //                        File(
-    //                            "redirect.mustache",
-    //                            string: Templates.Mocks.redirect()
-    //                        )
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        .test {
-    //            let url = $1.appending(path: "themes/default/templates/")
-    //            let overridesUrl = $1.appending(path: "themes/overrides/templates/")
-    //
-    //            let locator = TemplateLocator(fileManager: $0)
-    //            let locations = locator.locate(at: url, overrides: overridesUrl)
-    //
-    //            let loader = TemplateLoader(
-    //                url: url,
-    //                overridesUrl: overridesUrl,
-    //                locations: locations,
-    //                logger: logger
-    //            )
-    //            let results = try loader.load()
-    //
-    //            #expect(results.count == 2)
-    //        }
-    //    }
-    //
-    //    @Test
-    //    func loadTemplatesOverride() throws {
-    //        let logger = Logger(label: "TemplateLoaderTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory("themes") {
-    //                Directory("default") {
-    //                    Directory("templates") {
-    //                        File(
-    //                            "sitemap.mustache",
-    //                            string: Templates.Mocks.sitemap()
-    //                        )
-    //                        File("redirect.mustache", string: "")
-    //                    }
-    //                }
-    //                Directory("overrides") {
-    //                    Directory("templates") {
-    //                        File(
-    //                            "redirect.mustache",
-    //                            string: Templates.Mocks.redirect()
-    //                        )
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        .test {
-    //            let url = $1.appending(path: "themes/default/templates/")
-    //            let overridesUrl = $1.appending(path: "themes/overrides/templates/")
-    //
-    //            let locator = TemplateLocator(fileManager: $0)
-    //            let locations = locator.locate(at: url, overrides: overridesUrl)
-    //
-    //            let loader = TemplateLoader(
-    //                url: url,
-    //                overridesUrl: overridesUrl,
-    //                locations: locations,
-    //                logger: logger
-    //            )
-    //            let results = try loader.load()
-    //
-    //            #expect(results.count == 2)
-    //        }
-    //    }
 }

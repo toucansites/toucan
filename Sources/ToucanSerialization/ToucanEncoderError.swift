@@ -14,7 +14,7 @@ extension EncodingError: ToucanError {
     }
 
     public var userFriendlyMessage: String {
-        "\(localizedDescription)"
+        localizedDescription
     }
 }
 

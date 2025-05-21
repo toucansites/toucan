@@ -8,12 +8,9 @@
 import Foundation
 
 public protocol ToucanError: Error {
-
     var logMessage: String { get }
     var userFriendlyMessage: String { get }
-
     var underlyingErrors: [Error] { get }
-
     func logMessageStack() -> String
 }
 

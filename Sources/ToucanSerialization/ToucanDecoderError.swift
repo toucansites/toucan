@@ -35,7 +35,7 @@ extension DecodingError: ToucanError {
     }
 
     public var userFriendlyMessage: String {
-        "\(localizedDescription)"
+        localizedDescription
     }
 }
 
