@@ -69,7 +69,7 @@ public struct Pipeline: Decodable {
     /// Initializes a fully-defined `Pipeline` object.
     public init(
         id: String,
-        definesType: Bool = false,
+        definesType: Bool,
         scopes: [String: [String: Scope]],
         queries: [String: Query],
         dataTypes: DataTypes,

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Mocks+Pipelines.swift
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
@@ -12,6 +12,7 @@ extension Mocks.Pipelines {
     static func html() -> Pipeline {
         .init(
             id: "html",
+            definesType: false,
             scopes: [:],
             queries: [
                 "featured": .init(
@@ -37,25 +38,99 @@ extension Mocks.Pipelines {
                     "rss",
                     "sitemap",
                 ],
-                lastUpdate: [],
-                filterRules: [:]
+                lastUpdate: [
+                    "page",
+                    "author",
+                    "tag",
+                    "post",
+                    "guide",
+                    "category",
+                ],
+                filterRules: [
+                    "*": .field(
+                        key: "draft",
+                        operator: .equals,
+                        value: false
+                    ),
+                    "post": .and(
+                        [
+                            .field(
+                                key: "draft",
+                                operator: .equals,
+                                value: false
+                            ),
+                            .field(
+                                key: "publication",
+                                operator: .lessThanOrEquals,
+                                value: "{{date.now}}"
+                            ),
+                            .field(
+                                key: "expiration",
+                                operator: .greaterThanOrEquals,
+                                value: "{{date.now}}"
+                            ),
+                        ]
+                    ),
+                ]
             ),
-            // are iterators always pages? iteratorPages? or segments? 🤔
             iterators: [
                 "post.pagination": .init(
                     contentType: "post",
                     limit: 2
                 )
             ],
-            assets: .defaults,
+            assets: .init(
+                behaviors: [
+                    .init(
+                        id: "copy",
+                        input: .init(name: "*", ext: "*"),
+                        output: .init(name: "*", ext: "*")
+                    )
+                ],
+                properties: [
+                    .init(
+                        action: .add,
+                        property: "css",
+                        resolvePath: true,
+                        input: .init(name: "style", ext: "css")
+                    ),
+                    .init(
+                        action: .add,
+                        property: "js",
+                        resolvePath: true,
+                        input: .init(name: "main", ext: "js")
+                    ),
+                    .init(
+                        action: .set,
+                        property: "image",
+                        resolvePath: true,
+                        input: .init(name: "cover", ext: "jpg")
+                    ),
+                ]
+            ),
             transformers: [:],
             engine: .init(
                 id: "mustache",
                 options: [
                     "contentTypes": [
+                        "page": [
+                            "template": "pages.default"
+                        ],
                         "post": [
-                            "template": "post.default"
-                        ]
+                            "template": "blog.post.default"
+                        ],
+                        "author": [
+                            "template": "blog.author.default"
+                        ],
+                        "tag": [
+                            "template": "blog.tag.default"
+                        ],
+                        "category": [
+                            "template": "docs.category.default"
+                        ],
+                        "guide": [
+                            "template": "docs.guide.default"
+                        ],
                     ]
                 ]
             ),
@@ -67,9 +142,46 @@ extension Mocks.Pipelines {
         )
     }
 
+    static func notFound() -> Pipeline {
+        .init(
+            id: "not-found",
+            definesType: false,
+            scopes: [:],
+            queries: [:],
+            dataTypes: .defaults,
+            contentTypes: .init(
+                include: [
+                    "not-found"
+                ],
+                exclude: [],
+                lastUpdate: [],
+                filterRules: [:]
+            ),
+            iterators: [:],
+            assets: .defaults,
+            transformers: [:],
+            engine: .init(
+                id: "mustache",
+                options: [
+                    "contentTypes": [
+                        "not-found": [
+                            "template": "pages.404"
+                        ]
+                    ]
+                ]
+            ),
+            output: .init(
+                path: "",
+                file: "404",
+                ext: "html"
+            )
+        )
+    }
+
     static func redirect() -> Pipeline {
         .init(
             id: "redirect",
+            definesType: false,
             scopes: [:],
             queries: [:],
             dataTypes: .defaults,
@@ -105,6 +217,7 @@ extension Mocks.Pipelines {
     static func rss() -> Pipeline {
         .init(
             id: "rss",
+            definesType: true,
             scopes: [:],
             queries: [:],
             dataTypes: .defaults,
@@ -144,6 +257,7 @@ extension Mocks.Pipelines {
     static func sitemap() -> Pipeline {
         .init(
             id: "sitemap",
+            definesType: true,
             scopes: [:],
             queries: [
                 "pages": .init(
@@ -213,63 +327,45 @@ extension Mocks.Pipelines {
         )
     }
 
-    static func context() -> Pipeline {
+    static func api() -> Pipeline {
         .init(
-            id: "context",
-            scopes: [
-                "*": [
-                    "reference": .init(
-                        context: .reference,
-                        fields: []
-                    ),
-                    "list": .init(
-                        context: .list,
-                        fields: []
-                    ),
-                    "detail": .init(
-                        context: .detail,
-                        fields: []
-                    ),
-                    "custom": .init(
-                        context: .properties,
-                        fields: ["id"]
-                    ),
-                ]
-            ],
+            id: "api",
+            definesType: true,
+            scopes: [:],
             queries: [
-                "featured": .init(
+                "posts": .init(
                     contentType: "post",
                     scope: "list",
-                    filter: .field(
-                        key: "featured",
-                        operator: .equals,
-                        value: true
-                    )
-                )
-            ],
-            dataTypes: .init(
-                date: .init(
-                    dateFormats: [
-                        "full": .init(format: "y.m.d.")
+                    orderBy: [
+                        .init(key: "publication", direction: .desc)
                     ]
                 )
+            ],
+            dataTypes: .defaults,
+            contentTypes: .init(
+                include: ["api"],
+                exclude: [],
+                lastUpdate: [],
+                filterRules: [:]
             ),
-            contentTypes: .defaults,
             iterators: [
-                "post.pagination": .init(
-                    contentType: "post",
-                    limit: 2
-                )
+                :
+                //                "post.pagination": .init(
+                //                    contentType: "post",
+                //                    limit: 2
+                //                )
             ],
             assets: .defaults,
             transformers: [:],
             engine: .init(
-                id: "context",
-                options: [:]
+                id: "json",
+                options: [
+                    "keyPath": "context.posts"
+                ]
             ),
             output: .init(
-                path: "_contexts/{{slug}}",
-                file: "context",
+                path: "api",
+                file: "posts",
                 ext: "json"
             )
         )

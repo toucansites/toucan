@@ -70,11 +70,11 @@ public struct BuildTargetSourceLoader {
         let locations = getLocations(using: config)
         let settings = try loadSettings(using: locations)
         let pipelines = try loadPipelines(using: locations)
-        let types = try loadTypes(using: locations, pipelines: pipelines)
+        let types = try loadTypes(using: locations)
         let blocks = try loadBlocks(using: locations)
         let rawContents = try loadRawContents(using: config)
 
-        #warning("use locations")
+        #warning("move locations inside config, use that everywhere")
         return .init(
             location: sourceUrl,
             target: target,
@@ -242,25 +242,18 @@ public struct BuildTargetSourceLoader {
         )
     }
 
-    /// Loads content definitions and merges with virtual types defined by pipelines.
+    /// Loads content types
     ///
-    /// - Parameters:
-    ///   - locations: The source locations to use.
-    ///   - pipelines: The pipelines to consider for virtual types.
-    /// - Returns: A sorted array of `ContentDefinition` objects.
+    /// - Parameter locations: The source locations to use.
+    /// - Returns: An array of `ContentDefinition` objects.
     /// - Throws: A `SourceLoaderError` if loading fails.
     func loadTypes(
-        using locations: BuiltTargetSourceLocations,
-        pipelines: [Pipeline]
+        using locations: BuiltTargetSourceLocations
     ) throws(SourceLoaderError) -> [ContentDefinition] {
-        let loadedTypes = try load(
+        try load(
             type: ContentDefinition.self,
             at: locations.typesUrl
         )
-        let virtualTypes = pipelines.compactMap {
-            $0.definesType ? ContentDefinition(id: $0.id) : nil
-        }
-        return (loadedTypes + virtualTypes).sorted(by: { $0.id < $1.id })
     }
 
     /// Loads block directives from the specified locations.

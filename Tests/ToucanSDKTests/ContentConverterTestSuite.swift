@@ -9,6 +9,7 @@ import Foundation
 import Testing
 import Logging
 import ToucanSource
+import ToucanSerialization
 @testable import ToucanSDK
 
 @Suite
@@ -17,50 +18,33 @@ struct ContentConverterTestSuite {
     @Test
     func contentConversion() throws {
         let now = Date()
-        let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: "/"),
-            target: .standard,
-            config: .defaults,
-            settings: .defaults,
-            pipelines: [],
-            contentDefinitions: [
-                .init(
-                    id: "page",
-                    default: true,
-                    paths: [],
-                    properties: [
-                        "title": .init(
-                            propertyType: .string,
-                            isRequired: true
-                        )
-                    ],
-                    relations: [:],
-                    queries: [:]
-                )
-            ],
-            rawContents: [
-                .init(
-                    origin: .init(
-                        path: "",
-                        slug: ""
-                    ),
-                    markdown: .init(
-                        frontMatter: [
-                            "title": "Lorem ipsum"
-                        ],
-                        contents: """
-                            # Lorem ipsum
+        let buildTargetSource = Mocks.buildTargetSource(now: now)
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
 
-                            dolor sit amet
-                            """
-                    ),
-                    lastModificationDate: now.timeIntervalSince1970,
-                    assets: []
-                )
-            ],
-            blockDirectives: []
+        let converter = ContentConverter(
+            buildTargetSource: buildTargetSource,
+            encoder: encoder,
+            decoder: decoder
         )
 
+        let targetContents = try converter.convertTargetContents()
+        #expect(!targetContents.isEmpty)
+        #expect(buildTargetSource.rawContents.count == targetContents.count)
+        for rawContent in buildTargetSource.rawContents {
+            guard
+                let item = targetContents.first(
+                    where: { $0.rawValue == rawContent }
+                )
+            else {
+                Issue.record("Missing content `\(rawContent.origin.slug)`.")
+                return
+            }
+            #expect(!item.isIterator)
+            print("----------------")
+            print(item.rawValue.origin.slug)
+            print(item.definition.id)
+        }
     }
 
     //    @Test()

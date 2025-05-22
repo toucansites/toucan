@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Mocks+ContentDefinitions.swift
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
@@ -19,13 +19,11 @@ extension Mocks.ContentDefinitions {
             properties: [
                 "title": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
                 ),
                 "description": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
                 ),
             ],
             relations: [:],
@@ -33,33 +31,28 @@ extension Mocks.ContentDefinitions {
         )
     }
 
-    static func author(isDefault: Bool = false) -> ContentDefinition {
+    static func author() -> ContentDefinition {
         .init(
             id: "author",
-            default: isDefault,
             paths: [
                 "blog/authors"
             ],
             properties: [
                 "name": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
                 ),
                 "description": .init(
                     propertyType: .string,
-                    isRequired: false,
-                    defaultValue: nil
+                    isRequired: false
                 ),
                 "age": .init(
                     propertyType: .int,
-                    isRequired: false,
-                    defaultValue: nil
+                    isRequired: false
                 ),
                 "height": .init(
                     propertyType: .double,
-                    isRequired: false,
-                    defaultValue: nil
+                    isRequired: false
                 ),
             ],
             relations: [:],
@@ -67,15 +60,16 @@ extension Mocks.ContentDefinitions {
                 "posts": .init(
                     contentType: "post",
                     scope: "list",
-                    limit: 100,
-                    offset: 0,
                     filter: .field(
                         key: "authors",
                         operator: .contains,
                         value: .init("{{id}}")
                     ),
                     orderBy: [
-                        .init(key: "publication", direction: .desc)
+                        .init(
+                            key: "publication",
+                            direction: .desc
+                        )
                     ]
                 )
             ]
@@ -91,24 +85,28 @@ extension Mocks.ContentDefinitions {
             properties: [
                 "title": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
-                )
+                    isRequired: true
+                ),
+                "description": .init(
+                    propertyType: .string,
+                    isRequired: true
+                ),
             ],
             relations: [:],
             queries: [
                 "posts": .init(
                     contentType: "post",
                     scope: "list",
-                    limit: 100,
-                    offset: 0,
                     filter: .field(
                         key: "tags",
                         operator: .contains,
                         value: .init("{{id}}")
                     ),
                     orderBy: [
-                        .init(key: "publication", direction: .desc)
+                        .init(
+                            key: "publication",
+                            direction: .desc
+                        )
                     ]
                 )
             ]
@@ -124,42 +122,50 @@ extension Mocks.ContentDefinitions {
             properties: [
                 "title": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
+                ),
+                "description": .init(
+                    propertyType: .string,
+                    isRequired: true
                 ),
                 "publication": .init(
                     propertyType: .date(
-                        format: .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                        format: .init(
+                            format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                        )
                     ),
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
+                ),
+                "expiration": .init(
+                    propertyType: .date(
+                        format: .init(
+                            format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                        )
+                    ),
+                    isRequired: true
                 ),
                 "featured": .init(
                     propertyType: .bool,
                     isRequired: true,
                     defaultValue: .init(false)
                 ),
-                "ages": .init(
-                    propertyType: .array(of: .int),
-                    isRequired: true,
-                    defaultValue: nil
-                ),
-                "heights": .init(
-                    propertyType: .array(of: .double),
-                    isRequired: true,
-                    defaultValue: nil
-                ),
             ],
             relations: [
                 "authors": .init(
                     references: "author",
                     relationType: .many,
-                    order: .init(key: "title", direction: .asc)
+                    order: .init(
+                        key: "title",
+                        direction: .asc
+                    )
                 ),
                 "tags": .init(
                     references: "tag",
                     relationType: .many,
-                    order: .init(key: "title", direction: .asc)
+                    order: .init(
+                        key: "title",
+                        direction: .asc
+                    )
                 ),
             ],
             queries: [
@@ -194,7 +200,6 @@ extension Mocks.ContentDefinitions {
                         )
                     ]
                 ),
-
                 "related": .init(
                     contentType: "post",
                     scope: "list",
@@ -249,12 +254,15 @@ extension Mocks.ContentDefinitions {
             properties: [
                 "title": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
+                ),
+                "description": .init(
+                    propertyType: .string,
+                    isRequired: false
                 ),
                 "order": .init(
                     propertyType: .int,
-                    isRequired: false,
+                    isRequired: true,
                     defaultValue: .init(100)
                 ),
             ],
@@ -263,15 +271,16 @@ extension Mocks.ContentDefinitions {
                 "guides": .init(
                     contentType: "guide",
                     scope: "list",
-                    limit: 100,
-                    offset: 0,
                     filter: .field(
                         key: "category",
                         operator: .equals,
                         value: .init("{{id}}")
                     ),
                     orderBy: [
-                        .init(key: "order", direction: .desc)
+                        .init(
+                            key: "order",
+                            direction: .asc
+                        )
                     ]
                 )
             ]
@@ -287,80 +296,43 @@ extension Mocks.ContentDefinitions {
             properties: [
                 "title": .init(
                     propertyType: .string,
-                    isRequired: true,
-                    defaultValue: nil
+                    isRequired: true
+                ),
+                "description": .init(
+                    propertyType: .string,
+                    isRequired: false
                 ),
                 "order": .init(
                     propertyType: .int,
-                    isRequired: false,
+                    isRequired: true,
                     defaultValue: .init(100)
                 ),
             ],
             relations: [
                 "category": .init(
                     references: "category",
-                    relationType: .one,
-                    order: .init(key: "name", direction: .asc)
+                    relationType: .one
                 )
             ],
             queries: [:]
         )
     }
+
     static func redirect() -> ContentDefinition {
         .init(
             id: "redirect",
             paths: [],
             properties: [
-                "to": .init(propertyType: .string, isRequired: true),
+                "to": .init(
+                    propertyType: .string,
+                    isRequired: true
+                ),
                 "code": .init(
                     propertyType: .int,
                     isRequired: true,
                     defaultValue: .init(301)
                 ),
             ],
-            relations: [:],
-            queries: [:]
-        )
-    }
-
-    static func rss() -> ContentDefinition {
-        .init(
-            id: "rss",
-            paths: [],
-            properties: [:],
-            relations: [:],
-            queries: [
-                // for testing purpopses, we use authors, posts and tags
-                "posts": .init(
-                    contentType: "post",
-                    scope: "list",
-                    orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
-                    ]
-                ),
-                "authors": .init(
-                    contentType: "author",
-                    scope: "list",
-                    orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
-                    ]
-                ),
-                "tags": .init(
-                    contentType: "tag",
-                    scope: "list",
-                    orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
-                    ]
-                ),
-            ]
-        )
-    }
-
-    static func sitemap() -> ContentDefinition {
-        .init(
-            id: "sitemap",
-            paths: [],
-            properties: [:],
             relations: [:],
             queries: [:]
         )

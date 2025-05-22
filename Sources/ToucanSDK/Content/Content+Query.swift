@@ -1,5 +1,5 @@
 //
-//  Content+RunQuery.swift
+//  Content+Query.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 01. 31..

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  ContentConverter.swift
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
@@ -18,26 +18,27 @@ struct ContentConverter {
         case multipleDefaultContentDefinitionsFound
     }
 
-    let sourceBundle: BuildTargetSource
+    let buildTargetSource: BuildTargetSource
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
     let dateFormatter: DateFormatter
     let defaultDateFormat: LocalizedDateFormat
     let logger: Logger
+    let contentTypes: [ContentDefinition]
 
     init(
-        sourceBundle: BuildTargetSource,
+        buildTargetSource: BuildTargetSource,
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
-        logger: Logger
+        logger: Logger = .subsystem("content-converter")
     ) {
-        self.sourceBundle = sourceBundle
+        self.buildTargetSource = buildTargetSource
         self.encoder = encoder
         self.decoder = decoder
         self.logger = logger
 
-        self.dateFormatter = sourceBundle.target.dateFormatter(
-            sourceBundle.config.dateFormats.input
+        self.dateFormatter = buildTargetSource.target.dateFormatter(
+            buildTargetSource.config.dateFormats.input
         )
 
         self.defaultDateFormat = .init(
@@ -45,166 +46,20 @@ struct ContentConverter {
             timeZone: dateFormatter.timeZone.identifier,
             format: dateFormatter.dateFormat!
         )
+
+        let virtualTypes = buildTargetSource.pipelines.compactMap {
+            $0.definesType ? ContentDefinition(id: $0.id) : nil
+        }
+        self.contentTypes =
+            (buildTargetSource.contentDefinitions + virtualTypes)
+            .sorted { $0.id < $1.id }
     }
 
-    func convert(
-        rawContents: [RawContent]
-    ) throws -> [Content] {
-        try rawContents.map { try convert(rawContent: $0) }
+    func convertTargetContents() throws -> [Content] {
+        try buildTargetSource.rawContents.map { try convert(rawContent: $0) }
     }
 
-    func convert(
-        rawContent: RawContent
-    ) throws -> Content {
-        let type = rawContent.markdown.frontMatter.string("type")
-
-        let contentDefinition = try detectContentType(
-            explicitType: type,
-            origin: rawContent.origin
-        )
-
-        var properties: [String: AnyCodable] = [:]
-
-        // Convert schema-defined properties
-        for (key, property) in contentDefinition.properties.sorted(by: {
-            $0.key < $1.key
-        }) {
-            dateFormatter.config(with: defaultDateFormat)
-            let rawValue = rawContent.markdown.frontMatter[key]
-
-            properties[key] = convert(
-                property: property,
-                rawValue: rawValue,
-                forKey: key
-            )
-        }
-
-        // Convert schema-defined relations
-        var relations: [String: RelationValue] = [:]
-        for (key, relation) in contentDefinition.relations.sorted(by: {
-            $0.key < $1.key
-        }) {
-            let rawValue = rawContent.markdown.frontMatter[key]
-            var identifiers: [String] = []
-
-            switch relation.type {
-            case .one:
-                if let id = rawValue?.value as? String {
-                    identifiers.append(id)
-                }
-            case .many:
-                if let ids = rawValue?.value as? [String] {
-                    identifiers.append(contentsOf: ids)
-                }
-            }
-
-            relations[key] = .init(
-                contentType: relation.references,
-                type: relation.type,
-                identifiers: identifiers
-            )
-        }
-
-        // Filter out reserved keys and schema-mapped fields to extract user-defined fields
-        let keysToRemove =
-            ["id", "type", "slug"]
-            + contentDefinition.properties.keys
-            + contentDefinition.relations.keys
-
-        var userDefined = rawContent.markdown.frontMatter
-        for key in keysToRemove {
-            userDefined.removeValue(forKey: key)
-        }
-
-        // Extract `id` from front matter or fallback from origin path
-        var id: String =
-            rawContent.origin.path
-            .split(separator: "/")
-            .dropLast()
-            .last
-            .map(String.init)?
-            .trimmingBracketsContent() ?? ""
-
-        if let rawId = rawContent.markdown.frontMatter.string("id") {
-            id = rawId
-        }
-
-        // Extract `slug` from front matter or fallback to origin slug
-        var slug: String = rawContent.origin.slug
-        if let rawSlug = rawContent.markdown.frontMatter.string(
-            "slug",
-            allowingEmptyValue: true
-        ) {
-            slug = rawSlug
-        }
-
-        // Final assembled content object
-        return Content(
-            id: id,
-            slug: .init(value: slug),
-            rawValue: rawContent,
-            definition: contentDefinition,
-            properties: properties,
-            relations: relations,
-            userDefined: userDefined,
-            iteratorInfo: nil
-        )
-    }
-
-    // Content Definition Detection
-
-    func detectContentType(
-        explicitType: String?,
-        origin: Origin
-    ) throws -> ContentDefinition {
-        /// Use explicit content definition if specified
-        if let explicitType {
-            guard let result = detectExplicitType(explicitType) else {
-                //                logger.info("Explicit content type (\(explicitType)) not found")
-                throw Failure.noExplicitContentDefinitionFound(explicitType)
-            }
-            return result
-        }
-
-        /// Searching in `paths` values
-        if let matchingPathsType = detectMatchingPathsType(origin: origin) {
-            return matchingPathsType
-        }
-
-        /// Find the default content definition if exists
-        return try detectDefaultType()
-    }
-
-    func detectExplicitType(_ value: String) -> ContentDefinition? {
-        sourceBundle.contentDefinitions.first { $0.id == value }
-    }
-
-    func detectMatchingPathsType(
-        origin: Origin
-    ) -> ContentDefinition? {
-        sourceBundle.contentDefinitions.first { definition in
-            definition.paths.contains { origin.path.hasPrefix($0) }
-        }
-    }
-
-    func detectDefaultType() throws -> ContentDefinition {
-        let results = sourceBundle.contentDefinitions.filter { $0.default }
-
-        guard !results.isEmpty else {
-            //            logger.info("No content type found for slug: \(origin.slug)")
-            throw Failure.noDefaultContentDefinitionFound
-        }
-
-        guard results.count == 1 else {
-            let types = results.map { $0.id }.joined(separator: ", ")
-            //            logger.info(
-            //                "Multiple content types (\(types)) found for slug: `\(origin.slug)`"
-            //            )
-            throw Failure.multipleDefaultContentDefinitionsFound
-        }
-
-        return results[0]
-    }
+    // MARK: -
 
     func convert(
         property: Property,
@@ -236,5 +91,142 @@ struct ContentConverter {
         default:
             return value
         }
+    }
+
+    func convert(
+        rawContent: RawContent
+    ) throws -> Content {
+        let typeId = rawContent.markdown.frontMatter.string("type")
+
+        let contentType = try getContentType(
+            for: rawContent.origin,
+            using: typeId
+        )
+
+        var properties: [String: AnyCodable] = [:]
+
+        // Convert schema-defined properties
+        for (key, property) in contentType.properties.sorted(by: {
+            $0.key < $1.key
+        }) {
+            dateFormatter.config(with: defaultDateFormat)
+            let rawValue = rawContent.markdown.frontMatter[key]
+
+            properties[key] = convert(
+                property: property,
+                rawValue: rawValue,
+                forKey: key
+            )
+        }
+
+        // Convert schema-defined relations
+        var relations: [String: RelationValue] = [:]
+        for (key, relation) in contentType.relations.sorted(by: {
+            $0.key < $1.key
+        }) {
+            let rawValue = rawContent.markdown.frontMatter[key]
+            var identifiers: [String] = []
+
+            switch relation.type {
+            case .one:
+                if let id = rawValue?.value as? String {
+                    identifiers.append(id)
+                }
+            case .many:
+                if let ids = rawValue?.value as? [String] {
+                    identifiers.append(contentsOf: ids)
+                }
+            }
+
+            relations[key] = .init(
+                contentType: relation.references,
+                type: relation.type,
+                identifiers: identifiers
+            )
+        }
+
+        // Filter out reserved keys and schema-mapped fields to extract user-defined fields
+        let keysToRemove =
+            ["id", "type", "slug"]
+            + contentType.properties.keys
+            + contentType.relations.keys
+
+        var userDefined = rawContent.markdown.frontMatter
+        for key in keysToRemove {
+            userDefined.removeValue(forKey: key)
+        }
+
+        // Extract `id` from front matter or fallback from origin path
+        var id: String =
+            rawContent.origin.path
+            .split(separator: "/")
+            .dropLast()
+            .last
+            .map(String.init)?
+            .trimmingBracketsContent() ?? ""
+
+        if let rawId = rawContent.markdown.frontMatter.string("id") {
+            id = rawId
+        }
+
+        // Extract `slug` from front matter or fallback to origin slug
+        var slug: String = rawContent.origin.slug
+        if let rawSlug = rawContent.markdown.frontMatter.string(
+            "slug",
+            allowingEmptyValue: true
+        ) {
+            slug = rawSlug
+        }
+
+        // Final assembled content object
+        return .init(
+            id: id,
+            slug: .init(value: slug),
+            rawValue: rawContent,
+            definition: contentType,
+            properties: properties,
+            relations: relations,
+            userDefined: userDefined,
+            iteratorInfo: nil
+        )
+    }
+
+    func getContentType(
+        for origin: Origin,
+        using id: String?
+    ) throws -> ContentDefinition {
+
+        if let id {
+            guard
+                let result = contentTypes.first(where: { $0.id == id })
+            else {
+                //                logger.info("Explicit content type (\(explicitType)) not found")
+                throw Failure.noExplicitContentDefinitionFound(id)
+            }
+            return result
+        }
+
+        if let type = contentTypes.first(
+            where: { type in
+                type.paths.contains { origin.path.hasPrefix($0) }
+            }
+        ) {
+            return type
+        }
+
+        let results = contentTypes.filter { $0.default }
+
+        guard !results.isEmpty else {
+            //            logger.info("No content type found for slug: \(origin.slug)")
+            throw Failure.noDefaultContentDefinitionFound
+        }
+        guard results.count == 1 else {
+            //            let types = results.map { $0.id }.joined(separator: ", ")
+            //            logger.info(
+            //                "Multiple content types (\(types)) found for slug: `\(origin.slug)`"
+            //            )
+            throw Failure.multipleDefaultContentDefinitionsFound
+        }
+        return results[0]
     }
 }

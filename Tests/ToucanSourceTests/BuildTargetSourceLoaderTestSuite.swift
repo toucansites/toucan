@@ -93,10 +93,7 @@ struct BuildTargetSourceLoaderTestSuite {
             let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
             let config = try sourceLoader.loadConfig()
             let locations = sourceLoader.getLocations(using: config)
-            let results = try sourceLoader.loadTypes(
-                using: locations,
-                pipelines: []
-            )
+            let results = try sourceLoader.loadTypes(using: locations)
 
             let exp: [ContentDefinition] = [type1, type2]
                 .sorted(by: { $0.id < $1.id })
@@ -114,10 +111,7 @@ struct BuildTargetSourceLoaderTestSuite {
             let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
             let config = try sourceLoader.loadConfig()
             let locations = sourceLoader.getLocations(using: config)
-            let results = try sourceLoader.loadTypes(
-                using: locations,
-                pipelines: []
-            )
+            let results = try sourceLoader.loadTypes(using: locations)
             #expect(results.isEmpty)
         }
     }
@@ -138,10 +132,7 @@ struct BuildTargetSourceLoaderTestSuite {
                 let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
                 let config = try sourceLoader.loadConfig()
                 let locations = sourceLoader.getLocations(using: config)
-                _ = try sourceLoader.loadTypes(
-                    using: locations,
-                    pipelines: []
-                )
+                _ = try sourceLoader.loadTypes(using: locations)
             }
             catch let error as SourceLoaderError {
                 #expect(

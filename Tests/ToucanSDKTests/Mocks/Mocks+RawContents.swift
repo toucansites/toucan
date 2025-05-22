@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Mocks+RawContents.swift
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
@@ -143,7 +143,7 @@ extension Mocks.RawContents {
         )
     }
 
-    func sitemapXML(
+    static func sitemapXML(
         now: Date = .init()
     ) -> RawContent {
         .init(
@@ -164,7 +164,7 @@ extension Mocks.RawContents {
 
     // MARK: -
 
-    mutating func page(
+    static func page(
         id: Int,
         now: Date = .init()
     ) -> RawContent {
@@ -189,7 +189,7 @@ extension Mocks.RawContents {
         )
     }
 
-    mutating func buildAuthor(
+    static func author(
         id: Int,
         now: Date = .init()
     ) -> RawContent {
@@ -216,7 +216,7 @@ extension Mocks.RawContents {
         )
     }
 
-    mutating func buildTag(
+    static func tag(
         id: Int,
         now: Date = .init()
     ) -> RawContent {
@@ -242,7 +242,7 @@ extension Mocks.RawContents {
         )
     }
 
-    mutating func buildPost(
+    static func post(
         id: Int,
         now: Date = .init(),
         featured: Bool = false,
@@ -275,8 +275,7 @@ extension Mocks.RawContents {
         )
     }
 
-    func buildPostPagination(
-        id: Int,
+    static func postPagination(
         now: Date = .init()
     ) -> RawContent {
         .init(
@@ -301,7 +300,7 @@ extension Mocks.RawContents {
         )
     }
 
-    mutating func buildCategory(
+    static func category(
         id: Int,
         now: Date = .init()
     ) -> RawContent {
@@ -328,7 +327,7 @@ extension Mocks.RawContents {
         )
     }
 
-    mutating func buildGuide(
+    static func guide(
         id: Int,
         categoryId: Int,
         now: Date = .init()
