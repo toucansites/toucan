@@ -136,36 +136,8 @@ public struct Toucan {
             }
             // MARK: - Validation
 
-            //                /// Validate site locale
-            //                validate(
-            //                    .init(
-            //                        locale: target.locale,
-            //                        timeZone: target.timeZone,
-            //                        format: ""
-            //                    )
-            //                )
-            //
-            //                /// Validate config date formats
-            //                validate(sourceBundle.config.dateFormats.input)
-            //                for dateFormat in sourceBundle.sourceConfig.config.dateFormats
-            //                    .output.values
-            //                {
-            //                    validate(dateFormat)
-            //                }
-            //
-            //                /// Validate pipeline date formats
-            //                for pipeline in sourceBundle.pipelines {
-            //                    for dateFormat in pipeline.dataTypes.date.dateFormats.values
-            //                    {
-            //                        validate(dateFormat)
-            //                    }
-            //                }
-            //
-            //                /// Validate slugs
-            //                try validateSlugs(sourceBundle)
-            //
-            //                /// Validate frontMatters
-            //                validateFrontMatters(sourceBundle)
+            // TODO: validate build targets
+
             //
             //                // MARK: - Render pipeline results
             //
@@ -246,58 +218,4 @@ public struct Toucan {
         }
     }
 
-    //    func validate(_ dateFormat: LocalizedDateFormat) {
-    //        if let value = dateFormat.locale {
-    //            let canonicalId = Locale.identifier(.icu, from: value)
-    //
-    //            if !Locale.availableIdentifiers.contains(canonicalId) {
-    //                logger.warning("Invalid site locale: \(value)")
-    //            }
-    //        }
-    //        if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {
-    //            logger.warning("Invalid site time zone: \(value)")
-    //        }
-    //    }
-    //
-    //    func validateSlugs(_ sourceBundle: BuildTargetSource) throws {
-    //        let slugs = sourceBundle.contents.map(\.slug.value)
-    //        let duplicatedSlugs = Dictionary(grouping: slugs, by: { $0 })
-    //            .mapValues { $0.count }
-    //            .filter { $1 > 1 }
-    //
-    //        if !duplicatedSlugs.isEmpty {
-    //            throw Error.duplicateSlugs(duplicatedSlugs.keys.map { String($0) })
-    //        }
-    //    }
-    //
-    //    func validateFrontMatters(_ sourceBundle: BuildTargetSource) {
-    //        for content in sourceBundle.contents {
-    //            let metadata: Logger.Metadata = ["slug": "\(content.slug.value)"]
-    //            let frontMatter = content.rawValue.frontMatter
-    //
-    //            let missingProperties = content.definition.properties
-    //                .filter { name, property in
-    //                    property.required && frontMatter[name] == nil
-    //                        && property.default?.value == nil
-    //                }
-    //
-    //            for name in missingProperties.keys {
-    //                logger.warning(
-    //                    "Missing content property: `\(name)`",
-    //                    metadata: metadata
-    //                )
-    //            }
-    //
-    //            let missingRelations = content.definition.relations.keys.filter {
-    //                frontMatter[$0] == nil
-    //            }
-    //
-    //            for name in missingRelations {
-    //                logger.warning(
-    //                    "Missing content relation: `\(name)`",
-    //                    metadata: metadata
-    //                )
-    //            }
-    //        }
-    //    }
 }

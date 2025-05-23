@@ -6,17 +6,45 @@
 //
 
 import Foundation
+import ToucanCore
 import ToucanSource
 import ToucanSerialization
 import Logging
 
-struct ContentConverter {
+enum ContentConverterError: ToucanError {
 
-    enum Failure: Error {
-        case noExplicitContentDefinitionFound(String)
-        case noDefaultContentDefinitionFound
-        case multipleDefaultContentDefinitionsFound
+    case missingContentType(String)
+    case unknown(Error)
+
+    var underlyingErrors: [any Error] {
+        switch self {
+        case .unknown(let error):
+            return [error]
+        default:
+            return []
+        }
     }
+
+    var logMessage: String {
+        switch self {
+        case .missingContentType:
+            return "Missing content type."
+        case .unknown(let error):
+            return error.localizedDescription
+        }
+    }
+
+    var userFriendlyMessage: String {
+        switch self {
+        case .missingContentType:
+            return "Missing content type."
+        case .unknown:
+            return "Unknown content conversion error."
+        }
+    }
+}
+
+struct ContentConverter {
 
     let buildTargetSource: BuildTargetSource
     let encoder: ToucanEncoder
@@ -55,8 +83,18 @@ struct ContentConverter {
             .sorted { $0.id < $1.id }
     }
 
-    func convertTargetContents() throws -> [Content] {
-        try buildTargetSource.rawContents.map { try convert(rawContent: $0) }
+    func convertTargetContents() throws(ContentConverterError) -> [Content] {
+        do {
+            return try buildTargetSource.rawContents.map {
+                try convert(rawContent: $0)
+            }
+        }
+        catch let error as ContentConverterError {
+            throw error
+        }
+        catch {
+            throw .unknown(error)
+        }
     }
 
     // MARK: -
@@ -95,7 +133,7 @@ struct ContentConverter {
 
     func convert(
         rawContent: RawContent
-    ) throws -> Content {
+    ) throws(ContentConverterError) -> Content {
         let typeId = rawContent.markdown.frontMatter.string("type")
 
         let contentType = try getContentType(
@@ -194,14 +232,14 @@ struct ContentConverter {
     func getContentType(
         for origin: Origin,
         using id: String?
-    ) throws -> ContentDefinition {
+    ) throws(ContentConverterError) -> ContentDefinition {
 
         if let id {
             guard
                 let result = contentTypes.first(where: { $0.id == id })
             else {
                 //                logger.info("Explicit content type (\(explicitType)) not found")
-                throw Failure.noExplicitContentDefinitionFound(id)
+                throw .missingContentType(id)
             }
             return result
         }
@@ -215,18 +253,10 @@ struct ContentConverter {
         }
 
         let results = contentTypes.filter { $0.default }
-
-        guard !results.isEmpty else {
-            //            logger.info("No content type found for slug: \(origin.slug)")
-            throw Failure.noDefaultContentDefinitionFound
-        }
-        guard results.count == 1 else {
-            //            let types = results.map { $0.id }.joined(separator: ", ")
-            //            logger.info(
-            //                "Multiple content types (\(types)) found for slug: `\(origin.slug)`"
-            //            )
-            throw Failure.multipleDefaultContentDefinitionsFound
-        }
+        precondition(
+            !results.isEmpty,
+            "Don't forget to validate build target first."
+        )
         return results[0]
     }
 }

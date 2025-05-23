@@ -20,23 +20,6 @@ public struct Slug: Codable, Equatable {
 
     // MARK: - Iterator ID Extraction
 
-    /// Extracts a dynamic iterator identifier from a slug value containing
-    /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
-    ///
-    /// - Returns: The identifier inside `{{...}}`, or `nil` if not found.
-    public func extractIteratorId() -> String? {
-        guard
-            let startRange = value.range(of: "{{"),
-            let endRange = value.range(
-                of: "}}",
-                range: startRange.upperBound..<value.endIndex
-            )
-        else {
-            return nil
-        }
-        return .init(value[startRange.upperBound..<endRange.lowerBound])
-    }
-
     // MARK: - Permalink Generation
 
     /// Constructs a permalink from the base URL and the slug.
@@ -64,7 +47,7 @@ public struct Slug: Codable, Equatable {
     /// Useful for labeling pages or assigning anchor references.
     ///
     /// - Returns: The last segment of the slug (e.g., `"welcome"` from `"blog/welcome"`).
-    public func contextAwareIdentifier() -> String {
-        return String(value.split(separator: "/").last ?? "")
-    }
+    //    public func contextAwareIdentifier() -> String {
+    //        return String(value.split(separator: "/").last ?? "")
+    //    }
 }

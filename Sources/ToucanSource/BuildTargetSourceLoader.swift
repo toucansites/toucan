@@ -240,6 +240,7 @@ public struct BuildTargetSourceLoader {
             type: Pipeline.self,
             at: locations.pipelinesUrl
         )
+        .sorted { $0.id < $1.id }
     }
 
     /// Loads content types
@@ -254,6 +255,7 @@ public struct BuildTargetSourceLoader {
             type: ContentDefinition.self,
             at: locations.typesUrl
         )
+        .sorted { $0.id < $1.id }
     }
 
     /// Loads block directives from the specified locations.
@@ -268,5 +270,6 @@ public struct BuildTargetSourceLoader {
             type: Block.self,
             at: locations.blocksUrl
         )
+        .sorted { $0.name < $1.name }
     }
 }

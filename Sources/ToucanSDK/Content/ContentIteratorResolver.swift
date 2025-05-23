@@ -16,6 +16,23 @@ struct ContentIteratorResolver {
     var baseUrl: String
     var now: TimeInterval
 
+    /// Extracts a dynamic iterator identifier from a slug value containing
+    /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
+    ///
+    /// - Returns: The identifier inside `{{...}}`, or `nil` if not found.
+    private func extractIteratorId(from slug: String) -> String? {
+        guard
+            let startRange = slug.range(of: "{{"),
+            let endRange = slug.range(
+                of: "}}",
+                range: startRange.upperBound..<slug.endIndex
+            )
+        else {
+            return nil
+        }
+        return .init(slug[startRange.upperBound..<endRange.lowerBound])
+    }
+
     func resolve(
         contents: [Content],
         using pipeline: Pipeline
@@ -23,7 +40,7 @@ struct ContentIteratorResolver {
         var finalContents: [Content] = []
 
         for content in contents {
-            if let iteratorId = content.slug.extractIteratorId() {
+            if let iteratorId = extractIteratorId(from: content.slug.value) {
                 guard
                     let query = pipeline.iterators[iteratorId]
                 else {

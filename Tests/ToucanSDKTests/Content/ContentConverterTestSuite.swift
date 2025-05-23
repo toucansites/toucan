@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import Logging
+import ToucanCore
 import ToucanSource
 import ToucanSerialization
 @testable import ToucanSDK
@@ -16,7 +17,7 @@ import ToucanSerialization
 struct ContentConverterTestSuite {
 
     @Test
-    func contentConversion() throws {
+    func contentBasicConversion() throws {
         let now = Date()
         let buildTargetSource = Mocks.buildTargetSource(now: now)
         let encoder = ToucanYAMLEncoder()
@@ -41,11 +42,45 @@ struct ContentConverterTestSuite {
                 return
             }
             #expect(!item.isIterator)
-            print("----------------")
-            print(item.rawValue.origin.slug)
+
+            // check type identifiers
+            if ![
+                "",
+                "404",
+                "about",
+                "home-old",
+                "about-old",
+            ]
+            .contains(item.rawValue.origin.slug) {
+                #expect(item.rawValue.origin.slug.contains(item.definition.id))
+            }
+            else {
+                if ["", "404", "about"].contains(item.rawValue.origin.slug) {
+                    #expect(item.definition.id == "page")
+                }
+                else {
+                    #expect(item.definition.id == "redirect")
+                }
+            }
             print(item.definition.id)
         }
     }
+
+    //        catch let error as ToucanError {
+    //            print(error.logMessageStack())
+    //            if let context = error.lookup({
+    //                if case DecodingError.dataCorrupted(let ctx) = $0 {
+    //                    return ctx
+    //                }
+    //                return nil
+    //            }) {
+    //                let expected = "The given data was not valid YAML."
+    //                #expect(context.debugDescription == expected)
+    //            }
+    //            else {
+    //                throw error
+    //            }
+    //        }
 
     //    @Test()
     //    func contentDefinitionConverter() async throws {
@@ -323,54 +358,7 @@ struct ContentConverterTestSuite {
     //        #expect(result == definitions[3])
     //    }
     //
-    //    @Test
-    //    func noDefaultContentDefinitionFound() throws {
-    //        let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
-    //        let definitions = [
-    //            ContentDefinition.Mocks.author()
-    //        ]
-    //        let detector = ContentDefinitionDetector(
-    //            definitions: definitions,
-    //            origin: .init(path: "some/path", slug: "slug"),
-    //            logger: logger
-    //        )
-    //
-    //        do {
-    //            _ = try detector.detect(explicitType: nil)
-    //        }
-    //        catch let error {
-    //            #expect(
-    //                error.localizedDescription.contains(
-    //                    "ContentDefinitionDetector.Failure"
-    //                )
-    //            )
-    //        }
-    //    }
-    //
-    //    @Test
-    //    func multipleDefaultContentDefinitionsFound() throws {
-    //        let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
-    //        let definitions = [
-    //            ContentDefinition.Mocks.author(isDefault: true),
-    //            ContentDefinition.Mocks.page(),
-    //        ]
-    //        let detector = ContentDefinitionDetector(
-    //            definitions: definitions,
-    //            origin: .init(path: "some/path", slug: "slug"),
-    //            logger: logger
-    //        )
-    //
-    //        do {
-    //            _ = try detector.detect(explicitType: nil)
-    //        }
-    //        catch let error {
-    //            #expect(
-    //                error.localizedDescription.contains(
-    //                    "ContentDefinitionDetector.Failure"
-    //                )
-    //            )
-    //        }
-    //    }
+
     //
     //    @Test
     //    func noExplicitContentDefinitionFound() throws {
