@@ -34,8 +34,8 @@ public struct Markdown: Equatable {
     ///   - frontMatter: A dictionary of metadata parsed from the front matter section.
     ///   - contents: The Markdown body as a string.
     public init(
-        frontMatter: [String: AnyCodable],
-        contents: String
+        frontMatter: [String: AnyCodable] = [:],
+        contents: String = ""
     ) {
         self.frontMatter = frontMatter
         self.contents = contents

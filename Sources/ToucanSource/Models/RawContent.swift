@@ -31,9 +31,9 @@ public struct RawContent: Equatable {
     ///   - assets: List of asset file paths linked with this content.
     public init(
         origin: Origin,
-        markdown: Markdown,
+        markdown: Markdown = .init(),
         lastModificationDate: Double,
-        assets: [String]
+        assets: [String] = []
     ) {
         self.origin = origin
         self.markdown = markdown

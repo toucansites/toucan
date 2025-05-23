@@ -10,44 +10,16 @@ import Testing
 import Logging
 import ToucanCore
 import ToucanSource
-import ToucanSerialization
 @testable import ToucanSDK
 
 @Suite
 struct BuildTargetSourceValidatorTestSuite {
 
     @Test
-    func duplicateDefaultContentTypes() throws {
-        let now = Date()
+    func emptyContentTypes() throws {
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
-            target: .standard,
-            config: .defaults,
-            settings: .defaults,
-            pipelines: [],
-            contentDefinitions: [
-                .init(
-                    id: "foo",
-                    default: true,
-                    paths: [],
-                    properties: [:],
-                    relations: [:],
-                    queries: [:]
-                ),
-                .init(
-                    id: "bar",
-                    default: true,
-                    paths: [],
-                    properties: [:],
-                    relations: [:],
-                    queries: [:]
-                ),
-            ],
-            rawContents: [],
-            blockDirectives: []
+            location: .init(filePath: "")
         )
-        let encoder = ToucanYAMLEncoder()
-        let decoder = ToucanYAMLDecoder()
 
         let validator = BuildTargetSourceValidator(
             buildTargetSource: buildTargetSource
@@ -57,11 +29,10 @@ struct BuildTargetSourceValidatorTestSuite {
             try validator.validate()
         }
         catch {
-            guard case .multipleDefaultContentTypes(let values) = error else {
+            guard case .noDefaultContentType = error else {
                 Issue.record("Invalid error.")
                 return
             }
-            #expect(values == ["foo", "bar"].sorted())
         }
 
         //        catch let error as ToucanError {
@@ -81,4 +52,60 @@ struct BuildTargetSourceValidatorTestSuite {
         //        }
     }
 
+    @Test
+    func noDefaultContentType() throws {
+        let buildTargetSource = BuildTargetSource(
+            location: .init(filePath: ""),
+            contentDefinitions: [
+                .init(id: "foo"),
+                .init(id: "bar"),
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+
+        do {
+            try validator.validate()
+        }
+        catch {
+            guard case .noDefaultContentType = error else {
+                Issue.record("Invalid error.")
+                return
+            }
+        }
+    }
+
+    @Test
+    func multipleDefaultContentTypes() throws {
+        let buildTargetSource = BuildTargetSource(
+            location: .init(filePath: ""),
+            contentDefinitions: [
+                .init(
+                    id: "foo",
+                    default: true
+                ),
+                .init(
+                    id: "bar",
+                    default: true
+                ),
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+
+        do {
+            try validator.validate()
+        }
+        catch {
+            guard case .multipleDefaultContentTypes(let values) = error else {
+                Issue.record("Invalid error.")
+                return
+            }
+            #expect(values == ["foo", "bar"].sorted())
+        }
+    }
 }

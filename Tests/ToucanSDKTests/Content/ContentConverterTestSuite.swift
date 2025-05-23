@@ -66,6 +66,8 @@ struct ContentConverterTestSuite {
         }
     }
 
+    // MARK: - content types
+
     //        catch let error as ToucanError {
     //            print(error.logMessageStack())
     //            if let context = error.lookup({
@@ -81,6 +83,151 @@ struct ContentConverterTestSuite {
     //                throw error
     //            }
     //        }
+
+    @Test
+    func defaultContentDefinition() throws {
+        let now = Date()
+        let buildTargetSource = BuildTargetSource(
+            location: .init(filePath: ""),
+            contentDefinitions: [
+                .init(
+                    id: "page",
+                    default: true
+                ),
+                .init(
+                    id: "post"
+                ),
+            ],
+            rawContents: [
+                .init(
+                    origin: .init(
+                        path: "hello",
+                        slug: "hello"
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970
+                )
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+        try validator.validate()
+
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let converter = ContentConverter(
+            buildTargetSource: buildTargetSource,
+            encoder: encoder,
+            decoder: decoder
+        )
+
+        let targetContents = try converter.convertTargetContents()
+        #expect(targetContents.count == 1)
+        let content = try #require(targetContents.first)
+        #expect(content.definition.id == "page")
+    }
+
+    @Test
+    func explicitContentDefinition() throws {
+        let now = Date()
+        let buildTargetSource = BuildTargetSource(
+            location: .init(filePath: ""),
+            contentDefinitions: [
+                .init(
+                    id: "page",
+                    default: true
+                ),
+                .init(
+                    id: "post",
+                    paths: [
+                        "posts"
+                    ]
+                ),
+            ],
+            rawContents: [
+                .init(
+                    origin: .init(
+                        path: "posts/hello",
+                        slug: "posts/hello"
+                    ),
+                    markdown: .init(
+                        frontMatter: [
+                            "type": "post"
+                        ]
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970
+                )
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+        try validator.validate()
+
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let converter = ContentConverter(
+            buildTargetSource: buildTargetSource,
+            encoder: encoder,
+            decoder: decoder
+        )
+
+        let targetContents = try converter.convertTargetContents()
+        #expect(targetContents.count == 1)
+        let content = try #require(targetContents.first)
+        #expect(content.definition.id == "post")
+    }
+
+    @Test
+    func pathBasedContentDefinition() throws {
+        let now = Date()
+        let buildTargetSource = BuildTargetSource(
+            location: .init(filePath: ""),
+            contentDefinitions: [
+                .init(
+                    id: "page",
+                    default: true
+                ),
+                .init(
+                    id: "post",
+                    paths: [
+                        "posts"
+                    ]
+                ),
+            ],
+            rawContents: [
+                .init(
+                    origin: .init(
+                        path: "posts/hello",
+                        slug: "posts/hello"
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970
+                )
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+        try validator.validate()
+
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let converter = ContentConverter(
+            buildTargetSource: buildTargetSource,
+            encoder: encoder,
+            decoder: decoder
+        )
+
+        let targetContents = try converter.convertTargetContents()
+        #expect(targetContents.count == 1)
+        let content = try #require(targetContents.first)
+        #expect(content.definition.id == "post")
+    }
+
+    // MARK: - properties
 
     //    @Test()
     //    func contentDefinitionConverter() async throws {
@@ -304,86 +451,5 @@ struct ContentConverterTestSuite {
     //        //        #expect(logResults.count == 2)
     //    }
     //
-    //    @Test
-    //    func explicitContentDefinition() throws {
-    //        let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
-    //        let definitions = [
-    //            ContentDefinition.Mocks.author(),
-    //            ContentDefinition.Mocks.post(),
-    //            ContentDefinition.Mocks.tag(),
-    //            ContentDefinition.Mocks.page(),
-    //        ]
-    //        let detector = ContentDefinitionDetector(
-    //            definitions: definitions,
-    //            origin: .init(path: "blog/authors", slug: ""),
-    //            logger: logger
-    //        )
-    //        let result = try detector.detect(explicitType: "author")
-    //        #expect(result == definitions[0])
-    //    }
-    //
-    //    @Test
-    //    func pathsContentDefinition() throws {
-    //        let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
-    //        let definitions = [
-    //            ContentDefinition.Mocks.author(),
-    //            ContentDefinition.Mocks.post(),
-    //            ContentDefinition.Mocks.tag(),
-    //            ContentDefinition.Mocks.page(),
-    //        ]
-    //        let detector = ContentDefinitionDetector(
-    //            definitions: definitions,
-    //            origin: .init(path: "blog/authors", slug: ""),
-    //            logger: logger
-    //        )
-    //        let result = try detector.detect(explicitType: nil)
-    //        #expect(result == definitions[0])
-    //    }
-    //
-    //    @Test
-    //    func defaultContentDefinition() throws {
-    //        let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
-    //        let definitions = [
-    //            ContentDefinition.Mocks.author(),
-    //            ContentDefinition.Mocks.post(),
-    //            ContentDefinition.Mocks.tag(),
-    //            ContentDefinition.Mocks.page(),
-    //        ]
-    //        let detector = ContentDefinitionDetector(
-    //            definitions: definitions,
-    //            origin: .init(path: "some/path", slug: ""),
-    //            logger: logger
-    //        )
-    //        let result = try detector.detect(explicitType: nil)
-    //        #expect(result == definitions[3])
-    //    }
-    //
-
-    //
-    //    @Test
-    //    func noExplicitContentDefinitionFound() throws {
-    //        let logger = Logger(label: "ContentDefinitionDetectorTestSuite")
-    //        let definitions = [
-    //            ContentDefinition.Mocks.post(),
-    //            ContentDefinition.Mocks.tag(),
-    //            ContentDefinition.Mocks.page(),
-    //        ]
-    //        let detector = ContentDefinitionDetector(
-    //            definitions: definitions,
-    //            origin: .init(path: "blog/authors", slug: ""),
-    //            logger: logger
-    //        )
-    //
-    //        do {
-    //            _ = try detector.detect(explicitType: "author")
-    //        }
-    //        catch let error {
-    //            #expect(
-    //                error.localizedDescription.contains(
-    //                    "ContentDefinitionDetector.Failure"
-    //                )
-    //            )
-    //        }
-    //    }
 
 }

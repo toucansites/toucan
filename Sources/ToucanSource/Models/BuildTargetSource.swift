@@ -56,13 +56,13 @@ public struct BuildTargetSource {
     ///   - blockDirectives: Definitions of custom Markdown block directives.
     public init(
         location: URL,
-        target: Target,
-        config: Config,
-        settings: Settings,
-        pipelines: [Pipeline],
-        contentDefinitions: [ContentDefinition],
-        rawContents: [RawContent],
-        blockDirectives: [Block],
+        target: Target = .standard,
+        config: Config = .defaults,
+        settings: Settings = .defaults,
+        pipelines: [Pipeline] = [],
+        contentDefinitions: [ContentDefinition] = [],
+        rawContents: [RawContent] = [],
+        blockDirectives: [Block] = [],
     ) {
         self.location = location
         self.target = target
