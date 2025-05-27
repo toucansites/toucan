@@ -35,12 +35,12 @@ extension Toucan {
         //                logger.error(.init(stringLiteral: message), metadata: metadata)
         //            }
         //        }
-        catch let error as Toucan.Error {
-            switch error {
-            case .duplicateSlugs(let slugs):
-                logger.error("Duplicate slugs: \(slugs)")
-            }
-        }
+        //        catch let error as Toucan.Error {
+        //            switch error {
+        //            case .duplicateSlugs(let slugs):
+        //                logger.error("Duplicate slugs: \(slugs)")
+        //            }
+        //        }
         catch let error as ToucanDecoderError {
             logger.error("\(error.logMessageStack())")
         }

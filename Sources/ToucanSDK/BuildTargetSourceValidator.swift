@@ -5,6 +5,7 @@
 //  Created by Tibor Bödecs on 2025. 05. 23..
 //
 
+import Foundation
 import ToucanCore
 import ToucanSource
 import ToucanSerialization
@@ -87,13 +88,86 @@ struct BuildTargetSourceValidator {
         try validateRawContents()
         try validateBlocks()
 
-        //                validate(
-        //                    .init(
-        //                        locale: target.locale,
-        //                        timeZone: target.timeZone,
-        //                        format: ""
-        //                    )
-        //                )
+        /*
+        
+         target:
+             dev:
+                input: ./src
+                output: ./docs
+                config: ./src/config.dev.yml => auto lookup like this?
+            -> default looks up for config.yml
+        
+             live:
+                config: ./src/config.live.yml
+        
+            config.dev.yml:
+                url: http://localhost:3000/
+        
+                # output date formats basis
+        
+                date:
+                   input:
+                      # input date formats basis
+                      locale: en-US
+                      timezone: Americas/Los_Angeles
+                      format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+                   output:
+                      locale: en-US
+                      timezone: Americas/Los_Angeles
+                   formats:
+                      year:
+                         format: "y"
+                         locale: hu-HU
+                         timezone: Europe/Budapest
+        
+         pipeline -> overrides config completely
+            date:
+               input:
+                    locale: ???
+                    timezone: ???
+                    format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+                output:
+                    locale: en-US
+                    timezone: Americas/Los_Angeles
+                formats:
+                   year:
+                     format: "y"
+                     locale: ???
+                     timezone: ???
+        
+        
+        
+         1 input formatter -> pipeline
+         1 output formatter ->
+        
+        
+        
+         # content type
+                post
+                    publication:
+                        date:
+                          #custom input format...
+                            format:
+                            locale:
+                            timeZone:
+        
+        
+        
+        
+        
+        
+        
+        
+        
+         */
+
+        validate(
+            .init(
+                locale: buildTargetSource.target.locale,
+                timeZone: buildTargetSource.target.timeZone,
+                format: ""
+            )
+        )
         //
         //                /// Validate config date formats
         //                validate(sourceBundle.config.dateFormats.input)
@@ -118,19 +192,18 @@ struct BuildTargetSourceValidator {
 
     // MARK: - validators
 
-    //    func validate(_ dateFormat: LocalizedDateFormat) {
-    //        if let value = dateFormat.locale {
-    //            let canonicalId = Locale.identifier(.icu, from: value)
-    //
-    //            if !Locale.availableIdentifiers.contains(canonicalId) {
-    //                logger.warning("Invalid site locale: \(value)")
-    //            }
-    //        }
-    //        if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {
-    //            logger.warning("Invalid site time zone: \(value)")
-    //        }
-    //    }
-    //
+    func validate(_ dateFormat: LocalizedDateFormat) {
+        if let value = dateFormat.locale {
+            let canonicalId = Locale.identifier(.icu, from: value)
+
+            if !Locale.availableIdentifiers.contains(canonicalId) {
+                logger.warning("Invalid site locale: \(value)")
+            }
+        }
+        if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {
+            logger.warning("Invalid site time zone: \(value)")
+        }
+    }
 
     func validateContentTypes() throws(BuildTargetSourceValidatorError) {
 

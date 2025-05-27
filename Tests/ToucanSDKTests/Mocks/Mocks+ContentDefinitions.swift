@@ -149,6 +149,10 @@ extension Mocks.ContentDefinitions {
                     isRequired: true,
                     defaultValue: .init(false)
                 ),
+                "rating": .init(
+                    propertyType: .double,
+                    isRequired: false,
+                ),
             ],
             relations: [
                 "authors": .init(

@@ -11,6 +11,30 @@ import ToucanSource
 import ToucanSerialization
 import Logging
 
+fileprivate extension String {
+
+    // TODO: this is duplicate -> raw content id?
+    func trimmingBracketsContent() -> String {
+        var result = ""
+        var insideBrackets = false
+
+        let decoded = self.removingPercentEncoding ?? self
+
+        for char in decoded {
+            if char == "[" {
+                insideBrackets = true
+            }
+            else if char == "]" {
+                insideBrackets = false
+            }
+            else if !insideBrackets {
+                result.append(char)
+            }
+        }
+        return result
+    }
+}
+
 enum ContentConverterError: ToucanError {
 
     case missingContentType(String)
@@ -49,8 +73,7 @@ struct ContentConverter {
     let buildTargetSource: BuildTargetSource
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
-    let dateFormatter: DateFormatter
-    let defaultDateFormat: LocalizedDateFormat
+    let dateFormatter: ToucanDateFormatter
     let logger: Logger
     let contentTypes: [ContentDefinition]
 
@@ -65,15 +88,15 @@ struct ContentConverter {
         self.decoder = decoder
         self.logger = logger
 
-        self.dateFormatter = buildTargetSource.target.dateFormatter(
-            buildTargetSource.config.dateFormats.input
-        )
-
-        self.defaultDateFormat = .init(
-            locale: dateFormatter.locale.identifier,
-            timeZone: dateFormatter.timeZone.identifier,
-            format: dateFormatter.dateFormat!
-        )
+        //        self.dateFormatter = buildTargetSource.target.dateFormatter(
+        //            buildTargetSource.config.dateFormats.input
+        //        )
+        //
+        //        self.defaultDateFormat = .init(
+        //            locale: dateFormatter.locale.identifier,
+        //            timeZone: dateFormatter.timeZone.identifier,
+        //            format: dateFormatter.dateFormat!
+        //        )
 
         let virtualTypes = buildTargetSource.pipelines.compactMap {
             $0.definesType ? ContentDefinition(id: $0.id) : nil

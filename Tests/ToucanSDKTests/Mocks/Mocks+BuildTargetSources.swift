@@ -49,9 +49,9 @@ extension Mocks {
                 Mocks.RawContents.sitemapXML(now: now),
                 Mocks.RawContents.rssXML(now: now),
 
-                Mocks.RawContents.author(id: 1, now: now),
-                Mocks.RawContents.author(id: 2, now: now),
-                Mocks.RawContents.author(id: 3, now: now),
+                Mocks.RawContents.author(id: 1, age: 18, now: now),
+                Mocks.RawContents.author(id: 2, age: 21, now: now),
+                Mocks.RawContents.author(id: 3, age: 42, now: now),
 
                 Mocks.RawContents.tag(id: 1, now: now),
                 Mocks.RawContents.tag(id: 2, now: now),

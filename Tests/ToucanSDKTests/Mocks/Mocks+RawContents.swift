@@ -191,6 +191,7 @@ extension Mocks.RawContents {
 
     static func author(
         id: Int,
+        age: Int = 21,
         now: Date = .init()
     ) -> RawContent {
         .init(
@@ -202,7 +203,7 @@ extension Mocks.RawContents {
                 frontMatter: [
                     "name": "Author #\(id)",
                     "description": "Author #\(id) description",
-                    "age": .init(Int.random(in: 18...49)),
+                    "age": .init(age),
                 ],
 
                 contents: """
@@ -262,6 +263,7 @@ extension Mocks.RawContents {
                     "featured": .init(featured),
                     "authors": .init(authorIds.map { "author-\($0)" }),
                     "tags": .init(tagIds.map { "tag-\($0)" }),
+                    "rating": .init(Double(id)),
                 ],
 
                 contents: """
