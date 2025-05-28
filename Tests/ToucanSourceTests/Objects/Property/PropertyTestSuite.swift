@@ -49,8 +49,10 @@ struct PropertyTestSuite {
             result.type
                 == .date(
                     format: .init(
-                        locale: "en-US",
-                        timeZone: "EST",
+                        localization: .init(
+                            locale: "en-US",
+                            timeZone: "EST",
+                        ),
                         format: "ymd"
                     )
                 )

@@ -31,10 +31,19 @@ extension BuildTargetSource {
             formatters["time.\(key)"] = timeFormatter
         }
 
-        let standard: [String: LocalizedDateFormat] = [
-            "iso8601": .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
-            "rss": .init(format: "EEE, dd MMM yyyy HH:mm:ss Z"),
-            "sitemap": .init(format: "yyyy-MM-dd"),
+        let standard: [String: DateFormatterParameters] = [
+            "iso8601": .init(
+                localization: .defaults,
+                format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            ),
+            "rss": .init(
+                localization: .defaults,
+                format: "EEE, dd MMM yyyy HH:mm:ss Z"
+            ),
+            "sitemap": .init(
+                localization: .defaults,
+                format: "yyyy-MM-dd"
+            ),
         ]
 
         for (key, dateFormat) in standard.recursivelyMerged(

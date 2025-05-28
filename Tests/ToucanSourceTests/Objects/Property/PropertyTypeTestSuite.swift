@@ -26,7 +26,15 @@ struct PropertyTypeTestSuite {
         #expect(PropertyType.string == .string)
         #expect(PropertyType.string != dateFormat)
         #expect(dateFormat == .date(format: nil))
-        #expect(dateFormat != .date(format: .init(format: "y.m.d")))
+        #expect(
+            dateFormat
+                != .date(
+                    format: .init(
+                        localization: .defaults,
+                        format: "y.m.d"
+                    )
+                )
+        )
     }
 
     @Test
@@ -88,7 +96,15 @@ struct PropertyTypeTestSuite {
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
 
-        #expect(result == .date(format: .init(format: "y.m.d")))
+        #expect(
+            result
+                == .date(
+                    format: .init(
+                        localization: .defaults,
+                        format: "y.m.d"
+                    )
+                )
+        )
     }
 
     @Test
@@ -160,7 +176,17 @@ struct PropertyTypeTestSuite {
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
 
-        #expect(result == .array(of: .date(format: .init(format: "y.m.d"))))
+        #expect(
+            result
+                == .array(
+                    of: .date(
+                        format: .init(
+                            localization: .defaults,
+                            format: "y.m.d"
+                        )
+                    )
+                )
+        )
     }
 
 }

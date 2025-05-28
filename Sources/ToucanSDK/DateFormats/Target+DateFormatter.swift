@@ -10,7 +10,7 @@ import ToucanSource
 
 public extension Target {
 
-    func dateFormatter(_ dateFormat: LocalizedDateFormat) -> DateFormatter {
+    func dateFormatter(_ dateFormat: DateFormatterParameters) -> DateFormatter {
         let formatter = DateFormatter.default
         formatter.config(with: self)
         formatter.config(with: dateFormat)

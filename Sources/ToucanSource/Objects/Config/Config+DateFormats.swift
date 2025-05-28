@@ -22,7 +22,7 @@ extension Config {
         /// The expected format for parsing date input strings (typically from front matter or JSON).
         ///
         /// Example: `"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"` (ISO-8601 with milliseconds)
-        public var input: LocalizedDateFormat
+        public var input: DateFormatterParameters
 
         /// A dictionary of named output formats for rendering dates in different contexts.
         ///
@@ -32,14 +32,17 @@ extension Config {
         ///   short: { format: "MMM d" }
         ///   full: { format: "MMMM d, yyyy" }
         /// ```
-        public var output: [String: LocalizedDateFormat]
+        public var output: [String: DateFormatterParameters]
 
         // MARK: - Defaults
 
         /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
         public static var defaults: Self {
             .init(
-                input: .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+                input: .init(
+                    localization: .defaults,
+                    format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                ),
                 output: [:]
             )
         }
@@ -52,8 +55,8 @@ extension Config {
         ///   - input: Format used to parse raw date values.
         ///   - output: Named formats for rendering parsed dates.
         public init(
-            input: LocalizedDateFormat,
-            output: [String: LocalizedDateFormat]
+            input: DateFormatterParameters,
+            output: [String: DateFormatterParameters]
         ) {
             self.input = input
             self.output = output
@@ -77,14 +80,14 @@ extension Config {
 
             self.input =
                 try container.decodeIfPresent(
-                    LocalizedDateFormat.self,
+                    DateFormatterParameters.self,
                     forKey: .input
                 )
                 ?? defaults.input
 
             self.output =
                 try container.decodeIfPresent(
-                    [String: LocalizedDateFormat].self,
+                    [String: DateFormatterParameters].self,
                     forKey: .output
                 )
                 ?? defaults.output

@@ -73,7 +73,7 @@ struct ContentConverter {
     let buildTargetSource: BuildTargetSource
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
-    let dateFormatter: ToucanDateFormatter
+    //    let dateFormatter: ToucanDateFormatter
     let logger: Logger
     let contentTypes: [ContentDefinition]
 
@@ -104,6 +104,7 @@ struct ContentConverter {
         self.contentTypes =
             (buildTargetSource.contentDefinitions + virtualTypes)
             .sorted { $0.id < $1.id }
+
     }
 
     func convertTargetContents() throws(ContentConverterError) -> [Content] {
@@ -139,16 +140,17 @@ struct ContentConverter {
             }
 
             if let dateFormat {
-                dateFormatter.config(with: dateFormat)
+                //                dateFormatter.config(with: dateFormat)
             }
 
-            guard let value = dateFormatter.date(from: rawDateValue) else {
-                logger.warning(
-                    "Raw date property value is not a date (\(key): \(rawDateValue))."
-                )
-                return nil
-            }
-            return .init(value.timeIntervalSince1970)
+            //            guard let value = dateFormatter.date(from: rawDateValue) else {
+            //                logger.warning(
+            //                    "Raw date property value is not a date (\(key): \(rawDateValue))."
+            //                )
+            //                return nil
+            //            }
+            //            return .init(value.timeIntervalSince1970)
+            return nil
         default:
             return value
         }
@@ -170,7 +172,7 @@ struct ContentConverter {
         for (key, property) in contentType.properties.sorted(by: {
             $0.key < $1.key
         }) {
-            dateFormatter.config(with: defaultDateFormat)
+            //            dateFormatter.config(with: defaultDateFormat)
             let rawValue = rawContent.markdown.frontMatter[key]
 
             properties[key] = convert(

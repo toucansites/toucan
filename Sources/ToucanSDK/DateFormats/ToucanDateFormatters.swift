@@ -36,14 +36,14 @@ struct ToucanDateFormatter {
 
     func parse(
         date: String,
-        using: LocalizedDateFormat?
+        using: DateFormatterParameters?
     ) -> Date {
         .init()
     }
 
     func format(
         date: Date,
-        using: LocalizedDateFormat?
+        using: DateFormatterParameters?
     ) -> DateFormats {
         .init(
             date: .init(

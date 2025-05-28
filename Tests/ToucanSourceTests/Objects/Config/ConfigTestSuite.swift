@@ -93,10 +93,15 @@ struct ConfigTestSuite {
         expectation.blocks.path = "custom1"
         expectation.contents.assets.path = "custom2"
         expectation.contents.path = "custom3"
-        expectation.dateFormats.input = .init(format: "ymd")
+        expectation.dateFormats.input = .init(
+            localization: .defaults,
+            format: "ymd"
+        )
         expectation.dateFormats.output["test1"] = .init(
-            locale: "en-US",
-            timeZone: "EST",
+            localization: .init(
+                locale: "en-US",
+                timeZone: "EST",
+            ),
             format: "his"
         )
         expectation.pipelines.path = "custom4"

@@ -24,15 +24,15 @@ extension DateFormatter {
         }
     }
 
-    func config(with dateFormat: LocalizedDateFormat) {
-        if let rawLocale = dateFormat.locale {
-            locale = .init(identifier: rawLocale)
-        }
-        if let rawTimeZone = dateFormat.timeZone,
-            let value = TimeZone(identifier: rawTimeZone)
-        {
-            timeZone = value
-        }
+    func config(with dateFormat: DateFormatterParameters) {
+        //        if let rawLocale = dateFormat.locale {
+        //            locale = .init(identifier: rawLocale)
+        //        }
+        //        if let rawTimeZone = dateFormat.timeZone,
+        //            let value = TimeZone(identifier: rawTimeZone)
+        //        {
+        //            timeZone = value
+        //        }
         if let format = dateFormat.format.emptyToNil {
             self.dateFormat = format
         }

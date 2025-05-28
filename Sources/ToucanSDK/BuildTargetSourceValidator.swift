@@ -18,6 +18,8 @@ enum BuildTargetSourceValidatorError: ToucanError {
     case duplicatePipelines([String])
     case duplicateRawContentSlugs([String])
     case duplicateBlocks([String])
+    case invalidLocale(String)
+    case invalidTimeZone(String)
     case unknown(Error)
 
     var underlyingErrors: [any Error] {
@@ -48,6 +50,10 @@ enum BuildTargetSourceValidatorError: ToucanError {
         case .duplicateBlocks(let values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate blocks: \(items)."
+        case .invalidLocale(let locale):
+            return "Invalid site locale: `\(locale)`."
+        case .invalidTimeZone(let timeZone):
+            return "Invalid site time zone: `\(timeZone)`."
         case .unknown(let error):
             return error.localizedDescription
         }
@@ -72,6 +78,10 @@ enum BuildTargetSourceValidatorError: ToucanError {
         case .duplicateBlocks(let values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate blocks: \(items)."
+        case .invalidLocale(let locale):
+            return "Invalid site locale: `\(locale)`."
+        case .invalidTimeZone(let timeZone):
+            return "Invalid site time zone: `\(timeZone)`."
         case .unknown:
             return "Unknown source validator error."
         }
@@ -150,58 +160,57 @@ struct BuildTargetSourceValidator {
                             format:
                             locale:
                             timeZone:
-        
-        
-        
-        
-        
-        
-        
-        
-        
          */
 
-        validate(
-            .init(
-                locale: buildTargetSource.target.locale,
-                timeZone: buildTargetSource.target.timeZone,
-                format: ""
-            )
-        )
-        //
-        //                /// Validate config date formats
-        //                validate(sourceBundle.config.dateFormats.input)
-        //                for dateFormat in sourceBundle.sourceConfig.config.dateFormats
-        //                    .output.values
-        //                {
-        //                    validate(dateFormat)
-        //                }
-        //
-        //                /// Validate pipeline date formats
-        //                for pipeline in sourceBundle.pipelines {
-        //                    for dateFormat in pipeline.dataTypes.date.dateFormats.values
-        //                    {
-        //                        validate(dateFormat)
-        //                    }
-        //                }
-        //
+        try validateLocalizations()
 
-        //                /// Validate frontMatters
-        //                validateFrontMatters(sourceBundle)
+        /// Validate frontMatters
+        //validateFrontMatters(sourceBundle)
     }
 
     // MARK: - validators
 
-    func validate(_ dateFormat: LocalizedDateFormat) {
-        if let value = dateFormat.locale {
-            let canonicalId = Locale.identifier(.icu, from: value)
-
-            if !Locale.availableIdentifiers.contains(canonicalId) {
-                logger.warning("Invalid site locale: \(value)")
-            }
+    func validateLocalizations() throws(BuildTargetSourceValidatorError) {
+        try validate(
+            .init(
+                locale: buildTargetSource.target.locale,
+                timeZone: buildTargetSource.target.timeZone,
+            )
+        )
+        try validate(
+            buildTargetSource.config.dateFormats.input.localization
+        )
+        for param in buildTargetSource.config.dateFormats.output.values {
+            try validate(param.localization)
         }
-        if let value = dateFormat.timeZone, TimeZone(identifier: value) == nil {
-            logger.warning("Invalid site time zone: \(value)")
+        for pipeline in buildTargetSource.pipelines {
+            for param in pipeline.dataTypes.date.dateFormats.values {
+                try validate(param.localization)
+            }
+
+        }
+
+        /// Validate frontMatters
+        //validateFrontMatters(sourceBundle)
+    }
+
+    func validate(
+        _ localization: DateLocalization
+    ) throws(BuildTargetSourceValidatorError) {
+        let id = Locale.identifier(
+            .icu,
+            from: localization.locale
+        )
+
+        guard Locale.availableIdentifiers.contains(id) else {
+            throw .invalidLocale(localization.locale)
+        }
+
+        guard
+            TimeZone(identifier: localization.timeZone)
+                != nil
+        else {
+            throw .invalidTimeZone(localization.timeZone)
         }
     }
 
