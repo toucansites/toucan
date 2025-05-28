@@ -36,7 +36,7 @@ struct TypesTestSuite {
                     type: string
                 publication:
                     type: date
-                    dateFormat: 
+                    config: 
                         format: "y.m.d"
                     required: true
             relations:

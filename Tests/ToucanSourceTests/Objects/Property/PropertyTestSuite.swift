@@ -35,7 +35,7 @@ struct PropertyTestSuite {
     func dateTypeWithFormat() throws {
         let data = """
             type: date
-            dateFormat: 
+            config: 
                 format: "ymd"
                 locale: en-US
                 timeZone: EST
@@ -48,7 +48,7 @@ struct PropertyTestSuite {
         #expect(
             result.type
                 == .date(
-                    format: .init(
+                    config: .init(
                         localization: .init(
                             locale: "en-US",
                             timeZone: "EST",
@@ -71,7 +71,7 @@ struct PropertyTestSuite {
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Property.self, from: data)
 
-        #expect(result.type == .date(format: nil))
+        #expect(result.type == .date(config: nil))
         #expect(result.required == true)
         #expect(result.default == nil)
     }

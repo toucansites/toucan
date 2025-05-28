@@ -16,7 +16,7 @@ struct PropertyTypeTestSuite {
 
     @Test
     func equality() throws {
-        let dateFormat = PropertyType.date(format: nil)
+        let dateFormat = PropertyType.date(config: nil)
         #expect(PropertyType.bool == .bool)
         #expect(PropertyType.bool != .int)
         #expect(PropertyType.int == .int)
@@ -25,11 +25,11 @@ struct PropertyTypeTestSuite {
         #expect(PropertyType.double != .string)
         #expect(PropertyType.string == .string)
         #expect(PropertyType.string != dateFormat)
-        #expect(dateFormat == .date(format: nil))
+        #expect(dateFormat == .date(config: nil))
         #expect(
             dateFormat
                 != .date(
-                    format: .init(
+                    config: .init(
                         localization: .defaults,
                         format: "y.m.d"
                     )
@@ -89,7 +89,7 @@ struct PropertyTypeTestSuite {
     func decodingDate() throws {
         let object = """
             type: date
-            dateFormat:
+            config:
                 format: "y.m.d"
             """
 
@@ -99,7 +99,7 @@ struct PropertyTypeTestSuite {
         #expect(
             result
                 == .date(
-                    format: .init(
+                    config: .init(
                         localization: .defaults,
                         format: "y.m.d"
                     )
@@ -169,7 +169,7 @@ struct PropertyTypeTestSuite {
             type: array
             of: 
                 type: date
-                dateFormat:
+                config:
                     format: "y.m.d"
             """
 
@@ -180,7 +180,7 @@ struct PropertyTypeTestSuite {
             result
                 == .array(
                     of: .date(
-                        format: .init(
+                        config: .init(
                             localization: .defaults,
                             format: "y.m.d"
                         )

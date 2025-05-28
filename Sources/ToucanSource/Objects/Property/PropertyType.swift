@@ -25,7 +25,7 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     case string
 
     /// Date type with optional localized formatting.
-    case date(format: DateFormatterConfig?)
+    case date(config: DateFormatterConfig?)
 
     /// Array type with elements of a consistent `PropertyType`.
     case array(of: PropertyType)
@@ -34,7 +34,7 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case of
         case type
-        case dateFormat
+        case config
     }
 
     /// Type discriminator used during encoding and decoding.
@@ -69,11 +69,11 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         case .string:
             self = .string
         case .date:
-            let format = try container.decodeIfPresent(
+            let config = try container.decodeIfPresent(
                 DateFormatterConfig.self,
-                forKey: .dateFormat
+                forKey: .config
             )
-            self = .date(format: format)
+            self = .date(config: config)
         case .array:
             let itemType = try container.decode(PropertyType.self, forKey: .of)
             self = .array(of: itemType)
@@ -100,7 +100,7 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             try container.encode(TypeKey.string, forKey: .type)
         case .date(let format):
             try container.encode(TypeKey.date, forKey: .type)
-            try container.encodeIfPresent(format, forKey: .dateFormat)
+            try container.encodeIfPresent(format, forKey: .config)
         case .array(let of):
             try container.encode(TypeKey.array, forKey: .type)
             try container.encode(of, forKey: .of)

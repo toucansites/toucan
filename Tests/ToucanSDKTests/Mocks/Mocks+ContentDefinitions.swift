@@ -130,7 +130,7 @@ extension Mocks.ContentDefinitions {
                 ),
                 "publication": .init(
                     propertyType: .date(
-                        format: .init(
+                        config: .init(
                             localization: .defaults,
                             format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                         )
@@ -139,7 +139,7 @@ extension Mocks.ContentDefinitions {
                 ),
                 "expiration": .init(
                     propertyType: .date(
-                        format: .init(
+                        config: .init(
                             localization: .defaults,
                             format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                         )

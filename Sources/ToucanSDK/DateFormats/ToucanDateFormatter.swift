@@ -55,20 +55,20 @@ fileprivate extension DateFormatter {
                  locale: hu-HU
                  timezone: Europe/Budapest
 
- pipeline -> overrides config completely
-    date:
-        input:
-            locale: ???
-            timezone: ???
-            format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
-        output:
-            locale: en-US
-            timezone: Americas/Los_Angeles
-        formats:
-           year:
-             format: "y"
-             locale: ???
-             timezone: ???
+     pipeline -> overrides config completely
+        date:
+            input:
+                locale: ???
+                timezone: ???
+                format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+            output:
+                locale: en-US
+                timezone: Americas/Los_Angeles
+            formats:
+               year:
+                 format: "y"
+                 locale: ???
+                 timezone: ???
 
 
 
@@ -80,11 +80,10 @@ fileprivate extension DateFormatter {
  # content type
         post
             publication:
-                date:
-                  #custom input format...
-                    format:
-                    locale:
-                    timeZone:
+                type: date
+                format:
+                locale:
+                timeZone:
  */
 
 struct ToucanDateFormatter {
