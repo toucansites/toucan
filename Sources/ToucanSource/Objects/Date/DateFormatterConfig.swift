@@ -30,6 +30,14 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
         self.format = format
     }
 
+    /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
+    public static var defaults: Self {
+        .init(
+            localization: .defaults,
+            format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        )
+    }
+
     /// The keys used for encoding and decoding top-level date formatter properties.
     private enum CodingKeys: String, CodingKey {
         case locale
@@ -47,18 +55,19 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
         let container = try decoder.container(
             keyedBy: CodingKeys.self
         )
+        let defaults = Self.defaults
 
         let locale =
             try container.decodeIfPresent(
                 String.self,
                 forKey: .locale
-            ) ?? DateLocalization.defaults.locale
+            ) ?? defaults.localization.locale
 
         let timeZone =
             try container.decodeIfPresent(
                 String.self,
                 forKey: .timeZone
-            ) ?? DateLocalization.defaults.timeZone
+            ) ?? defaults.localization.timeZone
 
         self.localization = DateLocalization(
             locale: locale,

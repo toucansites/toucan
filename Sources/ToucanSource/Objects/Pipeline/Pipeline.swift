@@ -44,7 +44,7 @@ public struct Pipeline: Decodable {
     public var queries: [String: Query]
 
     /// Definitions for global or scoped data types (e.g., formats, types).
-    public var dataTypes: DataTypes
+    public var dataTypes: Config.DataTypes
 
     /// Definitions for all known content types in the system.
     public var contentTypes: ContentTypes
@@ -72,7 +72,7 @@ public struct Pipeline: Decodable {
         definesType: Bool,
         scopes: [String: [String: Scope]],
         queries: [String: Query],
-        dataTypes: DataTypes,
+        dataTypes: Config.DataTypes,
         contentTypes: ContentTypes,
         iterators: [String: Query],
         assets: Assets,
@@ -124,7 +124,7 @@ public struct Pipeline: Decodable {
 
         let dataTypes =
             try container.decodeIfPresent(
-                DataTypes.self,
+                Config.DataTypes.self,
                 forKey: .dataTypes
             ) ?? .defaults
 

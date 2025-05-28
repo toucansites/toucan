@@ -5,13 +5,13 @@
 //  Created by Tibor Bödecs on 2025. 02. 16..
 //
 
-extension Pipeline {
+extension Config {
 
     /// Defines how core data types—like date formats—should be interpreted or rendered within a pipeline.
     ///
     /// `DataTypes` is a configuration layer that allows pipelines to specify
     /// localized or project-specific formatting and handling logic for structured data.
-    public struct DataTypes: Decodable {
+    public struct DataTypes: Codable, Equatable {
 
         // MARK: - Coding Keys
 
@@ -56,8 +56,10 @@ extension Pipeline {
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let date =
-                try container.decodeIfPresent(Date.self, forKey: .date)
-                ?? .defaults
+                try container.decodeIfPresent(
+                    Date.self,
+                    forKey: .date
+                ) ?? .defaults
 
             self.init(date: date)
         }

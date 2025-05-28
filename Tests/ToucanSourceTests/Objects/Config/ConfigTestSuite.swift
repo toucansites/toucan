@@ -48,17 +48,18 @@ struct ConfigTestSuite {
               assets:
                 path: custom2
               path: custom3
-            dateFormats:
-              formats:
-                test1:
-                  format: his
-                  locale: hu-HU
-                  timeZone: CET
-              input:
-                format: ymd
-              output:
-                locale: en-GB
-                timeZone: PST
+            dataTypes:
+              date:
+                formats:
+                  test1:
+                    format: his
+                    locale: hu-HU
+                    timeZone: CET
+                input:
+                  format: ymd
+                output:
+                  locale: en-GB
+                  timeZone: PST
             pipelines:
               path: custom4
             renderer:
@@ -96,15 +97,15 @@ struct ConfigTestSuite {
         expectation.blocks.path = "custom1"
         expectation.contents.assets.path = "custom2"
         expectation.contents.path = "custom3"
-        expectation.dateFormats.input = .init(
+        expectation.dataTypes.date.input = .init(
             localization: .defaults,
             format: "ymd"
         )
-        expectation.dateFormats.output = .init(
+        expectation.dataTypes.date.output = .init(
             locale: "en-GB",
             timeZone: "PST"
         )
-        expectation.dateFormats.formats["test1"] = .init(
+        expectation.dataTypes.date.formats["test1"] = .init(
             localization: .init(
                 locale: "hu-HU",
                 timeZone: "CET",
@@ -130,7 +131,7 @@ struct ConfigTestSuite {
 
         #expect(result.blocks == expectation.blocks)
         #expect(result.contents == expectation.contents)
-        #expect(result.dateFormats == expectation.dateFormats)
+        #expect(result.dataTypes == expectation.dataTypes)
         #expect(result.pipelines == expectation.pipelines)
         #expect(result.renderer == expectation.renderer)
         #expect(result.site == expectation.site)

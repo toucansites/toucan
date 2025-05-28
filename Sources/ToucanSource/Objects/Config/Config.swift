@@ -19,7 +19,7 @@ public struct Config: Codable, Equatable {
         case types
         case blocks
         case themes
-        case dateFormats
+        case dataTypes
         case renderer
     }
 
@@ -44,7 +44,7 @@ public struct Config: Codable, Equatable {
     public var themes: Themes
 
     /// Global date format settings for rendering and parsing dates.
-    public var dateFormats: DateFormats
+    public var dataTypes: DataTypes
 
     /// Additional content-specific overrides or configuration extensions.
     public var renderer: RendererConfig
@@ -62,7 +62,7 @@ public struct Config: Codable, Equatable {
             types: .defaults,
             blocks: .defaults,
             themes: .defaults,
-            dateFormats: .defaults,
+            dataTypes: .defaults,
             renderer: .defaults
         )
     }
@@ -78,7 +78,7 @@ public struct Config: Codable, Equatable {
     ///   - types: Folder path for type definitions.
     ///   - blocks: Folder path for reusable block templates.
     ///   - themes: Theme layout and styling definitions.
-    ///   - dateFormats: Global or localized date format settings.
+    ///   - dataTypes: Data type related configurations.
     ///   - renderer: Fine-grained control for specific content types.
     public init(
         site: Site,
@@ -87,7 +87,7 @@ public struct Config: Codable, Equatable {
         types: Types,
         blocks: Blocks,
         themes: Themes,
-        dateFormats: DateFormats,
+        dataTypes: DataTypes,
         renderer: RendererConfig
     ) {
         self.site = site
@@ -96,7 +96,7 @@ public struct Config: Codable, Equatable {
         self.types = types
         self.blocks = blocks
         self.themes = themes
-        self.dateFormats = dateFormats
+        self.dataTypes = dataTypes
         self.renderer = renderer
     }
 
@@ -154,11 +154,11 @@ public struct Config: Codable, Equatable {
                 forKey: .themes
             ) ?? defaults.themes
 
-        self.dateFormats =
+        self.dataTypes =
             try container.decodeIfPresent(
-                DateFormats.self,
-                forKey: .dateFormats
-            ) ?? defaults.dateFormats
+                DataTypes.self,
+                forKey: .dataTypes
+            ) ?? defaults.dataTypes
 
         self.renderer =
             try container.decodeIfPresent(

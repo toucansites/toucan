@@ -27,7 +27,9 @@ extension Mocks.Pipelines {
             ],
             dataTypes: .init(
                 date: .init(
-                    dateFormats: [
+                    input: .defaults,
+                    output: .defaults,
+                    formats: [
                         "full": .init(
                             localization: .defaults,
                             format: "y.m.d."

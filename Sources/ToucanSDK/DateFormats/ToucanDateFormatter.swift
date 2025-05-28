@@ -57,7 +57,7 @@ fileprivate extension DateFormatter {
 
  pipeline -> overrides config completely
     date:
-       input:
+        input:
             locale: ???
             timezone: ???
             format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'

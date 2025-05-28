@@ -1,14 +1,14 @@
 //
-//  Config+DateFormats.swift
+//  Config+DataTypes+Date.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-extension Config {
+extension Config.DataTypes {
 
     /// Provides a configuration for parsing and formatting dates across the site or contents.
-    public struct DateFormats: Codable, Equatable {
+    public struct Date: Codable, Equatable {
 
         // MARK: - Coding Keys
 
@@ -43,10 +43,7 @@ extension Config {
         /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
         public static var defaults: Self {
             .init(
-                input: .init(
-                    localization: .defaults,
-                    format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-                ),
+                input: .defaults,
                 output: .defaults,
                 formats: [:]
             )
