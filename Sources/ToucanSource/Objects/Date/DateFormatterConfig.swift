@@ -40,8 +40,6 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
 
     /// The keys used for encoding and decoding top-level date formatter properties.
     private enum CodingKeys: String, CodingKey {
-        case locale
-        case timeZone
         case format
     }
 
@@ -52,26 +50,11 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+
+        self.localization = try DateLocalization(from: decoder)
+
         let container = try decoder.container(
             keyedBy: CodingKeys.self
-        )
-        let defaults = Self.defaults
-
-        let locale =
-            try container.decodeIfPresent(
-                String.self,
-                forKey: .locale
-            ) ?? defaults.localization.locale
-
-        let timeZone =
-            try container.decodeIfPresent(
-                String.self,
-                forKey: .timeZone
-            ) ?? defaults.localization.timeZone
-
-        self.localization = DateLocalization(
-            locale: locale,
-            timeZone: timeZone
         )
         let format = try container.decode(String.self, forKey: .format)
 
@@ -96,14 +79,7 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
     ) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        let defaults = DateLocalization.defaults
-
-        if localization.locale != defaults.locale {
-            try container.encode(localization.locale, forKey: .locale)
-        }
-        if localization.timeZone != defaults.timeZone {
-            try container.encode(localization.timeZone, forKey: .timeZone)
-        }
+        try localization.encode(to: encoder)
         try container.encode(format, forKey: .format)
     }
 }

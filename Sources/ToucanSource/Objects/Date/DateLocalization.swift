@@ -44,6 +44,12 @@ public struct DateLocalization: Sendable, Codable, Equatable {
         self.timeZone = timeZone
     }
 
+    /// The keys used for encoding and decoding top-level date formatter properties.
+    enum CodingKeys: CodingKey {
+        case locale
+        case timeZone
+    }
+
     /// Creates a new instance by decoding from the given decoder.
     ///
     /// - Parameter decoder: The decoder to read data from.
@@ -52,8 +58,19 @@ public struct DateLocalization: Sendable, Codable, Equatable {
         from decoder: any Decoder
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let locale = try container.decode(String.self, forKey: .locale)
-        let timeZone = try container.decode(String.self, forKey: .timeZone)
+        let defaults = Self.defaults
+
+        let locale =
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .locale
+            ) ?? defaults.locale
+
+        let timeZone =
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .timeZone
+            ) ?? defaults.timeZone
 
         let id = Locale.identifier(.icu, from: locale)
         guard Locale.availableIdentifiers.contains(id) else {
@@ -76,5 +93,24 @@ public struct DateLocalization: Sendable, Codable, Equatable {
 
         self.locale = locale
         self.timeZone = timeZone
+    }
+
+    /// Encodes this `DateFormatterOptions` into the given encoder.
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if any values are invalid for the given encoder’s format.
+    public func encode(
+        to encoder: any Encoder
+    ) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        let defaults = DateLocalization.defaults
+
+        if locale != defaults.locale {
+            try container.encode(locale, forKey: .locale)
+        }
+        if timeZone != defaults.timeZone {
+            try container.encode(timeZone, forKey: .timeZone)
+        }
     }
 }
