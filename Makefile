@@ -49,9 +49,6 @@ uninstall:
 	./scripts/uninstall-toucan.sh
 
 docker-image:
-	docker build -t toucan . -f ./Docker/Dockerfile
-
-docker-image:
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
 		-t toucan \
