@@ -70,33 +70,25 @@ enum ContentConverterError: ToucanError {
 
 struct ContentConverter {
 
-    let buildTargetSource: BuildTargetSource
-    let encoder: ToucanEncoder
-    let decoder: ToucanDecoder
-    //    let dateFormatter: ToucanDateFormatter
-    let logger: Logger
-    let contentTypes: [ContentDefinition]
+    var buildTargetSource: BuildTargetSource
+    var encoder: ToucanEncoder
+    var decoder: ToucanDecoder
+    var dateFormatter: ToucanDateFormatter
+    var logger: Logger
+    private var contentTypes: [ContentDefinition]
 
     init(
         buildTargetSource: BuildTargetSource,
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
+        dateFormatter: ToucanDateFormatter,
         logger: Logger = .subsystem("content-converter")
     ) {
         self.buildTargetSource = buildTargetSource
         self.encoder = encoder
         self.decoder = decoder
+        self.dateFormatter = dateFormatter
         self.logger = logger
-
-        //        self.dateFormatter = buildTargetSource.target.dateFormatter(
-        //            buildTargetSource.config.dateFormats.input
-        //        )
-        //
-        //        self.defaultDateFormat = .init(
-        //            locale: dateFormatter.locale.identifier,
-        //            timeZone: dateFormatter.timeZone.identifier,
-        //            format: dateFormatter.dateFormat!
-        //        )
 
         let virtualTypes = buildTargetSource.pipelines.compactMap {
             $0.definesType ? ContentDefinition(id: $0.id) : nil
@@ -104,7 +96,6 @@ struct ContentConverter {
         self.contentTypes =
             (buildTargetSource.contentDefinitions + virtualTypes)
             .sorted { $0.id < $1.id }
-
     }
 
     func convertTargetContents() throws(ContentConverterError) -> [Content] {
@@ -123,6 +114,7 @@ struct ContentConverter {
 
     // MARK: -
 
+    // TODO: throw instead of warning...
     func convert(
         property: Property,
         rawValue: AnyCodable?,
@@ -131,26 +123,27 @@ struct ContentConverter {
         let value = rawValue ?? property.default
 
         switch property.type {
-        case .date(let dateFormat):
-            guard let rawDateValue = value?.value(as: String.self) else {
+        case .date(let config):
+            guard
+                let rawDateValue = value?.value(as: String.self)
+            else {
                 logger.warning(
-                    "Raw date property is not a string (\(key): \(value?.value ?? "nil"))."
+                    "Date property is not a string (\(key): \(value?.value ?? "nil"))."
                 )
                 return nil
             }
-
-            if let dateFormat {
-                //                dateFormatter.config(with: dateFormat)
+            guard
+                let date = dateFormatter.parse(
+                    date: rawDateValue,
+                    using: config
+                )
+            else {
+                logger.warning(
+                    "Date property is not valid (\(key): \(rawDateValue))."
+                )
+                return nil
             }
-
-            //            guard let value = dateFormatter.date(from: rawDateValue) else {
-            //                logger.warning(
-            //                    "Raw date property value is not a date (\(key): \(rawDateValue))."
-            //                )
-            //                return nil
-            //            }
-            //            return .init(value.timeIntervalSince1970)
-            return nil
+            return .init(date.timeIntervalSince1970)
         default:
             return value
         }
@@ -172,7 +165,7 @@ struct ContentConverter {
         for (key, property) in contentType.properties.sorted(by: {
             $0.key < $1.key
         }) {
-            //            dateFormatter.config(with: defaultDateFormat)
+
             let rawValue = rawContent.markdown.frontMatter[key]
 
             properties[key] = convert(

@@ -116,7 +116,7 @@ private struct SystemDateFormatters {
 struct ToucanDateFormatter {
 
     var dateConfig: Config.DataTypes.Date
-    var pipelineDateConfig: Config.DataTypes.Date
+    var pipelineDateConfig: Config.DataTypes.Date?
     private var systemFormatters: SystemDateFormatters
     private var userFormatters: [String: DateFormatter]
     private var inputFormatter: DateFormatter
@@ -126,14 +126,14 @@ struct ToucanDateFormatter {
 
     init(
         dateConfig: Config.DataTypes.Date,
-        pipelineDateConfig: Config.DataTypes.Date,
+        pipelineDateConfig: Config.DataTypes.Date? = nil,
         logger: Logger = .subsystem("toucan-date-formatter")
     ) {
         self.dateConfig = dateConfig
         self.pipelineDateConfig = pipelineDateConfig
 
         var localization = dateConfig.output
-        if localization != pipelineDateConfig.output {
+        if let pipelineDateConfig, pipelineDateConfig.output != localization {
             localization = pipelineDateConfig.output
         }
 
@@ -158,7 +158,7 @@ struct ToucanDateFormatter {
         self.logger = logger
 
         let userFormatterConfig = dateConfig.formats.merging(
-            pipelineDateConfig.formats,
+            (pipelineDateConfig?.formats ?? [:]),
             uniquingKeysWith: { _, new in new }
         )
         for (key, config) in userFormatterConfig {
@@ -168,7 +168,7 @@ struct ToucanDateFormatter {
         }
 
         var config = dateConfig.input
-        if config != pipelineDateConfig.input {
+        if let pipelineDateConfig, pipelineDateConfig.input != config {
             config = pipelineDateConfig.input
         }
 
@@ -176,17 +176,17 @@ struct ToucanDateFormatter {
         self.ephemeralFormatter = .build { $0.use(config: config) }
     }
 
-    // TODO: throw error
+    // TODO: throw error?
     func parse(
         date: String,
         using config: DateFormatterConfig? = nil
-    ) -> Date {
+    ) -> Date? {
         if let config {
             ephemeralFormatter.use(config: config)
 
-            return ephemeralFormatter.date(from: date)!
+            return ephemeralFormatter.date(from: date)
         }
-        return inputFormatter.date(from: date)!
+        return inputFormatter.date(from: date)
     }
 
     func format(

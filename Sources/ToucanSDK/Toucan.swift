@@ -132,25 +132,22 @@ public struct Toucan {
                 )
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
-                dump(buildTargetSource)
+
+                let validator = BuildTargetSourceValidator(
+                    buildTargetSource: buildTargetSource
+                )
+                try validator.validate()
+
+                var renderer = SourceBundleRenderer(
+                    sourceBundle: buildTargetSource,
+                    fileManager: fileManager,
+                    logger: logger
+                )
+
+                let results = try renderer.render(now: Date())
+
             }
-            // MARK: - Validation
 
-            // TODO: validate build targets
-
-            //
-            //                // MARK: - Render pipeline results
-            //
-            //                var renderer = SourceBundleRenderer(
-            //                    sourceBundle: sourceBundle,
-            //                    fileManager: fileManager,
-            //                    logger: logger
-            //                )
-            //
-            //                let results = try renderer.render(now: Date())
-            //
-            //                // MARK: - Preparing work dir
-            //
             //                try resetDirectory(at: workDirUrl)
             //
             //                // MARK: - Copy default assets

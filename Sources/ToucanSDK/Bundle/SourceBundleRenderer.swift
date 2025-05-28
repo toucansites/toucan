@@ -12,6 +12,7 @@ import FileManagerKit
 import Logging
 import ToucanCore
 import ToucanSource
+import ToucanSerialization
 
 /// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
 ///
@@ -119,17 +120,27 @@ public struct SourceBundleRenderer {
             now: now
         )
 
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
         let executor = AssetBehaviorExecutor(sourceBundle: sourceBundle)
 
         for pipeline in sourceBundle.pipelines {
 
-            //            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
-            //                .mapValues {
-            //                    sourceBundle.target.dateFormatter($0)
-            //                }
-            //            let allFormatters = formatters.recursivelyMerged(
-            //                with: pipelineFormatters
-            //            )
+            let dateFormatter = ToucanDateFormatter(
+                dateConfig: sourceBundle.config.dataTypes.date,
+                pipelineDateConfig: pipeline.dataTypes.date,
+                logger: logger
+            )
+
+            let contentConverter = ContentConverter(
+                buildTargetSource: sourceBundle,
+                encoder: encoder,
+                decoder: decoder,
+                dateFormatter: dateFormatter,
+                logger: logger
+            )
+
+            let contents = try contentConverter.convertTargetContents()
 
             let filter = ContentFilter(
                 filterRules: pipeline.contentTypes.filterRules

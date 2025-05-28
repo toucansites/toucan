@@ -50,17 +50,21 @@ struct ToucanDateFormatterTestSuite {
         #expect(ctx.formats["year"] == "2001")
         #expect(ctx.formats["sitemap"] == "2001-01-01")
 
-        let inputDate = dateFormatter.parse(date: "2001-01-01T00:00:00.000Z")
+        let inputDate = try #require(
+            dateFormatter.parse(date: "2001-01-01T00:00:00.000Z")
+        )
         #expect(inputDate.timeIntervalSinceReferenceDate == 0)
 
-        let localizedInputDate = dateFormatter.parse(
-            date: "2001-01-01T01:00:00.000Z",
-            using: .init(
-                localization: .init(
-                    locale: "hu-HU",
-                    timeZone: "CET"
-                ),
-                format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let localizedInputDate = try #require(
+            dateFormatter.parse(
+                date: "2001-01-01T01:00:00.000Z",
+                using: .init(
+                    localization: .init(
+                        locale: "hu-HU",
+                        timeZone: "CET"
+                    ),
+                    format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                )
             )
         )
         #expect(localizedInputDate.timeIntervalSinceReferenceDate == 0)

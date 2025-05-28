@@ -22,7 +22,10 @@ struct ContentQueryTestSuite {
         let converter = ContentConverter(
             buildTargetSource: buildTargetSource,
             encoder: encoder,
-            decoder: decoder
+            decoder: decoder,
+            dateFormatter: .init(
+                dateConfig: buildTargetSource.config.dataTypes.date
+            )
         )
 
         return try converter.convertTargetContents()
