@@ -51,6 +51,14 @@ uninstall:
 docker-image:
 	docker build -t toucan . -f ./Docker/Dockerfile
 
+docker-image:
+	docker buildx build \
+		--platform linux/amd64,linux/arm64 \
+		-t toucan \
+		-f ./Docker/Dockerfile \
+		--load \
+		.
+
 # docker run --rm -v $(pwd):/app/site toucan generate /app/site/src /app/site/docs
 # docker run --rm -v $(pwd):/app/site toucan generate ./site/src ./site/docs --base-url "http://localhost:3000"
 # docker run --rm -v $(pwd):/app/site --entrypoint /app/toucan toucan generate ./site/src ./site/docs --base-url "http://localhost:3000"
