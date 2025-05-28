@@ -3,7 +3,10 @@ FROM swift:6.1-noble AS build
 WORKDIR /build
 COPY ./Package.* ./
 RUN swift package resolve
-COPY ./ .
+COPY Sources ./Sources
+COPY Tests ./Tests
+COPY Package.swift .
+COPY Package.resolved .
 RUN swift build -c release --static-swift-stdlib
 
 WORKDIR /staging
