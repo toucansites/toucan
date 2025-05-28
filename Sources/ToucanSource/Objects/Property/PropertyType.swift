@@ -25,7 +25,7 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     case string
 
     /// Date type with optional localized formatting.
-    case date(format: DateFormatterParameters?)
+    case date(format: DateFormatterConfig?)
 
     /// Array type with elements of a consistent `PropertyType`.
     case array(of: PropertyType)
@@ -70,7 +70,7 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             self = .string
         case .date:
             let format = try container.decodeIfPresent(
-                DateFormatterParameters.self,
+                DateFormatterConfig.self,
                 forKey: .dateFormat
             )
             self = .date(format: format)

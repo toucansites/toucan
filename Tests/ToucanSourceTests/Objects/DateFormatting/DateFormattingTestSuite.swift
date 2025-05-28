@@ -22,7 +22,7 @@ struct DateFormattingTestSuite {
             """
         let decoder = ToucanYAMLDecoder()
         let options = try decoder.decode(
-            DateFormatterParameters.self,
+            DateFormatterConfig.self,
             from: yaml
         )
         #expect(options.localization.locale == "fr_FR")
@@ -37,7 +37,7 @@ struct DateFormattingTestSuite {
             """
         let decoder = ToucanYAMLDecoder()
         let options = try decoder.decode(
-            DateFormatterParameters.self,
+            DateFormatterConfig.self,
             from: yaml
         )
         #expect(
@@ -53,7 +53,7 @@ struct DateFormattingTestSuite {
 
     @Test
     func encodeProducesExpectedYAML() throws {
-        let options = DateFormatterParameters(
+        let options = DateFormatterConfig(
             localization: DateLocalization(
                 locale: "de_DE",
                 timeZone: "Europe/Berlin"
@@ -75,7 +75,7 @@ struct DateFormattingTestSuite {
 
     @Test
     func encodeDefaultsProducesYAMLWithFormatOnly() throws {
-        let options = DateFormatterParameters(
+        let options = DateFormatterConfig(
             localization: DateLocalization.defaults,
             format: "yyyy"
         )
@@ -84,8 +84,6 @@ struct DateFormattingTestSuite {
 
         let exp = """
             format: yyyy
-            locale: en-US
-            timeZone: GMT
             """
             .trimmingCharacters(in: .whitespacesAndNewlines)
         #expect(
@@ -94,19 +92,122 @@ struct DateFormattingTestSuite {
     }
 
     @Test
-    func roundTripPreservesValues() throws {
-        let original = DateFormatterParameters(
+    func invalidLocale() throws {
+        let decoder = ToucanYAMLDecoder()
+        let yaml = """
+                format: yyyy
+                locale: invalid
+                timeZone: GMT
+            """
+
+        do {
+            let _ = try decoder.decode(DateLocalization.self, from: yaml)
+        }
+        catch let error {
+            if let context = error.lookup({
+                if case DecodingError.dataCorrupted(let ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
+                let expected = "Invalid locale identifier."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
+    }
+
+    @Test
+    func invalidTimeZone() throws {
+        let decoder = ToucanYAMLDecoder()
+        let yaml = """
+                format: yyyy
+                locale: en-US
+                timeZone: invalid
+            """
+
+        do {
+            let _ = try decoder.decode(DateLocalization.self, from: yaml)
+        }
+        catch let error {
+            if let context = error.lookup({
+                if case DecodingError.dataCorrupted(let ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
+                let expected = "Invalid time zone identifier."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
+    }
+
+    @Test
+    func invalidFormat() throws {
+        let decoder = ToucanYAMLDecoder()
+        let yaml = """
+                format: ""
+                locale: en-US
+                timeZone: GMT
+            """
+
+        do {
+            let _ = try decoder.decode(DateFormatterConfig.self, from: yaml)
+        }
+        catch let error {
+            if let context = error.lookup({
+                if case DecodingError.dataCorrupted(let ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
+                let expected = "Empty date format value."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
+    }
+
+    @Test
+    func preserveDefaultValues() throws {
+        let original = DateFormatterConfig(
             localization: DateLocalization(
-                locale: "es_ES",
-                timeZone: "UTC"
+                locale: "en-US",
+                timeZone: "GMT"
             ),
-            format: "dd-MM-yyyy"
+            format: "yyyy-MM-dd"
         )
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
         let yamlString: String = try encoder.encode(original)
         let decoded = try decoder.decode(
-            DateFormatterParameters.self,
+            DateFormatterConfig.self,
+            from: yamlString
+        )
+        #expect(decoded == original)
+    }
+
+    @Test
+    func preserveCustomValues() throws {
+        let original = DateFormatterConfig(
+            localization: DateLocalization(
+                locale: "hu-HU",
+                timeZone: "CET"
+            ),
+            format: "yyyy-MM-dd"
+        )
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let yamlString: String = try encoder.encode(original)
+        let decoded = try decoder.decode(
+            DateFormatterConfig.self,
             from: yamlString
         )
         #expect(decoded == original)

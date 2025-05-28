@@ -5,6 +5,9 @@
 //  Created by Tibor Bödecs on 2025. 05. 28..
 //
 
+import struct Foundation.Locale
+import struct Foundation.TimeZone
+
 /// A set of locale and time zone identifiers used when formatting dates.
 ///
 /// This type holds the locale and time zone identifiers that will be used
@@ -37,6 +40,40 @@ public struct DateLocalization: Sendable, Codable, Equatable {
         locale: String,
         timeZone: String
     ) {
+        self.locale = locale
+        self.timeZone = timeZone
+    }
+
+    /// Creates a new instance by decoding from the given decoder.
+    ///
+    /// - Parameter decoder: The decoder to read data from.
+    /// - Throws: An error if decoding fails, or if the locale or time zone identifier is invalid.
+    public init(
+        from decoder: any Decoder
+    ) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let locale = try container.decode(String.self, forKey: .locale)
+        let timeZone = try container.decode(String.self, forKey: .timeZone)
+
+        let id = Locale.identifier(.icu, from: locale)
+        guard Locale.availableIdentifiers.contains(id) else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "Invalid locale identifier."
+                )
+            )
+        }
+
+        guard TimeZone(identifier: timeZone) != nil else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "Invalid time zone identifier."
+                )
+            )
+        }
+
         self.locale = locale
         self.timeZone = timeZone
     }

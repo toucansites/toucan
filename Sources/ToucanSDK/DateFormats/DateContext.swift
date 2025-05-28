@@ -9,7 +9,7 @@
 ///
 /// `DateFormats` includes predefined formatting levels (full, long, medium, short)
 /// for both dates and times, as well as support for arbitrary format labels.
-public struct DateFormats: Codable {
+public struct DateContext: Codable {
 
     /// Represents standardized formatting levels for a date or time value.
     ///

@@ -75,13 +75,16 @@ struct RelationTestSuite {
                 path: custom2
               path: custom3
             dateFormats:
+              formats:
+                test1:
+                  format: his
+                  locale: hu-HU
+                  timeZone: CET
               input:
                 format: ymd
               output:
-                test1:
-                  format: his
-                  locale: en-US
-                  timeZone: EST
+                locale: en-GB
+                timeZone: PST
             pipelines:
               path: custom4
             renderer:
@@ -123,10 +126,15 @@ struct RelationTestSuite {
             localization: .defaults,
             format: "ymd"
         )
-        expectation.dateFormats.output["test1"] = .init(
+        expectation.dateFormats.output = .init(
+            locale: "en-GB",
+            timeZone: "PST"
+        )
+
+        expectation.dateFormats.formats["test1"] = .init(
             localization: .init(
-                locale: "en-US",
-                timeZone: "EST",
+                locale: "hu-HU",
+                timeZone: "CET",
             ),
             format: "his"
         )

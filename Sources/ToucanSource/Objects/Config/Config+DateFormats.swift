@@ -15,6 +15,7 @@ extension Config {
         private enum CodingKeys: CodingKey {
             case input
             case output
+            case formats
         }
 
         // MARK: - Properties
@@ -22,17 +23,20 @@ extension Config {
         /// The expected format for parsing date input strings (typically from front matter or JSON).
         ///
         /// Example: `"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"` (ISO-8601 with milliseconds)
-        public var input: DateFormatterParameters
+        public var input: DateFormatterConfig
+
+        /// A custom date localization for the standard localized output formats.
+        public var output: DateLocalization
 
         /// A dictionary of named output formats for rendering dates in different contexts.
         ///
         /// Example:
         /// ```yaml
-        /// output:
+        /// formats:
         ///   short: { format: "MMM d" }
         ///   full: { format: "MMMM d, yyyy" }
         /// ```
-        public var output: [String: DateFormatterParameters]
+        public var formats: [String: DateFormatterConfig]
 
         // MARK: - Defaults
 
@@ -43,7 +47,8 @@ extension Config {
                     localization: .defaults,
                     format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                 ),
-                output: [:]
+                output: .defaults,
+                formats: [:]
             )
         }
 
@@ -53,13 +58,16 @@ extension Config {
         ///
         /// - Parameters:
         ///   - input: Format used to parse raw date values.
-        ///   - output: Named formats for rendering parsed dates.
+        ///   - output: The date localization config for the standard date outputs.
+        ///   - formats: Named formats for rendering parsed dates.
         public init(
-            input: DateFormatterParameters,
-            output: [String: DateFormatterParameters]
+            input: DateFormatterConfig,
+            output: DateLocalization,
+            formats: [String: DateFormatterConfig]
         ) {
             self.input = input
             self.output = output
+            self.formats = formats
         }
 
         // MARK: - Decoding
@@ -80,17 +88,21 @@ extension Config {
 
             self.input =
                 try container.decodeIfPresent(
-                    DateFormatterParameters.self,
+                    DateFormatterConfig.self,
                     forKey: .input
-                )
-                ?? defaults.input
+                ) ?? defaults.input
 
             self.output =
                 try container.decodeIfPresent(
-                    [String: DateFormatterParameters].self,
+                    DateLocalization.self,
                     forKey: .output
-                )
-                ?? defaults.output
+                ) ?? defaults.output
+
+            self.formats =
+                try container.decodeIfPresent(
+                    [String: DateFormatterConfig].self,
+                    forKey: .formats
+                ) ?? defaults.formats
         }
     }
 }

@@ -25,7 +25,7 @@ public struct SourceBundleRenderer {
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
     /// Date formatters used across pipelines
-    let formatters: [String: DateFormatter]
+    //    let formatters: [String: DateFormatter]
     /// File system abstraction
     let fileManager: FileManagerKit
     /// Logger for warnings and errors
@@ -50,7 +50,7 @@ public struct SourceBundleRenderer {
         self.generatorInfo = generatorInfo
         self.fileManager = fileManager
         self.logger = logger
-        self.formatters = sourceBundle.prepareFormatters()
+        //        self.formatters = sourceBundle.prepareFormatters()
     }
 
     // MARK: -
@@ -64,7 +64,7 @@ public struct SourceBundleRenderer {
                 "baseUrl": .init(sourceBundle.target.url),
                 "locale": .init(sourceBundle.target.locale),
                 "timeZone": .init(sourceBundle.target.timeZone),
-                "generation": .init(now.toDateFormats(formatters: formatters)),
+                //                "generation": .init(now.toDateFormats(formatters: formatters)),
                 "generator": .init(generatorInfo),
             ]
         )
@@ -123,13 +123,13 @@ public struct SourceBundleRenderer {
 
         for pipeline in sourceBundle.pipelines {
 
-            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
-                .mapValues {
-                    sourceBundle.target.dateFormatter($0)
-                }
-            let allFormatters = formatters.recursivelyMerged(
-                with: pipelineFormatters
-            )
+            //            let pipelineFormatters = pipeline.dataTypes.date.dateFormats
+            //                .mapValues {
+            //                    sourceBundle.target.dateFormatter($0)
+            //                }
+            //            let allFormatters = formatters.recursivelyMerged(
+            //                with: pipelineFormatters
+            //            )
 
             let filter = ContentFilter(
                 filterRules: pipeline.contentTypes.filterRules
@@ -360,12 +360,12 @@ public struct SourceBundleRenderer {
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
-        let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
-            sourceBundle.target.dateFormatter($0)
-        }
-        let allFormatters = formatters.recursivelyMerged(
-            with: pipelineFormatters
-        )
+        //        let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
+        //            sourceBundle.target.dateFormatter($0)
+        //        }
+        //        let allFormatters = formatters.recursivelyMerged(
+        //            with: pipelineFormatters
+        //        )
 
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
@@ -394,9 +394,9 @@ public struct SourceBundleRenderer {
                     case .date(_) = p.type,
                     let rawDate = v.value(as: Double.self)
                 {
-                    result[k] = .init(
-                        rawDate.toDateFormats(formatters: allFormatters)
-                    )
+                    //                    result[k] = .init(
+                    //                        rawDate.toDateFormats(formatters: allFormatters)
+                    //                    )
                 }
                 else {
                     result[k] = .init(v.value)
@@ -408,11 +408,11 @@ public struct SourceBundleRenderer {
                 ""
                 //                content.slug.permalink(baseUrl: sourceBundle.target.url)
             )
-            result["lastUpdate"] = .init(
-                content.rawValue.lastModificationDate.toDateFormats(
-                    formatters: allFormatters
-                )
-            )
+            //            result["lastUpdate"] = .init(
+            //                content.rawValue.lastModificationDate.toDateFormats(
+            //                    formatters: allFormatters
+            //                )
+            //            )
         }
 
         if scope.context.contains(.contents) {

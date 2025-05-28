@@ -1,5 +1,5 @@
 //
-//  DateFormatterParameters.swift
+//  DateFormatterConfig.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 28..
@@ -9,7 +9,7 @@
 ///
 /// This type holds both localization options and a format string, allowing
 /// dates to be formatted according to locale, time zone, and pattern.
-public struct DateFormatterParameters: Sendable, Codable, Equatable {
+public struct DateFormatterConfig: Sendable, Codable, Equatable {
 
     /// The locale and time zone options to apply when formatting dates.
     public var localization: DateLocalization
@@ -64,7 +64,18 @@ public struct DateFormatterParameters: Sendable, Codable, Equatable {
             locale: locale,
             timeZone: timeZone
         )
-        self.format = try container.decode(String.self, forKey: .format)
+        let format = try container.decode(String.self, forKey: .format)
+
+        guard !format.isEmpty else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "Empty date format value."
+                )
+            )
+        }
+        self.format = format
+
     }
 
     /// Encodes this `DateFormatterOptions` into the given encoder.
@@ -75,8 +86,15 @@ public struct DateFormatterParameters: Sendable, Codable, Equatable {
         to encoder: Encoder
     ) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(localization.locale, forKey: .locale)
-        try container.encode(localization.timeZone, forKey: .timeZone)
+
+        let defaults = DateLocalization.defaults
+
+        if localization.locale != defaults.locale {
+            try container.encode(localization.locale, forKey: .locale)
+        }
+        if localization.timeZone != defaults.timeZone {
+            try container.encode(localization.timeZone, forKey: .timeZone)
+        }
         try container.encode(format, forKey: .format)
     }
 }

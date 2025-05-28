@@ -21,7 +21,7 @@ extension Pipeline.DataTypes {
 
         /// A mapping of named date format identifiers (e.g., `"full"`, `"rss"`, `"iso"`)
         /// to their corresponding localized formatting definitions.
-        public var dateFormats: [String: DateFormatterParameters]
+        public var dateFormats: [String: DateFormatterConfig]
 
         // MARK: - Defaults
 
@@ -35,7 +35,7 @@ extension Pipeline.DataTypes {
         /// Initializes the date formatting configuration with explicitly defined format mappings.
         ///
         /// - Parameter dateFormats: A dictionary of named formats to localized date format rules.
-        public init(dateFormats: [String: DateFormatterParameters]) {
+        public init(dateFormats: [String: DateFormatterConfig]) {
             self.dateFormats = dateFormats
         }
 
@@ -54,7 +54,7 @@ extension Pipeline.DataTypes {
 
             let dateFormats =
                 try container.decodeIfPresent(
-                    [String: DateFormatterParameters].self,
+                    [String: DateFormatterConfig].self,
                     forKey: .dateFormats
                 ) ?? [:]
 
