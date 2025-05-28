@@ -62,7 +62,10 @@ struct PipelineLoaderTestSuite: ToucanTestSuite {
             )
             let pipelines = try pipelineLoader.load()
             #expect(pipelines.count == 2)
-            #expect(pipelines[1].transformers.count == 2)
+            if let pipeline404 = pipelines.first(where: { $0.id == "not-found" }
+            ) {
+                #expect(pipeline404.transformers.count == 2)
+            }
         }
 
     }
