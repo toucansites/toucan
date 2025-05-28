@@ -44,10 +44,26 @@ struct ToucanDateFormatterTestSuite {
         #expect(ctx.time.short == "1:00")
 
         #expect(ctx.timestamp == 978_307_200)
+        #expect(ctx.iso8601 == "2001-01-01T01:00:00.000Z")
 
         #expect(ctx.formats["rss"] == "Mon, 01 Jan 2001 00:00:00 +0000")
         #expect(ctx.formats["year"] == "2001")
         #expect(ctx.formats["sitemap"] == "2001-01-01")
+
+        let inputDate = dateFormatter.parse(date: "2001-01-01T00:00:00.000Z")
+        #expect(inputDate.timeIntervalSinceReferenceDate == 0)
+
+        let localizedInputDate = dateFormatter.parse(
+            date: "2001-01-01T01:00:00.000Z",
+            using: .init(
+                localization: .init(
+                    locale: "hu-HU",
+                    timeZone: "CET"
+                ),
+                format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            )
+        )
+        #expect(localizedInputDate.timeIntervalSinceReferenceDate == 0)
     }
 
     //    @Test

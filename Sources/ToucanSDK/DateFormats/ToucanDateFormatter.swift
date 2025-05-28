@@ -10,7 +10,6 @@ import ToucanSource
 import Logging
 
 /*
-
  target:
      dev:
         input: ./src
@@ -64,10 +63,6 @@ import Logging
                     format:
                     locale:
                     timeZone:
-
-
-
-
 
  */
 
@@ -124,6 +119,9 @@ struct ToucanDateFormatter {
     var pipelineDateConfig: Config.DataTypes.Date
     private var systemFormatters: SystemDateFormatters
     private var userFormatters: [String: DateFormatter]
+    private var inputFormatter: DateFormatter
+    private var ephemeralFormatter: DateFormatter
+
     var logger: Logger
 
     init(
@@ -168,20 +166,31 @@ struct ToucanDateFormatter {
                 $0.use(config: config)
             }
         }
+
+        var config = dateConfig.input
+        if config != pipelineDateConfig.input {
+            config = pipelineDateConfig.input
+        }
+
+        self.inputFormatter = .build { $0.use(config: config) }
+        self.ephemeralFormatter = .build { $0.use(config: config) }
     }
 
-    // 1 input formatter -> pipeline
-
+    // TODO: throw error
     func parse(
         date: String,
         using config: DateFormatterConfig? = nil
     ) -> Date {
-        .init()
+        if let config {
+            ephemeralFormatter.use(config: config)
+
+            return ephemeralFormatter.date(from: date)!
+        }
+        return inputFormatter.date(from: date)!
     }
 
     func format(
-        date: Date,
-        using config: DateFormatterConfig? = nil
+        date: Date
     ) -> DateContext {
         .init(
             date: .init(
@@ -197,19 +206,14 @@ struct ToucanDateFormatter {
                 short: systemFormatters.time.short.string(from: date)
             ),
             timestamp: date.timeIntervalSince1970,
+            iso8601: systemFormatters.iso8601.string(from: date),
             formats: userFormatters.mapValues { $0.string(from: date) }
         )
     }
 
     func format(
-        timestamp: TimeInterval,
-        using config: DateFormatterConfig? = nil
+        timestamp: TimeInterval
     ) -> DateContext {
-        format(
-            date: .init(
-                timeIntervalSince1970: timestamp
-            ),
-            using: config
-        )
+        format(date: .init(timeIntervalSince1970: timestamp))
     }
 }

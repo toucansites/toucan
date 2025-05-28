@@ -54,6 +54,9 @@ public struct DateContext: Codable {
     /// Standardized time format strings (e.g., full, medium, short).
     public var time: Standard
 
+    /// A standard iso8601 date string.
+    public var iso8601: String
+
     /// A Unix timestamp representing a default or reference point in time.
     public var timestamp: Double
 
@@ -68,16 +71,19 @@ public struct DateContext: Codable {
     ///   - date: Standardized date formatting options.
     ///   - time: Standardized time formatting options.
     ///   - timestamp: A base or reference timestamp, typically in Unix format.
+    ///   - iso8601: A standard iso8601 date string.
     ///   - formats: Custom named format strings for specialized use cases.
     public init(
         date: Standard,
         time: Standard,
         timestamp: Double,
+        iso8601: String,
         formats: [String: String]
     ) {
         self.date = date
         self.time = time
         self.timestamp = timestamp
+        self.iso8601 = iso8601
         self.formats = formats
     }
 }
