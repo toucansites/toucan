@@ -32,12 +32,6 @@ public struct Target: Codable, Equatable {
     /// The base URL of the site or project without a trailing slash (e.g., `"https://example.com"`).
     public var url: String
 
-    /// The locale identifier used for date/time formatting and content localization (e.g., `"en-US"`).
-    public var locale: String
-
-    /// The time zone used for formatting timestamps (e.g., `"UTC"`, `"Europe/Berlin"`).
-    public var timeZone: String
-
     /// The output path for generated files.
     public var output: String
 
@@ -59,8 +53,6 @@ public struct Target: Codable, Equatable {
             name: "dev",
             config: "",
             url: "http://localhost:3000",
-            locale: "en-US",
-            timeZone: "UTC",
             output: "docs",
             isDefault: false
         )
@@ -73,24 +65,18 @@ public struct Target: Codable, Equatable {
     ///   - name: The unique name of the target.
     ///   - config: The path to the configuration file.
     ///   - url: The base URL for the target.
-    ///   - locale: The locale identifier for the target.
-    ///   - timeZone: The time zone identifier.
     ///   - output: The output path for generated files.
     ///   - isDefault: A flag indicating if this is the default target.
     public init(
         name: String,
         config: String,
         url: String,
-        locale: String,
-        timeZone: String,
         output: String,
         isDefault: Bool
     ) {
         self.name = name
         self.config = config
         self.url = url  //.dropTrailingSlash()
-        self.locale = locale
-        self.timeZone = timeZone
         self.output = output
         self.isDefault = isDefault
     }
@@ -121,14 +107,6 @@ public struct Target: Codable, Equatable {
             ) ?? base.url
         //.dropTrailingSlash() ?? base.url.dropTrailingSlash()
 
-        self.locale =
-            try container.decodeIfPresent(String.self, forKey: .locale)
-            ?? base.locale
-
-        self.timeZone =
-            try container.decodeIfPresent(String.self, forKey: .timeZone)
-            ?? base.timeZone
-
         self.output =
             try container.decodeIfPresent(String.self, forKey: .output)
             ?? base.output
@@ -150,8 +128,6 @@ public struct Target: Codable, Equatable {
         try container.encode(name, forKey: .name)
         try container.encode(config, forKey: .config)
         try container.encode(url, forKey: .url)
-        try container.encodeIfPresent(locale, forKey: .locale)
-        try container.encodeIfPresent(timeZone, forKey: .timeZone)
         try container.encode(output, forKey: .output)
         try container.encode(isDefault, forKey: .default)
     }

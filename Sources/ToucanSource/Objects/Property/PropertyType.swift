@@ -32,9 +32,9 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
 
     /// Coding keys used for encoding and decoding `PropertyType`.
     private enum CodingKeys: String, CodingKey {
-        case of
         case type
-        case config
+        case config  // date input config
+        case of  // type of array elements
     }
 
     /// Type discriminator used during encoding and decoding.
@@ -98,9 +98,9 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             try container.encode(TypeKey.double, forKey: .type)
         case .string:
             try container.encode(TypeKey.string, forKey: .type)
-        case .date(let format):
+        case .date(let config):
             try container.encode(TypeKey.date, forKey: .type)
-            try container.encodeIfPresent(format, forKey: .config)
+            try container.encodeIfPresent(config, forKey: .config)
         case .array(let of):
             try container.encode(TypeKey.array, forKey: .type)
             try container.encode(of, forKey: .of)

@@ -9,20 +9,6 @@ import Foundation
 import ToucanSource
 import Logging
 
-fileprivate extension DateFormatter {
-
-    func use(localization: DateLocalization) {
-        let id = Locale.identifier(.icu, from: localization.locale)
-        locale = .init(identifier: id)
-        timeZone = .init(identifier: localization.timeZone)
-    }
-
-    func use(config: DateFormatterConfig) {
-        use(localization: config.localization)
-        dateFormat = config.format
-    }
-}
-
 /*
 
  target:
@@ -70,158 +56,160 @@ fileprivate extension DateFormatter {
                  locale: ???
                  timezone: ???
 
-
-
- 1 input formatter -> pipeline
- 1 output formatter ->
-
-
-
- # content type
+    # content type
         post
             publication:
                 type: date
-                format:
-                locale:
-                timeZone:
+                config: # input
+                    format:
+                    locale:
+                    timeZone:
+
+
+
+
+
  */
 
-struct ToucanDateFormatter {
+fileprivate extension DateFormatter {
 
-    var config: Config
-    var pipeline: Pipeline
-    var formatters: [String: DateFormatter]
-    var logger: Logger
-
-    init(
-        config: Config,
-        pipeline: Pipeline,
-        logger: Logger
-    ) {
-        self.config = config
-        self.pipeline = pipeline
-        self.formatters = [:]
-        self.logger = logger
-    }
-
-    private func createDefault() -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.use(localization: .defaults)
+    static func build(
+        using localization: DateLocalization = .defaults,
+        _ block: (inout DateFormatter) -> Void
+    ) -> DateFormatter {
+        var formatter = DateFormatter()
+        formatter.use(localization: localization)
+        formatter.dateStyle = .none
+        formatter.timeStyle = .none
+        block(&formatter)
         return formatter
     }
 
+    func use(localization: DateLocalization) {
+        let id = Locale.identifier(.icu, from: localization.locale)
+        locale = .init(identifier: id)
+        timeZone = .init(identifier: localization.timeZone)
+    }
+
+    func use(config: DateFormatterConfig) {
+        use(localization: config.localization)
+        dateFormat = config.format
+    }
+}
+
+private struct SystemDateFormatters {
+
+    struct Date {
+        var full: DateFormatter
+        var long: DateFormatter
+        var medium: DateFormatter
+        var short: DateFormatter
+    }
+
+    struct Time {
+        var full: DateFormatter
+        var long: DateFormatter
+        var medium: DateFormatter
+        var short: DateFormatter
+    }
+
+    var date: Date
+    var time: Time
+    var iso8601: DateFormatter
+}
+
+struct ToucanDateFormatter {
+
+    var dateConfig: Config.DataTypes.Date
+    var pipelineDateConfig: Config.DataTypes.Date
+    private var systemFormatters: SystemDateFormatters
+    private var userFormatters: [String: DateFormatter]
+    var logger: Logger
+
+    init(
+        dateConfig: Config.DataTypes.Date,
+        pipelineDateConfig: Config.DataTypes.Date,
+        logger: Logger = .subsystem("toucan-date-formatter")
+    ) {
+        self.dateConfig = dateConfig
+        self.pipelineDateConfig = pipelineDateConfig
+
+        var localization = dateConfig.output
+        if localization != pipelineDateConfig.output {
+            localization = pipelineDateConfig.output
+        }
+
+        self.systemFormatters = .init(
+            date: .init(
+                full: .build(using: localization) { $0.dateStyle = .full },
+                long: .build(using: localization) { $0.dateStyle = .long },
+                medium: .build(using: localization) { $0.dateStyle = .medium },
+                short: .build(using: localization) { $0.dateStyle = .short }
+            ),
+            time: .init(
+                full: .build(using: localization) { $0.timeStyle = .full },
+                long: .build(using: localization) { $0.timeStyle = .long },
+                medium: .build(using: localization) { $0.timeStyle = .medium },
+                short: .build(using: localization) { $0.timeStyle = .short }
+            ),
+            iso8601: .build(using: localization) {
+                $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            }
+        )
+        self.userFormatters = [:]
+        self.logger = logger
+
+        let userFormatterConfig = dateConfig.formats.merging(
+            pipelineDateConfig.formats,
+            uniquingKeysWith: { _, new in new }
+        )
+        for (key, config) in userFormatterConfig {
+            userFormatters[key] = .build(using: localization) {
+                $0.use(config: config)
+            }
+        }
+    }
+
+    // 1 input formatter -> pipeline
+
     func parse(
         date: String,
-        using: DateFormatterConfig?
+        using config: DateFormatterConfig? = nil
     ) -> Date {
         .init()
     }
 
     func format(
         date: Date,
-        using: DateFormatterConfig?
+        using config: DateFormatterConfig? = nil
     ) -> DateContext {
         .init(
             date: .init(
-                full: "",
-                long: "",
-                medium: "",
-                short: ""
+                full: systemFormatters.date.full.string(from: date),
+                long: systemFormatters.date.long.string(from: date),
+                medium: systemFormatters.date.medium.string(from: date),
+                short: systemFormatters.date.short.string(from: date)
             ),
             time: .init(
-                full: "",
-                long: "",
-                medium: "",
-                short: ""
+                full: systemFormatters.time.full.string(from: date),
+                long: systemFormatters.time.long.string(from: date),
+                medium: systemFormatters.time.medium.string(from: date),
+                short: systemFormatters.time.short.string(from: date)
             ),
-            timestamp: 12,
-            formats: [:]
+            timestamp: date.timeIntervalSince1970,
+            formats: userFormatters.mapValues { $0.string(from: date) }
         )
     }
 
-    //    func dateFormatter(_ format: String? = nil) -> DateFormatter {
-    //        let formatter = createStandardFormatter()
-    //
-    //        if let format {
-    //            formatter.dateFormat = format
-    //        }
-    //        return formatter
-    //    }
-    //
-
-    //    func prepareFormatters() -> [String: DateFormatter] {
-    //        var formatters: [String: DateFormatter] = [:]
-    //        let styles: [(String, DateFormatter.Style)] = [
-    //            ("full", .full),
-    //            ("long", .long),
-    //            ("medium", .medium),
-    //            ("short", .short),
-    //        ]
-    //
-    //        for (key, style) in styles {
-    //            let dateFormatter = target.dateFormatter()
-    //            dateFormatter.dateStyle = style
-    //            dateFormatter.timeStyle = .none
-    //            formatters["date.\(key)"] = dateFormatter
-    //
-    //            let timeFormatter = target.dateFormatter()
-    //            timeFormatter.dateStyle = .none
-    //            timeFormatter.timeStyle = style
-    //            formatters["time.\(key)"] = timeFormatter
-    //        }
-    //
-    //        let standard: [String: LocalizedDateFormat] = [
-    //            "iso8601": .init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
-    //            "rss": .init(format: "EEE, dd MMM yyyy HH:mm:ss Z"),
-    //            "sitemap": .init(format: "yyyy-MM-dd"),
-    //        ]
-    //
-    //        for (key, dateFormat) in standard.recursivelyMerged(
-    //            with: config.dateFormats.output
-    //        ) {
-    //            let formatter = target.dateFormatter()
-    //            formatter.config(with: dateFormat)
-    //            formatters[key] = formatter
-    //        }
-    //        return formatters
-    //    }
-
+    func format(
+        timestamp: TimeInterval,
+        using config: DateFormatterConfig? = nil
+    ) -> DateContext {
+        format(
+            date: .init(
+                timeIntervalSince1970: timestamp
+            ),
+            using: config
+        )
+    }
 }
-
-//extension Double {
-//
-//    func toDateFormats(
-//        formatters: [String: DateFormatter]
-//    ) -> DateContext {
-//        let date = Date(timeIntervalSince1970: self)
-//        var results = formatters.mapValues { $0.string(from: date) }
-//        let dates = DateContext.Standard(
-//            full: formatters["date.full"]!.string(from: date),
-//            long: formatters["date.long"]!.string(from: date),
-//            medium: formatters["date.medium"]!.string(from: date),
-//            short: formatters["date.short"]!.string(from: date)
-//        )
-//        let times = DateContext.Standard(
-//            full: formatters["time.full"]!.string(from: date),
-//            long: formatters["time.long"]!.string(from: date),
-//            medium: formatters["time.medium"]!.string(from: date),
-//            short: formatters["time.short"]!.string(from: date)
-//        )
-//
-//        results.removeValue(forKey: "date.full")
-//        results.removeValue(forKey: "date.long")
-//        results.removeValue(forKey: "date.medium")
-//        results.removeValue(forKey: "date.short")
-//        results.removeValue(forKey: "time.full")
-//        results.removeValue(forKey: "time.long")
-//        results.removeValue(forKey: "time.medium")
-//        results.removeValue(forKey: "time.short")
-//
-//        return .init(
-//            date: dates,
-//            time: times,
-//            timestamp: self,
-//            formats: results
-//        )
-//    }
-//}

@@ -62,8 +62,8 @@ public struct SourceBundleRenderer {
         sourceBundle.settings.values.recursivelyMerged(
             with: [
                 "baseUrl": .init(sourceBundle.target.url),
-                "locale": .init(sourceBundle.target.locale),
-                "timeZone": .init(sourceBundle.target.timeZone),
+                //                "locale": .init(sourceBundle.target.locale),
+                //                "timeZone": .init(sourceBundle.target.timeZone),
                 //                "generation": .init(now.toDateFormats(formatters: formatters)),
                 "generator": .init(generatorInfo),
             ]

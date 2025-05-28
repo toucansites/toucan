@@ -19,8 +19,6 @@ struct TargetTestSuite {
             name: "dev"
             config: "./some-config.yml"
             url: "https://example.com"
-            locale: "en-GB"
-            timeZone: "Europe/London"
             output: "./out"
             default: true
             """
@@ -36,8 +34,6 @@ struct TargetTestSuite {
         #expect(result.name == "dev")
         #expect(result.config == "./some-config.yml")
         #expect(result.url == "https://example.com")
-        #expect(result.locale == "en-GB")
-        #expect(result.timeZone == "Europe/London")
         #expect(result.output == "./out")
         #expect(result.isDefault == true)
     }
@@ -59,8 +55,6 @@ struct TargetTestSuite {
         #expect(result.name == "dev")
         #expect(result.config == "")
         #expect(result.url == "http://localhost:3000")
-        #expect(result.locale == "en-US")
-        #expect(result.timeZone == "UTC")
         #expect(result.output == "docs")
         #expect(result.isDefault == false)
     }

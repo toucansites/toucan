@@ -30,10 +30,18 @@ extension Mocks.Pipelines {
                     input: .defaults,
                     output: .defaults,
                     formats: [
-                        "full": .init(
+                        "rss": .init(
                             localization: .defaults,
-                            format: "y.m.d."
-                        )
+                            format: "EEE, dd MMM yyyy HH:mm:ss Z"
+                        ),
+                        "sitemap": .init(
+                            localization: .defaults,
+                            format: "yyyy-MM-dd"
+                        ),
+                        "year": .init(
+                            localization: .defaults,
+                            format: "y"
+                        ),
                     ]
                 )
             ),
@@ -225,7 +233,18 @@ extension Mocks.Pipelines {
             definesType: true,
             scopes: [:],
             queries: [:],
-            dataTypes: .defaults,
+            dataTypes: .init(
+                date: .init(
+                    input: .defaults,
+                    output: .defaults,
+                    formats: [
+                        "rss": .init(
+                            localization: .defaults,
+                            format: "EEE, dd MMM yyyy HH:mm:ss Z"
+                        )
+                    ]
+                )
+            ),
             contentTypes: .init(
                 include: [
                     "rss"
@@ -297,7 +316,18 @@ extension Mocks.Pipelines {
                     ]
                 ),
             ],
-            dataTypes: .defaults,
+            dataTypes: .init(
+                date: .init(
+                    input: .defaults,
+                    output: .defaults,
+                    formats: [
+                        "sitemap": .init(
+                            localization: .defaults,
+                            format: "yyyy-MM-dd"
+                        )
+                    ]
+                )
+            ),
             contentTypes: .init(
                 include: [
                     "sitemap"
