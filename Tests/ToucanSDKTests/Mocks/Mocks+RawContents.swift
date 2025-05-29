@@ -246,11 +246,14 @@ extension Mocks.RawContents {
     static func post(
         id: Int,
         now: Date = .init(),
+        publication: String,
+        expiration: String,
+        draft: Bool = false,
         featured: Bool = false,
         authorIds: [Int] = [],
         tagIds: [Int] = []
     ) -> RawContent {
-        .init(
+        return .init(
             origin: .init(
                 path: "blog/posts/post-\(id)",
                 slug: "blog/posts/post-\(id)"
@@ -259,7 +262,9 @@ extension Mocks.RawContents {
                 frontMatter: [
                     "title": "Post #\(id)",
                     "description": "Post #\(id) description",
-                    "publication": .init(now),
+                    "publication": .init(publication),
+                    "expiration": .init(expiration),
+                    "draft": .init(draft),
                     "featured": .init(featured),
                     "authors": .init(authorIds.map { "author-\($0)" }),
                     "tags": .init(tagIds.map { "tag-\($0)" }),

@@ -146,6 +146,11 @@ extension Mocks.ContentDefinitions {
                     ),
                     isRequired: true
                 ),
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: .init(false)
+                ),
                 "featured": .init(
                     propertyType: .bool,
                     isRequired: true,

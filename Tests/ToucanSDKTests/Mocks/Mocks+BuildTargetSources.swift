@@ -6,18 +6,24 @@
 //
 
 import Foundation
+import ToucanSDK
 import ToucanSource
 
 extension Mocks {
 
     static func buildTargetSource(
-        now: Date = .init()
+        location: URL = .init(filePath: ""),
+        now: Date = .init(),
+        target: Target = .standard,
+        config: Config = .defaults,
+        settings: Settings = .defaults
     ) -> BuildTargetSource {
-        .init(
-            location: .init(filePath: ""),
-            target: .standard,
-            config: .defaults,
-            settings: .defaults,
+
+        return .init(
+            location: location,
+            target: target,
+            config: config,
+            settings: settings,
             pipelines: [
                 Mocks.Pipelines.html(),
                 Mocks.Pipelines.notFound(),
@@ -60,6 +66,8 @@ extension Mocks {
                 Mocks.RawContents.post(
                     id: 1,
                     now: now,
+                    publication: "",
+                    expiration: "",
                     featured: false,
                     authorIds: [1, 2],
                     tagIds: [1, 2]
@@ -67,6 +75,8 @@ extension Mocks {
                 Mocks.RawContents.post(
                     id: 2,
                     now: now,
+                    publication: "",
+                    expiration: "",
                     featured: true,
                     authorIds: [1, 2, 3],
                     tagIds: [2]
@@ -74,6 +84,8 @@ extension Mocks {
                 Mocks.RawContents.post(
                     id: 3,
                     now: now,
+                    publication: "",
+                    expiration: "",
                     featured: false,
                     authorIds: [2, 3],
                     tagIds: [2, 3]

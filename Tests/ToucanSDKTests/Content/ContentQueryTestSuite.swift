@@ -779,6 +779,8 @@ struct ContentQueryTestSuite {
         let diff = Double(5) * -86_400
         let pastDate = now.addingTimeInterval(diff)
 
+        print(contents.filter { $0.definition.id == "post" }.map(\.id))
+
         let query1 = Query(
             contentType: "post",
             filter: .field(
@@ -797,7 +799,7 @@ struct ContentQueryTestSuite {
             query: query1,
             now: now.timeIntervalSince1970
         )
-        //        try #require(results1.count == 5)
+        try #require(results1.count == 5)
 
         let query = Query(
             contentType: "post",

@@ -5,9 +5,17 @@
 //  Created by Tibor Bödecs on 2025. 05. 26..
 //
 
+/// # Toucan Date Formatter
+///
+/// Provides parsing and formatting of dates using application configuration,
+/// including locale, time zone, and custom format settings.
+///
+/// Topics: Date, Formatting, Localization, Configuration
+
 import Foundation
 import ToucanSource
 import Logging
+import ToucanCore
 
 /*
  target:
@@ -66,8 +74,15 @@ import Logging
 
  */
 
+/// Extension to configure `DateFormatter` with localization and config options.
 fileprivate extension DateFormatter {
 
+    /// Creates and configures a `DateFormatter`.
+    ///
+    /// - Parameters:
+    ///   - localization: The locale and time zone settings to apply.
+    ///   - block: A closure to further configure the formatter.
+    /// - Returns: A fully configured `DateFormatter`.
     static func build(
         using localization: DateLocalization = .defaults,
         _ block: (inout DateFormatter) -> Void
@@ -80,18 +95,25 @@ fileprivate extension DateFormatter {
         return formatter
     }
 
+    /// Applies the given localization (locale and time zone) to the formatter.
+    ///
+    /// - Parameter localization: The locale and time zone options.
     func use(localization: DateLocalization) {
         let id = Locale.identifier(.icu, from: localization.locale)
         locale = .init(identifier: id)
         timeZone = .init(identifier: localization.timeZone)
     }
 
+    /// Applies a `DateFormatterConfig` (format, locale, time zone) to the formatter.
+    ///
+    /// - Parameter config: The date formatter configuration.
     func use(config: DateFormatterConfig) {
         use(localization: config.localization)
         dateFormat = config.format
     }
 }
 
+/// Holds system date and time style `DateFormatter` instances and an ISO8601 formatter.
 private struct SystemDateFormatters {
 
     struct Date {
@@ -113,18 +135,27 @@ private struct SystemDateFormatters {
     var iso8601: DateFormatter
 }
 
-struct ToucanDateFormatter {
+/// Main utility for parsing and formatting dates based on project configuration.
+///
+/// Combines input parsing, system-style formatters, and user-defined formats.
+public struct ToucanDateFormatter {
 
-    var dateConfig: Config.DataTypes.Date
-    var pipelineDateConfig: Config.DataTypes.Date?
+    private var dateConfig: Config.DataTypes.Date
+    private var pipelineDateConfig: Config.DataTypes.Date?
     private var systemFormatters: SystemDateFormatters
     private var userFormatters: [String: DateFormatter]
-    private var inputFormatter: DateFormatter
+    var inputFormatter: DateFormatter
     private var ephemeralFormatter: DateFormatter
 
     var logger: Logger
 
-    init(
+    /// Initializes the date formatter utility.
+    ///
+    /// - Parameters:
+    ///   - dateConfig: The base date configuration from the project.
+    ///   - pipelineDateConfig: Optional overrides for date configuration.
+    ///   - logger: A logger instance for diagnostics.
+    public init(
         dateConfig: Config.DataTypes.Date,
         pipelineDateConfig: Config.DataTypes.Date? = nil,
         logger: Logger = .subsystem("toucan-date-formatter")
@@ -176,8 +207,13 @@ struct ToucanDateFormatter {
         self.ephemeralFormatter = .build { $0.use(config: config) }
     }
 
-    // TODO: throw error?
-    func parse(
+    /// Parses a date string into a `Date` object.
+    ///
+    /// - Parameters:
+    ///   - date: The string representation of the date.
+    ///   - config: Optional `DateFormatterConfig` to override the input format.
+    /// - Returns: A `Date` if parsing succeeds, otherwise `nil`.
+    public func parse(
         date: String,
         using config: DateFormatterConfig? = nil
     ) -> Date? {
@@ -189,7 +225,11 @@ struct ToucanDateFormatter {
         return inputFormatter.date(from: date)
     }
 
-    func format(
+    /// Formats a `Date` into a `DateContext`, providing multiple style outputs and custom formats.
+    ///
+    /// - Parameter date: The `Date` to format.
+    /// - Returns: A `DateContext` containing formatted strings and timestamp.
+    public func format(
         date: Date
     ) -> DateContext {
         .init(
@@ -211,7 +251,11 @@ struct ToucanDateFormatter {
         )
     }
 
-    func format(
+    /// Formats a time interval since 1970 into a `DateContext`.
+    ///
+    /// - Parameter timestamp: The time interval (seconds since 1970).
+    /// - Returns: A `DateContext` with formatted outputs.
+    public func format(
         timestamp: TimeInterval
     ) -> DateContext {
         format(date: .init(timeIntervalSince1970: timestamp))
