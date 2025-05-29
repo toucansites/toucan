@@ -210,19 +210,37 @@ public struct ToucanDateFormatter {
     /// Parses a date string into a `Date` object.
     ///
     /// - Parameters:
-    ///   - date: The string representation of the date.
+    ///   - string: The string representation of the date.
     ///   - config: Optional `DateFormatterConfig` to override the input format.
     /// - Returns: A `Date` if parsing succeeds, otherwise `nil`.
-    public func parse(
-        date: String,
+    public func date(
+        from string: String,
         using config: DateFormatterConfig? = nil
     ) -> Date? {
         if let config {
             ephemeralFormatter.use(config: config)
 
-            return ephemeralFormatter.date(from: date)
+            return ephemeralFormatter.date(from: string)
         }
-        return inputFormatter.date(from: date)
+        return inputFormatter.date(from: string)
+    }
+
+    /// Converts a date into a `String` object.
+    ///
+    /// - Parameters:
+    ///   - date: The date representation.
+    ///   - config: Optional `DateFormatterConfig` to override the input format.
+    /// - Returns: A `String` using the provided date format config.
+    public func string(
+        from date: Date,
+        using config: DateFormatterConfig? = nil
+    ) -> String {
+        if let config {
+            ephemeralFormatter.use(config: config)
+
+            return ephemeralFormatter.string(from: date)
+        }
+        return inputFormatter.string(from: date)
     }
 
     /// Formats a `Date` into a `DateContext`, providing multiple style outputs and custom formats.

@@ -133,8 +133,8 @@ struct ContentConverter {
                 return nil
             }
             guard
-                let date = dateFormatter.parse(
-                    date: rawDateValue,
+                let date = dateFormatter.date(
+                    from: rawDateValue,
                     using: config
                 )
             else {
