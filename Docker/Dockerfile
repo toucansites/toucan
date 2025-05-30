@@ -38,6 +38,9 @@ RUN useradd --user-group --create-home --system --skel /dev/null --home-dir /app
 WORKDIR /app
 COPY --from=build --chown=toucan:toucan /staging /app
 
+# ✅ Ensure all files in /app are executable by all users
+RUN chmod -R a+rx /app
+
 ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
 ENV PATH="/app:$PATH"
 
