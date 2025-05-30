@@ -61,7 +61,7 @@ struct ToucanDateFormatterTestSuite {
         )
 
         let date = Date(timeIntervalSinceReferenceDate: 0)
-        let ctx = dateFormatter.format(date: date)
+        let ctx = dateFormatter.format(date)
         dump(ctx)
 
         #expect(ctx.date.full == "2001. január 1., hétfő")
@@ -146,7 +146,7 @@ struct ToucanDateFormatterTestSuite {
     //            "post.default": Templates.Mocks.post()
     //        ]
     //
-    //        let sourceBundle = BuildTargetSource(
+    //        let buildTargetSource = BuildTargetSource(
     //            location: .init(filePath: ""),
     //            target: target,
     //            config: sourceConfig.config,
@@ -159,13 +159,13 @@ struct ToucanDateFormatterTestSuite {
     //            baseUrl: ""
     //        )
     //
-    //        var sourceBundleRenderer = SourceBundleRenderer(
-    //            sourceBundle: sourceBundle,
+    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
+    //            buildTargetSource: buildTargetSource,
     //            fileManager: FileManager.default,
     //            logger: logger
     //        )
     //
-    //        let results = try sourceBundleRenderer.render(now: now)
+    //        let results = try buildTargetSourceRenderer.render(now: now)
     //        #expect(results.count == 1)
     //
     //        let expectation = """
@@ -274,7 +274,7 @@ struct ToucanDateFormatterTestSuite {
     //            """
     //        ]
     //
-    //        let sourceBundle = BuildTargetSource(
+    //        let buildTargetSource = BuildTargetSource(
     //            location: .init(filePath: ""),
     //            target: target,
     //            config: config,
@@ -287,13 +287,13 @@ struct ToucanDateFormatterTestSuite {
     //            baseUrl: ""
     //        )
     //
-    //        var sourceBundleRenderer = SourceBundleRenderer(
-    //            sourceBundle: sourceBundle,
+    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
+    //            buildTargetSource: buildTargetSource,
     //            fileManager: FileManager.default,
     //            logger: logger
     //        )
     //
-    //        let results = try sourceBundleRenderer.render(now: now)
+    //        let results = try buildTargetSourceRenderer.render(now: now)
     //        #expect(results.count == 1)
     //
     //        let expectation = """
@@ -397,7 +397,7 @@ struct ToucanDateFormatterTestSuite {
     //            """
     //        ]
     //
-    //        let sourceBundle = BuildTargetSource(
+    //        let buildTargetSource = BuildTargetSource(
     //            location: .init(filePath: ""),
     //            target: target,
     //            config: config,
@@ -410,13 +410,13 @@ struct ToucanDateFormatterTestSuite {
     //            baseUrl: ""
     //        )
     //
-    //        var sourceBundleRenderer = SourceBundleRenderer(
-    //            sourceBundle: sourceBundle,
+    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
+    //            buildTargetSource: buildTargetSource,
     //            fileManager: FileManager.default,
     //            logger: logger
     //        )
     //
-    //        let results = try sourceBundleRenderer.render(now: now)
+    //        let results = try buildTargetSourceRenderer.render(now: now)
     //        #expect(results.count == 1)
     //
     //        let expectation = """

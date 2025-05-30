@@ -1,5 +1,5 @@
 //
-//  SourceBundleScopeTestSuite.swift
+//  BuildTargetSourceScopeTestSuite.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 21..
@@ -14,11 +14,11 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundleScopeTestSuite {
+//struct BuildTargetSourceScopeTestSuite {
 //
 //    @Test
 //    func testScopes() throws {
-//        let logger = Logger(label: "SourceBundleScopeTestSuite")
+//        let logger = Logger(label: "BuildTargetSourceScopeTestSuite")
 //        let now = Date()
 //
 //        let target = Target.standard
@@ -137,7 +137,7 @@
 //            "sitemap": Templates.Mocks.sitemap()
 //        ]
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -150,8 +150,8 @@
 //            baseUrl: ""
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )

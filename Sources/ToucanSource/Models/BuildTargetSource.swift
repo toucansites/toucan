@@ -43,7 +43,7 @@ public struct BuildTargetSource {
 
     // MARK: - Initialization
 
-    /// Initializes a fully populated `SourceBundle` from its constituent components.
+    /// Initializes a fully populated `BuildTargetSource` from its constituent components.
     ///
     /// - Parameters:
     ///   - location: Filesystem URL of the source root.

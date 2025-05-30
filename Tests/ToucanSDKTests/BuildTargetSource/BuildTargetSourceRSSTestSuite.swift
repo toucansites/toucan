@@ -1,5 +1,5 @@
 //
-//  SourceBundleRSSTestSuite.swift
+//  BuildTargetSourceRSSTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
@@ -14,11 +14,11 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundleRSSTestSuite {
+//struct BuildTargetSourceRSSTestSuite {
 //
 //    @Test
 //    func rss() throws {
-//        let logger = Logger(label: "SourceBundleRSSTestSuite")
+//        let logger = Logger(label: "BuildTargetSourceRSSTestSuite")
 //        let now = Date()
 //        let target = Target.standard
 //        let config = Config.defaults
@@ -71,7 +71,7 @@
 //            "rss": Templates.Mocks.rss()
 //        ]
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -84,8 +84,8 @@
 //            baseUrl: ""
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )

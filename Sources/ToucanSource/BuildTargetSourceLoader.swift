@@ -62,7 +62,7 @@ public struct BuildTargetSourceLoader {
     /// This function retrieves configuration, settings, content definitions, block directives,
     /// and raw contents, then transforms them into structured content.
     ///
-    /// - Returns: A `SourceBundle` containing the loaded and processed data.
+    /// - Returns: A `BuildTargetSource` containing the loaded and processed data.
     /// - Throws: An error if any of the loading operations fail.
     public func load() throws(SourceLoaderError) -> BuildTargetSource {
 

@@ -1,5 +1,5 @@
 //
-//  SourceBundleRedirectTestSuite.swift
+//  BuildTargetSourceRedirectTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
@@ -14,11 +14,11 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundleRedirectTestSuite {
+//struct BuildTargetSourceRedirectTestSuite {
 //
 //    @Test
 //    func redirect() throws {
-//        let logger = Logger(label: "SourceBundleRedirectTestSuite")
+//        let logger = Logger(label: "BuildTargetSourceRedirectTestSuite")
 //        let target = Target.standard
 //        let config = Config.defaults
 //        let sourceConfig = SourceLocations(
@@ -65,7 +65,7 @@
 //            "redirect": Templates.Mocks.redirect()
 //        ]
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -78,8 +78,8 @@
 //            baseUrl: ""
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )

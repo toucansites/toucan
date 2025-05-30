@@ -1,5 +1,5 @@
 //
-//  SourceBundlePageLinkTestSuite.swift
+//  BuildTargetSourcePageLinkTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
@@ -14,11 +14,11 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundlePageLinkTestSuite {
+//struct BuildTargetSourcePageLinkTestSuite {
 //
 //    @Test
 //    func testPageLink() throws {
-//        let logger = Logger(label: "SourceBundlePageLinkTestSuite")
+//        let logger = Logger(label: "BuildTargetSourcePageLinkTestSuite")
 //        let target = Target.standard
 //        let now = Date()
 //
@@ -165,7 +165,7 @@
 //            config: config
 //        )
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -178,8 +178,8 @@
 //            baseUrl: "http://localhost:3000"
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )

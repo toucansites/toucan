@@ -138,8 +138,8 @@ public struct Toucan {
                 )
                 try validator.validate()
 
-                var renderer = SourceBundleRenderer(
-                    sourceBundle: buildTargetSource,
+                var renderer = BuildTargetSourceRenderer(
+                    buildTargetSource: buildTargetSource,
                     fileManager: fileManager,
                     logger: logger
                 )
@@ -155,9 +155,9 @@ public struct Toucan {
             //                let copyManager = CopyManager(
             //                    fileManager: fileManager,
             //                    sources: [
-            //                        sourceBundle.sourceConfig.currentThemeAssetsUrl,
-            //                        sourceBundle.sourceConfig.currentThemeOverrideAssetsUrl,
-            //                        sourceBundle.sourceConfig.siteAssetsUrl,
+            //                        buildTargetSource.sourceConfig.currentThemeAssetsUrl,
+            //                        buildTargetSource.sourceConfig.currentThemeOverrideAssetsUrl,
+            //                        buildTargetSource.sourceConfig.siteAssetsUrl,
             //                    ],
             //                    destination: workDirUrl
             //                )
@@ -178,7 +178,7 @@ public struct Toucan {
             //
             //                    switch result.source {
             //                    case .assetFile(let path):
-            //                        let srcUrl = sourceBundle.sourceConfig.contentsUrl
+            //                        let srcUrl = buildTargetSource.sourceConfig.contentsUrl
             //                            .appending(path: path)
             //                        try fileManager.copy(from: srcUrl, to: resultOutputUrl)
             //                    case .asset(let string), .content(let string):

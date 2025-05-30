@@ -1,5 +1,5 @@
 //
-//  SourceBundleSitemapTestSuite.swift
+//  BuildTargetSourceSitemapTestSuite.swift
 //  Toucan
 //
 //  Created by Lengyel Gábor on 2025. 03. 26..
@@ -14,11 +14,11 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundleSitemapTestSuite {
+//struct BuildTargetSourceSitemapTestSuite {
 //
 //    @Test
 //    func sitemap() throws {
-//        let logger = Logger(label: "SourceBundleSitemapTestSuite")
+//        let logger = Logger(label: "BuildTargetSourceSitemapTestSuite")
 //        let now = Date()
 //        let target = Target.standard
 //        let config = Config.defaults
@@ -92,7 +92,7 @@
 //            "sitemap": Templates.Mocks.sitemap()
 //        ]
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -105,8 +105,8 @@
 //            baseUrl: ""
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )
@@ -149,7 +149,7 @@
 //
 //    @Test
 //    func sitemapWithPagination() throws {
-//        let logger = Logger(label: "SourceBundleSitemapTestSuite")
+//        let logger = Logger(label: "BuildTargetSourceSitemapTestSuite")
 //        let now = Date()
 //        let target = Target.standard
 //        let config = Config.defaults
@@ -226,7 +226,7 @@
 //            "sitemap": Templates.Mocks.sitemap(),
 //        ]
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -239,8 +239,8 @@
 //            baseUrl: ""
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )

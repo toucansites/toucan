@@ -10,7 +10,7 @@ import ToucanSource
 
 struct AssetBehaviorExecutor {
 
-    var sourceBundle: BuildTargetSource
+    var buildTargetSource: BuildTargetSource
 
     private func getNameAndExtension(
         from path: String
@@ -65,7 +65,7 @@ struct AssetBehaviorExecutor {
     ) throws -> [PipelineResult] {
         var results: [PipelineResult] = []
 
-        let assetsPath = sourceBundle.config.contents.assets.path
+        let assetsPath = buildTargetSource.config.contents.assets.path
 
         for content in contents {
             var assetsReady: Set<String> = .init()
@@ -117,7 +117,7 @@ struct AssetBehaviorExecutor {
 
                     switch behavior.id {
                     case "compile-sass":
-                        //                        let fileUrl = sourceBundle.sourceConfig.contentsUrl
+                        //                        let fileUrl = buildTargetSource.sourceConfig.contentsUrl
                         //                            .appending(
                         //                                path: sourcePath
                         //                            )
@@ -138,7 +138,7 @@ struct AssetBehaviorExecutor {
                         )
 
                     case "minify-css":
-                        //                        let fileUrl = sourceBundle.sourceConfig.contentsUrl
+                        //                        let fileUrl = buildTargetSource.sourceConfig.contentsUrl
                         //                            .appending(
                         //                                path: sourcePath
                         //                            )

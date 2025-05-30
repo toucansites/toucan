@@ -1,5 +1,5 @@
 //
-//  SourceBundleAssetsTestSuite.swift
+//  BuildTargetSourceAssetsTestSuite.swift
 //  Toucan
 //
 //  Created by gerp83 on 2025. 04. 24..
@@ -15,7 +15,7 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundleAssetsTestSuite {
+//struct BuildTargetSourceAssetsTestSuite {
 //
 //    @Test()
 //    func testSet() async throws {
@@ -377,9 +377,9 @@
 //        _ pipelines: [Pipeline],
 //        _ rawPageContents: [RawContent],
 //        _ img: String = "<img src=\"{{page.image}}\">"
-//    ) -> SourceBundleRenderer {
+//    ) -> BuildTargetSourceRenderer {
 //
-//        let logger = Logger(label: "SourceBundleAssetsTestSuite")
+//        let logger = Logger(label: "BuildTargetSourceAssetsTestSuite")
 //        let target = Target.standard
 //        let config = Config.defaults
 //        let sourceConfig = SourceLocations(
@@ -397,7 +397,7 @@
 //            return converter.convert(rawContent: $0)
 //        }
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -409,8 +409,8 @@
 //            templates: ["page": Templates.Mocks.page(img)],
 //            baseUrl: "http://localhost:3000/"
 //        )
-//        return SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        return BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )

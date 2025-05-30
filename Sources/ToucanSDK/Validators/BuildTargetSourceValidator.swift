@@ -99,7 +99,7 @@ struct BuildTargetSourceValidator {
         try validateBlocks()
 
         /// Validate frontMatters
-        //validateFrontMatters(sourceBundle)
+        //validateFrontMatters(buildTargetSource)
     }
 
     func validateContentTypes() throws(BuildTargetSourceValidatorError) {
@@ -154,8 +154,8 @@ struct BuildTargetSourceValidator {
         // validate front matters
     }
 
-    //    func validateFrontMatters(_ sourceBundle: BuildTargetSource) {
-    //        for content in sourceBundle.contents {
+    //    func validateFrontMatters(_ buildTargetSource: BuildTargetSource) {
+    //        for content in buildTargetSource.contents {
     //            let metadata: Logger.Metadata = ["slug": "\(content.slug.value)"]
     //            let frontMatter = content.rawValue.frontMatter
     //

@@ -1,5 +1,5 @@
 //
-//  SourceBundleRenderer.swift
+//  BuildTargetSourceRenderer.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 25..
@@ -14,15 +14,15 @@ import ToucanCore
 import ToucanSource
 import ToucanSerialization
 
-/// Responsible for rendering the entire site bundle based on the `SourceBundle` configuration.
+/// Responsible for rendering the entire site bundle based on the `BuildTargetSource` configuration.
 ///
 /// It processes content pipelines using the configured engine (Mustache, JSON, etc.),
 /// resolves content and site-level context, and outputs rendered content using templates
 /// or encoded formats.
-public struct SourceBundleRenderer {
+public struct BuildTargetSourceRenderer {
 
     /// Site configuration + all raw content
-    let sourceBundle: BuildTargetSource
+    let buildTargetSource: BuildTargetSource
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
     /// Date formatters used across pipelines
@@ -37,39 +37,24 @@ public struct SourceBundleRenderer {
     /// Initializes a renderer from a source bundle.
     ///
     /// - Parameters:
-    ///   - sourceBundle: The structured bundle containing settings, pipelines, and contents.
+    ///   - buildTargetSource: The structured bundle containing settings, pipelines, and contents.
     ///   - generatorInfo: Info about the content generator (defaults to `.current`).
     ///   - fileManager: Filesystem API for use during rendering.
     ///   - logger: Logger for reporting issues or metrics.
     public init(
-        sourceBundle: BuildTargetSource,
+        buildTargetSource: BuildTargetSource,
         generatorInfo: GeneratorInfo = .current,
         fileManager: FileManagerKit,
         logger: Logger
     ) {
-        self.sourceBundle = sourceBundle
+        self.buildTargetSource = buildTargetSource
         self.generatorInfo = generatorInfo
         self.fileManager = fileManager
         self.logger = logger
-        //        self.formatters = sourceBundle.prepareFormatters()
+        //        self.formatters = buildTargetSource.prepareFormatters()
     }
 
     // MARK: -
-
-    /// Returns the site context based on the source bundle settings and the generator info
-    private func getSiteContext(
-        for now: TimeInterval
-    ) -> [String: AnyCodable] {
-        sourceBundle.settings.values.recursivelyMerged(
-            with: [
-                "baseUrl": .init(sourceBundle.target.url),
-                //                "locale": .init(sourceBundle.target.locale),
-                //                "timeZone": .init(sourceBundle.target.timeZone),
-                //                "generation": .init(now.toDateFormats(formatters: formatters)),
-                "generator": .init(generatorInfo),
-            ]
-        )
-    }
 
     /// Returns the last content update based on the pipeline config
     private func getLastContentUpdate(
@@ -113,21 +98,38 @@ public struct SourceBundleRenderer {
         now: Date
     ) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
-        var siteContext = getSiteContext(for: now)
-        var results: [PipelineResult] = []
-
-        let inputDateFormatter = ToucanInputDateFormatter(
-            dateConfig: sourceBundle.config.dataTypes.date,
-            logger: logger
-        )
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let executor = AssetBehaviorExecutor(sourceBundle: sourceBundle)
+
+        let inputDateFormatter = ToucanInputDateFormatter(
+            dateConfig: buildTargetSource.config.dataTypes.date,
+            logger: logger
+        )
+
+        var siteContext = buildTargetSource.settings.values.recursivelyMerged(
+            with: [
+                "baseUrl": .init(buildTargetSource.target.url)
+            ]
+        )
+
+        // TODO: This should be in a .toucaninfo file or similar
+        siteContext["generator"] = .init(generatorInfo)
+        siteContext["generatedAt"] = .init(
+            inputDateFormatter.string(
+                from: .init(
+                    timeIntervalSince1970: now
+                )
+            )
+        )
+
+        let executor = AssetBehaviorExecutor(
+            buildTargetSource: buildTargetSource
+        )
 
         let contentTypeResolver = ContentTypeResolver(
-            types: sourceBundle.contentDefinitions,
-            pipelines: sourceBundle.pipelines
+            types: buildTargetSource.contentDefinitions,
+            pipelines: buildTargetSource.pipelines
         )
 
         let contentResolver = ContentResolver(
@@ -138,19 +140,28 @@ public struct SourceBundleRenderer {
             logger: logger
         )
 
-        for pipeline in sourceBundle.pipelines {
+        let baseContents = try contentResolver.convert(
+            rawContents: buildTargetSource.rawContents
+        )
 
-            let dateFormatter = ToucanOutputDateFormatter(
-                dateConfig: sourceBundle.config.dataTypes.date,
-                pipelineDateConfig: pipeline.dataTypes.date,
-                logger: logger
+        var results: [PipelineResult] = []
+        for pipeline in buildTargetSource.pipelines {
+
+            let filteredContents = contentResolver.apply(
+                filterRules: pipeline.contentTypes.filterRules,
+                to: baseContents,
+                now: now
+            )
+            let finalContents = contentResolver.apply(
+                iterators: pipeline.iterators,
+                to: filteredContents,
+                now: now
             )
 
-            let contents = try contentResolver.resolve(
-                rawContents: sourceBundle.rawContents,
-                filterRules: pipeline.contentTypes.filterRules,
-                iterators: pipeline.iterators,
-                now: now
+            let dateFormatter = ToucanOutputDateFormatter(
+                dateConfig: buildTargetSource.config.dataTypes.date,
+                pipelineDateConfig: pipeline.dataTypes.date,
+                logger: logger
             )
 
             //
@@ -161,56 +172,54 @@ public struct SourceBundleRenderer {
             //            results.append(contentsOf: assetResults)
             //
             //            let assetPropertyResolver = AssetPropertyResolver(
-            //                contentsUrl: sourceBundle.sourceConfig.contentsUrl,
-            //                assetsPath: sourceBundle.sourceConfig.config.contents.assets
+            //                contentsUrl: buildTargetSource.sourceConfig.contentsUrl,
+            //                assetsPath: buildTargetSource.sourceConfig.config.contents.assets
             //                    .path,
-            //                baseUrl: sourceBundle.baseUrl,
+            //                baseUrl: buildTargetSource.baseUrl,
             //                config: pipeline.assets
             //            )
             //
             //            let finalContents = try assetPropertyResolver.resolve(contents)
-            //
-            //            let lastUpdate =
-            //                getLastContentUpdate(
-            //                    contents: contents,
-            //                    pipeline: pipeline,
-            //                    now: now
-            //                ) ?? now
-            //
-            //            let lastUpdateContext = lastUpdate.toDateFormats(
-            //                formatters: allFormatters
-            //            )
-            //            siteContext["lastUpdate"] = .init(lastUpdateContext)
-            //
-            //            let contextBundles = try getContextBundles(
-            //                contents: finalContents,
-            //                context: [
-            //                    "site": .init(siteContext)
-            //                ],
-            //                pipeline: pipeline,
-            //                now: now
-            //            )
-            //
-            //            switch pipeline.engine.id {
-            //            case "json", "context":
-            //                let renderer = ContextBundleToJSONRenderer(
-            //                    pipeline: pipeline,
-            //                    logger: logger
-            //                )
-            //                results += renderer.render(contextBundles)
-            //
-            //            case "mustache":
-            //                let renderer = try ContextBundleToHTMLRenderer(
-            //                    pipeline: pipeline,
-            //                    templates: sourceBundle.templates,
-            //                    logger: logger
-            //                )
-            //                results += renderer.render(contextBundles)
-            //            default:
-            //                logger.error(
-            //                    "Unknown renderer engine `\(pipeline.engine.id)`"
-            //                )
-            //            }
+
+            let lastUpdate =
+                getLastContentUpdate(
+                    contents: finalContents,
+                    pipeline: pipeline,
+                    now: now
+                ) ?? now
+
+            let lastUpdateContext = dateFormatter.format(lastUpdate)
+            siteContext["lastUpdate"] = .init(lastUpdateContext)
+
+            let contextBundles = try getContextBundles(
+                contents: finalContents,
+                context: [
+                    "site": .init(siteContext)
+                ],
+                pipeline: pipeline,
+                now: now
+            )
+
+            switch pipeline.engine.id {
+            case "json", "context":
+                let renderer = ContextBundleToJSONRenderer(
+                    pipeline: pipeline,
+                    logger: logger
+                )
+                results += renderer.render(contextBundles)
+
+            case "mustache":
+                let renderer = try ContextBundleToHTMLRenderer(
+                    pipeline: pipeline,
+                    templates: [:],
+                    logger: logger
+                )
+                results += renderer.render(contextBundles)
+            default:
+                logger.error(
+                    "Unknown renderer engine `\(pipeline.engine.id)`"
+                )
+            }
         }
         return results
     }
@@ -370,7 +379,7 @@ public struct SourceBundleRenderer {
         var result: [String: AnyCodable] = [:]
 
         //        let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
-        //            sourceBundle.target.dateFormatter($0)
+        //            buildTargetSource.target.dateFormatter($0)
         //        }
         //        let allFormatters = formatters.recursivelyMerged(
         //            with: pipelineFormatters
@@ -415,7 +424,7 @@ public struct SourceBundleRenderer {
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
                 ""
-                //                content.slug.permalink(baseUrl: sourceBundle.target.url)
+                //                content.slug.permalink(baseUrl: buildTargetSource.target.url)
             )
             //            result["lastUpdate"] = .init(
             //                content.rawValue.lastModificationDate.toDateFormats(
@@ -434,11 +443,11 @@ public struct SourceBundleRenderer {
                         customBlockDirectives: []
                     ),
                     outline: .init(
-                        levels: sourceBundle.config.renderer
+                        levels: buildTargetSource.config.renderer
                             .outlineLevels
                     ),
                     readingTime: .init(
-                        wordsPerMinute: sourceBundle.config
+                        wordsPerMinute: buildTargetSource.config
                             .renderer.wordsPerMinute
                     ),
                     transformerPipeline: transformers.map {
@@ -449,7 +458,7 @@ public struct SourceBundleRenderer {
                             isMarkdownResult: $0.isMarkdownResult
                         )
                     },
-                    paragraphStyles: sourceBundle.config.renderer
+                    paragraphStyles: buildTargetSource.config.renderer
                         .paragraphStyles.styles
                 ),
 
@@ -460,8 +469,8 @@ public struct SourceBundleRenderer {
             let contents = renderer.render(
                 content: content.rawValue.markdown.contents,
                 slug: content.slug.value,
-                assetsPath: sourceBundle.config.contents.assets.path,
-                baseUrl: "sourceBundle.baseUrl"
+                assetsPath: buildTargetSource.config.contents.assets.path,
+                baseUrl: "buildTargetSource.baseUrl"
             )
 
             result["contents"] = [

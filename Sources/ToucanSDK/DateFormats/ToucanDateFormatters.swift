@@ -10,62 +10,61 @@ import ToucanSource
 import Logging
 import ToucanCore
 
-/*
- target:
-     dev:
-        input: ./src
-        output: ./docs
-        config: ./src/config.dev.yml => auto lookup like this?
-    -> default looks up for config.yml
-
-     live:
-        config: ./src/config.live.yml
-
-    config.dev.yml:
-        url: http://localhost:3000/
-
-        # output date formats basis
-
-        date:
-           input:
-              # input date formats basis
-              locale: en-US
-              timezone: Americas/Los_Angeles
-              format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
-           output:
-              locale: en-US
-              timezone: Americas/Los_Angeles
-           formats:
-              year:
-                 format: "y"
-                 locale: hu-HU
-                 timezone: Europe/Budapest
-
-     pipeline -> overrides config completely
-        date:
-            input:
-                locale: ???
-                timezone: ???
-                format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
-            output:
-                locale: en-US
-                timezone: Americas/Los_Angeles
-            formats:
-               year:
-                 format: "y"
-                 locale: ???
-                 timezone: ???
-
-    # content type
-        post
-            publication:
-                type: date
-                config: # input
-                    format:
-                    locale:
-                    timeZone:
-
- */
+/// ```
+/// target:
+///     dev:
+///        input: ./src
+///        output: ./docs
+///        config: ./src/config.dev.yml => auto lookup like this?
+///    -> default looks up for config.yml
+///
+///     live:
+///        config: ./src/config.live.yml
+///
+///    config.dev.yml:
+///        url: http://localhost:3000/
+///
+///        # output date formats basis
+///
+///        date:
+///           input:
+///              # input date formats basis
+///              locale: en-US
+///              timezone: Americas/Los_Angeles
+///              format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+///           output:
+///              locale: en-US
+///              timezone: Americas/Los_Angeles
+///           formats:
+///              year:
+///                 format: "y"
+///                 locale: hu-HU
+///                 timezone: Europe/Budapest
+///
+///     pipeline -> overrides config completely
+///        date:
+///            input:
+///                locale: ???
+///                timezone: ???
+///                format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+///            output:
+///                locale: en-US
+///                timezone: Americas/Los_Angeles
+///            formats:
+///               year:
+///                 format: "y"
+///                 locale: ???
+///                 timezone: ???
+///
+///    # content type
+///        post
+///            publication:
+///                type: date
+///                config: # input
+///                    format:
+///                    locale:
+///                    timeZone:
+/// ```
 
 /// Extension to configure `DateFormatter` with localization and config options.
 fileprivate extension DateFormatter {
@@ -259,7 +258,7 @@ public struct ToucanOutputDateFormatter {
     /// - Parameter date: The `Date` to format.
     /// - Returns: A `DateContext` containing formatted strings and timestamp.
     public func format(
-        date: Date
+        _ date: Date
     ) -> DateContext {
         .init(
             date: .init(
@@ -285,8 +284,8 @@ public struct ToucanOutputDateFormatter {
     /// - Parameter timestamp: The time interval (seconds since 1970).
     /// - Returns: A `DateContext` with formatted outputs.
     public func format(
-        timestamp: TimeInterval
+        _ timestamp: TimeInterval
     ) -> DateContext {
-        format(date: .init(timeIntervalSince1970: timestamp))
+        format(.init(timeIntervalSince1970: timestamp))
     }
 }

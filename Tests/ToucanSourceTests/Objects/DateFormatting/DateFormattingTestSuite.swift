@@ -1,6 +1,6 @@
 //
 //  DateFormattingTestSuite.swift
-//  toucan
+//  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 28..
 //

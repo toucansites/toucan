@@ -1,5 +1,5 @@
 //
-//  SourceBundleErrorTests.swift
+//  BuildTargetSourceErrorTests.swift
 //  Toucan
 //
 //  Created by gerp83 on 2025. 04. 08..
@@ -14,11 +14,11 @@
 //@testable import ToucanSDK
 //
 //@Suite
-//struct SourceBundleErrorTests {
+//struct BuildTargetSourceErrorTests {
 //
 //    @Test()
 //    func testWrongRendererEngine() async throws {
-//        let logger = Logger(label: "SourceBundleErrorTests")
+//        let logger = Logger(label: "BuildTargetSourceErrorTests")
 //        let target = Target.standard
 //        let config = Config.defaults
 //        let sourceConfig = SourceLocations(
@@ -64,7 +64,7 @@
 //
 //        let contents = pageContents
 //
-//        let sourceBundle = BuildTargetSource(
+//        let buildTargetSource = BuildTargetSource(
 //            location: .init(filePath: ""),
 //            target: target,
 //            config: config,
@@ -77,8 +77,8 @@
 //            baseUrl: ""
 //        )
 //
-//        var renderer = SourceBundleRenderer(
-//            sourceBundle: sourceBundle,
+//        var renderer = BuildTargetSourceRenderer(
+//            buildTargetSource: buildTargetSource,
 //            fileManager: FileManager.default,
 //            logger: logger
 //        )
