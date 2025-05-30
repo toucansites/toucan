@@ -292,6 +292,7 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
+                    "type": "page",
                     "title": "Post pagination page",
                     "description": "Post pagination page description",
                 ],

@@ -115,14 +115,19 @@ public struct SourceBundleRenderer {
         let now = now.timeIntervalSince1970
         var siteContext = getSiteContext(for: now)
         var results: [PipelineResult] = []
-        let iteratorResolver = ContentIteratorResolver(
-            baseUrl: sourceBundle.target.url,
-            now: now
-        )
+        //        let iteratorResolver = ContentIteratorResolver(
+        //            baseUrl: sourceBundle.target.url,
+        //            now: now
+        //        )
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
         let executor = AssetBehaviorExecutor(sourceBundle: sourceBundle)
+
+        let contentTypeResolver = ContentTypeResolver(
+            types: sourceBundle.contentDefinitions,
+            pipelines: sourceBundle.pipelines
+        )
 
         for pipeline in sourceBundle.pipelines {
 
@@ -134,6 +139,7 @@ public struct SourceBundleRenderer {
 
             let contentConverter = ContentConverter(
                 buildTargetSource: sourceBundle,
+                contentTypeResolver: contentTypeResolver,
                 encoder: encoder,
                 decoder: decoder,
                 dateFormatter: dateFormatter,
@@ -141,10 +147,6 @@ public struct SourceBundleRenderer {
             )
 
             let contents = try contentConverter.convertTargetContents()
-
-            let filter = ContentFilter(
-                filterRules: pipeline.contentTypes.filterRules
-            )
 
             //            let filteredContents = filter.applyRules(
             //                contents: sourceBundle.contents,

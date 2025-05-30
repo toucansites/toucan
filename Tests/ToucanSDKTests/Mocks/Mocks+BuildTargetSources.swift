@@ -8,16 +8,41 @@
 import Foundation
 import ToucanSDK
 import ToucanSource
+import Testing
 
 extension Mocks {
 
     static func buildTargetSource(
         location: URL = .init(filePath: ""),
-        now: Date = .init(),
+        now: Date,
         target: Target = .standard,
         config: Config = .defaults,
         settings: Settings = .defaults
     ) -> BuildTargetSource {
+
+        let formatter = ToucanDateFormatter(
+            dateConfig: config.dataTypes.date
+        )
+
+        let postType = Mocks.ContentDefinitions.post()
+        guard
+            case let .date(
+                publicationConfig
+            ) = postType.properties["publication"]?.type
+        else {
+            fatalError(
+                "Mock post type issue: publication is not a date property."
+            )
+        }
+        guard
+            case let .date(
+                expirationConfig
+            ) = postType.properties["expiration"]?.type
+        else {
+            fatalError(
+                "Mock post type issue: expiration is not a date property."
+            )
+        }
 
         return .init(
             location: location,
@@ -34,7 +59,7 @@ extension Mocks {
             ],
             contentDefinitions: [
                 Mocks.ContentDefinitions.page(),
-                Mocks.ContentDefinitions.post(),
+                postType,
                 Mocks.ContentDefinitions.author(),
                 Mocks.ContentDefinitions.tag(),
                 Mocks.ContentDefinitions.category(),
@@ -66,8 +91,16 @@ extension Mocks {
                 Mocks.RawContents.post(
                     id: 1,
                     now: now,
-                    publication: "",
-                    expiration: "",
+                    // near past
+                    publication: formatter.string(
+                        from: now.addingTimeInterval(-86_400),
+                        using: publicationConfig
+                    ),
+                    // near future
+                    expiration: formatter.string(
+                        from: now.addingTimeInterval(86_400),
+                        using: expirationConfig
+                    ),
                     featured: false,
                     authorIds: [1, 2],
                     tagIds: [1, 2]
@@ -75,8 +108,16 @@ extension Mocks {
                 Mocks.RawContents.post(
                     id: 2,
                     now: now,
-                    publication: "",
-                    expiration: "",
+                    // past
+                    publication: formatter.string(
+                        from: now.addingTimeInterval(-86_400 * 2),
+                        using: publicationConfig
+                    ),
+                    // future
+                    expiration: formatter.string(
+                        from: now.addingTimeInterval(86_400 * 2),
+                        using: expirationConfig
+                    ),
                     featured: true,
                     authorIds: [1, 2, 3],
                     tagIds: [2]
@@ -84,8 +125,16 @@ extension Mocks {
                 Mocks.RawContents.post(
                     id: 3,
                     now: now,
-                    publication: "",
-                    expiration: "",
+                    // distant past
+                    publication: formatter.string(
+                        from: now.addingTimeInterval(-86_400 * 3),
+                        using: publicationConfig
+                    ),
+                    // distant future
+                    expiration: formatter.string(
+                        from: now.addingTimeInterval(86_400 * 3),
+                        using: expirationConfig
+                    ),
                     featured: false,
                     authorIds: [2, 3],
                     tagIds: [2, 3]

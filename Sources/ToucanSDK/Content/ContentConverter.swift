@@ -37,11 +37,13 @@ fileprivate extension String {
 
 enum ContentConverterError: ToucanError {
 
-    case missingContentType(String)
+    case contentType(ContentTypeResolverError)
     case unknown(Error)
 
     var underlyingErrors: [any Error] {
         switch self {
+        case .contentType(let error):
+            return [error]
         case .unknown(let error):
             return [error]
         default:
@@ -51,8 +53,8 @@ enum ContentConverterError: ToucanError {
 
     var logMessage: String {
         switch self {
-        case .missingContentType:
-            return "Missing content type."
+        case .contentType(let error):
+            return "Content type related error: \(error.logMessage)"
         case .unknown(let error):
             return error.localizedDescription
         }
@@ -60,8 +62,8 @@ enum ContentConverterError: ToucanError {
 
     var userFriendlyMessage: String {
         switch self {
-        case .missingContentType:
-            return "Missing content type."
+        case .contentType(let error):
+            return "Content type related error: \(error.userFriendlyMessage)"
         case .unknown:
             return "Unknown content conversion error."
         }
@@ -70,37 +72,33 @@ enum ContentConverterError: ToucanError {
 
 struct ContentConverter {
 
-    var buildTargetSource: BuildTargetSource
+    var contentTypeResolver: ContentTypeResolver
     var encoder: ToucanEncoder
     var decoder: ToucanDecoder
     var dateFormatter: ToucanDateFormatter
     var logger: Logger
-    private var contentTypes: [ContentDefinition]
 
     init(
-        buildTargetSource: BuildTargetSource,
+        contentTypeResolver: ContentTypeResolver,
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
         dateFormatter: ToucanDateFormatter,
         logger: Logger = .subsystem("content-converter")
     ) {
-        self.buildTargetSource = buildTargetSource
+        self.contentTypeResolver = contentTypeResolver
         self.encoder = encoder
         self.decoder = decoder
         self.dateFormatter = dateFormatter
         self.logger = logger
-
-        let virtualTypes = buildTargetSource.pipelines.compactMap {
-            $0.definesType ? ContentDefinition(id: $0.id) : nil
-        }
-        self.contentTypes =
-            (buildTargetSource.contentDefinitions + virtualTypes)
-            .sorted { $0.id < $1.id }
     }
 
-    func convertTargetContents() throws(ContentConverterError) -> [Content] {
+    // MARK: - conversion
+
+    func convertTargetContents(
+        rawContents: [RawContent]
+    ) throws(ContentConverterError) -> [Content] {
         do {
-            return try buildTargetSource.rawContents.map {
+            return try rawContents.map {
                 try convert(rawContent: $0)
             }
         }
@@ -112,7 +110,24 @@ struct ContentConverter {
         }
     }
 
-    // MARK: -
+    // MARK: - error helper
+
+    func getContentType(
+        for origin: Origin,
+        using id: String?
+    ) throws(ContentConverterError) -> ContentDefinition {
+        do {
+            return try contentTypeResolver.getContentType(
+                for: origin,
+                using: id
+            )
+        }
+        catch {
+            throw .contentType(error)
+        }
+    }
+
+    // MARK: - conversion helpers
 
     // TODO: throw instead of warning...
     func convert(
@@ -152,6 +167,9 @@ struct ContentConverter {
     func convert(
         rawContent: RawContent
     ) throws(ContentConverterError) -> Content {
+
+        //        logger.debug("Converting raw content")
+
         let typeId = rawContent.markdown.frontMatter.string("type")
 
         let contentType = try getContentType(
@@ -168,6 +186,7 @@ struct ContentConverter {
 
             let rawValue = rawContent.markdown.frontMatter[key]
 
+            //            logger.debug("Converting property")
             properties[key] = convert(
                 property: property,
                 rawValue: rawValue,
@@ -247,34 +266,205 @@ struct ContentConverter {
         )
     }
 
-    func getContentType(
-        for origin: Origin,
-        using id: String?
-    ) throws(ContentConverterError) -> ContentDefinition {
+    // MARK: - content type detection
 
-        if let id {
-            guard
-                let result = contentTypes.first(where: { $0.id == id })
+    // MARK: - filter
+
+    /// Applies the filtering rules to the provided content items.
+    ///
+    /// - Parameters:
+    ///   - contents: The list of `Content` items to filter.
+    ///   - filterRules: A dictionary mapping content type identifiers to filtering conditions.
+    ///   - now: The current timestamp used for time-based filtering.
+    /// - Returns: A new list containing only the filtered content items.
+    func applyRules(
+        contents: [Content],
+        filterRules: [String: Condition],
+        now: TimeInterval
+    ) -> [Content] {
+        let groups = Dictionary(grouping: contents, by: { $0.definition.id })
+
+        var result: [Content] = []
+        for (id, contents) in groups {
+            if let condition = filterRules[id] ?? filterRules["*"] {
+                let items = contents.run(
+                    query: .init(
+                        contentType: id,
+                        filter: condition
+                    ),
+                    now: now
+                )
+                result.append(contentsOf: items)
+            }
             else {
-                //                logger.info("Explicit content type (\(explicitType)) not found")
-                throw .missingContentType(id)
+                result.append(contentsOf: contents)
             }
-            return result
         }
+        return result
+    }
 
-        if let type = contentTypes.first(
-            where: { type in
-                type.paths.contains { origin.path.hasPrefix($0) }
+    // MARK: - iterators
+
+    /// Extracts a dynamic iterator identifier from a slug value containing
+    /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
+    ///
+    /// - Returns: The identifier inside `{{...}}`, or `nil` if not found.
+    private func extractIteratorId(from slug: String) -> String? {
+        guard
+            let startRange = slug.range(of: "{{"),
+            let endRange = slug.range(
+                of: "}}",
+                range: startRange.upperBound..<slug.endIndex
+            )
+        else {
+            return nil
+        }
+        return .init(slug[startRange.upperBound..<endRange.lowerBound])
+    }
+
+    func resolve(
+        contents: [Content],
+        using pipeline: Pipeline,
+        now: TimeInterval
+    ) -> [Content] {
+        var finalContents: [Content] = []
+
+        for content in contents {
+            if let iteratorId = extractIteratorId(from: content.slug.value) {
+                guard
+                    let query = pipeline.iterators[iteratorId]
+                else {
+                    continue
+                }
+
+                let countQuery = Query(
+                    contentType: query.contentType,
+                    scope: query.scope,
+                    limit: nil,
+                    offset: nil,
+                    filter: query.filter,
+                    orderBy: query.orderBy
+                )
+
+                let total = contents.run(query: countQuery, now: now).count
+                let limit = max(1, query.limit ?? 10)
+                let numberOfPages = (total + limit - 1) / limit
+
+                for i in 0..<numberOfPages {
+                    let offset = i * limit
+                    let currentPageIndex = i + 1
+
+                    var alteredContent = content
+                    rewrite(
+                        iteratorId: iteratorId,
+                        pageIndex: currentPageIndex,
+                        &alteredContent.id
+                    )
+                    rewrite(
+                        iteratorId: iteratorId,
+                        pageIndex: currentPageIndex,
+                        &alteredContent.slug.value
+                    )
+                    rewrite(
+                        number: currentPageIndex,
+                        total: numberOfPages,
+                        &alteredContent.properties
+                    )
+                    rewrite(
+                        number: currentPageIndex,
+                        total: numberOfPages,
+                        &alteredContent.userDefined
+                    )
+
+                    if !alteredContent.rawValue.markdown.contents.isEmpty {
+                        alteredContent.rawValue.markdown.contents = replace(
+                            in: alteredContent.rawValue.markdown.contents,
+                            number: currentPageIndex,
+                            total: numberOfPages
+                        )
+                    }
+
+                    //                    let links = (0..<numberOfPages)
+                    //                        .map { i in
+                    //                            let pageIndex = i + 1
+                    //                            let permalink = content.slug.permalink(
+                    //                                baseUrl: baseUrl
+                    //                            )
+                    //                            return IteratorInfo.Link(
+                    //                                number: pageIndex,
+                    //                                permalink: permalink.replacingOccurrences(
+                    //                                    ["{{\(iteratorId)}}": String(pageIndex)]),
+                    //                                isCurrent: pageIndex == currentPageIndex
+                    //                            )
+                    //                        }
+
+                    let items = contents.run(
+                        query: .init(
+                            contentType: query.contentType,
+                            limit: limit,
+                            offset: offset,
+                            filter: query.filter,
+                            orderBy: query.orderBy
+                        ),
+                        now: now
+                    )
+
+                    alteredContent.iteratorInfo = .init(
+                        current: currentPageIndex,
+                        total: numberOfPages,
+                        limit: limit,
+                        items: items,
+                        links: [],
+                        scope: query.scope
+                    )
+
+                    finalContents.append(alteredContent)
+                }
+
             }
-        ) {
-            return type
+            else {
+                finalContents.append(content)
+            }
         }
+        return finalContents
+    }
 
-        let results = contentTypes.filter { $0.default }
-        precondition(
-            !results.isEmpty,
-            "Don't forget to validate build target first."
-        )
-        return results[0]
+    private func rewrite(
+        iteratorId: String,
+        pageIndex: Int,
+        _ value: inout String
+    ) {
+        value = value.replacingOccurrences([
+            "{{\(iteratorId)}}": String(pageIndex)
+        ])
+    }
+
+    private func rewrite(
+        number: Int,
+        total: Int,
+        _ array: inout [String: AnyCodable]
+    ) {
+        for (key, _) in array {
+            if let stringValue = array[key]?.stringValue() {
+                array[key] = .init(
+                    replace(
+                        in: stringValue,
+                        number: number,
+                        total: total
+                    )
+                )
+            }
+        }
+    }
+
+    private func replace(
+        in value: String,
+        number: Int,
+        total: Int
+    ) -> String {
+        value.replacingOccurrences([
+            "{{number}}": String(number),
+            "{{total}}": String(total),
+        ])
     }
 }

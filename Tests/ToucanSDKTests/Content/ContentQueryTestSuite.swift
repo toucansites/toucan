@@ -21,13 +21,16 @@ struct ContentQueryTestSuite {
 
         let converter = ContentConverter(
             buildTargetSource: buildTargetSource,
+            contentTypeResolver: .init(
+                types: buildTargetSource.contentDefinitions,
+                pipelines: buildTargetSource.pipelines
+            ),
             encoder: encoder,
             decoder: decoder,
             dateFormatter: .init(
                 dateConfig: buildTargetSource.config.dataTypes.date
             )
         )
-
         return try converter.convertTargetContents()
     }
 
@@ -776,10 +779,11 @@ struct ContentQueryTestSuite {
     func nextPost() async throws {
         let now = Date()
         let contents = try getMockContents(now: now)
-        let diff = Double(5) * -86_400
-        let pastDate = now.addingTimeInterval(diff)
-
-        print(contents.filter { $0.definition.id == "post" }.map(\.id))
+        let pastDate =
+            now
+            .addingTimeInterval(-86_400 * 2)
+            // TODO: double check this
+            .addingTimeInterval(-1)
 
         let query1 = Query(
             contentType: "post",
@@ -799,7 +803,15 @@ struct ContentQueryTestSuite {
             query: query1,
             now: now.timeIntervalSince1970
         )
-        try #require(results1.count == 5)
+
+        try #require(results1.count == 2)
+
+        #expect(
+            results1[0].properties["title"]?.value(as: String.self) == "Post #2"
+        )
+        #expect(
+            results1[1].properties["title"]?.value(as: String.self) == "Post #1"
+        )
 
         let query = Query(
             contentType: "post",
@@ -812,19 +824,21 @@ struct ContentQueryTestSuite {
             orderBy: [
                 .init(
                     key: "publication",
-                    direction: .asc
+                    direction: .desc
                 )
             ]
         )
 
-        let results = contents.run(
+        let results2 = contents.run(
             query: query,
             now: now.timeIntervalSince1970
         )
-        //        try #require(results.count == 1)
-        //        #expect(
-        //            results[0].properties["title"]?.value(as: String.self) == "Post #6"
-        //        )
+
+        try #require(results2.count == 1)
+
+        #expect(
+            results1[0].properties["title"]?.value(as: String.self) == "Post #2"
+        )
     }
 
     @Test
@@ -894,31 +908,4 @@ struct ContentQueryTestSuite {
         )
         try #require(results1.count == 3)
     }
-
-    //    @Test
-    //    func iterators() async throws {
-    //        let now = Date()
-    //        let contents = try getMockContents(now: now)
-    //
-    //        let query = Query(
-    //            contentType: "page",
-    //            filter: .field(
-    //                key: "iterator",
-    //                operator: .equals,
-    //                value: true
-    //            )
-    //        )
-    //
-    //        let resolver = ContentIteratorResolver(
-    //            baseUrl: "http://localhost:3000",
-    //            now: now.timeIntervalSince1970
-    //        )
-    //        let contents = resolver.resolve(
-    //            contents: contents,
-    //            using: Mocks.Pipelines.html()
-    //        )
-    //        let results = contents.run(query: query, now: now.timeIntervalSince1970)
-    //        try #require(results.count == 5)
-    //    }
-
 }
