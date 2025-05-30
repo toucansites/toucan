@@ -1,5 +1,5 @@
 //
-//  ContentresolverTestSuite.swift
+//  ContentResolverTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
@@ -14,7 +14,7 @@ import ToucanSerialization
 @testable import ToucanSDK
 
 @Suite
-struct ContentresolverTestSuite {
+struct ContentResolverTestSuite {
 
     @Test
     func contentBasicConversion() throws {
@@ -36,7 +36,7 @@ struct ContentresolverTestSuite {
             dateFormatter: dateFormatter
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(!targetContents.isEmpty)
@@ -136,7 +136,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -196,7 +196,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -251,7 +251,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -348,7 +348,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -437,7 +437,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -511,7 +511,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -579,7 +579,7 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convertTargetContents(
+        let targetContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         #expect(targetContents.count == 1)
@@ -618,12 +618,11 @@ struct ContentresolverTestSuite {
             buildTargetSource: buildTargetSource,
             now: now
         )
-        let contents = try resolver.convertTargetContents(
+        let contents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
 
-        let result = resolver.applyRules(
-            contents: contents,
+        let result = resolver.apply(
             filterRules: [
                 "*": .or(
                     [
@@ -640,6 +639,7 @@ struct ContentresolverTestSuite {
                     ]
                 )
             ],
+            to: contents,
             now: now.timeIntervalSince1970
         )
 
@@ -688,12 +688,11 @@ struct ContentresolverTestSuite {
             buildTargetSource: buildTargetSource,
             now: now
         )
-        let contents = try resolver.convertTargetContents(
+        let contents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
 
-        let result = resolver.applyRules(
-            contents: contents,
+        let result = resolver.apply(
             filterRules: [
                 "*": .or(
                     [
@@ -715,6 +714,7 @@ struct ContentresolverTestSuite {
                     value: true
                 ),
             ],
+            to: contents,
             now: now.timeIntervalSince1970
         )
 
@@ -771,13 +771,13 @@ struct ContentresolverTestSuite {
             buildTargetSource: buildTargetSource,
             now: now
         )
-        let contents = try resolver.convertTargetContents(
+        let contents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
 
-        let result = resolver.applyRules(
-            contents: contents,
+        let result = resolver.apply(
             filterRules: [:],
+            to: contents,
             now: now.timeIntervalSince1970
         )
 
@@ -885,12 +885,11 @@ struct ContentresolverTestSuite {
             dateFormatter: dateFormatter
         )
 
-        let contents = try resolver.convertTargetContents(
+        let contents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
 
-        let result = resolver.applyRules(
-            contents: contents,
+        let result = resolver.apply(
             filterRules: [
                 "post": .and(
                     [
@@ -907,6 +906,7 @@ struct ContentresolverTestSuite {
                     ]
                 )
             ],
+            to: contents,
             now: now.timeIntervalSince1970
         )
         #expect(result.count == 1)
@@ -979,12 +979,11 @@ struct ContentresolverTestSuite {
             )
         )
 
-        let contents = try resolver.convertTargetContents(
+        let contents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
 
-        let result = resolver.applyRules(
-            contents: contents,
+        let result = resolver.apply(
             filterRules: [
                 "*": .field(
                     key: "draft",
@@ -992,6 +991,7 @@ struct ContentresolverTestSuite {
                     value: false
                 )
             ],
+            to: contents,
             now: now.timeIntervalSince1970
         )
         #expect(result.count == 1)
@@ -1020,19 +1020,16 @@ struct ContentresolverTestSuite {
             buildTargetSource: buildTargetSource,
             now: now
         )
-        let contents = try resolver.convertTargetContents(
+        let baseContents = try resolver.convert(
             rawContents: buildTargetSource.rawContents
         )
         let pipeline = Mocks.Pipelines.html()
 
-        //        let resolver = ContentIteratorResolver(
-        //            baseUrl: "http://localhost:3000",
-        //            now: now.timeIntervalSince1970
-        //        )
-        //        let contents = resolver.resolve(
-        //            contents: baseContents,
-        //            using: pipeline
-        //        )
+        let contents = resolver.apply(
+            iterators: pipeline.iterators,
+            to: baseContents,
+            now: now.timeIntervalSince1970
+        )
 
         let query = Query(
             contentType: "page",

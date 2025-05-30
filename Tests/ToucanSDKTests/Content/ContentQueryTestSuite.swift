@@ -30,7 +30,7 @@ struct ContentQueryTestSuite {
                 dateConfig: buildTargetSource.config.dataTypes.date
             )
         )
-        return try converter.convertTargetContents(
+        return try converter.convert(
             rawContents: buildTargetSource.rawContents
         )
     }

@@ -27,7 +27,6 @@ extension Mocks.Pipelines {
             ],
             dataTypes: .init(
                 date: .init(
-                    input: .defaults,
                     output: .defaults,
                     formats: [
                         "rss": .init(
@@ -235,7 +234,6 @@ extension Mocks.Pipelines {
             queries: [:],
             dataTypes: .init(
                 date: .init(
-                    input: .defaults,
                     output: .defaults,
                     formats: [
                         "rss": .init(
@@ -318,7 +316,6 @@ extension Mocks.Pipelines {
             ],
             dataTypes: .init(
                 date: .init(
-                    input: .defaults,
                     output: .defaults,
                     formats: [
                         "sitemap": .init(

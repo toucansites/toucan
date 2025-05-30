@@ -90,9 +90,35 @@ struct ContentResolver {
         self.logger = logger
     }
 
+    func resolve(
+        rawContents: [RawContent],
+        filterRules: [String: Condition],
+        iterators: [String: Query],
+        now: TimeInterval
+    ) throws(ContentResolverError) -> [Content] {
+
+        let contents = try convert(
+            rawContents: rawContents
+        )
+
+        let filteredContents = apply(
+            filterRules: filterRules,
+            to: contents,
+            now: now
+        )
+
+        let finalContents = apply(
+            iterators: iterators,
+            to: filteredContents,
+            now: now
+        )
+
+        return finalContents
+    }
+
     // MARK: - conversion
 
-    func convertTargetContents(
+    func convert(
         rawContents: [RawContent]
     ) throws(ContentResolverError) -> [Content] {
         do {
@@ -264,20 +290,18 @@ struct ContentResolver {
         )
     }
 
-    // MARK: - content type detection
-
     // MARK: - filter
 
     /// Applies the filtering rules to the provided content items.
     ///
     /// - Parameters:
-    ///   - contents: The list of `Content` items to filter.
     ///   - filterRules: A dictionary mapping content type identifiers to filtering conditions.
+    ///   - contents: The list of `Content` items to filter.
     ///   - now: The current timestamp used for time-based filtering.
     /// - Returns: A new list containing only the filtered content items.
-    func applyRules(
-        contents: [Content],
+    func apply(
         filterRules: [String: Condition],
+        to contents: [Content],
         now: TimeInterval
     ) -> [Content] {
         let groups = Dictionary(grouping: contents, by: { $0.definition.id })
@@ -320,9 +344,9 @@ struct ContentResolver {
         return .init(slug[startRange.upperBound..<endRange.lowerBound])
     }
 
-    func resolve(
-        contents: [Content],
-        using pipeline: Pipeline,
+    func apply(
+        iterators: [String: Query],
+        to contents: [Content],
         now: TimeInterval
     ) -> [Content] {
         var finalContents: [Content] = []
@@ -330,7 +354,7 @@ struct ContentResolver {
         for content in contents {
             if let iteratorId = extractIteratorId(from: content.slug.value) {
                 guard
-                    let query = pipeline.iterators[iteratorId]
+                    let query = iterators[iteratorId]
                 else {
                     continue
                 }

@@ -141,7 +141,7 @@ private struct SystemDateFormatters {
 public struct ToucanDateFormatter {
 
     private var dateConfig: Config.DataTypes.Date
-    private var pipelineDateConfig: Config.DataTypes.Date?
+    private var pipelineDateConfig: Pipeline.DataTypes.Date?
     private var systemFormatters: SystemDateFormatters
     private var userFormatters: [String: DateFormatter]
     var inputFormatter: DateFormatter
@@ -157,8 +157,8 @@ public struct ToucanDateFormatter {
     ///   - logger: A logger instance for diagnostics.
     public init(
         dateConfig: Config.DataTypes.Date,
-        pipelineDateConfig: Config.DataTypes.Date? = nil,
-        logger: Logger = .subsystem("toucan-date-formatter")
+        pipelineDateConfig: Pipeline.DataTypes.Date? = nil,
+        logger: Logger = .subsystem("date-formatter")
     ) {
         self.dateConfig = dateConfig
         self.pipelineDateConfig = pipelineDateConfig
@@ -198,13 +198,8 @@ public struct ToucanDateFormatter {
             }
         }
 
-        var config = dateConfig.input
-        if let pipelineDateConfig, pipelineDateConfig.input != config {
-            config = pipelineDateConfig.input
-        }
-
-        self.inputFormatter = .build { $0.use(config: config) }
-        self.ephemeralFormatter = .build { $0.use(config: config) }
+        self.inputFormatter = .build { $0.use(config: dateConfig.input) }
+        self.ephemeralFormatter = .build { $0.use(config: dateConfig.input) }
     }
 
     /// Parses a date string into a `Date` object.
