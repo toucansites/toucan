@@ -1,16 +1,9 @@
 //
-//  ToucanDateFormatter.swift
+//  ToucanDateFormatters.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 26..
 //
-
-/// # Toucan Date Formatter
-///
-/// Provides parsing and formatting of dates using application configuration,
-/// including locale, time zone, and custom format settings.
-///
-/// Topics: Date, Formatting, Localization, Configuration
 
 import Foundation
 import ToucanSource
@@ -138,14 +131,75 @@ private struct SystemDateFormatters {
 /// Main utility for parsing and formatting dates based on project configuration.
 ///
 /// Combines input parsing, system-style formatters, and user-defined formats.
-public struct ToucanDateFormatter {
+public struct ToucanInputDateFormatter {
+
+    private var dateConfig: Config.DataTypes.Date
+    private var inputFormatter: DateFormatter
+    private var ephemeralFormatter: DateFormatter
+
+    var logger: Logger
+
+    /// Initializes the date formatter utility.
+    ///
+    /// - Parameters:
+    ///   - dateConfig: The base date configuration from the project.
+    ///   - logger: A logger instance for diagnostics.
+    public init(
+        dateConfig: Config.DataTypes.Date,
+        logger: Logger = .subsystem("input-date-formatter")
+    ) {
+        self.dateConfig = dateConfig
+        self.inputFormatter = .build { $0.use(config: dateConfig.input) }
+        self.ephemeralFormatter = .build { $0.use(config: dateConfig.input) }
+        self.logger = logger
+    }
+
+    /// Parses a date string into a `Date` object.
+    ///
+    /// - Parameters:
+    ///   - string: The string representation of the date.
+    ///   - config: Optional `DateFormatterConfig` to override the input format.
+    /// - Returns: A `Date` if parsing succeeds, otherwise `nil`.
+    public func date(
+        from string: String,
+        using config: DateFormatterConfig? = nil
+    ) -> Date? {
+        if let config {
+            ephemeralFormatter.use(config: config)
+
+            return ephemeralFormatter.date(from: string)
+        }
+        return inputFormatter.date(from: string)
+    }
+
+    /// Converts a date into a `String` object.
+    ///
+    /// - Parameters:
+    ///   - date: The date representation.
+    ///   - config: Optional `DateFormatterConfig` to override the input format.
+    /// - Returns: A `String` using the provided date format config.
+    public func string(
+        from date: Date,
+        using config: DateFormatterConfig? = nil
+    ) -> String {
+        if let config {
+            ephemeralFormatter.use(config: config)
+
+            return ephemeralFormatter.string(from: date)
+        }
+        return inputFormatter.string(from: date)
+    }
+}
+
+/// Main utility for parsing and formatting dates based on project configuration.
+///
+/// Combines input parsing, system-style formatters, and user-defined formats.
+public struct ToucanOutputDateFormatter {
 
     private var dateConfig: Config.DataTypes.Date
     private var pipelineDateConfig: Pipeline.DataTypes.Date?
     private var systemFormatters: SystemDateFormatters
     private var userFormatters: [String: DateFormatter]
-    var inputFormatter: DateFormatter
-    private var ephemeralFormatter: DateFormatter
 
     var logger: Logger
 
@@ -198,44 +252,6 @@ public struct ToucanDateFormatter {
             }
         }
 
-        self.inputFormatter = .build { $0.use(config: dateConfig.input) }
-        self.ephemeralFormatter = .build { $0.use(config: dateConfig.input) }
-    }
-
-    /// Parses a date string into a `Date` object.
-    ///
-    /// - Parameters:
-    ///   - string: The string representation of the date.
-    ///   - config: Optional `DateFormatterConfig` to override the input format.
-    /// - Returns: A `Date` if parsing succeeds, otherwise `nil`.
-    public func date(
-        from string: String,
-        using config: DateFormatterConfig? = nil
-    ) -> Date? {
-        if let config {
-            ephemeralFormatter.use(config: config)
-
-            return ephemeralFormatter.date(from: string)
-        }
-        return inputFormatter.date(from: string)
-    }
-
-    /// Converts a date into a `String` object.
-    ///
-    /// - Parameters:
-    ///   - date: The date representation.
-    ///   - config: Optional `DateFormatterConfig` to override the input format.
-    /// - Returns: A `String` using the provided date format config.
-    public func string(
-        from date: Date,
-        using config: DateFormatterConfig? = nil
-    ) -> String {
-        if let config {
-            ephemeralFormatter.use(config: config)
-
-            return ephemeralFormatter.string(from: date)
-        }
-        return inputFormatter.string(from: date)
     }
 
     /// Formats a `Date` into a `DateContext`, providing multiple style outputs and custom formats.

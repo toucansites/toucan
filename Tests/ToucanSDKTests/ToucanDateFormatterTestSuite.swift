@@ -15,7 +15,38 @@ import ToucanSource
 struct ToucanDateFormatterTestSuite {
 
     @Test
-    func localizedOutputFormat() throws {
+    func input() throws {
+
+        let config = Config.defaults
+
+        let dateFormatter = ToucanInputDateFormatter(
+            dateConfig: config.dataTypes.date,
+        )
+
+        let dateString = "2001-01-01T00:00:00.000Z"
+
+        let inputDate = try #require(
+            dateFormatter.date(from: dateString)
+        )
+        #expect(inputDate.timeIntervalSinceReferenceDate == 0)
+
+        let localizedInputDate = try #require(
+            dateFormatter.date(
+                from: dateString,
+                using: .init(
+                    localization: .init(
+                        locale: "hu-HU",
+                        timeZone: "CET"
+                    ),
+                    format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                )
+            )
+        )
+        #expect(localizedInputDate.timeIntervalSinceReferenceDate == -3600)
+    }
+
+    @Test
+    func output() throws {
 
         let config = Config.defaults
         var pipeline = Mocks.Pipelines.html()
@@ -24,7 +55,7 @@ struct ToucanDateFormatterTestSuite {
             timeZone: "CET"
         )
 
-        let dateFormatter = ToucanDateFormatter(
+        let dateFormatter = ToucanOutputDateFormatter(
             dateConfig: config.dataTypes.date,
             pipelineDateConfig: pipeline.dataTypes.date
         )
@@ -49,25 +80,6 @@ struct ToucanDateFormatterTestSuite {
         #expect(ctx.formats["rss"] == "Mon, 01 Jan 2001 00:00:00 +0000")
         #expect(ctx.formats["year"] == "2001")
         #expect(ctx.formats["sitemap"] == "2001-01-01")
-
-        let inputDate = try #require(
-            dateFormatter.date(from: "2001-01-01T00:00:00.000Z")
-        )
-        #expect(inputDate.timeIntervalSinceReferenceDate == 0)
-
-        let localizedInputDate = try #require(
-            dateFormatter.date(
-                from: "2001-01-01T01:00:00.000Z",
-                using: .init(
-                    localization: .init(
-                        locale: "hu-HU",
-                        timeZone: "CET"
-                    ),
-                    format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-                )
-            )
-        )
-        #expect(localizedInputDate.timeIntervalSinceReferenceDate == 0)
     }
 
     //    @Test

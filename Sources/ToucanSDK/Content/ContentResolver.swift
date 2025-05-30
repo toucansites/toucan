@@ -73,14 +73,14 @@ struct ContentResolver {
     var contentTypeResolver: ContentTypeResolver
     var encoder: ToucanEncoder
     var decoder: ToucanDecoder
-    var dateFormatter: ToucanDateFormatter
+    var dateFormatter: ToucanInputDateFormatter
     var logger: Logger
 
     init(
         contentTypeResolver: ContentTypeResolver,
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
-        dateFormatter: ToucanDateFormatter,
+        dateFormatter: ToucanInputDateFormatter,
         logger: Logger = .subsystem("content-resolver")
     ) {
         self.contentTypeResolver = contentTypeResolver

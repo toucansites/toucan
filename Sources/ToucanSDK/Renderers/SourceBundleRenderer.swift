@@ -116,6 +116,11 @@ public struct SourceBundleRenderer {
         var siteContext = getSiteContext(for: now)
         var results: [PipelineResult] = []
 
+        let inputDateFormatter = ToucanInputDateFormatter(
+            dateConfig: sourceBundle.config.dataTypes.date,
+            logger: logger
+        )
+
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
         let executor = AssetBehaviorExecutor(sourceBundle: sourceBundle)
@@ -125,19 +130,19 @@ public struct SourceBundleRenderer {
             pipelines: sourceBundle.pipelines
         )
 
+        let contentResolver = ContentResolver(
+            contentTypeResolver: contentTypeResolver,
+            encoder: encoder,
+            decoder: decoder,
+            dateFormatter: inputDateFormatter,
+            logger: logger
+        )
+
         for pipeline in sourceBundle.pipelines {
 
-            let dateFormatter = ToucanDateFormatter(
+            let dateFormatter = ToucanOutputDateFormatter(
                 dateConfig: sourceBundle.config.dataTypes.date,
                 pipelineDateConfig: pipeline.dataTypes.date,
-                logger: logger
-            )
-
-            let contentResolver = ContentResolver(
-                contentTypeResolver: contentTypeResolver,
-                encoder: encoder,
-                decoder: decoder,
-                dateFormatter: dateFormatter,
                 logger: logger
             )
 

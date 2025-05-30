@@ -22,7 +22,7 @@ struct ContentResolverTestSuite {
         let buildTargetSource = Mocks.buildTargetSource(now: now)
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let dateFormatter = ToucanDateFormatter(
+        let dateFormatter = ToucanInputDateFormatter(
             dateConfig: buildTargetSource.config.dataTypes.date
         )
 
@@ -595,7 +595,7 @@ struct ContentResolverTestSuite {
     ) throws -> ContentResolver {
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let dateFormatter = ToucanDateFormatter(
+        let dateFormatter = ToucanInputDateFormatter(
             dateConfig: buildTargetSource.config.dataTypes.date
         )
 
@@ -806,9 +806,12 @@ struct ContentResolverTestSuite {
         let past = now.addingTimeInterval(-86_400)
 
         let config = Config.defaults
-        let dateFormatter = ToucanDateFormatter(
+        let dateFormatter = ToucanInputDateFormatter(
             dateConfig: config.dataTypes.date
         )
+
+        // make sure we use the same format
+        let format: DateFormatterConfig? = config.dataTypes.date.input
 
         let buildTargetSource = BuildTargetSource(
             location: .init(filePath: ""),
@@ -819,11 +822,11 @@ struct ContentResolverTestSuite {
                     default: true,
                     properties: [
                         "publication": .init(
-                            propertyType: .date(config: nil),
+                            propertyType: .date(config: format),
                             isRequired: true
                         ),
                         "expiration": .init(
-                            propertyType: .date(config: nil),
+                            propertyType: .date(config: format),
                             isRequired: true
                         ),
                     ]
@@ -839,10 +842,16 @@ struct ContentResolverTestSuite {
                         frontMatter: [
                             "publication": .init(
                                 // NOTE: not the best way, but it's ok for tests
-                                dateFormatter.format(date: past).iso8601
+                                dateFormatter.string(
+                                    from: past,
+                                    using: format
+                                )
                             ),
                             "expiration": .init(
-                                dateFormatter.format(date: future).iso8601
+                                dateFormatter.string(
+                                    from: future,
+                                    using: format
+                                )
                             ),
                         ]
                     ),
@@ -856,10 +865,16 @@ struct ContentResolverTestSuite {
                     markdown: .init(
                         frontMatter: [
                             "publication": .init(
-                                dateFormatter.format(date: future).iso8601
+                                dateFormatter.string(
+                                    from: future,
+                                    using: format
+                                )
                             ),
                             "expiration": .init(
-                                dateFormatter.format(date: future).iso8601
+                                dateFormatter.string(
+                                    from: future,
+                                    using: format
+                                )
                             ),
                         ]
                     ),

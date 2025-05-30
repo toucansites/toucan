@@ -20,7 +20,7 @@ extension Mocks {
         settings: Settings = .defaults
     ) -> BuildTargetSource {
 
-        let formatter = ToucanDateFormatter(
+        let formatter = ToucanInputDateFormatter(
             dateConfig: config.dataTypes.date
         )
 
