@@ -1,5 +1,5 @@
 //
-//  ContentConverterTestSuite.swift
+//  ContentresolverTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
@@ -14,7 +14,7 @@ import ToucanSerialization
 @testable import ToucanSDK
 
 @Suite
-struct ContentConverterTestSuite {
+struct ContentresolverTestSuite {
 
     @Test
     func contentBasicConversion() throws {
@@ -26,8 +26,7 @@ struct ContentConverterTestSuite {
             dateConfig: buildTargetSource.config.dataTypes.date
         )
 
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -37,7 +36,9 @@ struct ContentConverterTestSuite {
             dateFormatter: dateFormatter
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(!targetContents.isEmpty)
         #expect(buildTargetSource.rawContents.count == targetContents.count)
         for rawContent in buildTargetSource.rawContents {
@@ -123,8 +124,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -136,7 +136,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let content = try #require(targetContents.first)
         #expect(content.definition.id == "page")
@@ -182,8 +184,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -195,7 +196,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let content = try #require(targetContents.first)
         #expect(content.definition.id == "post")
@@ -236,8 +239,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -249,7 +251,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let content = try #require(targetContents.first)
         #expect(content.definition.id == "post")
@@ -332,8 +336,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -345,7 +348,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let result = try #require(targetContents.first).properties
         #expect(result.count == 6)
@@ -420,8 +425,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -433,7 +437,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let result = try #require(targetContents.first).properties
 
@@ -493,8 +499,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -506,7 +511,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let result = try #require(targetContents.first).properties
         #expect(result.isEmpty)
@@ -560,8 +567,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -573,7 +579,9 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let targetContents = try converter.convertTargetContents()
+        let targetContents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         #expect(targetContents.count == 1)
         let result = try #require(targetContents.first).properties
         #expect(result.isEmpty)
@@ -581,11 +589,10 @@ struct ContentConverterTestSuite {
 
     // MARK: -
 
-    private func getMockConverter(
+    private func getMockresolver(
+        buildTargetSource: BuildTargetSource,
         now: Date
-    ) throws -> ContentConverter {
-
-        let buildTargetSource = Mocks.buildTargetSource(now: now)
+    ) throws -> ContentResolver {
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
         let dateFormatter = ToucanDateFormatter(
@@ -593,7 +600,6 @@ struct ContentConverterTestSuite {
         )
 
         return .init(
-            buildTargetSource: buildTargetSource,
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -607,10 +613,16 @@ struct ContentConverterTestSuite {
     @Test()
     func genericFilterRules() async throws {
         let now = Date()
-        let converter = try getMockConverter(now: now)
-        let contents = try converter.convertTargetContents()
+        let buildTargetSource = Mocks.buildTargetSource(now: now)
+        let resolver = try getMockresolver(
+            buildTargetSource: buildTargetSource,
+            now: now
+        )
+        let contents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
 
-        let result = converter.applyRules(
+        let result = resolver.applyRules(
             contents: contents,
             filterRules: [
                 "*": .or(
@@ -671,10 +683,16 @@ struct ContentConverterTestSuite {
     @Test()
     func specificFilterRules() async throws {
         let now = Date()
-        let converter = try getMockConverter(now: now)
-        let contents = try converter.convertTargetContents()
+        let buildTargetSource = Mocks.buildTargetSource(now: now)
+        let resolver = try getMockresolver(
+            buildTargetSource: buildTargetSource,
+            now: now
+        )
+        let contents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
 
-        let result = converter.applyRules(
+        let result = resolver.applyRules(
             contents: contents,
             filterRules: [
                 "*": .or(
@@ -748,10 +766,16 @@ struct ContentConverterTestSuite {
     @Test()
     func noFilterRules() async throws {
         let now = Date()
-        let converter = try getMockConverter(now: now)
-        let contents = try converter.convertTargetContents()
+        let buildTargetSource = Mocks.buildTargetSource(now: now)
+        let resolver = try getMockresolver(
+            buildTargetSource: buildTargetSource,
+            now: now
+        )
+        let contents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
 
-        let result = converter.applyRules(
+        let result = resolver.applyRules(
             contents: contents,
             filterRules: [:],
             now: now.timeIntervalSince1970
@@ -851,8 +875,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -862,9 +885,11 @@ struct ContentConverterTestSuite {
             dateFormatter: dateFormatter
         )
 
-        let contents = try converter.convertTargetContents()
+        let contents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
 
-        let result = converter.applyRules(
+        let result = resolver.applyRules(
             contents: contents,
             filterRules: [
                 "post": .and(
@@ -942,8 +967,7 @@ struct ContentConverterTestSuite {
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let resolver = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -955,9 +979,11 @@ struct ContentConverterTestSuite {
             )
         )
 
-        let contents = try converter.convertTargetContents()
+        let contents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
 
-        let result = converter.applyRules(
+        let result = resolver.applyRules(
             contents: contents,
             filterRules: [
                 "*": .field(
@@ -989,8 +1015,14 @@ struct ContentConverterTestSuite {
     @Test
     func iteratorResolution() async throws {
         let now = Date()
-        let converter = try getMockConverter(now: now)
-        let contents = try converter.convertTargetContents()
+        let buildTargetSource = Mocks.buildTargetSource(now: now)
+        let resolver = try getMockresolver(
+            buildTargetSource: buildTargetSource,
+            now: now
+        )
+        let contents = try resolver.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
         let pipeline = Mocks.Pipelines.html()
 
         //        let resolver = ContentIteratorResolver(

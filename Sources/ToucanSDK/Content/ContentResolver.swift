@@ -1,5 +1,5 @@
 //
-//  ContentConverter.swift
+//  ContentResolver.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
@@ -35,7 +35,7 @@ fileprivate extension String {
     }
 }
 
-enum ContentConverterError: ToucanError {
+enum ContentResolverError: ToucanError {
 
     case contentType(ContentTypeResolverError)
     case unknown(Error)
@@ -46,8 +46,6 @@ enum ContentConverterError: ToucanError {
             return [error]
         case .unknown(let error):
             return [error]
-        default:
-            return []
         }
     }
 
@@ -70,7 +68,7 @@ enum ContentConverterError: ToucanError {
     }
 }
 
-struct ContentConverter {
+struct ContentResolver {
 
     var contentTypeResolver: ContentTypeResolver
     var encoder: ToucanEncoder
@@ -83,7 +81,7 @@ struct ContentConverter {
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
         dateFormatter: ToucanDateFormatter,
-        logger: Logger = .subsystem("content-converter")
+        logger: Logger = .subsystem("content-resolver")
     ) {
         self.contentTypeResolver = contentTypeResolver
         self.encoder = encoder
@@ -96,13 +94,13 @@ struct ContentConverter {
 
     func convertTargetContents(
         rawContents: [RawContent]
-    ) throws(ContentConverterError) -> [Content] {
+    ) throws(ContentResolverError) -> [Content] {
         do {
             return try rawContents.map {
                 try convert(rawContent: $0)
             }
         }
-        catch let error as ContentConverterError {
+        catch let error as ContentResolverError {
             throw error
         }
         catch {
@@ -115,7 +113,7 @@ struct ContentConverter {
     func getContentType(
         for origin: Origin,
         using id: String?
-    ) throws(ContentConverterError) -> ContentDefinition {
+    ) throws(ContentResolverError) -> ContentDefinition {
         do {
             return try contentTypeResolver.getContentType(
                 for: origin,
@@ -166,7 +164,7 @@ struct ContentConverter {
 
     func convert(
         rawContent: RawContent
-    ) throws(ContentConverterError) -> Content {
+    ) throws(ContentResolverError) -> Content {
 
         //        logger.debug("Converting raw content")
 

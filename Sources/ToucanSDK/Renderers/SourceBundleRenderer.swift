@@ -137,8 +137,7 @@ public struct SourceBundleRenderer {
                 logger: logger
             )
 
-            let contentConverter = ContentConverter(
-                buildTargetSource: sourceBundle,
+            let contentResolver = ContentResolver(
                 contentTypeResolver: contentTypeResolver,
                 encoder: encoder,
                 decoder: decoder,
@@ -146,7 +145,9 @@ public struct SourceBundleRenderer {
                 logger: logger
             )
 
-            let contents = try contentConverter.convertTargetContents()
+            let contents = try contentResolver.convertTargetContents(
+                rawContents: sourceBundle.rawContents
+            )
 
             //            let filteredContents = filter.applyRules(
             //                contents: sourceBundle.contents,

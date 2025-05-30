@@ -19,8 +19,7 @@ struct ContentQueryTestSuite {
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
 
-        let converter = ContentConverter(
-            buildTargetSource: buildTargetSource,
+        let converter = ContentResolver(
             contentTypeResolver: .init(
                 types: buildTargetSource.contentDefinitions,
                 pipelines: buildTargetSource.pipelines
@@ -31,7 +30,9 @@ struct ContentQueryTestSuite {
                 dateConfig: buildTargetSource.config.dataTypes.date
             )
         )
-        return try converter.convertTargetContents()
+        return try converter.convertTargetContents(
+            rawContents: buildTargetSource.rawContents
+        )
     }
 
     @Test
