@@ -13,7 +13,7 @@
 //        let logger = Logger(label: "ConfigLoaderPipelinesTestSuite")
 //
 //        try FileManagerPlayground {
-//            Directory("src") {
+//            Directory(name: "src") {
 //                File(
 //                    "config.yml",
 //                    string: """
@@ -38,7 +38,7 @@
 //        let logger = Logger(label: "ConfigLoaderPipelinesTestSuite")
 //
 //        try FileManagerPlayground {
-//            Directory("src") {
+//            Directory(name: "src") {
 //                File(
 //                    "config.yml",
 //                    string: """

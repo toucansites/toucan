@@ -8,7 +8,7 @@
 import Testing
 import Logging
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSDK
 
@@ -29,7 +29,7 @@ extension ToucanTestSuite {
 
     func contentSiteFile() -> File {
         File(
-            "site.yml",
+            name: "site.yml",
             string: """
                 baseUrl: http://localhost:3000/
                 locale: en-US
@@ -45,7 +45,7 @@ extension ToucanTestSuite {
 
     func configFile() -> File {
         File(
-            "config.yml",
+            name: "config.yml",
             string: """
                 dateFormats:
                     input: 
@@ -59,7 +59,7 @@ extension ToucanTestSuite {
 
     func replaceScriptFile() -> File {
         File(
-            "replace",
+            name: "replace",
             attributes: [.posixPermissions: 0o777],
             string: """
                 #!/bin/bash

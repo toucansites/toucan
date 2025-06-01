@@ -8,7 +8,7 @@
 import Testing
 import Logging
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSDK
 
@@ -20,7 +20,7 @@ extension ToucanTestSuite {
         rootName: String? = nil
     ) -> File {
         File(
-            "html.yml",
+            name: "html.yml",
             string: """
                 id: html
                 contentTypes: 
@@ -58,7 +58,7 @@ extension ToucanTestSuite {
         engineOptions: String? = nil
     ) -> File {
         File(
-            "api.yml",
+            name: "api.yml",
             string: """
                 id: api
                 definesType: \(definesType ? "true" : "false")
@@ -89,7 +89,7 @@ extension ToucanTestSuite {
 
     func pipelinePaginatedApi(definesType: Bool = true) -> File {
         File(
-            "api.yml",
+            name: "api.yml",
             string: """
                 id: api
                 definesType: \(definesType ? "true" : "false")
@@ -120,7 +120,7 @@ extension ToucanTestSuite {
 
     func pipeline404(addTransformers: Bool = false) -> File {
         File(
-            "404.yml",
+            name: "404.yml",
             string: """
                 id: not-found
                 contentTypes: 
@@ -154,7 +154,7 @@ extension ToucanTestSuite {
 
     func pipelineSitemap(_ assets: String? = nil) -> File {
         File(
-            "sitemap.yml",
+            name: "sitemap.yml",
             string: """
                 id: sitemap
                 queries:
@@ -184,7 +184,7 @@ extension ToucanTestSuite {
 
     func pipelineRedirect() -> File {
         File(
-            "redirect.yml",
+            name: "redirect.yml",
             string: """
                 id: redirect
                 contentTypes: 
@@ -206,7 +206,7 @@ extension ToucanTestSuite {
 
     func pipelineRss() -> File {
         File(
-            "rss.yml",
+            name: "rss.yml",
             string: """
                 id: rss
                 queries:

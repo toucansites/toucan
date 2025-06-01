@@ -10,7 +10,7 @@
 //
 //
 //import Logging
-//import FileManagerKitTesting
+//import FileManagerKitBuilder
 //import ToucanSerialization
 //@testable import ToucanSDK
 //
@@ -42,7 +42,7 @@
 //    func testWithNoDefaultValue() throws {
 //        let logger = Logger(label: "ConfigLoaderTestSuite")
 //        try FileManagerPlayground {
-//            Directory("src") {
+//            Directory(name: "src") {
 //                File(
 //                    "config.yml",
 //                    string: """

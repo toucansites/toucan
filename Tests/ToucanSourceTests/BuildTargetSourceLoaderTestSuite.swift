@@ -9,7 +9,7 @@ import Foundation
 import ToucanCore
 import ToucanSerialization
 import FileManagerKit
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSource
 
@@ -22,7 +22,7 @@ struct BuildTargetSourceLoaderTestSuite {
         @FileManagerPlayground.DirectoryBuilder
         _ builder: () -> [FileManagerPlayground.Item]
     ) -> Directory {
-        Directory("src", builder)
+        Directory(name: "src", builder)
     }
 
     private func testSourceTypesHierarchy(
@@ -30,7 +30,7 @@ struct BuildTargetSourceLoaderTestSuite {
         _ builder: () -> [FileManagerPlayground.Item]
     ) -> Directory {
         testSourceHierarchy {
-            Directory("types", builder)
+            Directory(name: "types", builder)
         }
     }
 
@@ -85,8 +85,8 @@ struct BuildTargetSourceLoaderTestSuite {
         )
         try FileManagerPlayground {
             testSourceTypesHierarchy {
-                YAML(name: "post", contents: type1).file
-                YAML(name: "tag", contents: type2).file
+                YAML(name: "post", contents: type1)
+                YAML(name: "tag", contents: type2)
             }
         }
         .test {
@@ -121,7 +121,7 @@ struct BuildTargetSourceLoaderTestSuite {
         try FileManagerPlayground {
             testSourceTypesHierarchy {
                 File(
-                    "invalid.yaml",
+                    name: "invalid.yaml",
                     string: """
                         """
                 )
@@ -149,8 +149,8 @@ struct BuildTargetSourceLoaderTestSuite {
     //    @Test
     //    func contentDefinitions() throws {
     //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("types") {
+    //            Directory(name: "src") {
+    //                Directory(name: "types") {
     //                    File(
     //                        "foo.yml",
     //                        string: """
@@ -213,8 +213,8 @@ struct BuildTargetSourceLoaderTestSuite {
     //    func loadMarkdownBlockDirectives() throws {
     //        let logger = Logger(label: "BlockDirectiveLoaderTests")
     //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("blocks") {
+    //            Directory(name: "src") {
+    //                Directory(name: "blocks") {
     //                    File(
     //                        "highlighted-text.yml",
     //                        string: """
@@ -329,8 +329,8 @@ struct BuildTargetSourceLoaderTestSuite {
     //    func basicLoad() throws {
     //        let logger = Logger(label: "PipelineLoaderTestSuite")
     //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("pipelines") {
+    //            Directory(name: "src") {
+    //                Directory(name: "pipelines") {
     //                    pipeline404(addTransformers: true)
     //                    pipelineRedirect()
     //                }
@@ -377,8 +377,8 @@ struct BuildTargetSourceLoaderTestSuite {
     //    func loadAssets() throws {
     //        let logger = Logger(label: "PipelineLoaderTestSuite")
     //        try FileManagerPlayground {
-    //            Directory("src") {
-    //                Directory("pipelines") {
+    //            Directory(name: "src") {
+    //                Directory(name: "pipelines") {
     //                    pipelineSitemap(
     //                        """
     //                        assets:
@@ -458,7 +458,7 @@ struct BuildTargetSourceLoaderTestSuite {
     //    func basicSettings() throws {
     //        let logger = Logger(label: "SettingsLoaderTestSuite")
     //        try FileManagerPlayground {
-    //            Directory("src") {
+    //            Directory(name: "src") {
     //                File(
     //                    "site.yml",
     //                    string: """
@@ -507,48 +507,39 @@ struct BuildTargetSourceLoaderTestSuite {
 
         try FileManagerPlayground {
             testSourceHierarchy {
-                Directory("contents") {
+                Directory(name: "contents") {
                     "index.md"
-                    Directory("assets") {
+                    Directory(name: "assets") {
                         "main.js"
                     }
-                    Directory("404") {
+                    Directory(name: "404") {
                         "index.md"
                     }
 
-                    Directory("blog") {
+                    Directory(name: "blog") {
                         "noindex.yml"
-                        Directory("authors") {
+                        Directory(name: "authors") {
                             "index.md"
                         }
                     }
-                    Directory("redirects") {
+                    Directory(name: "redirects") {
                         "noindex.yml"
-                        Directory("home-old") {
+                        Directory(name: "home-old") {
                             "index.md"
                         }
                     }
                 }
-                Directory("types") {
-                    YAML(
-                        name: "post",
-                        contents: type1
-                    )
-                    .file
-                    YAML(
-                        name: "tag",
-                        contents: type2
-                    )
-                    .file
+                Directory(name: "types") {
+                    YAML(name: "post", contents: type1)
+                    YAML(name: "tag", contents: type2)
                 }
-                Directory("blocks") {
+                Directory(name: "blocks") {
                     YAML(
                         name: "link",
                         contents: Block(
                             name: "link"
                         )
                     )
-                    .file
                 }
             }
         }
@@ -568,8 +559,8 @@ struct BuildTargetSourceLoaderTestSuite {
         //    @Test()
         //    func fileSystem_SettingsLocator() async throws {
         //        try FileManagerPlayground {
-        //            Directory("src") {
-        //                Directory("contents") {
+        //            Directory(name: "src") {
+        //                Directory(name: "contents") {
         //                    "site.yml"
         //                    "site.yaml"
         //                    "index.yml"

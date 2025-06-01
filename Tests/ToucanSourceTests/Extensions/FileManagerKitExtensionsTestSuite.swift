@@ -6,7 +6,7 @@
 
 import Testing
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSource
 
@@ -25,8 +25,8 @@ struct FileManagerKitExtensionsTestSuite {
     @Test()
     func findAllFiles() throws {
         try FileManagerPlayground {
-            Directory("foo") {
-                Directory("bar") {
+            Directory(name: "foo") {
+                Directory(name: "bar") {
                     "baz.yaml"
                     "qux.yml"
                 }
@@ -43,8 +43,8 @@ struct FileManagerKitExtensionsTestSuite {
     @Test()
     func findDirectoriesAndFiles() throws {
         try FileManagerPlayground {
-            Directory("foo") {
-                Directory("bar")
+            Directory(name: "foo") {
+                Directory(name: "bar")
                 "baz.yaml"
                 "qux.yml"
             }
@@ -60,8 +60,8 @@ struct FileManagerKitExtensionsTestSuite {
     @Test()
     func findMultipleExtensions() async throws {
         try FileManagerPlayground {
-            Directory("foo") {
-                Directory("bar") {
+            Directory(name: "foo") {
+                Directory(name: "bar") {
                     "baz.yaml"
                     "qux.yml"
                     "quux.txt"

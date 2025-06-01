@@ -7,7 +7,7 @@
 
 import Foundation
 import Testing
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @Suite
 struct CopyManagerTestSuite {
@@ -15,19 +15,19 @@ struct CopyManagerTestSuite {
     @Test()
     func copyItemsRecursively() async throws {
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("assets") {
-                    Directory("icons") {
+            Directory(name: "src") {
+                Directory(name: "assets") {
+                    Directory(name: "icons") {
                         "image.png"
                         "cover.png"
                     }
-                    Directory("images") {
+                    Directory(name: "images") {
                         "image.png"
                         "cover.png"
                     }
                 }
             }
-            Directory("workDir") {}
+            Directory(name: "workDir") {}
         }
         .test { _, _ in
             //            let sourceConfig = SourceConfig(
@@ -65,11 +65,11 @@ struct CopyManagerTestSuite {
     @Test()
     func copyEmptyDirectory() async throws {
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("assets") {
+            Directory(name: "src") {
+                Directory(name: "assets") {
                 }
             }
-            Directory("workDir") {}
+            Directory(name: "workDir") {}
         }
         .test { _, _ in
             //            let sourceConfig = SourceConfig(

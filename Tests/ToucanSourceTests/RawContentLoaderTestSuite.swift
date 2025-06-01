@@ -9,7 +9,7 @@ import Testing
 import Foundation
 import ToucanSerialization
 import FileManagerKit
-import FileManagerKitTesting
+import FileManagerKitBuilder
 import Logging
 
 @testable import ToucanSource
@@ -21,8 +21,8 @@ struct RawContentLoaderTestSuite {
         @FileManagerPlayground.DirectoryBuilder
         _ builder: () -> [FileManagerPlayground.Item]
     ) -> Directory {
-        Directory("src") {
-            Directory("contents", builder)
+        Directory(name: "src") {
+            Directory(name: "contents", builder)
         }
     }
 
@@ -66,10 +66,10 @@ struct RawContentLoaderTestSuite {
     func locateOriginsWithNoIndexFile() async throws {
         try FileManagerPlayground {
             testSourceContentsHierarchy {
-                Directory("blog") {
-                    Directory("articles") {
+                Directory(name: "blog") {
+                    Directory(name: "articles") {
                         "noindex.yaml"
-                        Directory("first-beta-release") {
+                        Directory(name: "first-beta-release") {
                             "index.md"
                         }
                     }
@@ -94,9 +94,9 @@ struct RawContentLoaderTestSuite {
     func locateOriginsIgnoreSlugBrackets() async throws {
         try FileManagerPlayground {
             testSourceContentsHierarchy {
-                Directory("[01]blog") {
-                    Directory("[01]articles") {
-                        Directory("[01]first-beta-release") {
+                Directory(name: "[01]blog") {
+                    Directory(name: "[01]articles") {
+                        Directory(name: "[01]first-beta-release") {
                             "index.md"
                         }
                     }
@@ -123,9 +123,9 @@ struct RawContentLoaderTestSuite {
     func locateOriginsNoIndexBrackets() async throws {
         try FileManagerPlayground {
             testSourceContentsHierarchy {
-                Directory("[01]blog") {
-                    Directory("[articles]") {
-                        Directory("[02]first-beta-release") {
+                Directory(name: "[01]blog") {
+                    Directory(name: "[articles]") {
+                        Directory(name: "[02]first-beta-release") {
                             "index.md"
                         }
                     }
@@ -156,10 +156,10 @@ struct RawContentLoaderTestSuite {
         _ builder: () -> [FileManagerPlayground.Item]
     ) -> Directory {
         testSourceContentsHierarchy {
-            Directory("blog") {
-                Directory("articles") {
+            Directory(name: "blog") {
+                Directory(name: "articles") {
                     "noindex.yaml"
-                    Directory("first-beta-release", builder)
+                    Directory(name: "first-beta-release", builder)
                 }
             }
         }
@@ -199,7 +199,7 @@ struct RawContentLoaderTestSuite {
     )
     func locateFiles(files: [String]) async throws {
         try FileManagerPlayground {
-            testBlogArticleHierarchy({ files.map { .file(.init($0)) } })
+            testBlogArticleHierarchy({ files.map { .file(.init(name: $0)) } })
         }
         .test {
             try testExpectationRequirements(fileManager: $0, url: $1)
@@ -213,7 +213,7 @@ struct RawContentLoaderTestSuite {
         modificationDate: Date
     ) -> File {
         File(
-            "index.\(ext)",
+            name: "index.\(ext)",
             attributes: [
                 .modificationDate: modificationDate
             ],
@@ -234,7 +234,7 @@ struct RawContentLoaderTestSuite {
         modificationDate: Date
     ) -> File {
         File(
-            "index.\(ext)",
+            name: "index.\(ext)",
             attributes: [
                 .modificationDate: modificationDate
             ],
@@ -245,7 +245,7 @@ struct RawContentLoaderTestSuite {
     }
 
     func testAssetsDirectory() -> Directory {
-        Directory("assets") {
+        Directory(name: "assets") {
             "cover.png"
             "main.js"
             "style.css"
@@ -353,7 +353,7 @@ struct RawContentLoaderTestSuite {
 
         try FileManagerPlayground {
             testBlogArticleHierarchy {
-                Directory("assets") {
+                Directory(name: "assets") {
                     "cover.png"
                     "style.css"
                     "main.js"
@@ -409,10 +409,10 @@ struct RawContentLoaderTestSuite {
 
         try FileManagerPlayground {
             testSourceContentsHierarchy {
-                Directory("example-1") {
+                Directory(name: "example-1") {
                     testMarkdownFile(ext: "md", modificationDate: now)
                 }
-                Directory("example-2") {
+                Directory(name: "example-2") {
                     testYAMLFile(ext: "yml", modificationDate: now)
                 }
             }

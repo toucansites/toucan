@@ -7,7 +7,7 @@
 //import Testing
 //import Logging
 //import Foundation
-//import FileManagerKitTesting
+//import FileManagerKitBuilder
 //
 //@testable import ToucanSDK
 //
@@ -18,10 +18,10 @@
 //    func propertyValidationLogs() async throws {
 //        //        let logging = Logger.inMemory(label: "ToucanTestSuite")
 //        try FileManagerPlayground {
-//            Directory("src") {
-//                Directory("contents") {
+//            Directory(name: "src") {
+//                Directory(name: "contents") {
 //                    /// No title, but its required  => Warning.
-//                    Directory("page1") {
+//                    Directory(name: "page1") {
 //                        File(
 //                            "index.yaml",
 //                            string: """
@@ -32,7 +32,7 @@
 //                        )
 //                    }
 //                    /// No description, its required, but it has default value => No warning.
-//                    Directory("page2") {
+//                    Directory(name: "page2") {
 //                        File(
 //                            "index.yaml",
 //                            string: """
@@ -43,7 +43,7 @@
 //                        )
 //                    }
 //                    /// No label and its optional => No warning.
-//                    Directory("page3") {
+//                    Directory(name: "page3") {
 //                        File(
 //                            "index.yaml",
 //                            string: """
@@ -55,16 +55,16 @@
 //                    }
 //                    contentSiteFile()
 //                }
-//                Directory("pipelines") {
+//                Directory(name: "pipelines") {
 //                    pipelineHtml()
 //                }
-//                Directory("types") {
+//                Directory(name: "types") {
 //                    typePage()
 //                }
-//                Directory("themes") {
-//                    Directory("default") {
-//                        Directory("templates") {
-//                            Directory("pages") {
+//                Directory(name: "themes") {
+//                    Directory(name: "default") {
+//                        Directory(name: "templates") {
+//                            Directory(name: "pages") {
 //                                themeDefaultMustache()
 //                            }
 //                            themeHtmlMustache()
@@ -96,9 +96,9 @@
 //    func duplicateSlugs() async throws {
 //        let logger = Logger(label: "ToucanTestSuite")
 //        try FileManagerPlayground {
-//            Directory("src") {
-//                Directory("contents") {
-//                    Directory("page1") {
+//            Directory(name: "src") {
+//                Directory(name: "contents") {
+//                    Directory(name: "page1") {
 //                        File(
 //                            "index.yaml",
 //                            string: """
@@ -108,7 +108,7 @@
 //                                """
 //                        )
 //                    }
-//                    Directory("page2") {
+//                    Directory(name: "page2") {
 //                        File(
 //                            "index.yaml",
 //                            string: """
@@ -119,16 +119,16 @@
 //                        )
 //                    }
 //                }
-//                Directory("pipelines") {
+//                Directory(name: "pipelines") {
 //                    pipelineHtml()
 //                }
-//                Directory("types") {
+//                Directory(name: "types") {
 //                    typePage()
 //                }
-//                Directory("themes") {
-//                    Directory("default") {
-//                        Directory("templates") {
-//                            Directory("pages") {
+//                Directory(name: "themes") {
+//                    Directory(name: "default") {
+//                        Directory(name: "templates") {
+//                            Directory(name: "pages") {
 //                                themeDefaultMustache()
 //                            }
 //                            themeHtmlMustache()
@@ -154,9 +154,9 @@
 //    func invalidFrontMatter(_ file: String) async throws {
 //        let logger = Logger(label: "ToucanTestSuite")
 //        try FileManagerPlayground {
-//            Directory("src") {
-//                Directory("contents") {
-//                    Directory("page1") {
+//            Directory(name: "src") {
+//                Directory(name: "contents") {
+//                    Directory(name: "page1") {
 //                        File(
 //                            file,
 //                            string: """
@@ -166,16 +166,16 @@
 //                        )
 //                    }
 //                }
-//                Directory("pipelines") {
+//                Directory(name: "pipelines") {
 //                    pipelineHtml()
 //                }
-//                Directory("types") {
+//                Directory(name: "types") {
 //                    typePage()
 //                }
-//                Directory("themes") {
-//                    Directory("default") {
-//                        Directory("templates") {
-//                            Directory("pages") {
+//                Directory(name: "themes") {
+//                    Directory(name: "default") {
+//                        Directory(name: "templates") {
+//                            Directory(name: "pages") {
 //                                themeDefaultMustache()
 //                            }
 //                            themeHtmlMustache()

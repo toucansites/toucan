@@ -10,7 +10,7 @@
 //
 //
 //import Logging
-//import FileManagerKitTesting
+//import FileManagerKitBuilder
 //@testable import ToucanSDK
 //
 //@Suite
@@ -21,7 +21,7 @@
 //        let logger = Logger(label: "ConfigLoaderRendererConfigTestSuite")
 //
 //        try FileManagerPlayground {
-//            Directory("src") {
+//            Directory(name: "src") {
 //                File(
 //                    "config.yml",
 //                    string: """

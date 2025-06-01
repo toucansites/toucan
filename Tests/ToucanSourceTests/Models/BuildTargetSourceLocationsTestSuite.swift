@@ -10,7 +10,7 @@ import Foundation
 import ToucanCore
 import ToucanSerialization
 import FileManagerKit
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSource
 

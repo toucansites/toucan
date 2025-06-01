@@ -7,7 +7,7 @@
 import Testing
 import Logging
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSDK
 
@@ -19,35 +19,35 @@ struct ToucanApiTestSuite: ToucanTestSuite {
         let logger = Logger(label: "ToucanApiTestSuite")
 
         try FileManagerPlayground {
-            Directory("src") {
+            Directory(name: "src") {
                 File(
-                    "site.yml",
+                    name: "site.yml",
                     string: """
                         name: Test
                         """
                 )
-                Directory("contents") {
-                    Directory("api.json") {
+                Directory(name: "contents") {
+                    Directory(name: "api.json") {
                         File(
-                            "index.yml",
+                            name: "index.yml",
                             string: """
                                 type: api
                                 """
                         )
                     }
-                    Directory("posts") {
+                    Directory(name: "posts") {
                         contentPost(index: 1)
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePost()
                     if definesApiTypeManually {
-                        File("api.yml", string: "id: api")
+                        File(name: "api.yml", string: "id: api")
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineApi(definesType: !definesApiTypeManually)
                 }
                 configFile()
@@ -85,17 +85,17 @@ struct ToucanApiTestSuite: ToucanTestSuite {
         let logger = Logger(label: "ToucanApiTestSuite")
 
         try FileManagerPlayground {
-            Directory("src") {
+            Directory(name: "src") {
                 File(
-                    "site.yml",
+                    name: "site.yml",
                     string: """
                         name: Test
                         """
                 )
-                Directory("contents") {
-                    Directory("{{api.posts.pagination}}") {
+                Directory(name: "contents") {
+                    Directory(name: "{{api.posts.pagination}}") {
                         File(
-                            "index.md",
+                            name: "index.md",
                             string: """
                                 ---
                                 type: api
@@ -111,20 +111,20 @@ struct ToucanApiTestSuite: ToucanTestSuite {
                                 """
                         )
                     }
-                    Directory("posts") {
+                    Directory(name: "posts") {
                         contentPost(index: 1)
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
 
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePost()
                     if definesApiTypeManually {
-                        File("api.yml", string: "id: api")
+                        File(name: "api.yml", string: "id: api")
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelinePaginatedApi(definesType: !definesApiTypeManually)
                 }
                 configFile()
@@ -170,33 +170,33 @@ struct ToucanApiTestSuite: ToucanTestSuite {
         let logger = Logger(label: "ToucanApiTestSuite")
 
         try FileManagerPlayground {
-            Directory("src") {
+            Directory(name: "src") {
                 File(
-                    "site.yml",
+                    name: "site.yml",
                     string: """
                         name: Test
                         """
                 )
-                Directory("contents") {
-                    Directory("api.json") {
+                Directory(name: "contents") {
+                    Directory(name: "api.json") {
                         File(
-                            "index.yml",
+                            name: "index.yml",
                             string: """
                                 type: api
                                 """
                         )
                     }
-                    Directory("posts") {
+                    Directory(name: "posts") {
                         contentPost(index: 1)
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
 
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePost()
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineApi(
                         engineOptions: """
                             options:
@@ -243,33 +243,33 @@ struct ToucanApiTestSuite: ToucanTestSuite {
         let logger = Logger(label: "ToucanApiTestSuite")
 
         try FileManagerPlayground {
-            Directory("src") {
+            Directory(name: "src") {
                 File(
-                    "site.yml",
+                    name: "site.yml",
                     string: """
                         name: Test
                         """
                 )
-                Directory("contents") {
-                    Directory("api.json") {
+                Directory(name: "contents") {
+                    Directory(name: "api.json") {
                         File(
-                            "index.yml",
+                            name: "index.yml",
                             string: """
                                 type: api
                                 """
                         )
                     }
-                    Directory("posts") {
+                    Directory(name: "posts") {
                         contentPost(index: 1)
                         contentPost(index: 2)
                         contentPost(index: 3)
                     }
 
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePost()
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineApi(
                         engineOptions: """
                             options:

@@ -26,7 +26,6 @@ public struct BuildTargetSourceRenderer {
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
     /// Date formatters used across pipelines
-    //    let formatters: [String: DateFormatter]
     /// File system abstraction
     let fileManager: FileManagerKit
     /// Logger for warnings and errors
@@ -51,7 +50,6 @@ public struct BuildTargetSourceRenderer {
         self.generatorInfo = generatorInfo
         self.fileManager = fileManager
         self.logger = logger
-        //        self.formatters = buildTargetSource.prepareFormatters()
     }
 
     // MARK: -
@@ -97,6 +95,7 @@ public struct BuildTargetSourceRenderer {
     public mutating func render(
         now: Date
     ) throws -> [PipelineResult] {
+
         let now = now.timeIntervalSince1970
 
         let encoder = ToucanYAMLEncoder()
@@ -209,6 +208,7 @@ public struct BuildTargetSourceRenderer {
                 results += renderer.render(contextBundles)
 
             case "mustache":
+
                 let renderer = try ContextBundleToHTMLRenderer(
                     pipeline: pipeline,
                     templates: [:],
@@ -377,13 +377,6 @@ public struct BuildTargetSourceRenderer {
         allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
-
-        //        let pipelineFormatters = pipeline.dataTypes.date.dateFormats.mapValues {
-        //            buildTargetSource.target.dateFormatter($0)
-        //        }
-        //        let allFormatters = formatters.recursivelyMerged(
-        //            with: pipelineFormatters
-        //        )
 
         let scope = pipeline.getScope(
             keyedBy: scopeKey,

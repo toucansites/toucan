@@ -29,13 +29,13 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
-        .package(url: "https://github.com/apple/swift-markdown", branch: "main"),
+        .package(url: "https://github.com/apple/swift-markdown", from: "0.6.0"),
         .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
-        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.2.2"),
-        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.9.0"),
+        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.3.0"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.14.0"),
         .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
-        .package(url: "https://github.com/jpsim/Yams", from: "5.3.0"),
-        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.0"),
+        .package(url: "https://github.com/jpsim/Yams", from: "5.4.0"),
+        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.8.0"),
         .package(url: "https://github.com/aus-der-Technik/FileMonitor", from: "1.2.0"),
         .package(url: "https://github.com/Zollerboy1/SwiftCommand", from: "1.4.0"),
         .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0"),
@@ -173,14 +173,14 @@ let package = Package(
             name: "ToucanSourceTests",
             dependencies: [
                 .target(name: "ToucanSource"),
-                .product(name: "FileManagerKitTesting", package: "file-manager-kit")
+                .product(name: "FileManagerKitBuilder", package: "file-manager-kit")
             ]
         ),
         .testTarget(
             name: "ToucanSDKTests",
             dependencies: [
                 .target(name: "ToucanSDK"),
-                .product(name: "FileManagerKitTesting", package: "file-manager-kit")
+                .product(name: "FileManagerKitBuilder", package: "file-manager-kit")
             ]
         ),
     ]

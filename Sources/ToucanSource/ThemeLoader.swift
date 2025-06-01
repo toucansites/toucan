@@ -6,14 +6,24 @@
 //
 
 import FileManagerKit
+import struct Foundation.URL
 
-struct ThemeLoader {
+/// A loader responsible for building a `Theme` by collecting assets and templates from various locations.
+public struct ThemeLoader {
 
+    /// The file system locations relevant to the theme loading process.
     let locations: BuiltTargetSourceLocations
+    /// The list of file extensions considered as templates.
     let extensions: [String]
+    /// The file manager utility used to search and retrieve files.
     let fileManager: FileManagerKit
 
-    init(
+    /// Creates a new instance of `ThemeLoader`.
+    /// - Parameters:
+    ///   - locations: The locations where theme-related files are stored.
+    ///   - extensions: The template file extensions to look for.
+    ///   - fileManager: The file manager utility to use for locating files.
+    public init(
         locations: BuiltTargetSourceLocations,
         extensions: [String] = ["mustache", "html"],
         fileManager: FileManagerKit
@@ -23,7 +33,10 @@ struct ThemeLoader {
         self.fileManager = fileManager
     }
 
-    func load() throws -> Theme {
+    /// Loads and builds a `Theme` by collecting assets and templates from predefined locations.
+    /// - Returns: A fully constructed `Theme` instance.
+    /// - Throws: An error if file discovery fails.
+    public func load() throws -> Theme {
         let assets = fileManager.find(
             recursively: true,
             at: locations.currentThemeAssetsUrl
@@ -60,17 +73,78 @@ struct ThemeLoader {
             baseUrl: locations.themesUrl,
             components: .init(
                 assets: assets,
-                templates: templates.map { .init(path: $0) }
+                templates: try templates.map {
+                    try loadTemplate(
+                        at: locations.currentThemeTemplatesUrl,
+                        path: $0
+                    )
+                }
             ),
             overrides: .init(
                 assets: assetOverrides,
-                templates: templateOverrides.map { .init(path: $0) }
+                templates: try templateOverrides.map {
+                    try loadTemplate(
+                        at: locations.currentThemeTemplateOverridesUrl,
+                        path: $0
+                    )
+                }
             ),
             content: .init(
                 assets: contentAssetOverrides,
-                templates: contentTemplateOverrides.map { .init(path: $0) }
+                templates: try contentTemplateOverrides.map {
+                    try loadTemplate(
+                        at: locations.contentsUrl,
+                        path: $0
+                    )
+                }
             )
         )
         return theme
+    }
+
+    func loadTemplate(
+        at url: URL,
+        path: String
+    ) throws -> Template {
+
+        let basePath =
+            path
+            .split(separator: ".")
+            .dropLast()
+            .joined(separator: ".")
+
+        let id =
+            basePath
+            .replacingOccurrences(of: "/", with: ".")
+
+        let contents = try String(
+            contentsOf: url.appendingPathIfPresent(path),
+            encoding: .utf8
+        )
+        return .init(
+            id: id,
+            path: path,
+            contents: contents
+        )
+    }
+
+    func getTemplatesIDsWithContents(
+        _ theme: Theme
+    ) -> [String: String] {
+        var results: [String: String] = [:]
+
+        for template in theme.components.templates {
+            results[template.id] = template.contents
+        }
+        for template in theme.overrides.templates {
+            results[template.id] = template.contents
+        }
+        for template in theme.content.templates {
+            results[template.id] = template.contents
+        }
+
+        return .init(
+            uniqueKeysWithValues: results.sorted { $0.key < $1.key }
+        )
     }
 }

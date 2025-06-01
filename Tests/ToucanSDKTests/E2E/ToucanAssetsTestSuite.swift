@@ -7,7 +7,7 @@
 import Testing
 import Logging
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSDK
 
@@ -18,11 +18,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testMinifyCSSAsset() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -30,9 +30,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             File(
-                                "style.css",
+                                name: "style.css",
                                 string: """
                                     html {
                                         margin: 0;
@@ -46,9 +46,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
                             assets:
@@ -77,13 +77,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(svg: "{{page.svg}}")
                             }
                             themeHtmlMustache()
@@ -114,11 +114,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testSASSAsset() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -126,9 +126,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             File(
-                                "style.sass",
+                                name: "style.sass",
                                 string: """
                                     $font-stack: Helvetica, sans-serif
                                     $primary-color: #333
@@ -141,9 +141,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
                             assets:
@@ -172,13 +172,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(svg: "{{page.svg}}")
                             }
                             themeHtmlMustache()
@@ -218,11 +218,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testSASSAssetModuleLoader() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -230,15 +230,15 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             File(
-                                "_colors.scss",
+                                name: "_colors.scss",
                                 string: """
                                     $primary: blue;
                                     """
                             )
                             File(
-                                "style.scss",
+                                name: "style.scss",
                                 string: """
                                     @use "colors";
 
@@ -250,9 +250,9 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
                             assets:
@@ -281,13 +281,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(svg: "{{page.svg}}")
                             }
                             themeHtmlMustache()
@@ -326,11 +326,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testLoadSvg() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -338,14 +338,14 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             svg1()
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
 
@@ -376,13 +376,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(svg: "{{page.svg}}")
                             }
                             themeHtmlMustache()
@@ -412,11 +412,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testLoadMoreSvg() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -424,15 +424,15 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             svg1()
                             svg2()
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
                             contentTypes: 
@@ -462,13 +462,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(
                                     svg: """
                                             {{page.svg.test1}}
@@ -506,11 +506,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testParse() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -518,14 +518,14 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             yaml1()
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
                             contentTypes: 
@@ -555,13 +555,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(
                                     yaml:
                                         """
@@ -598,11 +598,11 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
     func testParseMore() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("page1") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 title: title
                                 type: page
@@ -610,15 +610,15 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                                 label: label1
                                 """
                         )
-                        Directory("assets") {
+                        Directory(name: "assets") {
                             yaml1()
                             yaml2()
                         }
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     File(
-                        "html.yml",
+                        name: "html.yml",
                         string: """
                             id: html
                             contentTypes: 
@@ -648,13 +648,13 @@ struct ToucanAssetsTestSuite: ToucanTestSuite {
                             """
                     )
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache(
                                     yaml:
                                         """

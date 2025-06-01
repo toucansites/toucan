@@ -16,21 +16,23 @@ public struct Template: Equatable {
     /// The file system path to the template file relative from the selected template directory.
     public var path: String
 
-    /// Initializes a new `TemplateLocation` with a logical ID and file path.
-    ///
-    /// - Parameter path: The file path pointing to the template file.
-    public init(
-        path: String
-    ) {
-        let basePath =
-            path
-            .split(separator: ".")
-            .dropLast()
-            .joined(separator: ".")
+    /// The contents of the template file.
+    public var contents: String
 
-        self.id =
-            basePath
-            .replacingOccurrences(of: "/", with: ".")
+    /// Creates a new template instance.
+    ///
+    /// - Parameters:
+    ///   - id: A unique identifier for the template.
+    ///   - path: The relative file system path of the template file.
+    ///   - contents: The full contents of the template file.
+    public init(
+        id: String,
+        path: String,
+        contents: String
+    ) {
+        self.id = id
         self.path = path
+        self.contents = contents
     }
+
 }

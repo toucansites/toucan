@@ -8,7 +8,7 @@ import Testing
 import Foundation
 import ToucanSerialization
 import FileManagerKit
-import FileManagerKitTesting
+import FileManagerKitBuilder
 import Logging
 
 @testable import ToucanSource
@@ -19,39 +19,69 @@ struct ThemeLoaderTestSuite {
     @Test()
     func standardThemeLoading() async throws {
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("assets") {
+            Directory(name: "src") {
+                Directory(name: "assets") {
                     "style.css"
                 }
-                Directory("contents") {
-                    Directory("about") {
-                        "about.mustache"
+                Directory(name: "contents") {
+                    Directory(name: "about") {
+                        File(
+                            name: "about.mustache",
+                            string: """
+                                about override
+                                """
+                        )
                     }
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("assets") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "assets") {
                             "theme.css"
                         }
-                        Directory("templates") {
-                            Directory("pages") {
-                                "default.mustache"
-                                "about.mustache"
-                                "test.html"
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
+                                File(
+                                    name: "default.mustache",
+                                    string: """
+                                        default
+                                        """
+                                )
+                                File(
+                                    name: "about.mustache",
+                                    string: """
+                                        about
+                                        """
+                                )
+                                File(
+                                    name: "test.html",
+                                    string: """
+                                        test.html
+                                        """
+                                )
                             }
-                            "html.mustache"
+                            File(
+                                name: "html.mustache",
+                                string: """
+                                    html
+                                    """
+                            )
                             "README.md"
                         }
                         "README.md"
                     }
-                    Directory("overrides") {
-                        Directory("default") {
-                            Directory("assets") {
+                    Directory(name: "overrides") {
+                        Directory(name: "default") {
+                            Directory(name: "assets") {
                                 "theme.css"
                             }
-                            Directory("templates") {
-                                Directory("pages") {
-                                    "default.mustache"
+                            Directory(name: "templates") {
+                                Directory(name: "pages") {
+                                    File(
+                                        name: "default.mustache",
+                                        string: """
+                                            default override
+                                            """
+                                    )
                                 }
                                 "README.md"
                             }
@@ -85,14 +115,14 @@ struct ThemeLoaderTestSuite {
                     .sorted()
             )
             #expect(
-                theme.components.templates.sorted(by: { $0.id < $1.id })
+                theme.components.templates.map(\.path).sorted()
                     == [
-                        .init(path: "pages/default.mustache"),
-                        .init(path: "pages/about.mustache"),
-                        .init(path: "pages/test.html"),
-                        .init(path: "html.mustache"),
+                        "pages/default.mustache",
+                        "pages/about.mustache",
+                        "pages/test.html",
+                        "html.mustache",
                     ]
-                    .sorted(by: { $0.id < $1.id })
+                    .sorted()
             )
 
             #expect(
@@ -103,11 +133,11 @@ struct ThemeLoaderTestSuite {
                     .sorted()
             )
             #expect(
-                theme.overrides.templates.sorted(by: { $0.id < $1.id })
+                theme.overrides.templates.map(\.path).sorted()
                     == [
-                        .init(path: "pages/default.mustache")
+                        "pages/default.mustache"
                     ]
-                    .sorted(by: { $0.id < $1.id })
+                    .sorted()
             )
 
             #expect(
@@ -118,12 +148,30 @@ struct ThemeLoaderTestSuite {
                     .sorted()
             )
             #expect(
-                theme.content.templates.sorted(by: { $0.id < $1.id })
+                theme.content.templates.map(\.path).sorted()
                     == [
-                        .init(path: "about/about.mustache")
+                        "about/about.mustache"
                     ]
-                    .sorted(by: { $0.id < $1.id })
+                    .sorted()
             )
+
+            let results = loader.getTemplatesIDsWithContents(theme)
+
+            let exp: [String: String] = [
+                "pages.test": "test.html",
+                "pages.about": "about",
+                "about.about": "about override",
+                "pages.default": "default override",
+                "html": "html",
+            ]
+
+            #expect(
+                results
+                    == .init(
+                        uniqueKeysWithValues: exp.sorted { $0.key < $1.key }
+                    )
+            )
+
         }
     }
 }

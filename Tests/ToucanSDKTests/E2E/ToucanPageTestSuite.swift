@@ -7,7 +7,7 @@
 import Testing
 import Logging
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSDK
 
@@ -26,16 +26,16 @@ struct ToucanPageTestSuite: ToucanTestSuite {
             rootName: rootName,
             fileManager: fileManager
         ) {
-            Directory("src") {
-                Directory("contents") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
                     contentAbout()
-                    Directory("assets") {
+                    Directory(name: "assets") {
                         contentStyleCss()
                     }
                     contentHome()
-                    Directory("page1") {
+                    Directory(name: "page1") {
                         File(
-                            "index.yaml",
+                            name: "index.yaml",
                             string: """
                                 type: page
                                 description: Desc1
@@ -43,7 +43,7 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                                 """
                         )
                         File(
-                            "index.md",
+                            name: "index.md",
                             string: """
                                 ---
                                 title: "First beta release"
@@ -54,23 +54,23 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                     }
                     contentSiteFile()
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineHtml(rootUrl: rootUrl.path(), rootName: rootName)
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache()
                             }
                             themeHtmlMustache()
                         }
                     }
                 }
-                Directory("transformers") {
+                Directory(name: "transformers") {
                     replaceScriptFile()
                 }
                 configFile()
@@ -91,33 +91,33 @@ struct ToucanPageTestSuite: ToucanTestSuite {
     func sitemapAnd404Test() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
                     contentAbout()
                     contentHome()
                     content404()
                     contentSitemap()
                     contentSiteFile()
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineHtml()
                     pipelineSitemap()
                     pipeline404()
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     type404()
                     typePage()
                     typeSitemap()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("assets") {
-                            Directory("css") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "assets") {
+                            Directory(name: "css") {
                                 themeCss()
                             }
                         }
-                        Directory("templates") {
-                            Directory("pages") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeHomeMustache()
                                 themeDefaultMustache()
                                 theme404Mustache()
@@ -147,9 +147,9 @@ struct ToucanPageTestSuite: ToucanTestSuite {
     func postAndRssTest() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
-                    Directory("posts") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
+                    Directory(name: "posts") {
                         contentPost(index: 1)
                         contentPost(index: 2)
                         contentPost(index: 3)
@@ -159,19 +159,19 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                     contentRss()
                     contentSiteFile()
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineHtml()
                     pipelineRss()
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                     typePost()
                     typeRss()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeHomeMustache()
                                 themeDefaultMustache()
                                 themeHeaderMustache()
@@ -199,13 +199,13 @@ struct ToucanPageTestSuite: ToucanTestSuite {
     func redirectTest() async throws {
         let logger = Logger(label: "ToucanTestSuite")
         try FileManagerPlayground {
-            Directory("src") {
-                Directory("contents") {
+            Directory(name: "src") {
+                Directory(name: "contents") {
                     contentAbout()
                     contentHome()
-                    Directory("redirectAbout") {
+                    Directory(name: "redirectAbout") {
                         File(
-                            "index.yml",
+                            name: "index.yml",
                             string: """
                                 type: redirect
                                 to: about
@@ -213,18 +213,18 @@ struct ToucanPageTestSuite: ToucanTestSuite {
                         )
                     }
                 }
-                Directory("pipelines") {
+                Directory(name: "pipelines") {
                     pipelineHtml()
                     pipelineRedirect()
                 }
-                Directory("types") {
+                Directory(name: "types") {
                     typePage()
                     typeRedirect()
                 }
-                Directory("themes") {
-                    Directory("default") {
-                        Directory("templates") {
-                            Directory("pages") {
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "templates") {
+                            Directory(name: "pages") {
                                 themeDefaultMustache()
                             }
                             themeRedirectMustache()

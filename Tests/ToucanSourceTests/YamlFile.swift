@@ -7,7 +7,7 @@
 
 import ToucanSerialization
 import FileManagerKit
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 struct YAML<T: Encodable> {
 
@@ -24,12 +24,17 @@ struct YAML<T: Encodable> {
         self.ext = ext
         self.contents = contents
     }
+}
 
-    var file: File {
+extension YAML: BuildableItem {
+
+    func buildItem() -> FileManagerPlayground.Item {
         let encoder = ToucanYAMLEncoder()
-        return .init(
-            name + "." + ext,
-            string: try! encoder.encode(contents)
+        return .file(
+            .init(
+                name: name + "." + ext,
+                string: try! encoder.encode(contents)
+            )
         )
     }
 }

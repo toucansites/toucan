@@ -8,7 +8,7 @@
 import Testing
 import Logging
 import Foundation
-import FileManagerKitTesting
+import FileManagerKitBuilder
 
 @testable import ToucanSDK
 
@@ -16,7 +16,7 @@ extension ToucanTestSuite {
 
     func themeCss() -> File {
         File(
-            "theme.css",
+            name: "theme.css",
             string: """
                 header, footer, .page {
                     max-width: 800px;
@@ -45,7 +45,7 @@ extension ToucanTestSuite {
 
     func theme404Mustache() -> File {
         File(
-            "404.mustache",
+            name: "404.mustache",
             string: """
                 {{<html}}
                 {{$main}}
@@ -63,7 +63,7 @@ extension ToucanTestSuite {
         yaml: String = ""
     ) -> File {
         File(
-            "default.mustache",
+            name: "default.mustache",
             string: """
                 {{<html}}
                 {{$main}}
@@ -84,7 +84,7 @@ extension ToucanTestSuite {
 
     func themeHomeMustache() -> File {
         File(
-            "home.mustache",
+            name: "home.mustache",
             string: """
                 {{<html}}
                 {{$main}}
@@ -101,7 +101,7 @@ extension ToucanTestSuite {
 
     func themeFooterMustache() -> File {
         File(
-            "footer.mustache",
+            name: "footer.mustache",
             string: """
                 <footer>
                     <p>This site was generated using <a href="https://www.swift.org/" target="_blank">Swift</a> & <a href="https://github.com/toucansites/toucan" target="_blank">Toucan</a>.</p>
@@ -114,7 +114,7 @@ extension ToucanTestSuite {
 
     func themeHeaderMustache() -> File {
         File(
-            "header.mustache",
+            name: "header.mustache",
             string: """
                 <header>
                     <a id="logo" href="/">
@@ -138,7 +138,7 @@ extension ToucanTestSuite {
 
     func themeHtmlMustache() -> File {
         File(
-            "html.mustache",
+            name: "html.mustache",
             string: """
                 <!DOCTYPE html>
                 <html {{#site.locale}}lang="{{.}}"{{/site.locale}}>
@@ -231,7 +231,7 @@ extension ToucanTestSuite {
 
     func themeRedirectMustache() -> File {
         File(
-            "redirect.mustache",
+            name: "redirect.mustache",
             string: """
                 <!DOCTYPE html>
                 <html {{#site.locale}}lang="{{.}}"{{/site.locale}}>
@@ -250,7 +250,7 @@ extension ToucanTestSuite {
 
     func themeRssMustache() -> File {
         File(
-            "rss.mustache",
+            name: "rss.mustache",
             string: """
                 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
                 <channel>
@@ -281,7 +281,7 @@ extension ToucanTestSuite {
 
     func themeSitemapMustache() -> File {
         File(
-            "sitemap.mustache",
+            name: "sitemap.mustache",
             string: """
                 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                     {{#empty(urls)}}

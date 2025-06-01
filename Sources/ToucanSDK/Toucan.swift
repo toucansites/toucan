@@ -133,6 +133,16 @@ public struct Toucan {
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
 
+                let themeLoader = ThemeLoader(
+                    locations: .init(
+                        sourceUrl: buildTargetSource.location,
+                        config: buildTargetSource.config
+                    ),
+                    fileManager: fileManager
+                )
+
+                let theme = try themeLoader.load()
+
                 let validator = BuildTargetSourceValidator(
                     buildTargetSource: buildTargetSource
                 )
