@@ -23,6 +23,8 @@ public struct BuildTargetSourceRenderer {
 
     /// Site configuration + all raw content
     let buildTargetSource: BuildTargetSource
+    /// Template identifiers and contents.
+    let templates: [String: String]
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
     /// Date formatters used across pipelines
@@ -37,16 +39,19 @@ public struct BuildTargetSourceRenderer {
     ///
     /// - Parameters:
     ///   - buildTargetSource: The structured bundle containing settings, pipelines, and contents.
+    ///   - templates: The template IDs and contents used by the Mustache renderer.
     ///   - generatorInfo: Info about the content generator (defaults to `.current`).
     ///   - fileManager: Filesystem API for use during rendering.
     ///   - logger: Logger for reporting issues or metrics.
     public init(
         buildTargetSource: BuildTargetSource,
+        templates: [String: String],
         generatorInfo: GeneratorInfo = .current,
         fileManager: FileManagerKit,
         logger: Logger
     ) {
         self.buildTargetSource = buildTargetSource
+        self.templates = templates
         self.generatorInfo = generatorInfo
         self.fileManager = fileManager
         self.logger = logger
@@ -211,7 +216,7 @@ public struct BuildTargetSourceRenderer {
 
                 let renderer = try ContextBundleToHTMLRenderer(
                     pipeline: pipeline,
-                    templates: [:],
+                    templates: templates,
                     logger: logger
                 )
                 results += renderer.render(contextBundles)

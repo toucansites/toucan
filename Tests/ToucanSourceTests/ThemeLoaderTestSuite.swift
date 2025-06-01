@@ -26,9 +26,9 @@ struct ThemeLoaderTestSuite {
                 Directory(name: "contents") {
                     Directory(name: "about") {
                         File(
-                            name: "about.mustache",
+                            name: "pages.about.mustache",
                             string: """
-                                about override
+                                about content override
                                 """
                         )
                     }
@@ -80,6 +80,12 @@ struct ThemeLoaderTestSuite {
                                         name: "default.mustache",
                                         string: """
                                             default override
+                                            """
+                                    )
+                                    File(
+                                        name: "about.mustache",
+                                        string: """
+                                            about override
                                             """
                                     )
                                 }
@@ -135,7 +141,8 @@ struct ThemeLoaderTestSuite {
             #expect(
                 theme.overrides.templates.map(\.path).sorted()
                     == [
-                        "pages/default.mustache"
+                        "pages/about.mustache",
+                        "pages/default.mustache",
                     ]
                     .sorted()
             )
@@ -150,7 +157,7 @@ struct ThemeLoaderTestSuite {
             #expect(
                 theme.content.templates.map(\.path).sorted()
                     == [
-                        "about/about.mustache"
+                        "about/pages.about.mustache"
                     ]
                     .sorted()
             )
@@ -159,8 +166,7 @@ struct ThemeLoaderTestSuite {
 
             let exp: [String: String] = [
                 "pages.test": "test.html",
-                "pages.about": "about",
-                "about.about": "about override",
+                "pages.about": "about content override",
                 "pages.default": "default override",
                 "html": "html",
             ]

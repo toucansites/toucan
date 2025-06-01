@@ -33,7 +33,9 @@ public struct ThemeLoader {
         self.fileManager = fileManager
     }
 
+    ///
     /// Loads and builds a `Theme` by collecting assets and templates from predefined locations.
+    ///
     /// - Returns: A fully constructed `Theme` instance.
     /// - Throws: An error if file discovery fails.
     public func load() throws -> Theme {
@@ -94,7 +96,8 @@ public struct ThemeLoader {
                 templates: try contentTemplateOverrides.map {
                     try loadTemplate(
                         at: locations.contentsUrl,
-                        path: $0
+                        path: $0,
+                        isContentOverride: true
                     )
                 }
             )
@@ -104,7 +107,8 @@ public struct ThemeLoader {
 
     func loadTemplate(
         at url: URL,
-        path: String
+        path: String,
+        isContentOverride: Bool = false
     ) throws -> Template {
 
         let basePath =
@@ -114,8 +118,15 @@ public struct ThemeLoader {
             .joined(separator: ".")
 
         let id =
-            basePath
-            .replacingOccurrences(of: "/", with: ".")
+            if isContentOverride {
+                basePath
+                    .split(separator: "/")
+                    .last.map(String.init) ?? ""
+            }
+            else {
+                basePath
+                    .replacingOccurrences(of: "/", with: ".")
+            }
 
         let contents = try String(
             contentsOf: url.appendingPathIfPresent(path),
@@ -128,7 +139,11 @@ public struct ThemeLoader {
         )
     }
 
-    func getTemplatesIDsWithContents(
+    /// Returns a dictionary of template IDs and their contents.
+    ///
+    /// - Parameter theme: The `Theme` instance to extract templates from.
+    /// - Returns: A dictionary where the keys are template IDs and the values are their contents.
+    public func getTemplatesIDsWithContents(
         _ theme: Theme
     ) -> [String: String] {
         var results: [String: String] = [:]

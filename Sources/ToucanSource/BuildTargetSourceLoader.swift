@@ -74,9 +74,8 @@ public struct BuildTargetSourceLoader {
         let blocks = try loadBlocks(using: locations)
         let rawContents = try loadRawContents(using: config)
 
-        #warning("move locations inside config, use that everywhere")
         return .init(
-            location: sourceUrl,
+            locations: locations,
             target: target,
             config: config,
             settings: settings,

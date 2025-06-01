@@ -134,14 +134,12 @@ public struct Toucan {
                 let buildTargetSource = try buildTargetSourceLoader.load()
 
                 let themeLoader = ThemeLoader(
-                    locations: .init(
-                        sourceUrl: buildTargetSource.location,
-                        config: buildTargetSource.config
-                    ),
+                    locations: buildTargetSource.locations,
                     fileManager: fileManager
                 )
 
                 let theme = try themeLoader.load()
+                let templates = themeLoader.getTemplatesIDsWithContents(theme)
 
                 let validator = BuildTargetSourceValidator(
                     buildTargetSource: buildTargetSource
@@ -150,74 +148,74 @@ public struct Toucan {
 
                 var renderer = BuildTargetSourceRenderer(
                     buildTargetSource: buildTargetSource,
+                    templates: templates,
                     fileManager: fileManager,
                     logger: logger
                 )
 
                 let results = try renderer.render(now: Date())
 
-            }
+                try resetDirectory(at: workDirUrl)
 
-            //                try resetDirectory(at: workDirUrl)
-            //
-            //                // MARK: - Copy default assets
-            //
-            //                let copyManager = CopyManager(
-            //                    fileManager: fileManager,
-            //                    sources: [
-            //                        buildTargetSource.sourceConfig.currentThemeAssetsUrl,
-            //                        buildTargetSource.sourceConfig.currentThemeOverrideAssetsUrl,
-            //                        buildTargetSource.sourceConfig.siteAssetsUrl,
-            //                    ],
-            //                    destination: workDirUrl
-            //                )
-            //                try copyManager.copy()
-            //
-            //                // MARK: - Writing results
-            //
-            //                for result in results {
-            //                    let destinationFolder = workDirUrl.appending(
-            //                        path: result.destination.path
-            //                    )
-            //                    try fileManager.createDirectory(at: destinationFolder)
-            //
-            //                    let resultOutputUrl =
-            //                        destinationFolder
-            //                        .appending(path: result.destination.file)
-            //                        .appendingPathExtension(result.destination.ext)
-            //
-            //                    switch result.source {
-            //                    case .assetFile(let path):
-            //                        let srcUrl = buildTargetSource.sourceConfig.contentsUrl
-            //                            .appending(path: path)
-            //                        try fileManager.copy(from: srcUrl, to: resultOutputUrl)
-            //                    case .asset(let string), .content(let string):
-            //                        try string.write(
-            //                            to: resultOutputUrl,
-            //                            atomically: true,
-            //                            encoding: .utf8
-            //                        )
-            //                    }
-            //                            }
-            //
-            //                // MARK: - Finalize and cleanup
-            //
-            //                // TODO: make sure output url works well in all cases
-            //                var outputUrl = getSafeUrl(
-            //                    for: target.output,
-            //                    using: fileManager
-            //                )
-            //                if !outputUrl.path().hasPrefix("/") {
-            //                    outputUrl = inputUrl.deletingLastPathComponent()
-            //                        .appending(
-            //                            path: target.output
-            //                        )
-            //                }
-            //
-            //                try resetDirectory(at: outputUrl)
-            //                try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
-            //                try? fileManager.delete(at: workDirUrl)
-            //            }
+                // MARK: - Copy default assets
+
+                let copyManager = CopyManager(
+                    fileManager: fileManager,
+                    sources: [
+                        buildTargetSource.locations.currentThemeAssetsUrl,
+                        buildTargetSource.locations
+                            .currentThemeAssetOverridesUrl,
+                        buildTargetSource.locations.siteAssetsUrl,
+                    ],
+                    destination: workDirUrl
+                )
+                try copyManager.copy()
+
+                // MARK: - Writing results
+
+                for result in results {
+                    let destinationFolder = workDirUrl.appending(
+                        path: result.destination.path
+                    )
+                    try fileManager.createDirectory(at: destinationFolder)
+
+                    let resultOutputUrl =
+                        destinationFolder
+                        .appending(path: result.destination.file)
+                        .appendingPathExtension(result.destination.ext)
+
+                    switch result.source {
+                    case .assetFile(let path):
+                        let srcUrl = buildTargetSource.locations.contentsUrl
+                            .appending(path: path)
+                        try fileManager.copy(from: srcUrl, to: resultOutputUrl)
+                    case .asset(let string), .content(let string):
+                        try string.write(
+                            to: resultOutputUrl,
+                            atomically: true,
+                            encoding: .utf8
+                        )
+                    }
+                }
+
+                // MARK: - Finalize and cleanup
+
+                // TODO: make sure output url works well in all cases
+                var outputUrl = getSafeUrl(
+                    for: target.output,
+                    using: fileManager
+                )
+                if !outputUrl.path().hasPrefix("/") {
+                    outputUrl = inputUrl.deletingLastPathComponent()
+                        .appending(
+                            path: target.output
+                        )
+                }
+
+                try resetDirectory(at: outputUrl)
+                try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
+                try? fileManager.delete(at: workDirUrl)
+            }
         }
         catch {
             try? fileManager.delete(at: workDirUrl)

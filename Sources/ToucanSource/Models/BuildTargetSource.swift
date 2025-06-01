@@ -17,8 +17,7 @@ public struct BuildTargetSource {
     // MARK: - Properties
 
     /// The root location of the source on the filesystem.
-    /// This usually points to the folder where the source content resides.
-    public var location: URL
+    public var locations: BuiltTargetSourceLocations
 
     /// The target to use to build the site.
     public var target: Target
@@ -46,7 +45,7 @@ public struct BuildTargetSource {
     /// Initializes a fully populated `BuildTargetSource` from its constituent components.
     ///
     /// - Parameters:
-    ///   - location: Filesystem URL of the source root.
+    ///   - locations: Filesystem URLs of the source contents.
     ///   - target: The target to use to build the site.
     ///   - config: The main configuration for the site/project.
     ///   - settings: Site-level metadata like title, language, etc.
@@ -55,7 +54,7 @@ public struct BuildTargetSource {
     ///   - rawContents: Parsed content entries from the source.
     ///   - blockDirectives: Definitions of custom Markdown block directives.
     public init(
-        location: URL,
+        locations: BuiltTargetSourceLocations,
         target: Target = .standard,
         config: Config = .defaults,
         settings: Settings = .defaults,
@@ -64,7 +63,7 @@ public struct BuildTargetSource {
         rawContents: [RawContent] = [],
         blockDirectives: [Block] = [],
     ) {
-        self.location = location
+        self.locations = locations
         self.target = target
         self.config = config
         self.settings = settings
