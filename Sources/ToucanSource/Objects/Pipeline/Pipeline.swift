@@ -9,7 +9,7 @@
 /// including scopes, queries, content types, engines, and outputs.
 ///
 /// A pipeline defines how data flows from content source to final rendered output.
-public struct Pipeline: Decodable {
+public struct Pipeline: Codable {
 
     // MARK: - Coding Keys
 

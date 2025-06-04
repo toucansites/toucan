@@ -14,10 +14,10 @@ extension Block {
         public var label: String
 
         /// Indicates whether the parameter is required. Defaults to `nil` (optional).
-        public var `required`: Bool?
+        public var isRequired: Bool?
 
         /// A default value for the parameter, used if it is not explicitly specified in the directive.
-        public var `default`: String?
+        public var defaultValue: String?
 
         /// Initializes a `Parameter` for a directive.
         ///
@@ -31,8 +31,8 @@ extension Block {
             defaultValue: String? = nil
         ) {
             self.label = label
-            self.`required` = isRequired
-            self.`default` = defaultValue
+            self.isRequired = isRequired
+            self.defaultValue = defaultValue
         }
     }
 }

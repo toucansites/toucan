@@ -85,8 +85,8 @@ struct BuildTargetSourceLoaderTestSuite {
         )
         try FileManagerPlayground {
             testSourceTypesHierarchy {
-                YAML(name: "post", contents: type1)
-                YAML(name: "tag", contents: type2)
+                YAMLFile(name: "post", contents: type1)
+                YAMLFile(name: "tag", contents: type2)
             }
         }
         .test {
@@ -530,11 +530,11 @@ struct BuildTargetSourceLoaderTestSuite {
                     }
                 }
                 Directory(name: "types") {
-                    YAML(name: "post", contents: type1)
-                    YAML(name: "tag", contents: type2)
+                    YAMLFile(name: "post", contents: type1)
+                    YAMLFile(name: "tag", contents: type2)
                 }
                 Directory(name: "blocks") {
-                    YAML(
+                    YAMLFile(
                         name: "link",
                         contents: Block(
                             name: "link"

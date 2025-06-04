@@ -1,20 +1,64 @@
 //
-//  ToucanTestSuite+Theme.swift
+//  Mocks+Files.swift
 //  Toucan
 //
 //  Created by gerp83 on 2025. 04. 15..
 //
 
-import Testing
-import Logging
 import Foundation
 import FileManagerKitBuilder
 
-@testable import ToucanSDK
+extension File {
+    enum Mocks {}
+}
 
-extension ToucanTestSuite {
+extension File.Mocks {
 
-    func themeCss() -> File {
+    // MARK: -
+
+    static func replaceTransformer() -> File {
+        .init(
+            name: "replace",
+            attributes: [.posixPermissions: 0o777],
+            string: """
+                #!/bin/bash
+                # Replaces all colons `:` with dashes `-` in the given file.
+                # Usage: replace-char --file <path>
+                UNKNOWN_ARGS=()
+                while [[ $# -gt 0 ]]; do
+                    case $1 in
+                        --file)
+                            TOUCAN_FILE="$2"
+                            shift
+                            shift
+                            ;;
+                        -*|--*)
+                            UNKNOWN_ARGS+=("$1" "$2")
+                            shift
+                            shift
+                            ;;
+                        *)
+                            shift
+                            ;;
+                    esac
+                done
+                if [[ -z "${TOUCAN_FILE}" ]]; then
+                    echo "❌ No file specified with --file."
+                    exit 1
+                fi
+                echo "📄 Processing file: ${TOUCAN_FILE}"
+                if [[ ${#UNKNOWN_ARGS[@]} -gt 0 ]]; then
+                    echo "ℹ️ Ignored unknown options: ${UNKNOWN_ARGS[*]}"
+                fi
+                sed 's/:/-/g' "${TOUCAN_FILE}" > "${TOUCAN_FILE}.tmp" && mv "${TOUCAN_FILE}.tmp" "${TOUCAN_FILE}"
+                echo "✅ Done replacing characters."
+                """
+        )
+    }
+
+    // MARK: -
+
+    static func themeCss() -> File {
         File(
             name: "theme.css",
             string: """
@@ -43,10 +87,12 @@ extension ToucanTestSuite {
         )
     }
 
-    func theme404Mustache() -> File {
-        File(
-            name: "404.mustache",
-            string: """
+    // MARK: -
+
+    static func theme404Mustache() -> MustacheFile {
+        .init(
+            name: "404",
+            template: """
                 {{<html}}
                 {{$main}}
                 <div id="not-found" class="page">
@@ -58,21 +104,16 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeDefaultMustache(
-        svg: String = "",
-        yaml: String = ""
-    ) -> File {
-        File(
-            name: "default.mustache",
-            string: """
+    static func themeDefaultMustache() -> MustacheFile {
+        .init(
+            name: "default",
+            template: """
                 {{<html}}
                 {{$main}}
                 <div class="page">
                     <div class="card">
                         <img src="{{page.image}}">
                     </div>
-                    \(svg)
-                    \(yaml)
 
                     {{& page.contents.html}}
                 </div>
@@ -82,10 +123,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeHomeMustache() -> File {
-        File(
-            name: "home.mustache",
-            string: """
+    static func themeHomeMustache() -> MustacheFile {
+        .init(
+            name: "home",
+            template: """
                 {{<html}}
                 {{$main}}
                 <div class="page">
@@ -99,10 +140,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeFooterMustache() -> File {
-        File(
-            name: "footer.mustache",
-            string: """
+    static func themeFooterMustache() -> MustacheFile {
+        .init(
+            name: "footer",
+            template: """
                 <footer>
                     <p>This site was generated using <a href="https://www.swift.org/" target="_blank">Swift</a> & <a href="https://github.com/toucansites/toucan" target="_blank">Toucan</a>.</p>
 
@@ -112,10 +153,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeHeaderMustache() -> File {
-        File(
-            name: "header.mustache",
-            string: """
+    static func themeHeaderMustache() -> MustacheFile {
+        .init(
+            name: "header",
+            template: """
                 <header>
                     <a id="logo" href="/">
                         <img
@@ -136,10 +177,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeHtmlMustache() -> File {
-        File(
-            name: "html.mustache",
-            string: """
+    static func themeHtmlMustache() -> MustacheFile {
+        .init(
+            name: "html",
+            template: """
                 <!DOCTYPE html>
                 <html {{#site.locale}}lang="{{.}}"{{/site.locale}}>
                 <head>
@@ -229,10 +270,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeRedirectMustache() -> File {
-        File(
-            name: "redirect.mustache",
-            string: """
+    static func themeRedirectMustache() -> MustacheFile {
+        .init(
+            name: "redirect",
+            template: """
                 <!DOCTYPE html>
                 <html {{#site.locale}}lang="{{.}}"{{/site.locale}}>
                   <meta charset="utf-8">
@@ -248,10 +289,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeRssMustache() -> File {
-        File(
+    static func themeRssMustache() -> MustacheFile {
+        .init(
             name: "rss.mustache",
-            string: """
+            template: """
                 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
                 <channel>
                     <title>{{site.name}}</title>
@@ -279,10 +320,10 @@ extension ToucanTestSuite {
         )
     }
 
-    func themeSitemapMustache() -> File {
-        File(
+    static func themeSitemapMustache() -> MustacheFile {
+        .init(
             name: "sitemap.mustache",
-            string: """
+            template: """
                 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                     {{#empty(urls)}}
                     {{/empty(urls)}}
@@ -297,6 +338,124 @@ extension ToucanTestSuite {
 
                     {{/empty(urls)}}
                 </urlset>
+                """
+        )
+    }
+
+    // MARK: -
+
+    static func notFoundPage() -> RawContentBundle {
+        .init(Mocks.RawContents.notFoundPage())
+    }
+
+    static func aboutPage() -> RawContentBundle {
+        .init(Mocks.RawContents.aboutPage())
+    }
+
+    static func aboutPageStyleCSS() -> File {
+        File(
+            name: "style.css",
+            string: """
+                #home h1 {
+                    text-transform: uppercase;
+                }
+                """
+        )
+    }
+
+    static func homePage() -> MarkdownFile {
+        .init(
+            name: "index",
+            markdown: Mocks.RawContents.homePage().markdown
+        )
+    }
+
+    static func post(
+        id: Int,
+        now: Date = .init(),
+        publication: String,
+        expiration: String,
+        draft: Bool,
+        featured: Bool,
+        authorIds: [Int],
+        tagIds: [Int]
+    ) -> RawContentBundle {
+        .init(
+            Mocks.RawContents.post(
+                id: id,
+                now: now,
+                publication: publication,
+                expiration: expiration,
+                draft: draft,
+                featured: featured,
+                authorIds: authorIds,
+                tagIds: tagIds
+            )
+        )
+    }
+
+    static func rssBundle() -> Directory {
+        Directory(name: "rss.xml") {
+            File(
+                name: "index.yml",
+                string: """
+                    type: rss
+                    """
+            )
+        }
+    }
+
+    static func sitemapBundle() -> Directory {
+        Directory(name: "sitemap.xml") {
+            File(
+                name: "index.yml",
+                string: """
+                    type: sitemap
+                    """
+            )
+        }
+    }
+
+    // MARK: - misc
+
+    static func svg1() -> File {
+        File(
+            name: "test1.svg",
+            string: """
+                <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.46967 10.0303C6.17678 9.73744 6.17678 9.26256 6.46967 8.96967L11.4697 3.96967C11.7626 3.67678 12.2374 3.67678 12.5303 3.96967L17.5303 8.96967C17.8232 9.26256 17.8232 9.73744 17.5303 10.0303C17.2374 10.3232 16.7626 10.3232 16.4697 10.0303L12.75 6.31066L12.75 14.5C12.75 15.2133 12.9702 16.3 13.6087 17.1868C14.2196 18.0353 15.2444 18.75 17 18.75C17.4142 18.75 17.75 19.0858 17.75 19.5C17.75 19.9142 17.4142 20.25 17 20.25C14.7556 20.25 13.2804 19.298 12.3913 18.0632C11.5298 16.8667 11.25 15.4534 11.25 14.5L11.25 6.31066L7.53033 10.0303C7.23744 10.3232 6.76256 10.3232 6.46967 10.0303Z" fill="#1C274C"/>
+                </svg>
+                """
+        )
+    }
+
+    static func svg2() -> File {
+        File(
+            name: "test2.svg",
+            string: """
+                <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.46967 10.0303C6.17678 9.73744 6.17678 9.26256 6.46967 8.96967L11.4697 3.96967C11.7626 3.67678 12.2374 3.67678 12.5303 3.96967L17.5303 8.96967C17.8232 9.26256 17.8232 9.73744 17.5303 10.0303C17.2374 10.3232 16.7626 10.3232 16.4697 10.0303L12.75 6.31066L12.75 14.5C12.75 15.2133 12.9702 16.3 13.6087 17.1868C14.2196 18.0353 15.2444 18.75 17 18.75C17.4142 18.75 17.75 19.0858 17.75 19.5C17.75 19.9142 17.4142 20.25 17 20.25C14.7556 20.25 13.2804 19.298 12.3913 18.0632C11.5298 16.8667 11.25 15.4534 11.25 14.5L11.25 6.31066L7.53033 10.0303C7.23744 10.3232 6.76256 10.3232 6.46967 10.0303Z" fill="#1C274C"/>
+                </svg>
+                """
+        )
+    }
+
+    static func yaml1() -> File {
+        File(
+            name: "test1.yaml",
+            string: """
+                key1: value1
+                key2: value2
+                """
+        )
+    }
+
+    static func yaml2() -> File {
+        File(
+            name: "test2.yaml",
+            string: """
+                key3: value3
+                key4: value4
                 """
         )
     }

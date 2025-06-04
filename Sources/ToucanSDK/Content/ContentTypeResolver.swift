@@ -73,7 +73,7 @@ struct ContentTypeResolver {
 
         if let type = contentTypes.first(
             where: { type in
-                type.paths.contains { origin.path.hasPrefix($0) }
+                type.paths.contains { origin.path.value.hasPrefix($0) }
             }
         ) {
             return type

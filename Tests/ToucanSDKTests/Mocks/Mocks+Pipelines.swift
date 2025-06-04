@@ -109,7 +109,7 @@ extension Mocks.Pipelines {
                     .init(
                         action: .add,
                         property: "js",
-                        resolvePath: true,
+                        resolvePath: false,
                         input: .init(name: "main", ext: "js")
                     ),
                     .init(
@@ -117,6 +117,44 @@ extension Mocks.Pipelines {
                         property: "image",
                         resolvePath: true,
                         input: .init(name: "cover", ext: "jpg")
+                    ),
+                    .init(
+                        action: .load,
+                        property: "svg",
+                        resolvePath: false,
+                        input: .init(
+                            name: "icon",
+                            ext: "svg"
+                        )
+                    ),
+                    .init(
+                        action: .load,
+                        property: "svgs",
+                        resolvePath: true,
+                        input: .init(
+                            path: "icons",
+                            name: "*",
+                            ext: "svg"
+                        )
+                    ),
+                    .init(
+                        action: .parse,
+                        property: "yaml",
+                        resolvePath: false,
+                        input: .init(
+                            name: "data",
+                            ext: "yml"
+                        )
+                    ),
+                    .init(
+                        action: .parse,
+                        property: "yamls",
+                        resolvePath: true,
+                        input: .init(
+                            path: "dataset",
+                            name: "*",
+                            ext: "yaml"
+                        )
                     ),
                 ]
             ),
@@ -339,7 +377,10 @@ extension Mocks.Pipelines {
                     limit: 2
                 )
             ],
-            assets: .defaults,
+            assets: .init(
+                behaviors: [],
+                properties: []
+            ),
             transformers: [:],
             engine: .init(
                 id: "mustache",

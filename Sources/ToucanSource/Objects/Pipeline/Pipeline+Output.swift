@@ -8,7 +8,7 @@
 extension Pipeline {
 
     /// Describes the output configuration for a content pipeline.
-    public struct Output: Decodable {
+    public struct Output: Codable {
 
         // MARK: - Coding Keys
 

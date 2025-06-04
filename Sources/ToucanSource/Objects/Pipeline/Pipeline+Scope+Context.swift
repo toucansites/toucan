@@ -8,7 +8,7 @@
 extension Pipeline.Scope {
 
     /// Represents the available data context for a rendering `Scope`.
-    public struct Context: OptionSet, Decodable {
+    public struct Context: OptionSet, Codable {
 
         // MARK: - Bitmask Flags (Simple Contexts)
 

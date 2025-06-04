@@ -8,7 +8,7 @@
 extension Pipeline {
 
     /// Describes a rendering scope within a content pipeline.
-    public struct Scope: Decodable {
+    public struct Scope: Codable {
 
         // MARK: - Coding Keys
 
@@ -61,6 +61,20 @@ extension Pipeline {
                 ?? []
 
             self.init(context: context, fields: fields)
+        }
+
+        /// Encodes this `Scope` instance into the given encoder.
+        ///
+        /// This method encodes the `context` and `fields` properties using keyed encoding.
+        ///
+        /// - Parameter encoder: The encoder to write data to.
+        /// - Throws: An error if any values are invalid for the encoder’s format.
+        public func encode(
+            to encoder: any Encoder
+        ) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(context, forKey: .context)
+            try container.encode(fields, forKey: .fields)
         }
 
         // MARK: - Predefined Scopes

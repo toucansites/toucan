@@ -15,7 +15,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "",
+                path: .init(""),
                 slug: ""
             ),
             markdown: .init(
@@ -39,7 +39,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "404",
+                path: .init("404"),
                 slug: "404"
             ),
             markdown: .init(
@@ -63,13 +63,17 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "about",
+                path: .init("about"),
                 slug: "about"
             ),
             markdown: .init(
                 frontMatter: [
                     "title": "About page",
                     "description": "About page description",
+                    "css": [
+                        "/assets/about/about.css",
+                        "https://unpkg.com/test@1.0.0.css",
+                    ],
                 ],
                 contents: """
                     # About page
@@ -78,7 +82,10 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
-            assets: []
+            assets: [
+                "style.css",
+                "main.js",
+            ]
         )
     }
 
@@ -87,7 +94,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "redirects/home-old",
+                path: .init("redirects/home-old"),
                 slug: "home-old"
             ),
             markdown: .init(
@@ -108,7 +115,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "redirects/about-old",
+                path: .init("redirects/about-old"),
                 slug: "about-old"
             ),
             markdown: .init(
@@ -129,7 +136,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "rss.xml",
+                path: .init("rss.xml"),
                 slug: "rss.xml"
             ),
             markdown: .init(
@@ -148,7 +155,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "sitemap.xml",
+                path: .init("sitemap.xml"),
                 slug: "sitemap.xml"
             ),
             markdown: .init(
@@ -170,7 +177,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "pages/page-\(id)",
+                path: .init("pages/page-\(id)"),
                 slug: "pages/page-\(id)"
             ),
             markdown: .init(
@@ -196,7 +203,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "blog/authors/author-\(id)",
+                path: .init("blog/authors/author-\(id)"),
                 slug: "blog/authors/author-\(id)"
             ),
             markdown: .init(
@@ -223,7 +230,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "blog/tags/tag-\(id)",
+                path: .init("blog/tags/tag-\(id)"),
                 slug: "blog/tags/tag-\(id)"
             ),
             markdown: .init(
@@ -255,7 +262,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         return .init(
             origin: .init(
-                path: "blog/posts/post-\(id)",
+                path: .init("blog/posts/post-\(id)"),
                 slug: "blog/posts/post-\(id)"
             ),
             markdown: .init(
@@ -269,6 +276,7 @@ extension Mocks.RawContents {
                     "authors": .init(authorIds.map { "author-\($0)" }),
                     "tags": .init(tagIds.map { "tag-\($0)" }),
                     "rating": .init(Double(id)),
+                    "image": "cover-\(id).jpg",
                 ],
 
                 contents: """
@@ -278,7 +286,9 @@ extension Mocks.RawContents {
                     """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
-            assets: []
+            assets: [
+                "cover.jpg"
+            ]
         )
     }
 
@@ -287,7 +297,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "blog/posts/pages/{{post.pagination}}",
+                path: .init("blog/posts/pages/{{post.pagination}}"),
                 slug: "blog/posts/pages/{{post.pagination}}"
             ),
             markdown: .init(
@@ -314,7 +324,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "docs/categories/category-\(id)",
+                path: .init("docs/categories/category-\(id)"),
                 slug: "docs/categories/category-\(id)"
             ),
             markdown: .init(
@@ -342,7 +352,7 @@ extension Mocks.RawContents {
     ) -> RawContent {
         .init(
             origin: .init(
-                path: "docs/guides/guide-\(id)",
+                path: .init("docs/guides/guide-\(id)"),
                 slug: "docs/guides/guide-\(id)"
             ),
             markdown: .init(

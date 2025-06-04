@@ -8,7 +8,7 @@
 extension Pipeline {
 
     /// Represents the rendering engine configuration used in a content pipeline.
-    public struct Engine: Decodable {
+    public struct Engine: Codable {
 
         // MARK: - Coding Keys
 

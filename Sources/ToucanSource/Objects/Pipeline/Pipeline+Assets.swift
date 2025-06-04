@@ -11,10 +11,10 @@ extension Pipeline {
     ///
     /// Assets include static files like JavaScript, CSS, and images that are attached
     /// to the output content, either by setting paths, loading files, or parsing content.
-    public struct Assets: Decodable {
+    public struct Assets: Codable {
 
         /// Describes the file location for the asset.
-        public struct Location: Decodable {
+        public struct Location: Codable {
             /// An optional path to the asset file.
             public var path: String?
             /// The base name of the file (without extension).
@@ -48,7 +48,7 @@ extension Pipeline {
         ///   - id: A unique identifier for the behavior.
         ///   - input: The source location of the asset.
         ///   - output: The destination location for the processed asset.
-        public struct Behavior: Decodable {
+        public struct Behavior: Codable {
 
             private enum CodingKeys: CodingKey {
                 case id
@@ -118,7 +118,7 @@ extension Pipeline {
         }
 
         /// Represents a single asset manipulation instruction within the `Assets` configuration.
-        public struct Property: Decodable {
+        public struct Property: Codable {
 
             /// Initializes a new `Property` describing an asset manipulation.
             ///
@@ -140,7 +140,7 @@ extension Pipeline {
             }
 
             /// Defines how the asset should be applied or processed.
-            public enum Action: String, Decodable {
+            public enum Action: String, Codable {
                 /// Add the asset to an existing list or collection.
                 case add
                 /// Overwrite or explicitly set the asset value.

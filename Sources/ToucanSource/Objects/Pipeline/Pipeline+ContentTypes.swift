@@ -11,7 +11,7 @@ extension Pipeline {
     ///
     /// `ContentTypes` allows explicit inclusion or exclusion of types, as well as
     /// optional tracking for last modification timestamps.
-    public struct ContentTypes: Decodable {
+    public struct ContentTypes: Codable {
 
         // MARK: - Coding Keys
 

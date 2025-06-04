@@ -1,39 +1,38 @@
 //
-//  YamlFile.swift
+//  MustacheFile.swift
 //  Toucan
 //
-//  Created by Tibor Bödecs on 2025. 05. 20..
+//  Created by Tibor Bödecs on 2025. 06. 04..
 //
 
 import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
 
-struct YAML<T: Encodable> {
+struct MustacheFile {
 
     var name: String
     var ext: String
-    var contents: T
+    var template: String
 
     init(
         name: String,
-        ext: String = "yml",
-        contents: T
+        ext: String = "mustache",
+        template: String
     ) {
         self.name = name
         self.ext = ext
-        self.contents = contents
+        self.template = template
     }
 }
 
-extension YAML: BuildableItem {
+extension MustacheFile: BuildableItem {
 
     func buildItem() -> FileManagerPlayground.Item {
-        let encoder = ToucanYAMLEncoder()
         return .file(
             .init(
                 name: name + "." + ext,
-                string: try! encoder.encode(contents)
+                string: template
             )
         )
     }

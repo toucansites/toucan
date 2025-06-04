@@ -90,13 +90,10 @@ struct AssetBehaviorExecutor {
                 }
 
                 for inputAsset in matchingRemainingAssets {
-                    let basePath = content.rawValue.origin.path
-                        .split(separator: "/")
-                        .dropLast()
-                        .joined(separator: "/")
+                    let basePath = content.rawValue.origin.path.basePath()
 
                     let sourcePath = [
-                        basePath,
+                        basePath.value,
                         assetsPath,
                         inputAsset,
                     ]

@@ -156,10 +156,19 @@ public struct BuildTargetSourceRenderer {
                 to: baseContents,
                 now: now
             )
-            let finalContents = contentResolver.apply(
+            let iteratedContents = contentResolver.apply(
                 iterators: pipeline.iterators,
                 to: filteredContents,
+                baseURL: buildTargetSource.target.url,
                 now: now
+            )
+
+            let finalContents = try contentResolver.apply(
+                assetProperties: pipeline.assets.properties,
+                to: iteratedContents,
+                contentsUrl: buildTargetSource.locations.contentsUrl,
+                assetsPath: buildTargetSource.config.contents.assets.path,
+                baseUrl: buildTargetSource.target.url
             )
 
             let dateFormatter = ToucanOutputDateFormatter(
@@ -168,22 +177,11 @@ public struct BuildTargetSourceRenderer {
                 logger: logger
             )
 
-            //
-            //            let assetResults = try executor.execute(
-            //                pipeline: pipeline,
-            //                contents: contents
-            //            )
-            //            results.append(contentsOf: assetResults)
-            //
-            //            let assetPropertyResolver = AssetPropertyResolver(
-            //                contentsUrl: buildTargetSource.sourceConfig.contentsUrl,
-            //                assetsPath: buildTargetSource.sourceConfig.config.contents.assets
-            //                    .path,
-            //                baseUrl: buildTargetSource.baseUrl,
-            //                config: pipeline.assets
-            //            )
-            //
-            //            let finalContents = try assetPropertyResolver.resolve(contents)
+            //                        let assetResults = try executor.execute(
+            //                            pipeline: pipeline,
+            //                            contents: contents
+            //                        )
+            //                        results.append(contentsOf: assetResults)
 
             let lastUpdate =
                 getLastContentUpdate(
@@ -448,7 +446,33 @@ public struct BuildTargetSourceRenderer {
             let renderer = MarkdownRenderer(
                 configuration: .init(
                     markdown: .init(
-                        customBlockDirectives: []
+                        customBlockDirectives: buildTargetSource.blockDirectives
+                            .map {
+                                .init(
+                                    name: $0.name,
+                                    parameters: $0.parameters?
+                                        .map {
+                                            .init(
+                                                label: $0.label,
+                                                isRequired: $0.isRequired,
+                                                defaultValue: $0.defaultValue
+                                            )
+                                        },
+                                    requiresParentDirective: $0
+                                        .requiresParentDirective,
+                                    removesChildParagraph: $0
+                                        .removesChildParagraph,
+                                    tag: $0.tag,
+                                    attributes: $0.attributes?
+                                        .map {
+                                            .init(
+                                                name: $0.name,
+                                                value: $0.value
+                                            )
+                                        },
+                                    output: $0.output
+                                )
+                            }
                     ),
                     outline: .init(
                         levels: buildTargetSource.config.renderer
@@ -510,19 +534,24 @@ public struct BuildTargetSourceRenderer {
                     ),
                     now: now
                 )
-                result[key] = .init(
-                    relationContents.map {
-                        getContentContext(
-                            contents: contents,
-                            for: $0,
-                            pipeline: pipeline,
-                            dateFormatter: dateFormatter,
-                            now: now,
-                            scopeKey: "reference",
-                            allowSubQueries: false
-                        )
-                    }
-                )
+
+                let relationContexts = relationContents.map {
+                    getContentContext(
+                        contents: contents,
+                        for: $0,
+                        pipeline: pipeline,
+                        dateFormatter: dateFormatter,
+                        now: now,
+                        scopeKey: "reference",
+                        allowSubQueries: false
+                    )
+                }
+                switch relation.type {
+                case .many:
+                    result[key] = .init(relationContexts)
+                case .one:
+                    result[key] = .init(relationContexts.first)
+                }
             }
         }
 

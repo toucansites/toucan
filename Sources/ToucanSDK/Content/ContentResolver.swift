@@ -11,27 +11,16 @@ import ToucanSource
 import ToucanSerialization
 import Logging
 
-fileprivate extension String {
+fileprivate extension Path {
 
-    // TODO: this is duplicate -> raw content id?
-    func trimmingBracketsContent() -> String {
-        var result = ""
-        var insideBrackets = false
-
-        let decoded = self.removingPercentEncoding ?? self
-
-        for char in decoded {
-            if char == "[" {
-                insideBrackets = true
-            }
-            else if char == "]" {
-                insideBrackets = false
-            }
-            else if !insideBrackets {
-                result.append(char)
-            }
-        }
-        return result
+    func getIdentifier() -> String {
+        let newRawPath =
+            self.value
+            .split(separator: "/")
+            .dropLast()
+            .last
+            .map(String.init) ?? ""
+        return Path(newRawPath).trimmingBracketsContent()
     }
 }
 
@@ -88,32 +77,6 @@ struct ContentResolver {
         self.decoder = decoder
         self.dateFormatter = dateFormatter
         self.logger = logger
-    }
-
-    func resolve(
-        rawContents: [RawContent],
-        filterRules: [String: Condition],
-        iterators: [String: Query],
-        now: TimeInterval
-    ) throws(ContentResolverError) -> [Content] {
-
-        let contents = try convert(
-            rawContents: rawContents
-        )
-
-        let filteredContents = apply(
-            filterRules: filterRules,
-            to: contents,
-            now: now
-        )
-
-        let finalContents = apply(
-            iterators: iterators,
-            to: filteredContents,
-            now: now
-        )
-
-        return finalContents
     }
 
     // MARK: - conversion
@@ -256,13 +219,7 @@ struct ContentResolver {
         }
 
         // Extract `id` from front matter or fallback from origin path
-        var id: String =
-            rawContent.origin.path
-            .split(separator: "/")
-            .dropLast()
-            .last
-            .map(String.init)?
-            .trimmingBracketsContent() ?? ""
+        var id: String = rawContent.origin.path.getIdentifier()
 
         if let rawId = rawContent.markdown.frontMatter.string("id") {
             id = rawId
@@ -280,7 +237,7 @@ struct ContentResolver {
         // Final assembled content object
         return .init(
             id: id,
-            slug: .init(value: slug),
+            slug: .init(slug),
             rawValue: rawContent,
             definition: contentType,
             properties: properties,
@@ -327,32 +284,16 @@ struct ContentResolver {
 
     // MARK: - iterators
 
-    /// Extracts a dynamic iterator identifier from a slug value containing
-    /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
-    ///
-    /// - Returns: The identifier inside `{{...}}`, or `nil` if not found.
-    private func extractIteratorId(from slug: String) -> String? {
-        guard
-            let startRange = slug.range(of: "{{"),
-            let endRange = slug.range(
-                of: "}}",
-                range: startRange.upperBound..<slug.endIndex
-            )
-        else {
-            return nil
-        }
-        return .init(slug[startRange.upperBound..<endRange.lowerBound])
-    }
-
     func apply(
         iterators: [String: Query],
         to contents: [Content],
+        baseURL: String,
         now: TimeInterval
     ) -> [Content] {
         var finalContents: [Content] = []
 
         for content in contents {
-            if let iteratorId = extractIteratorId(from: content.slug.value) {
+            if let iteratorId = content.slug.extractIteratorId() {
                 guard
                     let query = iterators[iteratorId]
                 else {
@@ -406,19 +347,19 @@ struct ContentResolver {
                         )
                     }
 
-                    //                    let links = (0..<numberOfPages)
-                    //                        .map { i in
-                    //                            let pageIndex = i + 1
-                    //                            let permalink = content.slug.permalink(
-                    //                                baseUrl: baseUrl
-                    //                            )
-                    //                            return IteratorInfo.Link(
-                    //                                number: pageIndex,
-                    //                                permalink: permalink.replacingOccurrences(
-                    //                                    ["{{\(iteratorId)}}": String(pageIndex)]),
-                    //                                isCurrent: pageIndex == currentPageIndex
-                    //                            )
-                    //                        }
+                    let links = (0..<numberOfPages)
+                        .map { i in
+                            let pageIndex = i + 1
+                            let permalink = content.slug.permalink(
+                                baseUrl: baseURL,
+                            )
+                            return IteratorInfo.Link(
+                                number: pageIndex,
+                                permalink: permalink.replacingOccurrences(
+                                    ["{{\(iteratorId)}}": String(pageIndex)]),
+                                isCurrent: pageIndex == currentPageIndex
+                            )
+                        }
 
                     let items = contents.run(
                         query: .init(
@@ -436,7 +377,7 @@ struct ContentResolver {
                         total: numberOfPages,
                         limit: limit,
                         items: items,
-                        links: [],
+                        links: links,
                         scope: query.scope
                     )
 
@@ -488,5 +429,168 @@ struct ContentResolver {
             "{{number}}": String(number),
             "{{total}}": String(total),
         ])
+    }
+
+    // MARK: - asset resolution
+
+    func apply(
+        assetProperties: [Pipeline.Assets.Property],
+        to contents: [Content],
+        contentsUrl: URL,
+        assetsPath: String,
+        baseUrl: String,
+    ) throws -> [Content] {
+        var results: [Content] = []
+
+        for content in contents {
+            var item: Content = content
+
+            for property in assetProperties {
+                let path = item.rawValue.origin.path
+                let url = contentsUrl.appendingPathComponent(path.value)
+                let assetsUrl = url.deletingLastPathComponent()
+                    .appending(path: assetsPath)
+
+                let filteredAssets = filterFilePaths(
+                    from: content.rawValue.assets,
+                    input: property.input
+                )
+
+                guard !filteredAssets.isEmpty else {
+                    continue
+                }
+
+                let assetKeys =
+                    filteredAssets.compactMap {
+                        $0.split(separator: ".").first
+                    }
+                    .map(String.init)
+
+                let resolvedAssets = filteredAssets.map {
+                    "./\(assetsPath)/\($0)"
+                        .resolveAsset(
+                            baseUrl: baseUrl,
+                            assetsPath: assetsPath,
+                            slug: content.slug.value
+                        )
+                }
+
+                let frontMatter = item.rawValue.markdown.frontMatter
+
+                let finalAssets =
+                    property.resolvePath ? resolvedAssets : filteredAssets
+
+                switch property.action {
+                case .add:
+                    if let originalItems = frontMatter[property.property]?
+                        .arrayValue(as: String.self)
+                    {
+                        item.properties[property.property] = .init(
+                            originalItems + finalAssets
+                        )
+                    }
+                    else {
+                        item.properties[property.property] = .init(finalAssets)
+                    }
+                case .set:
+                    if finalAssets.count == 1 {
+                        let asset = finalAssets[0]
+                        item.properties[property.property] = .init(asset)
+                    }
+                    else {
+                        item.properties[property.property] = .init(
+                            createDictionaryValues(
+                                assetKeys: assetKeys,
+                                array: finalAssets
+                            )
+                        )
+                    }
+                case .load:
+                    if finalAssets.count == 1 {
+                        let asset = finalAssets[0]
+                        let contents = try String(
+                            contentsOf: assetsUrl.appending(path: asset)
+                        )
+                        item.properties[property.property] = .init(contents)
+                    }
+                    else {
+                        var values: [String: AnyCodable] = [:]
+                        for i in 0..<finalAssets.count {
+                            let contents = try String(
+                                contentsOf: assetsUrl.appending(
+                                    path: finalAssets[i]
+                                )
+                            )
+                            values[assetKeys[i]] = .init(contents)
+                        }
+                        item.properties[property.property] = .init(values)
+                    }
+                // TODO: check extension, add json support
+                case .parse:
+                    if finalAssets.count == 1 {
+                        let data = try Data(
+                            contentsOf: assetsUrl.appending(
+                                path: finalAssets[0]
+                            )
+                        )
+                        let yaml = try ToucanYAMLDecoder()
+                            .decode(AnyCodable.self, from: data)
+                        item.properties[property.property] = yaml
+                    }
+                    else {
+                        var values: [String: AnyCodable] = [:]
+                        for i in 0..<finalAssets.count {
+                            let data = try Data(
+                                contentsOf: assetsUrl.appending(
+                                    path: finalAssets[i]
+                                )
+                            )
+                            let yaml = try ToucanYAMLDecoder()
+                                .decode(AnyCodable.self, from: data)
+
+                            values[assetKeys[i]] = yaml
+                        }
+                        item.properties[property.property] = .init(values)
+                    }
+                }
+            }
+            results.append(item)
+        }
+        return results
+    }
+
+    private func createDictionaryValues(
+        assetKeys: [String],
+        array: [String]
+    ) -> [String: AnyCodable] {
+        var values: [String: AnyCodable] = [:]
+        for i in 0..<array.count {
+            values[assetKeys[i]] = .init(array[i])
+        }
+        return values
+    }
+
+    private func filterFilePaths(
+        from paths: [String],
+        input: Pipeline.Assets.Location
+    ) -> [String] {
+        paths.filter { filePath in
+            guard let url = URL(string: filePath) else {
+                return false
+            }
+
+            let path = url.deletingLastPathComponent().path
+            let name = url.deletingPathExtension().lastPathComponent
+            let ext = url.pathExtension
+
+            let inputPath = input.path ?? ""
+            let pathMatches =
+                inputPath == "*" || inputPath.isEmpty || path == inputPath
+            let nameMatches =
+                input.name == "*" || input.name.isEmpty || name == input.name
+            let extMatches =
+                input.ext == "*" || input.ext.isEmpty || ext == input.ext
+            return pathMatches && nameMatches && extMatches
+        }
     }
 }

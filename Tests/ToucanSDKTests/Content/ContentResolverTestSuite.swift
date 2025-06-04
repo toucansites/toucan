@@ -112,7 +112,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "hello",
+                        path: .init("hello"),
                         slug: "hello"
                     ),
                     lastModificationDate: now.timeIntervalSince1970
@@ -170,7 +170,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "posts/hello",
+                        path: .init("posts/hello"),
                         slug: "posts/hello"
                     ),
                     markdown: .init(
@@ -233,7 +233,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "posts/hello",
+                        path: .init("posts/hello"),
                         slug: "posts/hello"
                     ),
                     lastModificationDate: now.timeIntervalSince1970
@@ -323,7 +323,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "test",
+                        path: .init("test"),
                         slug: "test"
                     ),
                     markdown: .init(
@@ -419,7 +419,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "test",
+                        path: .init("test"),
                         slug: "test"
                     ),
                     markdown: .init(
@@ -497,7 +497,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "test",
+                        path: .init("test"),
                         slug: "test"
                     ),
                     markdown: .init(
@@ -568,7 +568,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "test",
+                        path: .init("test"),
                         slug: "test"
                     ),
                     markdown: .init(
@@ -859,7 +859,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "test1",
+                        path: .init("test1"),
                         slug: "test1"
                     ),
                     markdown: .init(
@@ -883,7 +883,7 @@ struct ContentResolverTestSuite {
                 ),
                 .init(
                     origin: .init(
-                        path: "test2",
+                        path: .init("test2"),
                         slug: "test2"
                     ),
                     markdown: .init(
@@ -977,7 +977,7 @@ struct ContentResolverTestSuite {
             rawContents: [
                 .init(
                     origin: .init(
-                        path: "test1",
+                        path: .init("test1"),
                         slug: "test1"
                     ),
                     markdown: .init(
@@ -989,7 +989,7 @@ struct ContentResolverTestSuite {
                 ),
                 .init(
                     origin: .init(
-                        path: "test2",
+                        path: .init("test2"),
                         slug: "test2"
                     ),
                     markdown: .init(
@@ -1070,6 +1070,7 @@ struct ContentResolverTestSuite {
         let contents = resolver.apply(
             iterators: pipeline.iterators,
             to: baseContents,
+            baseURL: buildTargetSource.target.url,
             now: now.timeIntervalSince1970
         )
 
@@ -1096,4 +1097,84 @@ struct ContentResolverTestSuite {
         )
     }
 
+    // MARK: - asset resolver
+
+    @Test
+    func assetBehaviorBasics() async throws {
+        let now = Date()
+        let buildTargetSource = Mocks.buildTargetSource(now: now)
+        let resolver = try getMockresolver(
+            buildTargetSource: buildTargetSource,
+            now: now
+        )
+        let baseContents = try resolver.convert(
+            rawContents: buildTargetSource.rawContents
+        )
+        let pipeline = Mocks.Pipelines.html()
+
+        let contents = try resolver.apply(
+            assetProperties: pipeline.assets.properties,
+            to: baseContents,
+            contentsUrl: buildTargetSource.locations.contentsUrl,
+            assetsPath: buildTargetSource.config.contents.assets.path,
+            baseUrl: buildTargetSource.target.url
+        )
+
+        let query1 = Query(
+            contentType: "post",
+        )
+
+        let results1 = contents.run(
+            query: query1,
+            now: now.timeIntervalSince1970
+        )
+
+        try #require(results1.count == 3)
+
+        let images = results1.compactMap {
+            $0.properties["image"]?.stringValue()
+        }
+
+        #expect(
+            images.sorted() == [
+                "http://localhost:3000/assets/blog/posts/post-1/cover.jpg",
+                "http://localhost:3000/assets/blog/posts/post-2/cover.jpg",
+                "http://localhost:3000/assets/blog/posts/post-3/cover.jpg",
+            ]
+        )
+
+        let query2 = Query(
+            contentType: "page",
+            filter: .field(
+                key: "slug",
+                operator: .equals,
+                value: "about"
+            )
+        )
+
+        let results2 = contents.run(
+            query: query2,
+            now: now.timeIntervalSince1970
+        )
+
+        try #require(results2.count == 1)
+
+        let css =
+            results2[0].properties["css"]?.arrayValue(as: String.self) ?? []
+        let js = results2[0].properties["js"]?.arrayValue(as: String.self) ?? []
+        #expect(
+            css.sorted() == [
+                // @NOTE: maybe support resolving ./assets/file.css ???
+                "/assets/about/about.css",
+                "http://localhost:3000/assets/about/style.css",
+                "https://unpkg.com/test@1.0.0.css",
+            ]
+        )
+        #expect(
+            js.sorted() == [
+                "main.js"
+            ]
+        )
+
+    }
 }

@@ -11,7 +11,7 @@ public struct Origin: Equatable {
     /// The original path of the page bundle directory.
     ///
     /// This also acts as a unique identifier for the content within the file system.
-    public var path: String
+    public var path: Path
 
     /// The slug, typically derived from the path and influenced by noindex files or directory structure.
     ///
@@ -24,7 +24,7 @@ public struct Origin: Equatable {
     ///   - path: The source directory of the content.
     ///   - slug: The derived slug based on the path and metadata.
     public init(
-        path: String,
+        path: Path,
         slug: String
     ) {
         self.path = path

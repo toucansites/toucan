@@ -83,7 +83,7 @@ struct RawContentLoaderTestSuite {
 
             let result = try #require(results.first)
             let expected = Origin(
-                path: "blog/articles/first-beta-release",
+                path: .init("blog/articles/first-beta-release"),
                 slug: "blog/first-beta-release"
             )
             #expect(result == expected)
@@ -110,9 +110,11 @@ struct RawContentLoaderTestSuite {
 
             let result = try #require(results.first)
             let expected = Origin(
-                path: "[01]blog/[01]articles/[01]first-beta-release"
-                    .replacingOccurrences(of: "[", with: "%5B")
-                    .replacingOccurrences(of: "]", with: "%5D"),
+                path: .init(
+                    "[01]blog/[01]articles/[01]first-beta-release"
+                        .replacingOccurrences(of: "[", with: "%5B")
+                        .replacingOccurrences(of: "]", with: "%5D")
+                ),
                 slug: "blog/articles/first-beta-release",
             )
             #expect(result == expected)
@@ -140,9 +142,11 @@ struct RawContentLoaderTestSuite {
 
             let result = try #require(results.first)
             let expected = Origin(
-                path: "[01]blog/[articles]/[02]first-beta-release"
-                    .replacingOccurrences(of: "[", with: "%5B")
-                    .replacingOccurrences(of: "]", with: "%5D"),
+                path: .init(
+                    "[01]blog/[articles]/[02]first-beta-release"
+                        .replacingOccurrences(of: "[", with: "%5B")
+                        .replacingOccurrences(of: "]", with: "%5D")
+                ),
                 slug: "blog/first-beta-release",
             )
             #expect(result == expected)
@@ -167,7 +171,7 @@ struct RawContentLoaderTestSuite {
 
     private func testBlogArticleOrigin() -> Origin {
         .init(
-            path: "blog/articles/first-beta-release",
+            path: .init("blog/articles/first-beta-release"),
             slug: "blog/first-beta-release",
         )
     }
@@ -425,7 +429,7 @@ struct RawContentLoaderTestSuite {
             let expected: [RawContent] = [
                 .init(
                     origin: .init(
-                        path: "example-1",
+                        path: .init("example-1"),
                         slug: "example-1"
                     ),
                     markdown: .init(
@@ -441,7 +445,7 @@ struct RawContentLoaderTestSuite {
                 ),
                 .init(
                     origin: .init(
-                        path: "example-2",
+                        path: .init("example-2"),
                         slug: "example-2"
                     ),
                     markdown: .init(

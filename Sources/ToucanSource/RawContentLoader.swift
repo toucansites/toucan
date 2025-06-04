@@ -11,32 +11,6 @@ import FileManagerKit
 import ToucanCore
 import ToucanSerialization
 
-fileprivate extension String {
-
-    /// Returns a version of the string with any content inside square brackets removed.
-    ///
-    /// This is typically used to sanitize paths by omitting bracketed segments.
-    func trimmingBracketsContent() -> String {
-        var result = ""
-        var insideBrackets = false
-
-        let decoded = self.removingPercentEncoding ?? self
-
-        for char in decoded {
-            if char == "[" {
-                insideBrackets = true
-            }
-            else if char == "]" {
-                insideBrackets = false
-            }
-            else if !insideBrackets {
-                result.append(char)
-            }
-        }
-        return result
-    }
-}
-
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
 
@@ -132,7 +106,7 @@ public struct RawContentLoader {
         var lastModificationDate: Date?
 
         let currentURL = contentsURL.appendingPathIfPresent(
-            origin.path
+            origin.path.value
         )
 
         let indexFiles = getIndexes(at: currentURL).sorted()
@@ -159,7 +133,7 @@ public struct RawContentLoader {
                 logger.trace(
                     "Loading index Markdown file",
                     metadata: [
-                        "path": .string(origin.path),
+                        "path": .string(origin.path.value),
                         "slug": .string(origin.slug),
                         "file": .string(indexFile),
                     ]
@@ -175,7 +149,7 @@ public struct RawContentLoader {
                 logger.trace(
                     "Loading index YAML file",
                     metadata: [
-                        "path": .string(origin.path),
+                        "path": .string(origin.path.value),
                         "slug": .string(origin.slug),
                         "file": .string(indexFile),
                     ]
@@ -187,7 +161,7 @@ public struct RawContentLoader {
                 logger.warning(
                     "The content has no index file.",
                     metadata: [
-                        "path": .string(origin.path),
+                        "path": .string(origin.path.value),
                         "slug": .string(origin.slug),
                     ]
                 )
@@ -233,15 +207,16 @@ public struct RawContentLoader {
         path: [String] = []
     ) -> [Origin] {
         var result: [Origin] = []
-        let currentPath = path.joined(separator: "/")
-        let currentSlug = slug.joined(separator: "/").trimmingBracketsContent()
-        let currentUrl = contentsUrl.appendingPathIfPresent(currentPath)
+        let currentPath = Path(path.joined(separator: "/"))
+        let currentSlug = Path(slug.joined(separator: "/"))
+            .trimmingBracketsContent()
+        let currentUrl = contentsUrl.appendingPathIfPresent(currentPath.value)
 
         logger.trace(
             "Trying to locate raw content item.",
             metadata: [
                 "contentsURL": .string(contentsUrl.absoluteString),
-                "path": .string(currentPath),
+                "path": .string(currentPath.value),
                 "slug": .string(currentSlug),
             ]
         )
@@ -255,7 +230,7 @@ public struct RawContentLoader {
                 "Raw content item found with index.",
                 metadata: [
                     "contentsURL": .string(contentsUrl.absoluteString),
-                    "path": .string(currentPath),
+                    "path": .string(currentPath.value),
                     "slug": .string(currentSlug),
                 ]
             )
@@ -273,7 +248,7 @@ public struct RawContentLoader {
                     "Raw content item has no index file or bracket.",
                     metadata: [
                         "contentsURL": .string(contentsUrl.absoluteString),
-                        "path": .string(currentPath),
+                        "path": .string(currentPath.value),
                         "slug": .string(currentSlug),
                     ]
                 )
