@@ -45,6 +45,7 @@ struct MarkdownRendererTestSuite {
 
         let contents = renderer.render(
             content: input,
+            id: "",
             slug: "",
             assetsPath: "",
             baseUrl: ""

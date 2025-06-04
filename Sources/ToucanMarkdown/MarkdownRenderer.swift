@@ -171,13 +171,15 @@ public struct MarkdownRenderer {
     ///
     /// - Parameters:
     ///   - content: The raw Markdown content to process.
-    ///   - slug: A unique identifier used for transformation and rendering context.
+    ///   - id: A unique identifier used for transformation and rendering context.
+    ///   - slug: The slug of the content.
     ///   - assetsPath: Path to associated assets (e.g., images or includes).
     ///   - baseUrl: The base URL for resolving relative paths or links.
     ///
     /// - Returns: A structured `Output` containing HTML, reading time, and outline.
     public func render(
         content: String,
+        id: String,
         slug: String,
         assetsPath: String,
         baseUrl: String
@@ -197,6 +199,7 @@ public struct MarkdownRenderer {
                 do {
                     finalHtml = try executor.transform(
                         contents: finalHtml,
+                        id: id,
                         slug: slug
                     )
                 }

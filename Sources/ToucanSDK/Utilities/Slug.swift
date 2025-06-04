@@ -26,19 +26,19 @@ public struct Slug: Codable, Equatable {
     ///
     /// - Parameter baseUrl: The base URL of the site (e.g., `"https://example.com"`).
     /// - Returns: A fully-qualified permalink string (e.g., `"https://example.com/blog/"`).
-    //    public func permalink(baseUrl: String) -> String {
-    //        let components = value.split(separator: "/").map(String.init)
-    //        if components.isEmpty {
-    //            return baseUrl.ensureTrailingSlash()
-    //        }
-    //        if components.last?.split(separator: ".").count ?? 0 > 1 {
-    //            // If last segment has a file extension, return without trailing slash
-    //            return ([baseUrl] + components).joined(separator: "/")
-    //        }
-    //        return ([baseUrl] + components)
-    //            .joined(separator: "/")
-    //            .ensureTrailingSlash()
-    //    }
+    public func permalink(baseUrl: String) -> String {
+        let components = value.split(separator: "/").map(String.init)
+        if components.isEmpty {
+            return baseUrl.ensureTrailingSlash()
+        }
+        if components.last?.split(separator: ".").count ?? 0 > 1 {
+            // If last segment has a file extension, return without trailing slash
+            return ([baseUrl] + components).joined(separator: "/")
+        }
+        return ([baseUrl] + components)
+            .joined(separator: "/")
+            .ensureTrailingSlash()
+    }
 
     // MARK: - Identifier
 
@@ -47,7 +47,7 @@ public struct Slug: Codable, Equatable {
     /// Useful for labeling pages or assigning anchor references.
     ///
     /// - Returns: The last segment of the slug (e.g., `"welcome"` from `"blog/welcome"`).
-    //    public func contextAwareIdentifier() -> String {
-    //        return String(value.split(separator: "/").last ?? "")
-    //    }
+    public func contextAwareIdentifier() -> String {
+        return String(value.split(separator: "/").last ?? "")
+    }
 }

@@ -45,7 +45,10 @@ extension Mocks {
         }
 
         return .init(
-            location: location,
+            locations: .init(
+                sourceUrl: location,
+                config: config
+            ),
             target: target,
             config: config,
             settings: settings,

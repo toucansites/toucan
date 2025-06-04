@@ -10,14 +10,6 @@ import SwiftCommand
 import Logging
 import FileManagerKit
 
-// NOTE: duplicate
-fileprivate extension String {
-
-    func contextAwareIdentifier() -> String {
-        return String(split(separator: "/").last ?? "")
-    }
-}
-
 /// Executes a sequence of shell-based transformation commands defined in a `TransformerPipeline`,
 /// allowing content to be programmatically modified.
 public struct TransformerExecutor {
@@ -57,11 +49,16 @@ public struct TransformerExecutor {
     ///
     /// - Parameters:
     ///   - contents: The raw content to be transformed.
-    ///   - slug: An identifier used to pass context to the commands.
+    ///   - id: An identifier used to pass context to the commands.
+    ///   - slug: The slug of the content.
     ///
     /// - Throws: Rethrows any error encountered during reading, writing, or transformation.
     /// - Returns: The final transformed content string.
-    public func transform(contents: String, slug: String) throws -> String {
+    public func transform(
+        contents: String,
+        id: String,
+        slug: String
+    ) throws -> String {
         // Step 1: Write the content to a temp file
         let tempDirectoryURL = fileManager.temporaryDirectory
         let fileName = UUID().uuidString
@@ -71,9 +68,8 @@ public struct TransformerExecutor {
         // Step 2: Run each command in the transformation pipeline
         for command in pipeline.run {
             do {
-                let contextAwareIdentifier = slug.contextAwareIdentifier()
                 let arguments: [String] = [
-                    "--id", contextAwareIdentifier,
+                    "--id", id,
                     "--file", fileURL.path,
                     "--slug", slug,
                 ]

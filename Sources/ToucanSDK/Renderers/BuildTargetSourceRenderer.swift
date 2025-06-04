@@ -201,6 +201,7 @@ public struct BuildTargetSourceRenderer {
                     "site": .init(siteContext)
                 ],
                 pipeline: pipeline,
+                dateFormatter: dateFormatter,
                 now: now
             )
 
@@ -234,6 +235,7 @@ public struct BuildTargetSourceRenderer {
         contents: [Content],
         context globalContext: [String: AnyCodable],
         pipeline: Pipeline,
+        dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
     ) throws -> [ContextBundle] {
         contents.compactMap { content in
@@ -247,6 +249,7 @@ public struct BuildTargetSourceRenderer {
             let pipelineContext = getPipelineContext(
                 contents: contents,
                 pipeline: pipeline,
+                dateFormatter: dateFormatter,
                 now: now
             )
             .recursivelyMerged(with: globalContext)
@@ -255,7 +258,9 @@ public struct BuildTargetSourceRenderer {
                 contents: contents,
                 content: content,
                 pipeline: pipeline,
+
                 pipelineContext: pipelineContext,
+                dateFormatter: dateFormatter,
                 now: now
             )
         }
@@ -264,6 +269,7 @@ public struct BuildTargetSourceRenderer {
     mutating func getPipelineContext(
         contents: [Content],
         pipeline: Pipeline,
+        dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
@@ -276,6 +282,7 @@ public struct BuildTargetSourceRenderer {
                         contents: contents,
                         for: $0,
                         pipeline: pipeline,
+                        dateFormatter: dateFormatter,
                         now: now,
                         scopeKey: query.scope ?? "list"
                     )
@@ -291,6 +298,7 @@ public struct BuildTargetSourceRenderer {
         contents: [Content],
         content: Content,
         pipeline: Pipeline,
+        dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
     ) -> [String: AnyCodable] {
         guard let iteratorInfo = content.iteratorInfo else {
@@ -301,6 +309,7 @@ public struct BuildTargetSourceRenderer {
                 contents: contents,
                 for: $0,
                 pipeline: pipeline,
+                dateFormatter: dateFormatter,
                 now: now,
                 scopeKey: iteratorInfo.scope ?? "list"
             )
@@ -323,6 +332,7 @@ public struct BuildTargetSourceRenderer {
         content: Content,
         pipeline: Pipeline,
         pipelineContext: [String: AnyCodable],
+        dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
     ) -> ContextBundle {
 
@@ -330,6 +340,7 @@ public struct BuildTargetSourceRenderer {
             contents: contents,
             for: content,
             pipeline: pipeline,
+            dateFormatter: dateFormatter,
             now: now,
             scopeKey: "detail"
         )
@@ -338,6 +349,7 @@ public struct BuildTargetSourceRenderer {
             contents: contents,
             content: content,
             pipeline: pipeline,
+            dateFormatter: dateFormatter,
             now: now
         )
 
@@ -377,6 +389,7 @@ public struct BuildTargetSourceRenderer {
         contents: [Content],
         for content: Content,
         pipeline: Pipeline,
+        dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval,
         scopeKey: String,
         allowSubQueries: Bool = true  // allow top level queries only,
@@ -410,9 +423,9 @@ public struct BuildTargetSourceRenderer {
                     case .date(_) = p.type,
                     let rawDate = v.value(as: Double.self)
                 {
-                    //                    result[k] = .init(
-                    //                        rawDate.toDateFormats(formatters: allFormatters)
-                    //                    )
+                    result[k] = .init(
+                        dateFormatter.format(rawDate)
+                    )
                 }
                 else {
                     result[k] = .init(v.value)
@@ -421,14 +434,11 @@ public struct BuildTargetSourceRenderer {
 
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
-                ""
-                //                content.slug.permalink(baseUrl: buildTargetSource.target.url)
+                content.slug.permalink(baseUrl: buildTargetSource.target.url)
             )
-            //            result["lastUpdate"] = .init(
-            //                content.rawValue.lastModificationDate.toDateFormats(
-            //                    formatters: allFormatters
-            //                )
-            //            )
+            result["lastUpdate"] = .init(
+                dateFormatter.format(content.rawValue.lastModificationDate)
+            )
         }
 
         if scope.context.contains(.contents) {
@@ -466,6 +476,7 @@ public struct BuildTargetSourceRenderer {
 
             let contents = renderer.render(
                 content: content.rawValue.markdown.contents,
+                id: content.slug.contextAwareIdentifier(),
                 slug: content.slug.value,
                 assetsPath: buildTargetSource.config.contents.assets.path,
                 baseUrl: "buildTargetSource.baseUrl"
@@ -505,6 +516,7 @@ public struct BuildTargetSourceRenderer {
                             contents: contents,
                             for: $0,
                             pipeline: pipeline,
+                            dateFormatter: dateFormatter,
                             now: now,
                             scopeKey: "reference",
                             allowSubQueries: false
@@ -530,6 +542,7 @@ public struct BuildTargetSourceRenderer {
                             contents: contents,
                             for: $0,
                             pipeline: pipeline,
+                            dateFormatter: dateFormatter,
                             now: now,
                             scopeKey: query.scope ?? "list",
                             allowSubQueries: false

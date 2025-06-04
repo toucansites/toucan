@@ -96,7 +96,10 @@ struct ContentResolverTestSuite {
     func defaultContentDefinition() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "page",
@@ -148,7 +151,10 @@ struct ContentResolverTestSuite {
     func explicitContentDefinition() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "page",
@@ -208,7 +214,10 @@ struct ContentResolverTestSuite {
     func pathBasedContentDefinition() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "page",
@@ -265,7 +274,10 @@ struct ContentResolverTestSuite {
     func allPropertyTypeConversion() async throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "test",
@@ -367,7 +379,10 @@ struct ContentResolverTestSuite {
     func contentDatePropertyConversion() async throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "definition",
@@ -458,7 +473,10 @@ struct ContentResolverTestSuite {
     func contentDatePropertyConversionInvalidValue() async throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "test",
@@ -525,7 +543,10 @@ struct ContentResolverTestSuite {
     {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "test",
@@ -814,7 +835,10 @@ struct ContentResolverTestSuite {
         let format: DateFormatterConfig? = config.dataTypes.date.input
 
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             config: config,
             contentDefinitions: [
                 .init(
@@ -933,7 +957,10 @@ struct ContentResolverTestSuite {
         let now = Date()
 
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "post",

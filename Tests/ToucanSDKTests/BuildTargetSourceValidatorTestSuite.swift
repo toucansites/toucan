@@ -18,7 +18,10 @@ struct BuildTargetSourceValidatorTestSuite {
     @Test
     func emptyContentTypes() throws {
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: "")
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            )
         )
 
         let validator = BuildTargetSourceValidator(
@@ -55,7 +58,10 @@ struct BuildTargetSourceValidatorTestSuite {
     @Test
     func noDefaultContentType() throws {
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(id: "foo"),
                 .init(id: "bar"),
@@ -80,7 +86,10 @@ struct BuildTargetSourceValidatorTestSuite {
     @Test
     func multipleDefaultContentTypes() throws {
         let buildTargetSource = BuildTargetSource(
-            location: .init(filePath: ""),
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
             contentDefinitions: [
                 .init(
                     id: "foo",
