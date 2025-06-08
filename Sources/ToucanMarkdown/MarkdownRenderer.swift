@@ -7,8 +7,6 @@
 
 import Logging
 
-import FileManagerKit
-
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
 public struct MarkdownRenderer {
@@ -123,9 +121,6 @@ public struct MarkdownRenderer {
     /// Calculates the estimated reading time for a given HTML or Markdown document.
     public var readingTimeCalculator: ReadingTimeCalculator
 
-    /// Interface for file system operations (used by the transformer pipeline).
-    public var fileManager: FileManagerKit
-
     /// Logger for diagnostics and error reporting during rendering.
     public var logger: Logger
 
@@ -135,11 +130,9 @@ public struct MarkdownRenderer {
     ///
     /// - Parameters:
     ///   - configuration: Rendering configuration including markdown, outline, and reading time options.
-    ///   - fileManager: File management utility for use with transformation pipelines.
     ///   - logger: Optional logger for tracking events and issues.
     public init(
         configuration: Configuration,
-        fileManager: FileManagerKit,
         logger: Logger = .init(label: "ContentRenderer")
     ) {
         self.configuration = configuration
@@ -160,7 +153,6 @@ public struct MarkdownRenderer {
             logger: logger
         )
 
-        self.fileManager = fileManager
         self.logger = logger
     }
 
@@ -193,7 +185,6 @@ public struct MarkdownRenderer {
                 shouldRenderMarkdown = transformerPipeline.isMarkdownResult
                 let executor = TransformerExecutor(
                     pipeline: transformerPipeline,
-                    fileManager: fileManager,
                     logger: logger
                 )
                 do {

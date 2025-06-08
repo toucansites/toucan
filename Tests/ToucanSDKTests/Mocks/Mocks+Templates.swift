@@ -32,7 +32,7 @@ extension Mocks.Templates {
             <title>{{site.name}}</title>
             <description>{{site.description}}</description>
             <link>{{baseUrl}}</link>
-            <language>{{site.locale}}</language>
+            <language>{{site.language}}</language>
             <lastBuildDate>{{generation.formats.rss}}</lastBuildDate>
             <pubDate>{{site.lastUpdate.formats.rss}}</pubDate>
             <ttl>250</ttl>
@@ -180,6 +180,14 @@ extension Mocks.Templates {
 
         {{/main}}
         {{/html}}
+        """#
+    }
+
+    static func context(
+        value: String
+    ) -> String {
+        #"""
+        \#(value)
         """#
     }
 

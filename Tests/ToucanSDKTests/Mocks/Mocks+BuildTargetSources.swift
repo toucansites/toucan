@@ -72,7 +72,9 @@ extension Mocks {
             rawContents: [
                 Mocks.RawContents.homePage(now: now),
                 Mocks.RawContents.aboutPage(now: now),
+                Mocks.RawContents.contextPage(now: now),
                 Mocks.RawContents.notFoundPage(now: now),
+
                 Mocks.RawContents.page(id: 1, now: now),
                 Mocks.RawContents.page(id: 2, now: now),
                 Mocks.RawContents.page(id: 3, now: now),

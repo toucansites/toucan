@@ -5,8 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 06. 08..
 //
 
+import Foundation
 import FileManagerKitBuilder
 import ToucanSource
+import ToucanSDK
 
 extension Mocks.E2E {
 
@@ -26,7 +28,10 @@ extension Mocks.E2E {
                 name: "tag",
                 contents: Mocks.ContentDefinitions.tag()
             )
-            YAMLFile(name: "post", contents: postType)
+            YAMLFile(
+                name: "post",
+                contents: postType
+            )
             YAMLFile(
                 name: "category",
                 contents: Mocks.ContentDefinitions.category()
@@ -40,7 +45,10 @@ extension Mocks.E2E {
 
     static func pipelines() -> Directory {
         Directory(name: "pipelines") {
-            YAMLFile(name: "html", contents: Mocks.Pipelines.html())
+            YAMLFile(
+                name: "html",
+                contents: Mocks.Pipelines.html()
+            )
             YAMLFile(
                 name: "not-found",
                 contents: Mocks.Pipelines.notFound()
@@ -53,8 +61,14 @@ extension Mocks.E2E {
                 name: "sitemap",
                 contents: Mocks.Pipelines.sitemap()
             )
-            YAMLFile(name: "rss", contents: Mocks.Pipelines.rss())
-            YAMLFile(name: "api", contents: Mocks.Pipelines.api())
+            YAMLFile(
+                name: "rss",
+                contents: Mocks.Pipelines.rss()
+            )
+            YAMLFile(
+                name: "api",
+                contents: Mocks.Pipelines.api()
+            )
         }
     }
 
@@ -67,7 +81,9 @@ extension Mocks.E2E {
         }
     }
 
-    static func themes() -> Directory {
+    static func themes(
+        debugContext: String
+    ) -> Directory {
         Directory(name: "themes") {
             Directory(name: "default") {
                 Directory(name: "assets") {
@@ -103,6 +119,12 @@ extension Mocks.E2E {
                         MustacheFile(
                             name: "404",
                             template: Mocks.Templates.notFound()
+                        )
+                        MustacheFile(
+                            name: "context",
+                            template: Mocks.Templates.context(
+                                value: debugContext
+                            )
                         )
                     }
                     Directory(name: "blog") {
@@ -169,6 +191,252 @@ extension Mocks.E2E {
                     )
                 }
             }
+        }
+    }
+
+    static func src(
+        now: Date,
+        debugContext: String = "{{.}}"
+    ) -> Directory {
+
+        let config: Config = .defaults
+
+        let formatter = ToucanInputDateFormatter(
+            dateConfig: config.dataTypes.date
+        )
+
+        let postType = Mocks.ContentDefinitions.post()
+        guard
+            case let .date(
+                publicationConfig
+            ) = postType.properties["publication"]?.type
+        else {
+            fatalError(
+                "Mock post type issue: publication is not a date property."
+            )
+        }
+        guard
+            case let .date(
+                expirationConfig
+            ) = postType.properties["expiration"]?.type
+        else {
+            fatalError(
+                "Mock post type issue: expiration is not a date property."
+            )
+        }
+
+        return Directory(name: "src") {
+            YAMLFile(
+                name: "site",
+                contents: [
+                    "name": "Test site name",
+                    "description": "Test site description",
+                    "language": "en-US",
+                ] as [String: AnyCodable]
+            )
+            Directory(name: "contents") {
+                RawContentBundle(Mocks.RawContents.homePage(now: now))
+                RawContentBundle(Mocks.RawContents.aboutPage(now: now))
+                RawContentBundle(Mocks.RawContents.contextPage(now: now))
+                RawContentBundle(Mocks.RawContents.notFoundPage(now: now))
+                RawContentBundle(Mocks.RawContents.page(id: 1, now: now))
+                RawContentBundle(Mocks.RawContents.page(id: 2, now: now))
+                RawContentBundle(Mocks.RawContents.page(id: 3, now: now))
+
+                RawContentBundle(Mocks.RawContents.redirectHome(now: now))
+                RawContentBundle(Mocks.RawContents.redirectAbout(now: now))
+                RawContentBundle(Mocks.RawContents.sitemapXML(now: now))
+                RawContentBundle(Mocks.RawContents.rssXML(now: now))
+
+                Directory(name: "blog") {
+                    Directory(name: "posts") {
+                        RawContentBundle(
+                            Mocks.RawContents.post(
+                                id: 1,
+                                now: now,
+                                // near past
+                                publication: formatter.string(
+                                    from: now.addingTimeInterval(-86_400),
+                                    using: publicationConfig
+                                ),
+                                // near future
+                                expiration: formatter.string(
+                                    from: now.addingTimeInterval(86_400),
+                                    using: expirationConfig
+                                ),
+                                featured: false,
+                                authorIds: [1, 2],
+                                tagIds: [1, 2]
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.post(
+                                id: 2,
+                                now: now,
+                                // past
+                                publication: formatter.string(
+                                    from: now.addingTimeInterval(
+                                        -86_400 * 2
+                                    ),
+                                    using: publicationConfig
+                                ),
+                                // future
+                                expiration: formatter.string(
+                                    from: now.addingTimeInterval(
+                                        86_400 * 2
+                                    ),
+                                    using: expirationConfig
+                                ),
+                                featured: true,
+                                authorIds: [1, 2, 3],
+                                tagIds: [2]
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.post(
+                                id: 3,
+                                now: now,
+                                // distant past
+                                publication: formatter.string(
+                                    from: now.addingTimeInterval(
+                                        -86_400 * 3
+                                    ),
+                                    using: publicationConfig
+                                ),
+                                // distant future
+                                expiration: formatter.string(
+                                    from: now.addingTimeInterval(
+                                        86_400 * 3
+                                    ),
+                                    using: expirationConfig
+                                ),
+                                featured: false,
+                                authorIds: [2, 3],
+                                tagIds: [2, 3]
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.postPagination(now: now)
+                        )
+                    }
+                    Directory(name: "authors") {
+                        RawContentBundle(
+                            Mocks.RawContents.author(
+                                id: 1,
+                                age: 18,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.author(
+                                id: 1,
+                                age: 21,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.author(
+                                id: 1,
+                                age: 42,
+                                now: now
+                            )
+                        )
+                    }
+                    Directory(name: "tags") {
+                        RawContentBundle(
+                            Mocks.RawContents.tag(id: 1, now: now)
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.tag(id: 2, now: now)
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.tag(id: 3, now: now)
+                        )
+                    }
+                }
+                Directory(name: "docs") {
+                    Directory(name: "categories") {
+                        RawContentBundle(
+                            Mocks.RawContents.category(id: 1, now: now)
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.category(id: 2, now: now)
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.category(id: 3, now: now)
+                        )
+                    }
+                    Directory(name: "guides") {
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 1,
+                                categoryId: 1,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 2,
+                                categoryId: 1,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 3,
+                                categoryId: 1,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 4,
+                                categoryId: 2,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 5,
+                                categoryId: 2,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 6,
+                                categoryId: 2,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 7,
+                                categoryId: 3,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 8,
+                                categoryId: 3,
+                                now: now
+                            )
+                        )
+                        RawContentBundle(
+                            Mocks.RawContents.guide(
+                                id: 9,
+                                categoryId: 3,
+                                now: now
+                            )
+                        )
+                    }
+                }
+            }
+            Mocks.E2E.types(postType: postType)
+            Mocks.E2E.pipelines()
+            Mocks.E2E.blocks()
+            Mocks.E2E.themes(debugContext: debugContext)
         }
     }
 

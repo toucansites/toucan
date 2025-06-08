@@ -32,7 +32,6 @@ struct MarkdownRendererTestSuite {
                 transformerPipeline: nil,
                 paragraphStyles: [:]
             ),
-            fileManager: FileManager.default,
             logger: logger
         )
 

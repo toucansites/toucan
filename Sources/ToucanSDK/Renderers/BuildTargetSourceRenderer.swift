@@ -6,9 +6,7 @@
 //
 
 import Foundation
-
 import ToucanMarkdown
-import FileManagerKit
 import Logging
 import ToucanCore
 import ToucanSource
@@ -27,9 +25,6 @@ public struct BuildTargetSourceRenderer {
     let templates: [String: String]
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
-    /// Date formatters used across pipelines
-    /// File system abstraction
-    let fileManager: FileManagerKit
     /// Logger for warnings and errors
     let logger: Logger
     /// Cache
@@ -41,19 +36,16 @@ public struct BuildTargetSourceRenderer {
     ///   - buildTargetSource: The structured bundle containing settings, pipelines, and contents.
     ///   - templates: The template IDs and contents used by the Mustache renderer.
     ///   - generatorInfo: Info about the content generator (defaults to `.current`).
-    ///   - fileManager: Filesystem API for use during rendering.
     ///   - logger: Logger for reporting issues or metrics.
     public init(
         buildTargetSource: BuildTargetSource,
         templates: [String: String],
         generatorInfo: GeneratorInfo = .current,
-        fileManager: FileManagerKit,
         logger: Logger
     ) {
         self.buildTargetSource = buildTargetSource
         self.templates = templates
         self.generatorInfo = generatorInfo
-        self.fileManager = fileManager
         self.logger = logger
     }
 
@@ -487,8 +479,6 @@ public struct BuildTargetSourceRenderer {
                     paragraphStyles: buildTargetSource.config.renderer
                         .paragraphStyles.styles
                 ),
-
-                fileManager: fileManager,
                 logger: logger
             )
 

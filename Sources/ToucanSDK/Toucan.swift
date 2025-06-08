@@ -150,7 +150,6 @@ public struct Toucan {
                 var renderer = BuildTargetSourceRenderer(
                     buildTargetSource: buildTargetSource,
                     templates: templates,
-                    fileManager: fileManager,
                     logger: logger
                 )
 

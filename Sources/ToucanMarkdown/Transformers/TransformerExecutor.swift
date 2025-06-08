@@ -8,7 +8,6 @@
 import Foundation
 import SwiftCommand
 import Logging
-import FileManagerKit
 
 /// Executes a sequence of shell-based transformation commands defined in a `TransformerPipeline`,
 /// allowing content to be programmatically modified.
@@ -18,7 +17,7 @@ public struct TransformerExecutor {
     public var pipeline: TransformerPipeline
 
     /// File manager utility for file system interactions, including temp files and cleanup.
-    public var fileManager: FileManagerKit
+    public var fileManager: FileManager
 
     /// Logger instance.
     public var logger: Logger
@@ -31,7 +30,7 @@ public struct TransformerExecutor {
     ///   - logger: A logger for capturing stdout, stderr, and errors.
     public init(
         pipeline: TransformerPipeline,
-        fileManager: FileManagerKit,
+        fileManager: FileManager = .default,
         logger: Logger = .init(label: "TransformerExecutor")
     ) {
         self.pipeline = pipeline
@@ -97,12 +96,12 @@ public struct TransformerExecutor {
         // Step 3: Read the transformed contents, clean up, and return
         do {
             let finalContents = try fileURL.loadContents()
-            try fileManager.delete(at: fileURL)
+            try fileManager.removeItem(at: fileURL)
             return finalContents
         }
         catch {
             // Ensure cleanup is still performed
-            try fileManager.delete(at: fileURL)
+            try fileManager.removeItem(at: fileURL)
             throw error
         }
     }

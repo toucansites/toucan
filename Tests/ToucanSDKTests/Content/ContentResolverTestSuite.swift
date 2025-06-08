@@ -52,19 +52,16 @@ struct ContentResolverTestSuite {
             }
             #expect(!item.isIterator)
 
+            let specialPages = ["", "404", "about", "context"]
+            let redirectPages = ["home-old", "about-old"]
             // check type identifiers
-            if ![
-                "",
-                "404",
-                "about",
-                "home-old",
-                "about-old",
-            ]
-            .contains(item.rawValue.origin.slug) {
+            if !(specialPages + redirectPages)
+                .contains(item.rawValue.origin.slug)
+            {
                 #expect(item.rawValue.origin.slug.contains(item.definition.id))
             }
             else {
-                if ["", "404", "about"].contains(item.rawValue.origin.slug) {
+                if specialPages.contains(item.rawValue.origin.slug) {
                     #expect(item.definition.id == "page")
                 }
                 else {

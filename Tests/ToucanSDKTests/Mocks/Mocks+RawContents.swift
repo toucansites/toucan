@@ -89,6 +89,31 @@ extension Mocks.RawContents {
         )
     }
 
+    static func contextPage(
+        now: Date = .init()
+    ) -> RawContent {
+        .init(
+            origin: .init(
+                path: .init("context"),
+                slug: "context"
+            ),
+            markdown: .init(
+                frontMatter: [
+                    "title": "Context page",
+                    "description": "Context page description",
+                    "template": "pages.context",
+                ],
+                contents: """
+                    # Context page
+
+                    Context page contents
+                    """
+            ),
+            lastModificationDate: now.timeIntervalSince1970,
+            assets: []
+        )
+    }
+
     static func redirectHome(
         now: Date = .init()
     ) -> RawContent {
