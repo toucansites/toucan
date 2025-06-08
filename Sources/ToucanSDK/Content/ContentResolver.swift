@@ -593,4 +593,148 @@ struct ContentResolver {
             return pathMatches && nameMatches && extMatches
         }
     }
+
+    // MARK: - asset behaviors
+
+    private func getNameAndExtension(
+        from path: String
+    ) -> (name: String, ext: String) {
+
+        let safePath = path.split(separator: "/").last.map(String.init) ?? ""
+
+        let parts = safePath.split(
+            separator: ".",
+            omittingEmptySubsequences: false
+        )
+        guard parts.count >= 2 else {
+            return (String(safePath), "")  // No extension
+        }
+
+        let ext = String(parts.last!)
+        let filename = parts.dropLast().joined(separator: ".")
+
+        return (filename, ext)
+    }
+
+    // TODO: Behavior protocol?
+
+    func applyBehaviors(
+        pipeline: Pipeline,
+        to contents: [Content],
+        contentsUrl: URL,
+        assetsPath: String
+    ) throws -> [PipelineResult] {
+        var results: [PipelineResult] = []
+
+        for content in contents {
+            var assetsReady: Set<String> = .init()
+
+            for behavior in pipeline.assets.behaviors {
+                let isAllowed = pipeline.contentTypes.isAllowed(
+                    contentType: content.definition.id
+                )
+                guard isAllowed else {
+                    continue
+                }
+                let remainingAssets = Set(content.rawValue.assets)
+                    .subtracting(assetsReady)
+
+                let matchingRemainingAssets = filterFilePaths(
+                    from: Array(remainingAssets),
+                    input: behavior.input
+                )
+
+                guard !matchingRemainingAssets.isEmpty else {
+                    continue
+                }
+
+                for inputAsset in matchingRemainingAssets {
+                    let basePath = content.rawValue.origin.path
+
+                    let sourcePath = [
+                        basePath.value,
+                        assetsPath,
+                        inputAsset,
+                    ]
+                    .joined(separator: "/")
+
+                    // TODO: log trace
+
+                    let file = getNameAndExtension(from: inputAsset)
+
+                    let destPath = [
+                        assetsPath,
+                        content.slug.value,
+                        inputAsset,
+                    ]
+                    .filter { !$0.isEmpty }
+                    .joined(separator: "/")
+                    .split(separator: "/")
+                    .dropLast()
+                    .joined(separator: "/")
+
+                    switch behavior.id {
+                    case "compile-sass":
+                        let fileUrl =
+                            contentsUrl
+                            .appending(
+                                path: sourcePath
+                            )
+
+                        let script = try CompileSASSBehavior()
+                        let css = try script.compile(fileUrl: fileUrl)
+
+                        // TODO: proper output management later on
+                        results.append(
+                            .init(
+                                source: .asset(css),
+                                destination: .init(
+                                    path: destPath,
+                                    file: behavior.output.name,
+                                    ext: behavior.output.ext
+                                )
+                            )
+                        )
+
+                    case "minify-css":
+                        let fileUrl =
+                            contentsUrl
+                            .appending(
+                                path: sourcePath
+                            )
+
+                        let script = MinifyCSSBehavior()
+                        let css = try script.minify(fileUrl: fileUrl)
+
+                        results.append(
+                            .init(
+                                source: .asset(css),
+                                destination: .init(
+                                    path: destPath,
+                                    file: behavior.output.name,
+                                    ext: behavior.output.ext
+                                )
+                            )
+                        )
+
+                    default:  // copy
+                        results.append(
+                            .init(
+                                source: .assetFile(sourcePath),
+                                destination: .init(
+                                    path: destPath,
+                                    file: file.name,
+                                    ext: file.ext
+                                )
+                            )
+                        )
+                    }
+
+                    assetsReady.insert(inputAsset)
+                }
+            }
+        }
+
+        return results
+    }
 }

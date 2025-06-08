@@ -50,6 +50,24 @@ struct PropertyTypeTestSuite {
     }
 
     @Test
+    func encodingBool() throws {
+        let object = """
+            type: bool
+            """
+
+        let decoder = ToucanYAMLDecoder()
+        let result = try decoder.decode(PropertyType.self, from: object)
+        let encoder = ToucanYAMLEncoder()
+        let yaml = try encoder.encode(result)
+
+        #expect(result == .bool)
+        #expect(
+            object.trimmingCharacters(in: .whitespacesAndNewlines)
+                == yaml.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+    }
+
+    @Test
     func decodingInt() throws {
         let object = """
             type: int

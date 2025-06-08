@@ -1070,7 +1070,7 @@ struct ContentResolverTestSuite {
         let contents = resolver.apply(
             iterators: pipeline.iterators,
             to: baseContents,
-            baseURL: buildTargetSource.target.url,
+            baseURL: buildTargetSource.target.url.dropTrailingSlash(),
             now: now.timeIntervalSince1970
         )
 
@@ -1117,7 +1117,7 @@ struct ContentResolverTestSuite {
             to: baseContents,
             contentsUrl: buildTargetSource.locations.contentsUrl,
             assetsPath: buildTargetSource.config.contents.assets.path,
-            baseUrl: buildTargetSource.target.url
+            baseUrl: buildTargetSource.target.url.dropTrailingSlash()
         )
 
         let query1 = Query(

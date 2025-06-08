@@ -10,6 +10,7 @@ import FileManagerKit
 import Logging
 import ToucanSerialization
 import ToucanSource
+import ToucanCore
 
 private func getSafeUrl(
     for path: String,
@@ -219,6 +220,9 @@ public struct Toucan {
         }
         catch {
             try? fileManager.delete(at: workDirUrl)
+            if let error = error as? ToucanError {
+                print(error.logMessageStack())
+            }
             throw error
         }
     }

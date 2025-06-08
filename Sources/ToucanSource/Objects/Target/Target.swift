@@ -76,7 +76,7 @@ public struct Target: Codable, Equatable {
     ) {
         self.name = name
         self.config = config
-        self.url = url  //.dropTrailingSlash()
+        self.url = url
         self.output = output
         self.isDefault = isDefault
     }
@@ -105,7 +105,6 @@ public struct Target: Codable, Equatable {
                 String.self,
                 forKey: .url
             ) ?? base.url
-        //.dropTrailingSlash() ?? base.url.dropTrailingSlash()
 
         self.output =
             try container.decodeIfPresent(String.self, forKey: .output)

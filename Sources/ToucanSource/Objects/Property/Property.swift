@@ -10,8 +10,8 @@
 public struct Property: Codable, Equatable {
 
     /// Coding keys used for decoding optional metadata fields.
-    enum CodingKeys: CodingKey {
-        case `required`
+    enum CodingKeys: String, CodingKey {
+        case required
         case `default`
     }
 
@@ -70,5 +70,18 @@ public struct Property: Codable, Equatable {
             isRequired: required,
             defaultValue: anyValue
         )
+    }
+
+    /// Encodes the `Property` into a keyed container
+    ///
+    /// - Parameter encoder: The encoder to write data to.
+    /// - Throws: An error if encoding fails.
+    public func encode(
+        to encoder: any Encoder
+    ) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try self.type.encode(to: encoder)
+        try container.encode(self.required, forKey: .required)
+        try container.encodeIfPresent(self.default, forKey: .default)
     }
 }

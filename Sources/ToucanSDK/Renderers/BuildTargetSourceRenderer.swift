@@ -92,6 +92,10 @@ public struct BuildTargetSourceRenderer {
             .sorted(by: >).first
     }
 
+    private func baseUrl() -> String {
+        buildTargetSource.target.url.dropTrailingSlash()
+    }
+
     /// Starts rendering the source bundle based on current time and pipeline configuration.
     ///
     /// - Parameter now: Current date, used for generation timestamps.
@@ -111,25 +115,11 @@ public struct BuildTargetSourceRenderer {
             logger: logger
         )
 
-        var siteContext = buildTargetSource.settings.values.recursivelyMerged(
-            with: [
-                "baseUrl": .init(buildTargetSource.target.url)
-            ]
-        )
-
         // TODO: This should be in a .toucaninfo file or similar
-        siteContext["generator"] = .init(generatorInfo)
-        siteContext["generatedAt"] = .init(
-            inputDateFormatter.string(
-                from: .init(
-                    timeIntervalSince1970: now
-                )
-            )
-        )
-
-        let executor = AssetBehaviorExecutor(
-            buildTargetSource: buildTargetSource
-        )
+        let globalContext: [String: AnyCodable] = [
+            "baseUrl": .init(baseUrl()),
+            "generator": .init(generatorInfo),
+        ]
 
         let contentTypeResolver = ContentTypeResolver(
             types: buildTargetSource.contentDefinitions,
@@ -159,7 +149,7 @@ public struct BuildTargetSourceRenderer {
             let iteratedContents = contentResolver.apply(
                 iterators: pipeline.iterators,
                 to: filteredContents,
-                baseURL: buildTargetSource.target.url,
+                baseURL: baseUrl(),
                 now: now
             )
 
@@ -168,7 +158,7 @@ public struct BuildTargetSourceRenderer {
                 to: iteratedContents,
                 contentsUrl: buildTargetSource.locations.contentsUrl,
                 assetsPath: buildTargetSource.config.contents.assets.path,
-                baseUrl: buildTargetSource.target.url
+                baseUrl: baseUrl()
             )
 
             let dateFormatter = ToucanOutputDateFormatter(
@@ -177,11 +167,14 @@ public struct BuildTargetSourceRenderer {
                 logger: logger
             )
 
-            //                        let assetResults = try executor.execute(
-            //                            pipeline: pipeline,
-            //                            contents: contents
-            //                        )
-            //                        results.append(contentsOf: assetResults)
+            let assetResults = try contentResolver.applyBehaviors(
+                pipeline: pipeline,
+                to: finalContents,
+                contentsUrl: buildTargetSource.locations.contentsUrl,
+                assetsPath: buildTargetSource.config.contents.assets.path
+            )
+
+            results.append(contentsOf: assetResults)
 
             let lastUpdate =
                 getLastContentUpdate(
@@ -190,14 +183,15 @@ public struct BuildTargetSourceRenderer {
                     now: now
                 ) ?? now
 
-            let lastUpdateContext = dateFormatter.format(lastUpdate)
-            siteContext["lastUpdate"] = .init(lastUpdateContext)
-
             let contextBundles = try getContextBundles(
                 contents: finalContents,
-                context: [
-                    "site": .init(siteContext)
-                ],
+                context: globalContext.recursivelyMerged(
+                    with: [
+                        "lastUpdate": .init(dateFormatter.format(lastUpdate)),
+                        "generation": .init(dateFormatter.format(now)),
+                        "site": .init(buildTargetSource.settings.values),
+                    ]
+                ),
                 pipeline: pipeline,
                 dateFormatter: dateFormatter,
                 now: now
@@ -432,7 +426,7 @@ public struct BuildTargetSourceRenderer {
 
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
-                content.slug.permalink(baseUrl: buildTargetSource.target.url)
+                content.slug.permalink(baseUrl: baseUrl())
             )
             result["lastUpdate"] = .init(
                 dateFormatter.format(content.rawValue.lastModificationDate)
@@ -503,7 +497,7 @@ public struct BuildTargetSourceRenderer {
                 id: content.slug.contextAwareIdentifier(),
                 slug: content.slug.value,
                 assetsPath: buildTargetSource.config.contents.assets.path,
-                baseUrl: "buildTargetSource.baseUrl"
+                baseUrl: baseUrl()
             )
 
             result["contents"] = [

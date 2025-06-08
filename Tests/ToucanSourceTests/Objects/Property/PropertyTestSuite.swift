@@ -18,17 +18,24 @@ struct PropertyTestSuite {
     @Test
     func stringType() throws {
         let data = """
-            type: string
-            required: false
             default: hello
+            required: false
+            type: string
             """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Property.self, from: data)
+        let encoder = ToucanYAMLEncoder()
+        let yaml = try encoder.encode(result)
 
         #expect(result.type == .string)
         #expect(result.required == false)
         #expect(result.default?.value as? String == "hello")
+
+        #expect(
+            data.trimmingCharacters(in: .whitespacesAndNewlines)
+                == yaml.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
     }
 
     @Test
