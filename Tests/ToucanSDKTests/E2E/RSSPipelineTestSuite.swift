@@ -277,11 +277,20 @@ struct RSSPipelineTestSuite {
                 }
                 Directory(name: "pipelines") {
                     YAMLFile(name: "html", contents: Mocks.Pipelines.html())
-                    YAMLFile(name: "html", contents: Mocks.Pipelines.notFound())
-                    YAMLFile(name: "html", contents: Mocks.Pipelines.redirect())
-                    YAMLFile(name: "html", contents: Mocks.Pipelines.sitemap())
-                    YAMLFile(name: "html", contents: Mocks.Pipelines.rss())
-                    YAMLFile(name: "html", contents: Mocks.Pipelines.api())
+                    YAMLFile(
+                        name: "not-found",
+                        contents: Mocks.Pipelines.notFound()
+                    )
+                    YAMLFile(
+                        name: "redirect",
+                        contents: Mocks.Pipelines.redirect()
+                    )
+                    YAMLFile(
+                        name: "sitemap",
+                        contents: Mocks.Pipelines.sitemap()
+                    )
+                    YAMLFile(name: "rss", contents: Mocks.Pipelines.rss())
+                    YAMLFile(name: "api", contents: Mocks.Pipelines.api())
 
                 }
                 Directory(name: "blocks") {
@@ -289,6 +298,79 @@ struct RSSPipelineTestSuite {
                         name: "faq",
                         contents: Mocks.Blocks.faq()
                     )
+                }
+                Directory(name: "themes") {
+                    Directory(name: "default") {
+                        Directory(name: "assets") {
+                            Directory(name: "css") {
+                                File(
+                                    name: "theme.css",
+                                    string: """
+                                        body { background: #000; }
+                                        """
+                                )
+                            }
+                        }
+                        Directory(name: "templates") {
+                            Directory(name: "docs") {
+                                Directory(name: "category") {
+                                    MustacheFile(
+                                        name: "default",
+                                        template: Mocks.Templates.rss()
+                                    )
+                                }
+                                Directory(name: "guide") {
+                                    MustacheFile(
+                                        name: "default",
+                                        template: Mocks.Templates.rss()
+                                    )
+                                }
+                            }
+                            Directory(name: "pages") {
+                                MustacheFile(
+                                    name: "default",
+                                    template: Mocks.Templates.rss()
+                                )
+                            }
+                            Directory(name: "blog") {
+                                Directory(name: "tag") {
+                                    MustacheFile(
+                                        name: "default",
+                                        template: Mocks.Templates.rss()
+                                    )
+                                }
+                                Directory(name: "post") {
+                                    MustacheFile(
+                                        name: "default",
+                                        template: Mocks.Templates.rss()
+                                    )
+                                }
+                                Directory(name: "author") {
+                                    MustacheFile(
+                                        name: "default",
+                                        template: Mocks.Templates.rss()
+                                    )
+                                }
+                            }
+                            MustacheFile(
+                                name: "html",
+                                template: Mocks.Templates.rss()
+                            )
+                            MustacheFile(
+                                name: "redirect",
+                                template: Mocks.Templates.rss()
+                            )
+                            MustacheFile(
+                                name: "rss",
+                                template: Mocks.Templates.rss()
+                            )
+                            MustacheFile(
+                                name: "sitemap",
+                                template: Mocks.Templates.rss()
+                            )
+                        }
+                    }
+
                 }
             }
         }

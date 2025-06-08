@@ -49,6 +49,7 @@ extension Mocks.Pipelines {
                 exclude: [
                     "rss",
                     "sitemap",
+                    "redirect",
                 ],
                 lastUpdate: [
                     "page",
@@ -231,7 +232,7 @@ extension Mocks.Pipelines {
     static func redirect() -> Pipeline {
         .init(
             id: "redirect",
-            definesType: false,
+            definesType: true,
             scopes: [:],
             queries: [:],
             dataTypes: .defaults,
