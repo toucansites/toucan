@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import Logging
+import ToucanCore
 import ToucanSource
 import FileManagerKitBuilder
 @testable import ToucanSDK
@@ -47,7 +48,6 @@ struct RSSPipelineTestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-
                 YAMLFile(
                     name: "site",
                     contents: [
@@ -252,139 +252,21 @@ struct RSSPipelineTestSuite {
                         }
                     }
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "page",
-                        contents: Mocks.ContentDefinitions.page()
-                    )
-                    YAMLFile(
-                        name: "author",
-                        contents: Mocks.ContentDefinitions.author()
-                    )
-                    YAMLFile(
-                        name: "tag",
-                        contents: Mocks.ContentDefinitions.tag()
-                    )
-                    YAMLFile(name: "post", contents: postType)
-                    YAMLFile(
-                        name: "category",
-                        contents: Mocks.ContentDefinitions.category()
-                    )
-                    YAMLFile(
-                        name: "guide",
-                        contents: Mocks.ContentDefinitions.guide()
-                    )
-                }
-                Directory(name: "pipelines") {
-                    YAMLFile(name: "html", contents: Mocks.Pipelines.html())
-                    YAMLFile(
-                        name: "not-found",
-                        contents: Mocks.Pipelines.notFound()
-                    )
-                    YAMLFile(
-                        name: "redirect",
-                        contents: Mocks.Pipelines.redirect()
-                    )
-                    YAMLFile(
-                        name: "sitemap",
-                        contents: Mocks.Pipelines.sitemap()
-                    )
-                    YAMLFile(name: "rss", contents: Mocks.Pipelines.rss())
-                    YAMLFile(name: "api", contents: Mocks.Pipelines.api())
-
-                }
-                Directory(name: "blocks") {
-                    YAMLFile(
-                        name: "faq",
-                        contents: Mocks.Blocks.faq()
-                    )
-                }
-                Directory(name: "themes") {
-                    Directory(name: "default") {
-                        Directory(name: "assets") {
-                            Directory(name: "css") {
-                                File(
-                                    name: "theme.css",
-                                    string: """
-                                        body { background: #000; }
-                                        """
-                                )
-                            }
-                        }
-                        Directory(name: "templates") {
-                            Directory(name: "docs") {
-                                Directory(name: "category") {
-                                    MustacheFile(
-                                        name: "default",
-                                        template: Mocks.Templates.rss()
-                                    )
-                                }
-                                Directory(name: "guide") {
-                                    MustacheFile(
-                                        name: "default",
-                                        template: Mocks.Templates.rss()
-                                    )
-                                }
-                            }
-                            Directory(name: "pages") {
-                                MustacheFile(
-                                    name: "default",
-                                    template: Mocks.Templates.rss()
-                                )
-                            }
-                            Directory(name: "blog") {
-                                Directory(name: "tag") {
-                                    MustacheFile(
-                                        name: "default",
-                                        template: Mocks.Templates.rss()
-                                    )
-                                }
-                                Directory(name: "post") {
-                                    MustacheFile(
-                                        name: "default",
-                                        template: Mocks.Templates.rss()
-                                    )
-                                }
-                                Directory(name: "author") {
-                                    MustacheFile(
-                                        name: "default",
-                                        template: Mocks.Templates.rss()
-                                    )
-                                }
-                            }
-                            MustacheFile(
-                                name: "html",
-                                template: Mocks.Templates.rss()
-                            )
-                            MustacheFile(
-                                name: "redirect",
-                                template: Mocks.Templates.rss()
-                            )
-                            MustacheFile(
-                                name: "rss",
-                                template: Mocks.Templates.rss()
-                            )
-                            MustacheFile(
-                                name: "sitemap",
-                                template: Mocks.Templates.rss()
-                            )
-                        }
-                    }
-
-                }
+                Mocks.E2E.types(postType: postType)
+                Mocks.E2E.pipelines()
+                Mocks.E2E.blocks()
+                Mocks.E2E.themes()
             }
         }
         .test {
             let input = $1.appendingPathIfPresent("src")
-            let output = $1.appending(path: "docs/")
-            let toucan = Toucan(
-                input: input.path(),
-                targetsToBuild: []
-            )
+            try Toucan(input: input.path()).generate()
 
-            try toucan.generate()
+            let output = $1.appendingPathIfPresent("docs")
+            let rssXML = output.appendingPathIfPresent("rss.xml")
+            let rss = try String(contentsOf: rssXML)
 
-            print($0.listDirectory(at: output))
+            print(rss)
 
             //            let expectation = #"""
             //                <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
@@ -408,10 +290,7 @@ struct RSSPipelineTestSuite {
             //                </channel>
             //                </rss>
             //                """#
-            //
-            //            #expect(results[0].destination.path == "")
-            //            #expect(results[0].destination.file == "rss")
-            //            #expect(results[0].destination.ext == "xml")
+
         }
     }
 

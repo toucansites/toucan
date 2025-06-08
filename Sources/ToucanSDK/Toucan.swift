@@ -43,7 +43,7 @@ public struct Toucan {
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "toucan".
     public init(
         input: String,
-        targetsToBuild: [String],
+        targetsToBuild: [String] = [],
         logger: Logger = .init(label: "toucan")
     ) {
         self.fileManager = FileManager.default

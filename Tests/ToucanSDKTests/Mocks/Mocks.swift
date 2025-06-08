@@ -11,4 +11,5 @@ enum Mocks {
     enum Pipelines {}
     enum Templates {}
     enum Blocks {}
+    enum E2E {}
 }

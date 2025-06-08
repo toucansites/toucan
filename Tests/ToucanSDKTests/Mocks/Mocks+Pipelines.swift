@@ -411,7 +411,10 @@ extension Mocks.Pipelines {
                     contentType: "post",
                     scope: "list",
                     orderBy: [
-                        .init(key: "publication", direction: .desc)
+                        .init(
+                            key: "publication",
+                            direction: .desc
+                        )
                     ]
                 )
             ],
@@ -423,11 +426,10 @@ extension Mocks.Pipelines {
                 filterRules: [:]
             ),
             iterators: [
-                :
-                //                "post.pagination": .init(
-                //                    contentType: "post",
-                //                    limit: 2
-                //                )
+                "post.pagination": .init(
+                    contentType: "post",
+                    limit: 2
+                )
             ],
             assets: .defaults,
             transformers: [:],
