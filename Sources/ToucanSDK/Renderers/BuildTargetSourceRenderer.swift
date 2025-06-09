@@ -41,7 +41,7 @@ public struct BuildTargetSourceRenderer {
         buildTargetSource: BuildTargetSource,
         templates: [String: String],
         generatorInfo: GeneratorInfo = .current,
-        logger: Logger
+        logger: Logger = .subsystem("build-target-source-renderer")
     ) {
         self.buildTargetSource = buildTargetSource
         self.templates = templates
