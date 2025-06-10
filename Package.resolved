@@ -1,5 +1,5 @@
 {
-  "originHash" : "6987e2f23978d4f710560cb811e2255b9f7a4068dd5d22c8ca6d13aad52efca8",
+  "originHash" : "456df882ade63a6bdb1d1cc26b8fa6086a3c87df5ae13407018ca120cb4d4b1a",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird",
       "state" : {
-        "revision" : "de2ff8249862791a8972842fd13bff014e71a329",
-        "version" : "2.14.0"
+        "revision" : "65ace7855fa8413d6218adeecaf706f2b99c23c1",
+        "version" : "2.14.1"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-atomics.git",
       "state" : {
-        "revision" : "cd142fd2f64be2100422d658e7411e39489da985",
-        "version" : "1.2.0"
+        "revision" : "b601256eab081c0f92f059e12818ac1d4f178ff7",
+        "version" : "1.3.0"
       }
     },
     {
@@ -222,8 +222,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-extras.git",
       "state" : {
-        "revision" : "24cb15c9bc05e3e9eb5ebaf3d28517d42537bfb1",
-        "version" : "1.27.1"
+        "revision" : "145db1962f4f33a4ea07a32e751d5217602eea29",
+        "version" : "1.28.0"
       }
     },
     {
@@ -285,8 +285,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-service-context.git",
       "state" : {
-        "revision" : "8946c930cae601452149e45d31d8ddfac973c3c7",
-        "version" : "1.2.0"
+        "revision" : "1983448fefc717a2bc2ebde5490fe99873c5b8a6",
+        "version" : "1.2.1"
       }
     },
     {

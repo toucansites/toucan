@@ -34,14 +34,20 @@ struct Entrypoint: AsyncParsableCommand {
     @Argument(help: "The input directory (default: src).")
     var input: String = "./src"
 
-    @Argument(help: "The output directory (default: docs).")
-    var output: String = "./docs"
+    @Option(
+        name: .shortAndLong,
+        help: "The target to build, if empty build all."
+    )
+    var target: String?
 
-    @Option(name: .shortAndLong, help: "The base url to use.")
-    var baseUrl: String? = nil
+    @Option(
+        name: .shortAndLong,
+        help: "The treshold to watch for changes in seconds."
+    )
+    var seconds: Int = 3
 
     @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .debug
+    var logLevel: Logger.Level = .info
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -63,18 +69,9 @@ struct Entrypoint: AsyncParsableCommand {
             return
         }
 
-        logger.info("👀 Watching: `\(input)` -> \(output).")
-
-        var options: [String] = [
-            "--log-level", "\(logLevel)",
-        ]
-        if let baseUrl, !baseUrl.isEmpty {
-            options.append("--base-url")
-            options.append(baseUrl)
-        }
+        logger.info("👀 Watching: `\(input)`.")
 
         let inputUrl = safeUrl(for: input)
-        let outputUrl = safeUrl(for: output)
 
         var lastGenerationTime = Date()
 
@@ -82,12 +79,7 @@ struct Entrypoint: AsyncParsableCommand {
         let command = Command(
             executablePath: .init(commandUrl.path() + "-generate")
         )
-        .addArguments(
-            [
-                inputUrl.path(),
-                outputUrl.path(),
-            ] + options
-        )
+        .addArguments(arguments)
 
         let generate = try await command.output.stdout
 
@@ -103,22 +95,12 @@ struct Entrypoint: AsyncParsableCommand {
             let last = lastGenerationTime
             let diff = abs(last.timeIntervalSince(now))
 
-            guard diff > 3 else {  // 3 sec treshold
+            guard diff > Double(seconds) else {  // 3 sec treshold
                 logger.trace("Skipping generation due to treshold...")
                 continue
             }
             lastGenerationTime = now
             logger.info("Generating site...")
-
-            let command = Command(
-                executablePath: .init(commandUrl.path() + "-generate")
-            )
-            .addArguments(
-                [
-                    inputUrl.path(),
-                    outputUrl.path(),
-                ] + options
-            )
 
             let generate = try await command.output.stdout
 
@@ -129,13 +111,17 @@ struct Entrypoint: AsyncParsableCommand {
         }
     }
 
+    var arguments: [String] {
+        [input] + options
+    }
+
     var options: [String] {
         var options: [String] = [
             "--log-level", "\(logLevel)",
         ]
-        if let baseUrl, !baseUrl.isEmpty {
-            options.append("--base-url")
-            options.append(baseUrl)
+        if let target, !target.isEmpty {
+            options.append("--target")
+            options.append(target)
         }
         return options
     }
