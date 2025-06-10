@@ -17,6 +17,11 @@ extension Mocks.ContentDefinitions {
                 "pages"
             ],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "title": .init(
                     propertyType: .string,
                     isRequired: true
@@ -38,6 +43,11 @@ extension Mocks.ContentDefinitions {
                 "blog/authors"
             ],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "name": .init(
                     propertyType: .string,
                     isRequired: true
@@ -83,6 +93,11 @@ extension Mocks.ContentDefinitions {
                 "blog/tags"
             ],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "title": .init(
                     propertyType: .string,
                     isRequired: true
@@ -120,6 +135,11 @@ extension Mocks.ContentDefinitions {
                 "blog/posts"
             ],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "title": .init(
                     propertyType: .string,
                     isRequired: true
@@ -146,15 +166,10 @@ extension Mocks.ContentDefinitions {
                     ),
                     isRequired: true
                 ),
-                "draft": .init(
-                    propertyType: .bool,
-                    isRequired: true,
-                    defaultValue: .init(false)
-                ),
                 "featured": .init(
                     propertyType: .bool,
                     isRequired: true,
-                    defaultValue: .init(false)
+                    defaultValue: false
                 ),
                 "rating": .init(
                     propertyType: .double,
@@ -263,6 +278,11 @@ extension Mocks.ContentDefinitions {
                 "docs/categories"
             ],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "title": .init(
                     propertyType: .string,
                     isRequired: true
@@ -305,6 +325,11 @@ extension Mocks.ContentDefinitions {
                 "docs/guides"
             ],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "title": .init(
                     propertyType: .string,
                     isRequired: true
@@ -334,6 +359,11 @@ extension Mocks.ContentDefinitions {
             id: "redirect",
             paths: [],
             properties: [
+                "draft": .init(
+                    propertyType: .bool,
+                    isRequired: true,
+                    defaultValue: false
+                ),
                 "to": .init(
                     propertyType: .string,
                     isRequired: true

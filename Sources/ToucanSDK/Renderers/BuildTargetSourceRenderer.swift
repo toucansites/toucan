@@ -133,11 +133,14 @@ public struct BuildTargetSourceRenderer {
         var results: [PipelineResult] = []
         for pipeline in buildTargetSource.pipelines {
 
+            //            print(pipeline.id)
             let filteredContents = contentResolver.apply(
                 filterRules: pipeline.contentTypes.filterRules,
                 to: baseContents,
                 now: now
             )
+            //            print(baseContents.count)
+            //            print(filteredContents.count)
             let iteratedContents = contentResolver.apply(
                 iterators: pipeline.iterators,
                 to: filteredContents,
@@ -188,6 +191,12 @@ public struct BuildTargetSourceRenderer {
                 dateFormatter: dateFormatter,
                 now: now
             )
+            //            print("---")
+            //            print(finalContents.count)
+            //            print(contextBundles.count)
+            //            print("---")
+            //            print(finalContents.map(\.slug.value).joined(separator: "\n"))
+            //            print(contextBundles.map(\.content.slug))
 
             switch pipeline.engine.id {
             case "json", "context":
@@ -198,7 +207,6 @@ public struct BuildTargetSourceRenderer {
                 results += renderer.render(contextBundles)
 
             case "mustache":
-
                 let renderer = try ContextBundleToHTMLRenderer(
                     pipeline: pipeline,
                     templates: templates,
@@ -227,6 +235,7 @@ public struct BuildTargetSourceRenderer {
                 contentType: content.definition.id
             )
             guard isAllowed else {
+                //                print(pipeline.id, content.definition.id, pipeline.contentTypes.exclude, pipeline.contentTypes.include)
                 return nil
             }
 
