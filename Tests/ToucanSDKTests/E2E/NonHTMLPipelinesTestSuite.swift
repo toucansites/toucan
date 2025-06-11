@@ -56,6 +56,8 @@ struct NonHTMLPipelinesTestSuite {
             let rssXML = output.appendingPathIfPresent("rss.xml")
             let rss = try String(contentsOf: rssXML)
 
+            //            print(rss)
+
             let nowString = ""
             let expectation = #"""
                 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">

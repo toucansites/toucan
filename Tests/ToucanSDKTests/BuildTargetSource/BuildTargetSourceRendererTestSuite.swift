@@ -182,16 +182,8 @@ struct BuildTargetSourceRendererTestSuite {
     }
 
     @Test()
-    func queryFilter() async throws {
+    func pipelineContentFilter() async throws {
         let now = Date()
-        let config = Config.defaults
-        let target = Target.standard
-        let settings = Settings.defaults
-
-        let dateFormatter = ToucanOutputDateFormatter(
-            dateConfig: config.dataTypes.date
-        )
-        let nowISO8601String = dateFormatter.format(now).iso8601
 
         let pipelines: [Pipeline] = [
             .init(
@@ -200,7 +192,20 @@ struct BuildTargetSourceRendererTestSuite {
                 scopes: [:],
                 queries: [:],
                 dataTypes: .defaults,
-                contentTypes: .defaults,
+                contentTypes: .init(
+                    include: [
+                        "test"
+                    ],
+                    exclude: [],
+                    lastUpdate: [],
+                    filterRules: [
+                        "*": .field(
+                            key: "title",
+                            operator: .equals,
+                            value: "foo"
+                        )
+                    ]
+                ),
                 iterators: [:],
                 assets: .defaults,
                 transformers: [:],
@@ -217,6 +222,7 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 markdown: .init(
                     frontMatter: [
+                        "type": "test",
                         "title": "Home",
                         "description": "Home description",
                         "foo": [
@@ -234,48 +240,34 @@ struct BuildTargetSourceRendererTestSuite {
             )
         ]
 
-        var buildTargetSource = Mocks.buildTargetSource(now: now)
-        // keep only html pipeline, exclude sitemap & rss xml contents
-        buildTargetSource.pipelines = [
-            Mocks.Pipelines.html()
+        let contentDefinitions: [ContentDefinition] = [
+            .init(
+                id: "test",
+                default: true,
+                paths: [],
+                properties: [
+                    "title": .init(
+                        propertyType: .string,
+                        isRequired: true
+                    )
+                ],
+                relations: [:],
+                queries: [:]
+            )
         ]
-        buildTargetSource.rawContents = buildTargetSource.rawContents.filter {
-            !$0.origin.path.value.hasSuffix("xml")
-        }
 
-        //        let buildTargetSource = BuildTargetSource(
-        //            locations: .init(
-        //                sourceUrl: .init(filePath: ""),
-        //                config: config
-        //            ),
-        //            target: target,
-        //            config: config,
-        //            settings: settings,
-        //            pipelines: pipelines,
-        //            contentDefinitions: [
-        //                Mocks.ContentDefinitions.page()
-        //            ],
-        //            rawContents: rawContents,
-        //            blockDirectives: []
-        //        )
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents = rawContents
+        buildTargetSource.contentDefinitions = contentDefinitions
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
-            templates: Mocks.Templates.all()
+            templates: [:]
         )
         let results = try renderer.render(now: now)
 
-        dump(results.filter { $0.source.isContent }.map { $0.destination.path })
-
-        let context = results.filter { $0.source.isContent }
-            .first { $0.destination.path == "context" }
-
-        guard case let .content(value) = context?.source else {
-            Issue.record("Source type is not a valid content.")
-            return
-        }
-
-        print(value.replacingOccurrences(["&quot;": "\""]))
+        #expect(results.isEmpty)
     }
 
     // MARK: - api
