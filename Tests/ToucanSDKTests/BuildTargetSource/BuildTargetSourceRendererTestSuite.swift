@@ -323,4 +323,44 @@ struct BuildTargetSourceRendererTestSuite {
 
         print(value)
     }
+
+    @Test()
+    func renderAuthor() async throws {
+        let now = Date()
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        // keep only html pipeline & one author
+        buildTargetSource.pipelines = buildTargetSource.pipelines.filter {
+            $0.id == "html"
+        }
+        buildTargetSource.rawContents = buildTargetSource.rawContents.filter {
+            $0.origin.slug == "blog/authors/author-1"
+        }
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: Mocks.Templates.all()
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 2)
+
+        let contents = results.filter { $0.source.isContent }
+        #expect(contents.count == 1)
+
+        let assets = results.filter { $0.source.isAsset }
+        #expect(assets.count == 1)
+
+        guard case let .content(value) = contents[0].source else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+        print(value)
+
+        guard case let .assetFile(path) = assets[0].source else {
+            Issue.record("Source type is not a valid asset file.")
+            return
+        }
+        #expect(path == "blog/authors/author-1/assets/author-1.jpg")
+    }
 }

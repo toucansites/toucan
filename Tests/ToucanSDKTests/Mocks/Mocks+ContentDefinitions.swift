@@ -56,6 +56,10 @@ extension Mocks.ContentDefinitions {
                     propertyType: .string,
                     isRequired: false
                 ),
+                "image": .init(
+                    propertyType: .asset,
+                    isRequired: true
+                ),
                 "age": .init(
                     propertyType: .int,
                     isRequired: false

@@ -7,6 +7,7 @@
 
 import Markdown
 import Logging
+import ToucanCore
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
@@ -299,7 +300,7 @@ struct HTMLVisitor: MarkupVisitor {
                 var hrefDestination = destination
                 if destination.hasPrefix("/") {
                     hrefDestination =
-                        "\(baseUrl)\(baseUrl.suffixForPath())\(destination.dropFirst())"
+                        "\(baseUrl.ensureTrailingSlash())\(destination.dropFirst())"
                 }
                 attributes.append(
                     .init(

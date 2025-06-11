@@ -39,6 +39,27 @@ struct PropertyTestSuite {
     }
 
     @Test
+    func assetType() throws {
+        let data = """
+            required: true
+            type: asset
+            """
+
+        let decoder = ToucanYAMLDecoder()
+        let result = try decoder.decode(Property.self, from: data)
+        let encoder = ToucanYAMLEncoder()
+        let yaml = try encoder.encode(result)
+
+        #expect(result.type == .asset)
+        #expect(result.required == true)
+
+        #expect(
+            data.trimmingCharacters(in: .whitespacesAndNewlines)
+                == yaml.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+    }
+
+    @Test
     func dateTypeWithFormat() throws {
         let data = """
             type: date

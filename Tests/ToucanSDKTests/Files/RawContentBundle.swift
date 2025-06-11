@@ -26,6 +26,11 @@ extension RawContentBundle: BuildableItem {
     func buildItem() -> FileManagerPlayground.Item {
         .directory(
             Directory(name: rawContent.origin.slug) {
+                Directory(name: "assets") {
+                    for asset in rawContent.assets {
+                        File(name: asset, string: asset)
+                    }
+                }
                 MarkdownFile(
                     name: "index",
                     markdown: rawContent.markdown

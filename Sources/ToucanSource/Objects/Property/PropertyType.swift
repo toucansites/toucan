@@ -24,6 +24,9 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     /// Text/string type (`String`).
     case string
 
+    /// Asset reference stored as a string value
+    case asset
+
     /// Date type with optional localized formatting.
     case date(config: DateFormatterConfig?)
 
@@ -33,8 +36,10 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     /// Coding keys used for encoding and decoding `PropertyType`.
     private enum CodingKeys: String, CodingKey {
         case type
-        case config  // date input config
-        case of  // type of array elements
+        // date input config
+        case config
+        // type of array elements
+        case of
     }
 
     /// Type discriminator used during encoding and decoding.
@@ -43,6 +48,7 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         case int
         case double
         case string
+        case asset
         case date
         case array
     }
@@ -68,6 +74,8 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             self = .double
         case .string:
             self = .string
+        case .asset:
+            self = .asset
         case .date:
             let config = try container.decodeIfPresent(
                 DateFormatterConfig.self,
@@ -98,6 +106,8 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             try container.encode(TypeKey.double, forKey: .type)
         case .string:
             try container.encode(TypeKey.string, forKey: .type)
+        case .asset:
+            try container.encode(TypeKey.asset, forKey: .type)
         case .date(let config):
             try container.encode(TypeKey.date, forKey: .type)
             try container.encodeIfPresent(config, forKey: .config)

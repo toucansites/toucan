@@ -235,6 +235,7 @@ extension Mocks.RawContents {
                 frontMatter: [
                     "name": "Author #\(id)",
                     "description": "Author #\(id) description",
+                    "image": "./assets/author-\(id).jpg",
                     "age": .init(age),
                 ],
 
@@ -245,7 +246,9 @@ extension Mocks.RawContents {
                     """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
-            assets: []
+            assets: [
+                "author-\(id).jpg"
+            ]
         )
     }
 

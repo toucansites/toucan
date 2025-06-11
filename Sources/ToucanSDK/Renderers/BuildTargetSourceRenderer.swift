@@ -412,17 +412,38 @@ public struct BuildTargetSourceRenderer {
 
         if scope.context.contains(.properties) {
             for (k, v) in content.properties {
-                if let p = content.type.properties[k],
-                    case .date(_) = p.type,
-                    let rawDate = v.value(as: Double.self)
-                {
-                    result[k] = .init(
-                        dateFormatter.format(rawDate)
-                    )
+                guard let p = content.type.properties[k] else {
+                    continue
                 }
-                else {
+
+                switch p.type {
+                // resolve assets
+                case .asset:
+                    guard let rawValue = v.stringValue() else {
+                        continue
+                    }
+
+                    let resolvedValue = rawValue.resolveAsset(
+                        baseUrl: baseUrl(),
+                        // TODO: double check this -> content.assetsPath?
+                        assetsPath: buildTargetSource.config.contents.assets
+                            .path,
+                        slug: content.slug.value
+                    )
+
+                    result[k] = .init(resolvedValue)
+                // format dates
+                case .date(_):
+                    guard let rawValue = v.doubleValue() else {
+                        continue
+                    }
+                    result[k] = .init(
+                        dateFormatter.format(rawValue)
+                    )
+                default:
                     result[k] = .init(v.value)
                 }
+
             }
 
             result["slug"] = .init(content.slug)

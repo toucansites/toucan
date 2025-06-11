@@ -95,7 +95,7 @@ public struct TransformerExecutor {
 
         // Step 3: Read the transformed contents, clean up, and return
         do {
-            let finalContents = try fileURL.loadContents()
+            let finalContents = try String(contentsOf: fileURL)
             try fileManager.removeItem(at: fileURL)
             return finalContents
         }
