@@ -310,7 +310,7 @@ struct BuildTargetSourceRendererTestSuite {
                     filterRules: [:]
                 ),
                 iterators: [
-                    "post.pagination": .init(
+                    "api.posts.pagination": .init(
                         contentType: "post",
                         limit: 2
                     )
@@ -322,8 +322,8 @@ struct BuildTargetSourceRendererTestSuite {
                     options: options
                 ),
                 output: .init(
-                    path: "api",
-                    file: "posts",
+                    path: "",
+                    file: "{{slug}}",
                     ext: "json"
                 )
             )
@@ -342,11 +342,24 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: []
-            )
+            ),
+            .init(
+                origin: .init(
+                    path: .init("api/posts/{{api.posts.pagination}}"),
+                    slug: "api/posts/{{api.posts.pagination}}"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "api"
+                    ],
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: []
+            ),
         ]
 
         var buildTargetSource = Mocks.buildTargetSource(now: now)
-        // keep only html pipeline, exclude sitemap & rss xml contents
+        // keep only api pipeline, exclude sitemap & rss xml contents
         buildTargetSource.pipelines = pipelines
         buildTargetSource.rawContents =
             buildTargetSource.rawContents.filter {
@@ -366,14 +379,19 @@ struct BuildTargetSourceRendererTestSuite {
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
-            templates: Mocks.Templates.all()
+            templates: [:]
         )
         let results = try renderer.render(now: now)
 
-        #expect(results.count == 1)
+        #expect(results.count == 3)
+
+        let contents = results.filter { $0.source.isContent }
+            .filter { $0.destination.file == "api" }
+
+        #expect(contents.count == 1)
 
         guard
-            case let .content(value) = results[0].source,
+            case let .content(value) = contents[0].source,
             let data = value.data(using: .utf8)
         else {
             Issue.record("Source type is not a valid content.")
@@ -397,6 +415,62 @@ struct BuildTargetSourceRendererTestSuite {
     }
 
     @Test()
+    func renderAPIPagination() async throws {
+        let now = Date()
+        let buildTargetSource = getMockAPIBuildTargetSource(
+            now: now,
+            options: [:]
+        )
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: [:]
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 3)
+
+        let contents = results.filter { $0.source.isContent }
+            .filter { $0.destination.file != "api" }
+
+        #expect(contents.count == 2)
+
+        for content in contents {
+            guard
+                case let .content(value) = content.source,
+                let data = value.data(using: .utf8)
+            else {
+                Issue.record("Source type is not a valid content.")
+                return
+            }
+
+            struct Expected: Decodable {
+                struct Item: Decodable {
+                    let title: String
+                    let slug: Slug
+                }
+                struct Iterator: Decodable {
+                    let current: Int
+                    let items: [Item]
+                }
+                let iterator: Iterator
+            }
+
+            let decoder = JSONDecoder()
+
+            let result = try decoder.decode(Expected.self, from: data)
+            switch result.iterator.current {
+            case 1:
+                #expect(result.iterator.items.count == 2)
+            case 2:
+                #expect(result.iterator.items.count == 1)
+            default:
+                Issue.record("Invalid iterator page.")
+            }
+        }
+    }
+
+    @Test()
     func renderAPIWithEngineOptionsKeyPath() async throws {
         let now = Date()
         let buildTargetSource = getMockAPIBuildTargetSource(
@@ -408,14 +482,19 @@ struct BuildTargetSourceRendererTestSuite {
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
-            templates: Mocks.Templates.all()
+            templates: [:]
         )
         let results = try renderer.render(now: now)
 
-        #expect(results.count == 1)
+        #expect(results.count == 3)
+
+        let contents = results.filter { $0.source.isContent }
+            .filter { $0.destination.file == "api" }
+
+        #expect(contents.count == 1)
 
         guard
-            case let .content(value) = results[0].source,
+            case let .content(value) = contents[0].source,
             let data = value.data(using: .utf8)
         else {
             Issue.record("Source type is not a valid content.")
@@ -447,14 +526,17 @@ struct BuildTargetSourceRendererTestSuite {
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
-            templates: Mocks.Templates.all()
+            templates: [:]
         )
         let results = try renderer.render(now: now)
 
-        #expect(results.count == 1)
+        let contents = results.filter { $0.source.isContent }
+            .filter { $0.destination.file == "api" }
+
+        #expect(contents.count == 1)
 
         guard
-            case let .content(value) = results[0].source,
+            case let .content(value) = contents[0].source,
             let data = value.data(using: .utf8)
         else {
             Issue.record("Source type is not a valid content.")

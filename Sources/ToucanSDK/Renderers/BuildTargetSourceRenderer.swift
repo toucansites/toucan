@@ -189,6 +189,9 @@ public struct BuildTargetSourceRenderer {
                 baseUrl: baseUrl()
             )
 
+            //            print(iteratedContents.map(\.slug.value).joined(separator: "\n"))
+            //            print(finalContents.map(\.slug.value).joined(separator: "\n"))
+
             let dateFormatter = ToucanOutputDateFormatter(
                 dateConfig: buildTargetSource.config.dataTypes.date,
                 pipelineDateConfig: pipeline.dataTypes.date,
