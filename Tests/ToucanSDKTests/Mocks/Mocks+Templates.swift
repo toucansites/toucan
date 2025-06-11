@@ -9,6 +9,35 @@ import ToucanSource
 
 extension Mocks.Templates {
 
+    static func all(
+        contextValue: String = "{{.}}"
+    ) -> [String: String] {
+        [
+            "html": Mocks.Templates.html(),
+            "redirect": Mocks.Templates.redirect(),
+            "rss": Mocks.Templates.rss(),
+            "sitemap": Mocks.Templates.sitemap(),
+
+            "pages.default": Mocks.Templates.page(),
+            "pages.404": Mocks.Templates.notFound(),
+            "pages.context": Mocks.Templates.context(value: contextValue),
+
+            "docs.category.default": Mocks.Templates.category(),
+            "docs.guide.default": Mocks.Templates.guide(),
+
+            "blog.post.default": Mocks.Templates.post(),
+            "blog.author.default": Mocks.Templates.author(),
+            "blog.tag.default": Mocks.Templates.tag(),
+
+            "partials.blog.author": Mocks.Templates.partialAuthor(),
+            "partials.blog.tag": Mocks.Templates.partialTag(),
+            "partials.blog.post": Mocks.Templates.partialPost(),
+
+            "partials.docs.category": Mocks.Templates.partialCategory(),
+            "partials.docs.guide": Mocks.Templates.partialGuide(),
+        ]
+    }
+
     static func redirect() -> String {
         #"""
         <!DOCTYPE html>

@@ -12,18 +12,18 @@ public struct Content {
 
     // MARK: - Core Identifiers
 
+    /// The content type definition that describes structure and expected fields.
+    public var type: ContentDefinition
+
     /// A globally unique string identifier for this content item.
     /// This value remains constant across contexts and is used for persistence or lookup.
-    public var id: String
+    public var typeAwareID: String
 
     /// A URL-friendly slug that identifies the content in paths or links.
     public var slug: Slug
 
     /// The raw content representation, usually Markdown or HTML source.
     public var rawValue: RawContent
-
-    /// The content type definition that describes structure and expected fields.
-    public var definition: ContentDefinition
 
     // MARK: - Data & Metadata
 
@@ -52,28 +52,28 @@ public struct Content {
     /// Initializes a new `Content` instance.
     ///
     /// - Parameters:
-    ///   - id: A unique identifier.
+    ///   - type: Structural schema for this content.
+    ///   - typeAwareID: A unique identifier.
     ///   - slug: A human-readable URL slug.
     ///   - rawValue: The unparsed content.
-    ///   - definition: Structural schema for this content.
     ///   - properties: Parsed content fields.
     ///   - relations: Links to other content.
     ///   - userDefined: Freeform or plugin-provided metadata.
     ///   - iteratorInfo: Optional info for repeated or generated content.
     public init(
-        id: String,
+        type: ContentDefinition,
+        typeAwareID: String,
         slug: Slug,
         rawValue: RawContent,
-        definition: ContentDefinition,
         properties: [String: AnyCodable],
         relations: [String: RelationValue],
         userDefined: [String: AnyCodable],
         iteratorInfo: IteratorInfo?
     ) {
-        self.id = id
+        self.type = type
+        self.typeAwareID = typeAwareID
         self.slug = slug
         self.rawValue = rawValue
-        self.definition = definition
         self.properties = properties
         self.relations = relations
         self.userDefined = userDefined

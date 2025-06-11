@@ -39,7 +39,7 @@ struct ContextBundleToHTMLRenderer {
 
     func render(_ contextBundle: ContextBundle) -> PipelineResult? {
         let bundleOptions = contentTypesOptions.dict(
-            contextBundle.content.definition.id
+            contextBundle.content.type.id
         )
 
         let contentTypeTemplate = bundleOptions.string("template")
@@ -53,7 +53,7 @@ struct ContextBundleToHTMLRenderer {
                 "Missing mustache template file.",
                 metadata: [
                     "slug": "\(contextBundle.content.slug)",
-                    "type": "\(contextBundle.content.definition.id)",
+                    "type": "\(contextBundle.content.type.id)",
                 ]
             )
             return nil
@@ -69,7 +69,7 @@ struct ContextBundleToHTMLRenderer {
                 "Could not get valid HTML from content using template.",
                 metadata: [
                     "slug": "\(contextBundle.content.slug)",
-                    "type": "\(contextBundle.content.definition.id)",
+                    "type": "\(contextBundle.content.type.id)",
                     "template": "\(template)",
                 ]
             )

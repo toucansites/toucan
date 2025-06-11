@@ -45,7 +45,7 @@ public extension Content {
         }
 
         // Append metadata fields
-        fields["id"] = .init(id)
+        fields["id"] = .init(typeAwareID)
         fields["slug"] = .init(slug.value)
         fields["lastUpdate"] = .init(rawValue.lastModificationDate)
         fields["iterator"] = .init(isIterator)
@@ -67,7 +67,7 @@ public extension [Content] {
         query: Query,
         now: TimeInterval
     ) -> [Content] {
-        let contents = filter { query.contentType == $0.definition.id }
+        let contents = filter { query.contentType == $0.type.id }
         return filter(
             contents: contents,
             using: query.resolveFilterParameters(

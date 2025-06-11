@@ -57,7 +57,7 @@ public struct BuildTargetSourceRenderer {
         pipeline: Pipeline,
         now: TimeInterval
     ) -> TimeInterval? {
-        var updateTypes = contents.map(\.definition.id)
+        var updateTypes = contents.map(\.type.id)
         if !pipeline.contentTypes.lastUpdate.isEmpty {
             updateTypes = updateTypes.filter {
                 pipeline.contentTypes.lastUpdate.contains($0)
@@ -232,7 +232,7 @@ public struct BuildTargetSourceRenderer {
     ) throws -> [ContextBundle] {
         contents.compactMap { content in
             let isAllowed = pipeline.contentTypes.isAllowed(
-                contentType: content.definition.id
+                contentType: content.type.id
             )
             guard isAllowed else {
                 //                print(pipeline.id, content.definition.id, pipeline.contentTypes.exclude, pipeline.contentTypes.include)
@@ -353,7 +353,7 @@ public struct BuildTargetSourceRenderer {
         .recursivelyMerged(with: pipelineContext)
 
         var outputArgs: [String: String] = [
-            "{{id}}": content.id,
+            "{{id}}": content.typeAwareID,
             "{{slug}}": content.slug.value,
         ]
 
@@ -391,7 +391,7 @@ public struct BuildTargetSourceRenderer {
 
         let scope = pipeline.getScope(
             keyedBy: scopeKey,
-            for: content.definition.id
+            for: content.type.id
         )
 
         let cacheKey = [
@@ -412,7 +412,7 @@ public struct BuildTargetSourceRenderer {
 
         if scope.context.contains(.properties) {
             for (k, v) in content.properties {
-                if let p = content.definition.properties[k],
+                if let p = content.type.properties[k],
                     case .date(_) = p.type,
                     let rawDate = v.value(as: Double.self)
                 {
@@ -436,7 +436,7 @@ public struct BuildTargetSourceRenderer {
 
         if scope.context.contains(.contents) {
             let transformers = pipeline.transformers[
-                content.definition.id
+                content.type.id
             ]
             let renderer = MarkdownRenderer(
                 configuration: .init(
@@ -507,7 +507,7 @@ public struct BuildTargetSourceRenderer {
         }
 
         if scope.context.contains(.relations) {
-            for (key, relation) in content.definition.relations {
+            for (key, relation) in content.type.relations {
                 var orderBy: [Order] = []
                 if let order = relation.order {
                     orderBy.append(order)
@@ -550,7 +550,7 @@ public struct BuildTargetSourceRenderer {
 
         if allowSubQueries, scope.context.contains(.queries) {
 
-            for (key, query) in content.definition.queries {
+            for (key, query) in content.type.queries {
                 let queryContents = contents.run(
                     query: query.resolveFilterParameters(
                         with: content.queryFields

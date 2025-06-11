@@ -13,11 +13,10 @@ import Logging
 
 fileprivate extension Path {
 
-    func getIdentifier() -> String {
+    func getTypeLocalIdentifier() -> String {
         let newRawPath =
             self.value
             .split(separator: "/")
-            .dropLast()
             .last
             .map(String.init) ?? ""
         return Path(newRawPath).trimmingBracketsContent()
@@ -218,11 +217,9 @@ struct ContentResolver {
             userDefined.removeValue(forKey: key)
         }
 
-        // Extract `id` from front matter or fallback from origin path
-        var id: String = rawContent.origin.path.getIdentifier()
-
-        if let rawId = rawContent.markdown.frontMatter.string("id") {
-            id = rawId
+        var typeAwareID = rawContent.origin.path.getTypeLocalIdentifier()
+        if let id = rawContent.markdown.frontMatter.string("id") {
+            typeAwareID = id
         }
 
         // Extract `slug` from front matter or fallback to origin slug
@@ -234,12 +231,21 @@ struct ContentResolver {
             slug = rawSlug
         }
 
+        //        print("------------------------")
+        //        print(contentType.id)
+        //        print(typeAwareID)
+        //        print(".")
+        //        print(rawContent.origin.path.value)
+        //        print(rawContent.origin.slug)
+        //        print(slug)
+        //        print("------------------------")
+
         // Final assembled content object
         return .init(
-            id: id,
+            type: contentType,
+            typeAwareID: typeAwareID,
             slug: .init(slug),
             rawValue: rawContent,
-            definition: contentType,
             properties: properties,
             relations: relations,
             userDefined: userDefined,
@@ -261,7 +267,7 @@ struct ContentResolver {
         to contents: [Content],
         now: TimeInterval
     ) -> [Content] {
-        let groups = Dictionary(grouping: contents, by: { $0.definition.id })
+        let groups = Dictionary(grouping: contents, by: { $0.type.id })
 
         var result: [Content] = []
         for (id, contents) in groups {
@@ -321,7 +327,7 @@ struct ContentResolver {
                     rewrite(
                         iteratorId: iteratorId,
                         pageIndex: currentPageIndex,
-                        &alteredContent.id
+                        &alteredContent.typeAwareID
                     )
                     rewrite(
                         iteratorId: iteratorId,
@@ -631,7 +637,7 @@ struct ContentResolver {
 
             for behavior in pipeline.assets.behaviors {
                 let isAllowed = pipeline.contentTypes.isAllowed(
-                    contentType: content.definition.id
+                    contentType: content.type.id
                 )
                 guard isAllowed else {
                     continue

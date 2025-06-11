@@ -58,14 +58,14 @@ struct ContentResolverTestSuite {
             if !(specialPages + redirectPages)
                 .contains(item.rawValue.origin.slug)
             {
-                #expect(item.rawValue.origin.slug.contains(item.definition.id))
+                #expect(item.rawValue.origin.slug.contains(item.type.id))
             }
             else {
                 if specialPages.contains(item.rawValue.origin.slug) {
-                    #expect(item.definition.id == "page")
+                    #expect(item.type.id == "page")
                 }
                 else {
-                    #expect(item.definition.id == "redirect")
+                    #expect(item.type.id == "redirect")
                 }
             }
         }
@@ -141,7 +141,7 @@ struct ContentResolverTestSuite {
         )
         #expect(targetContents.count == 1)
         let content = try #require(targetContents.first)
-        #expect(content.definition.id == "page")
+        #expect(content.type.id == "page")
     }
 
     @Test
@@ -204,7 +204,7 @@ struct ContentResolverTestSuite {
         )
         #expect(targetContents.count == 1)
         let content = try #require(targetContents.first)
-        #expect(content.definition.id == "post")
+        #expect(content.type.id == "post")
     }
 
     @Test
@@ -262,7 +262,7 @@ struct ContentResolverTestSuite {
         )
         #expect(targetContents.count == 1)
         let content = try #require(targetContents.first)
-        #expect(content.definition.id == "post")
+        #expect(content.type.id == "post")
     }
 
     // MARK: - properties
@@ -663,12 +663,12 @@ struct ContentResolverTestSuite {
 
         let expGroups = Dictionary(
             grouping: contents,
-            by: { $0.definition.id }
+            by: { $0.type.id }
         )
 
         let resGroups = Dictionary(
             grouping: result,
-            by: { $0.definition.id }
+            by: { $0.type.id }
         )
 
         #expect(result.count < contents.count)
@@ -740,12 +740,12 @@ struct ContentResolverTestSuite {
 
         let expGroups = Dictionary(
             grouping: contents,
-            by: { $0.definition.id }
+            by: { $0.type.id }
         )
 
         let resGroups = Dictionary(
             grouping: result,
-            by: { $0.definition.id }
+            by: { $0.type.id }
         )
 
         for key in expGroups.keys {
@@ -803,12 +803,12 @@ struct ContentResolverTestSuite {
 
         let expGroups = Dictionary(
             grouping: contents,
-            by: { $0.definition.id }
+            by: { $0.type.id }
         )
 
         let resGroups = Dictionary(
             grouping: result,
-            by: { $0.definition.id }
+            by: { $0.type.id }
         )
 
         for key in expGroups.keys {

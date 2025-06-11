@@ -215,34 +215,9 @@ struct BuildTargetSourceRendererTestSuite {
         //            blockDirectives: []
         //        )
 
-        let templates: [String: String] = [
-            "html": Mocks.Templates.html(),
-            "redirect": Mocks.Templates.redirect(),
-            "rss": Mocks.Templates.rss(),
-            "sitemap": Mocks.Templates.sitemap(),
-
-            "pages.default": Mocks.Templates.page(),
-            "pages.404": Mocks.Templates.notFound(),
-            "pages.context": Mocks.Templates.context(value: "{{.}}"),
-
-            "docs.category.default": Mocks.Templates.category(),
-            "docs.guide.default": Mocks.Templates.guide(),
-
-            "blog.post.default": Mocks.Templates.post(),
-            "blog.author.default": Mocks.Templates.author(),
-            "blog.tag.default": Mocks.Templates.tag(),
-
-            "partials.blog.author": Mocks.Templates.partialAuthor(),
-            "partials.blog.tag": Mocks.Templates.partialTag(),
-            "partials.blog.post": Mocks.Templates.partialPost(),
-
-            "partials.docs.category": Mocks.Templates.partialCategory(),
-            "partials.docs.guide": Mocks.Templates.partialGuide(),
-        ]
-
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
-            templates: templates
+            templates: Mocks.Templates.all()
         )
         let results = try renderer.render(now: now)
 
@@ -257,5 +232,95 @@ struct BuildTargetSourceRendererTestSuite {
         }
 
         print(value.replacingOccurrences(["&quot;": "\""]))
+    }
+
+    @Test()
+    func api() async throws {
+        let now = Date()
+
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "api",
+                definesType: true,
+                scopes: [:],
+                queries: [
+                    "posts": .init(
+                        contentType: "post",
+                        scope: "list",
+                        orderBy: [
+                            .init(
+                                key: "publication",
+                                direction: .desc
+                            )
+                        ]
+                    )
+                ],
+                dataTypes: .defaults,
+                contentTypes: .init(
+                    include: ["api"],
+                    exclude: [],
+                    lastUpdate: [],
+                    filterRules: [:]
+                ),
+                iterators: [
+                    "post.pagination": .init(
+                        contentType: "post",
+                        limit: 2
+                    )
+                ],
+                assets: .defaults,
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: [
+                        "keyPath": "context.posts"
+                    ]
+                ),
+                output: .init(
+                    path: "api",
+                    file: "posts",
+                    ext: "json"
+                )
+            )
+        ]
+
+        let rawContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: .init("api"),
+                    slug: "api"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "api"
+                    ]
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: []
+            )
+        ]
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        // keep only html pipeline, exclude sitemap & rss xml contents
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents =
+            buildTargetSource.rawContents.filter {
+                !$0.origin.path.value.hasSuffix("xml")
+            } + rawContents
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: Mocks.Templates.all()
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        guard case let .content(value) = results[0].source else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        print(value)
     }
 }
