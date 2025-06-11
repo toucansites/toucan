@@ -1,5 +1,5 @@
 //
-//  NonHTMLPipelinesTestSuite.swift
+//  NonHTMLTestSuite.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 02. 20..
@@ -15,18 +15,15 @@ import FileManagerKitBuilder
 @testable import ToucanSDK
 
 @Suite
-struct NonHTMLPipelinesTestSuite {
+struct NonHTMLTestSuite {
 
     @Test
-    func context() throws {
+    func notFound() throws {
         let now = Date()
 
         try FileManagerPlayground {
             Mocks.E2E.src(
-                now: now,
-                debugContext: #"""
-                    {{page}}
-                    """#
+                now: now
             )
         }
         .test {
@@ -34,10 +31,10 @@ struct NonHTMLPipelinesTestSuite {
             try Toucan(input: input.path()).generate()
 
             let output = $1.appendingPathIfPresent("docs")
-            let contextURL = output.appendingPathIfPresent("context/index.html")
-            let context = try String(contentsOf: contextURL)
+            let notFoundUrl = output.appendingPathIfPresent("404.html")
+            let notFound = try String(contentsOf: notFoundUrl)
 
-            print(context.replacingOccurrences(["&quot;": "\""]))
+            #expect(notFound.contains("Not found page contents"))
 
         }
     }
@@ -123,71 +120,6 @@ struct NonHTMLPipelinesTestSuite {
     }
 
     @Test
-    func redirect() throws {
-        let now = Date()
-
-        try FileManagerPlayground {
-            Mocks.E2E.src(now: now)
-        }
-        .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate()
-
-            let output = $1.appendingPathIfPresent("docs")
-
-            let redirect1URL = output.appendingPathIfPresent(
-                "redirects/home-old/index.html"
-            )
-            let redirect1 = try String(contentsOf: redirect1URL)
-            let expectation1 = #"""
-                <!DOCTYPE html>
-                <html lang="en-US">
-                  <meta charset="utf-8">
-                  <title>Redirecting&hellip;</title>
-                  <link rel="canonical" href="http://localhost:3000/">
-                  <script>location="http://localhost:3000/"</script>
-                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
-                  <meta name="robots" content="noindex">
-                  <h1>Redirecting&hellip;</h1>
-                  <a href="http://localhost:3000/">Click here if you are not redirected.</a>
-                </html>
-                """#
-
-            #expect(
-                redirect1.trimmingCharacters(in: .whitespacesAndNewlines)
-                    == expectation1.trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    )
-            )
-
-            let redirect2URL = output.appendingPathIfPresent(
-                "redirects/about-old/index.html"
-            )
-            let redirect2 = try String(contentsOf: redirect2URL)
-            let expectation2 = #"""
-                <!DOCTYPE html>
-                <html lang="en-US">
-                  <meta charset="utf-8">
-                  <title>Redirecting&hellip;</title>
-                  <link rel="canonical" href="http://localhost:3000/about">
-                  <script>location="http://localhost:3000/about"</script>
-                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
-                  <meta name="robots" content="noindex">
-                  <h1>Redirecting&hellip;</h1>
-                  <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
-                </html>
-                """#
-
-            #expect(
-                redirect2.trimmingCharacters(in: .whitespacesAndNewlines)
-                    == expectation2.trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    )
-            )
-        }
-    }
-
-    @Test
     func sitemap() throws {
         let now = Date()
 
@@ -260,6 +192,71 @@ struct NonHTMLPipelinesTestSuite {
             #expect(
                 sitemap.trimmingCharacters(in: .whitespacesAndNewlines)
                     == expectation.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+            )
+        }
+    }
+
+    @Test
+    func redirect() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Mocks.E2E.src(now: now)
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate()
+
+            let output = $1.appendingPathIfPresent("docs")
+
+            let redirect1URL = output.appendingPathIfPresent(
+                "redirects/home-old/index.html"
+            )
+            let redirect1 = try String(contentsOf: redirect1URL)
+            let expectation1 = #"""
+                <!DOCTYPE html>
+                <html lang="en-US">
+                  <meta charset="utf-8">
+                  <title>Redirecting&hellip;</title>
+                  <link rel="canonical" href="http://localhost:3000/">
+                  <script>location="http://localhost:3000/"</script>
+                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
+                  <meta name="robots" content="noindex">
+                  <h1>Redirecting&hellip;</h1>
+                  <a href="http://localhost:3000/">Click here if you are not redirected.</a>
+                </html>
+                """#
+
+            #expect(
+                redirect1.trimmingCharacters(in: .whitespacesAndNewlines)
+                    == expectation1.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+            )
+
+            let redirect2URL = output.appendingPathIfPresent(
+                "redirects/about-old/index.html"
+            )
+            let redirect2 = try String(contentsOf: redirect2URL)
+            let expectation2 = #"""
+                <!DOCTYPE html>
+                <html lang="en-US">
+                  <meta charset="utf-8">
+                  <title>Redirecting&hellip;</title>
+                  <link rel="canonical" href="http://localhost:3000/about">
+                  <script>location="http://localhost:3000/about"</script>
+                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
+                  <meta name="robots" content="noindex">
+                  <h1>Redirecting&hellip;</h1>
+                  <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
+                </html>
+                """#
+
+            #expect(
+                redirect2.trimmingCharacters(in: .whitespacesAndNewlines)
+                    == expectation2.trimmingCharacters(
                         in: .whitespacesAndNewlines
                     )
             )
