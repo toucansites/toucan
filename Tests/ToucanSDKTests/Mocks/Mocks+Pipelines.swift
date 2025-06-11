@@ -50,6 +50,7 @@ extension Mocks.Pipelines {
                     "rss",
                     "sitemap",
                     "redirect",
+                    "not-found",
                 ],
                 lastUpdate: [
                     "page",
@@ -196,7 +197,7 @@ extension Mocks.Pipelines {
     static func notFound() -> Pipeline {
         .init(
             id: "not-found",
-            definesType: false,
+            definesType: true,
             scopes: [:],
             queries: [:],
             dataTypes: .defaults,
@@ -270,7 +271,15 @@ extension Mocks.Pipelines {
             id: "rss",
             definesType: true,
             scopes: [:],
-            queries: [:],
+            queries: [
+                "posts": .init(
+                    contentType: "post",
+                    scope: "list",
+                    orderBy: [
+                        .init(key: "lastUpdate", direction: .desc)
+                    ]
+                )
+            ],
             dataTypes: .init(
                 date: .init(
                     output: .defaults,
@@ -331,7 +340,6 @@ extension Mocks.Pipelines {
                 "posts": .init(
                     contentType: "post",
                     scope: "list",
-                    limit: 2,
                     orderBy: [
                         .init(key: "lastUpdate", direction: .desc)
                     ]
@@ -339,7 +347,6 @@ extension Mocks.Pipelines {
                 "authors": .init(
                     contentType: "author",
                     scope: "list",
-                    limit: 2,
                     orderBy: [
                         .init(key: "lastUpdate", direction: .desc)
                     ]
@@ -347,7 +354,6 @@ extension Mocks.Pipelines {
                 "tags": .init(
                     contentType: "tag",
                     scope: "list",
-                    limit: 2,
                     orderBy: [
                         .init(key: "lastUpdate", direction: .desc)
                     ]

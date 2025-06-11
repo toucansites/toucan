@@ -235,23 +235,64 @@ extension Mocks.E2E {
                 ] as [String: AnyCodable]
             )
             Directory(name: "contents") {
-                RawContentBundle(Mocks.RawContents.homePage(now: now))
-                RawContentBundle(Mocks.RawContents.aboutPage(now: now))
-                RawContentBundle(Mocks.RawContents.contextPage(now: now))
-                RawContentBundle(Mocks.RawContents.notFoundPage(now: now))
-                RawContentBundle(Mocks.RawContents.page(id: 1, now: now))
-                RawContentBundle(Mocks.RawContents.page(id: 2, now: now))
-                RawContentBundle(Mocks.RawContents.page(id: 3, now: now))
+                RawContentBundle(
+                    name: "",
+                    rawContent: Mocks.RawContents.homePage(now: now)
+                )
+                RawContentBundle(
+                    name: "about",
+                    rawContent: Mocks.RawContents.aboutPage(now: now)
+                )
+                RawContentBundle(
+                    name: "context",
+                    rawContent: Mocks.RawContents.contextPage(now: now)
+                )
+                RawContentBundle(
+                    name: "404",
+                    rawContent: Mocks.RawContents.notFoundPage(now: now)
+                )
 
-                RawContentBundle(Mocks.RawContents.redirectHome(now: now))
-                RawContentBundle(Mocks.RawContents.redirectAbout(now: now))
-                RawContentBundle(Mocks.RawContents.sitemapXML(now: now))
-                RawContentBundle(Mocks.RawContents.rssXML(now: now))
+                Directory(name: "pages") {
+                    RawContentBundle(
+                        name: "page-1",
+                        rawContent: Mocks.RawContents.page(id: 1, now: now)
+                    )
+                    RawContentBundle(
+                        name: "page-2",
+                        rawContent: Mocks.RawContents.page(id: 2, now: now)
+                    )
+                    RawContentBundle(
+                        name: "page-3",
+                        rawContent: Mocks.RawContents.page(id: 3, now: now)
+                    )
+                }
+
+                Directory(name: "redirects") {
+                    RawContentBundle(
+                        name: "home-old",
+                        rawContent: Mocks.RawContents.redirectHome(now: now)
+                    )
+                    RawContentBundle(
+                        name: "about-old",
+                        rawContent: Mocks.RawContents.redirectAbout(now: now)
+                    )
+                }
+
+                RawContentBundle(
+                    name: "sitemap.xml",
+                    rawContent: Mocks.RawContents.sitemapXML(now: now)
+                )
+
+                RawContentBundle(
+                    name: "rss.xml",
+                    rawContent: Mocks.RawContents.rssXML(now: now)
+                )
 
                 Directory(name: "blog") {
                     Directory(name: "posts") {
                         RawContentBundle(
-                            Mocks.RawContents.post(
+                            name: "post-1",
+                            rawContent: Mocks.RawContents.post(
                                 id: 1,
                                 now: now,
                                 // near past
@@ -270,7 +311,8 @@ extension Mocks.E2E {
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.post(
+                            name: "post-2",
+                            rawContent: Mocks.RawContents.post(
                                 id: 2,
                                 now: now,
                                 // past
@@ -293,7 +335,8 @@ extension Mocks.E2E {
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.post(
+                            name: "post-3",
+                            rawContent: Mocks.RawContents.post(
                                 id: 3,
                                 now: now,
                                 // distant past
@@ -315,28 +358,36 @@ extension Mocks.E2E {
                                 tagIds: [2, 3]
                             )
                         )
-                        RawContentBundle(
-                            Mocks.RawContents.postPagination(now: now)
-                        )
+                        Directory(name: "pages") {
+                            RawContentBundle(
+                                name: "{{post.pagination}}",
+                                rawContent: Mocks.RawContents.postPagination(
+                                    now: now
+                                )
+                            )
+                        }
                     }
                     Directory(name: "authors") {
                         RawContentBundle(
-                            Mocks.RawContents.author(
+                            name: "author-1",
+                            rawContent: Mocks.RawContents.author(
                                 id: 1,
                                 age: 18,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.author(
-                                id: 1,
+                            name: "author-2",
+                            rawContent: Mocks.RawContents.author(
+                                id: 2,
                                 age: 21,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.author(
-                                id: 1,
+                            name: "author-3",
+                            rawContent: Mocks.RawContents.author(
+                                id: 3,
                                 age: 42,
                                 now: now
                             )
@@ -344,87 +395,111 @@ extension Mocks.E2E {
                     }
                     Directory(name: "tags") {
                         RawContentBundle(
-                            Mocks.RawContents.tag(id: 1, now: now)
+                            name: "tag-1",
+                            rawContent: Mocks.RawContents.tag(id: 1, now: now)
                         )
                         RawContentBundle(
-                            Mocks.RawContents.tag(id: 2, now: now)
+                            name: "tag-2",
+                            rawContent: Mocks.RawContents.tag(id: 2, now: now)
                         )
                         RawContentBundle(
-                            Mocks.RawContents.tag(id: 3, now: now)
+                            name: "tag-3",
+                            rawContent: Mocks.RawContents.tag(id: 3, now: now)
                         )
                     }
                 }
                 Directory(name: "docs") {
                     Directory(name: "categories") {
                         RawContentBundle(
-                            Mocks.RawContents.category(id: 1, now: now)
+                            name: "category-1",
+                            rawContent: Mocks.RawContents.category(
+                                id: 1,
+                                now: now
+                            )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.category(id: 2, now: now)
+                            name: "category-2",
+                            rawContent: Mocks.RawContents.category(
+                                id: 2,
+                                now: now
+                            )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.category(id: 3, now: now)
+                            name: "category-3",
+                            rawContent: Mocks.RawContents.category(
+                                id: 3,
+                                now: now
+                            )
                         )
                     }
                     Directory(name: "guides") {
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-1",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 1,
                                 categoryId: 1,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-2",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 2,
                                 categoryId: 1,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-3",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 3,
                                 categoryId: 1,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-4",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 4,
                                 categoryId: 2,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-5",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 5,
                                 categoryId: 2,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-6",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 6,
                                 categoryId: 2,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-7",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 7,
                                 categoryId: 3,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-8",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 8,
                                 categoryId: 3,
                                 now: now
                             )
                         )
                         RawContentBundle(
-                            Mocks.RawContents.guide(
+                            name: "guide-9",
+                            rawContent: Mocks.RawContents.guide(
                                 id: 9,
                                 categoryId: 3,
                                 now: now

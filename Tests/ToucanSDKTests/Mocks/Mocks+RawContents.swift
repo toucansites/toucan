@@ -44,6 +44,7 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
+                    "type": "not-found",
                     "title": "Not found page",
                     "description": "Not found page description",
                 ],

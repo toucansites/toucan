@@ -231,14 +231,14 @@ struct ContentResolver {
             slug = rawSlug
         }
 
-        //        print("------------------------")
-        //        print(contentType.id)
-        //        print(typeAwareID)
-        //        print(".")
-        //        print(rawContent.origin.path.value)
-        //        print(rawContent.origin.slug)
-        //        print(slug)
-        //        print("------------------------")
+        //                print("------------------------")
+        //                print(contentType.id)
+        //                print(typeAwareID)
+        //                print(".")
+        //                print(rawContent.origin.path.value)
+        //                print(rawContent.origin.slug)
+        //                print(slug)
+        //                print("------------------------")
 
         // Final assembled content object
         return .init(

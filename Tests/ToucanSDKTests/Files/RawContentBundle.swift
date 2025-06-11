@@ -12,20 +12,15 @@ import FileManagerKitBuilder
 
 struct RawContentBundle {
 
+    var name: String
     var rawContent: RawContent
-
-    init(
-        _ rawContent: RawContent
-    ) {
-        self.rawContent = rawContent
-    }
 }
 
 extension RawContentBundle: BuildableItem {
 
     func buildItem() -> FileManagerPlayground.Item {
         .directory(
-            Directory(name: rawContent.origin.slug) {
+            Directory(name: name) {
                 Directory(name: "assets") {
                     for asset in rawContent.assets {
                         File(name: asset, string: asset)

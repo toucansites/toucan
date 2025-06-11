@@ -87,61 +87,7 @@
 //        }
 //    }
 //
-//    @Test
-//    func sitemapAnd404Test() async throws {
-//        let logger = Logger(label: "ToucanTestSuite")
-//        try FileManagerPlayground {
-//            Directory(name: "src") {
-//                Directory(name: "contents") {
-//                    contentAbout()
-//                    contentHome()
-//                    content404()
-//                    contentSitemap()
-//                    contentSiteFile()
-//                }
-//                Directory(name: "pipelines") {
-//                    pipelineHtml()
-//                    pipelineSitemap()
-//                    pipeline404()
-//                }
-//                Directory(name: "types") {
-//                    type404()
-//                    typePage()
-//                    typeSitemap()
-//                }
-//                Directory(name: "themes") {
-//                    Directory(name: "default") {
-//                        Directory(name: "assets") {
-//                            Directory(name: "css") {
-//                                themeCss()
-//                            }
-//                        }
-//                        Directory(name: "templates") {
-//                            Directory(name: "pages") {
-//                                themeHomeMustache()
-//                                themeDefaultMustache()
-//                                theme404Mustache()
-//                            }
-//                            themeHtmlMustache()
-//                            themeSitemapMustache()
-//                        }
-//                    }
-//                }
-//                configFile()
-//            }
-//        }
-//        .test {
-//            let input = $1.appending(path: "src/")
-//            let output = $1.appending(path: "docs/")
-//            try getToucan(input, output, logger).generate()
 //
-//            let notfoundPath = output.appending(path: "404.html")
-//            #expect($0.fileExists(at: notfoundPath))
-//
-//            let sitemapPath = output.appending(path: "sitemap.xml")
-//            #expect($0.fileExists(at: sitemapPath))
-//        }
-//    }
 //
 //    @Test
 //    func postAndRssTest() async throws {
@@ -195,54 +141,6 @@
 //        }
 //    }
 //
-//    @Test
-//    func redirectTest() async throws {
-//        let logger = Logger(label: "ToucanTestSuite")
-//        try FileManagerPlayground {
-//            Directory(name: "src") {
-//                Directory(name: "contents") {
-//                    contentAbout()
-//                    contentHome()
-//                    Directory(name: "redirectAbout") {
-//                        File(
-//                            name: "index.yml",
-//                            string: """
-//                                type: redirect
-//                                to: about
-//                                """
-//                        )
-//                    }
-//                }
-//                Directory(name: "pipelines") {
-//                    pipelineHtml()
-//                    pipelineRedirect()
-//                }
-//                Directory(name: "types") {
-//                    typePage()
-//                    typeRedirect()
-//                }
-//                Directory(name: "themes") {
-//                    Directory(name: "default") {
-//                        Directory(name: "templates") {
-//                            Directory(name: "pages") {
-//                                themeDefaultMustache()
-//                            }
-//                            themeRedirectMustache()
-//                            themeHtmlMustache()
-//                        }
-//                    }
-//                }
-//                configFile()
-//            }
-//        }
-//        .test {
-//            let input = $1.appending(path: "src/")
-//            let output = $1.appending(path: "docs/")
-//            try getToucan(input, output, logger).generate()
-//
-//            let htmlPath = output.appending(path: "redirectAbout/index.html")
-//            #expect($0.fileExists(at: htmlPath))
-//        }
-//    }
+
 //
 //}

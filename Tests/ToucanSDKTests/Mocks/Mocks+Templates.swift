@@ -41,7 +41,7 @@ extension Mocks.Templates {
     static func redirect() -> String {
         #"""
         <!DOCTYPE html>
-        <html {{#site.locale}}lang="{{.}}"{{/site.locale}}>
+        <html{{#site.language}} lang="{{.}}"{{/site.language}}>
           <meta charset="utf-8">
           <title>Redirecting&hellip;</title>
           <link rel="canonical" href="{{baseUrl}}/{{page.to}}">
@@ -67,15 +67,15 @@ extension Mocks.Templates {
             <ttl>250</ttl>
             <atom:link href="{{baseUrl}}/rss.xml" rel="self" type="application/rss+xml"/>
 
-        {{#context.posts}}
-        <item>
-            <guid isPermaLink="true">{{permalink}}</guid>
-            <title><![CDATA[ {{title}} ]]></title>
-            <description><![CDATA[ {{description}} ]]></description>
-            <link>{{permalink}}</link>
-            <pubDate>{{publication.formats.rss}}</pubDate>
-        </item>
-        {{/context.posts}}
+            {{#context.posts}}
+            <item>
+                <guid isPermaLink="true">{{permalink}}</guid>
+                <title><![CDATA[ {{title}} ]]></title>
+                <description><![CDATA[ {{description}} ]]></description>
+                <link>{{permalink}}</link>
+                <pubDate>{{publication.formats.rss}}</pubDate>
+            </item>
+            {{/context.posts}}
 
         </channel>
         </rss>

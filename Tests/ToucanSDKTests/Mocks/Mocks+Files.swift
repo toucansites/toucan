@@ -345,11 +345,17 @@ extension File.Mocks {
     // MARK: -
 
     static func notFoundPage() -> RawContentBundle {
-        .init(Mocks.RawContents.notFoundPage())
+        .init(
+            name: "404",
+            rawContent: Mocks.RawContents.notFoundPage()
+        )
     }
 
     static func aboutPage() -> RawContentBundle {
-        .init(Mocks.RawContents.aboutPage())
+        .init(
+            name: "about",
+            rawContent: Mocks.RawContents.aboutPage()
+        )
     }
 
     static func aboutPageStyleCSS() -> File {
@@ -381,7 +387,8 @@ extension File.Mocks {
         tagIds: [Int]
     ) -> RawContentBundle {
         .init(
-            Mocks.RawContents.post(
+            name: "post-\(id)",
+            rawContent: Mocks.RawContents.post(
                 id: id,
                 now: now,
                 publication: publication,

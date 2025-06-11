@@ -52,10 +52,11 @@ struct ContentResolverTestSuite {
             }
             #expect(!item.isIterator)
 
-            let specialPages = ["", "404", "about", "context"]
+            let notFoundPages = ["404"]
+            let specialPages = ["", "about", "context"]
             let redirectPages = ["home-old", "about-old"]
             // check type identifiers
-            if !(specialPages + redirectPages)
+            if !(specialPages + redirectPages + notFoundPages)
                 .contains(item.rawValue.origin.slug)
             {
                 #expect(item.rawValue.origin.slug.contains(item.type.id))
@@ -63,6 +64,9 @@ struct ContentResolverTestSuite {
             else {
                 if specialPages.contains(item.rawValue.origin.slug) {
                     #expect(item.type.id == "page")
+                }
+                else if notFoundPages.contains(item.rawValue.origin.slug) {
+                    #expect(item.type.id == "not-found")
                 }
                 else {
                     #expect(item.type.id == "redirect")

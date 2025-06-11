@@ -356,6 +356,7 @@ struct BuildTargetSourceRendererTestSuite {
         buildTargetSource.rawContents =
             buildTargetSource.rawContents.filter {
                 !$0.origin.path.value.hasSuffix("xml")
+                    && !$0.origin.path.value.contains("404")
             } + rawContents
 
         return buildTargetSource

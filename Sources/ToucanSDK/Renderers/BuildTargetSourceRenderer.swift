@@ -485,6 +485,11 @@ public struct BuildTargetSourceRenderer {
             result["permalink"] = .init(
                 content.slug.permalink(baseUrl: baseUrl())
             )
+            //            print("------------")
+            //            print(content.slug)
+            //            print(result["permalink"]!)
+            //            print("------------")
+
             result["lastUpdate"] = .init(
                 dateFormatter.format(content.rawValue.lastModificationDate)
             )
