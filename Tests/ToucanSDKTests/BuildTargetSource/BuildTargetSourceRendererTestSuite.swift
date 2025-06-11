@@ -34,6 +34,50 @@ struct BuildTargetSourceRendererTestSuite {
         let results = try renderer.render(now: now)
     }
 
+    @Test
+    func wrongRendererEngine() throws {
+        let now = Date()
+        let buildTargetSource = BuildTargetSource(
+            locations: .init(
+                sourceUrl: .init(filePath: ""),
+                config: .defaults
+            ),
+            pipelines: [
+                .init(
+                    id: "test",
+                    definesType: false,
+                    scopes: [:],
+                    queries: [:],
+                    dataTypes: .defaults,
+                    contentTypes: .defaults,
+                    iterators: [:],
+                    assets: .defaults,
+                    transformers: [:],
+                    engine: .init(id: "wrong", options: [:]),
+                    output: .init(path: "", file: "context", ext: "json")
+                )
+            ]
+        )
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: [:],
+            generatorInfo: .current
+        )
+
+        do {
+            _ = try renderer.render(now: now)
+        }
+        catch let error as BuildTargetSourceRendererError {
+            switch error {
+            case let .invalidEngine(id):
+                #expect(id == "wrong")
+            default:
+                Issue.record("\(error.logMessage)")
+            }
+        }
+    }
+
     @Test()
     func generatorMetadata() async throws {
         let now = Date()
@@ -234,9 +278,12 @@ struct BuildTargetSourceRendererTestSuite {
         print(value.replacingOccurrences(["&quot;": "\""]))
     }
 
-    @Test()
-    func api() async throws {
-        let now = Date()
+    // MARK: - api
+
+    private func getMockAPIBuildTargetSource(
+        now: Date,
+        options: [String: AnyCodable]
+    ) -> BuildTargetSource {
 
         let pipelines: [Pipeline] = [
             .init(
@@ -272,9 +319,7 @@ struct BuildTargetSourceRendererTestSuite {
                 transformers: [:],
                 engine: .init(
                     id: "json",
-                    options: [
-                        "keyPath": "context.posts"
-                    ]
+                    options: options
                 ),
                 output: .init(
                     path: "api",
@@ -308,6 +353,17 @@ struct BuildTargetSourceRendererTestSuite {
                 !$0.origin.path.value.hasSuffix("xml")
             } + rawContents
 
+        return buildTargetSource
+    }
+
+    @Test()
+    func renderAPIBasics() async throws {
+        let now = Date()
+        let buildTargetSource = getMockAPIBuildTargetSource(
+            now: now,
+            options: [:]
+        )
+
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
             templates: Mocks.Templates.all()
@@ -316,13 +372,118 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 1)
 
-        guard case let .content(value) = results[0].source else {
+        guard
+            case let .content(value) = results[0].source,
+            let data = value.data(using: .utf8)
+        else {
             Issue.record("Source type is not a valid content.")
             return
         }
 
-        print(value)
+        struct Expected: Decodable {
+            struct Item: Decodable {
+                let title: String
+                let slug: Slug
+            }
+            struct Context: Decodable {
+                let posts: [Item]
+            }
+            let context: Context
+        }
+
+        let decoder = JSONDecoder()
+        let result = try decoder.decode(Expected.self, from: data)
+        #expect(result.context.posts.count == 3)
     }
+
+    @Test()
+    func renderAPIWithEngineOptionsKeyPath() async throws {
+        let now = Date()
+        let buildTargetSource = getMockAPIBuildTargetSource(
+            now: now,
+            options: [
+                "keyPath": "context.posts"
+            ]
+        )
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: Mocks.Templates.all()
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        guard
+            case let .content(value) = results[0].source,
+            let data = value.data(using: .utf8)
+        else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        struct Expected: Decodable {
+            let title: String
+            let slug: Slug
+        }
+
+        let decoder = JSONDecoder()
+        let result = try decoder.decode([Expected].self, from: data)
+        #expect(result.count == 3)
+    }
+
+    @Test()
+    func renderAPIWithEngineOptionsMultipleKeyPaths() async throws {
+        let now = Date()
+        let buildTargetSource = getMockAPIBuildTargetSource(
+            now: now,
+            options: [
+                "keyPaths": [
+                    "context.posts": "items",
+                    "generator": "info",
+                ]
+            ]
+        )
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: Mocks.Templates.all()
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        guard
+            case let .content(value) = results[0].source,
+            let data = value.data(using: .utf8)
+        else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        struct Expected: Decodable {
+            struct Item: Decodable {
+                let title: String
+                let slug: Slug
+            }
+            struct Info: Decodable {
+                let name: String
+                let version: String
+            }
+            let items: [Item]
+            let info: Info
+        }
+
+        print(value)
+        let decoder = JSONDecoder()
+        let result = try decoder.decode(Expected.self, from: data)
+
+        #expect(result.items.count == 3)
+        #expect(result.info.name == "Toucan")
+
+    }
+
+    // MARK: - contents
 
     @Test()
     func renderAuthor() async throws {
@@ -355,7 +516,7 @@ struct BuildTargetSourceRendererTestSuite {
             Issue.record("Source type is not a valid content.")
             return
         }
-        print(value)
+        #expect(!value.contains("./assets"))
 
         guard case let .assetFile(path) = assets[0].source else {
             Issue.record("Source type is not a valid asset file.")

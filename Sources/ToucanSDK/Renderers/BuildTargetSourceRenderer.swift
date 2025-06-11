@@ -12,6 +12,39 @@ import ToucanCore
 import ToucanSource
 import ToucanSerialization
 
+enum BuildTargetSourceRendererError: ToucanError {
+
+    case invalidEngine(String)
+    case unknown(Error)
+
+    var underlyingErrors: [any Error] {
+        switch self {
+        case .unknown(let error):
+            return [error]
+        default:
+            return []
+        }
+    }
+
+    var logMessage: String {
+        switch self {
+        case .invalidEngine(let engine):
+            return "Invalid engine: `\(engine)`."
+        case .unknown(let error):
+            return error.localizedDescription
+        }
+    }
+
+    var userFriendlyMessage: String {
+        switch self {
+        case .invalidEngine(let engine):
+            return "Invalid engine: `\(engine)`."
+        case .unknown:
+            return "Unknown source validator error."
+        }
+    }
+}
+
 /// Responsible for rendering the entire site bundle based on the `BuildTargetSource` configuration.
 ///
 /// It processes content pipelines using the configured engine (Mustache, JSON, etc.),
@@ -199,13 +232,12 @@ public struct BuildTargetSourceRenderer {
             //            print(contextBundles.map(\.content.slug))
 
             switch pipeline.engine.id {
-            case "json", "context":
+            case "json":
                 let renderer = ContextBundleToJSONRenderer(
                     pipeline: pipeline,
                     logger: logger
                 )
                 results += renderer.render(contextBundles)
-
             case "mustache":
                 let renderer = try ContextBundleToHTMLRenderer(
                     pipeline: pipeline,
@@ -214,8 +246,8 @@ public struct BuildTargetSourceRenderer {
                 )
                 results += renderer.render(contextBundles)
             default:
-                logger.error(
-                    "Unknown renderer engine `\(pipeline.engine.id)`"
+                throw BuildTargetSourceRendererError.invalidEngine(
+                    pipeline.engine.id
                 )
             }
         }
