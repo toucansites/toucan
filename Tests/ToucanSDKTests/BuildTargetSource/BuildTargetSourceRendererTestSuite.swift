@@ -599,4 +599,108 @@ struct BuildTargetSourceRendererTestSuite {
         }
         #expect(path == "blog/authors/author-1/assets/author-1.jpg")
     }
+
+    // MARK: - assets
+
+    @Test()
+    func assetPropertyAddTest() async throws {
+        let now = Date()
+
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "test",
+                definesType: true,
+                scopes: [:],
+                queries: [:],
+                dataTypes: .defaults,
+                contentTypes: .defaults,
+                iterators: [:],
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .add,
+                            property: "css",
+                            resolvePath: true,
+                            input: .init(
+                                path: nil,
+                                name: "style",
+                                ext: "css"
+                            )
+                        )
+                    ]
+                ),
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: [
+                        "keyPath": "page"
+                    ]
+                ),
+                output: .init(path: "", file: "context", ext: "json")
+            )
+        ]
+
+        let rawContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: .init(""),
+                    slug: ""
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "test",
+                        "css": [
+                            "https://test.css"
+                        ],
+                    ]
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: [
+                    "style.css"
+                ]
+            )
+        ]
+
+        let contentDefinitions: [ContentDefinition] = []
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents = rawContents
+        buildTargetSource.contentDefinitions = contentDefinitions
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: [:]
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        let contents = results.filter { $0.source.isContent }
+        #expect(contents.count == 1)
+
+        guard case let .content(value) = contents[0].source else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        let decoder = JSONDecoder()
+
+        struct Exp: Decodable {
+            let css: [String]
+        }
+
+        let data = try #require(value.data(using: .utf8))
+        let exp = try decoder.decode(Exp.self, from: data)
+
+        #expect(
+            exp.css.sorted()
+                == [
+                    "https://test.css",
+                    "http://localhost:3000/assets/style.css",
+                ]
+                .sorted()
+        )
+    }
 }

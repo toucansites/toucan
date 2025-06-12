@@ -132,12 +132,6 @@ public extension String {
         assetsPath: String,
         slug: String
     ) -> String {
-
-        if self == "./images/defaults/default.jpg" {
-            print("fooo")
-        }
-        print(self)
-        print("----")
         if baseUrl.isEmpty || assetsPath.isEmpty {
             return self
         }

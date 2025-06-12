@@ -189,9 +189,6 @@ public struct BuildTargetSourceRenderer {
                 baseUrl: baseUrl()
             )
 
-            //            print(iteratedContents.map(\.slug.value).joined(separator: "\n"))
-            //            print(finalContents.map(\.slug.value).joined(separator: "\n"))
-
             let dateFormatter = ToucanOutputDateFormatter(
                 dateConfig: buildTargetSource.config.dataTypes.date,
                 pipelineDateConfig: pipeline.dataTypes.date,
@@ -227,6 +224,7 @@ public struct BuildTargetSourceRenderer {
                 dateFormatter: dateFormatter,
                 now: now
             )
+
             //            print("---")
             //            print(finalContents.count)
             //            print(contextBundles.count)
@@ -447,38 +445,38 @@ public struct BuildTargetSourceRenderer {
 
         if scope.context.contains(.properties) {
             for (k, v) in content.properties {
-                guard let p = content.type.properties[k] else {
-                    continue
+                if let p = content.type.properties[k] {
+                    switch p.type {
+                    // resolve assets
+                    case .asset:
+                        guard let rawValue = v.stringValue() else {
+                            continue
+                        }
+
+                        let resolvedValue = rawValue.resolveAsset(
+                            baseUrl: baseUrl(),
+                            // TODO: double check this -> content.assetsPath?
+                            assetsPath: buildTargetSource.config.contents.assets
+                                .path,
+                            slug: content.slug.value
+                        )
+
+                        result[k] = .init(resolvedValue)
+                    // format dates
+                    case .date(_):
+                        guard let rawValue = v.doubleValue() else {
+                            continue
+                        }
+                        result[k] = .init(
+                            dateFormatter.format(rawValue)
+                        )
+                    default:
+                        result[k] = .init(v.value)
+                    }
                 }
-
-                switch p.type {
-                // resolve assets
-                case .asset:
-                    guard let rawValue = v.stringValue() else {
-                        continue
-                    }
-
-                    let resolvedValue = rawValue.resolveAsset(
-                        baseUrl: baseUrl(),
-                        // TODO: double check this -> content.assetsPath?
-                        assetsPath: buildTargetSource.config.contents.assets
-                            .path,
-                        slug: content.slug.value
-                    )
-
-                    result[k] = .init(resolvedValue)
-                // format dates
-                case .date(_):
-                    guard let rawValue = v.doubleValue() else {
-                        continue
-                    }
-                    result[k] = .init(
-                        dateFormatter.format(rawValue)
-                    )
-                default:
+                else {
                     result[k] = .init(v.value)
                 }
-
             }
 
             result["slug"] = .init(content.slug)
