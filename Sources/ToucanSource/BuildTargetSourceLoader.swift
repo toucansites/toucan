@@ -65,7 +65,6 @@ public struct BuildTargetSourceLoader {
     /// - Returns: A `BuildTargetSource` containing the loaded and processed data.
     /// - Throws: An error if any of the loading operations fail.
     public func load() throws(SourceLoaderError) -> BuildTargetSource {
-
         let config = try loadConfig()
         let locations = getLocations(using: config)
         let settings = try loadSettings(using: locations)
@@ -177,17 +176,30 @@ public struct BuildTargetSourceLoader {
 
     /// Loads the main configuration object from the source.
     ///
+    /// The loader first attempts to load a configuration file named `config-{target.name}`. 
+    /// If that fails, it falls back to loading the default `config` file from the same source location.
+    /// If both attempts fail, a `SourceLoaderError` is thrown with detailed context.
+    ///
     /// - Returns: A `Config` object loaded from the source.
     /// - Throws: A `SourceLoaderError` if loading fails.
     func loadConfig() throws(SourceLoaderError) -> Config {
         do {
             let configUrl = sourceUrl.appendingPathIfPresent(target.config)
-            let config = try load(
-                type: Config.self,
-                named: "config",
-                at: configUrl
-            )
-            return config
+
+            do {
+                return try load(
+                    type: Config.self,
+                    named: "config-\(target.name)",
+                    at: configUrl
+                )
+            }
+            catch {
+                return try load(
+                    type: Config.self,
+                    named: "config",
+                    at: configUrl
+                )
+            }
         }
         catch {
             throw .init(type: "Config", error: error)

@@ -577,4 +577,41 @@ struct BuildTargetSourceLoaderTestSuite {
         //        }
         //    }
     }
+    
+    // MARK: - config with target name
+
+    @Test
+    func configWithTargetName() async throws {
+        var config = Config.defaults
+        config.themes.current.path = "test"
+
+        try FileManagerPlayground {
+            testSourceHierarchy {
+                YAMLFile(name: "config-dev", contents: config)
+                YAMLFile(name: "config", contents: Config.defaults)
+            }
+        }
+        .test {
+            let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
+            let result = try sourceLoader.loadConfig()
+
+            #expect(result.themes.current.path == "test")
+        }
+    }
+    
+    @Test
+    func invalidConfigWithTargetNameFallbackDefault() async throws {
+        try FileManagerPlayground {
+            testSourceHierarchy {
+                YAMLFile(name: "config-dev", contents: "invalid")
+                YAMLFile(name: "config", contents: Config.defaults)
+            }
+        }
+        .test {
+            let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
+            let result = try sourceLoader.loadConfig()
+
+            #expect(result.themes.current.path == "default")
+        }
+    }
 }
