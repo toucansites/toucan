@@ -600,7 +600,7 @@ struct BuildTargetSourceLoaderTestSuite {
     }
     
     @Test
-    func invalidConfigWithTargetNameFallbackDefault() async throws {
+    func invalidConfigWithTargetName() async throws {
         try FileManagerPlayground {
             testSourceHierarchy {
                 YAMLFile(name: "config-dev", contents: "invalid")
@@ -609,9 +609,14 @@ struct BuildTargetSourceLoaderTestSuite {
         }
         .test {
             let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
-            let result = try sourceLoader.loadConfig()
 
-            #expect(result.themes.current.path == "default")
+            do {
+                let _ = try sourceLoader.loadConfig()
+                Issue.record("Invalid target config should throw an error.")
+            }
+            catch let error as SourceLoaderError {
+                #expect(error.logMessage == "Could not load: `Config`.")
+            }
         }
     }
 }

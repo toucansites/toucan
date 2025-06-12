@@ -141,7 +141,7 @@ public struct BuildTargetSourceLoader {
             .load(type)
         }
         catch {
-            throw .init(type: "Config", error: error)
+            throw .init(type: "ObjectLoader", error: error)
         }
     }
 
@@ -176,30 +176,34 @@ public struct BuildTargetSourceLoader {
 
     /// Loads the main configuration object from the source.
     ///
-    /// The loader first attempts to load a configuration file named `config-{target.name}`. 
-    /// If that fails, it falls back to loading the default `config` file from the same source location.
-    /// If both attempts fail, a `SourceLoaderError` is thrown with detailed context.
+    /// The loader first attempts to locate a configuration file named `config-{target.name}` at the computed source location.
+    /// - If the file exists, it attempts to parse and load it. If parsing fails, a `SourceLoaderError` is thrown.
+    /// - If the file does not exist, the loader falls back to load the default `config` file from the same location.
+    /// - If neither configuration file can be successfully loaded, a `SourceLoaderError` is thrown with detailed context.
     ///
     /// - Returns: A `Config` object loaded from the source.
-    /// - Throws: A `SourceLoaderError` if loading fails.
+    /// - Throws: A `SourceLoaderError` if loading fails or parsing the located configuration file fails.
     func loadConfig() throws(SourceLoaderError) -> Config {
         do {
             let configUrl = sourceUrl.appendingPathIfPresent(target.config)
-
-            do {
+            let targetConfigName = "config-\(target.name)"
+            let targetConfigLocation = fileManager
+                .find(extensions: ["yml", "yaml"], at: configUrl)
+                .first { $0.hasPrefix(targetConfigName) }
+            
+            if targetConfigLocation != nil {
                 return try load(
                     type: Config.self,
-                    named: "config-\(target.name)",
+                    named: targetConfigName,
                     at: configUrl
                 )
             }
-            catch {
-                return try load(
-                    type: Config.self,
-                    named: "config",
-                    at: configUrl
-                )
-            }
+            
+            return try load(
+                type: Config.self,
+                named: "config",
+                at: configUrl
+            )
         }
         catch {
             throw .init(type: "Config", error: error)
