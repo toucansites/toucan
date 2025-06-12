@@ -436,6 +436,7 @@ struct HTMLVisitor: MarkupVisitor {
             else {
                 let v =
                     arguments.getFirstValueBy(key: p.label) ?? p.default ?? ""
+
                 parameters[p.label] = v
             }
         }

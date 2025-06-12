@@ -25,6 +25,18 @@ public extension String {
         isEmpty ? nil : self
     }
 
+    /// Removes the leading slash from the string if present.
+    ///
+    /// This method checks if the string starts with a slash (`/`). If so, it removes it.
+    ///
+    /// - Returns: A new string without a leading slash, or the original string if no leading slash exists.
+    func dropLeadingSlash() -> String {
+        if hasPrefix("/") {
+            return String(dropFirst())
+        }
+        return self
+    }
+
     /// Removes the trailing slash from the string if present.
     ///
     /// This method checks if the string ends with a slash (`/`). If so, it removes it.
@@ -35,6 +47,19 @@ public extension String {
             return String(dropLast())
         }
         return self
+    }
+
+    /// Ensures the string starts with a leading slash.
+    ///
+    /// This method checks if the string already begins with a slash (`/`). If it does, the original string is returned.
+    /// Otherwise, it prepends a slash to the beginning of the string.
+    ///
+    /// - Returns: A new string with a leading slash ensured.
+    func ensureLeadingSlash() -> String {
+        if hasPrefix("/") {
+            return self
+        }
+        return "/" + self
     }
 
     /// Appends a trailing slash to the string if not already present.
@@ -67,30 +92,6 @@ public extension String {
         return result
     }
 
-    /// Replaces the first occurrence of a given character with a specified string.
-    ///
-    /// This method searches the string for the first occurrence of the provided character.
-    /// If found, it replaces that character with the given replacement string.
-    ///
-    /// - Parameters:
-    ///   - target: The character to search for.
-    ///   - replacement: The string to replace the first occurrence with.
-    /// - Returns: A new string with the first occurrence of the character replaced,
-    ///   or the original string if the character is not found or is `nil`.
-    func replacingFirstOccurrence(
-        of target: Character?,
-        with replacement: String
-    ) -> String {
-        guard let target, let index = firstIndex(of: target)
-        else {
-            return self
-        }
-
-        var modified = self
-        modified.replaceSubrange(index...index, with: replacement)
-        return modified
-    }
-
     /// Converts the string into a URL-friendly slug.
     ///
     /// This method removes diacritics, trims whitespace, lowercases the string,
@@ -113,42 +114,37 @@ public extension String {
             .joined(separator: "-")
     }
 
-    /// Resolves a relative asset path into an absolute URL based on the given base URL, asset path, and slug.
+    /// Resolves a relative asset path by combining it with a base URL, assets path, and slug.
     ///
-    /// This method replaces a `{{baseUrl}}` token or a relative asset path prefix with a fully constructed path,
-    /// combining the base URL, asset path, and slug. Special handling is done for cases where the path starts
-    /// with a known offset or a template placeholder.
+    /// This method builds a complete asset URL by handling various cases:
+    /// - If the base URL or assets path is empty, it returns the original string.
+    /// - If the string starts with `/`, it appends the string directly to the base URL.
+    /// - If the string starts with a relative prefix (e.g., `./assetsPath/`), it removes the prefix
+    ///   and combines the base URL, assets path, slug, and remaining path parts into a full URL.
     ///
     /// - Parameters:
-    ///   - baseUrl: The base URL to use for constructing the absolute asset path.
-    ///   - assetsPath: The relative path segment to the assets directory.
-    ///   - slug: An identifier to insert into the resulting asset path.
-    /// - Returns: A new string with resolved asset path based on input values.
+    ///   - baseUrl: The base URL used to form the full path.
+    ///   - assetsPath: The relative directory for the assets.
+    ///   - slug: A string inserted in the final path for identification or grouping.
+    /// - Returns: A full string URL combining all parts, or the original string if no resolution is applied.
     func resolveAsset(
         baseUrl: String,
         assetsPath: String,
         slug: String
     ) -> String {
+
+        if self == "./images/defaults/default.jpg" {
+            print("fooo")
+        }
+        print(self)
+        print("----")
         if baseUrl.isEmpty || assetsPath.isEmpty {
             return self
         }
 
-        if contains("{{baseUrl}}") {
-            let baseUrlPath = baseUrl.ensureTrailingSlash()
-            var value = self
-            if let slashIndex = firstIndex(of: "/") {
-                let offset = distance(
-                    from: startIndex,
-                    to: slashIndex
-                )
-                if offset == 11 {
-                    value = value.replacingFirstOccurrence(of: "/", with: "")
-                }
-            }
-            return value.replacingOccurrences(
-                of: "{{baseUrl}}",
-                with: baseUrlPath
-            )
+        let baseUrl = baseUrl.dropTrailingSlash()
+        if hasPrefix("/") {
+            return [baseUrl, dropLeadingSlash()].joined(separator: "/")
         }
 
         let prefix = "./\(assetsPath)/"
@@ -158,11 +154,8 @@ public extension String {
 
         let src = String(dropFirst(prefix.count))
 
-        return [
-            "\(baseUrl.ensureTrailingSlash())\(assetsPath)",
-            slug,
-            src,
-        ]
-        .filter { !$0.isEmpty }.joined(separator: "/")
+        return [baseUrl, assetsPath, slug, src]
+            .filter { !$0.isEmpty }
+            .joined(separator: "/")
     }
 }

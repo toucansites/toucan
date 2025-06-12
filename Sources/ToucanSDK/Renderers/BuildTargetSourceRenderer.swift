@@ -600,11 +600,14 @@ public struct BuildTargetSourceRenderer {
                         allowSubQueries: false
                     )
                 }
+
                 switch relation.type {
                 case .many:
                     result[key] = .init(relationContexts)
                 case .one:
-                    result[key] = .init(relationContexts.first)
+                    if let item = relationContexts.first {
+                        result[key] = .init(item)
+                    }
                 }
             }
         }

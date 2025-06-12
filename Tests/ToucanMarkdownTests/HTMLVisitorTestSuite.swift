@@ -642,7 +642,7 @@ struct HTMLVisitorTestSuite {
     func imageWithBaseUrlMarkdownValue() {
 
         let input = #"""
-            ![Lorem]({{baseUrl}}/lorem.jpg)
+            ![Lorem](/lorem.jpg)
             """#
 
         let output = renderHTML(markdown: input)
@@ -658,7 +658,7 @@ struct HTMLVisitorTestSuite {
     func imageWithBaseUrlMarkdownValueNoTraling() {
 
         let input = #"""
-            ![Lorem]({{baseUrl}}lorem.jpg)
+            ![Lorem](/lorem.jpg)
             """#
 
         let output = renderHTML(markdown: input)

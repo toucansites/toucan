@@ -187,10 +187,11 @@ public struct BuildTargetSourceLoader {
         do {
             let configUrl = sourceUrl.appendingPathIfPresent(target.config)
             let targetConfigName = "config-\(target.name)"
-            let targetConfigLocation = fileManager
+            let targetConfigLocation =
+                fileManager
                 .find(extensions: ["yml", "yaml"], at: configUrl)
                 .first { $0.hasPrefix(targetConfigName) }
-            
+
             if targetConfigLocation != nil {
                 return try load(
                     type: Config.self,
@@ -198,7 +199,7 @@ public struct BuildTargetSourceLoader {
                     at: configUrl
                 )
             }
-            
+
             return try load(
                 type: Config.self,
                 named: "config",

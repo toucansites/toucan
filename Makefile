@@ -58,3 +58,6 @@ docker-image:
 
 docker-tests:
 	docker build -t toucan-tests . -f ./Docker/Dockerfile.testing && docker run --rm toucan-tests
+
+diff:
+	diff --color=always -r docs-v4 docs --exclude=api || true

@@ -577,7 +577,7 @@ struct BuildTargetSourceLoaderTestSuite {
         //        }
         //    }
     }
-    
+
     // MARK: - config with target name
 
     @Test
@@ -598,7 +598,7 @@ struct BuildTargetSourceLoaderTestSuite {
             #expect(result.themes.current.path == "test")
         }
     }
-    
+
     @Test
     func invalidConfigWithTargetName() async throws {
         try FileManagerPlayground {
