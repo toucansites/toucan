@@ -603,7 +603,7 @@ struct BuildTargetSourceRendererTestSuite {
     // MARK: - assets
 
     @Test()
-    func assetPropertyAddTest() async throws {
+    func assetPropertyAddOne() async throws {
         let now = Date()
 
         let pipelines: [Pipeline] = [
@@ -644,8 +644,8 @@ struct BuildTargetSourceRendererTestSuite {
         let rawContents: [RawContent] = [
             .init(
                 origin: .init(
-                    path: .init(""),
-                    slug: ""
+                    path: .init("test"),
+                    slug: "test"
                 ),
                 markdown: .init(
                     frontMatter: [
@@ -698,9 +698,308 @@ struct BuildTargetSourceRendererTestSuite {
             exp.css.sorted()
                 == [
                     "https://test.css",
-                    "http://localhost:3000/assets/style.css",
+                    "http://localhost:3000/assets/test/style.css",
                 ]
                 .sorted()
         )
     }
+
+    @Test()
+    func assetPropertyAddMultiple() async throws {
+        let now = Date()
+
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "test",
+                definesType: true,
+                scopes: [:],
+                queries: [:],
+                dataTypes: .defaults,
+                contentTypes: .defaults,
+                iterators: [:],
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .add,
+                            property: "css",
+                            resolvePath: false,
+                            input: .init(
+                                path: nil,
+                                name: "*",
+                                ext: "css"
+                            )
+                        )
+                    ]
+                ),
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: [
+                        "keyPath": "page"
+                    ]
+                ),
+                output: .init(path: "", file: "context", ext: "json")
+            )
+        ]
+
+        let rawContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: .init("test"),
+                    slug: "test"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "test",
+                        "css": [
+                            "https://test.css"
+                        ],
+                    ]
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: [
+                    "foo.css",
+                    "bar.css",
+                ]
+            )
+        ]
+
+        let contentDefinitions: [ContentDefinition] = []
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents = rawContents
+        buildTargetSource.contentDefinitions = contentDefinitions
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: [:]
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        let contents = results.filter { $0.source.isContent }
+        #expect(contents.count == 1)
+
+        guard case let .content(value) = contents[0].source else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        let decoder = JSONDecoder()
+
+        struct Exp: Decodable {
+            let css: [String]
+        }
+
+        let data = try #require(value.data(using: .utf8))
+        let exp = try decoder.decode(Exp.self, from: data)
+
+        #expect(
+            exp.css.sorted()
+                == [
+                    "https://test.css",
+                    "foo.css",
+                    "bar.css",
+                ]
+                .sorted()
+        )
+    }
+
+    @Test()
+    func assetPropertySetOne() async throws {
+        let now = Date()
+
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "test",
+                definesType: true,
+                scopes: [:],
+                queries: [:],
+                dataTypes: .defaults,
+                contentTypes: .defaults,
+                iterators: [:],
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .set,
+                            property: "image",
+                            resolvePath: true,
+                            input: .init(
+                                path: nil,
+                                name: "cover",
+                                ext: "jpg"
+                            )
+                        )
+                    ]
+                ),
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: [
+                        "keyPath": "page"
+                    ]
+                ),
+                output: .init(path: "", file: "context", ext: "json")
+            )
+        ]
+
+        let rawContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: .init("test"),
+                    slug: "test"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "test"
+                    ]
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: [
+                    "cover.jpg"
+                ]
+            )
+        ]
+
+        let contentDefinitions: [ContentDefinition] = []
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents = rawContents
+        buildTargetSource.contentDefinitions = contentDefinitions
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: [:]
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        let contents = results.filter { $0.source.isContent }
+        #expect(contents.count == 1)
+
+        guard case let .content(value) = contents[0].source else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        let decoder = JSONDecoder()
+
+        struct Exp: Decodable {
+            let image: String
+        }
+
+        let data = try #require(value.data(using: .utf8))
+        let exp = try decoder.decode(Exp.self, from: data)
+
+        #expect(exp.image == "http://localhost:3000/assets/test/cover.jpg")
+    }
+
+    @Test()
+    func assetPropertySetMultiple() async throws {
+        let now = Date()
+
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "test",
+                definesType: true,
+                scopes: [:],
+                queries: [:],
+                dataTypes: .defaults,
+                contentTypes: .defaults,
+                iterators: [:],
+                assets: .init(
+                    behaviors: [],
+                    properties: [
+                        .init(
+                            action: .set,
+                            property: "images",
+                            resolvePath: true,
+                            input: .init(
+                                path: nil,
+                                name: "*",
+                                ext: "png"
+                            )
+                        )
+                    ]
+                ),
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: [
+                        "keyPath": "page"
+                    ]
+                ),
+                output: .init(path: "", file: "context", ext: "json")
+            )
+        ]
+
+        let rawContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: .init("test"),
+                    slug: "test"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "test"
+                    ]
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: [
+                    "cover.jpg",
+                    "foo.png",
+                    "bar.png",
+                ]
+            )
+        ]
+
+        let contentDefinitions: [ContentDefinition] = []
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents = rawContents
+        buildTargetSource.contentDefinitions = contentDefinitions
+
+        var renderer = BuildTargetSourceRenderer(
+            buildTargetSource: buildTargetSource,
+            templates: [:]
+        )
+        let results = try renderer.render(now: now)
+
+        #expect(results.count == 1)
+
+        let contents = results.filter { $0.source.isContent }
+        #expect(contents.count == 1)
+
+        guard case let .content(value) = contents[0].source else {
+            Issue.record("Source type is not a valid content.")
+            return
+        }
+
+        let decoder = JSONDecoder()
+
+        struct Exp: Decodable {
+            let images: [String: String]
+        }
+
+        let data = try #require(value.data(using: .utf8))
+        let exp = try decoder.decode(Exp.self, from: data)
+
+        #expect(exp.images.keys.sorted() == ["foo", "bar"].sorted())
+        #expect(
+            exp.images.values.sorted()
+                == [
+                    "http://localhost:3000/assets/test/foo.png",
+                    "http://localhost:3000/assets/test/bar.png",
+                ]
+                .sorted()
+        )
+    }
+
 }

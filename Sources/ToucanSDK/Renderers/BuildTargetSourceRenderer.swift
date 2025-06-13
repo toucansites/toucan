@@ -90,13 +90,13 @@ public struct BuildTargetSourceRenderer {
         pipeline: Pipeline,
         now: TimeInterval
     ) -> TimeInterval? {
-        var updateTypes = contents.map(\.type.id)
+        var updateTypes = Set(contents.map(\.type.id))
         if !pipeline.contentTypes.lastUpdate.isEmpty {
             updateTypes = updateTypes.filter {
                 pipeline.contentTypes.lastUpdate.contains($0)
             }
         }
-        return
+        let lastUpdate =
             updateTypes.compactMap {
                 let items = contents.run(
                     query: .init(
@@ -115,6 +115,13 @@ public struct BuildTargetSourceRenderer {
                 return items.first?.rawValue.lastModificationDate
             }
             .sorted(by: >).first
+        //        if pipeline.id == "rss" {
+        //            print("---")
+        //            print(updateTypes)
+        //            print(Date(timeIntervalSince1970: lastUpdate ?? 0))
+        //            print("---")
+        //        }
+        return lastUpdate
     }
 
     private func baseUrl() -> String {

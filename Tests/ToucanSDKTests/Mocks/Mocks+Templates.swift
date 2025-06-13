@@ -63,7 +63,7 @@ extension Mocks.Templates {
             <link>{{baseUrl}}</link>
             <language>{{site.language}}</language>
             <lastBuildDate>{{generation.formats.rss}}</lastBuildDate>
-            <pubDate>{{site.lastUpdate.formats.rss}}</pubDate>
+            <pubDate>{{lastUpdate.formats.rss}}</pubDate>
             <ttl>250</ttl>
             <atom:link href="{{baseUrl}}/rss.xml" rel="self" type="application/rss+xml"/>
 

@@ -297,9 +297,7 @@ extension Mocks.Pipelines {
                 ],
                 exclude: [],
                 lastUpdate: [
-                    "post",
-                    "author",
-                    "tag",
+                    "post"
                 ],
                 filterRules: [:]
             ),

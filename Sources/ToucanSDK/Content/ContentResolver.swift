@@ -514,6 +514,8 @@ struct ContentResolver {
                 case .load:
                     if finalAssets.count == 1 {
                         let asset = finalAssets[0]
+
+                        //                        print(asset)
                         let contents = try String(
                             contentsOf: assetsUrl.appending(path: asset)
                         )
@@ -522,11 +524,11 @@ struct ContentResolver {
                     else {
                         var values: [String: AnyCodable] = [:]
                         for i in 0..<finalAssets.count {
-                            let contents = try String(
-                                contentsOf: assetsUrl.appending(
-                                    path: finalAssets[i]
-                                )
-                            )
+                            let url = assetsUrl.appending(path: finalAssets[i])
+
+                            //                            print(url.path())
+
+                            let contents = try String(contentsOf: url)
                             values[assetKeys[i]] = .init(contents)
                         }
                         item.properties[property.property] = .init(values)

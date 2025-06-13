@@ -80,7 +80,7 @@ struct NonHTMLTestSuite {
                     <link>http://localhost:3000</link>
                     <language>en-US</language>
                     <lastBuildDate>\#(nowString)</lastBuildDate>
-                    <pubDate></pubDate>
+                    <pubDate>\#(nowString)</pubDate>
                     <ttl>250</ttl>
                     <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
 

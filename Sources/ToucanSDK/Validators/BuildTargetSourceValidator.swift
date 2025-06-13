@@ -114,7 +114,6 @@ struct BuildTargetSourceValidator {
                 duplicates.keys.map { String($0) }.sorted()
             )
         }
-
         let items = buildTargetSource.contentDefinitions.filter(\.default)
         if items.isEmpty {
             throw .noDefaultContentType
