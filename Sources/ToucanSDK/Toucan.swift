@@ -111,7 +111,9 @@ public struct Toucan {
     // MARK: - api
 
     /// generates the static site
-    public func generate() throws {
+    public func generate(
+        now: Date = .init()
+    ) throws {
         let workDirUrl = try prepareWorkingDirectory()
 
         do {
@@ -153,7 +155,7 @@ public struct Toucan {
                     logger: logger
                 )
 
-                let results = try renderer.render(now: Date())
+                let results = try renderer.render(now: now)
 
                 try resetDirectory(at: workDirUrl)
 
@@ -219,9 +221,9 @@ public struct Toucan {
         }
         catch {
             try? fileManager.delete(at: workDirUrl)
-            if let error = error as? ToucanError {
-                print(error.logMessageStack())
-            }
+            //            if let error = error as? ToucanError {
+            //                print(error.logMessageStack())
+            //            }
             throw error
         }
     }

@@ -1,5 +1,5 @@
 //
-//  HTMLTestSuite.swift
+//  E2ETestSuite.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 06. 11..
@@ -14,7 +14,256 @@ import FileManagerKitBuilder
 @testable import ToucanSDK
 
 @Suite
-struct HTMLTestSuite {
+struct E2ETestSuite {
+
+    // MARK: - html files
+
+    @Test
+    func notFound() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Mocks.E2E.src(
+                now: now
+            )
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let notFoundUrl = output.appendingPathIfPresent("404.html")
+            let notFound = try String(contentsOf: notFoundUrl)
+
+            #expect(notFound.contains("Not found page contents"))
+        }
+    }
+
+    // MARK: non-html files
+
+    @Test
+    func rss() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Mocks.E2E.src(now: now)
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let rssXML = output.appendingPathIfPresent("rss.xml")
+            let rss = try String(contentsOf: rssXML)
+
+            let formatter = ToucanOutputDateFormatter(
+                dateConfig: Config.defaults.dataTypes.date,
+                pipelineDateConfig: Mocks.Pipelines.rss().dataTypes.date
+            )
+
+            let nowString = formatter.format(now).formats["rss"] ?? ""
+            let post1date =
+                formatter.format(now.addingTimeInterval(-86_400)).formats["rss"]
+                ?? ""
+            let post2date =
+                formatter.format(now.addingTimeInterval(-86_400 * 2))
+                .formats["rss"] ?? ""
+            let post3date =
+                formatter.format(now.addingTimeInterval(-86_400 * 3))
+                .formats["rss"] ?? ""
+
+            let expectation = #"""
+                <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+                <channel>
+                    <title>Test site name</title>
+                    <description>Test site description</description>
+                    <link>http://localhost:3000</link>
+                    <language>en-US</language>
+                    <lastBuildDate>\#(nowString)</lastBuildDate>
+                    <pubDate>\#(nowString)</pubDate>
+                    <ttl>250</ttl>
+                    <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+
+                    <item>
+                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
+                        <title><![CDATA[ Post #1 ]]></title>
+                        <description><![CDATA[ Post #1 description ]]></description>
+                        <link>http://localhost:3000/blog/posts/post-1/</link>
+                        <pubDate>\#(post1date)</pubDate>
+                    </item>
+                    <item>
+                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-2/</guid>
+                        <title><![CDATA[ Post #2 ]]></title>
+                        <description><![CDATA[ Post #2 description ]]></description>
+                        <link>http://localhost:3000/blog/posts/post-2/</link>
+                        <pubDate>\#(post2date)</pubDate>
+                    </item>
+                    <item>
+                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-3/</guid>
+                        <title><![CDATA[ Post #3 ]]></title>
+                        <description><![CDATA[ Post #3 description ]]></description>
+                        <link>http://localhost:3000/blog/posts/post-3/</link>
+                        <pubDate>\#(post3date)</pubDate>
+                    </item>
+
+                </channel>
+                </rss>
+                """#
+
+            #expect(
+                rss.trimmingCharacters(in: .whitespacesAndNewlines)
+                    == expectation.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+            )
+        }
+    }
+
+    @Test
+    func sitemap() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Mocks.E2E.src(now: now)
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let sitemapXML = output.appendingPathIfPresent("sitemap.xml")
+            let sitemap = try String(contentsOf: sitemapXML)
+
+            let formatter = ToucanOutputDateFormatter(
+                dateConfig: Config.defaults.dataTypes.date,
+                pipelineDateConfig: Mocks.Pipelines.sitemap().dataTypes.date
+            )
+
+            let nowString = formatter.format(now).formats["sitemap"] ?? ""
+
+            let expectation = #"""
+                <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                    <url>
+
+                        <loc>http://localhost:3000/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/about/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/pages/1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/pages/2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/context/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/pages/page-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/pages/page-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/pages/page-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+
+                        <loc>http://localhost:3000/blog/posts/post-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/post-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/post-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+
+                        <loc>http://localhost:3000/blog/authors/author-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/authors/author-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/authors/author-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+
+                        <loc>http://localhost:3000/blog/tags/tag-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/tags/tag-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/tags/tag-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                    
+
+
+                    </url>
+                </urlset>
+                """#
+
+            #expect(
+                sitemap.trimmingCharacters(in: .whitespacesAndNewlines)
+                    == expectation.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+            )
+        }
+    }
+
+    @Test
+    func redirect() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Mocks.E2E.src(now: now)
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+
+            let redirect1URL = output.appendingPathIfPresent(
+                "redirects/home-old/index.html"
+            )
+            let redirect1 = try String(contentsOf: redirect1URL)
+            let expectation1 = #"""
+                <!DOCTYPE html>
+                <html lang="en-US">
+                  <meta charset="utf-8">
+                  <title>Redirecting&hellip;</title>
+                  <link rel="canonical" href="http://localhost:3000/">
+                  <script>location="http://localhost:3000/"</script>
+                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
+                  <meta name="robots" content="noindex">
+                  <h1>Redirecting&hellip;</h1>
+                  <a href="http://localhost:3000/">Click here if you are not redirected.</a>
+                </html>
+                """#
+
+            #expect(
+                redirect1.trimmingCharacters(in: .whitespacesAndNewlines)
+                    == expectation1.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+            )
+
+            let redirect2URL = output.appendingPathIfPresent(
+                "redirects/about-old/index.html"
+            )
+            let redirect2 = try String(contentsOf: redirect2URL)
+            let expectation2 = #"""
+                <!DOCTYPE html>
+                <html lang="en-US">
+                  <meta charset="utf-8">
+                  <title>Redirecting&hellip;</title>
+                  <link rel="canonical" href="http://localhost:3000/about">
+                  <script>location="http://localhost:3000/about"</script>
+                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
+                  <meta name="robots" content="noindex">
+                  <h1>Redirecting&hellip;</h1>
+                  <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
+                </html>
+                """#
+
+            #expect(
+                redirect2.trimmingCharacters(in: .whitespacesAndNewlines)
+                    == expectation2.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+            )
+        }
+    }
+
+    // MARK: - other tests
 
     @Test
     func context() throws {
@@ -30,7 +279,7 @@ struct HTMLTestSuite {
         }
         .test {
             let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate()
+            try Toucan(input: input.path()).generate(now: now)
 
             let output = $1.appendingPathIfPresent("docs")
             let contextURL = output.appendingPathIfPresent("context/index.html")
@@ -43,8 +292,116 @@ struct HTMLTestSuite {
 
     // MARK: - assets
 
-    @Test(.disabled())
-    func testLoadSvg() async throws {
+    @Test
+    func loadOneSVGFile() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .init(
+                                behaviors: [],
+                                properties: [
+                                    .init(
+                                        action: .load,
+                                        property: "icon",
+                                        resolvePath: false,
+                                        input: .init(
+                                            path: nil,
+                                            name: "icon",
+                                            ext: "svg"
+                                        )
+                                    )
+                                ]
+                            ),
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [
+                                    "keyPath": "page"
+                                ]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    RawContentBundle(
+                        name: "test",
+                        rawContent: .init(
+                            origin: .init(
+                                path: .init("test"),
+                                slug: "test"
+                            ),
+                            markdown: .init(
+                                frontMatter: [
+                                    "type": "test"
+                                ]
+                            ),
+                            lastModificationDate: now.timeIntervalSince1970,
+                            assets: [
+                                "icon.svg",
+                                "foo.svg",
+                                "bar.svg",
+                            ]
+                        )
+                    )
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let contextURL = output.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL)
+            let data = try Data(contentsOf: contextURL)
+
+            let decoder = JSONDecoder()
+
+            struct Exp: Decodable {
+                let icon: String
+            }
+
+            let exp = try decoder.decode(Exp.self, from: data)
+            #expect(exp.icon == "icon.svg")
+        }
+    }
+
+    @Test
+    func loadMultipleSVGFiles() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -133,385 +490,257 @@ struct HTMLTestSuite {
         }
         .test {
             let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate()
+            try Toucan(input: input.path()).generate(now: now)
 
             let output = $1.appendingPathIfPresent("docs")
             let contextURL = output.appendingPathIfPresent("context.json")
-            let context = try String(contentsOf: contextURL)
+            //            let context = try String(contentsOf: contextURL)
+            let data = try Data(contentsOf: contextURL)
 
-            print(context.replacingOccurrences(["&quot;": "\""]))
+            let decoder = JSONDecoder()
+
+            struct Exp: Decodable {
+                let icons: [String: String]
+            }
+
+            let exp = try decoder.decode(Exp.self, from: data)
+
+            #expect(exp.icons.keys.sorted() == ["foo", "bar"].sorted())
+            #expect(
+                exp.icons.values.sorted()
+                    == [
+                        "foo.svg",
+                        "bar.svg",
+                    ]
+                    .sorted()
+            )
 
         }
     }
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            svg1()
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    File(
-    //                        name: "html.yml",
-    //                        string: """
-    //                            id: html
-    //
-    //                            contentTypes:
-    //                                include:
-    //                                    - page
-    //                            engine:
-    //                                id: mustache
-    //                                options:
-    //                                    contentTypes:
-    //                                        page:
-    //                                            template: "pages.default"
-    //                            assets:
-    //                              behaviors:
-    //                                - id: copy
-    //                              properties:
-    //                                - action: load
-    //                                  property: svg
-    //                                  resolvePath: false
-    //                                  input:
-    //                                    name: "test1"
-    //                                    ext: svg
-    //
-    //                            output:
-    //                                path: "{{slug}}"
-    //                                file: index
-    //                                ext: html
-    //                            """
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(svg: "{{page.svg}}")
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let svgPath = output.appending(path: "assets/page1/test1.svg")
-    //            #expect($0.fileExists(at: svgPath))
-    //
-    //            let htmlPath = output.appending(path: "page1/index.html")
-    //            #expect($0.fileExists(at: htmlPath))
-    //
-    //            let contents = try htmlPath.loadContents()
-    //            #expect(contents.contains("/svg"))
-    //        }
 
-    //
-    //    @Test
-    //    func testLoadMoreSvg() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            svg1()
-    //                            svg2()
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    File(
-    //                        name: "html.yml",
-    //                        string: """
-    //                            id: html
-    //                            contentTypes:
-    //                                include:
-    //                                    - page
-    //                            engine:
-    //                                id: mustache
-    //                                options:
-    //                                    contentTypes:
-    //                                        page:
-    //                                            template: "pages.default"
-    //                            assets:
-    //                              behaviors:
-    //                                - id: copy
-    //                              properties:
-    //                                - action: load
-    //                                  property: svg
-    //                                  resolvePath: false
-    //                                  input:
-    //                                    name: "*"
-    //                                    ext: svg
-    //
-    //                            output:
-    //                                path: "{{slug}}"
-    //                                file: index
-    //                                ext: html
-    //                            """
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(
-    //                                    svg: """
-    //                                            {{page.svg.test1}}
-    //                                            {{page.svg.test2}}
-    //                                        """
-    //                                )
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let svgPath = output.appending(path: "assets/page1/test1.svg")
-    //            #expect($0.fileExists(at: svgPath))
-    //
-    //            let svgPath2 = output.appending(path: "assets/page1/test1.svg")
-    //            #expect($0.fileExists(at: svgPath2))
-    //
-    //            let htmlPath = output.appending(path: "page1/index.html")
-    //            #expect($0.fileExists(at: htmlPath))
-    //
-    //            let contents = try htmlPath.loadContents()
-    //            #expect(contents.contains("/svg"))
-    //        }
-    //    }
-    //
-    //    @Test
-    //    func testParse() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            yaml1()
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    File(
-    //                        name: "html.yml",
-    //                        string: """
-    //                            id: html
-    //                            contentTypes:
-    //                                include:
-    //                                    - page
-    //                            engine:
-    //                                id: mustache
-    //                                options:
-    //                                    contentTypes:
-    //                                        page:
-    //                                            template: "pages.default"
-    //                            assets:
-    //                              behaviors:
-    //                                - id: copy
-    //                              properties:
-    //                                - action: parse
-    //                                  property: yaml
-    //                                  resolvePath: false
-    //                                  input:
-    //                                    name: "test1"
-    //                                    ext: yaml
-    //
-    //                            output:
-    //                                path: "{{slug}}"
-    //                                file: index
-    //                                ext: html
-    //                            """
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(
-    //                                    yaml:
-    //                                        """
-    //                                        {{page.yaml.key1}}
-    //                                        {{page.yaml.key2}}
-    //                                        """
-    //                                )
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let svgPath = output.appending(path: "assets/page1/test1.yaml")
-    //            #expect($0.fileExists(at: svgPath))
-    //
-    //            let htmlPath = output.appending(path: "page1/index.html")
-    //            #expect($0.fileExists(at: htmlPath))
-    //
-    //            let contents = try htmlPath.loadContents()
-    //            #expect(contents.contains("value1"))
-    //            #expect(contents.contains("value2"))
-    //        }
-    //    }
-    //
-    //    @Test
-    //    func testParseMore() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            yaml1()
-    //                            yaml2()
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    File(
-    //                        name: "html.yml",
-    //                        string: """
-    //                            id: html
-    //                            contentTypes:
-    //                                include:
-    //                                    - page
-    //                            engine:
-    //                                id: mustache
-    //                                options:
-    //                                    contentTypes:
-    //                                        page:
-    //                                            template: "pages.default"
-    //                            assets:
-    //                              behaviors:
-    //                                - id: copy
-    //                              properties:
-    //                                - action: parse
-    //                                  property: yaml
-    //                                  resolvePath: false
-    //                                  input:
-    //                                    name: "*"
-    //                                    ext: yaml
-    //
-    //                            output:
-    //                                path: "{{slug}}"
-    //                                file: index
-    //                                ext: html
-    //                            """
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(
-    //                                    yaml:
-    //                                        """
-    //                                        {{page.yaml.test1.key1}}
-    //                                        {{page.yaml.test1.key2}}
-    //                                        {{page.yaml.test2.key3}}
-    //                                        {{page.yaml.test2.key4}}
-    //                                        """
-    //                                )
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let svgPath = output.appending(path: "assets/page1/test1.yaml")
-    //            #expect($0.fileExists(at: svgPath))
-    //
-    //            let htmlPath = output.appending(path: "page1/index.html")
-    //            #expect($0.fileExists(at: htmlPath))
-    //
-    //            let contents = try htmlPath.loadContents()
-    //            #expect(contents.contains("value1"))
-    //            #expect(contents.contains("value2"))
-    //            #expect(contents.contains("value3"))
-    //            #expect(contents.contains("value4"))
-    //        }
-    //    }
-    //
-    //
-    //    // MARK: - behaviors
-    //
-    //
+    @Test
+    func parseOneDataFile() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .init(
+                                behaviors: [],
+                                properties: [
+                                    .init(
+                                        action: .parse,
+                                        property: "data",
+                                        resolvePath: false,
+                                        input: .init(
+                                            path: nil,
+                                            name: "data",
+                                            ext: "yaml"
+                                        )
+                                    )
+                                ]
+                            ),
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [
+                                    "keyPath": "page"
+                                ]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        Directory(name: "assets") {
+                            File(
+                                name: "data.yaml",
+                                string: """
+                                    foo: value1
+                                    bar: value2
+                                    """
+                            )
+                        }
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "type": "test"
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let contextURL = output.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL)
+            let data = try Data(contentsOf: contextURL)
+
+            let decoder = JSONDecoder()
+
+            struct Exp: Decodable {
+                let data: [String: String]
+            }
+
+            let exp = try decoder.decode(Exp.self, from: data)
+            #expect(exp.data["foo"] == "value1")
+            #expect(exp.data["bar"] == "value2")
+        }
+    }
+
+    @Test
+    func parseMultipleDataFile() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .init(
+                                behaviors: [],
+                                properties: [
+                                    .init(
+                                        action: .parse,
+                                        property: "data",
+                                        resolvePath: false,
+                                        input: .init(
+                                            path: nil,
+                                            name: "*",
+                                            ext: "yaml"
+                                        )
+                                    )
+                                ]
+                            ),
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [
+                                    "keyPath": "page"
+                                ]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        Directory(name: "assets") {
+                            File(
+                                name: "foo.yaml",
+                                string: """
+                                    foo: value1
+                                    """
+                            )
+                            File(
+                                name: "bar.yaml",
+                                string: """
+                                    bar: value2
+                                    """
+                            )
+                        }
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "type": "test"
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let contextURL = output.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL)
+            let data = try Data(contentsOf: contextURL)
+
+            let decoder = JSONDecoder()
+
+            struct Exp: Decodable {
+                let data: [String: [String: String]]
+            }
+
+            let exp = try decoder.decode(Exp.self, from: data)
+            #expect(exp.data["foo"]?["foo"] == "value1")
+            #expect(exp.data["bar"]?["bar"] == "value2")
+        }
+    }
+
+    // MARK: - asset behaviors
+
     //    @Test
     //    func testMinifyCSSAsset() async throws {
     //        let logger = Logger(label: "ToucanTestSuite")

@@ -549,7 +549,6 @@ struct BuildTargetSourceRendererTestSuite {
             let info: Info
         }
 
-        print(value)
         let decoder = JSONDecoder()
         let result = try decoder.decode(Expected.self, from: data)
 

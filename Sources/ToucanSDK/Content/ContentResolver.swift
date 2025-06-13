@@ -454,8 +454,7 @@ struct ContentResolver {
             for property in assetProperties {
                 let path = item.rawValue.origin.path
                 let url = contentsUrl.appendingPathComponent(path.value)
-                let assetsUrl = url.deletingLastPathComponent()
-                    .appending(path: assetsPath)
+                let assetsUrl = url.appending(path: assetsPath)
 
                 let filteredAssets = filterFilePaths(
                     from: content.rawValue.assets,
@@ -512,22 +511,17 @@ struct ContentResolver {
                         )
                     }
                 case .load:
-                    if finalAssets.count == 1 {
-                        let asset = finalAssets[0]
-
-                        //                        print(asset)
-                        let contents = try String(
-                            contentsOf: assetsUrl.appending(path: asset)
-                        )
+                    if filteredAssets.count == 1 {
+                        let asset = filteredAssets[0]
+                        let url = assetsUrl.appending(path: asset)
+                        let contents = try String(contentsOf: url)
                         item.properties[property.property] = .init(contents)
                     }
                     else {
                         var values: [String: AnyCodable] = [:]
-                        for i in 0..<finalAssets.count {
-                            let url = assetsUrl.appending(path: finalAssets[i])
-
-                            //                            print(url.path())
-
+                        for i in 0..<filteredAssets.count {
+                            let asset = filteredAssets[i]
+                            let url = assetsUrl.appending(path: asset)
                             let contents = try String(contentsOf: url)
                             values[assetKeys[i]] = .init(contents)
                         }
@@ -535,27 +529,22 @@ struct ContentResolver {
                     }
                 // TODO: check extension, add json support
                 case .parse:
-                    if finalAssets.count == 1 {
-                        let data = try Data(
-                            contentsOf: assetsUrl.appending(
-                                path: finalAssets[0]
-                            )
-                        )
+                    if filteredAssets.count == 1 {
+                        let asset = filteredAssets[0]
+                        let url = assetsUrl.appending(path: asset)
+                        let data = try Data(contentsOf: url)
                         let yaml = try ToucanYAMLDecoder()
                             .decode(AnyCodable.self, from: data)
                         item.properties[property.property] = yaml
                     }
                     else {
                         var values: [String: AnyCodable] = [:]
-                        for i in 0..<finalAssets.count {
-                            let data = try Data(
-                                contentsOf: assetsUrl.appending(
-                                    path: finalAssets[i]
-                                )
-                            )
+                        for i in 0..<filteredAssets.count {
+                            let asset = filteredAssets[i]
+                            let url = assetsUrl.appending(path: asset)
+                            let data = try Data(contentsOf: url)
                             let yaml = try ToucanYAMLDecoder()
                                 .decode(AnyCodable.self, from: data)
-
                             values[assetKeys[i]] = yaml
                         }
                         item.properties[property.property] = .init(values)

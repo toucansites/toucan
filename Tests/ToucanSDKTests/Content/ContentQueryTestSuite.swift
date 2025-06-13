@@ -133,8 +133,8 @@ struct ContentQueryTestSuite {
             contentType: "author",
             filter: .field(
                 key: "lastUpdate",
-                operator: .lessThan,
-                value: .init(now.timeIntervalSince1970 + 1)
+                operator: .lessThanOrEquals,
+                value: .init(now.timeIntervalSince1970)
             )
         )
 

@@ -546,8 +546,8 @@ struct BuildTargetSourceLoaderTestSuite {
         .test {
             let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
             do {
-                let source = try sourceLoader.load()
-                print(source)
+                _ = try sourceLoader.load()
+                //                print(source)
             }
             catch let error as SourceLoaderError {
                 print(error.logMessageStack())
