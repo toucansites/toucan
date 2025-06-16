@@ -434,9 +434,9 @@ public struct BuildTargetSourceRenderer {
             for: content.type.id
         )
 
-        print("--------------")
-        print(scope)
-        print("--------------")
+//        print("--------------")
+//        print(scope)
+//        print("--------------")
 
         let cacheKey = [
             pipeline.id,
