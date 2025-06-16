@@ -57,7 +57,7 @@ public struct Order: Sendable, Codable, Equatable {
         let key = try container.decode(String.self, forKey: .key)
         let direction =
             try container.decodeIfPresent(Direction.self, forKey: .direction)
-            ?? .defaults
+                ?? .defaults
 
         self.init(
             key: key,

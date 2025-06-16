@@ -32,8 +32,14 @@ let package = Package(
             url: "https://github.com/apple/swift-argument-parser",
             from: "1.5.0"
         ),
-        .package(url: "https://github.com/apple/swift-markdown", from: "0.6.0"),
-        .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
+        .package(
+            url: "https://github.com/apple/swift-markdown",
+            from: "0.6.0"
+        ),
+        .package(
+            url: "https://github.com/apple/swift-log",
+            from: "1.6.0"
+        ),
         .package(
             url: "https://github.com/binarybirds/file-manager-kit",
             from: "0.3.0"
@@ -46,8 +52,14 @@ let package = Package(
             url: "https://github.com/hummingbird-project/swift-mustache",
             from: "2.0.0"
         ),
-        .package(url: "https://github.com/jpsim/Yams", from: "5.4.0"),
-        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.8.0"),
+        .package(
+            url: "https://github.com/jpsim/Yams",
+            from: "5.4.0"
+        ),
+        .package(
+            url: "https://github.com/scinfu/SwiftSoup",
+            from: "2.8.0"
+        ),
         .package(
             url: "https://github.com/aus-der-Technik/FileMonitor",
             from: "1.2.0"
@@ -56,12 +68,18 @@ let package = Package(
             url: "https://github.com/Zollerboy1/SwiftCommand",
             from: "1.4.0"
         ),
-        .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0"),
+        .package(
+            url: "https://github.com/johnfairh/swift-sass",
+            from: "3.1.0"
+        ),
         .package(
             url: "https://github.com/stackotter/swift-css-parser",
             from: "0.1.2"
         ),
-//        .package(url: "https://github.com/swiftlang/swift-subprocess", branch: "main"),
+//        .package(
+//            url: "https://github.com/swiftlang/swift-subprocess",
+//            branch: "main"
+//        ),
     ],
     targets: [
         // MARK: - executable targets

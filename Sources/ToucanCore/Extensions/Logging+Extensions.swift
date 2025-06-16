@@ -19,7 +19,8 @@ public extension Logger {
 
         let env = ProcessInfo.processInfo.environment
 
-        if let rawLevel = env["LOG_LEVEL"]?.lowercased(),
+        if
+            let rawLevel = env["LOG_LEVEL"]?.lowercased(),
             let level = Logger.Level(rawValue: rawLevel)
         {
             logger.logLevel = level
@@ -27,10 +28,12 @@ public extension Logger {
 
         let envKey =
             id
-            .appending("-log-level")
-            .replacingOccurrences(of: "-", with: "_")
-            .uppercased()
-        if let rawLevel = env[envKey]?.lowercased(),
+                .appending("-log-level")
+                .replacingOccurrences(of: "-", with: "_")
+                .uppercased()
+
+        if
+            let rawLevel = env[envKey]?.lowercased(),
             let level = Logger.Level(rawValue: rawLevel)
         {
             logger.logLevel = level

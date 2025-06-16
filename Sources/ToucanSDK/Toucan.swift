@@ -87,7 +87,7 @@ public struct Toucan {
         try ObjectLoader(
             url: inputURL,
             locations:
-                fileManager
+            fileManager
                 .find(
                     name: "toucan",
                     extensions: ["yml", "yaml"],
@@ -190,8 +190,8 @@ public struct Toucan {
 
                     let resultOutputURL =
                         destinationFolder
-                        .appending(path: result.destination.file)
-                        .appendingPathExtension(result.destination.ext)
+                            .appending(path: result.destination.file)
+                            .appendingPathExtension(result.destination.ext)
 
                     switch result.source {
                     case let .assetFile(path):

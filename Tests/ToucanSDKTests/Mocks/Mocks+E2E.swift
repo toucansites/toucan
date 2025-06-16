@@ -90,8 +90,8 @@ extension Mocks.E2E {
                         File(
                             name: "template.css",
                             string: """
-                                body { background: #000; }
-                                """
+                            body { background: #000; }
+                            """
                         )
                     }
                 }

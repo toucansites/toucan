@@ -78,8 +78,9 @@ struct ContentResolverTestSuite {
             let specialPages = ["", "about", "context"]
             let redirectPages = ["home-old", "about-old"]
             // check type identifiers
-            if !(specialPages + redirectPages + notFoundPages)
-                .contains(item.rawValue.origin.slug)
+            if
+                !(specialPages + redirectPages + notFoundPages)
+                    .contains(item.rawValue.origin.slug)
             {
                 #expect(item.rawValue.origin.slug.contains(item.type.id))
             }
@@ -139,7 +140,7 @@ struct ContentResolverTestSuite {
                         slug: "hello"
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -186,7 +187,7 @@ struct ContentResolverTestSuite {
                 .init(
                     id: "post",
                     paths: [
-                        "posts"
+                        "posts",
                     ]
                 ),
             ],
@@ -198,11 +199,11 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "type": "post"
+                            "type": "post",
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -249,7 +250,7 @@ struct ContentResolverTestSuite {
                 .init(
                     id: "post",
                     paths: [
-                        "posts"
+                        "posts",
                     ]
                 ),
             ],
@@ -260,7 +261,7 @@ struct ContentResolverTestSuite {
                         slug: "posts/hello"
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -339,7 +340,7 @@ struct ContentResolverTestSuite {
                             defaultValue: nil
                         ),
                     ]
-                )
+                ),
             ],
             rawContents: [
                 .init(
@@ -358,7 +359,7 @@ struct ContentResolverTestSuite {
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -435,7 +436,7 @@ struct ContentResolverTestSuite {
                             defaultValue: .init("2021-03-03")
                         ),
                     ]
-                )
+                ),
             ],
             rawContents: [
                 .init(
@@ -450,7 +451,7 @@ struct ContentResolverTestSuite {
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -511,9 +512,9 @@ struct ContentResolverTestSuite {
                                 )
                             ),
                             isRequired: true
-                        )
+                        ),
                     ]
-                )
+                ),
             ],
             rawContents: [
                 .init(
@@ -523,11 +524,11 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "monthAndDay": .init("2021-03-05")
+                            "monthAndDay": .init("2021-03-05"),
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -582,9 +583,9 @@ struct ContentResolverTestSuite {
                             ),
                             isRequired: true,
                             defaultValue: .init("03-30")
-                        )
+                        ),
                     ]
-                )
+                ),
             ],
             rawContents: [
                 .init(
@@ -594,11 +595,11 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "monthAndDay": .init("2021-03-05")
+                            "monthAndDay": .init("2021-03-05"),
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
-                )
+                ),
             ]
         )
 
@@ -656,7 +657,7 @@ struct ContentResolverTestSuite {
                             value: "1"
                         ),
                     ]
-                )
+                ),
             ],
             to: contents,
             now: now.timeIntervalSince1970
@@ -677,21 +678,21 @@ struct ContentResolverTestSuite {
         for key in expGroups.keys {
             let exp1 =
                 expGroups[key]?
-                .filter {
-                    $0.properties["title"]?.stringValue()?.hasSuffix("1")
-                        ?? $0.properties["name"]?.stringValue()?
-                        .hasSuffix("1")
-                        ?? false
-                } ?? []
+                    .filter {
+                        $0.properties["title"]?.stringValue()?.hasSuffix("1")
+                            ?? $0.properties["name"]?.stringValue()?
+                            .hasSuffix("1")
+                            ?? false
+                    } ?? []
 
             let res1 =
                 resGroups[key]?
-                .filter {
-                    $0.properties["title"]?.stringValue()?.hasSuffix("1")
-                        ?? $0.properties["name"]?.stringValue()?
-                        .hasSuffix("1")
-                        ?? false
-                } ?? []
+                    .filter {
+                        $0.properties["title"]?.stringValue()?.hasSuffix("1")
+                            ?? $0.properties["name"]?.stringValue()?
+                            .hasSuffix("1")
+                            ?? false
+                    } ?? []
 
             #expect(res1.count == exp1.count)
             for i in 0..<res1.count {
@@ -753,29 +754,29 @@ struct ContentResolverTestSuite {
         for key in expGroups.keys {
             let exp1 =
                 expGroups[key]?
-                .filter {
-                    if key == "post" {
-                        return $0.properties["featured"]?
-                            .boolValue() ?? false
-                    }
-                    return $0.properties["title"]?.stringValue()?
-                        .hasSuffix("10") ?? $0.properties["name"]?
-                        .stringValue()?
-                        .hasSuffix("10") ?? false
-                } ?? []
+                    .filter {
+                        if key == "post" {
+                            return $0.properties["featured"]?
+                                .boolValue() ?? false
+                        }
+                        return $0.properties["title"]?.stringValue()?
+                            .hasSuffix("10") ?? $0.properties["name"]?
+                            .stringValue()?
+                            .hasSuffix("10") ?? false
+                    } ?? []
 
             let res1 =
                 resGroups[key]?
-                .filter {
-                    if key == "post" {
-                        return $0.properties["featured"]?
-                            .boolValue() ?? false
-                    }
-                    return $0.properties["title"]?.stringValue()?
-                        .hasSuffix("10") ?? $0.properties["name"]?
-                        .stringValue()?
-                        .hasSuffix("10") ?? false
-                } ?? []
+                    .filter {
+                        if key == "post" {
+                            return $0.properties["featured"]?
+                                .boolValue() ?? false
+                        }
+                        return $0.properties["title"]?.stringValue()?
+                            .hasSuffix("10") ?? $0.properties["name"]?
+                            .stringValue()?
+                            .hasSuffix("10") ?? false
+                    } ?? []
 
             #expect(res1.count == exp1.count)
             for i in 0..<res1.count {
@@ -853,7 +854,7 @@ struct ContentResolverTestSuite {
                             isRequired: true
                         ),
                     ]
-                )
+                ),
             ],
             rawContents: [
                 .init(
@@ -942,7 +943,7 @@ struct ContentResolverTestSuite {
                             value: "{{date.now}}"
                         ),
                     ]
-                )
+                ),
             ],
             to: contents,
             now: now.timeIntervalSince1970
@@ -969,9 +970,9 @@ struct ContentResolverTestSuite {
                             propertyType: .bool,
                             isRequired: false,
                             defaultValue: false
-                        )
+                        ),
                     ]
-                )
+                ),
             ],
             rawContents: [
                 .init(
@@ -981,7 +982,7 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "draft": false
+                            "draft": false,
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
@@ -993,7 +994,7 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "draft": true
+                            "draft": true,
                         ]
                     ),
                     lastModificationDate: now.timeIntervalSince1970
@@ -1030,7 +1031,7 @@ struct ContentResolverTestSuite {
                     key: "draft",
                     operator: .equals,
                     value: false
-                )
+                ),
             ],
             to: contents,
             now: now.timeIntervalSince1970
@@ -1171,7 +1172,7 @@ struct ContentResolverTestSuite {
         )
         #expect(
             js.sorted() == [
-                "main.js"
+                "main.js",
             ]
         )
     }

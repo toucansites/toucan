@@ -36,7 +36,7 @@ struct CopyManagerTestSuite {
             let copyManager = CopyManager(
                 fileManager: $0,
                 sources: [
-                    src
+                    src,
                 ],
                 destination: workDirURL
             )
@@ -49,11 +49,11 @@ struct CopyManagerTestSuite {
                     )
                 )
                 .sorted()
-                    == [
-                        "foo.svg",
-                        "bar.ico",
-                    ]
-                    .sorted()
+                == [
+                    "foo.svg",
+                    "bar.ico",
+                ]
+                .sorted()
             )
 
             #expect(
@@ -63,11 +63,11 @@ struct CopyManagerTestSuite {
                     )
                 )
                 .sorted()
-                    == [
-                        "image.png",
-                        "cover.jpg",
-                    ]
-                    .sorted()
+                == [
+                    "image.png",
+                    "cover.jpg",
+                ]
+                .sorted()
             )
         }
     }
@@ -87,7 +87,7 @@ struct CopyManagerTestSuite {
             let copyManager = CopyManager(
                 fileManager: $0,
                 sources: [
-                    src
+                    src,
                 ],
                 destination: workDirURL
             )

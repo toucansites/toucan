@@ -25,7 +25,7 @@ struct PipelineTransformersTestSuite {
     func initWithRun() throws {
         let transformerPipeline = Pipeline.Transformers(
             run: [
-                .init(name: "test")
+                .init(name: "test"),
             ],
             isMarkdownResult: false
         )

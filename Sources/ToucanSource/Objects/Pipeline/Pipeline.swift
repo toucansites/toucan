@@ -109,7 +109,7 @@ public struct Pipeline: Codable {
         let id = try container.decode(String.self, forKey: .id)
         let definesType =
             try container.decodeIfPresent(Bool.self, forKey: .definesType)
-            ?? false
+                ?? false
 
         //        let defaultScopes = Scope.default
         let userScopes =
@@ -161,7 +161,7 @@ public struct Pipeline: Codable {
         self.init(
             id: id,
             definesType: definesType,
-            scopes: userScopes,  // TODO: fix this
+            scopes: userScopes, // TODO: fix this
             queries: queries,
             dataTypes: dataTypes,
             contentTypes: contentTypes,

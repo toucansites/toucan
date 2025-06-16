@@ -63,9 +63,10 @@ public extension Path {
     func basePath() -> Path {
         let rawPath =
             value
-            .split(separator: "/")
-            .dropLast()
-            .joined(separator: "/")
+                .split(separator: "/")
+                .dropLast()
+                .joined(separator: "/")
+
         return .init(rawPath)
     }
 

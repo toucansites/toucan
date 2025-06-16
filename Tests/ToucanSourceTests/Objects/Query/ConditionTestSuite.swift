@@ -97,10 +97,10 @@ struct ConditionTestSuite {
     @Test
     func customField() throws {
         let value = """
-            key: foo
-            operator: equals
-            value: a
-            """ + "\n"
+        key: foo
+        operator: equals
+        value: a
+        """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
@@ -121,14 +121,14 @@ struct ConditionTestSuite {
     @Test
     func customAnd() throws {
         let value = """
-            and:
-            - key: foo
-              operator: equals
-              value: a
-            - key: bar
-              operator: notEquals
-              value: b
-            """ + "\n"
+        and:
+        - key: foo
+          operator: equals
+          value: a
+        - key: bar
+          operator: notEquals
+          value: b
+        """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
@@ -158,14 +158,14 @@ struct ConditionTestSuite {
     @Test
     func customOr() throws {
         let value = """
-            or:
-            - key: foo
-              operator: equals
-              value: a
-            - key: bar
-              operator: notEquals
-              value: b
-            """ + "\n"
+        or:
+        - key: foo
+          operator: equals
+          value: a
+        - key: bar
+          operator: notEquals
+          value: b
+        """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
@@ -195,10 +195,10 @@ struct ConditionTestSuite {
     @Test
     func stringValue() throws {
         let data = """
-            key: name
-            operator: equals
-            value: hello
-            """
+        key: name
+        operator: equals
+        value: hello
+        """
 
         let decoder = ToucanYAMLDecoder()
 
@@ -220,13 +220,13 @@ struct ConditionTestSuite {
     @Test
     func arrayValue() throws {
         let data = """
-            key: name
-            operator: in
-            value: 
-                - foo
-                - bar
-                - baz
-            """
+        key: name
+        operator: in
+        value: 
+            - foo
+            - bar
+            - baz
+        """
 
         let decoder = ToucanYAMLDecoder()
 
@@ -248,15 +248,15 @@ struct ConditionTestSuite {
     @Test
     func orConditionValues() throws {
         let data = """
-            or:
-                - key: name
-                  operator: equals
-                  value: hello
+        or:
+            - key: name
+              operator: equals
+              value: hello
 
-                - key: description
-                  operator: like
-                  value: foo
-            """
+            - key: description
+              operator: like
+              value: foo
+        """
 
         let decoder = ToucanYAMLDecoder()
 
@@ -294,20 +294,20 @@ struct ConditionTestSuite {
     @Test
     func complexCondition() throws {
         let data = """
-            or:
-                - key: name
+        or:
+            - key: name
+              operator: equals
+              value: hello
+
+            - and: 
+                - key: featured
                   operator: equals
-                  value: hello
+                  value: false
 
-                - and: 
-                    - key: featured
-                      operator: equals
-                      value: false
-
-                    - key: likes
-                      operator: greaterThan
-                      value: 100
-            """
+                - key: likes
+                  operator: greaterThan
+                  value: 100
+        """
 
         let decoder = ToucanYAMLDecoder()
 
@@ -359,11 +359,11 @@ struct ConditionTestSuite {
     @Test
     func wrongCondition() throws {
         let data = """
-            wrong:
-                - key: name
-                  operator: equals
-                  value: hello
-            """
+        wrong:
+            - key: name
+              operator: equals
+              value: hello
+        """
 
         let decoder = ToucanYAMLDecoder()
         do {

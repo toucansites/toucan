@@ -63,22 +63,22 @@ public extension FileManagerKit {
         }
         return
             items
-            .filter { fileName in
-                let fileURL = URL(fileURLWithPath: fileName)
-                let baseName = fileURL.deletingPathExtension()
-                    .lastPathComponent
-                let ext = fileURL.pathExtension
+                .filter { fileName in
+                    let fileURL = URL(fileURLWithPath: fileName)
+                    let baseName = fileURL.deletingPathExtension()
+                        .lastPathComponent
+                    let ext = fileURL.pathExtension
 
-                switch (name, extensions) {
-                case (nil, nil):
-                    return true
-                case (let name?, nil):
-                    return baseName == name
-                case (nil, let extensions?):
-                    return extensions.contains(ext)
-                case let (name?, extensions?):
-                    return baseName == name && extensions.contains(ext)
+                    switch (name, extensions) {
+                    case (nil, nil):
+                        return true
+                    case (let name?, nil):
+                        return baseName == name
+                    case (nil, let extensions?):
+                        return extensions.contains(ext)
+                    case let (name?, extensions?):
+                        return baseName == name && extensions.contains(ext)
+                    }
                 }
-            }
     }
 }

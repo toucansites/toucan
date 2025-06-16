@@ -52,9 +52,9 @@ public struct MarkdownParser {
         if markdown.starts(with: separator) {
             return
                 markdown
-                .split(separator: separator)
-                .dropFirst()
-                .joined(separator: separator)
+                    .split(separator: separator)
+                    .dropFirst()
+                    .joined(separator: separator)
         }
         return markdown
     }

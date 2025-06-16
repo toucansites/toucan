@@ -122,7 +122,7 @@ struct BuildTargetSourceLoaderTestSuite {
                 File(
                     name: "invalid.yaml",
                     string: """
-                        """
+                    """
                 )
             }
         }

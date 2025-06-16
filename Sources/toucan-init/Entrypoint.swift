@@ -21,11 +21,11 @@ struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "toucan-init",
         abstract: """
-            Toucan Init Command
-            """,
+        Toucan Init Command
+        """,
         discussion: """
-            A markdown-based Static Site Generator (SSG) written in Swift.
-            """,
+        A markdown-based Static Site Generator (SSG) written in Swift.
+        """,
         version: GeneratorInfo.current.version
     )
 
@@ -94,14 +94,14 @@ extension Entrypoint {
     var minimalSourceURL: URL {
         .init(
             string:
-                "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
+            "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
         )!
     }
 
     var minimalTemplateURL: URL {
         .init(
             string:
-                "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
+            "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
         )!
     }
 

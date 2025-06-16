@@ -15,13 +15,13 @@ struct TargetTestSuite {
     @Test
     func full() throws {
         let data = """
-            name: "dev"
-            config: "./some-config.yml"
-            url: "https://example.com"
-            output: "./out"
-            default: true
-            """
-            .data(using: .utf8)!
+        name: "dev"
+        config: "./some-config.yml"
+        url: "https://example.com"
+        output: "./out"
+        default: true
+        """
+        .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -40,9 +40,9 @@ struct TargetTestSuite {
     @Test
     func defaults() throws {
         let data = """
-            name: "dev"
-            """
-            .data(using: .utf8)!
+        name: "dev"
+        """
+        .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 

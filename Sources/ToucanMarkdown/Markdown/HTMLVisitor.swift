@@ -162,10 +162,11 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         let filterBlocks =
             customBlockDirectives
-            .filter { $0.removesChildParagraph ?? false }
-            .map(\.name)
+                .filter { $0.removesChildParagraph ?? false }
+                .map(\.name)
 
-        if let block = paragraph.parent as? BlockDirective,
+        if
+            let block = paragraph.parent as? BlockDirective,
             filterBlocks.contains(block.name.lowercased())
         {
             return visit(paragraph.children)
@@ -217,11 +218,11 @@ struct HTMLVisitor: MarkupVisitor {
         let pTagCount = 3
         let contents =
             paragraph.prefix(pTagCount)
-            + paragraph.dropFirst(pTagCount).dropFirst(dropCount)
+                + paragraph.dropFirst(pTagCount).dropFirst(dropCount)
         return HTML(
             name: "blockquote",
             attributes: [
-                .init(key: "class", value: type)
+                .init(key: "class", value: type),
             ],
             contents: String(contents)
         )
@@ -248,9 +249,9 @@ struct HTMLVisitor: MarkupVisitor {
                     [
                         #"<"#: #"&lt;"#,
                         #">"#: #"&gt;"#,
-                            // #"&"#: #"&amp;"#,
-                            // #"'"#: #"&apos;"#,
-                            // #"""#: #"&quot;"#,
+                        // #"&"#: #"&amp;"#,
+                        // #"'"#: #"&apos;"#,
+                        // #"""#: #"&quot;"#,
                     ]
                 )
                 .replacingOccurrences(
@@ -311,7 +312,8 @@ struct HTMLVisitor: MarkupVisitor {
                 )
             }
 
-            if !destination.hasPrefix("."),
+            if
+                !destination.hasPrefix("."),
                 !destination.hasPrefix("/"),
                 !destination.hasPrefix("#")
             {
@@ -406,8 +408,8 @@ struct HTMLVisitor: MarkupVisitor {
         guard parseErrors.isEmpty else {
             let errors =
                 parseErrors
-                .map { String(describing: $0) }
-                .joined(separator: ", ")
+                    .map { String(describing: $0) }
+                    .joined(separator: ", ")
             logger.warning("\(errors)")
             return ""
         }
@@ -471,12 +473,12 @@ struct HTMLVisitor: MarkupVisitor {
         if let name = block.tag {
             let attributes: [HTML.Attribute] =
                 block.attributes?
-                .map { a in
-                    .init(
-                        key: a.name,
-                        value: a.value.replacingOccurrences(templateParams)
-                    )
-                } ?? []
+                    .map { a in
+                        .init(
+                            key: a.name,
+                            value: a.value.replacingOccurrences(templateParams)
+                        )
+                    } ?? []
 
             return HTML(
                 name: name,

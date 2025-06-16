@@ -41,7 +41,7 @@ public struct ToucanJSONEncoder: ToucanEncoder {
                         .init(
                             codingPath: [],
                             debugDescription:
-                                "The data cannot be represetned as UTF-8 encoded string."
+                            "The data cannot be represetned as UTF-8 encoded string."
                         )
                     )
                 )

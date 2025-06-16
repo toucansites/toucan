@@ -95,10 +95,10 @@ public extension Pipeline {
 
             let include =
                 try container.decodeIfPresent([String].self, forKey: .include)
-                ?? []
+                    ?? []
             let exclude =
                 try container.decodeIfPresent([String].self, forKey: .exclude)
-                ?? []
+                    ?? []
             let lastUpdate =
                 try container.decodeIfPresent(
                     [String].self,
