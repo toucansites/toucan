@@ -1,0 +1,11 @@
+.*
+*.txt
+*.html
+*.yaml
+README.md
+Package.resolved
+Makefile
+LICENSE
+Package.swift
+Docker/**
+scripts/**
