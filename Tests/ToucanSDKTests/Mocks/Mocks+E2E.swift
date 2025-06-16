@@ -97,6 +97,10 @@ extension Mocks.E2E {
                     }
                 }
                 Directory(name: "templates") {
+                    MustacheFile(
+                        name: "test",
+                        template: Mocks.Templates.page()
+                    )
                     Directory(name: "docs") {
                         Directory(name: "category") {
                             MustacheFile(

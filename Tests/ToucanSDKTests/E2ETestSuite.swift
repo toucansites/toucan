@@ -1091,78 +1091,155 @@ struct E2ETestSuite {
 
     // MARK: - transformers
 
-    //    @Test
-    //    func transformerRunTest() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        let fileManager = FileManager.default
-    //        let rootUrl = FileManager.default.temporaryDirectory
-    //        let rootName = "FileManagerPlayground_\(UUID().uuidString)"
-    //
-    //        try FileManagerPlayground(
-    //            rootUrl: rootUrl,
-    //            rootName: rootName,
-    //            fileManager: fileManager
-    //        ) {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    contentAbout()
-    //                    Directory(name: "assets") {
-    //                        contentStyleCss()
-    //                    }
-    //                    contentHome()
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        File(
-    //                            name: "index.md",
-    //                            string: """
-    //                                ---
-    //                                title: "First beta release"
-    //                                ---
-    //                                Character to replace => :
-    //                                """
-    //                        )
-    //                    }
-    //                    contentSiteFile()
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    pipelineHtml(rootUrl: rootUrl.path(), rootName: rootName)
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache()
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "transformers") {
-    //                    replaceScriptFile()
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let page1 = output.appending(path: "page1/index.html")
-    //            let data = try page1.loadContents()
-    //            #expect(data.contains("Character to replace => -"))
-    //        }
-    //    }
+    @Test
+    func transformerRunTest() async throws {
+        let now = Date()
+        let fileManager = FileManager.default
+        let rootUrl = FileManager.default.temporaryDirectory
+        let rootName = "FileManagerPlayground_\(UUID().uuidString)"
+
+        try FileManagerPlayground(
+            rootUrl: rootUrl,
+            rootName: rootName,
+            fileManager: fileManager
+        ) {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .defaults,
+                            transformers: [
+                                "test": .init(
+                                    run: [
+                                        .init(
+                                            path:
+                                                "\(rootUrl.path())/\(rootName)/src/transformers",
+                                            name: "replace"
+                                        )
+                                    ],
+                                    isMarkdownResult: false
+                                )
+                            ],
+                            engine: .init(
+                                id: "mustache",
+                                options: [
+                                    "contentTypes": [
+                                        "test": [
+                                            "template": "test"
+                                        ]
+                                    ]
+                                ]
+                            ),
+                            output: .init(
+                                path: "{{slug}}",
+                                file: "index",
+                                ext: "html"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        File(
+                            name: "index.yaml",
+                            string: """
+                                type: test
+                                description: Desc1
+                                label: label1
+                                """
+                        )
+                        File(
+                            name: "index.md",
+                            string: """
+                                ---
+                                title: "First beta release"
+                                ---
+                                Character to replace => :
+                                """
+                        )
+                    }
+                }
+                Directory(name: "transformers") {
+                    File(
+                        name: "replace",
+                        attributes: [.posixPermissions: 0o777],
+                        string: """
+                            #!/bin/bash
+                            # Replaces all colons `:` with dashes `-` in the given file.
+                            # Usage: replace-char --file <path>
+                            UNKNOWN_ARGS=()
+                            while [[ $# -gt 0 ]]; do
+                                case $1 in
+                                    --file)
+                                        TOUCAN_FILE="$2"
+                                        shift
+                                        shift
+                                        ;;
+                                    -*|--*)
+                                        UNKNOWN_ARGS+=("$1" "$2")
+                                        shift
+                                        shift
+                                        ;;
+                                    *)
+                                        shift
+                                        ;;
+                                esac
+                            done
+                            if [[ -z "${TOUCAN_FILE}" ]]; then
+                                echo "❌ No file specified with --file."
+                                exit 1
+                            fi
+                            echo "📄 Processing file: ${TOUCAN_FILE}"
+                            if [[ ${#UNKNOWN_ARGS[@]} -gt 0 ]]; then
+                                echo "ℹ️ Ignored unknown options: ${UNKNOWN_ARGS[*]}"
+                            fi
+                            sed 's/:/-/g' "${TOUCAN_FILE}" > "${TOUCAN_FILE}.tmp" && mv "${TOUCAN_FILE}.tmp" "${TOUCAN_FILE}"
+                            echo "✅ Done replacing characters."
+                            """
+                    )
+                }
+                Mocks.E2E.themes(debugContext: "{{.}}")
+
+            }
+
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            print($0.listDirectory(at: output))
+            let fileURL = output.appendingPathIfPresent("test/index.html")
+            let html = try String(contentsOf: fileURL)
+
+            #expect(html.contains("Character to replace => -"))
+        }
+    }
     //
     //    @Test
     //    func testPageLink() throws {
