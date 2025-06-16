@@ -3,7 +3,10 @@ FROM swift:6.1-noble AS build
 WORKDIR /build
 COPY ./Package.* ./
 RUN swift package resolve
-COPY ./ .
+COPY Sources ./Sources
+COPY Tests ./Tests
+COPY Package.swift .
+COPY Package.resolved .
 RUN swift build -c release --static-swift-stdlib
 
 WORKDIR /staging
@@ -20,7 +23,7 @@ FROM ubuntu:noble
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q update \
     && apt-get -q dist-upgrade -y \
-    && apt-get -q install -y tzdata locales \
+    && apt-get -q install -y tzdata locales curl \
     && ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
     && dpkg-reconfigure -f noninteractive tzdata \
     && locale-gen en_US.UTF-8 \
@@ -34,6 +37,9 @@ RUN useradd --user-group --create-home --system --skel /dev/null --home-dir /app
 
 WORKDIR /app
 COPY --from=build --chown=toucan:toucan /staging /app
+
+# ✅ Ensure all files in /app are executable by all users
+RUN chmod -R a+rx /app
 
 ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
 ENV PATH="/app:$PATH"
