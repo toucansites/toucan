@@ -7,9 +7,12 @@
 
 /// A value type representing a URL-friendly identifier for a content item.
 public struct Slug: Equatable {
+    // MARK: - Properties
 
     /// The raw slug string (e.g., `"blog/welcome"`, `"about"`, `""`).
     public var value: String
+
+    // MARK: - Lifecycle
 
     /// Initializes a new slug.
     ///
@@ -20,13 +23,15 @@ public struct Slug: Equatable {
         self.value = value
     }
 
+    // MARK: - Functions
+
     // MARK: - Iterator ID Extraction
 
     /// Extracts a dynamic iterator identifier from a slug value containing
     /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
     ///
     /// - Returns: The identifier inside `{{...}}`, or `nil` if not found.
-    public func extractIteratorId() -> String? {
+    public func extractIteratorID() -> String? {
         guard
             let startRange = value.range(of: "{{"),
             let endRange = value.range(
@@ -43,18 +48,18 @@ public struct Slug: Equatable {
 
     /// Constructs a permalink from the base URL and the slug.
     ///
-    /// - Parameter baseUrl: The base URL of the site (e.g., `"https://example.com"`).
+    /// - Parameter baseURL: The base URL of the site (e.g., `"https://example.com"`).
     /// - Returns: A fully-qualified permalink string (e.g., `"https://example.com/blog/"`).
-    public func permalink(baseUrl: String) -> String {
+    public func permalink(baseURL: String) -> String {
         let components = value.split(separator: "/").map(String.init)
         if components.isEmpty {
-            return baseUrl.ensureTrailingSlash()
+            return baseURL.ensureTrailingSlash()
         }
         if components.last?.split(separator: ".").count ?? 0 > 1 {
             // If last segment has a file extension, return without trailing slash
-            return ([baseUrl] + components).joined(separator: "/")
+            return ([baseURL] + components).joined(separator: "/")
         }
-        return ([baseUrl] + components)
+        return ([baseURL] + components)
             .joined(separator: "/")
             .ensureTrailingSlash()
     }
@@ -72,7 +77,6 @@ public struct Slug: Equatable {
 }
 
 extension Slug: Codable {
-
     /// Creates a new instance by decoding from the given decoder.
     ///
     /// This initializer attempts to decode the value as a single string.
@@ -83,7 +87,7 @@ extension Slug: Codable {
         from decoder: Decoder
     ) throws {
         let container = try decoder.singleValueContainer()
-        value = try container.decode(String.self)
+        self.value = try container.decode(String.self)
     }
 
     /// Encodes this value into the given encoder.

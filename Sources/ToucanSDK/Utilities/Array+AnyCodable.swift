@@ -9,7 +9,6 @@ import Foundation
 import ToucanSource
 
 public extension [AnyCodable] {
-
     /// Returns an array of unboxed elements by applying `unboxed()` to each element in the sequence.
     ///
     /// - Returns: An array containing the result of calling `unboxed()` on each element.

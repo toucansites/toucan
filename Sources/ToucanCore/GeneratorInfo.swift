@@ -7,6 +7,7 @@
 
 /// Metadata describing the content generator, including its name, version, and homepage link.
 public struct GeneratorInfo: Codable, Sendable {
+    // MARK: - Properties
 
     /// The name of the generator.
     public let name: String
@@ -16,6 +17,8 @@ public struct GeneratorInfo: Codable, Sendable {
 
     /// A URL pointing to the generator’s homepage or documentation.
     public let link: String
+
+    // MARK: - Lifecycle
 
     /// Initializes a generator metadata instance.
     ///
@@ -35,7 +38,6 @@ public struct GeneratorInfo: Codable, Sendable {
 }
 
 public extension GeneratorInfo {
-
     /// Returns the most current version of the generator.
     static var current: Self {
         .v1_0_0_beta_5
@@ -44,7 +46,6 @@ public extension GeneratorInfo {
 
 // list versions here
 extension GeneratorInfo {
-
     static let v1_0_0 = GeneratorInfo(version: "1.0.0")
     static let v1_0_0_rc_1 = GeneratorInfo(version: "1.0.0-rc.1")
     static let v1_0_0_beta_5 = GeneratorInfo(version: "1.0.0-beta.5")

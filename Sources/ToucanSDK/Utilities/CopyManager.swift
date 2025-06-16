@@ -5,11 +5,12 @@
 //  Created by gerp83 on 2025. 04. 17..
 //
 
-import Foundation
 import FileManagerKit
+import Foundation
 
 /// Responsible for copying static assets from various source locations into the working directory.
 public struct CopyManager {
+    // MARK: - Properties
 
     /// File manager abstraction for performing file operations.
     let fileManager: FileManagerKit
@@ -19,6 +20,8 @@ public struct CopyManager {
 
     /// The target directory where all assets should be written.
     let destination: URL
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -37,6 +40,8 @@ public struct CopyManager {
         self.sources = sources
         self.destination = destination
     }
+
+    // MARK: - Functions
 
     // MARK: - Copy Operation
 

@@ -11,7 +11,6 @@
 /// Supports primitive types (`bool`, `int`, `double`, `string`, `date`)
 /// and complex structures like arrays of types.
 public indirect enum PropertyType: Sendable, Codable, Equatable {
-
     /// Boolean type (`true` or `false`).
     case bool
 
@@ -33,6 +32,8 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     /// Array type with elements of a consistent `PropertyType`.
     case array(of: PropertyType)
 
+    // MARK: - Nested Types
+
     /// Coding keys used for encoding and decoding `PropertyType`.
     private enum CodingKeys: String, CodingKey {
         case type
@@ -52,6 +53,8 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         case date
         case array
     }
+
+    // MARK: - Lifecycle
 
     /// Creates a new instance by decoding from the given decoder.
     ///
@@ -88,6 +91,8 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         }
     }
 
+    // MARK: - Functions
+
     /// Encodes this value into the given encoder.
     ///
     /// - Parameter encoder: The encoder to write data to.
@@ -108,10 +113,10 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             try container.encode(TypeKey.string, forKey: .type)
         case .asset:
             try container.encode(TypeKey.asset, forKey: .type)
-        case .date(let config):
+        case let .date(config):
             try container.encode(TypeKey.date, forKey: .type)
             try container.encodeIfPresent(config, forKey: .config)
-        case .array(let of):
+        case let .array(of):
             try container.encode(TypeKey.array, forKey: .type)
             try container.encode(of, forKey: .of)
         }

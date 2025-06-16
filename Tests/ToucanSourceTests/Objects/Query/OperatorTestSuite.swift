@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct OperatorTestSuite {
-
     @Test
     func basics() throws {
         let object = Operator.allCases
@@ -29,7 +28,6 @@ struct OperatorTestSuite {
 
         #expect(object == result1)
         #expect(object == result2)
-
     }
 
     @Test
@@ -141,5 +139,4 @@ struct OperatorTestSuite {
 
         #expect(result == expectation)
     }
-
 }

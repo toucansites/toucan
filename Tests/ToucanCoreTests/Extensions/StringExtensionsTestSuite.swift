@@ -11,8 +11,6 @@ import Testing
 
 @Suite
 struct StringExtensionsTestSuite {
-
     @Test()
-    func example() async throws {
-    }
+    func example() async throws {}
 }

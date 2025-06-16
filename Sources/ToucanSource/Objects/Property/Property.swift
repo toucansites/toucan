@@ -8,6 +8,7 @@
 /// Represents a single content property definition, including its type,
 /// whether it's required, and an optional default value.
 public struct Property: Codable, Equatable {
+    // MARK: - Nested Types
 
     /// Coding keys used for decoding optional metadata fields.
     enum CodingKeys: String, CodingKey {
@@ -15,16 +16,20 @@ public struct Property: Codable, Equatable {
         case `default`
     }
 
+    // MARK: - Properties
+
     /// The type of the property (e.g., string, number, boolean, etc.).
-    public var `type`: PropertyType
+    public var type: PropertyType
 
     /// Whether the property is required in the content entry.
     ///
     /// Defaults to `true` if not explicitly provided in the definition.
-    public var `required`: Bool
+    public var required: Bool
 
     /// An optional default value to use if the property is missing in the content.
     public var `default`: AnyCodable?
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -39,9 +44,9 @@ public struct Property: Codable, Equatable {
         isRequired: Bool,
         defaultValue: AnyCodable? = nil
     ) {
-        self.`type` = propertyType
-        self.`required` = isRequired
-        self.`default` = defaultValue
+        self.type = propertyType
+        self.required = isRequired
+        self.default = defaultValue
     }
 
     // MARK: - Decoding
@@ -72,6 +77,8 @@ public struct Property: Codable, Equatable {
         )
     }
 
+    // MARK: - Functions
+
     /// Encodes the `Property` into a keyed container
     ///
     /// - Parameter encoder: The encoder to write data to.
@@ -80,8 +87,8 @@ public struct Property: Codable, Equatable {
         to encoder: any Encoder
     ) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try self.type.encode(to: encoder)
-        try container.encode(self.required, forKey: .required)
+        try type.encode(to: encoder)
+        try container.encode(required, forKey: .required)
         try container.encodeIfPresent(self.default, forKey: .default)
     }
 }

@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct TypesTestSuite {
-
     // MARK: - order
 
     @Test
@@ -82,7 +81,7 @@ struct TypesTestSuite {
                             - key: authors
                               operator: matching
                               value: "{{authors}}"
-                            
+
                             - key: id
                               operator: notEquals
                               value: "{{id}}"
@@ -95,12 +94,12 @@ struct TypesTestSuite {
                             - key: tags
                               operator: matching
                               value: "{{tags}}"
-                            
+
                             - key: id
                               operator: notEquals
                               value: "{{id}}"
 
-                
+
             """
 
         let decoder = ToucanYAMLDecoder()

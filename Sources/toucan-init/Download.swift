@@ -4,33 +4,37 @@
 //
 //  Created by Binary Birds on 2025. 03. 31..
 
-import Foundation
 import FileManagerKit
+import Foundation
 import SwiftCommand
 
 struct Download {
+    // MARK: - Properties
 
     let id = UUID().uuidString
-    let sourceUrl: URL
-    let targetDirUrl: URL
+    let sourceURL: URL
+    let targetDirURL: URL
     let fileManager: FileManager
+
+    // MARK: - Computed Properties
 
     private var url: URL {
         fileManager.temporaryDirectory.appendingPathComponent(id)
     }
 
-    private var zipUrl: URL {
+    private var zipURL: URL {
         url.appendingPathExtension("zip")
     }
 
-    func resolve() async throws {
+    // MARK: - Functions
 
+    func resolve() async throws {
         /// Ensure working directory exists
         try fileManager.createDirectory(
             at: url,
             withIntermediateDirectories: true
         )
-        let zipUrl = url.appendingPathExtension("zip")
+        let zipURL = url.appendingPathExtension("zip")
 
         /// Find and run `curl` using SwiftCommand
         guard let curl = Command.findInPath(withName: "curl") else {
@@ -38,7 +42,12 @@ struct Download {
         }
         _ =
             try await curl
-            .addArguments(["-L", sourceUrl.absoluteString, "-o", zipUrl.path])
+            .addArguments([
+                "-L",
+                sourceURL.absoluteString,
+                "-o",
+                zipURL.path,
+            ])
             .output
 
         /// Find and run `unzip` using SwiftCommand
@@ -47,24 +56,24 @@ struct Download {
         }
         _ =
             try await unzipExe
-            .addArguments([zipUrl.path, "-d", url.path])
+            .addArguments([zipURL.path, "-d", url.path])
             .output
 
         /// Remove existing target directory
-        try? fileManager.removeItem(at: targetDirUrl)
+        try? fileManager.removeItem(at: targetDirURL)
 
         /// Finding the root directory URL.
         let items = fileManager.listDirectory(at: url)
         guard let rootDirName = items.first else {
             throw URLError(.cannotParseResponse)
         }
-        let rootDirUrl = url.appendingPathComponent(rootDirName)
+        let rootDirURL = url.appendingPathComponent(rootDirName)
 
         /// Moving files to the target directory.
-        try fileManager.moveItem(at: rootDirUrl, to: targetDirUrl)
+        try fileManager.moveItem(at: rootDirURL, to: targetDirURL)
 
         /// Cleaning up unnecessary files.
-        try? fileManager.delete(at: zipUrl)
+        try? fileManager.delete(at: zipURL)
         try? fileManager.delete(at: url)
     }
 }

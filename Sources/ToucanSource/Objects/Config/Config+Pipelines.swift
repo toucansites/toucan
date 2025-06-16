@@ -5,15 +5,24 @@
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-extension Config {
-
+public extension Config {
     /// Represents the location of pipeline configuration files.
-    public struct Pipelines: Codable, Equatable {
+    struct Pipelines: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Provides a default `Pipelines` configuration pointing to `"pipelines"`.
+        public static var defaults: Self {
+            .init(path: "pipelines")
         }
 
         // MARK: - Properties
@@ -23,12 +32,7 @@ extension Config {
         /// Example: `"pipelines"` (default), or `"config/pipelines"`
         public var path: String
 
-        // MARK: - Defaults
-
-        /// Provides a default `Pipelines` configuration pointing to `"pipelines"`.
-        public static var defaults: Self {
-            .init(path: "pipelines")
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

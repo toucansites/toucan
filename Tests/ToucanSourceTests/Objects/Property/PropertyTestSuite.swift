@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct PropertyTestSuite {
-
     // MARK: - order
 
     @Test

@@ -8,7 +8,6 @@
 import Foundation
 
 public extension URL {
-
     /// Returns a new URL by appending the given path component if it is non-nil and not empty.
     ///
     /// This method is useful when working with optional path components where you want to

@@ -5,16 +5,19 @@
 //  Created by Tibor Bödecs on 2025. 06. 04..
 //
 
-import ToucanSource
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import ToucanSerialization
+import ToucanSource
 
 struct MarkdownFile {
+    // MARK: - Properties
 
     var name: String
     var ext: String
     var markdown: Markdown
+
+    // MARK: - Lifecycle
 
     init(
         name: String,
@@ -28,7 +31,6 @@ struct MarkdownFile {
 }
 
 extension MarkdownFile: BuildableItem {
-
     func buildItem() -> FileManagerPlayground.Item {
         let encoder = ToucanYAMLEncoder()
         let yml = try! encoder.encode(markdown.frontMatter)

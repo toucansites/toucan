@@ -4,18 +4,17 @@
 //
 //  Created by Binary Birds on 2025. 04. 15..
 
-import Testing
-import Markdown
 import Logging
+import Markdown
+import Testing
 
 @testable import ToucanMarkdown
 
 @Suite
 struct HTMLVisitorTestSuite {
-
     func renderHTML(
         markdown: String,
-        baseUrl: String? = nil
+        baseURL: String? = nil
     ) -> String {
         let document = Document(
             parsing: markdown,
@@ -33,7 +32,7 @@ struct HTMLVisitorTestSuite {
             ],
             slug: "slug",
             assetsPath: "assets",
-            baseUrl: baseUrl ?? "http://localhost:3000"
+            baseURL: baseURL ?? "http://localhost:3000"
         )
 
         return visitor.visit(document)
@@ -43,7 +42,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func inlineHTML() {
-
         let input = #"""
             <b>https://swift.org</b>
             """#
@@ -59,7 +57,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func paragraph() {
-
         let input = #"""
             Lorem ipsum dolor sit amet.
             """#
@@ -75,7 +72,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func softBreak() {
-
         let input = #"""
             This is the first line.
             And this is the second line.
@@ -92,7 +88,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func lineBreak() {
-
         let input = #"""
             a\
             b
@@ -109,7 +104,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func thematicBreak() {
-
         let input = #"""
             Lorem ipsum
             ***
@@ -131,7 +125,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func strong() {
-
         let input = #"""
             Lorem **ipsum** dolor __sit__ amet.
             """#
@@ -147,7 +140,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func striketrough() {
-
         let input = #"""
             Lorem ipsum ~~dolor sit amet~~.
             """#
@@ -163,7 +155,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func blockquote() {
-
         let input = #"""
             > Lorem ipsum dolor sit amet.
             """#
@@ -179,7 +170,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func blockquoteNote() {
-
         let input = #"""
             > NOTE: Lorem ipsum dolor sit amet.
             """#
@@ -195,7 +185,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func blockquoteWarn() {
-
         let input = #"""
             > WARN: Lorem ipsum dolor sit amet.
             """#
@@ -211,7 +200,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func blockquoteWarning() {
-
         let input = #"""
             > warning: Lorem ipsum dolor sit amet.
             """#
@@ -227,7 +215,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func nestedBlockquote() {
-
         let input = #"""
             > Lorem ipsum
             >
@@ -245,7 +232,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func emphasis() {
-
         let input = #"""
             Lorem *ipsum* dolor _sit_ amet.
             """#
@@ -263,7 +249,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func h1() {
-
         let input = #"""
             # Lorem ipsum dolor sit amet.
             """#
@@ -279,7 +264,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func h2() {
-
         let input = #"""
             ## Lorem ipsum dolor sit amet.
             """#
@@ -295,7 +279,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func h3() {
-
         let input = #"""
             ### Lorem ipsum dolor sit amet.
             """#
@@ -311,7 +294,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func h4() {
-
         let input = #"""
             #### Lorem ipsum dolor sit amet.
             """#
@@ -327,7 +309,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func h5() {
-
         let input = #"""
             ##### Lorem ipsum dolor sit amet.
             """#
@@ -343,7 +324,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func h6() {
-
         let input = #"""
             ###### Lorem ipsum dolor sit amet.
             """#
@@ -359,7 +339,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func invalidHeading() {
-
         /// NOTE: this should be treated as a paragraph
         let input = #"""
             ####### Lorem ipsum dolor sit amet.
@@ -378,7 +357,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func unorderedList() {
-
         let input = #"""
             - foo
             - bar
@@ -396,7 +374,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func orderedList() {
-
         let input = #"""
             1. foo
             2. bar
@@ -414,7 +391,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func listWithCode() {
-
         let input = #"""
             - foo `aaa`
             - bar
@@ -434,7 +410,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func inlineCode() {
-
         let input = #"""
             Lorem `ipsum dolor` sit amet.
             """#
@@ -450,7 +425,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func link() {
-
         let input = #"""
             [Swift](https://swift.org/)
             """#
@@ -466,7 +440,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func emptyLink() {
-
         let input = #"""
             [Swift]()
             """#
@@ -482,7 +455,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func dotLink() {
-
         let input = #"""
             [Swift](./foo)
             """#
@@ -498,7 +470,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func slashLink() {
-
         let input = #"""
             [Swift](/foo)
             """#
@@ -514,7 +485,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func externalLink() {
-
         let input = #"""
             [Swift](foo/bar)
             """#
@@ -530,7 +500,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func anchorLink() {
-
         let input = #"""
             [Swift](#anchor)
             """#
@@ -546,7 +515,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func anchorName() {
-
         let input = #"""
             [Swift](#[name]anchor)
             """#
@@ -562,7 +530,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func image() {
-
         let input = #"""
             ![Lorem](lorem.jpg)
             """#
@@ -578,7 +545,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func imageAssetsPrefix() {
-
         let input = #"""
             ![Lorem](./assets/lorem.jpg)
             """#
@@ -593,7 +559,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func imageEmptySource() {
-
         let input = #"""
             ![Lorem]()
             """#
@@ -608,7 +573,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func imageWithTitle() {
-
         let input = #"""
             ![Lorem](lorem.jpg "Image title")
             """#
@@ -623,13 +587,12 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test
-    func imageWithEmptyBaseUrl() {
-
+    func imageWithEmptyBaseURL() {
         let input = #"""
             ![Lorem](/lorem.jpg "Image title")
             """#
 
-        let output = renderHTML(markdown: input, baseUrl: "")
+        let output = renderHTML(markdown: input, baseURL: "")
 
         let expectation = #"""
             <p><img src="/lorem.jpg" alt="Lorem" title="Image title"></p>
@@ -639,8 +602,7 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test
-    func imageWithBaseUrlMarkdownValue() {
-
+    func imageWithBaseURLMarkdownValue() {
         let input = #"""
             ![Lorem](/lorem.jpg)
             """#
@@ -655,8 +617,7 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test
-    func imageWithBaseUrlMarkdownValueNoTraling() {
-
+    func imageWithBaseURLMarkdownValueNoTraling() {
         let input = #"""
             ![Lorem](/lorem.jpg)
             """#
@@ -672,7 +633,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func codeBlock() {
-
         let input = #"""
             ```js
             Lorem
@@ -699,7 +659,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func codeBlockWithHighlight() {
-
         let input = #"""
             ```css
             Lorem
@@ -730,7 +689,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func codeBlockWithHighlightSwift() {
-
         let input = #"""
             ```swift
             /*!*/func main() -> String/*.*/ {
@@ -755,7 +713,6 @@ struct HTMLVisitorTestSuite {
 
     @Test
     func table() {
-
         let input = #"""
             | Item              | In Stock | Price |
             | :---------------- | :------: | ----: |

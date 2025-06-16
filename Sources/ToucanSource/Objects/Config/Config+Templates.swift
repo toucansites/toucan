@@ -7,10 +7,10 @@
 
 import Foundation
 
-extension Config {
-
+public extension Config {
     /// Defines the structure and paths for working with templates in the system.
-    public struct Templates: Codable, Equatable {
+    struct Templates: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -20,6 +20,21 @@ extension Config {
             case assets
             case views
             case overrides
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Returns the default template configuration with all folders under the `"templates"` base.
+        public static var defaults: Self {
+            .init(
+                location: .init(path: "templates"),
+                current: .init(path: "default"),
+                assets: .init(path: "assets"),
+                views: .init(path: "views"),
+                overrides: .init(path: "overrides")
+            )
         }
 
         // MARK: - Properties
@@ -39,18 +54,7 @@ extension Config {
         /// A folder for override files that replace core behavior or template (optional).
         public var overrides: Location
 
-        // MARK: - Defaults
-
-        /// Returns the default template configuration with all folders under the `"templates"` base.
-        public static var defaults: Self {
-            .init(
-                location: .init(path: "templates"),
-                current: .init(path: "default"),
-                assets: .init(path: "assets"),
-                views: .init(path: "views"),
-                overrides: .init(path: "overrides")
-            )
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

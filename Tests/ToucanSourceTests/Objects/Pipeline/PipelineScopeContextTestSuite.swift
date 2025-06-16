@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct PipelineScopeContextTestSuite {
-
     @Test
     func initialization() throws {
         let result = Pipeline.Scope.Context(stringValue: "foo")

@@ -7,18 +7,22 @@
 
 /// A representation of a custom block directive in Markdown, used for extending Markdown syntax with special tags or behaviors.
 public struct MarkdownBlockDirective: Codable, Equatable {
+    // MARK: - Nested Types
 
     /// Defines a configurable parameter for a directive, which may be required and have a default value.
     public struct Parameter: Codable, Equatable {
+        // MARK: - Properties
 
         /// The label of the parameter.
         public var label: String
 
         /// Indicates whether the parameter is required. Defaults to `nil` (optional).
-        public var `required`: Bool?
+        public var required: Bool?
 
         /// A default value for the parameter, used if it is not explicitly specified in the directive.
         public var `default`: String?
+
+        // MARK: - Lifecycle
 
         /// Initializes a `Parameter` for a directive.
         ///
@@ -32,18 +36,22 @@ public struct MarkdownBlockDirective: Codable, Equatable {
             defaultValue: String? = nil
         ) {
             self.label = label
-            self.`required` = isRequired
-            self.`default` = defaultValue
+            self.required = isRequired
+            self.default = defaultValue
         }
     }
 
     /// Represents a static HTML attribute that will be rendered on the directive's HTML tag.
     public struct Attribute: Codable, Equatable {
+        // MARK: - Properties
+
         /// The name of the HTML attribute (e.g., `class`, `id`).
         public var name: String
 
         /// The corresponding value of the attribute.
         public var value: String
+
+        // MARK: - Lifecycle
 
         /// Initializes an `Attribute` for the rendered directive HTML tag.
         ///
@@ -58,6 +66,8 @@ public struct MarkdownBlockDirective: Codable, Equatable {
             self.value = value
         }
     }
+
+    // MARK: - Properties
 
     /// The name of the directive (e.g., `"note"`, `"warning"`, `"info"`).
     public var name: String
@@ -79,6 +89,8 @@ public struct MarkdownBlockDirective: Codable, Equatable {
 
     /// Custom output HTML string that overrides default rendering behavior, if provided.
     public var output: String?
+
+    // MARK: - Lifecycle
 
     /// Initializes a `MarkdownBlockDirective`.
     ///

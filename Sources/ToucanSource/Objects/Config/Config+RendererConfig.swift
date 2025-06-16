@@ -5,12 +5,12 @@
 //  Created by gerp83 on 2025. 03. 28..
 //
 
-extension Config {
-
+public extension Config {
     /// Defines default configurations used when rendering content,
     /// including reading time settings, outline parsing depth, and
     /// paragraph styling rules for directive blocks.
-    public struct RendererConfig: Codable, Equatable {
+    struct RendererConfig: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -18,6 +18,19 @@ extension Config {
             case wordsPerMinute
             case outlineLevels
             case paragraphStyles
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Returns a `ContentConfigurations` instance with sensible default values.
+        public static var defaults: Self {
+            .init(
+                wordsPerMinute: 238,
+                outlineLevels: [2, 3],
+                paragraphStyles: .defaults
+            )
         }
 
         // MARK: - Properties
@@ -35,16 +48,7 @@ extension Config {
         /// Aliases for styled paragraph blocks (e.g., "note", "tip", "error").
         public var paragraphStyles: ParagraphStyles
 
-        // MARK: - Defaults
-
-        /// Returns a `ContentConfigurations` instance with sensible default values.
-        public static var defaults: Self {
-            .init(
-                wordsPerMinute: 238,
-                outlineLevels: [2, 3],
-                paragraphStyles: .defaults
-            )
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

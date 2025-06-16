@@ -5,15 +5,24 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 04. 18..
 //
 
-extension Config {
-
+public extension Config {
     /// Represents the location of type configuration files.
-    public struct Types: Sendable, Codable, Equatable {
+    struct Types: Sendable, Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Provides a default `Types` configuration pointing to `"types"`.
+        public static var defaults: Self {
+            .init(path: "types")
         }
 
         // MARK: - Properties
@@ -23,12 +32,7 @@ extension Config {
         /// Example: `"types"` (default), or `"config/types"`
         public var path: String
 
-        // MARK: - Defaults
-
-        /// Provides a default `Types` configuration pointing to `"types"`.
-        public static var defaults: Self {
-            .init(path: "types")
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

@@ -7,7 +7,6 @@
 
 /// Defines the cardinality of a content relation, indicating whether it links to one or multiple items.
 public enum RelationType: String, Codable, Equatable, CaseIterable {
-
     /// A one-to-one relation. The relation targets a single content item.
     case one
 

@@ -9,6 +9,7 @@ import Foundation
 
 /// Represents the physical location of a Mustache file, identified by a logical ID.
 public struct View: Equatable {
+    // MARK: - Properties
 
     /// A unique identifier for the template
     public var id: String
@@ -18,6 +19,8 @@ public struct View: Equatable {
 
     /// The contents of the template file.
     public var contents: String
+
+    // MARK: - Lifecycle
 
     /// Creates a new template instance.
     ///
@@ -34,5 +37,4 @@ public struct View: Equatable {
         self.path = path
         self.contents = contents
     }
-
 }

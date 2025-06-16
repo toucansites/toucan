@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct PropertyTypeTestSuite {
-
     @Test
     func equality() throws {
         let dateFormat = PropertyType.date(config: nil)
@@ -206,5 +205,4 @@ struct PropertyTypeTestSuite {
                 )
         )
     }
-
 }

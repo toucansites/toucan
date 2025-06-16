@@ -11,8 +11,6 @@ import Testing
 
 @Suite
 struct ToucanCoreTestSuite {
-
     @Test()
-    func example() async throws {
-    }
+    func example() async throws {}
 }

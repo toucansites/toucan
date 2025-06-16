@@ -8,7 +8,6 @@
 import ToucanSource
 
 extension Mocks.ContentDefinitions {
-
     static func page() -> ContentDefinition {
         .init(
             id: "page",

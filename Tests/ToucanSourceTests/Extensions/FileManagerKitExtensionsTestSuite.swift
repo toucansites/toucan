@@ -4,15 +4,14 @@
 //
 //  Created by Binary Birds on 2025. 03. 04..
 
-import Testing
-import Foundation
 import FileManagerKitBuilder
+import Foundation
+import Testing
 
 @testable import ToucanSource
 
 @Suite
 struct FileManagerKitExtensionsTestSuite {
-
     @Test()
     func findEmpty() throws {
         try FileManagerPlayground()

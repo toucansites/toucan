@@ -5,14 +5,15 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 03..
 //
 
+import FileManagerKit
 import Foundation
 import Logging
-import FileManagerKit
 import ToucanCore
 import ToucanSerialization
 
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
+    // MARK: - Properties
 
     /// Source configuration.
     let contentsURL: URL
@@ -31,6 +32,8 @@ public struct RawContentLoader {
 
     /// The logger instance
     let logger: Logger
+
+    // MARK: - Lifecycle
 
     /// Creates a new instance of `RawContentLoader` with the provided dependencies.
     ///
@@ -57,132 +60,7 @@ public struct RawContentLoader {
         self.logger = logger
     }
 
-    /// Loads raw content items from a set of predefined locations.
-    ///
-    /// This function iterates over a collection of locations, resolves each into a `RawContent` item,
-    /// and collects them into an array.
-    ///
-    /// - Returns: An array of `RawContent` objects representing the loaded items.
-    /// - Throws: An error if any of the content items cannot be resolved.
-    public func load() throws -> [RawContent] {
-        logger.debug(
-            "Loading raw contents.",
-            metadata: [
-                "path": .string(contentsURL.path())
-            ]
-        )
-        return try locateOrigins()
-            .map {
-                try loadRawContent(at: $0)
-            }
-    }
-
-    // MARK: - locate
-
-    /// Locates all raw content entries under a specified base URL.
-    ///
-    /// Each entry is derived from a folder containing one or more valid index files (Markdown/YAML).
-    /// Subdirectories marked with `noindex.yaml|yml` are skipped.
-    ///
-    /// - Returns: A list of `Origin` objects, sorted by slug.
-    func locateOrigins() -> [Origin] {
-        locateRawContentsOrigins(
-            at: contentsURL
-        )
-        .sorted { $0.slug < $1.slug }
-    }
-
-    /// Loads a single raw content item from the specified origin.
-    ///
-    /// - Parameter origin: The origin metadata from which to load the content.
-    /// - Returns: A populated `RawContent` instance.
-    /// - Throws: An error if the content cannot be loaded or parsed.
-    func loadRawContent(
-        at origin: Origin
-    ) throws -> RawContent {
-
-        var frontMatter: [String: AnyCodable] = [:]
-        var contents: String = ""
-        var lastModificationDate: Date?
-
-        let currentURL = contentsURL.appendingPathIfPresent(
-            origin.path.value
-        )
-
-        let indexFiles = getIndexes(at: currentURL).sorted()
-
-        for indexFile in indexFiles {
-
-            let indexUrl = currentURL.appendingPathIfPresent(indexFile)
-
-            if let existingDate = lastModificationDate {
-                lastModificationDate = max(
-                    existingDate,
-                    try fileManager.modificationDate(at: indexUrl)
-                )
-            }
-            else {
-                lastModificationDate = try fileManager.modificationDate(
-                    at: indexUrl
-                )
-            }
-
-            switch true {
-            case indexFile.hasSuffix("markdown"),
-                indexFile.hasSuffix("md"):
-                logger.trace(
-                    "Loading index Markdown file",
-                    metadata: [
-                        "path": .string(origin.path.value),
-                        "slug": .string(origin.slug),
-                        "file": .string(indexFile),
-                    ]
-                )
-
-                let markdown = try loadMarkdownFile(at: indexUrl)
-                frontMatter = frontMatter.recursivelyMerged(
-                    with: markdown.frontMatter
-                )
-                contents = markdown.contents
-            case indexFile.hasSuffix("yaml"),
-                indexFile.hasSuffix("yml"):
-                logger.trace(
-                    "Loading index YAML file",
-                    metadata: [
-                        "path": .string(origin.path.value),
-                        "slug": .string(origin.slug),
-                        "file": .string(indexFile),
-                    ]
-                )
-
-                let yaml = try loadYAMLFile(at: indexUrl)
-                frontMatter = frontMatter.recursivelyMerged(with: yaml)
-            default:
-                logger.warning(
-                    "The content has no index file.",
-                    metadata: [
-                        "path": .string(origin.path.value),
-                        "slug": .string(origin.slug),
-                    ]
-                )
-                continue
-            }
-        }
-
-        let modificationDate = lastModificationDate ?? Date()
-        let assetsURL = currentURL.appendingPathIfPresent(assetsPath)
-        let assets = locateAssets(at: assetsURL)
-
-        return RawContent(
-            origin: origin,
-            markdown: .init(
-                frontMatter: frontMatter,
-                contents: contents
-            ),
-            lastModificationDate: modificationDate.timeIntervalSince1970,
-            assets: assets.sorted()
-        )
-    }
+    // MARK: - Functions
 
     /// Recursively finds all assets in the given directory.
     ///
@@ -197,12 +75,12 @@ public struct RawContentLoader {
     /// Recursively traverses the content directory to locate index-based content definitions.
     ///
     /// - Parameters:
-    ///   - contentsUrl: The base directory for contents.
+    ///   - contentsURL: The base directory for contents.
     ///   - slug: The accumulated slug segments (used to form the output slug).
     ///   - path: The accumulated path segments (used to navigate the file system).
     /// - Returns: A list of discovered `RawContentLocation` objects.
     private func locateRawContentsOrigins(
-        at contentsUrl: URL,
+        at contentsURL: URL,
         slug: [String] = [],
         path: [String] = []
     ) -> [Origin] {
@@ -210,18 +88,18 @@ public struct RawContentLoader {
         let currentPath = Path(path.joined(separator: "/"))
         let currentSlug = Path(slug.joined(separator: "/"))
             .trimmingBracketsContent()
-        let currentUrl = contentsUrl.appendingPathIfPresent(currentPath.value)
+        let currentURL = contentsURL.appendingPathIfPresent(currentPath.value)
 
         logger.trace(
             "Trying to locate raw content item.",
             metadata: [
-                "contentsURL": .string(contentsUrl.absoluteString),
+                "contentsURL": .string(contentsURL.absoluteString),
                 "path": .string(currentPath.value),
                 "slug": .string(currentSlug),
             ]
         )
 
-        if hasIndex(at: currentUrl) {
+        if hasIndex(at: currentURL) {
             let origin = Origin(
                 path: currentPath,
                 slug: currentSlug
@@ -229,7 +107,7 @@ public struct RawContentLoader {
             logger.debug(
                 "Raw content item found with index.",
                 metadata: [
-                    "contentsURL": .string(contentsUrl.absoluteString),
+                    "contentsURL": .string(contentsURL.absoluteString),
                     "path": .string(currentPath.value),
                     "slug": .string(currentSlug),
                 ]
@@ -237,17 +115,17 @@ public struct RawContentLoader {
             result.append(origin)
         }
 
-        let list = fileManager.listDirectory(at: currentUrl)
+        let list = fileManager.listDirectory(at: currentURL)
         for item in list {
             var newSlug = slug
             let newPath = path + [item]
-            let childUrl = currentUrl.appendingPathIfPresent(item)
+            let childURL = currentURL.appendingPathIfPresent(item)
 
-            if !hasNoIndex(item: item, at: childUrl) {
+            if !hasNoIndex(item: item, at: childURL) {
                 logger.trace(
                     "Raw content item has no index file or bracket.",
                     metadata: [
-                        "contentsURL": .string(contentsUrl.absoluteString),
+                        "contentsURL": .string(contentsURL.absoluteString),
                         "path": .string(currentPath.value),
                         "slug": .string(currentSlug),
                     ]
@@ -256,7 +134,7 @@ public struct RawContentLoader {
             }
 
             result += locateRawContentsOrigins(
-                at: contentsUrl,
+                at: contentsURL,
                 slug: newSlug,
                 path: newPath
             )
@@ -349,10 +227,133 @@ public struct RawContentLoader {
         return try decoder.decode([String: AnyCodable].self, from: rawContents)
     }
 
+    // MARK: - locate
+
+    /// Locates all raw content entries under a specified base URL.
+    ///
+    /// Each entry is derived from a folder containing one or more valid index files (Markdown/YAML).
+    /// Subdirectories marked with `noindex.yaml|yml` are skipped.
+    ///
+    /// - Returns: A list of `Origin` objects, sorted by slug.
+    func locateOrigins() -> [Origin] {
+        locateRawContentsOrigins(
+            at: contentsURL
+        )
+        .sorted { $0.slug < $1.slug }
+    }
+
+    /// Loads a single raw content item from the specified origin.
+    ///
+    /// - Parameter origin: The origin metadata from which to load the content.
+    /// - Returns: A populated `RawContent` instance.
+    /// - Throws: An error if the content cannot be loaded or parsed.
+    func loadRawContent(
+        at origin: Origin
+    ) throws -> RawContent {
+        var frontMatter: [String: AnyCodable] = [:]
+        var contents = ""
+        var lastModificationDate: Date?
+
+        let currentURL = contentsURL.appendingPathIfPresent(
+            origin.path.value
+        )
+
+        let indexFiles = getIndexes(at: currentURL).sorted()
+
+        for indexFile in indexFiles {
+            let indexURL = currentURL.appendingPathIfPresent(indexFile)
+
+            if let existingDate = lastModificationDate {
+                lastModificationDate = try max(
+                    existingDate,
+                    fileManager.modificationDate(at: indexURL)
+                )
+            }
+            else {
+                lastModificationDate = try fileManager.modificationDate(
+                    at: indexURL
+                )
+            }
+
+            switch true {
+            case indexFile.hasSuffix("markdown"),
+                indexFile.hasSuffix("md"):
+                logger.trace(
+                    "Loading index Markdown file",
+                    metadata: [
+                        "path": .string(origin.path.value),
+                        "slug": .string(origin.slug),
+                        "file": .string(indexFile),
+                    ]
+                )
+
+                let markdown = try loadMarkdownFile(at: indexURL)
+                frontMatter = frontMatter.recursivelyMerged(
+                    with: markdown.frontMatter
+                )
+                contents = markdown.contents
+            case indexFile.hasSuffix("yaml"),
+                indexFile.hasSuffix("yml"):
+                logger.trace(
+                    "Loading index YAML file",
+                    metadata: [
+                        "path": .string(origin.path.value),
+                        "slug": .string(origin.slug),
+                        "file": .string(indexFile),
+                    ]
+                )
+
+                let yaml = try loadYAMLFile(at: indexURL)
+                frontMatter = frontMatter.recursivelyMerged(with: yaml)
+            default:
+                logger.warning(
+                    "The content has no index file.",
+                    metadata: [
+                        "path": .string(origin.path.value),
+                        "slug": .string(origin.slug),
+                    ]
+                )
+                continue
+            }
+        }
+
+        let modificationDate = lastModificationDate ?? Date()
+        let assetsURL = currentURL.appendingPathIfPresent(assetsPath)
+        let assets = locateAssets(at: assetsURL)
+
+        return RawContent(
+            origin: origin,
+            markdown: .init(
+                frontMatter: frontMatter,
+                contents: contents
+            ),
+            lastModificationDate: modificationDate.timeIntervalSince1970,
+            assets: assets.sorted()
+        )
+    }
+
+    /// Loads raw content items from a set of predefined locations.
+    ///
+    /// This function iterates over a collection of locations, resolves each into a `RawContent` item,
+    /// and collects them into an array.
+    ///
+    /// - Returns: An array of `RawContent` objects representing the loaded items.
+    /// - Throws: An error if any of the content items cannot be resolved.
+    public func load() throws -> [RawContent] {
+        logger.debug(
+            "Loading raw contents.",
+            metadata: [
+                "path": .string(contentsURL.path())
+            ]
+        )
+        return try locateOrigins()
+            .map {
+                try loadRawContent(at: $0)
+            }
+    }
 }
 
 extension RawContentLoader {
-
     //
     //    func resolveImage(
     //        frontMatter: [String: AnyCodable],
@@ -371,7 +372,7 @@ extension RawContentLoader {
     //            else {
     //                return .init(
     //                    imageValue.resolveAsset(
-    //                        baseUrl: baseUrl,
+    //                        baseUrl: baseURL,
     //                        assetsPath: assetsPath,
     //                        slug: slug.value
     //                    )

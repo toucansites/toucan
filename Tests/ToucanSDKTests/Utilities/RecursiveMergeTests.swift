@@ -4,9 +4,9 @@
 //
 //  Created by Binary Birds on 2025. 04. 15..
 //
-//import Testing
-//@Suite
-//struct RecursiveMergeTests {
+// import Testing
+// @Suite
+// struct RecursiveMergeTests {
 //
 //    @Test
 //    func testBasicMerge() throws {
@@ -45,4 +45,4 @@
 //        #expect(c["foo"] as? String == expected["foo"] as? String)
 //    }
 //
-//}
+// }

@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-extension Config {
-
+public extension Config {
     /// Defines file system paths for locating site related resources.
-    public struct Site: Codable, Equatable {
+    struct Site: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -17,13 +17,7 @@ extension Config {
             case settings
         }
 
-        // MARK: - Properties
-
-        /// The location of the global site assets.
-        public var assets: Location
-
-        /// The location of the site settings.
-        public var settings: Location
+        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -34,6 +28,16 @@ extension Config {
                 settings: .init(path: "")
             )
         }
+
+        // MARK: - Properties
+
+        /// The location of the global site assets.
+        public var assets: Location
+
+        /// The location of the site settings.
+        public var settings: Location
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

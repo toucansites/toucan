@@ -7,6 +7,7 @@
 
 /// Represents the source origin of a content item.
 public struct Origin: Equatable {
+    // MARK: - Properties
 
     /// The original path of the page bundle directory.
     ///
@@ -17,6 +18,8 @@ public struct Origin: Equatable {
     ///
     /// This slug is used to generate URLs, permalinks, or unique identifiers in the rendered site.
     public var slug: String
+
+    // MARK: - Lifecycle
 
     /// Initializes a new `Origin` instance with the given path and slug.
     ///

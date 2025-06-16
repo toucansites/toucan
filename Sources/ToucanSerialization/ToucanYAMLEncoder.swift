@@ -10,9 +10,12 @@ import class Yams.YAMLEncoder
 
 /// A n implementation of `ToucanEncoder` that uses `YAMLEncoder`.
 public struct ToucanYAMLEncoder: ToucanEncoder {
+    // MARK: - Lifecycle
 
     /// Initializes a new instance of the YAML encoder.
     public init() {}
+
+    // MARK: - Functions
 
     /// Encodes a given `Encodable` object into a YAML `String`.
     ///

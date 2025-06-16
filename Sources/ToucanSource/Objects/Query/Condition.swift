@@ -10,7 +10,6 @@
 /// `Condition` supports both field-based comparisons and compound logic (AND/OR),
 /// and can be resolved dynamically with parameters at runtime.
 public enum Condition: Codable, Equatable {
-
     /// A condition that compares a content field to a value using an operator.
     case field(key: String, operator: Operator, value: AnyCodable)
 
@@ -19,6 +18,8 @@ public enum Condition: Codable, Equatable {
 
     /// A logical OR of multiple conditions (at least one must be true).
     case or([Condition])
+
+    // MARK: - Nested Types
 
     // MARK: - Internal Keys for Decoding
 
@@ -30,6 +31,8 @@ public enum Condition: Codable, Equatable {
         case and
         case or
     }
+
+    // MARK: - Lifecycle
 
     // MARK: - Decoding
 
@@ -71,6 +74,8 @@ public enum Condition: Codable, Equatable {
             )
         }
     }
+
+    // MARK: - Functions
 
     /// Encodes this `Condition` instance into the given encoder.
     ///

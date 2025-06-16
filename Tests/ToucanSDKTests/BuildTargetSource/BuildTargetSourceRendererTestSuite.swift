@@ -6,21 +6,111 @@
 //
 
 import Foundation
-import Testing
 import Logging
+import Testing
 import ToucanCore
-import ToucanSource
 @testable import ToucanSDK
+import ToucanSource
 
 @Suite
 struct BuildTargetSourceRendererTestSuite {
+    // MARK: - api
+
+    private func getMockAPIBuildTargetSource(
+        now: Date,
+        options: [String: AnyCodable]
+    ) -> BuildTargetSource {
+        let pipelines: [Pipeline] = [
+            .init(
+                id: "api",
+                definesType: true,
+                scopes: [:],
+                queries: [
+                    "posts": .init(
+                        contentType: "post",
+                        scope: "list",
+                        orderBy: [
+                            .init(
+                                key: "publication",
+                                direction: .desc
+                            )
+                        ]
+                    )
+                ],
+                dataTypes: .defaults,
+                contentTypes: .init(
+                    include: ["api"],
+                    exclude: [],
+                    lastUpdate: [],
+                    filterRules: [:]
+                ),
+                iterators: [
+                    "api.posts.pagination": .init(
+                        contentType: "post",
+                        limit: 2
+                    )
+                ],
+                assets: .defaults,
+                transformers: [:],
+                engine: .init(
+                    id: "json",
+                    options: options
+                ),
+                output: .init(
+                    path: "",
+                    file: "{{slug}}",
+                    ext: "json"
+                )
+            )
+        ]
+
+        let rawContents: [RawContent] = [
+            .init(
+                origin: .init(
+                    path: .init("api"),
+                    slug: "api"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "api"
+                    ]
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: []
+            ),
+            .init(
+                origin: .init(
+                    path: .init("api/posts/{{api.posts.pagination}}"),
+                    slug: "api/posts/{{api.posts.pagination}}"
+                ),
+                markdown: .init(
+                    frontMatter: [
+                        "type": "api"
+                    ],
+                ),
+                lastModificationDate: now.timeIntervalSince1970,
+                assets: []
+            ),
+        ]
+
+        var buildTargetSource = Mocks.buildTargetSource(now: now)
+        // keep only api pipeline, exclude sitemap & rss xml contents
+        buildTargetSource.pipelines = pipelines
+        buildTargetSource.rawContents =
+            buildTargetSource.rawContents.filter {
+                !$0.origin.path.value.hasSuffix("xml")
+                    && !$0.origin.path.value.contains("404")
+            } + rawContents
+
+        return buildTargetSource
+    }
 
     @Test
     func emptyContentTypes() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             )
         )
@@ -39,7 +129,7 @@ struct BuildTargetSourceRendererTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             pipelines: [
@@ -133,7 +223,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: config
             ),
             target: target,
@@ -162,9 +252,8 @@ struct BuildTargetSourceRendererTestSuite {
         let decoder = JSONDecoder()
 
         struct Exp: Decodable {
-            struct Site: Codable {
+            struct Site: Codable {}
 
-            }
             let site: Site
             let generation: DateContext
             let generator: GeneratorInfo
@@ -270,98 +359,6 @@ struct BuildTargetSourceRendererTestSuite {
         #expect(results.isEmpty)
     }
 
-    // MARK: - api
-
-    private func getMockAPIBuildTargetSource(
-        now: Date,
-        options: [String: AnyCodable]
-    ) -> BuildTargetSource {
-
-        let pipelines: [Pipeline] = [
-            .init(
-                id: "api",
-                definesType: true,
-                scopes: [:],
-                queries: [
-                    "posts": .init(
-                        contentType: "post",
-                        scope: "list",
-                        orderBy: [
-                            .init(
-                                key: "publication",
-                                direction: .desc
-                            )
-                        ]
-                    )
-                ],
-                dataTypes: .defaults,
-                contentTypes: .init(
-                    include: ["api"],
-                    exclude: [],
-                    lastUpdate: [],
-                    filterRules: [:]
-                ),
-                iterators: [
-                    "api.posts.pagination": .init(
-                        contentType: "post",
-                        limit: 2
-                    )
-                ],
-                assets: .defaults,
-                transformers: [:],
-                engine: .init(
-                    id: "json",
-                    options: options
-                ),
-                output: .init(
-                    path: "",
-                    file: "{{slug}}",
-                    ext: "json"
-                )
-            )
-        ]
-
-        let rawContents: [RawContent] = [
-            .init(
-                origin: .init(
-                    path: .init("api"),
-                    slug: "api"
-                ),
-                markdown: .init(
-                    frontMatter: [
-                        "type": "api"
-                    ]
-                ),
-                lastModificationDate: now.timeIntervalSince1970,
-                assets: []
-            ),
-            .init(
-                origin: .init(
-                    path: .init("api/posts/{{api.posts.pagination}}"),
-                    slug: "api/posts/{{api.posts.pagination}}"
-                ),
-                markdown: .init(
-                    frontMatter: [
-                        "type": "api"
-                    ],
-                ),
-                lastModificationDate: now.timeIntervalSince1970,
-                assets: []
-            ),
-        ]
-
-        var buildTargetSource = Mocks.buildTargetSource(now: now)
-        // keep only api pipeline, exclude sitemap & rss xml contents
-        buildTargetSource.pipelines = pipelines
-        buildTargetSource.rawContents =
-            buildTargetSource.rawContents.filter {
-                !$0.origin.path.value.hasSuffix("xml")
-                    && !$0.origin.path.value.contains("404")
-            } + rawContents
-
-        return buildTargetSource
-    }
-
     @Test()
     func renderAPIBasics() async throws {
         let now = Date()
@@ -378,7 +375,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 3)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
             .filter { $0.destination.file == "api" }
 
         #expect(contents.count == 1)
@@ -396,9 +393,11 @@ struct BuildTargetSourceRendererTestSuite {
                 let title: String
                 let slug: Slug
             }
+
             struct Context: Decodable {
                 let posts: [Item]
             }
+
             let context: Context
         }
 
@@ -423,7 +422,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 3)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
             .filter { $0.destination.file != "api" }
 
         #expect(contents.count == 2)
@@ -442,10 +441,12 @@ struct BuildTargetSourceRendererTestSuite {
                     let title: String
                     let slug: Slug
                 }
+
                 struct Iterator: Decodable {
                     let current: Int
                     let items: [Item]
                 }
+
                 let iterator: Iterator
             }
 
@@ -481,7 +482,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 3)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
             .filter { $0.destination.file == "api" }
 
         #expect(contents.count == 1)
@@ -523,7 +524,7 @@ struct BuildTargetSourceRendererTestSuite {
         )
         let results = try renderer.render(now: now)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
             .filter { $0.destination.file == "api" }
 
         #expect(contents.count == 1)
@@ -541,10 +542,12 @@ struct BuildTargetSourceRendererTestSuite {
                 let title: String
                 let slug: Slug
             }
+
             struct Info: Decodable {
                 let name: String
                 let version: String
             }
+
             let items: [Item]
             let info: Info
         }
@@ -554,7 +557,6 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(result.items.count == 3)
         #expect(result.info.name == "Toucan")
-
     }
 
     // MARK: - contents
@@ -580,10 +582,10 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 2)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
         #expect(contents.count == 1)
 
-        let assets = results.filter { $0.source.isAsset }
+        let assets = results.filter(\.source.isAsset)
         #expect(assets.count == 1)
 
         guard case let .content(value) = contents[0].source else {
@@ -676,7 +678,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 1)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
         #expect(contents.count == 1)
 
         guard case let .content(value) = contents[0].source else {
@@ -779,7 +781,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 1)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
         #expect(contents.count == 1)
 
         guard case let .content(value) = contents[0].source else {
@@ -879,7 +881,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 1)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
         #expect(contents.count == 1)
 
         guard case let .content(value) = contents[0].source else {
@@ -973,7 +975,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 1)
 
-        let contents = results.filter { $0.source.isContent }
+        let contents = results.filter(\.source.isContent)
         #expect(contents.count == 1)
 
         guard case let .content(value) = contents[0].source else {
@@ -1000,5 +1002,4 @@ struct BuildTargetSourceRendererTestSuite {
                 .sorted()
         )
     }
-
 }

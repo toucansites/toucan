@@ -5,14 +5,13 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import Foundation
-import Testing
 import Logging
+import Testing
 
 @testable import ToucanMarkdown
 
 @Suite
 struct MarkdownRendererTestSuite {
-
     @Test
     func basicRendering() throws {
         let logger = Logger(label: "ContentRendererTestSuite")
@@ -47,7 +46,7 @@ struct MarkdownRendererTestSuite {
             id: "",
             slug: "",
             assetsPath: "",
-            baseUrl: ""
+            baseURL: ""
         )
 
         let html = #"""
@@ -66,5 +65,4 @@ struct MarkdownRendererTestSuite {
         )
         #expect(contents.readingTime == 1)
     }
-
 }

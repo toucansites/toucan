@@ -5,16 +5,29 @@
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-extension Config {
-
+public extension Config {
     /// Defines file system paths for locating raw content and its associated assets.
-    public struct Contents: Codable, Equatable {
+    struct Contents: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
             case assets
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Provides a default content configuration using `contents` for source files
+        /// and `assets` for media or supporting files.
+        public static var defaults: Self {
+            .init(
+                path: "contents",
+                assets: .init(path: "assets")
+            )
         }
 
         // MARK: - Properties
@@ -27,16 +40,7 @@ extension Config {
         /// The location configuration for assets (e.g., images, attachments) linked to the content.
         public var assets: Location
 
-        // MARK: - Defaults
-
-        /// Provides a default content configuration using `contents` for source files
-        /// and `assets` for media or supporting files.
-        public static var defaults: Self {
-            .init(
-                path: "contents",
-                assets: .init(path: "assets")
-            )
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

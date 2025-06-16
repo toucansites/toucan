@@ -47,8 +47,7 @@ public protocol ToucanError: Error {
     ) -> V?
 }
 
-extension ToucanError {
-
+public extension ToucanError {
     /// Searches for an error of a specific type in the error hierarchy.
     ///
     /// This method traverses the list of underlying errors and attempts to cast
@@ -57,7 +56,7 @@ extension ToucanError {
     ///
     /// - Parameter errorType: The type of error to search for.
     /// - Returns: An instance of the specified error type if found, otherwise `nil`.
-    public func lookup<T: Error>(
+    func lookup<T: Error>(
         _ errorType: T.Type
     ) -> T? {
         for error in underlyingErrors {
@@ -78,7 +77,7 @@ extension ToucanError {
     ///
     /// - Parameter t: A closure that takes an error of type `T` and returns an associated value of type `V?`.
     /// - Returns: The extracted associated value if found, otherwise `nil`.
-    public func lookup<T: Error, V>(
+    func lookup<T: Error, V>(
         _ t: (T) -> V?
     ) -> V? {
         lookup(T.self).flatMap(t)
@@ -88,7 +87,6 @@ extension ToucanError {
 /// Conforms `NSError` to the `ToucanError` protocol, providing
 /// default implementations for logging and user-friendly messages.
 extension NSError: ToucanError {
-
     /// A detailed log message composed of the domain, code, and localized description.
     public var logMessage: String {
         "\(domain):\(code) - \(localizedDescription)"
@@ -102,15 +100,14 @@ extension NSError: ToucanError {
 
 /// Provides default implementations for `ToucanError` protocol
 /// including empty `underlyingErrors` and a recursive `logMessageStack`.
-extension ToucanError {
-
+public extension ToucanError {
     /// A default empty list of underlying errors. Can be overridden by conforming types to provide error hierarchies.
-    public var underlyingErrors: [Error] { [] }
+    var underlyingErrors: [Error] { [] }
 
     /// Recursively builds a string that describes the error and its underlying errors in a readable format.
     ///
     /// - Returns: A formatted stack-like string representing the error and any nested underlying errors.
-    public func logMessageStack() -> String {
+    func logMessageStack() -> String {
         format(error: self)
     }
 

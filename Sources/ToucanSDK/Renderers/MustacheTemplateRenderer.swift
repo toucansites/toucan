@@ -5,14 +5,13 @@
 //  Created by Tibor Bödecs on 2025. 02. 16..
 //
 
-import Mustache
 import Foundation
 import Logging
+import Mustache
 import ToucanSource
 
 /// Renders Mustache templates using a predefined template library and a dynamic context object.
 public struct MustacheTemplateRenderer {
-
     // MARK: - Properties
 
     /// A list of all available template IDs in the library.
@@ -23,6 +22,8 @@ public struct MustacheTemplateRenderer {
 
     /// Logger used for reporting missing templates or rendering failures.
     var logger: Logger
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -39,6 +40,8 @@ public struct MustacheTemplateRenderer {
         self.library = .init(templates: templates)
         self.logger = logger
     }
+
+    // MARK: - Functions
 
     // MARK: - Rendering
 

@@ -8,7 +8,6 @@
 import ToucanSource
 
 extension Mocks.Views {
-
     static func all(
         contextValue: String = "{{.}}"
     ) -> [String: String] {
@@ -106,7 +105,7 @@ extension Mocks.Views {
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
             {{/context.tags}}
-            
+
             {{#context.categories}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
@@ -143,7 +142,7 @@ extension Mocks.Views {
 
             <link rel="stylesheet" href="{{baseUrl}}/css/style.css">
             <link rel="stylesheet" href="{{baseUrl}}/css/template.css">
-            
+
             {{#page.css}}<link rel="stylesheet" href="{{.}}">{{/page.css}}
         </head>
 
@@ -225,7 +224,7 @@ extension Mocks.Views {
         {{<html}}
         {{$main}}
         <article class="post">
-            
+
             <header>
                 {{#page.image}}<img src="{{page.image}}" alt="{{page.title}}">{{/page.image}}
                 <div class="meta">
@@ -235,14 +234,14 @@ extension Mocks.Views {
                 <h1>{{page.title}}</h1>
                 <hr>
                 <p class="excerpt">{{page.description}}</p>
-                
-                
+
+
             </header>
 
             <section>
-            
+
             {{& page.contents.html}}
-                
+
             </section>
 
             <footer class="grid grid-221">
@@ -259,7 +258,7 @@ extension Mocks.Views {
                 {{/page.tags}}
                 </div>
             </footer>
-            
+
             <section>
             {{#empty(page.related)}}
             {{/empty(page.related)}}
@@ -304,7 +303,7 @@ extension Mocks.Views {
             {{/iterator.items}}
             </div>
             {{/empty(iterator.items)}}
-            
+
             {{#empty(iterator.links)}}
             {{/empty(iterator.links)}}
             {{^empty(iterator.links)}}
@@ -338,7 +337,7 @@ extension Mocks.Views {
             {{#context.tags}}
                 {{> partials.blog.tag}}
             {{/context.tags}}
-            
+
             </div>
             {{/empty(context.tags)}}
         </div>
@@ -367,7 +366,7 @@ extension Mocks.Views {
             {{/context.authors}}
             </div>
             {{/empty(context.authors)}}
-            
+
         </div>
 
         {{/main}}
@@ -394,10 +393,10 @@ extension Mocks.Views {
             {{/context.posts}}
             </div>
             {{/empty(context.posts)}}
-            
+
             <br>
             <a href="/articles/page/1" class="cta">Browse all articles</a>
-            
+
 
             <h2>Tags</h2>
             <br>
@@ -411,7 +410,7 @@ extension Mocks.Views {
             {{/context.tags}}
             </div>
             {{/empty(context.tags)}}
-            
+
             <h2>Authors</h2>
             <br>
             {{#empty(context.authors)}}
@@ -446,7 +445,7 @@ extension Mocks.Views {
             </header>
 
             {{& page.contents.html}}
-            
+
             {{#empty(page.posts)}}
             Empty.
             {{/empty(page.posts)}}
@@ -469,7 +468,7 @@ extension Mocks.Views {
         {{<html}}
         {{$main}}
         <div id="author-page">
-            
+
             <header>
                 {{#page.image}}<img class="large rounded" src="{{.}}" alt="{{page.title}}">{{/page.image}}
                 <h1>{{page.title}}</h1>
@@ -490,7 +489,7 @@ extension Mocks.Views {
             {{/page.posts}}
             </div>
             {{/empty(page.posts)}}
-            
+
         </div>
 
         {{/main}}
@@ -511,7 +510,7 @@ extension Mocks.Views {
                 <article>
                     <a href="/docs/">Docs</a>
                     {{& page.contents.html}}
-                
+
                     {{#empty(page.guides)}}
                     {{/empty(page.guides)}}
                     {{^empty(page.guides)}}
@@ -547,7 +546,7 @@ extension Mocks.Views {
                     {{#page.category}}
                     <a href="{{permalink}}">{{title}}</a>
                     {{/page.category}}
-                    
+
                     {{& page.contents.html}}
 
 
@@ -563,7 +562,7 @@ extension Mocks.Views {
                         <a href="{{permalink}}">{{title}}</a>
                     </div>
                     {{/page.guide.prev}}
-                        
+
                     {{^page.guide.next}}
                     <div></div>
                     {{/page.guide.next}}
@@ -673,11 +672,11 @@ extension Mocks.Views {
                 <time datetime="{{publication.formats.iso8601}}">{{publication.date.short}}</time>
                 {{#contents.readingTime}} &middot; <span class="reading-time">{{.}} min read</span>{{/contents.readingTime}}
             </div>
-            
+
             <h2 class="title"><a href="{{permalink}}" target="">{{title}}</a></h2>
             <hr>
             <p>{{description}}</p>
-            
+
             <div class="grid grid-221">
                 <div class="author-list">
                 {{#authors}}
@@ -686,7 +685,7 @@ extension Mocks.Views {
                     </a>
                 {{/authors}}
                 </div>
-                
+
                 <div class="tag-list">
                 {{#tags}}
                     <a href="{{permalink}}"><small>{{title}}</small></a>
@@ -748,5 +747,4 @@ extension Mocks.Views {
         </a>
         """#
     }
-
 }

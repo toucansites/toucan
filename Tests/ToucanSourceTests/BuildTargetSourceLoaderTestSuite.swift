@@ -4,30 +4,29 @@
 //
 //  Created by Binary Birds on 2025. 03. 04..
 
-import Testing
-import Foundation
-import ToucanCore
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import Foundation
+import Testing
+import ToucanCore
+import ToucanSerialization
 
 @testable import ToucanSource
 
 @Suite
 struct BuildTargetSourceLoaderTestSuite {
-
     // MARK: - private helpers
 
     private func testSourceHierarchy(
-        @FileManagerPlayground.DirectoryBuilder
-        _ builder: () -> [FileManagerPlayground.Item]
+        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+            [FileManagerPlayground.Item]
     ) -> Directory {
         Directory(name: "src", builder)
     }
 
     private func testSourceTypesHierarchy(
-        @FileManagerPlayground.DirectoryBuilder
-        _ builder: () -> [FileManagerPlayground.Item]
+        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+            [FileManagerPlayground.Item]
     ) -> Directory {
         testSourceHierarchy {
             Directory(name: "types", builder)
@@ -42,11 +41,11 @@ struct BuildTargetSourceLoaderTestSuite {
         let decoder = ToucanYAMLDecoder()
         let config = Config.defaults
         let locations = BuiltTargetSourceLocations(
-            sourceUrl: url,
+            sourceURL: url,
             config: config
         )
         let loader = RawContentLoader(
-            contentsURL: locations.contentsUrl,
+            contentsURL: locations.contentsURL,
             assetsPath: config.contents.assets.path,
             decoder: .init(),
             markdownParser: .init(decoder: decoder),
@@ -64,7 +63,7 @@ struct BuildTargetSourceLoaderTestSuite {
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
         let loader = BuildTargetSourceLoader(
-            sourceUrl: url,
+            sourceURL: url,
             target: target,
             fileManager: fileManager,
             encoder: encoder,
@@ -344,24 +343,24 @@ struct BuildTargetSourceLoaderTestSuite {
     //            }
     //        }
     //        .test {
-    //            let sourceUrl = $1.appending(path: "src")
+    //            let sourceURL = $1.appending(path: "src")
     //            let loader = ConfigLoaderTestSuite.getConfigLoader(
-    //                url: sourceUrl,
+    //                url: sourceURL,
     //                logger: logger
     //            )
     //            let config = try loader.load(Config.self)
     //
     //            let sourceConfig = SourceConfig(
-    //                sourceUrl: sourceUrl,
+    //                sourceUrl: sourceURL,
     //                config: config
     //            )
     //
     //            let fs = ToucanFileSystem(fileManager: $0)
     //            let pipelineLocations = fs.pipelineLocator.locate(
-    //                at: sourceConfig.pipelinesUrl
+    //                at: sourceConfig.pipelinesURL
     //            )
     //            let pipelineLoader = PipelineLoader(
-    //                url: sourceConfig.pipelinesUrl,
+    //                url: sourceConfig.pipelinesURL,
     //                locations: pipelineLocations,
     //                decoder: ToucanYAMLDecoder(),
     //                logger: logger
@@ -420,24 +419,24 @@ struct BuildTargetSourceLoaderTestSuite {
     //            }
     //        }
     //        .test {
-    //            let sourceUrl = $1.appending(path: "src")
+    //            let sourceURL = $1.appending(path: "src")
     //            let loader = ConfigLoaderTestSuite.getConfigLoader(
-    //                url: sourceUrl,
+    //                url: sourceURL,
     //                logger: logger
     //            )
     //            let config = try loader.load(Config.self)
     //
     //            let sourceConfig = SourceConfig(
-    //                sourceUrl: sourceUrl,
+    //                sourceUrl: sourceURL,
     //                config: config
     //            )
     //
     //            let fs = ToucanFileSystem(fileManager: $0)
     //            let pipelineLocations = fs.pipelineLocator.locate(
-    //                at: sourceConfig.pipelinesUrl
+    //                at: sourceConfig.pipelinesURL
     //            )
     //            let pipelineLoader = PipelineLoader(
-    //                url: sourceConfig.pipelinesUrl,
+    //                url: sourceConfig.pipelinesURL,
     //                locations: pipelineLocations,
     //                decoder: ToucanYAMLDecoder(),
     //                logger: logger
@@ -553,7 +552,6 @@ struct BuildTargetSourceLoaderTestSuite {
                 print(error.logMessageStack())
                 Issue.record(error)
             }
-
         }
 
         //    @Test()
@@ -611,7 +609,7 @@ struct BuildTargetSourceLoaderTestSuite {
             let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
 
             do {
-                let _ = try sourceLoader.loadConfig()
+                _ = try sourceLoader.loadConfig()
                 Issue.record("Invalid target config should throw an error.")
             }
             catch let error as SourceLoaderError {

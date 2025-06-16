@@ -5,9 +5,9 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import ArgumentParser
-import Logging
 import FileMonitor
 import Foundation
+import Logging
 import SwiftCommand
 import ToucanCore
 
@@ -16,6 +16,7 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
@@ -28,6 +29,8 @@ struct Entrypoint: AsyncParsableCommand {
             """,
         version: GeneratorInfo.current.version
     )
+
+    // MARK: - Properties
 
     // MARK: - arguments
 
@@ -48,6 +51,25 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
+
+    // MARK: - Computed Properties
+
+    var arguments: [String] {
+        [input] + options
+    }
+
+    var options: [String] {
+        var options: [String] = [
+            "--log-level", "\(logLevel)",
+        ]
+        if let target, !target.isEmpty {
+            options.append("--target")
+            options.append(target)
+        }
+        return options
+    }
+
+    // MARK: - Functions
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -71,13 +93,13 @@ struct Entrypoint: AsyncParsableCommand {
 
         logger.info("👀 Watching: `\(input)`.")
 
-        let inputUrl = safeUrl(for: input)
+        let inputURL = safeURL(for: input)
 
         var lastGenerationTime = Date()
 
-        let commandUrl = URL(fileURLWithPath: toucan)
+        let commandURL = URL(fileURLWithPath: toucan)
         let command = Command(
-            executablePath: .init(commandUrl.path() + "-generate")
+            executablePath: .init(commandURL.path() + "-generate")
         )
         .addArguments(arguments)
 
@@ -88,7 +110,7 @@ struct Entrypoint: AsyncParsableCommand {
             return
         }
 
-        let monitor = try FileMonitor(directory: inputUrl)
+        let monitor = try FileMonitor(directory: inputURL)
         try monitor.start()
         for await _ in monitor.stream {
             let now = Date()
@@ -111,22 +133,7 @@ struct Entrypoint: AsyncParsableCommand {
         }
     }
 
-    var arguments: [String] {
-        [input] + options
-    }
-
-    var options: [String] {
-        var options: [String] = [
-            "--log-level", "\(logLevel)",
-        ]
-        if let target, !target.isEmpty {
-            options.append("--target")
-            options.append(target)
-        }
-        return options
-    }
-
-    func safeUrl(for path: String) -> URL {
+    func safeURL(for path: String) -> URL {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let replaced = path.replacingOccurrences(of: "~", with: home)
         return .init(fileURLWithPath: replaced).standardized

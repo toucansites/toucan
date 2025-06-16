@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct DateFormattingTestSuite {
-
     @Test
     func decodeFullSpec() throws {
         let yaml = """
@@ -101,11 +100,11 @@ struct DateFormattingTestSuite {
             """
 
         do {
-            let _ = try decoder.decode(DateLocalization.self, from: yaml)
+            _ = try decoder.decode(DateLocalization.self, from: yaml)
         }
-        catch let error {
+        catch {
             if let context = error.lookup({
-                if case DecodingError.dataCorrupted(let ctx) = $0 {
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
                     return ctx
                 }
                 return nil
@@ -129,11 +128,11 @@ struct DateFormattingTestSuite {
             """
 
         do {
-            let _ = try decoder.decode(DateLocalization.self, from: yaml)
+            _ = try decoder.decode(DateLocalization.self, from: yaml)
         }
-        catch let error {
+        catch {
             if let context = error.lookup({
-                if case DecodingError.dataCorrupted(let ctx) = $0 {
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
                     return ctx
                 }
                 return nil
@@ -157,11 +156,11 @@ struct DateFormattingTestSuite {
             """
 
         do {
-            let _ = try decoder.decode(DateFormatterConfig.self, from: yaml)
+            _ = try decoder.decode(DateFormatterConfig.self, from: yaml)
         }
-        catch let error {
+        catch {
             if let context = error.lookup({
-                if case DecodingError.dataCorrupted(let ctx) = $0 {
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
                     return ctx
                 }
                 return nil

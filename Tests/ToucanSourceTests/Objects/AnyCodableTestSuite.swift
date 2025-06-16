@@ -12,6 +12,29 @@ import ToucanSerialization
 
 @Suite
 struct AnyCodableTestSuite {
+    // MARK: - Nested Types
+
+    // MARK: -
+
+    struct SomeCodable: Codable {
+        // MARK: - Nested Types
+
+        enum CodingKeys: String, CodingKey {
+            case string
+            case int
+            case bool
+            case hasUnderscore = "has_underscore"
+        }
+
+        // MARK: - Properties
+
+        var string: String
+        var int: Int
+        var bool: Bool
+        var hasUnderscore: String
+    }
+
+    // MARK: - Functions
 
     @Test
     func decodingInt() throws {
@@ -101,25 +124,8 @@ struct AnyCodableTestSuite {
         #expect(dict["name"] == "Toucan")
     }
 
-    // MARK: -
-
-    struct SomeCodable: Codable {
-
-        enum CodingKeys: String, CodingKey {
-            case string
-            case int
-            case bool
-            case hasUnderscore = "has_underscore"
-        }
-
-        var string: String
-        var int: Int
-        var bool: Bool
-        var hasUnderscore: String
-    }
-
     @Test
-    func testJSONDecoding() throws {
+    func jSONDecoding() throws {
         let json = """
             {
                 "boolean": true,
@@ -159,7 +165,7 @@ struct AnyCodableTestSuite {
     }
 
     @Test
-    func testJSONDecodingEquatable() throws {
+    func jSONDecodingEquatable() throws {
         let json = """
             {
                 "boolean": true,
@@ -206,8 +212,7 @@ struct AnyCodableTestSuite {
     }
 
     @Test
-    func testJSONEncoding() throws {
-
+    func jSONEncoding() throws {
         let someCodable = AnyCodable(
             SomeCodable(
                 string: "String",
@@ -273,8 +278,7 @@ struct AnyCodableTestSuite {
     }
 
     @Test
-    func testAllValues() throws {
-
+    func allValues() throws {
         let boolValue = AnyCodable(true)
         let intValue = AnyCodable(100)
         let doubleValue = AnyCodable(100.1)
@@ -336,7 +340,7 @@ struct AnyCodableTestSuite {
     }
 
     @Test
-    func testAllComparisons() throws {
+    func allComparisons() throws {
         let boolValue = AnyCodable(true)
         let boolValue2 = AnyCodable(true)
         let intValue = AnyCodable(100)
@@ -365,5 +369,4 @@ struct AnyCodableTestSuite {
         #expect(dictValue == dictValue2)
         #expect(dictValue != arrayValue)
     }
-
 }

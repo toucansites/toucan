@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct SettingsTestSuite {
-
     @Test
     func defaults() throws {
         let object = Settings.defaults

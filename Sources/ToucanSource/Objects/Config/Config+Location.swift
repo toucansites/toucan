@@ -5,13 +5,15 @@
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-extension Config {
-
+public extension Config {
     /// Represents a named location within the file system.
-    public struct Location: Codable, Equatable {
+    struct Location: Codable, Equatable {
+        // MARK: - Properties
 
         /// The file system path for this location (e.g., `"assets"`, `"public/images"`).
         public var path: String
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

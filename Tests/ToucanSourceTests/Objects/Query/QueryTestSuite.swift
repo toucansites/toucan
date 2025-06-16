@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct QueryTestSuite {
-
     @Test
     func basics() throws {
         let object = Query(
@@ -25,7 +24,6 @@ struct QueryTestSuite {
                 .init(key: "publication", direction: .desc),
                 .init(key: "title"),
             ]
-
         )
 
         let encoder = ToucanYAMLEncoder()
@@ -43,7 +41,6 @@ struct QueryTestSuite {
 
     @Test
     func defaults() throws {
-
         let data = """
             contentType: post
             """

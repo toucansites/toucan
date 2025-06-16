@@ -2,7 +2,7 @@
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [
-    .enableExperimentalFeature("StrictConcurrency=complete")
+    .enableExperimentalFeature("StrictConcurrency=complete"),
 ]
 
 let package = Package(
@@ -28,26 +28,51 @@ let package = Package(
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
+        .package(
+            url: "https://github.com/apple/swift-argument-parser",
+            from: "1.5.0"
+        ),
         .package(url: "https://github.com/apple/swift-markdown", from: "0.6.0"),
         .package(url: "https://github.com/apple/swift-log", from: "1.6.0"),
-        .package(url: "https://github.com/binarybirds/file-manager-kit", from: "0.3.0"),
-        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.14.0"),
-        .package(url: "https://github.com/hummingbird-project/swift-mustache", from: "2.0.0"),
+        .package(
+            url: "https://github.com/binarybirds/file-manager-kit",
+            from: "0.3.0"
+        ),
+        .package(
+            url: "https://github.com/hummingbird-project/hummingbird",
+            from: "2.14.0"
+        ),
+        .package(
+            url: "https://github.com/hummingbird-project/swift-mustache",
+            from: "2.0.0"
+        ),
         .package(url: "https://github.com/jpsim/Yams", from: "5.4.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.8.0"),
-        .package(url: "https://github.com/aus-der-Technik/FileMonitor", from: "1.2.0"),
-        .package(url: "https://github.com/Zollerboy1/SwiftCommand", from: "1.4.0"),
+        .package(
+            url: "https://github.com/aus-der-Technik/FileMonitor",
+            from: "1.2.0"
+        ),
+        .package(
+            url: "https://github.com/Zollerboy1/SwiftCommand",
+            from: "1.4.0"
+        ),
         .package(url: "https://github.com/johnfairh/swift-sass", from: "3.1.0"),
-        .package(url: "https://github.com/stackotter/swift-css-parser", from: "0.1.2"),
+        .package(
+            url: "https://github.com/stackotter/swift-css-parser",
+            from: "0.1.2"
+        ),
 //        .package(url: "https://github.com/swiftlang/swift-subprocess", branch: "main"),
     ],
     targets: [
         // MARK: - executable targets
+
         .executableTarget(
             name: "toucan",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                ),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
 //                .product(name: "Subprocess", package: "swift-subprocess")
@@ -58,7 +83,10 @@ let package = Package(
         .executableTarget(
             name: "toucan-init",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                ),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
@@ -69,7 +97,10 @@ let package = Package(
         .executableTarget(
             name: "toucan-generate",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                ),
                 .product(name: "Logging", package: "swift-log"),
                 .target(name: "ToucanSDK"),
             ],
@@ -78,7 +109,10 @@ let package = Package(
         .executableTarget(
             name: "toucan-watch",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                ),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileMonitor", package: "FileMonitor"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
@@ -89,15 +123,19 @@ let package = Package(
         .executableTarget(
             name: "toucan-serve",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                ),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Hummingbird", package: "hummingbird"),
                 .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
         ),
-        
+
         // MARK: - regular targets
+
         .target(
             name: "ToucanCore",
             dependencies: [
@@ -144,11 +182,11 @@ let package = Package(
                 .target(name: "ToucanCore"),
                 .target(name: "ToucanSerialization"),
                 .target(name: "ToucanMarkdown"),
-                .target(name: "ToucanSource")
+                .target(name: "ToucanSource"),
             ],
             swiftSettings: swiftSettings
         ),
-        
+
         // MARK: - test targets
 
         .testTarget(
@@ -173,14 +211,20 @@ let package = Package(
             name: "ToucanSourceTests",
             dependencies: [
                 .target(name: "ToucanSource"),
-                .product(name: "FileManagerKitBuilder", package: "file-manager-kit")
+                .product(
+                    name: "FileManagerKitBuilder",
+                    package: "file-manager-kit"
+                ),
             ]
         ),
         .testTarget(
             name: "ToucanSDKTests",
             dependencies: [
                 .target(name: "ToucanSDK"),
-                .product(name: "FileManagerKitBuilder", package: "file-manager-kit")
+                .product(
+                    name: "FileManagerKitBuilder",
+                    package: "file-manager-kit"
+                ),
             ]
         ),
     ]

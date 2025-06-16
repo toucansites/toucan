@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct ConditionTestSuite {
-
     @Test
     func fieldBasics() throws {
         let object = Condition.field(
@@ -195,7 +194,6 @@ struct ConditionTestSuite {
 
     @Test
     func stringValue() throws {
-
         let data = """
             key: name
             operator: equals
@@ -249,13 +247,12 @@ struct ConditionTestSuite {
 
     @Test
     func orConditionValues() throws {
-
         let data = """
             or:
                 - key: name
                   operator: equals
                   value: hello
-                
+
                 - key: description
                   operator: like
                   value: foo
@@ -296,13 +293,12 @@ struct ConditionTestSuite {
 
     @Test
     func complexCondition() throws {
-
         let data = """
             or:
                 - key: name
                   operator: equals
                   value: hello
-                
+
                 - and: 
                     - key: featured
                       operator: equals
@@ -362,7 +358,6 @@ struct ConditionTestSuite {
 
     @Test
     func wrongCondition() throws {
-
         let data = """
             wrong:
                 - key: name
@@ -377,7 +372,7 @@ struct ConditionTestSuite {
                 from: data
             )
         }
-        catch let error {
+        catch {
             #expect(
                 error.localizedDescription.contains(
                     "ToucanDecoderError"
@@ -385,5 +380,4 @@ struct ConditionTestSuite {
             )
         }
     }
-
 }

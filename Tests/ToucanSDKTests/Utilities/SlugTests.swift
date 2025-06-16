@@ -4,9 +4,9 @@
 //
 //  Created by gerp83 on 2025. 04. 04..
 //
-//import Testing
-//@Suite
-//struct SlugTests {
+// import Testing
+// @Suite
+// struct SlugTests {
 //
 //
 //    @Test
@@ -39,4 +39,4 @@
 //        #expect(slug.contextAwareIdentifier() == "slug")
 //    }
 //
-//}
+// }

@@ -7,6 +7,7 @@
 
 /// A structure that holds a list of deployment targets and resolves the default one.
 public struct TargetConfig: Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -15,15 +16,7 @@ public struct TargetConfig: Codable, Equatable {
         case targets
     }
 
-    // MARK: - Properties
-
-    /// All defined targets.
-    public var targets: [Target]
-
-    /// The default target (first one with `isDefault == true`, or first in the list, or fallback).
-    public var `default`: Target {
-        targets.first(where: { $0.isDefault }) ?? targets[0]
-    }
+    // MARK: - Static Computed Properties
 
     // MARK: - Defaults
 
@@ -31,6 +24,20 @@ public struct TargetConfig: Codable, Equatable {
     private static var base: Self {
         .init(targets: [Target.standard])
     }
+
+    // MARK: - Properties
+
+    /// All defined targets.
+    public var targets: [Target]
+
+    // MARK: - Computed Properties
+
+    /// The default target (first one with `isDefault == true`, or first in the list, or fallback).
+    public var `default`: Target {
+        targets.first(where: { $0.isDefault }) ?? targets[0]
+    }
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -82,6 +89,8 @@ public struct TargetConfig: Codable, Equatable {
         }
         self.init(targets: all)
     }
+
+    // MARK: - Functions
 
     /// Encodes this instance into the given encoder.
     ///

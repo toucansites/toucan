@@ -8,7 +8,6 @@
 import ToucanSource
 
 extension Mocks.Blocks {
-
     static func link() -> Block {
         .init(
             name: "link",
@@ -92,5 +91,4 @@ extension Mocks.Blocks {
             output: nil
         )
     }
-
 }

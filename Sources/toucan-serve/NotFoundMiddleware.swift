@@ -8,7 +8,6 @@
 import Hummingbird
 
 struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
-
     func handle(
         _ request: Request,
         context: Context,

@@ -19,6 +19,7 @@
 /// print(markdown.contents)             // "# Hello World\nThis is the body."
 /// ```
 public struct Markdown: Equatable {
+    // MARK: - Properties
 
     /// A dictionary containing parsed front matter metadata.
     ///
@@ -27,6 +28,8 @@ public struct Markdown: Equatable {
 
     /// The body content of the Markdown file, excluding front matter.
     public var contents: String
+
+    // MARK: - Lifecycle
 
     /// Initializes a new `Markdown` instance with front matter and Markdown content.
     ///

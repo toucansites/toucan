@@ -5,18 +5,17 @@
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
 
-import Testing
-import Foundation
-import ToucanCore
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import Foundation
+import Testing
+import ToucanCore
+import ToucanSerialization
 
 @testable import ToucanSource
 
 @Suite
 struct BuildTargetSourceLocationsTestSuite {
-
     @Test()
     func defaults() async throws {
         let prefix = "src"
@@ -43,17 +42,17 @@ struct BuildTargetSourceLocationsTestSuite {
 
         let url = URL(filePath: prefix)
         let locations = BuiltTargetSourceLocations(
-            sourceUrl: url,
+            sourceURL: url,
             config: .defaults
         )
 
-        let basePath = locations.baseUrl.path()
+        let basePath = locations.baseURL.path()
         let assetsPath = locations.siteAssetsURL.path()
         let settingsPath = locations.siteSettingsURL.path()
-        let contentsPath = locations.contentsUrl.path()
-        let typesPath = locations.typesUrl.path()
-        let blocksPath = locations.blocksUrl.path()
-        let pipelinesPath = locations.pipelinesUrl.path()
+        let contentsPath = locations.contentsURL.path()
+        let typesPath = locations.typesURL.path()
+        let blocksPath = locations.blocksURL.path()
+        let pipelinesPath = locations.pipelinesURL.path()
         let templatesPathValue = locations.templatesURL.path()
         let currentTemplatePath = locations.currentTemplateURL.path()
         let templateAssetsPath = locations.currentTemplateAssetsURL.path()
@@ -61,7 +60,7 @@ struct BuildTargetSourceLocationsTestSuite {
         let overridesPathValue = locations.currentTemplateOverridesURL.path()
         let overrideAssetsPath = locations.currentTemplateAssetOverridesURL
             .path()
-        let overrideTemplatesPath = locations.currentTemplateViewsOverridesUrl
+        let overrideTemplatesPath = locations.currentTemplateViewsOverridesURL
             .path()
 
         #expect(basePath == expectedBase)

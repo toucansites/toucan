@@ -6,15 +6,37 @@
 //
 //
 import Foundation
-import Testing
 import Logging
+import Testing
 import ToucanCore
-import ToucanSource
-import ToucanSerialization
 @testable import ToucanSDK
+import ToucanSerialization
+import ToucanSource
 
 @Suite
 struct ContentResolverTestSuite {
+    // MARK: -
+
+    private func getMockresolver(
+        buildTargetSource: BuildTargetSource,
+        now _: Date
+    ) throws -> ContentResolver {
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let dateFormatter = ToucanInputDateFormatter(
+            dateConfig: buildTargetSource.config.dataTypes.date
+        )
+
+        return .init(
+            contentTypeResolver: .init(
+                types: buildTargetSource.contentDefinitions,
+                pipelines: buildTargetSource.pipelines
+            ),
+            encoder: encoder,
+            decoder: decoder,
+            dateFormatter: dateFormatter
+        )
+    }
 
     @Test
     func contentBasicConversion() throws {
@@ -98,7 +120,7 @@ struct ContentResolverTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -153,7 +175,7 @@ struct ContentResolverTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -216,7 +238,7 @@ struct ContentResolverTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -269,14 +291,12 @@ struct ContentResolverTestSuite {
         #expect(content.type.id == "post")
     }
 
-    // MARK: - properties
-
     @Test()
     func allPropertyTypeConversion() async throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -371,7 +391,7 @@ struct ContentResolverTestSuite {
         #expect(result["bool"] == true)
         #expect(result["int"] == 42)
         #expect(result["double"] == 3.14)
-        #expect(result["date"] == 1743326594.87)
+        #expect(result["date"] == 1_743_326_594.87)
         // TODO: what do we expect here?
         // #expect(result["array"] == .init(["1", "2"]))
     }
@@ -381,7 +401,7 @@ struct ContentResolverTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -460,13 +480,13 @@ struct ContentResolverTestSuite {
         let result = try #require(targetContents.first).properties
 
         #expect(
-            result["customFormat"] == .init(1614902400.0)
+            result["customFormat"] == .init(1_614_902_400.0)
         )
         #expect(
-            result["customFormatDefaultValue"] == .init(1614729600.0)
+            result["customFormatDefaultValue"] == .init(1_614_729_600.0)
         )
         #expect(
-            result["defaultFormat"] == .init(1743326594.87)
+            result["defaultFormat"] == .init(1_743_326_594.87)
         )
     }
 
@@ -475,7 +495,7 @@ struct ContentResolverTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -545,7 +565,7 @@ struct ContentResolverTestSuite {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -609,29 +629,6 @@ struct ContentResolverTestSuite {
         #expect(result.isEmpty)
     }
 
-    // MARK: -
-
-    private func getMockresolver(
-        buildTargetSource: BuildTargetSource,
-        now: Date
-    ) throws -> ContentResolver {
-        let encoder = ToucanYAMLEncoder()
-        let decoder = ToucanYAMLDecoder()
-        let dateFormatter = ToucanInputDateFormatter(
-            dateConfig: buildTargetSource.config.dataTypes.date
-        )
-
-        return .init(
-            contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
-                pipelines: buildTargetSource.pipelines
-            ),
-            encoder: encoder,
-            decoder: decoder,
-            dateFormatter: dateFormatter
-        )
-    }
-
     @Test()
     func genericFilterRules() async throws {
         let now = Date()
@@ -678,12 +675,12 @@ struct ContentResolverTestSuite {
         #expect(result.count < contents.count)
 
         for key in expGroups.keys {
-
             let exp1 =
                 expGroups[key]?
                 .filter {
                     $0.properties["title"]?.stringValue()?.hasSuffix("1")
-                        ?? $0.properties["name"]?.stringValue()?.hasSuffix("1")
+                        ?? $0.properties["name"]?.stringValue()?
+                        .hasSuffix("1")
                         ?? false
                 } ?? []
 
@@ -691,7 +688,8 @@ struct ContentResolverTestSuite {
                 resGroups[key]?
                 .filter {
                     $0.properties["title"]?.stringValue()?.hasSuffix("1")
-                        ?? $0.properties["name"]?.stringValue()?.hasSuffix("1")
+                        ?? $0.properties["name"]?.stringValue()?
+                        .hasSuffix("1")
                         ?? false
                 } ?? []
 
@@ -753,12 +751,12 @@ struct ContentResolverTestSuite {
         )
 
         for key in expGroups.keys {
-
             let exp1 =
                 expGroups[key]?
                 .filter {
                     if key == "post" {
-                        return $0.properties["featured"]?.boolValue() ?? false
+                        return $0.properties["featured"]?
+                            .boolValue() ?? false
                     }
                     return $0.properties["title"]?.stringValue()?
                         .hasSuffix("10") ?? $0.properties["name"]?
@@ -770,7 +768,8 @@ struct ContentResolverTestSuite {
                 resGroups[key]?
                 .filter {
                     if key == "post" {
-                        return $0.properties["featured"]?.boolValue() ?? false
+                        return $0.properties["featured"]?
+                            .boolValue() ?? false
                     }
                     return $0.properties["title"]?.stringValue()?
                         .hasSuffix("10") ?? $0.properties["name"]?
@@ -822,10 +821,9 @@ struct ContentResolverTestSuite {
 
     @Test()
     func globalDateFilter() async throws {
-
         let now = Date()
-        let future = now.addingTimeInterval(+86_400)
-        let past = now.addingTimeInterval(-86_400)
+        let future = now.addingTimeInterval(+86400)
+        let past = now.addingTimeInterval(-86400)
 
         let config = Config.defaults
         let dateFormatter = ToucanInputDateFormatter(
@@ -837,7 +835,7 @@ struct ContentResolverTestSuite {
 
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             config: config,
@@ -959,7 +957,7 @@ struct ContentResolverTestSuite {
 
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -1116,9 +1114,9 @@ struct ContentResolverTestSuite {
         let contents = try resolver.apply(
             assetProperties: pipeline.assets.properties,
             to: baseContents,
-            contentsUrl: buildTargetSource.locations.contentsUrl,
+            contentsURL: buildTargetSource.locations.contentsURL,
             assetsPath: buildTargetSource.config.contents.assets.path,
-            baseUrl: buildTargetSource.target.url.dropTrailingSlash()
+            baseURL: buildTargetSource.target.url.dropTrailingSlash()
         )
 
         let query1 = Query(
@@ -1176,6 +1174,5 @@ struct ContentResolverTestSuite {
                 "main.js"
             ]
         )
-
     }
 }

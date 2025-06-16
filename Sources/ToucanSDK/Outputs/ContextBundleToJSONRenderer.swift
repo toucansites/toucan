@@ -10,6 +10,7 @@ import Logging
 import ToucanSource
 
 struct ContextBundleToJSONRenderer {
+    // MARK: - Properties
 
     let pipeline: Pipeline
     let encoder: JSONEncoder
@@ -18,6 +19,8 @@ struct ContextBundleToJSONRenderer {
 
     let keyPath: String?
     let keyPaths: [String: AnyCodable]?
+
+    // MARK: - Lifecycle
 
     init(
         pipeline: Pipeline,
@@ -39,6 +42,48 @@ struct ContextBundleToJSONRenderer {
             "keyPaths",
             as: [String: AnyCodable].self
         )
+    }
+
+    // MARK: - Functions
+
+    private func data(
+        from context: [String: Any],
+        at keyPath: String?,
+        using encoder: JSONEncoder
+    ) throws -> Data? {
+        guard let keyPath else {
+            return nil
+        }
+
+        if let value = context.value(forKeyPath: keyPath) {
+            return try encoder.encode(AnyCodable(value))
+        }
+
+        return nil
+    }
+
+    private func data(
+        from context: [String: Any],
+        keyPaths: [String: AnyCodable]?,
+        using encoder: JSONEncoder
+    ) throws -> Data? {
+        var result: [String: AnyCodable] = [:]
+
+        guard let keyPaths else {
+            return nil
+        }
+
+        for (keyPath, value) in keyPaths {
+            guard let newKeyPath = value.value(as: String.self) else {
+                continue
+            }
+
+            if let value = context.value(forKeyPath: keyPath) {
+                result[newKeyPath] = .init(value)
+            }
+        }
+
+        return try encoder.encode(result)
     }
 
     func render(_ contextBundles: [ContextBundle]) -> [PipelineResult] {
@@ -88,45 +133,5 @@ struct ContextBundleToJSONRenderer {
             source: .content(json),
             destination: contextBundle.destination
         )
-    }
-
-    private func data(
-        from context: [String: Any],
-        at keyPath: String?,
-        using encoder: JSONEncoder
-    ) throws -> Data? {
-        guard let keyPath else {
-            return nil
-        }
-
-        if let value = context.value(forKeyPath: keyPath) {
-            return try encoder.encode(AnyCodable(value))
-        }
-
-        return nil
-    }
-
-    private func data(
-        from context: [String: Any],
-        keyPaths: [String: AnyCodable]?,
-        using encoder: JSONEncoder
-    ) throws -> Data? {
-        var result: [String: AnyCodable] = [:]
-
-        guard let keyPaths else {
-            return nil
-        }
-
-        for (keyPath, value) in keyPaths {
-            guard let newKeyPath = value.value(as: String.self) else {
-                continue
-            }
-
-            if let value = context.value(forKeyPath: keyPath) {
-                result[newKeyPath] = .init(value)
-            }
-        }
-
-        return try encoder.encode(result)
     }
 }

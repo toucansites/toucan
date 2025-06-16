@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct TargetConfigTestSuite {
-
     @Test
     func full() throws {
         let data = """

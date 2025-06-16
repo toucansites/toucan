@@ -6,9 +6,9 @@
 
 import Foundation
 
-//public protocol AnySendable: Sendable {
+// public protocol AnySendable: Sendable {
 //
-//}
+// }
 
 /// A type-erased wrapper for any `Codable` value, allowing serialization of
 /// heterogeneous data structures (e.g., JSON-like dictionaries or YAML trees).
@@ -16,24 +16,71 @@ import Foundation
 /// Supports dynamic type resolution during encoding/decoding,
 /// literal initialization, value extraction, and hashing.
 public struct AnyCodable: Codable {
+    // MARK: - Properties
 
     /// The wrapped value (may be `nil`, scalar, array, dictionary, etc.).
     public var value: Any?
 
+    // MARK: - Lifecycle
+
     // MARK: - Initialization
 
     /// Initializes with any optional value.
-    public init<T>(_ value: T?) {
+    public init(_ value: (some Any)?) {
         self.value = value
     }
+
+    // MARK: - Decoding
+
+    /// Decodes a value from the given decoder and stores it in a type-erased wrapper.
+    ///
+    /// Automatically handles null, scalars, arrays, and dictionaries.
+    ///
+    /// - Parameter decoder: The decoder providing the data.
+    /// - Throws: `DecodingError.dataCorruptedError` if the value cannot be decoded.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+
+        if container.decodeNil() {
+            self.init(nil as Any?)
+        }
+        else if let bool = try? container.decode(Bool.self) {
+            self.init(bool)
+        }
+        else if let int = try? container.decode(Int.self) {
+            self.init(int)
+        }
+        else if let double = try? container.decode(Double.self) {
+            self.init(double)
+        }
+        else if let string = try? container.decode(String.self) {
+            self.init(string)
+        }
+        else if let array = try? container.decode([AnyCodable].self) {
+            self.init(array.map(\.value))
+        }
+        else if let dictionary = try? container.decode(
+            [String: AnyCodable].self
+        ) {
+            self.init(dictionary.mapValues { $0 })
+        }
+        else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "AnyCodable value cannot be decoded"
+            )
+        }
+    }
+
+    // MARK: - Functions
 
     // MARK: - Typed Value Access
 
     /// Attempts to cast the internal value to a concrete type.
     ///
-    /// - Parameter type: The target type.
+    /// - Parameter _: The target type.
     /// - Returns: The casted value, or `nil` if the cast fails.
-    public func value<T>(as type: T.Type) -> T? {
+    public func value<T>(as _: T.Type) -> T? {
         value as? T
     }
 
@@ -80,48 +127,6 @@ public struct AnyCodable: Codable {
             )
         }
     }
-
-    // MARK: - Decoding
-
-    /// Decodes a value from the given decoder and stores it in a type-erased wrapper.
-    ///
-    /// Automatically handles null, scalars, arrays, and dictionaries.
-    ///
-    /// - Parameter decoder: The decoder providing the data.
-    /// - Throws: `DecodingError.dataCorruptedError` if the value cannot be decoded.
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-
-        if container.decodeNil() {
-            self.init(nil as Any?)
-        }
-        else if let bool = try? container.decode(Bool.self) {
-            self.init(bool)
-        }
-        else if let int = try? container.decode(Int.self) {
-            self.init(int)
-        }
-        else if let double = try? container.decode(Double.self) {
-            self.init(double)
-        }
-        else if let string = try? container.decode(String.self) {
-            self.init(string)
-        }
-        else if let array = try? container.decode([AnyCodable].self) {
-            self.init(array.map { $0.value })
-        }
-        else if let dictionary = try? container.decode(
-            [String: AnyCodable].self
-        ) {
-            self.init(dictionary.mapValues { $0 })
-        }
-        else {
-            throw DecodingError.dataCorruptedError(
-                in: container,
-                debugDescription: "AnyCodable value cannot be decoded"
-            )
-        }
-    }
 }
 
 public extension AnyCodable {
@@ -129,14 +134,13 @@ public extension AnyCodable {
     func intValue() -> Int? { value(as: Int.self) }
     func doubleValue() -> Double? { value(as: Double.self) }
     func stringValue() -> String? { value(as: String.self) }
-    func arrayValue<T>(as type: T.Type) -> [T] { value(as: [T].self) ?? [] }
+    func arrayValue<T>(as _: T.Type) -> [T] { value(as: [T].self) ?? [] }
     func dictValue() -> [String: AnyCodable] {
         value(as: [String: AnyCodable].self) ?? [:]
     }
 }
 
 extension AnyCodable: Equatable {
-
     /// Compares two `AnyCodable` values for equality, including nested structures.
     ///
     /// Only compares supported primitive and collection types (Bool, Int, Double, String,
@@ -144,51 +148,49 @@ extension AnyCodable: Equatable {
     public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
         switch (lhs.value, rhs.value) {
         case (nil, nil):
-            return true
+            true
         case let (lhs as Bool, rhs as Bool):
-            return lhs == rhs
+            lhs == rhs
         case let (lhs as Int, rhs as Int):
-            return lhs == rhs
+            lhs == rhs
         case let (lhs as Double, rhs as Double):
-            return lhs == rhs
+            lhs == rhs
         case let (lhs as String, rhs as String):
-            return lhs == rhs
+            lhs == rhs
         case let (lhs as [AnyCodable], rhs as [AnyCodable]):
-            return lhs == rhs
+            lhs == rhs
         case let (lhs as [String: AnyCodable], rhs as [String: AnyCodable]):
-            return lhs == rhs
+            lhs == rhs
         default:
-            return false
+            false
         }
     }
 }
 
 extension AnyCodable: CustomStringConvertible {
-
     /// Returns a human-readable description of the wrapped value.
     ///
     /// Falls back to `String(describing:)` if the value does not conform to `CustomStringConvertible`.
     public var description: String {
         switch value {
         case let value as CustomStringConvertible:
-            return value.description
+            value.description
         default:
-            return String(describing: value)
+            String(describing: value)
         }
     }
 }
 
 extension AnyCodable: CustomDebugStringConvertible {
-
     /// Returns a debug-friendly string representation of the wrapped value.
     ///
     /// Prefixes the output with `"AnyCodable(...)"` for easy identification.
     public var debugDescription: String {
         switch value {
         case let value as CustomDebugStringConvertible:
-            return "AnyCodable(\(value.debugDescription))"
+            "AnyCodable(\(value.debugDescription))"
         default:
-            return "AnyCodable(\(description))"
+            "AnyCodable(\(description))"
         }
     }
 }
@@ -243,7 +245,6 @@ extension AnyCodable: ExpressibleByArrayLiteral {
 }
 
 extension AnyCodable: ExpressibleByDictionaryLiteral {
-
     /// Initializes an `AnyCodable` with a dictionary literal.
     ///
     /// Also recursively wraps nested dictionaries and arrays.
@@ -285,7 +286,6 @@ extension AnyCodable: ExpressibleByDictionaryLiteral {
 }
 
 extension AnyCodable: Hashable {
-
     /// Computes a hash based on the value type.
     ///
     /// Only values of supported types will be hashed.

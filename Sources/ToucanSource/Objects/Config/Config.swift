@@ -9,6 +9,7 @@ import Foundation
 
 /// Represents the top-level configuration for a content rendering system.
 public struct Config: Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -21,6 +22,26 @@ public struct Config: Codable, Equatable {
         case templates
         case dataTypes
         case renderer
+    }
+
+    // MARK: - Static Computed Properties
+
+    // MARK: - Defaults
+
+    /// Provides a default `Config` instance using defaults from all subcomponents.
+    ///
+    /// This is used when configuration fields are missing or omitted.
+    public static var defaults: Self {
+        .init(
+            site: .defaults,
+            pipelines: .defaults,
+            contents: .defaults,
+            types: .defaults,
+            blocks: .defaults,
+            templates: .defaults,
+            dataTypes: .defaults,
+            renderer: .defaults
+        )
     }
 
     // MARK: - Properties
@@ -49,23 +70,7 @@ public struct Config: Codable, Equatable {
     /// Additional content-specific overrides or configuration extensions.
     public var renderer: RendererConfig
 
-    // MARK: - Defaults
-
-    /// Provides a default `Config` instance using defaults from all subcomponents.
-    ///
-    /// This is used when configuration fields are missing or omitted.
-    public static var defaults: Self {
-        .init(
-            site: .defaults,
-            pipelines: .defaults,
-            contents: .defaults,
-            types: .defaults,
-            blocks: .defaults,
-            templates: .defaults,
-            dataTypes: .defaults,
-            renderer: .defaults
-        )
-    }
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -165,6 +170,5 @@ public struct Config: Codable, Equatable {
                 RendererConfig.self,
                 forKey: .renderer
             ) ?? defaults.renderer
-
     }
 }

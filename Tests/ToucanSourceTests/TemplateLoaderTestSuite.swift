@@ -4,18 +4,17 @@
 //
 //  Created by Binary Birds on 2025. 03. 12..
 
-import Testing
-import Foundation
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import Foundation
 import Logging
+import Testing
+import ToucanSerialization
 
 @testable import ToucanSource
 
 @Suite
 struct TemplateLoaderTestSuite {
-
     @Test()
     func standardTemplateLoading() async throws {
         try FileManagerPlayground {
@@ -101,7 +100,7 @@ struct TemplateLoaderTestSuite {
             let sourceURL = $1.appending(path: "src/")
             let config = Config.defaults
             let locations = BuiltTargetSourceLocations(
-                sourceUrl: sourceURL,
+                sourceURL: sourceURL,
                 config: config
             )
 
@@ -111,7 +110,7 @@ struct TemplateLoaderTestSuite {
             )
             let template = try loader.load()
 
-            #expect(template.baseUrl == locations.templatesURL)
+            #expect(template.baseURL == locations.templatesURL)
 
             #expect(
                 template.components.assets.sorted()
@@ -177,7 +176,6 @@ struct TemplateLoaderTestSuite {
                         uniqueKeysWithValues: exp.sorted { $0.key < $1.key }
                     )
             )
-
         }
     }
 }

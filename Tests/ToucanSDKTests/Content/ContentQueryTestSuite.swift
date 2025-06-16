@@ -7,13 +7,12 @@
 import Foundation
 import Testing
 import ToucanCore
+@testable import ToucanSDK
 import ToucanSerialization
 import ToucanSource
-@testable import ToucanSDK
 
 @Suite
 struct ContentQueryTestSuite {
-
     func getMockContents(now: Date) throws -> [Content] {
         let buildTargetSource = Mocks.buildTargetSource(now: now)
         let encoder = ToucanYAMLEncoder()
@@ -782,7 +781,7 @@ struct ContentQueryTestSuite {
         let contents = try getMockContents(now: now)
         let pastDate =
             now
-            .addingTimeInterval(-86_400 * 2)
+            .addingTimeInterval(-86400 * 2)
             // TODO: double check this
             .addingTimeInterval(-1)
 
@@ -879,7 +878,7 @@ struct ContentQueryTestSuite {
     }
 
     @Test
-    func resolveFilterParametersUsingId() async throws {
+    func resolveFilterParametersUsingID() async throws {
         let now = Date()
         let contents = try getMockContents(now: now)
 

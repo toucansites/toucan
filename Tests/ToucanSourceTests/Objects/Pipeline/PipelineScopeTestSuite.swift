@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct PipelineScopeTestSuite {
-
     // MARK: - order
 
     @Test

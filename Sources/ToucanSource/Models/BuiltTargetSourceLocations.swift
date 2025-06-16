@@ -11,23 +11,22 @@ import ToucanCore
 
 /// A computed mapping of project-relative URLs based on the loaded configuration and project root.
 public struct BuiltTargetSourceLocations {
-
     // MARK: - Properties
 
     /// The base URL of the source directory.
-    public var baseUrl: URL
+    public var baseURL: URL
     /// The URL where content files are located.
-    public var contentsUrl: URL
+    public var contentsURL: URL
     /// The URL of the site settings configuration file.
     public var siteSettingsURL: URL
     /// The URL pointing to site-wide asset resources.
     public var siteAssetsURL: URL
     /// The URL containing content type definitions.
-    public var typesUrl: URL
+    public var typesURL: URL
     /// The URL containing block directive definitions.
-    public var blocksUrl: URL
+    public var blocksURL: URL
     /// The URL pointing to the pipeline configuration files.
-    public var pipelinesUrl: URL
+    public var pipelinesURL: URL
     /// The URL where template definitions are located.
     public var templatesURL: URL
     /// The URL of the currently active template.
@@ -41,20 +40,22 @@ public struct BuiltTargetSourceLocations {
     /// The URL for overridden assets in the current template.
     public var currentTemplateAssetOverridesURL: URL
     /// The URL for overridden views in the current template.
-    public var currentTemplateViewsOverridesUrl: URL
+    public var currentTemplateViewsOverridesURL: URL
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
     /// Creates a new `BuiltTargetSourceLocations` instance by computing file paths based on the project configuration.
     ///
     /// - Parameters:
-    ///   - sourceUrl: The base URL of the source directory.
+    ///   - sourceURL: The base URL of the source directory.
     ///   - config: The configuration object describing relative paths for various components.
     public init(
-        sourceUrl: URL,
+        sourceURL: URL,
         config: Config
     ) {
-        let base = sourceUrl
+        let base = sourceURL
 
         let contents =
             base
@@ -101,29 +102,28 @@ public struct BuiltTargetSourceLocations {
             currentTemplateOverrides
             .appendingPathIfPresent(config.templates.views.path)
 
-        baseUrl = base
-        contentsUrl = contents
-        siteSettingsURL = settings
-        siteAssetsURL = assets
-        typesUrl = types
-        blocksUrl = blocks
-        pipelinesUrl = pipelines
-        templatesURL = templates
-        currentTemplateURL = currentTemplate
-        currentTemplateAssetsURL = currentTemplateAssets
-        currentTemplateViewsURL = currentTemplateViews
-        currentTemplateOverridesURL = currentTemplateOverrides
-        currentTemplateAssetOverridesURL = currentTemplateAssetOverrides
-        currentTemplateViewsOverridesUrl = currentTemplateViewsOverrides
+        self.baseURL = base
+        self.contentsURL = contents
+        self.siteSettingsURL = settings
+        self.siteAssetsURL = assets
+        self.typesURL = types
+        self.blocksURL = blocks
+        self.pipelinesURL = pipelines
+        self.templatesURL = templates
+        self.currentTemplateURL = currentTemplate
+        self.currentTemplateAssetsURL = currentTemplateAssets
+        self.currentTemplateViewsURL = currentTemplateViews
+        self.currentTemplateOverridesURL = currentTemplateOverrides
+        self.currentTemplateAssetOverridesURL = currentTemplateAssetOverrides
+        self.currentTemplateViewsOverridesURL = currentTemplateViewsOverrides
     }
 }
 
 extension BuiltTargetSourceLocations: LoggerMetadataRepresentable {
-
     /// This metadata can be used to provide additional context in log output.
     public var logMetadata: [String: Logger.MetadataValue] {
         [
-            "baseUrl": .string(baseUrl.absoluteString)
+            "baseUrl": .string(baseURL.absoluteString)
         ]
     }
 }

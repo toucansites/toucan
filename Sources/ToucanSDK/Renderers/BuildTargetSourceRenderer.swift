@@ -6,41 +6,42 @@
 //
 
 import Foundation
-import ToucanMarkdown
 import Logging
 import ToucanCore
-import ToucanSource
+import ToucanMarkdown
 import ToucanSerialization
+import ToucanSource
 
 enum BuildTargetSourceRendererError: ToucanError {
-
     case invalidEngine(String)
     case unknown(Error)
 
+    // MARK: - Computed Properties
+
     var underlyingErrors: [any Error] {
         switch self {
-        case .unknown(let error):
-            return [error]
+        case let .unknown(error):
+            [error]
         default:
-            return []
+            []
         }
     }
 
     var logMessage: String {
         switch self {
-        case .invalidEngine(let engine):
-            return "Invalid engine: `\(engine)`."
-        case .unknown(let error):
-            return error.localizedDescription
+        case let .invalidEngine(engine):
+            "Invalid engine: `\(engine)`."
+        case let .unknown(error):
+            error.localizedDescription
         }
     }
 
     var userFriendlyMessage: String {
         switch self {
-        case .invalidEngine(let engine):
-            return "Invalid engine: `\(engine)`."
+        case let .invalidEngine(engine):
+            "Invalid engine: `\(engine)`."
         case .unknown:
-            return "Unknown source validator error."
+            "Unknown source validator error."
         }
     }
 }
@@ -51,6 +52,7 @@ enum BuildTargetSourceRendererError: ToucanError {
 /// resolves content and site-level context, and outputs rendered content using templates
 /// or encoded formats.
 public struct BuildTargetSourceRenderer {
+    // MARK: - Properties
 
     /// Site configuration + all raw content
     let buildTargetSource: BuildTargetSource
@@ -62,6 +64,8 @@ public struct BuildTargetSourceRenderer {
     let logger: Logger
     /// Cache
     var contentContextCache: [String: [String: AnyCodable]] = [:]
+
+    // MARK: - Lifecycle
 
     /// Initializes a renderer from a source bundle.
     ///
@@ -81,6 +85,8 @@ public struct BuildTargetSourceRenderer {
         self.generatorInfo = generatorInfo
         self.logger = logger
     }
+
+    // MARK: - Functions
 
     // MARK: -
 
@@ -124,142 +130,8 @@ public struct BuildTargetSourceRenderer {
         return lastUpdate
     }
 
-    private func baseUrl() -> String {
+    private func baseURL() -> String {
         buildTargetSource.target.url.dropTrailingSlash()
-    }
-
-    /// Starts rendering the source bundle based on current time and pipeline configuration.
-    ///
-    /// - Parameter now: Current date, used for generation timestamps.
-    /// - Returns: A list of rendered `PipelineResult`s.
-    /// - Throws: Rendering or encoding-related errors.
-    public mutating func render(
-        now: Date
-    ) throws -> [PipelineResult] {
-
-        let now = now.timeIntervalSince1970
-
-        let encoder = ToucanYAMLEncoder()
-        let decoder = ToucanYAMLDecoder()
-
-        let inputDateFormatter = ToucanInputDateFormatter(
-            dateConfig: buildTargetSource.config.dataTypes.date,
-            logger: logger
-        )
-
-        // TODO: This should be in a .toucaninfo file or similar
-        let globalContext: [String: AnyCodable] = [
-            "baseUrl": .init(baseUrl()),
-            "generator": .init(generatorInfo),
-        ]
-
-        let contentTypeResolver = ContentTypeResolver(
-            types: buildTargetSource.contentDefinitions,
-            pipelines: buildTargetSource.pipelines
-        )
-
-        let contentResolver = ContentResolver(
-            contentTypeResolver: contentTypeResolver,
-            encoder: encoder,
-            decoder: decoder,
-            dateFormatter: inputDateFormatter,
-            logger: logger
-        )
-
-        let baseContents = try contentResolver.convert(
-            rawContents: buildTargetSource.rawContents
-        )
-
-        var results: [PipelineResult] = []
-        for pipeline in buildTargetSource.pipelines {
-
-            //            print(pipeline.id)
-            let filteredContents = contentResolver.apply(
-                filterRules: pipeline.contentTypes.filterRules,
-                to: baseContents,
-                now: now
-            )
-            //            print(baseContents.count)
-            //            print(filteredContents.count)
-            let iteratedContents = contentResolver.apply(
-                iterators: pipeline.iterators,
-                to: filteredContents,
-                baseURL: baseUrl(),
-                now: now
-            )
-
-            let finalContents = try contentResolver.apply(
-                assetProperties: pipeline.assets.properties,
-                to: iteratedContents,
-                contentsUrl: buildTargetSource.locations.contentsUrl,
-                assetsPath: buildTargetSource.config.contents.assets.path,
-                baseUrl: baseUrl()
-            )
-
-            let dateFormatter = ToucanOutputDateFormatter(
-                dateConfig: buildTargetSource.config.dataTypes.date,
-                pipelineDateConfig: pipeline.dataTypes.date,
-                logger: logger
-            )
-
-            let assetResults = try contentResolver.applyBehaviors(
-                pipeline: pipeline,
-                to: finalContents,
-                contentsUrl: buildTargetSource.locations.contentsUrl,
-                assetsPath: buildTargetSource.config.contents.assets.path
-            )
-
-            results.append(contentsOf: assetResults)
-
-            let lastUpdate =
-                getLastContentUpdate(
-                    contents: finalContents,
-                    pipeline: pipeline,
-                    now: now
-                ) ?? now
-
-            let contextBundles = try getContextBundles(
-                contents: finalContents,
-                context: globalContext.recursivelyMerged(
-                    with: [
-                        "lastUpdate": .init(dateFormatter.format(lastUpdate)),
-                        "generation": .init(dateFormatter.format(now)),
-                        "site": .init(buildTargetSource.settings.values),
-                    ]
-                ),
-                pipeline: pipeline,
-                dateFormatter: dateFormatter,
-                now: now
-            )
-
-            //            print("---")
-            //            print(finalContents.count)
-            //            print(contextBundles.count)
-            //            print("---")
-            //            print(finalContents.map(\.slug.value).joined(separator: "\n"))
-            //            print(contextBundles.map(\.content.slug))
-
-            switch pipeline.engine.id {
-            case "json":
-                let renderer = ContextBundleToJSONRenderer(
-                    pipeline: pipeline,
-                    logger: logger
-                )
-                results += renderer.render(contextBundles)
-            case "mustache":
-                let renderer = try ContextBundleToHTMLRenderer(
-                    pipeline: pipeline,
-                    templates: templates,
-                    logger: logger
-                )
-                results += renderer.render(contextBundles)
-            default:
-                throw BuildTargetSourceRendererError.invalidEngine(
-                    pipeline.engine.id
-                )
-            }
-        }
-        return results
     }
 
     /// Returns the renderable context bundle for each content for a given pipeline using the global context
@@ -368,7 +240,6 @@ public struct BuildTargetSourceRenderer {
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
     ) -> ContextBundle {
-
         let pageContext = getContentContext(
             contents: contents,
             for: content,
@@ -465,7 +336,7 @@ public struct BuildTargetSourceRenderer {
                         }
 
                         let resolvedValue = rawValue.resolveAsset(
-                            baseUrl: baseUrl(),
+                            baseURL: baseURL(),
                             // TODO: double check this -> content.assetsPath?
                             assetsPath: buildTargetSource.config.contents.assets
                                 .path,
@@ -474,7 +345,7 @@ public struct BuildTargetSourceRenderer {
 
                         result[k] = .init(resolvedValue)
                     // format dates
-                    case .date(_):
+                    case .date:
                         guard let rawValue = v.doubleValue() else {
                             continue
                         }
@@ -492,7 +363,7 @@ public struct BuildTargetSourceRenderer {
 
             result["slug"] = .init(content.slug)
             result["permalink"] = .init(
-                content.slug.permalink(baseUrl: baseUrl())
+                content.slug.permalink(baseURL: baseURL())
             )
             //            print("------------")
             //            print(content.slug)
@@ -566,7 +437,7 @@ public struct BuildTargetSourceRenderer {
                 id: content.slug.contextAwareIdentifier(),
                 slug: content.slug.value,
                 assetsPath: buildTargetSource.config.contents.assets.path,
-                baseUrl: baseUrl()
+                baseURL: baseURL()
             )
 
             result["contents"] = [
@@ -622,7 +493,6 @@ public struct BuildTargetSourceRenderer {
         }
 
         if allowSubQueries, scope.context.contains(.queries) {
-
             for (key, query) in content.type.queries {
                 let queryContents = contents.run(
                     query: query.resolveFilterParameters(
@@ -653,5 +523,137 @@ public struct BuildTargetSourceRenderer {
         }
         contentContextCache[cacheKey] = result
         return result.filter { scope.fields.contains($0.key) }
+    }
+
+    /// Starts rendering the source bundle based on current time and pipeline configuration.
+    ///
+    /// - Parameter now: Current date, used for generation timestamps.
+    /// - Returns: A list of rendered `PipelineResult`s.
+    /// - Throws: Rendering or encoding-related errors.
+    public mutating func render(
+        now: Date
+    ) throws -> [PipelineResult] {
+        let now = now.timeIntervalSince1970
+
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+
+        let inputDateFormatter = ToucanInputDateFormatter(
+            dateConfig: buildTargetSource.config.dataTypes.date,
+            logger: logger
+        )
+
+        // TODO: This should be in a .toucaninfo file or similar
+        let globalContext: [String: AnyCodable] = [
+            "baseUrl": .init(baseURL()),
+            "generator": .init(generatorInfo),
+        ]
+
+        let contentTypeResolver = ContentTypeResolver(
+            types: buildTargetSource.contentDefinitions,
+            pipelines: buildTargetSource.pipelines
+        )
+
+        let contentResolver = ContentResolver(
+            contentTypeResolver: contentTypeResolver,
+            encoder: encoder,
+            decoder: decoder,
+            dateFormatter: inputDateFormatter,
+            logger: logger
+        )
+
+        let baseContents = try contentResolver.convert(
+            rawContents: buildTargetSource.rawContents
+        )
+
+        var results: [PipelineResult] = []
+        for pipeline in buildTargetSource.pipelines {
+            //            print(pipeline.id)
+            let filteredContents = contentResolver.apply(
+                filterRules: pipeline.contentTypes.filterRules,
+                to: baseContents,
+                now: now
+            )
+            //            print(baseContents.count)
+            //            print(filteredContents.count)
+            let iteratedContents = contentResolver.apply(
+                iterators: pipeline.iterators,
+                to: filteredContents,
+                baseURL: baseURL(),
+                now: now
+            )
+
+            let finalContents = try contentResolver.apply(
+                assetProperties: pipeline.assets.properties,
+                to: iteratedContents,
+                contentsURL: buildTargetSource.locations.contentsURL,
+                assetsPath: buildTargetSource.config.contents.assets.path,
+                baseURL: baseURL()
+            )
+
+            let dateFormatter = ToucanOutputDateFormatter(
+                dateConfig: buildTargetSource.config.dataTypes.date,
+                pipelineDateConfig: pipeline.dataTypes.date,
+                logger: logger
+            )
+
+            let assetResults = try contentResolver.applyBehaviors(
+                pipeline: pipeline,
+                to: finalContents,
+                contentsURL: buildTargetSource.locations.contentsURL,
+                assetsPath: buildTargetSource.config.contents.assets.path
+            )
+
+            results.append(contentsOf: assetResults)
+
+            let lastUpdate =
+                getLastContentUpdate(
+                    contents: finalContents,
+                    pipeline: pipeline,
+                    now: now
+                ) ?? now
+
+            let contextBundles = try getContextBundles(
+                contents: finalContents,
+                context: globalContext.recursivelyMerged(
+                    with: [
+                        "lastUpdate": .init(dateFormatter.format(lastUpdate)),
+                        "generation": .init(dateFormatter.format(now)),
+                        "site": .init(buildTargetSource.settings.values),
+                    ]
+                ),
+                pipeline: pipeline,
+                dateFormatter: dateFormatter,
+                now: now
+            )
+
+            //            print("---")
+            //            print(finalContents.count)
+            //            print(contextBundles.count)
+            //            print("---")
+            //            print(finalContents.map(\.slug.value).joined(separator: "\n"))
+            //            print(contextBundles.map(\.content.slug))
+
+            switch pipeline.engine.id {
+            case "json":
+                let renderer = ContextBundleToJSONRenderer(
+                    pipeline: pipeline,
+                    logger: logger
+                )
+                results += renderer.render(contextBundles)
+            case "mustache":
+                let renderer = try ContextBundleToHTMLRenderer(
+                    pipeline: pipeline,
+                    templates: templates,
+                    logger: logger
+                )
+                results += renderer.render(contextBundles)
+            default:
+                throw BuildTargetSourceRendererError.invalidEngine(
+                    pipeline.engine.id
+                )
+            }
+        }
+        return results
     }
 }

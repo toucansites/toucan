@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct PipelineContentTypeTestSuite {
-
     @Test
     func empty() throws {
         let data = """
@@ -54,5 +53,4 @@ struct PipelineContentTypeTestSuite {
         #expect(result.exclude == ["rss"])
         #expect(result.lastUpdate == ["page"])
     }
-
 }

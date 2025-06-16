@@ -8,7 +8,6 @@
 import ToucanSource
 
 extension Mocks.Pipelines {
-
     static func html() -> Pipeline {
         .init(
             id: "html",

@@ -5,12 +5,11 @@
 //  Created by Tibor Bödecs on 2025. 05. 18..
 //
 
-import class Foundation.DateFormatter
 import struct Foundation.Date
+import class Foundation.DateFormatter
 
 public extension [String: AnyCodable] {
-
-    func value<T>(_ keyPath: String, as type: T.Type) -> T? {
+    func value<T>(_ keyPath: String, as _: T.Type) -> T? {
         let keys = keyPath.split(separator: ".").map { String($0) }
 
         guard !keys.isEmpty else {
@@ -52,7 +51,7 @@ public extension [String: AnyCodable] {
         return (result ?? "").isEmpty ? nil : result
     }
 
-    func array<T>(_ keyPath: String, as type: T.Type) -> [T] {
+    func array<T>(_ keyPath: String, as _: T.Type) -> [T] {
         value(keyPath, as: [T].self) ?? []
     }
 

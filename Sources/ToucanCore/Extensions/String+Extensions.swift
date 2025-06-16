@@ -8,7 +8,6 @@
 import Foundation
 
 public extension String {
-
     /// A convenience property that converts an empty string to `nil`.
     ///
     /// This is useful for cases where an empty string should be treated as the absence of a value,
@@ -123,22 +122,22 @@ public extension String {
     ///   and combines the base URL, assets path, slug, and remaining path parts into a full URL.
     ///
     /// - Parameters:
-    ///   - baseUrl: The base URL used to form the full path.
+    ///   - baseURL: The base URL used to form the full path.
     ///   - assetsPath: The relative directory for the assets.
     ///   - slug: A string inserted in the final path for identification or grouping.
     /// - Returns: A full string URL combining all parts, or the original string if no resolution is applied.
     func resolveAsset(
-        baseUrl: String,
+        baseURL: String,
         assetsPath: String,
         slug: String
     ) -> String {
-        if baseUrl.isEmpty || assetsPath.isEmpty {
+        if baseURL.isEmpty || assetsPath.isEmpty {
             return self
         }
 
-        let baseUrl = baseUrl.dropTrailingSlash()
+        let baseURL = baseURL.dropTrailingSlash()
         if hasPrefix("/") {
-            return [baseUrl, dropLeadingSlash()].joined(separator: "/")
+            return [baseURL, dropLeadingSlash()].joined(separator: "/")
         }
 
         let prefix = "./\(assetsPath)/"
@@ -148,7 +147,7 @@ public extension String {
 
         let src = String(dropFirst(prefix.count))
 
-        return [baseUrl, assetsPath, slug, src]
+        return [baseURL, assetsPath, slug, src]
             .filter { !$0.isEmpty }
             .joined(separator: "/")
     }

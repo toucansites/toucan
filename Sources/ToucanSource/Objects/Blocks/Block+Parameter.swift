@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 05. 18..
 //
 
-extension Block {
-
+public extension Block {
     /// Defines a configurable parameter for a directive, which may be required and have a default value.
-    public struct Parameter: Sendable, Codable, Equatable {
+    struct Parameter: Sendable, Codable, Equatable {
+        // MARK: - Properties
 
         /// The label of the parameter.
         public var label: String
@@ -18,6 +18,8 @@ extension Block {
 
         /// A default value for the parameter, used if it is not explicitly specified in the directive.
         public var defaultValue: String?
+
+        // MARK: - Lifecycle
 
         /// Initializes a `Parameter` for a directive.
         ///

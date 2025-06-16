@@ -5,15 +5,16 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import ArgumentParser
-import ToucanSDK
 import Logging
 import ToucanCore
+import ToucanSDK
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
@@ -26,6 +27,8 @@ struct Entrypoint: AsyncParsableCommand {
             """,
         version: GeneratorInfo.current.version
     )
+
+    // MARK: - Properties
 
     // MARK: - arguments
 
@@ -40,6 +43,8 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
+
+    // MARK: - Functions
 
     // MARK: - run
 

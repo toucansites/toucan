@@ -12,7 +12,6 @@ public extension MarkdownBlockDirective {
 }
 
 public extension MarkdownBlockDirective.Mocks {
-
     static func highlightedTexts(
         max: Int = 10
     ) -> [MarkdownBlockDirective] {
@@ -67,5 +66,4 @@ public extension MarkdownBlockDirective.Mocks {
             output: nil
         )
     }
-
 }

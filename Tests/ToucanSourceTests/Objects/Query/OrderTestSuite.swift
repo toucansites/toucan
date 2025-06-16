@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct OrderTestSuite {
-
     @Test
     func basics() throws {
         let object = Order(key: "foo")

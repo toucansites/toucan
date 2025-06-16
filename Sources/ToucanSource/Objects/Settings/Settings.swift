@@ -7,24 +7,28 @@
 
 /// A custom coding key type for encoding and decoding dynamic keys.
 private struct DynamicCodingKeys: CodingKey {
+    // MARK: - Properties
 
     var stringValue: String
-    var intValue: Int? { return nil }
+
+    // MARK: - Computed Properties
+
+    var intValue: Int? { nil }
+
+    // MARK: - Lifecycle
 
     init?(stringValue: String) {
         self.stringValue = stringValue
     }
 
-    init?(intValue: Int) {
-        return nil
+    init?(intValue _: Int) {
+        nil
     }
 }
 
 /// Represents site-wide configuration settings, allowing for dynamic, user-defined values.
 public struct Settings: Codable, Equatable {
-
-    /// A dictionary holding arbitrary user-defined settings keyed by strings.
-    public var values: [String: AnyCodable]
+    // MARK: - Static Computed Properties
 
     // MARK: - Initialization
 
@@ -32,6 +36,13 @@ public struct Settings: Codable, Equatable {
     public static var defaults: Self {
         .init([:])
     }
+
+    // MARK: - Properties
+
+    /// A dictionary holding arbitrary user-defined settings keyed by strings.
+    public var values: [String: AnyCodable]
+
+    // MARK: - Lifecycle
 
     /// Creates a new `Settings` instance with the specified key-value pairs.
     ///
@@ -63,6 +74,8 @@ public struct Settings: Codable, Equatable {
         self.values = value
     }
 
+    // MARK: - Functions
+
     /// Encodes the `Settings` instance into the given encoder.
     ///
     /// - Parameter encoder: The encoder to write data to.
@@ -78,5 +91,4 @@ public struct Settings: Codable, Equatable {
             try container.encode(value, forKey: codingKey)
         }
     }
-
 }

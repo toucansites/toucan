@@ -5,17 +5,16 @@
 //  Created by Tibor Bödecs on 2025. 06. 11..
 //
 
-import Foundation
-import Testing
-import Logging
-import ToucanCore
-import ToucanSource
 import FileManagerKitBuilder
+import Foundation
+import Logging
+import Testing
+import ToucanCore
 @testable import ToucanSDK
+import ToucanSource
 
 @Suite
 struct E2ETestSuite {
-
     // MARK: - html files
 
     @Test
@@ -32,8 +31,8 @@ struct E2ETestSuite {
             try Toucan(input: input.path()).generate(now: now)
 
             let output = $1.appendingPathIfPresent("docs")
-            let notFoundUrl = output.appendingPathIfPresent("404.html")
-            let notFound = try String(contentsOf: notFoundUrl)
+            let notFoundURL = output.appendingPathIfPresent("404.html")
+            let notFound = try String(contentsOf: notFoundURL)
 
             #expect(notFound.contains("Not found page contents"))
         }
@@ -63,13 +62,13 @@ struct E2ETestSuite {
 
             let nowString = formatter.format(now).formats["rss"] ?? ""
             let post1date =
-                formatter.format(now.addingTimeInterval(-86_400)).formats["rss"]
+                formatter.format(now.addingTimeInterval(-86400)).formats["rss"]
                 ?? ""
             let post2date =
-                formatter.format(now.addingTimeInterval(-86_400 * 2))
+                formatter.format(now.addingTimeInterval(-86400 * 2))
                 .formats["rss"] ?? ""
             let post3date =
-                formatter.format(now.addingTimeInterval(-86_400 * 3))
+                formatter.format(now.addingTimeInterval(-86400 * 3))
                 .formats["rss"] ?? ""
 
             let expectation = #"""
@@ -182,7 +181,7 @@ struct E2ETestSuite {
                         <lastmod>\#(nowString)</lastmod>
                         <loc>http://localhost:3000/blog/tags/tag-3/</loc>
                         <lastmod>\#(nowString)</lastmod>
-                    
+
 
 
                     </url>
@@ -286,7 +285,6 @@ struct E2ETestSuite {
             let context = try String(contentsOf: contextURL)
 
             print(context.replacingOccurrences(["&quot;": "\""]))
-
         }
     }
 
@@ -514,7 +512,6 @@ struct E2ETestSuite {
                     ]
                     .sorted()
             )
-
         }
     }
 
@@ -742,7 +739,7 @@ struct E2ETestSuite {
     // MARK: - asset behaviors
 
     @Test
-    func testMinifyCSSAsset() async throws {
+    func minifyCSSAsset() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -854,7 +851,7 @@ struct E2ETestSuite {
     }
 
     @Test
-    func testSASSAsset() async throws {
+    func sASSAsset() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -970,7 +967,7 @@ struct E2ETestSuite {
     }
 
     @Test
-    func testSCSSModuleLoader() async throws {
+    func sCSSModuleLoader() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -1095,11 +1092,11 @@ struct E2ETestSuite {
     func transformerRunTest() async throws {
         let now = Date()
         let fileManager = FileManager.default
-        let rootUrl = FileManager.default.temporaryDirectory
+        let rootURL = FileManager.default.temporaryDirectory
         let rootName = "FileManagerPlayground_\(UUID().uuidString)"
 
         try FileManagerPlayground(
-            rootUrl: rootUrl,
+            rootURL: rootURL,
             rootName: rootName,
             fileManager: fileManager
         ) {
@@ -1129,7 +1126,7 @@ struct E2ETestSuite {
                                     run: [
                                         .init(
                                             path:
-                                                "\(rootUrl.path())/\(rootName)/src/transformers",
+                                                "\(rootURL.path())/\(rootName)/src/transformers",
                                             name: "replace"
                                         )
                                     ],
@@ -1224,9 +1221,7 @@ struct E2ETestSuite {
                     )
                 }
                 Mocks.E2E.templates(debugContext: "{{.}}")
-
             }
-
         }
         .test {
             let input = $1.appendingPathIfPresent("src")
@@ -1242,7 +1237,7 @@ struct E2ETestSuite {
     }
 
     @Test
-    func testPaginationPages() throws {
+    func paginationPages() throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -1373,15 +1368,17 @@ struct E2ETestSuite {
                     let slug: String
                     let title: String
                 }
+
                 struct Context: Decodable {
                     struct Minimal: Decodable {
                         let slug: String
                     }
+
                     let minimal: [Minimal]
                 }
+
                 let page: Page
                 let context: Context
-
             }
 
             let exp = try decoder.decode(Exp.self, from: data)

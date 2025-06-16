@@ -5,13 +5,12 @@
 //  Created by Tibor Bödecs on 2025. 06. 08..
 //
 
-import Foundation
 import FileManagerKitBuilder
-import ToucanSource
+import Foundation
 import ToucanSDK
+import ToucanSource
 
 extension Mocks.E2E {
-
     static func types(
         postType: ContentDefinition
     ) -> Directory {
@@ -202,7 +201,6 @@ extension Mocks.E2E {
         now: Date,
         debugContext: String = "{{.}}"
     ) -> Directory {
-
         let config: Config = .defaults
 
         let formatter = ToucanInputDateFormatter(
@@ -301,17 +299,17 @@ extension Mocks.E2E {
                                 now: now,
                                 // near past
                                 publication: formatter.string(
-                                    from: now.addingTimeInterval(-86_400),
+                                    from: now.addingTimeInterval(-86400),
                                     using: publicationConfig
                                 ),
                                 // near future
                                 expiration: formatter.string(
-                                    from: now.addingTimeInterval(86_400),
+                                    from: now.addingTimeInterval(86400),
                                     using: expirationConfig
                                 ),
                                 featured: false,
-                                authorIds: [1, 2],
-                                tagIds: [1, 2]
+                                authorIDs: [1, 2],
+                                tagIDs: [1, 2]
                             )
                         )
                         RawContentBundle(
@@ -322,20 +320,20 @@ extension Mocks.E2E {
                                 // past
                                 publication: formatter.string(
                                     from: now.addingTimeInterval(
-                                        -86_400 * 2
+                                        -86400 * 2
                                     ),
                                     using: publicationConfig
                                 ),
                                 // future
                                 expiration: formatter.string(
                                     from: now.addingTimeInterval(
-                                        86_400 * 2
+                                        86400 * 2
                                     ),
                                     using: expirationConfig
                                 ),
                                 featured: true,
-                                authorIds: [1, 2, 3],
-                                tagIds: [2]
+                                authorIDs: [1, 2, 3],
+                                tagIDs: [2]
                             )
                         )
                         RawContentBundle(
@@ -346,20 +344,20 @@ extension Mocks.E2E {
                                 // distant past
                                 publication: formatter.string(
                                     from: now.addingTimeInterval(
-                                        -86_400 * 3
+                                        -86400 * 3
                                     ),
                                     using: publicationConfig
                                 ),
                                 // distant future
                                 expiration: formatter.string(
                                     from: now.addingTimeInterval(
-                                        86_400 * 3
+                                        86400 * 3
                                     ),
                                     using: expirationConfig
                                 ),
                                 featured: false,
-                                authorIds: [2, 3],
-                                tagIds: [2, 3]
+                                authorIDs: [2, 3],
+                                tagIDs: [2, 3]
                             )
                         )
                         Directory(name: "pages") {
@@ -441,7 +439,7 @@ extension Mocks.E2E {
                             name: "guide-1",
                             rawContent: Mocks.RawContents.guide(
                                 id: 1,
-                                categoryId: 1,
+                                categoryID: 1,
                                 now: now
                             )
                         )
@@ -449,7 +447,7 @@ extension Mocks.E2E {
                             name: "guide-2",
                             rawContent: Mocks.RawContents.guide(
                                 id: 2,
-                                categoryId: 1,
+                                categoryID: 1,
                                 now: now
                             )
                         )
@@ -457,7 +455,7 @@ extension Mocks.E2E {
                             name: "guide-3",
                             rawContent: Mocks.RawContents.guide(
                                 id: 3,
-                                categoryId: 1,
+                                categoryID: 1,
                                 now: now
                             )
                         )
@@ -465,7 +463,7 @@ extension Mocks.E2E {
                             name: "guide-4",
                             rawContent: Mocks.RawContents.guide(
                                 id: 4,
-                                categoryId: 2,
+                                categoryID: 2,
                                 now: now
                             )
                         )
@@ -473,7 +471,7 @@ extension Mocks.E2E {
                             name: "guide-5",
                             rawContent: Mocks.RawContents.guide(
                                 id: 5,
-                                categoryId: 2,
+                                categoryID: 2,
                                 now: now
                             )
                         )
@@ -481,7 +479,7 @@ extension Mocks.E2E {
                             name: "guide-6",
                             rawContent: Mocks.RawContents.guide(
                                 id: 6,
-                                categoryId: 2,
+                                categoryID: 2,
                                 now: now
                             )
                         )
@@ -489,7 +487,7 @@ extension Mocks.E2E {
                             name: "guide-7",
                             rawContent: Mocks.RawContents.guide(
                                 id: 7,
-                                categoryId: 3,
+                                categoryID: 3,
                                 now: now
                             )
                         )
@@ -497,7 +495,7 @@ extension Mocks.E2E {
                             name: "guide-8",
                             rawContent: Mocks.RawContents.guide(
                                 id: 8,
-                                categoryId: 3,
+                                categoryID: 3,
                                 now: now
                             )
                         )
@@ -505,7 +503,7 @@ extension Mocks.E2E {
                             name: "guide-9",
                             rawContent: Mocks.RawContents.guide(
                                 id: 9,
-                                categoryId: 3,
+                                categoryID: 3,
                                 now: now
                             )
                         )
@@ -518,5 +516,4 @@ extension Mocks.E2E {
             Mocks.E2E.templates(debugContext: debugContext)
         }
     }
-
 }

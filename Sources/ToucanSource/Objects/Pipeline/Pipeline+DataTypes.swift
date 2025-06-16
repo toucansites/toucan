@@ -5,13 +5,13 @@
 //  Created by Tibor Bödecs on 2025. 05. 30..
 //
 
-extension Pipeline {
-
+public extension Pipeline {
     /// Defines how core data types—like date formats—should be interpreted or rendered within a pipeline.
     ///
     /// `DataTypes` is a configuration layer that allows pipelines to specify
     /// localized or project-specific formatting and handling logic for structured data.
-    public struct DataTypes: Codable, Equatable {
+    struct DataTypes: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -19,10 +19,7 @@ extension Pipeline {
             case date
         }
 
-        // MARK: - Properties
-
-        /// The configuration used to handle and format date values.
-        public var date: Date
+        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -30,6 +27,13 @@ extension Pipeline {
         public static var defaults: Self {
             .init(date: .defaults)
         }
+
+        // MARK: - Properties
+
+        /// The configuration used to handle and format date values.
+        public var date: Date
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

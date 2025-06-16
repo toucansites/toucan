@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 21..
 //
 
-extension Config.DataTypes {
-
+public extension Config.DataTypes {
     /// Provides a configuration for parsing and formatting dates across the site or contents.
-    public struct Date: Codable, Equatable {
+    struct Date: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -16,6 +16,19 @@ extension Config.DataTypes {
             case input
             case output
             case formats
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
+        public static var defaults: Self {
+            .init(
+                input: .defaults,
+                output: .defaults,
+                formats: [:]
+            )
         }
 
         // MARK: - Properties
@@ -38,16 +51,7 @@ extension Config.DataTypes {
         /// ```
         public var formats: [String: DateFormatterConfig]
 
-        // MARK: - Defaults
-
-        /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
-        public static var defaults: Self {
-            .init(
-                input: .defaults,
-                output: .defaults,
-                formats: [:]
-            )
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

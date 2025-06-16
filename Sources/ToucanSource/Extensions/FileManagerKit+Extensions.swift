@@ -4,11 +4,10 @@
 //
 //  Created by Binary Birds on 2025. 04. 17..
 
-import struct Foundation.URL
 import FileManagerKit
+import struct Foundation.URL
 
-fileprivate extension URL {
-
+private extension URL {
     /// Computes a relative path from the current URL (`self`) to another base URL.
     ///
     /// This method compares the standardized path components of both URLs,
@@ -19,7 +18,7 @@ fileprivate extension URL {
     /// - Returns: A relative path string from `url` to `self`.
     func relativePath(to url: URL) -> String {
         // Break both paths into components (standardized removes '.', '..', etc.)
-        let components = self.standardized.pathComponents
+        let components = standardized.pathComponents
         let baseComponents = url.standardized.pathComponents
 
         // Determine how many leading components are shared between both paths
@@ -35,13 +34,12 @@ fileprivate extension URL {
     }
 }
 
-extension FileManagerKit {
-
+public extension FileManagerKit {
     /// Find files in the specified directory that match the given name and extensions criteria.
     ///
     /// - Parameters: url: The URL of the directory to search.
     /// - Returns: An array of file names that match the specified criteria.
-    public func find(
+    func find(
         name: String? = nil,
         extensions: [String]? = nil,
         recursively: Bool = false,
@@ -66,9 +64,10 @@ extension FileManagerKit {
         return
             items
             .filter { fileName in
-                let fileUrl = URL(fileURLWithPath: fileName)
-                let baseName = fileUrl.deletingPathExtension().lastPathComponent
-                let ext = fileUrl.pathExtension
+                let fileURL = URL(fileURLWithPath: fileName)
+                let baseName = fileURL.deletingPathExtension()
+                    .lastPathComponent
+                let ext = fileURL.pathExtension
 
                 switch (name, extensions) {
                 case (nil, nil):
@@ -77,10 +76,9 @@ extension FileManagerKit {
                     return baseName == name
                 case (nil, let extensions?):
                     return extensions.contains(ext)
-                case (let name?, let extensions?):
+                case let (name?, extensions?):
                     return baseName == name && extensions.contains(ext)
                 }
             }
     }
-
 }

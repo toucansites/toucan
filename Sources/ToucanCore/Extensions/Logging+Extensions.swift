@@ -9,12 +9,10 @@ import class Foundation.ProcessInfo
 import Logging
 
 public extension Logger {
-
     static func subsystem(
         _ id: String,
         _ level: Logger.Level = .info
     ) -> Logger {
-
         var logger = Logger(label: id)
 
         logger.logLevel = level

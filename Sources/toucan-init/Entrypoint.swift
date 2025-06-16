@@ -4,10 +4,10 @@
 //
 //  Created by Binary Birds on 2025. 04. 15..
 
-import Foundation
 import ArgumentParser
-import Logging
 import FileManagerKit
+import Foundation
+import Logging
 import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
@@ -15,6 +15,7 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
@@ -28,6 +29,8 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
+    // MARK: - Properties
+
     // MARK: - arguments
 
     @Argument(help: "The name of the site directory (default: site).")
@@ -35,6 +38,8 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
+
+    // MARK: - Functions
 
     // MARK: - run
 
@@ -51,13 +56,13 @@ struct Entrypoint: AsyncParsableCommand {
 
         do {
             let source = Download(
-                sourceUrl: minimalSourceURL,
-                targetDirUrl: siteDirectoryURL,
+                sourceURL: minimalSourceURL,
+                targetDirURL: siteDirectoryURL,
                 fileManager: fileManager
             )
             let template = Download(
-                sourceUrl: minimalTemplateURL,
-                targetDirUrl: defaultTemplatesURL,
+                sourceURL: minimalTemplateURL,
+                targetDirURL: defaultTemplatesURL,
                 fileManager: fileManager
             )
 
@@ -76,7 +81,6 @@ struct Entrypoint: AsyncParsableCommand {
 }
 
 extension Entrypoint {
-
     var fileManager: FileManager { .default }
 
     var currentDirectoryURL: URL {

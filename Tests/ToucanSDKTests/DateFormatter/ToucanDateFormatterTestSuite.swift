@@ -6,17 +6,15 @@
 //
 
 import Foundation
-import Testing
 import Logging
-import ToucanSource
+import Testing
 @testable import ToucanSDK
+import ToucanSource
 
 @Suite
 struct ToucanDateFormatterTestSuite {
-
     @Test
     func input() throws {
-
         let config = Config.defaults
 
         let dateFormatter = ToucanInputDateFormatter(
@@ -47,7 +45,6 @@ struct ToucanDateFormatterTestSuite {
 
     @Test
     func output() throws {
-
         let config = Config.defaults
         var pipeline = Mocks.Pipelines.html()
         pipeline.dataTypes.date.output = .init(

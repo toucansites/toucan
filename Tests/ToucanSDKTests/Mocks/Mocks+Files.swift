@@ -5,15 +5,14 @@
 //  Created by gerp83 on 2025. 04. 15..
 //
 
-import Foundation
 import FileManagerKitBuilder
+import Foundation
 
 extension File {
     enum Mocks {}
 }
 
 extension File.Mocks {
-
     // MARK: -
 
     static func replaceTransformer() -> File {
@@ -216,8 +215,8 @@ extension File.Mocks {
         expiration: String,
         draft: Bool,
         featured: Bool,
-        authorIds: [Int],
-        tagIds: [Int]
+        authorIDs: [Int],
+        tagIDs: [Int]
     ) -> RawContentBundle {
         .init(
             name: "post-\(id)",
@@ -228,8 +227,8 @@ extension File.Mocks {
                 expiration: expiration,
                 draft: draft,
                 featured: featured,
-                authorIds: authorIds,
-                tagIds: tagIds
+                authorIDs: authorIDs,
+                tagIDs: tagIDs
             )
         )
     }
@@ -299,5 +298,4 @@ extension File.Mocks {
                 """
         )
     }
-
 }

@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct PipelineTransformersTestSuite {
-
     @Test
     func initWithName() throws {
         let contentTransformer = Pipeline.Transformers.Transformer(

@@ -7,6 +7,7 @@
 
 /// Represents a deployment target configuration for a Toucan project.
 public struct Target: Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -19,6 +20,28 @@ public struct Target: Codable, Equatable {
         case timeZone
         case output
         case `default`
+    }
+
+    // MARK: - Static Computed Properties
+
+    /// Base values used when decoding fails or fields are missing.
+    private static var base: Self {
+        .init(
+            name: "dev",
+            config: "",
+            url: "http://localhost:3000",
+            output: "docs",
+            isDefault: false
+        )
+    }
+
+    // MARK: - Defaults
+
+    /// Standard target value
+    public static var standard: Self {
+        var target = Self.base
+        target.isDefault = true
+        return target
     }
 
     // MARK: - Properties
@@ -38,25 +61,7 @@ public struct Target: Codable, Equatable {
     /// A flag indicating if this is the default target.
     public var isDefault: Bool
 
-    // MARK: - Defaults
-
-    /// Standard target value
-    public static var standard: Self {
-        var target = Self.base
-        target.isDefault = true
-        return target
-    }
-
-    /// Base values used when decoding fails or fields are missing.
-    private static var base: Self {
-        .init(
-            name: "dev",
-            config: "",
-            url: "http://localhost:3000",
-            output: "docs",
-            isDefault: false
-        )
-    }
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -114,6 +119,8 @@ public struct Target: Codable, Equatable {
             try container.decodeIfPresent(Bool.self, forKey: .default)
             ?? base.isDefault
     }
+
+    // MARK: - Functions
 
     /// Encodes this instance into the given encoder.
     ///

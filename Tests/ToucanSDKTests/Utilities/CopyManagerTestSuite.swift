@@ -5,14 +5,13 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 04..
 //
 
+import FileManagerKitBuilder
 import Foundation
 import Testing
-import FileManagerKitBuilder
 import ToucanSDK
 
 @Suite
 struct CopyManagerTestSuite {
-
     @Test()
     func copyItemsRecursively() async throws {
         try FileManagerPlayground {
@@ -32,20 +31,20 @@ struct CopyManagerTestSuite {
         }
         .test {
             let src = $1.appendingPathIfPresent("src/assets")
-            let workDirUrl = $1.appendingPathIfPresent("workDir")
+            let workDirURL = $1.appendingPathIfPresent("workDir")
 
             let copyManager = CopyManager(
                 fileManager: $0,
                 sources: [
                     src
                 ],
-                destination: workDirUrl
+                destination: workDirURL
             )
             try copyManager.copy()
 
             #expect(
                 $0.listDirectory(
-                    at: workDirUrl.appendingPathIfPresent(
+                    at: workDirURL.appendingPathIfPresent(
                         "icons"
                     )
                 )
@@ -59,7 +58,7 @@ struct CopyManagerTestSuite {
 
             #expect(
                 $0.listDirectory(
-                    at: workDirUrl.appendingPathIfPresent(
+                    at: workDirURL.appendingPathIfPresent(
                         "images"
                     )
                 )
@@ -70,7 +69,6 @@ struct CopyManagerTestSuite {
                     ]
                     .sorted()
             )
-
         }
     }
 
@@ -78,24 +76,23 @@ struct CopyManagerTestSuite {
     func copyEmptyDirectory() async throws {
         try FileManagerPlayground {
             Directory(name: "src") {
-                Directory(name: "assets") {
-                }
+                Directory(name: "assets") {}
             }
             Directory(name: "workDir") {}
         }
         .test {
             let src = $1.appendingPathIfPresent("src/assets")
-            let workDirUrl = $1.appendingPathIfPresent("workDir")
+            let workDirURL = $1.appendingPathIfPresent("workDir")
 
             let copyManager = CopyManager(
                 fileManager: $0,
                 sources: [
                     src
                 ],
-                destination: workDirUrl
+                destination: workDirURL
             )
             try copyManager.copy()
-            #expect($0.listDirectory(at: workDirUrl).isEmpty)
+            #expect($0.listDirectory(at: workDirURL).isEmpty)
         }
     }
 }

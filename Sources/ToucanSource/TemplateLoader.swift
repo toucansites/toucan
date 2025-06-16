@@ -10,6 +10,7 @@ import struct Foundation.URL
 
 /// A loader responsible for building a `Template` by collecting assets and templates from various locations.
 public struct TemplateLoader {
+    // MARK: - Properties
 
     /// The file system locations relevant to the template loading process.
     let locations: BuiltTargetSourceLocations
@@ -17,6 +18,8 @@ public struct TemplateLoader {
     let extensions: [String]
     /// The file manager utility used to search and retrieve files.
     let fileManager: FileManagerKit
+
+    // MARK: - Lifecycle
 
     /// Creates a new instance of `TemplateLoader`.
     /// - Parameters:
@@ -33,84 +36,13 @@ public struct TemplateLoader {
         self.fileManager = fileManager
     }
 
-    ///
-    /// Loads and builds a `Template` by collecting assets and templates from predefined locations.
-    ///
-    /// - Returns: A fully constructed `Template` instance.
-    /// - Throws: An error if file discovery fails.
-    public func load() throws -> Template {
-        let assets = fileManager.find(
-            recursively: true,
-            at: locations.currentTemplateAssetsURL
-        )
-        let templates = fileManager.find(
-            extensions: extensions,
-            recursively: true,
-            at: locations.currentTemplateViewsURL
-        )
-
-        let assetOverrides = fileManager.find(
-            recursively: true,
-            at: locations.currentTemplateAssetOverridesURL
-        )
-
-        let templateOverrides = fileManager.find(
-            extensions: extensions,
-            recursively: true,
-            at: locations.currentTemplateViewsOverridesUrl
-        )
-
-        let contentAssetOverrides = fileManager.find(
-            recursively: true,
-            at: locations.siteAssetsURL
-        )
-
-        let contentTemplateOverrides = fileManager.find(
-            extensions: extensions,
-            recursively: true,
-            at: locations.contentsUrl
-        )
-
-        let template = Template(
-            baseUrl: locations.templatesURL,
-            components: .init(
-                assets: assets,
-                views: try templates.map {
-                    try loadTemplate(
-                        at: locations.currentTemplateViewsURL,
-                        path: $0
-                    )
-                }
-            ),
-            overrides: .init(
-                assets: assetOverrides,
-                views: try templateOverrides.map {
-                    try loadTemplate(
-                        at: locations.currentTemplateViewsOverridesUrl,
-                        path: $0
-                    )
-                }
-            ),
-            content: .init(
-                assets: contentAssetOverrides,
-                views: try contentTemplateOverrides.map {
-                    try loadTemplate(
-                        at: locations.contentsUrl,
-                        path: $0,
-                        isContentOverride: true
-                    )
-                }
-            )
-        )
-        return template
-    }
+    // MARK: - Functions
 
     func loadTemplate(
         at url: URL,
         path: String,
         isContentOverride: Bool = false
     ) throws -> View {
-
         let basePath =
             path
             .split(separator: ".")
@@ -137,6 +69,78 @@ public struct TemplateLoader {
             path: path,
             contents: contents
         )
+    }
+
+    ///
+    /// Loads and builds a `Template` by collecting assets and templates from predefined locations.
+    ///
+    /// - Returns: A fully constructed `Template` instance.
+    /// - Throws: An error if file discovery fails.
+    public func load() throws -> Template {
+        let assets = fileManager.find(
+            recursively: true,
+            at: locations.currentTemplateAssetsURL
+        )
+        let templates = fileManager.find(
+            extensions: extensions,
+            recursively: true,
+            at: locations.currentTemplateViewsURL
+        )
+
+        let assetOverrides = fileManager.find(
+            recursively: true,
+            at: locations.currentTemplateAssetOverridesURL
+        )
+
+        let templateOverrides = fileManager.find(
+            extensions: extensions,
+            recursively: true,
+            at: locations.currentTemplateViewsOverridesURL
+        )
+
+        let contentAssetOverrides = fileManager.find(
+            recursively: true,
+            at: locations.siteAssetsURL
+        )
+
+        let contentTemplateOverrides = fileManager.find(
+            extensions: extensions,
+            recursively: true,
+            at: locations.contentsURL
+        )
+
+        let template = try Template(
+            baseURL: locations.templatesURL,
+            components: .init(
+                assets: assets,
+                views: templates.map {
+                    try loadTemplate(
+                        at: locations.currentTemplateViewsURL,
+                        path: $0
+                    )
+                }
+            ),
+            overrides: .init(
+                assets: assetOverrides,
+                views: templateOverrides.map {
+                    try loadTemplate(
+                        at: locations.currentTemplateViewsOverridesURL,
+                        path: $0
+                    )
+                }
+            ),
+            content: .init(
+                assets: contentAssetOverrides,
+                views: contentTemplateOverrides.map {
+                    try loadTemplate(
+                        at: locations.contentsURL,
+                        path: $0,
+                        isContentOverride: true
+                    )
+                }
+            )
+        )
+        return template
     }
 
     /// Returns a dictionary of template IDs and their contents.

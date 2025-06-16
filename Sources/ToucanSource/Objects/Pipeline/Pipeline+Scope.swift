@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
-extension Pipeline {
-
+public extension Pipeline {
     /// Describes a rendering scope within a content pipeline.
-    public struct Scope: Codable {
+    struct Scope: Codable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -16,6 +16,43 @@ extension Pipeline {
             case id
             case context
             case fields
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Predefined Scopes
+
+        /// A scope for rendering lightweight summaries or IDs for use in references.
+        public static var reference: Scope {
+            .init(context: .reference)
+        }
+
+        /// A scope for rendering content in a list format (e.g., previews, teasers).
+        public static var list: Scope {
+            .init(context: .list)
+        }
+
+        /// A scope for rendering full content in detail pages.
+        public static var detail: Scope {
+            .init(context: .detail)
+        }
+
+        // MARK: - Default Scope Sets
+
+        /// A standard mapping of common context names to their default scopes.
+        public static var standard: [String: Scope] {
+            [
+                "reference": reference,
+                "list": list,
+                "detail": detail,
+            ]
+        }
+
+        /// The default fallback scope set, applied to all content types via the `*` wildcard.
+        public static var `default`: [String: [String: Scope]] {
+            [
+                "*": standard
+            ]
         }
 
         // MARK: - Properties
@@ -26,6 +63,8 @@ extension Pipeline {
         /// The specific content fields to include when rendering in this scope.
         /// If empty, all fields may be included by default.
         public var fields: [String]
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -63,6 +102,8 @@ extension Pipeline {
             self.init(context: context, fields: fields)
         }
 
+        // MARK: - Functions
+
         /// Encodes this `Scope` instance into the given encoder.
         ///
         /// This method encodes the `context` and `fields` properties using keyed encoding.
@@ -75,41 +116,6 @@ extension Pipeline {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(context, forKey: .context)
             try container.encode(fields, forKey: .fields)
-        }
-
-        // MARK: - Predefined Scopes
-
-        /// A scope for rendering lightweight summaries or IDs for use in references.
-        public static var reference: Scope {
-            .init(context: .reference)
-        }
-
-        /// A scope for rendering content in a list format (e.g., previews, teasers).
-        public static var list: Scope {
-            .init(context: .list)
-        }
-
-        /// A scope for rendering full content in detail pages.
-        public static var detail: Scope {
-            .init(context: .detail)
-        }
-
-        // MARK: - Default Scope Sets
-
-        /// A standard mapping of common context names to their default scopes.
-        public static var standard: [String: Scope] {
-            [
-                "reference": reference,
-                "list": list,
-                "detail": detail,
-            ]
-        }
-
-        /// The default fallback scope set, applied to all content types via the `*` wildcard.
-        public static var `default`: [String: [String: Scope]] {
-            [
-                "*": standard
-            ]
         }
     }
 }

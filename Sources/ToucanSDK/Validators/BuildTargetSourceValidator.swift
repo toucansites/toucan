@@ -7,11 +7,10 @@
 
 import Foundation
 import ToucanCore
-import ToucanSource
 import ToucanSerialization
+import ToucanSource
 
 enum BuildTargetSourceValidatorError: ToucanError {
-
     case duplicateContentTypes([String])
     case noDefaultContentType
     case multipleDefaultContentTypes([String])
@@ -22,65 +21,67 @@ enum BuildTargetSourceValidatorError: ToucanError {
     case invalidTimeZone(String)
     case unknown(Error)
 
+    // MARK: - Computed Properties
+
     var underlyingErrors: [any Error] {
         switch self {
-        case .unknown(let error):
-            return [error]
+        case let .unknown(error):
+            [error]
         default:
-            return []
+            []
         }
     }
 
     var logMessage: String {
         switch self {
-        case .duplicateContentTypes(let values):
+        case let .duplicateContentTypes(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate content types: \(items)."
         case .noDefaultContentType:
             return "No default content type."
-        case .multipleDefaultContentTypes(let values):
+        case let .multipleDefaultContentTypes(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Multiple default content types: \(items)."
-        case .duplicatePipelines(let values):
+        case let .duplicatePipelines(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate pipelines: \(items)."
-        case .duplicateRawContentSlugs(let values):
+        case let .duplicateRawContentSlugs(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate slugs: \(items)."
-        case .duplicateBlocks(let values):
+        case let .duplicateBlocks(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate blocks: \(items)."
-        case .invalidLocale(let locale):
+        case let .invalidLocale(locale):
             return "Invalid site locale: `\(locale)`."
-        case .invalidTimeZone(let timeZone):
+        case let .invalidTimeZone(timeZone):
             return "Invalid site time zone: `\(timeZone)`."
-        case .unknown(let error):
+        case let .unknown(error):
             return error.localizedDescription
         }
     }
 
     var userFriendlyMessage: String {
         switch self {
-        case .duplicateContentTypes(let values):
+        case let .duplicateContentTypes(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate content types: \(items)."
         case .noDefaultContentType:
             return "No default content type."
-        case .multipleDefaultContentTypes(let values):
+        case let .multipleDefaultContentTypes(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Multiple default content types: \(items)."
-        case .duplicatePipelines(let values):
+        case let .duplicatePipelines(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate pipelines: \(items)."
-        case .duplicateRawContentSlugs(let values):
+        case let .duplicateRawContentSlugs(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate slugs: \(items)."
-        case .duplicateBlocks(let values):
+        case let .duplicateBlocks(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate blocks: \(items)."
-        case .invalidLocale(let locale):
+        case let .invalidLocale(locale):
             return "Invalid site locale: `\(locale)`."
-        case .invalidTimeZone(let timeZone):
+        case let .invalidTimeZone(timeZone):
             return "Invalid site time zone: `\(timeZone)`."
         case .unknown:
             return "Unknown source validator error."
@@ -89,8 +90,11 @@ enum BuildTargetSourceValidatorError: ToucanError {
 }
 
 struct BuildTargetSourceValidator {
+    // MARK: - Properties
 
     var buildTargetSource: BuildTargetSource
+
+    // MARK: - Functions
 
     func validate() throws(BuildTargetSourceValidatorError) {
         try validateContentTypes()
@@ -99,11 +103,10 @@ struct BuildTargetSourceValidator {
         try validateBlocks()
 
         /// Validate frontMatters
-        //validateFrontMatters(buildTargetSource)
+        // validateFrontMatters(buildTargetSource)
     }
 
     func validateContentTypes() throws(BuildTargetSourceValidatorError) {
-
         let ids = buildTargetSource.contentDefinitions.map(\.id)
         let duplicates = Dictionary(grouping: ids, by: { $0 })
             .mapValues { $0.count }
@@ -124,7 +127,6 @@ struct BuildTargetSourceValidator {
     }
 
     func validatePipelines() throws(BuildTargetSourceValidatorError) {
-
         let ids = buildTargetSource.pipelines.map(\.id)
         let duplicates = Dictionary(grouping: ids, by: { $0 })
             .mapValues { $0.count }
@@ -185,7 +187,6 @@ struct BuildTargetSourceValidator {
     //    }
 
     func validateBlocks() throws(BuildTargetSourceValidatorError) {
-
         let names = buildTargetSource.blockDirectives.map(\.name)
         let duplicates = Dictionary(grouping: names, by: { $0 })
             .mapValues { $0.count }

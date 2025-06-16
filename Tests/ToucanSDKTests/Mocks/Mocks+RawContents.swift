@@ -9,7 +9,6 @@ import Foundation
 import ToucanSource
 
 extension Mocks.RawContents {
-
     static func homePage(
         now: Date = .init()
     ) -> RawContent {
@@ -286,10 +285,10 @@ extension Mocks.RawContents {
         expiration: String,
         draft: Bool = false,
         featured: Bool = false,
-        authorIds: [Int] = [],
-        tagIds: [Int] = []
+        authorIDs: [Int] = [],
+        tagIDs: [Int] = []
     ) -> RawContent {
-        return .init(
+        .init(
             origin: .init(
                 path: .init("blog/posts/post-\(id)"),
                 slug: "blog/posts/post-\(id)"
@@ -302,8 +301,8 @@ extension Mocks.RawContents {
                     "expiration": .init(expiration),
                     "draft": .init(draft),
                     "featured": .init(featured),
-                    "authors": .init(authorIds.map { "author-\($0)" }),
-                    "tags": .init(tagIds.map { "tag-\($0)" }),
+                    "authors": .init(authorIDs.map { "author-\($0)" }),
+                    "tags": .init(tagIDs.map { "tag-\($0)" }),
                     "rating": .init(Double(id)),
                     "image": "cover-\(id).jpg",
                 ],
@@ -376,7 +375,7 @@ extension Mocks.RawContents {
 
     static func guide(
         id: Int,
-        categoryId: Int,
+        categoryID: Int,
         now: Date = .init()
     ) -> RawContent {
         .init(
@@ -388,7 +387,7 @@ extension Mocks.RawContents {
                 frontMatter: [
                     "title": "Guide #\(id)",
                     "description": "Guide #\(id) description",
-                    "category": "category-\(categoryId)",
+                    "category": "category-\(categoryID)",
                     "order": .init(id),
                 ],
 

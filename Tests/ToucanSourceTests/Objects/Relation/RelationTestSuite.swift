@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct RelationTestSuite {
-
     // MARK: - order
 
     @Test
@@ -38,5 +37,4 @@ struct RelationTestSuite {
         #expect(result.order?.key == "title")
         #expect(result.order?.direction == .desc)
     }
-
 }
