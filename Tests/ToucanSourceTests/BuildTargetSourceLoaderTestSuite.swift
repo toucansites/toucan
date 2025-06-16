@@ -583,7 +583,7 @@ struct BuildTargetSourceLoaderTestSuite {
     @Test
     func configWithTargetName() async throws {
         var config = Config.defaults
-        config.themes.current.path = "test"
+        config.templates.current.path = "test"
 
         try FileManagerPlayground {
             testSourceHierarchy {
@@ -595,7 +595,7 @@ struct BuildTargetSourceLoaderTestSuite {
             let sourceLoader = testSourceLoader(fileManager: $0, url: $1)
             let result = try sourceLoader.loadConfig()
 
-            #expect(result.themes.current.path == "test")
+            #expect(result.templates.current.path == "test")
         }
     }
 

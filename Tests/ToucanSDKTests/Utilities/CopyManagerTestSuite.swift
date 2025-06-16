@@ -8,6 +8,7 @@
 import Foundation
 import Testing
 import FileManagerKitBuilder
+import ToucanSDK
 
 @Suite
 struct CopyManagerTestSuite {
@@ -18,47 +19,58 @@ struct CopyManagerTestSuite {
             Directory(name: "src") {
                 Directory(name: "assets") {
                     Directory(name: "icons") {
-                        "image.png"
-                        "cover.png"
+                        "foo.svg"
+                        "bar.ico"
                     }
                     Directory(name: "images") {
                         "image.png"
-                        "cover.png"
+                        "cover.jpg"
                     }
                 }
             }
             Directory(name: "workDir") {}
         }
-        .test { _, _ in
-            //            let sourceConfig = SourceConfig(
-            //                sourceUrl: $1.appending(path: "src/"),
-            //                config: .defaults
-            //            )
-            //            let workDirUrl = $1.appending(path: "workDir/")
-            //            let copyManager = CopyManager(
-            //                fileManager: $0,
-            //                sources: [
-            //                    sourceConfig.currentThemeAssetsUrl,
-            //                    sourceConfig.currentThemeOverrideAssetsUrl,
-            //                    sourceConfig.siteAssetsUrl,
-            //                ],
-            //                destination: workDirUrl
-            //            )
-            //            try copyManager.copy()
-            //
-            //            let expectation = ["cover.png", "image.png"]
-            //
-            //            var locations =
-            //                $0
-            //                .find(at: workDirUrl.appending(path: "icons/"))
-            //                .sorted()
-            //            #expect(locations == expectation)
-            //
-            //            locations =
-            //                $0
-            //                .find(at: workDirUrl.appending(path: "images/"))
-            //                .sorted()
-            //            #expect(locations == expectation)
+        .test {
+            let src = $1.appendingPathIfPresent("src/assets")
+            let workDirUrl = $1.appendingPathIfPresent("workDir")
+
+            let copyManager = CopyManager(
+                fileManager: $0,
+                sources: [
+                    src
+                ],
+                destination: workDirUrl
+            )
+            try copyManager.copy()
+
+            #expect(
+                $0.listDirectory(
+                    at: workDirUrl.appendingPathIfPresent(
+                        "icons"
+                    )
+                )
+                .sorted()
+                    == [
+                        "foo.svg",
+                        "bar.ico",
+                    ]
+                    .sorted()
+            )
+
+            #expect(
+                $0.listDirectory(
+                    at: workDirUrl.appendingPathIfPresent(
+                        "images"
+                    )
+                )
+                .sorted()
+                    == [
+                        "image.png",
+                        "cover.jpg",
+                    ]
+                    .sorted()
+            )
+
         }
     }
 
@@ -71,25 +83,19 @@ struct CopyManagerTestSuite {
             }
             Directory(name: "workDir") {}
         }
-        .test { _, _ in
-            //            let sourceConfig = SourceConfig(
-            //                sourceUrl: $1.appending(path: "src/"),
-            //                config: .defaults
-            //            )
-            //            let workDirUrl = $1.appending(path: "workDir/")
-            //            let copyManager = CopyManager(
-            //                fileManager: $0,
-            //                sources: [
-            //                    sourceConfig.currentThemeAssetsUrl,
-            //                    sourceConfig.currentThemeOverrideAssetsUrl,
-            //                    sourceConfig.siteAssetsUrl,
-            //                ],
-            //                destination: workDirUrl
-            //            )
-            //            try copyManager.copy()
-            //
-            //            let locations = $0.find(at: workDirUrl).sorted()
-            //            #expect(locations.isEmpty)
+        .test {
+            let src = $1.appendingPathIfPresent("src/assets")
+            let workDirUrl = $1.appendingPathIfPresent("workDir")
+
+            let copyManager = CopyManager(
+                fileManager: $0,
+                sources: [
+                    src
+                ],
+                destination: workDirUrl
+            )
+            try copyManager.copy()
+            #expect($0.listDirectory(at: workDirUrl).isEmpty)
         }
     }
 }

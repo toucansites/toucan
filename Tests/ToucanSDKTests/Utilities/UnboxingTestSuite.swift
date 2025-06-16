@@ -46,7 +46,7 @@
 //                            )
 //                        ),
 //                        "description": AnyCodable(
-//                            "Migration guide for Toucan Beta 3: covering changes to content structure, theme changes and rendering features."
+//                            "Migration guide for Toucan Beta 3: covering changes to content structure, template changes and rendering features."
 //                        ),
 //                        "featured": AnyCodable(true),
 //                        "contents": AnyCodable([
@@ -68,9 +68,9 @@
 //                                    Optional(
 //                                        Outline(
 //                                            level: 2,
-//                                            text: "Changes in theme",
+//                                            text: "Changes in templates",
 //                                            fragment: Optional(
-//                                                "changes-in-theme"
+//                                                "changes-in-templates"
 //                                            ),
 //                                            children: []
 //                                        )

@@ -31,7 +31,7 @@ struct BuildTargetSourceRendererTestSuite {
             generatorInfo: .current
         )
 
-        let results = try renderer.render(now: now)
+        _ = try renderer.render(now: now)
     }
 
     @Test
@@ -574,7 +574,7 @@ struct BuildTargetSourceRendererTestSuite {
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
-            templates: Mocks.Templates.all()
+            templates: Mocks.Views.all()
         )
         let results = try renderer.render(now: now)
 

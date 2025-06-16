@@ -1223,7 +1223,7 @@ struct E2ETestSuite {
                             """
                     )
                 }
-                Mocks.E2E.themes(debugContext: "{{.}}")
+                Mocks.E2E.templates(debugContext: "{{.}}")
 
             }
 

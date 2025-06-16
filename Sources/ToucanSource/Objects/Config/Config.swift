@@ -18,7 +18,7 @@ public struct Config: Codable, Equatable {
         case contents
         case types
         case blocks
-        case themes
+        case templates
         case dataTypes
         case renderer
     }
@@ -40,8 +40,8 @@ public struct Config: Codable, Equatable {
     /// A folder for reusable UI block components (e.g., hero, footer, card).
     public var blocks: Blocks
 
-    /// Theme-related configuration, including layout templates and style resources.
-    public var themes: Themes
+    /// Template-related configuration, including layout templates and style resources.
+    public var templates: Templates
 
     /// Global date format settings for rendering and parsing dates.
     public var dataTypes: DataTypes
@@ -61,7 +61,7 @@ public struct Config: Codable, Equatable {
             contents: .defaults,
             types: .defaults,
             blocks: .defaults,
-            themes: .defaults,
+            templates: .defaults,
             dataTypes: .defaults,
             renderer: .defaults
         )
@@ -77,7 +77,7 @@ public struct Config: Codable, Equatable {
     ///   - contents: Content mapping configuration.
     ///   - types: Folder path for type definitions.
     ///   - blocks: Folder path for reusable block templates.
-    ///   - themes: Theme layout and styling definitions.
+    ///   - templates: Template layout and styling definitions.
     ///   - dataTypes: Data type related configurations.
     ///   - renderer: Fine-grained control for specific content types.
     public init(
@@ -86,7 +86,7 @@ public struct Config: Codable, Equatable {
         contents: Contents,
         types: Types,
         blocks: Blocks,
-        themes: Themes,
+        templates: Templates,
         dataTypes: DataTypes,
         renderer: RendererConfig
     ) {
@@ -95,7 +95,7 @@ public struct Config: Codable, Equatable {
         self.contents = contents
         self.types = types
         self.blocks = blocks
-        self.themes = themes
+        self.templates = templates
         self.dataTypes = dataTypes
         self.renderer = renderer
     }
@@ -148,11 +148,11 @@ public struct Config: Codable, Equatable {
                 forKey: .blocks
             ) ?? defaults.blocks
 
-        self.themes =
+        self.templates =
             try container.decodeIfPresent(
-                Themes.self,
-                forKey: .themes
-            ) ?? defaults.themes
+                Templates.self,
+                forKey: .templates
+            ) ?? defaults.templates
 
         self.dataTypes =
             try container.decodeIfPresent(

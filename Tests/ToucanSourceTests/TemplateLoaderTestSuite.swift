@@ -1,5 +1,5 @@
 //
-//  ThemeLoaderTestSuite.swift
+//  TemplateLoaderTestSuite.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 03. 12..
@@ -14,10 +14,10 @@ import Logging
 @testable import ToucanSource
 
 @Suite
-struct ThemeLoaderTestSuite {
+struct TemplateLoaderTestSuite {
 
     @Test()
-    func standardThemeLoading() async throws {
+    func standardTemplateLoading() async throws {
         try FileManagerPlayground {
             Directory(name: "src") {
                 Directory(name: "assets") {
@@ -33,12 +33,12 @@ struct ThemeLoaderTestSuite {
                         )
                     }
                 }
-                Directory(name: "themes") {
+                Directory(name: "templates") {
                     Directory(name: "default") {
                         Directory(name: "assets") {
-                            "theme.css"
+                            "template.css"
                         }
-                        Directory(name: "templates") {
+                        Directory(name: "views") {
                             Directory(name: "pages") {
                                 File(
                                     name: "default.mustache",
@@ -72,9 +72,9 @@ struct ThemeLoaderTestSuite {
                     Directory(name: "overrides") {
                         Directory(name: "default") {
                             Directory(name: "assets") {
-                                "theme.css"
+                                "template.css"
                             }
-                            Directory(name: "templates") {
+                            Directory(name: "views") {
                                 Directory(name: "pages") {
                                     File(
                                         name: "default.mustache",
@@ -105,23 +105,23 @@ struct ThemeLoaderTestSuite {
                 config: config
             )
 
-            let loader = ThemeLoader(
+            let loader = TemplateLoader(
                 locations: locations,
                 fileManager: $0
             )
-            let theme = try loader.load()
+            let template = try loader.load()
 
-            #expect(theme.baseUrl == locations.themesUrl)
+            #expect(template.baseUrl == locations.templatesURL)
 
             #expect(
-                theme.components.assets.sorted()
+                template.components.assets.sorted()
                     == [
-                        "theme.css"
+                        "template.css"
                     ]
                     .sorted()
             )
             #expect(
-                theme.components.templates.map(\.path).sorted()
+                template.components.views.map(\.path).sorted()
                     == [
                         "pages/default.mustache",
                         "pages/about.mustache",
@@ -132,14 +132,14 @@ struct ThemeLoaderTestSuite {
             )
 
             #expect(
-                theme.overrides.assets.sorted()
+                template.overrides.assets.sorted()
                     == [
-                        "theme.css"
+                        "template.css"
                     ]
                     .sorted()
             )
             #expect(
-                theme.overrides.templates.map(\.path).sorted()
+                template.overrides.views.map(\.path).sorted()
                     == [
                         "pages/about.mustache",
                         "pages/default.mustache",
@@ -148,21 +148,21 @@ struct ThemeLoaderTestSuite {
             )
 
             #expect(
-                theme.content.assets.sorted()
+                template.content.assets.sorted()
                     == [
                         "style.css"
                     ]
                     .sorted()
             )
             #expect(
-                theme.content.templates.map(\.path).sorted()
+                template.content.views.map(\.path).sorted()
                     == [
                         "about/pages.about.mustache"
                     ]
                     .sorted()
             )
 
-            let results = loader.getTemplatesIDsWithContents(theme)
+            let results = loader.getTemplatesIDsWithContents(template)
 
             let exp: [String: String] = [
                 "pages.test": "test.html",

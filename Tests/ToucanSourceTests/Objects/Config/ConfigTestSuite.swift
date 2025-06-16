@@ -74,7 +74,7 @@ struct ConfigTestSuite {
                 path: custom5
               settings:
                 path: custom6
-            themes:
+            templates:
               assets:
                 path: custom7
               current:
@@ -83,7 +83,7 @@ struct ConfigTestSuite {
                 path: custom9
               overrides:
                 path: custom10
-              templates:
+              views:
                 path: custom11
             types:
               path: custom12
@@ -122,11 +122,11 @@ struct ConfigTestSuite {
         expectation.renderer.wordsPerMinute = 42
         expectation.site.assets.path = "custom5"
         expectation.site.settings.path = "custom6"
-        expectation.themes.assets.path = "custom7"
-        expectation.themes.current.path = "custom8"
-        expectation.themes.location.path = "custom9"
-        expectation.themes.overrides.path = "custom10"
-        expectation.themes.templates.path = "custom11"
+        expectation.templates.assets.path = "custom7"
+        expectation.templates.current.path = "custom8"
+        expectation.templates.location.path = "custom9"
+        expectation.templates.overrides.path = "custom10"
+        expectation.templates.views.path = "custom11"
         expectation.types.path = "custom12"
 
         #expect(result.blocks == expectation.blocks)
@@ -135,7 +135,7 @@ struct ConfigTestSuite {
         #expect(result.pipelines == expectation.pipelines)
         #expect(result.renderer == expectation.renderer)
         #expect(result.site == expectation.site)
-        #expect(result.themes == expectation.themes)
+        #expect(result.templates == expectation.templates)
         #expect(result.types == expectation.types)
 
         let encodedValue: String = try encoder.encode(expectation)

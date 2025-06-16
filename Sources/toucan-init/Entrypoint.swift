@@ -42,30 +42,30 @@ struct Entrypoint: AsyncParsableCommand {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
 
-        let siteExists = fileManager.directoryExists(at: siteDirUrl)
+        let siteExists = fileManager.directoryExists(at: siteDirectoryURL)
 
         guard !siteExists else {
-            logger.error("Folder already exists: \(siteDirUrl)")
+            logger.error("Folder already exists: \(siteDirectoryURL)")
             return
         }
 
         do {
             let source = Download(
-                sourceUrl: exampleSourceUrl,
-                targetDirUrl: siteDirUrl,
+                sourceUrl: minimalSourceURL,
+                targetDirUrl: siteDirectoryURL,
                 fileManager: fileManager
             )
-            let theme = Download(
-                sourceUrl: exampleThemeUrl,
-                targetDirUrl: themesDefaultDirUrl,
+            let template = Download(
+                sourceUrl: minimalTemplateURL,
+                targetDirUrl: defaultTemplatesURL,
                 fileManager: fileManager
             )
 
             logger.info("Preparing source files.")
             try await source.resolve()
 
-            logger.info("Preparing theme files.")
-            try await theme.resolve()
+            logger.info("Preparing template files.")
+            try await template.resolve()
 
             logger.info("'\(siteDirectory)' was prepared successfully.")
         }
@@ -79,29 +79,29 @@ extension Entrypoint {
 
     var fileManager: FileManager { .default }
 
-    var currentDirUrl: URL {
+    var currentDirectoryURL: URL {
         URL(fileURLWithPath: fileManager.currentDirectoryPath)
     }
 
-    var siteDirUrl: URL {
-        currentDirUrl.appendingPathComponent(siteDirectory)
+    var siteDirectoryURL: URL {
+        currentDirectoryURL.appendingPathComponent(siteDirectory)
     }
 
-    var exampleSourceUrl: URL {
+    var minimalSourceURL: URL {
         .init(
             string:
                 "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
         )!
     }
 
-    var exampleThemeUrl: URL {
+    var minimalTemplateURL: URL {
         .init(
             string:
                 "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
         )!
     }
 
-    var themesDefaultDirUrl: URL {
-        siteDirUrl.appendingPathComponent("src/themes/default")
+    var defaultTemplatesURL: URL {
+        siteDirectoryURL.appendingPathComponent("src/templates/default")
     }
 }

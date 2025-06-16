@@ -136,13 +136,15 @@ public struct Toucan {
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
 
-                let themeLoader = ThemeLoader(
+                let templateLoader = TemplateLoader(
                     locations: buildTargetSource.locations,
                     fileManager: fileManager
                 )
 
-                let theme = try themeLoader.load()
-                let templates = themeLoader.getTemplatesIDsWithContents(theme)
+                let template = try templateLoader.load()
+                let templates = templateLoader.getTemplatesIDsWithContents(
+                    template
+                )
 
                 let validator = BuildTargetSourceValidator(
                     buildTargetSource: buildTargetSource
@@ -164,10 +166,10 @@ public struct Toucan {
                 let copyManager = CopyManager(
                     fileManager: fileManager,
                     sources: [
-                        buildTargetSource.locations.currentThemeAssetsUrl,
+                        buildTargetSource.locations.currentTemplateAssetsURL,
                         buildTargetSource.locations
-                            .currentThemeAssetOverridesUrl,
-                        buildTargetSource.locations.siteAssetsUrl,
+                            .currentTemplateAssetOverridesURL,
+                        buildTargetSource.locations.siteAssetsURL,
                     ],
                     destination: workDirUrl
                 )

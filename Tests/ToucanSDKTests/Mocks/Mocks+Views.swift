@@ -1,5 +1,5 @@
 //
-//  Mocks+Templates.swift
+//  Mocks+Views.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
@@ -7,34 +7,34 @@
 
 import ToucanSource
 
-extension Mocks.Templates {
+extension Mocks.Views {
 
     static func all(
         contextValue: String = "{{.}}"
     ) -> [String: String] {
         [
-            "html": Mocks.Templates.html(),
-            "redirect": Mocks.Templates.redirect(),
-            "rss": Mocks.Templates.rss(),
-            "sitemap": Mocks.Templates.sitemap(),
+            "html": html(),
+            "redirect": redirect(),
+            "rss": rss(),
+            "sitemap": sitemap(),
 
-            "pages.default": Mocks.Templates.page(),
-            "pages.404": Mocks.Templates.notFound(),
-            "pages.context": Mocks.Templates.context(value: contextValue),
+            "pages.default": page(),
+            "pages.404": notFound(),
+            "pages.context": context(value: contextValue),
 
-            "docs.category.default": Mocks.Templates.category(),
-            "docs.guide.default": Mocks.Templates.guide(),
+            "docs.category.default": category(),
+            "docs.guide.default": guide(),
 
-            "blog.post.default": Mocks.Templates.post(),
-            "blog.author.default": Mocks.Templates.author(),
-            "blog.tag.default": Mocks.Templates.tag(),
+            "blog.post.default": post(),
+            "blog.author.default": author(),
+            "blog.tag.default": tag(),
 
-            "partials.blog.author": Mocks.Templates.partialAuthor(),
-            "partials.blog.tag": Mocks.Templates.partialTag(),
-            "partials.blog.post": Mocks.Templates.partialPost(),
+            "partials.blog.author": partialAuthor(),
+            "partials.blog.tag": partialTag(),
+            "partials.blog.post": partialPost(),
 
-            "partials.docs.category": Mocks.Templates.partialCategory(),
-            "partials.docs.guide": Mocks.Templates.partialGuide(),
+            "partials.docs.category": partialCategory(),
+            "partials.docs.guide": partialGuide(),
         ]
     }
 
@@ -142,7 +142,7 @@ extension Mocks.Templates {
             {{#page.next}}<link rel="next" href="{{permalink}}">{{/page.next}}
 
             <link rel="stylesheet" href="{{baseUrl}}/css/style.css">
-            <link rel="stylesheet" href="{{baseUrl}}/css/theme.css">
+            <link rel="stylesheet" href="{{baseUrl}}/css/template.css">
             
             {{#page.css}}<link rel="stylesheet" href="{{.}}">{{/page.css}}
         </head>

@@ -21,27 +21,27 @@ public struct BuiltTargetSourceLocations {
     /// The URL of the site settings configuration file.
     public var siteSettingsURL: URL
     /// The URL pointing to site-wide asset resources.
-    public var siteAssetsUrl: URL
+    public var siteAssetsURL: URL
     /// The URL containing content type definitions.
     public var typesUrl: URL
     /// The URL containing block directive definitions.
     public var blocksUrl: URL
     /// The URL pointing to the pipeline configuration files.
     public var pipelinesUrl: URL
-    /// The URL where theme definitions are located.
-    public var themesUrl: URL
-    /// The URL of the currently active theme.
-    public var currentThemeUrl: URL
-    /// The URL containing assets for the current theme.
-    public var currentThemeAssetsUrl: URL
-    /// The URL pointing to template files of the current theme.
-    public var currentThemeTemplatesUrl: URL
-    /// The URL pointing to the override directory of the current theme.
-    public var currentThemeOverridesUrl: URL
-    /// The URL for overridden assets in the current theme.
-    public var currentThemeAssetOverridesUrl: URL
-    /// The URL for overridden templates in the current theme.
-    public var currentThemeTemplateOverridesUrl: URL
+    /// The URL where template definitions are located.
+    public var templatesURL: URL
+    /// The URL of the currently active template.
+    public var currentTemplateURL: URL
+    /// The URL containing assets for the current template.
+    public var currentTemplateAssetsURL: URL
+    /// The URL pointing to views for the current template.
+    public var currentTemplateViewsURL: URL
+    /// The URL pointing to the override directory of the current template.
+    public var currentTemplateOverridesURL: URL
+    /// The URL for overridden assets in the current template.
+    public var currentTemplateAssetOverridesURL: URL
+    /// The URL for overridden views in the current template.
+    public var currentTemplateViewsOverridesUrl: URL
 
     // MARK: - Initialization
 
@@ -76,45 +76,45 @@ public struct BuiltTargetSourceLocations {
         let pipelines =
             base
             .appendingPathIfPresent(config.pipelines.path)
-        let themes =
+        let templates =
             base
-            .appendingPathIfPresent(config.themes.location.path)
+            .appendingPathIfPresent(config.templates.location.path)
 
-        let currentTheme =
-            themes
-            .appendingPathIfPresent(config.themes.current.path)
-        let currentThemeAssets =
-            currentTheme
-            .appendingPathIfPresent(config.themes.assets.path)
-        let currentThemeTemplates =
-            currentTheme
-            .appendingPathIfPresent(config.themes.templates.path)
+        let currentTemplate =
+            templates
+            .appendingPathIfPresent(config.templates.current.path)
+        let currentTemplateAssets =
+            currentTemplate
+            .appendingPathIfPresent(config.templates.assets.path)
+        let currentTemplateViews =
+            currentTemplate
+            .appendingPathIfPresent(config.templates.views.path)
 
-        let currentThemeOverrides =
-            themes
-            .appendingPathIfPresent(config.themes.overrides.path)
-            .appendingPathIfPresent(config.themes.current.path)
-        let currentThemeAssetOverrides =
-            currentThemeOverrides
-            .appendingPathIfPresent(config.themes.assets.path)
-        let currentThemeTemplateOverrides =
-            currentThemeOverrides
-            .appendingPathIfPresent(config.themes.templates.path)
+        let currentTemplateOverrides =
+            templates
+            .appendingPathIfPresent(config.templates.overrides.path)
+            .appendingPathIfPresent(config.templates.current.path)
+        let currentTemplateAssetOverrides =
+            currentTemplateOverrides
+            .appendingPathIfPresent(config.templates.assets.path)
+        let currentTemplateViewsOverrides =
+            currentTemplateOverrides
+            .appendingPathIfPresent(config.templates.views.path)
 
         baseUrl = base
         contentsUrl = contents
         siteSettingsURL = settings
-        siteAssetsUrl = assets
+        siteAssetsURL = assets
         typesUrl = types
         blocksUrl = blocks
         pipelinesUrl = pipelines
-        themesUrl = themes
-        currentThemeUrl = currentTheme
-        currentThemeAssetsUrl = currentThemeAssets
-        currentThemeTemplatesUrl = currentThemeTemplates
-        currentThemeOverridesUrl = currentThemeOverrides
-        currentThemeAssetOverridesUrl = currentThemeAssetOverrides
-        currentThemeTemplateOverridesUrl = currentThemeTemplateOverrides
+        templatesURL = templates
+        currentTemplateURL = currentTemplate
+        currentTemplateAssetsURL = currentTemplateAssets
+        currentTemplateViewsURL = currentTemplateViews
+        currentTemplateOverridesURL = currentTemplateOverrides
+        currentTemplateAssetOverridesURL = currentTemplateAssetOverrides
+        currentTemplateViewsOverridesUrl = currentTemplateViewsOverrides
     }
 }
 

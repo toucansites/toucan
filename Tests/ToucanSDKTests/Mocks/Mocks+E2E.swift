@@ -81,52 +81,52 @@ extension Mocks.E2E {
         }
     }
 
-    static func themes(
+    static func templates(
         debugContext: String
     ) -> Directory {
-        Directory(name: "themes") {
+        Directory(name: "templates") {
             Directory(name: "default") {
                 Directory(name: "assets") {
                     Directory(name: "css") {
                         File(
-                            name: "theme.css",
+                            name: "template.css",
                             string: """
                                 body { background: #000; }
                                 """
                         )
                     }
                 }
-                Directory(name: "templates") {
+                Directory(name: "views") {
                     MustacheFile(
                         name: "test",
-                        template: Mocks.Templates.page()
+                        template: Mocks.Views.page()
                     )
                     Directory(name: "docs") {
                         Directory(name: "category") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.category()
+                                template: Mocks.Views.category()
                             )
                         }
                         Directory(name: "guide") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.guide()
+                                template: Mocks.Views.guide()
                             )
                         }
                     }
                     Directory(name: "pages") {
                         MustacheFile(
                             name: "default",
-                            template: Mocks.Templates.page()
+                            template: Mocks.Views.page()
                         )
                         MustacheFile(
                             name: "404",
-                            template: Mocks.Templates.notFound()
+                            template: Mocks.Views.notFound()
                         )
                         MustacheFile(
                             name: "context",
-                            template: Mocks.Templates.context(
+                            template: Mocks.Views.context(
                                 value: debugContext
                             )
                         )
@@ -135,19 +135,19 @@ extension Mocks.E2E {
                         Directory(name: "tag") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.tag()
+                                template: Mocks.Views.tag()
                             )
                         }
                         Directory(name: "post") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.post()
+                                template: Mocks.Views.post()
                             )
                         }
                         Directory(name: "author") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.author()
+                                template: Mocks.Views.author()
                             )
                         }
                     }
@@ -155,43 +155,43 @@ extension Mocks.E2E {
                         Directory(name: "blog") {
                             MustacheFile(
                                 name: "author",
-                                template: Mocks.Templates.partialAuthor()
+                                template: Mocks.Views.partialAuthor()
                             )
                             MustacheFile(
                                 name: "tag",
-                                template: Mocks.Templates.partialTag()
+                                template: Mocks.Views.partialTag()
                             )
                             MustacheFile(
                                 name: "post",
-                                template: Mocks.Templates.partialPost()
+                                template: Mocks.Views.partialPost()
                             )
                         }
                         Directory(name: "docs") {
                             MustacheFile(
                                 name: "category",
-                                template: Mocks.Templates.partialCategory()
+                                template: Mocks.Views.partialCategory()
                             )
                             MustacheFile(
                                 name: "guide",
-                                template: Mocks.Templates.partialGuide()
+                                template: Mocks.Views.partialGuide()
                             )
                         }
                     }
                     MustacheFile(
                         name: "html",
-                        template: Mocks.Templates.html()
+                        template: Mocks.Views.html()
                     )
                     MustacheFile(
                         name: "redirect",
-                        template: Mocks.Templates.redirect()
+                        template: Mocks.Views.redirect()
                     )
                     MustacheFile(
                         name: "rss",
-                        template: Mocks.Templates.rss()
+                        template: Mocks.Views.rss()
                     )
                     MustacheFile(
                         name: "sitemap",
-                        template: Mocks.Templates.sitemap()
+                        template: Mocks.Views.sitemap()
                     )
                 }
             }
@@ -515,7 +515,7 @@ extension Mocks.E2E {
             Mocks.E2E.types(postType: postType)
             Mocks.E2E.pipelines()
             Mocks.E2E.blocks()
-            Mocks.E2E.themes(debugContext: debugContext)
+            Mocks.E2E.templates(debugContext: debugContext)
         }
     }
 

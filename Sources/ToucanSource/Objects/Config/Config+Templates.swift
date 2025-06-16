@@ -1,5 +1,5 @@
 //
-//  Config+Themes.swift
+//  Config+Templates.swift
 //  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 03. 01..
@@ -9,8 +9,8 @@ import Foundation
 
 extension Config {
 
-    /// Defines the structure and paths for working with themes in the system.
-    public struct Themes: Codable, Equatable {
+    /// Defines the structure and paths for working with templates in the system.
+    public struct Templates: Codable, Equatable {
 
         // MARK: - Coding Keys
 
@@ -18,67 +18,67 @@ extension Config {
             case location
             case current
             case assets
-            case templates
+            case views
             case overrides
         }
 
         // MARK: - Properties
 
-        /// The base folder where all themes are stored (e.g., `"themes"`).
+        /// The base folder where all templates are stored (e.g., `"templates"`).
         public var location: Location
 
-        /// The subfolder or identifier of the currently selected theme (e.g., `"default"`, `"dark"`).
+        /// The subfolder or identifier of the currently selected template (e.g., `"default"`, `"dark"`).
         public var current: Location
 
-        /// The path inside the theme where static assets (e.g., CSS, JS, images) are stored.
+        /// The path inside the template where static assets (e.g., CSS, JS, images) are stored.
         public var assets: Location
 
-        /// The path to the folder containing template files (e.g., HTML or markup layouts).
-        public var templates: Location
+        /// The path to the folder containing template views (e.g., HTML or markup layouts).
+        public var views: Location
 
-        /// A folder for override files that replace core behavior or templates (optional).
+        /// A folder for override files that replace core behavior or template (optional).
         public var overrides: Location
 
         // MARK: - Defaults
 
-        /// Returns the default theme configuration with all folders under the `"themes"` base.
+        /// Returns the default template configuration with all folders under the `"templates"` base.
         public static var defaults: Self {
             .init(
-                location: .init(path: "themes"),
+                location: .init(path: "templates"),
                 current: .init(path: "default"),
                 assets: .init(path: "assets"),
-                templates: .init(path: "templates"),
+                views: .init(path: "views"),
                 overrides: .init(path: "overrides")
             )
         }
 
         // MARK: - Initialization
 
-        /// Initializes a `Themes` configuration.
+        /// Initializes a configuration.
         ///
         /// - Parameters:
-        ///   - location: The base path containing all theme folders.
-        ///   - current: The name or path of the active theme.
-        ///   - assets: Folder path for theme assets.
-        ///   - templates: Folder path for templates.
-        ///   - overrides: Folder path for template or config overrides.
+        ///   - location: The base path containing all template folders.
+        ///   - current: The name or path of the active template.
+        ///   - assets: Folder path for template assets.
+        ///   - views: Folder path for views.
+        ///   - overrides: Folder path for template overrides.
         public init(
             location: Location,
             current: Location,
             assets: Location,
-            templates: Location,
+            views: Location,
             overrides: Location
         ) {
             self.location = location
             self.current = current
             self.assets = assets
-            self.templates = templates
+            self.views = views
             self.overrides = overrides
         }
 
         // MARK: - Decoding
 
-        /// Decodes a `Themes` configuration from serialized input, falling back to default values when missing.
+        /// Decodes a configuration from serialized input, falling back to default values when missing.
         public init(
             from decoder: any Decoder
         ) throws {
@@ -102,9 +102,9 @@ extension Config {
                 try container.decodeIfPresent(Location.self, forKey: .assets)
                 ?? defaults.assets
 
-            self.templates =
-                try container.decodeIfPresent(Location.self, forKey: .templates)
-                ?? defaults.templates
+            self.views =
+                try container.decodeIfPresent(Location.self, forKey: .views)
+                ?? defaults.views
 
             self.overrides =
                 try container.decodeIfPresent(Location.self, forKey: .overrides)
