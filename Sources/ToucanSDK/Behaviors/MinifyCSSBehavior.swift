@@ -8,9 +8,11 @@
 import Foundation
 import SwiftCSSParser
 
-struct MinifyCSSBehavior {
+struct MinifyCSSBehavior: Behavior {
 
-    func minify(fileUrl: URL) throws -> String {
+    static let id = "minify-css"
+
+    func run(fileUrl: URL) throws -> String {
         let src = try String(
             contentsOf: fileUrl
         )

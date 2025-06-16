@@ -8,7 +8,9 @@
 import Foundation
 import DartSass
 
-struct CompileSASSBehavior {
+struct CompileSASSBehavior: Behavior {
+
+    static let id = "compile-sass"
 
     var compiler: Compiler
 
@@ -16,7 +18,7 @@ struct CompileSASSBehavior {
         self.compiler = try .init()
     }
 
-    func compile(fileUrl: URL) throws -> String {
+    func run(fileUrl: URL) throws -> String {
 
         let css = unsafeSyncCompile(fileUrl: fileUrl)
 

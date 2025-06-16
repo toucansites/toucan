@@ -741,294 +741,353 @@ struct E2ETestSuite {
 
     // MARK: - asset behaviors
 
-    //    @Test
-    //    func testMinifyCSSAsset() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            File(
-    //                                name: "style.css",
-    //                                string: """
-    //                                    html {
-    //                                        margin: 0;
-    //                                        padding: 0;
-    //                                    }
-    //                                    body {
-    //                                        background: red;
-    //                                    }
-    //                                    """
-    //                            )
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    YAML(
-    //                        name: "html",
-    //                        contents: Mocks.Pipelines.html()
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    YAML(
-    //                        name: "page",
-    //                        contents: Mocks.ContentDefinitions.page()
-    //                    )
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(svg: "{{page.svg}}")
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let cssPath = output.appending(path: "assets/page1/style.min.css")
-    //            #expect($0.fileExists(at: cssPath))
-    //
-    //            let contents = try cssPath.loadContents()
-    //            #expect(
-    //                contents.contains(
-    //                    "html{margin:0;padding:0}body{background:red}"
-    //                )
-    //            )
-    //        }
-    //    }
-    //
-    //    @Test
-    //    func testSASSAsset() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            File(
-    //                                name: "style.sass",
-    //                                string: """
-    //                                    $font-stack: Helvetica, sans-serif
-    //                                    $primary-color: #333
-    //
-    //                                    body
-    //                                      font: 100% $font-stack
-    //                                      color: $primary-color
-    //                                    """
-    //                            )
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    File(
-    //                        name: "html.yml",
-    //                        string: """
-    //                            id: html
-    //                            assets:
-    //                                behaviors:
-    //                                    - id: compile-sass
-    //                                      input:
-    //                                        name: "style"
-    //                                        ext: "sass"
-    //                                      output:
-    //                                        name: "style.min"
-    //                                        ext: "css"
-    //
-    //                            contentTypes:
-    //                                include:
-    //                                    - page
-    //                            engine:
-    //                                id: mustache
-    //                                options:
-    //                                    contentTypes:
-    //                                        page:
-    //                                            template: "pages.default"
-    //                            output:
-    //                                path: "{{slug}}"
-    //                                file: index
-    //                                ext: html
-    //                            """
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(svg: "{{page.svg}}")
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let assetsPath = output.appending(path: "assets/page1/")
-    //
-    //            #expect($0.listDirectory(at: assetsPath).count == 1)
-    //
-    //            let cssPath = assetsPath.appending(path: "style.min.css")
-    //            #expect($0.fileExists(at: cssPath))
-    //
-    //            let contents = try cssPath.loadContents()
-    //            #expect(
-    //                contents.contains(
-    //                    """
-    //                    body {
-    //                      font: 100% Helvetica, sans-serif;
-    //                      color: #333;
-    //                    }
-    //                    """
-    //                )
-    //            )
-    //        }
-    //    }
-    //
-    //    @Test
-    //    func testSASSAssetModuleLoader() async throws {
-    //        let logger = Logger(label: "ToucanTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "contents") {
-    //                    Directory(name: "page1") {
-    //                        File(
-    //                            name: "index.yaml",
-    //                            string: """
-    //                                title: title
-    //                                type: page
-    //                                description: Desc1
-    //                                label: label1
-    //                                """
-    //                        )
-    //                        Directory(name: "assets") {
-    //                            File(
-    //                                name: "_colors.scss",
-    //                                string: """
-    //                                    $primary: blue;
-    //                                    """
-    //                            )
-    //                            File(
-    //                                name: "style.scss",
-    //                                string: """
-    //                                    @use "colors";
-    //
-    //                                    body {
-    //                                      color: colors.$primary;
-    //                                    }
-    //                                    """
-    //                            )
-    //                        }
-    //                    }
-    //                }
-    //                Directory(name: "pipelines") {
-    //                    File(
-    //                        name: "html.yml",
-    //                        string: """
-    //                            id: html
-    //                            assets:
-    //                                behaviors:
-    //                                    - id: compile-sass
-    //                                      input:
-    //                                        name: "style"
-    //                                        ext: "scss"
-    //                                      output:
-    //                                        name: "style.min"
-    //                                        ext: "css"
-    //
-    //                            contentTypes:
-    //                                include:
-    //                                    - page
-    //                            engine:
-    //                                id: mustache
-    //                                options:
-    //                                    contentTypes:
-    //                                        page:
-    //                                            template: "pages.default"
-    //                            output:
-    //                                path: "{{slug}}"
-    //                                file: index
-    //                                ext: html
-    //                            """
-    //                    )
-    //                }
-    //                Directory(name: "types") {
-    //                    typePage()
-    //                }
-    //                Directory(name: "themes") {
-    //                    Directory(name: "default") {
-    //                        Directory(name: "templates") {
-    //                            Directory(name: "pages") {
-    //                                themeDefaultMustache(svg: "{{page.svg}}")
-    //                            }
-    //                            themeHtmlMustache()
-    //                        }
-    //                    }
-    //                }
-    //                configFile()
-    //            }
-    //        }
-    //        .test {
-    //            let input = $1.appending(path: "src/")
-    //            let output = $1.appending(path: "docs/")
-    //            try getToucan(input, output, logger).generate()
-    //
-    //            let assetsPath = output.appending(path: "assets/page1/")
-    //
-    //            #expect($0.listDirectory(at: assetsPath).count == 1)
-    //
-    //            let cssPath = assetsPath.appending(path: "style.min.css")
-    //            #expect($0.fileExists(at: cssPath))
-    //
-    //            let contents = try cssPath.loadContents()
-    //            #expect(
-    //                contents.contains(
-    //                    """
-    //                    body {
-    //                      color: blue;
-    //                    }
-    //                    """
-    //                )
-    //            )
-    //        }
-    //    }
-    //
+    @Test
+    func testMinifyCSSAsset() async throws {
+        let now = Date()
 
-    //}
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .init(
+                                behaviors: [
+                                    .init(
+                                        id: "minify-css",
+                                        input: .init(
+                                            name: "style",
+                                            ext: "css"
+                                        ),
+                                        output: .init(
+                                            name: "style.min",
+                                            ext: "css"
+                                        )
+                                    )
+                                ],
+                                properties: []
+                            ),
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [
+                                    "keyPath": "page"
+                                ]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        Directory(name: "assets") {
+                            File(
+                                name: "style.css",
+                                string: """
+                                    html {
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                    body {
+                                        background: red;
+                                    }
+                                    """
+                            )
+                        }
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "type": "test"
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let cssURL = output.appendingPathIfPresent(
+                "assets/test/style.min.css"
+            )
+
+            let css = try String(contentsOf: cssURL)
+
+            #expect(
+                css.contains(
+                    "html{margin:0;padding:0}body{background:red}"
+                )
+            )
+        }
+    }
+
+    @Test
+    func testSASSAsset() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .init(
+                                behaviors: [
+                                    .init(
+                                        id: "compile-sass",
+                                        input: .init(
+                                            name: "style",
+                                            ext: "sass"
+                                        ),
+                                        output: .init(
+                                            name: "style",
+                                            ext: "css"
+                                        )
+                                    )
+                                ],
+                                properties: []
+                            ),
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [
+                                    "keyPath": "page"
+                                ]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        Directory(name: "assets") {
+                            File(
+                                name: "style.sass",
+                                string: """
+                                    $font-stack: Helvetica, sans-serif
+                                    $primary-color: #333
+
+                                    body
+                                      font: 100% $font-stack
+                                      color: $primary-color
+                                    """
+                            )
+                        }
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "type": "test"
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let cssURL = output.appendingPathIfPresent(
+                "assets/test/style.css"
+            )
+
+            let css = try String(contentsOf: cssURL)
+
+            #expect(
+                css.contains(
+                    """
+                    body {
+                      font: 100% Helvetica, sans-serif;
+                      color: #333;
+                    }
+                    """
+                )
+            )
+        }
+    }
+
+    @Test
+    func testSCSSModuleLoader() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "site",
+                    contents: [
+                        "name": "Test site name",
+                        "description": "Test site description",
+                        "language": "en-US",
+                    ] as [String: AnyCodable]
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .init(
+                                behaviors: [
+                                    .init(
+                                        id: "compile-sass",
+                                        input: .init(
+                                            name: "style",
+                                            ext: "scss"
+                                        ),
+                                        output: .init(
+                                            name: "style",
+                                            ext: "css"
+                                        )
+                                    )
+                                ],
+                                properties: []
+                            ),
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [
+                                    "keyPath": "page"
+                                ]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentDefinition(
+                            id: "test",
+                            default: true
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        Directory(name: "assets") {
+                            File(
+                                name: "_colors.scss",
+                                string: """
+                                    $primary: blue;
+                                    """
+                            )
+                            File(
+                                name: "style.scss",
+                                string: """
+                                    @use "colors";
+
+                                    body {
+                                      color: colors.$primary;
+                                    }
+                                    """
+                            )
+                        }
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "type": "test"
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let cssURL = output.appendingPathIfPresent(
+                "assets/test/style.css"
+            )
+
+            let css = try String(contentsOf: cssURL)
+
+            #expect(
+                css.contains(
+                    """
+                    body {
+                      color: blue;
+                    }
+                    """
+                )
+            )
+        }
+    }
 
     // MARK: - transformers
 

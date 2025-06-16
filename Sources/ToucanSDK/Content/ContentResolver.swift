@@ -670,16 +670,12 @@ struct ContentResolver {
                     .dropLast()
                     .joined(separator: "/")
 
-                    switch behavior.id {
-                    case "compile-sass":
-                        let fileUrl =
-                            contentsUrl
-                            .appending(
-                                path: sourcePath
-                            )
+                    let fileUrl = contentsUrl.appending(path: sourcePath)
 
+                    switch behavior.id {
+                    case CompileSASSBehavior.id:
                         let script = try CompileSASSBehavior()
-                        let css = try script.compile(fileUrl: fileUrl)
+                        let css = try script.run(fileUrl: fileUrl)
 
                         // TODO: proper output management later on
                         results.append(
@@ -693,15 +689,9 @@ struct ContentResolver {
                             )
                         )
 
-                    case "minify-css":
-                        let fileUrl =
-                            contentsUrl
-                            .appending(
-                                path: sourcePath
-                            )
-
+                    case MinifyCSSBehavior.id:
                         let script = MinifyCSSBehavior()
-                        let css = try script.minify(fileUrl: fileUrl)
+                        let css = try script.run(fileUrl: fileUrl)
 
                         results.append(
                             .init(
