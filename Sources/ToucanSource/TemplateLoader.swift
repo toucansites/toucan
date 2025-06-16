@@ -152,14 +152,12 @@ public struct TemplateLoader {
     ) -> [String: String] {
         var results: [String: String] = [:]
 
-        for template in template.components.views {
-            results[template.id] = template.contents
-        }
-        for template in template.overrides.views {
-            results[template.id] = template.contents
-        }
-        for template in template.content.views {
-            results[template.id] = template.contents
+        let views =
+            template.components.views + template.overrides.views
+            + template.content.views
+
+        for view in views {
+            results[view.id] = view.contents
         }
 
         return .init(
