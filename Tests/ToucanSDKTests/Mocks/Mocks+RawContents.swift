@@ -332,12 +332,12 @@ extension Mocks.RawContents {
             markdown: .init(
                 frontMatter: [
                     "type": "page",
-                    "title": "Post pagination page",
+                    "title": "Post pagination page {{number}} / {{total}}",
                     "description": "Post pagination page description",
                 ],
 
                 contents: """
-                    # Post pagination page
+                    # Post pagination page {{number}} / {{total}}
 
                     Post pagination page contents
                     """,

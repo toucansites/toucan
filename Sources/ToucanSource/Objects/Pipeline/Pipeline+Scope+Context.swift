@@ -136,5 +136,34 @@ extension Pipeline.Scope {
                 )
             }
         }
+
+        /// Encodes the context as a string or array of strings using the defined string values.
+        ///
+        /// - Parameter encoder: The encoder to write data to.
+        /// - Throws: An error if any values are invalid or encoding fails.
+        public func encode(
+            to encoder: any Encoder
+        ) throws {
+            var container = encoder.singleValueContainer()
+
+            let allOptions: [(Context, String)] = [
+                (.userDefined, "userDefined"),
+                (.properties, "properties"),
+                (.contents, "contents"),
+                (.relations, "relations"),
+                (.queries, "queries"),
+                (.reference, "reference"),
+                (.list, "list"),
+                (.detail, "detail"),
+            ]
+
+            if let matched = allOptions.first(where: { self == $0.0 }) {
+                try container.encode(matched.1)
+            }
+            else {
+                let parts = allOptions.filter { contains($0.0) }.map(\.1)
+                try container.encode(parts)
+            }
+        }
     }
 }
