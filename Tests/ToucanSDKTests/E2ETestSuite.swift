@@ -1398,4 +1398,270 @@ struct E2ETestSuite {
             #expect(first.slug == "test")
         }
     }
+
+    @Test
+    func localizedDateOutputConfig() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "toucan",
+                    contents: TargetConfig(
+                        targets: [
+                            .standard
+                        ]
+                    )
+                )
+                YAMLFile(
+                    name: "config",
+                    contents: Config(
+                        site: .defaults,
+                        pipelines: .defaults,
+                        contents: .defaults,
+                        types: .defaults,
+                        blocks: .defaults,
+                        templates: .defaults,
+                        dataTypes: .init(
+                            date: .init(
+                                input: .defaults,
+                                output: .init(
+                                    locale: "de-DE",
+                                    timeZone: "CET"
+                                ),
+                                formats: [:]
+                            )
+                        ),
+                        renderer: .defaults
+                    )
+                )
+                YAMLFile(
+                    name: "site",
+                    contents: Settings(
+                        [
+                            "name": "Test site name",
+                            "description": "Test site description",
+                            "language": "de-DE",
+                        ]
+                    )
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .defaults,
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .defaults,
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [:]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentType(
+                            id: "test",
+                            default: true,
+                            properties: [
+                                "publication": .init(
+                                    propertyType: .date(config: nil),
+                                    isRequired: true
+                                )
+                            ]
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "title": "Test",
+                                    "type": "test",
+                                    "publication": "2025-03-30T09:23:14.870Z",
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let contextURL = output.appendingPathIfPresent("context.json")
+            let data = try Data(contentsOf: contextURL)
+
+            let decoder = JSONDecoder()
+
+            struct Exp: Decodable {
+                struct Page: Decodable {
+                    let slug: String
+                    let title: String
+                    let publication: DateContext
+                }
+                let page: Page
+            }
+
+            let exp = try decoder.decode(Exp.self, from: data)
+            #expect(exp.page.title == "Test")
+            #expect(exp.page.slug == "test")
+            #expect(exp.page.publication.date.full == "Sonntag, 30. März 2025")
+        }
+    }
+
+    @Test
+    func localizedDateOutputConfigPipelineOverride() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                YAMLFile(
+                    name: "toucan",
+                    contents: TargetConfig(
+                        targets: [
+                            .standard
+                        ]
+                    )
+                )
+                YAMLFile(
+                    name: "config",
+                    contents: Config(
+                        site: .defaults,
+                        pipelines: .defaults,
+                        contents: .defaults,
+                        types: .defaults,
+                        blocks: .defaults,
+                        templates: .defaults,
+                        dataTypes: .init(
+                            date: .init(
+                                input: .defaults,
+                                output: .init(
+                                    locale: "de-DE",
+                                    timeZone: "CET"
+                                ),
+                                formats: [:]
+                            )
+                        ),
+                        renderer: .defaults
+                    )
+                )
+                YAMLFile(
+                    name: "site",
+                    contents: Settings(
+                        [
+                            "name": "Test site name",
+                            "description": "Test site description",
+                            "language": "de-DE",
+                        ]
+                    )
+                )
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "test",
+                        contents: Pipeline(
+                            id: "test",
+                            definesType: false,
+                            scopes: [:],
+                            queries: [:],
+                            dataTypes: .init(
+                                date: .init(
+                                    output: .init(
+                                        locale: "hu-HU",
+                                        timeZone: "CET"
+                                    ),
+                                    formats: [:]
+                                )
+                            ),
+                            contentTypes: .defaults,
+                            iterators: [:],
+                            assets: .defaults,
+                            transformers: [:],
+                            engine: .init(
+                                id: "json",
+                                options: [:]
+                            ),
+                            output: .init(
+                                path: "",
+                                file: "context",
+                                ext: "json"
+                            )
+                        )
+                    )
+                }
+                Directory(name: "types") {
+                    YAMLFile(
+                        name: "test",
+                        contents: ContentType(
+                            id: "test",
+                            default: true,
+                            properties: [
+                                "publication": .init(
+                                    propertyType: .date(config: nil),
+                                    isRequired: true
+                                )
+                            ]
+                        )
+                    )
+                }
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        MarkdownFile(
+                            name: "index",
+                            markdown: .init(
+                                frontMatter: [
+                                    "title": "Test",
+                                    "type": "test",
+                                    "publication": "2025-03-30T09:23:14.870Z",
+                                ]
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+            let contextURL = output.appendingPathIfPresent("context.json")
+            let data = try Data(contentsOf: contextURL)
+
+            let decoder = JSONDecoder()
+
+            struct Exp: Decodable {
+                struct Page: Decodable {
+                    let slug: String
+                    let title: String
+                    let publication: DateContext
+                }
+                let page: Page
+            }
+
+            let exp = try decoder.decode(Exp.self, from: data)
+            #expect(exp.page.title == "Test")
+            #expect(exp.page.slug == "test")
+            #expect(
+                exp.page.publication.date.full == "2025. március 30., vasárnap"
+            )
+        }
+    }
 }

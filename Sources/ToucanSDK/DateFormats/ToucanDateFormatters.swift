@@ -213,8 +213,8 @@ public struct ToucanOutputDateFormatter {
         self.pipelineDateConfig = pipelineDateConfig
 
         var localization = dateConfig.output
-        if let pipelineDateConfig, pipelineDateConfig.output != localization {
-            localization = pipelineDateConfig.output
+        if let outputLocalization = pipelineDateConfig?.output {
+            localization = outputLocalization
         }
 
         self.systemFormatters = .init(

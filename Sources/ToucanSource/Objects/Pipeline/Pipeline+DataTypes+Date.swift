@@ -20,13 +20,13 @@ public extension Pipeline.DataTypes {
         /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
         public static var defaults: Self {
             .init(
-                output: .defaults,
+                output: nil,
                 formats: [:]
             )
         }
 
         /// A custom date localization for the standard localized output formats.
-        public var output: DateLocalization
+        public var output: DateLocalization?
 
         /// A dictionary of named output formats for rendering dates in different contexts.
         ///
@@ -46,7 +46,7 @@ public extension Pipeline.DataTypes {
         ///   - output: The date localization config for the standard date outputs.
         ///   - formats: Named formats for rendering parsed dates.
         public init(
-            output: DateLocalization,
+            output: DateLocalization?,
             formats: [String: DateFormatterConfig]
         ) {
             self.output = output
