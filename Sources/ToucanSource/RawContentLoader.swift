@@ -13,8 +13,6 @@ import ToucanSerialization
 
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
-    // MARK: - Properties
-
     /// Source configuration.
     let contentsURL: URL
 
@@ -32,8 +30,6 @@ public struct RawContentLoader {
 
     /// The logger instance
     let logger: Logger
-
-    // MARK: - Lifecycle
 
     /// Creates a new instance of `RawContentLoader` with the provided dependencies.
     ///
@@ -59,8 +55,6 @@ public struct RawContentLoader {
         self.fileManager = fileManager
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Recursively finds all assets in the given directory.
     ///
@@ -277,7 +271,7 @@ public struct RawContentLoader {
 
             switch true {
             case indexFile.hasSuffix("markdown"),
-                indexFile.hasSuffix("md"):
+                 indexFile.hasSuffix("md"):
                 logger.trace(
                     "Loading index Markdown file",
                     metadata: [
@@ -293,7 +287,7 @@ public struct RawContentLoader {
                 )
                 contents = markdown.contents
             case indexFile.hasSuffix("yaml"),
-                indexFile.hasSuffix("yml"):
+                 indexFile.hasSuffix("yml"):
                 logger.trace(
                     "Loading index YAML file",
                     metadata: [
@@ -343,7 +337,7 @@ public struct RawContentLoader {
         logger.debug(
             "Loading raw contents.",
             metadata: [
-                "path": .string(contentsURL.path())
+                "path": .string(contentsURL.path()),
             ]
         )
         return try locateOrigins()
@@ -351,36 +345,4 @@ public struct RawContentLoader {
                 try loadRawContent(at: $0)
             }
     }
-}
-
-extension RawContentLoader {
-    //
-    //    func resolveImage(
-    //        frontMatter: [String: AnyCodable],
-    //        assetsPath: String,
-    //        assetLocations: [String],
-    //        slug: Slug,
-    //        imageKey: String = "image"
-    //    ) -> String? {
-    //
-    //        if let imageValue = frontMatter[imageKey]?.stringValue() {
-    //            if imageValue.hasPrefix("/") {
-    //                return .init(
-    //                    "\(baseUrl)\(baseUrl.suffixForPath())\(imageValue.dropFirst())"
-    //                )
-    //            }
-    //            else {
-    //                return .init(
-    //                    imageValue.resolveAsset(
-    //                        baseUrl: baseURL,
-    //                        assetsPath: assetsPath,
-    //                        slug: slug.value
-    //                    )
-    //                )
-    //            }
-    //        }
-    //
-    //        return nil
-    //    }
-    //
 }

@@ -16,12 +16,8 @@ import Foundation
 /// Supports dynamic type resolution during encoding/decoding,
 /// literal initialization, value extraction, and hashing.
 public struct AnyCodable: Codable {
-    // MARK: - Properties
-
     /// The wrapped value (may be `nil`, scalar, array, dictionary, etc.).
     public var value: Any?
-
-    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -59,9 +55,11 @@ public struct AnyCodable: Codable {
         else if let array = try? container.decode([AnyCodable].self) {
             self.init(array.map(\.value))
         }
-        else if let dictionary = try? container.decode(
-            [String: AnyCodable].self
-        ) {
+        else if
+            let dictionary = try? container.decode(
+                [String: AnyCodable].self
+            )
+        {
             self.init(dictionary.mapValues { $0 })
         }
         else {
@@ -71,8 +69,6 @@ public struct AnyCodable: Codable {
             )
         }
     }
-
-    // MARK: - Functions
 
     // MARK: - Typed Value Access
 
@@ -304,7 +300,7 @@ extension AnyCodable: Hashable {
         case let value as [AnyCodable]:
             hasher.combine(value)
         default:
-            break  // Non-hashable values are ignored
+            break // Non-hashable values are ignored
         }
     }
 }

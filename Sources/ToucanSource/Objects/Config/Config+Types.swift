@@ -8,15 +8,11 @@
 public extension Config {
     /// Represents the location of type configuration files.
     struct Types: Sendable, Codable, Equatable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -25,14 +21,10 @@ public extension Config {
             .init(path: "types")
         }
 
-        // MARK: - Properties
-
         /// The relative or absolute path to the folder containing type configuration files.
         ///
         /// Example: `"types"` (default), or `"config/types"`
         public var path: String
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

@@ -8,16 +8,12 @@
 public extension Config {
     /// Defines file system paths for locating site related resources.
     struct Site: Codable, Equatable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case assets
             case settings
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -29,15 +25,11 @@ public extension Config {
             )
         }
 
-        // MARK: - Properties
-
         /// The location of the global site assets.
         public var assets: Location
 
         /// The location of the site settings.
         public var settings: Location
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

@@ -6,7 +6,7 @@
 //
 
 enum Mocks {
-    enum ContentDefinitions {}
+    enum ContentTypes {}
     enum RawContents {}
     enum Pipelines {}
     enum Views {}

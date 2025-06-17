@@ -11,8 +11,6 @@ public extension Pipeline {
     /// `ContentTypes` allows explicit inclusion or exclusion of types, as well as
     /// optional tracking for last modification timestamps.
     struct ContentTypes: Codable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
@@ -21,8 +19,6 @@ public extension Pipeline {
             case lastUpdate
             case filterRules
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -35,8 +31,6 @@ public extension Pipeline {
                 filterRules: [:]
             )
         }
-
-        // MARK: - Properties
 
         /// A list of content types to explicitly include.
         ///
@@ -59,8 +53,6 @@ public extension Pipeline {
         ///
         /// If a content type is not listed in `filterRules`, it is not subject to condition-based filtering.
         public var filterRules: [String: Condition]
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -118,8 +110,6 @@ public extension Pipeline {
                 filterRules: filterRules
             )
         }
-
-        // MARK: - Functions
 
         // MARK: - Evaluation
 

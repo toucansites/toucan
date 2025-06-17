@@ -12,14 +12,10 @@ import ToucanCore
 ///
 /// Wraps the file URL and an optional underlying error for context and debugging.
 public struct ObjectLoaderError: ToucanError {
-    // MARK: - Properties
-
     /// The URL of the file that caused the error.
     let url: URL
     /// The underlying error that occurred during loading or decoding.
     let error: Error?
-
-    // MARK: - Computed Properties
 
     /// An array containing the underlying error if present.
     public var underlyingErrors: [Error] {
@@ -35,8 +31,6 @@ public struct ObjectLoaderError: ToucanError {
     public var userFriendlyMessage: String {
         "Could not load object."
     }
-
-    // MARK: - Lifecycle
 
     /// Initializes a new `ObjectLoaderError`.
     ///

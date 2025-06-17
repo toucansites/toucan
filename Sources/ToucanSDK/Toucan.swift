@@ -26,8 +26,6 @@ private func getSafeURL(
 
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
-    // MARK: - Properties
-
     let inputURL: URL
     let targetsToBuild: [String]
     let logger: Logger
@@ -36,8 +34,6 @@ public struct Toucan {
     //    let markdownParser: MarkdownParser
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
-
-    // MARK: - Lifecycle
 
     /// Initialize a new instance.
     /// - Parameters:
@@ -56,8 +52,6 @@ public struct Toucan {
         self.targetsToBuild = targetsToBuild
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     // MARK: - helpers
 
@@ -87,7 +81,7 @@ public struct Toucan {
         try ObjectLoader(
             url: inputURL,
             locations:
-                fileManager
+            fileManager
                 .find(
                     name: "toucan",
                     extensions: ["yml", "yaml"],
@@ -190,8 +184,8 @@ public struct Toucan {
 
                     let resultOutputURL =
                         destinationFolder
-                        .appending(path: result.destination.file)
-                        .appendingPathExtension(result.destination.ext)
+                            .appending(path: result.destination.file)
+                            .appendingPathExtension(result.destination.ext)
 
                     switch result.source {
                     case let .assetFile(path):
@@ -228,9 +222,6 @@ public struct Toucan {
         }
         catch {
             try? fileManager.delete(at: workDirURL)
-            //            if let error = error as? ToucanError {
-            //                print(error.logMessageStack())
-            //            }
             throw error
         }
     }

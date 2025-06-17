@@ -115,7 +115,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.components.assets.sorted()
                     == [
-                        "template.css"
+                        "template.css",
                     ]
                     .sorted()
             )
@@ -133,7 +133,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.overrides.assets.sorted()
                     == [
-                        "template.css"
+                        "template.css",
                     ]
                     .sorted()
             )
@@ -149,14 +149,14 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.content.assets.sorted()
                     == [
-                        "style.css"
+                        "style.css",
                     ]
                     .sorted()
             )
             #expect(
                 template.content.views.map(\.path).sorted()
                     == [
-                        "about/pages.about.mustache"
+                        "about/pages.about.mustache",
                     ]
                     .sorted()
             )

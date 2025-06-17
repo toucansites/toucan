@@ -10,13 +10,9 @@ import FileManagerKitBuilder
 import ToucanSerialization
 
 struct MustacheFile {
-    // MARK: - Properties
-
     var name: String
     var ext: String
     var template: String
-
-    // MARK: - Lifecycle
 
     init(
         name: String,

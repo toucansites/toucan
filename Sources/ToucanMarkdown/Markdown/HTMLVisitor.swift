@@ -26,11 +26,7 @@ private extension [DirectiveArgument] {
 // MARK: - HTML visitor
 
 struct HTMLVisitor: MarkupVisitor {
-    // MARK: - Nested Types
-
     typealias Result = String
-
-    // MARK: - Properties
 
     var customBlockDirectives: [MarkdownBlockDirective]
     var paragraphStyles: [String: [String]]
@@ -39,15 +35,13 @@ struct HTMLVisitor: MarkupVisitor {
     var assetsPath: String
     var baseURL: String
 
-    // MARK: - Lifecycle
-
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: [String: [String]],
         slug: String,
         assetsPath: String,
         baseURL: String,
-        logger: Logger = .init(label: "HTMLVisitor"),
+        logger: Logger = .init(label: "HTMLVisitor")
     ) {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
@@ -56,8 +50,6 @@ struct HTMLVisitor: MarkupVisitor {
         self.baseURL = baseURL
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     // MARK: - visitor functions
 
@@ -162,10 +154,11 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         let filterBlocks =
             customBlockDirectives
-            .filter { $0.removesChildParagraph ?? false }
-            .map(\.name)
+                .filter { $0.removesChildParagraph ?? false }
+                .map(\.name)
 
-        if let block = paragraph.parent as? BlockDirective,
+        if
+            let block = paragraph.parent as? BlockDirective,
             filterBlocks.contains(block.name.lowercased())
         {
             return visit(paragraph.children)
@@ -221,7 +214,7 @@ struct HTMLVisitor: MarkupVisitor {
         return HTML(
             name: "blockquote",
             attributes: [
-                .init(key: "class", value: type)
+                .init(key: "class", value: type),
             ],
             contents: String(contents)
         )
@@ -248,9 +241,9 @@ struct HTMLVisitor: MarkupVisitor {
                     [
                         #"<"#: #"&lt;"#,
                         #">"#: #"&gt;"#,
-                            // #"&"#: #"&amp;"#,
-                            // #"'"#: #"&apos;"#,
-                            // #"""#: #"&quot;"#,
+                        // #"&"#: #"&amp;"#,
+                        // #"'"#: #"&apos;"#,
+                        // #"""#: #"&quot;"#,
                     ]
                 )
                 .replacingOccurrences(
@@ -311,7 +304,8 @@ struct HTMLVisitor: MarkupVisitor {
                 )
             }
 
-            if !destination.hasPrefix("."),
+            if
+                !destination.hasPrefix("."),
                 !destination.hasPrefix("/"),
                 !destination.hasPrefix("#")
             {
@@ -406,8 +400,8 @@ struct HTMLVisitor: MarkupVisitor {
         guard parseErrors.isEmpty else {
             let errors =
                 parseErrors
-                .map { String(describing: $0) }
-                .joined(separator: ", ")
+                    .map { String(describing: $0) }
+                    .joined(separator: ", ")
             logger.warning("\(errors)")
             return ""
         }
@@ -471,12 +465,12 @@ struct HTMLVisitor: MarkupVisitor {
         if let name = block.tag {
             let attributes: [HTML.Attribute] =
                 block.attributes?
-                .map { a in
-                    .init(
-                        key: a.name,
-                        value: a.value.replacingOccurrences(templateParams)
-                    )
-                } ?? []
+                    .map { a in
+                        .init(
+                            key: a.name,
+                            value: a.value.replacingOccurrences(templateParams)
+                        )
+                    } ?? []
 
             return HTML(
                 name: name,

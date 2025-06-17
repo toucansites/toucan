@@ -13,8 +13,6 @@ public enum Direction: String, Sendable, Codable, Equatable, CaseIterable {
     /// Sort in descending order (e.g., Z–A, 9–1).
     case desc
 
-    // MARK: - Static Computed Properties
-
     /// The default sorting direction. Defaults to `.asc`.
     public static var defaults: Self {
         .asc

@@ -12,13 +12,7 @@ import ToucanSerialization
 
 @Suite
 struct AnyCodableTestSuite {
-    // MARK: - Nested Types
-
-    // MARK: -
-
     struct SomeCodable: Codable {
-        // MARK: - Nested Types
-
         enum CodingKeys: String, CodingKey {
             case string
             case int
@@ -26,15 +20,11 @@ struct AnyCodableTestSuite {
             case hasUnderscore = "has_underscore"
         }
 
-        // MARK: - Properties
-
         var string: String
         var int: Int
         var bool: Bool
         var hasUnderscore: String
     }
-
-    // MARK: - Functions
 
     @Test
     func decodingInt() throws {
@@ -205,7 +195,7 @@ struct AnyCodableTestSuite {
             dictionary1["dict"]?.value as? [String: String] == dictionary2[
                 "dict"
             ]?
-            .value as? [String: String]
+                .value as? [String: String]
         )
         #expect(dictionary1["null"]?.value == nil)
         #expect(dictionary2["null"]?.value == nil)
@@ -321,7 +311,8 @@ struct AnyCodableTestSuite {
         )
         #expect(
             arrayValue.debugDescription
-                == "AnyCodable([AnyCodable(\"string\"), AnyCodable(\"string2\")])"
+                ==
+                "AnyCodable([AnyCodable(\"string\"), AnyCodable(\"string2\")])"
         )
         #expect(dictValue.description == "[\"key\": AnyCodable(\"value\")]")
         #expect(

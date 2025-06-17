@@ -15,8 +15,6 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-    // MARK: - Static Properties
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-serve",
@@ -28,8 +26,6 @@ struct Entrypoint: AsyncParsableCommand {
             """,
         version: GeneratorInfo.current.version
     )
-
-    // MARK: - Properties
 
     // MARK: - arguments
 
@@ -44,8 +40,6 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
-
-    // MARK: - Functions
 
     // MARK: - run
 

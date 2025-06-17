@@ -8,15 +8,11 @@
 public extension Config {
     /// Represents the location of block configuration files.
     struct Blocks: Codable, Equatable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -25,14 +21,10 @@ public extension Config {
             .init(path: "blocks")
         }
 
-        // MARK: - Properties
-
         /// The relative or absolute path to the folder containing block configuration files.
         ///
         /// Example: `"blocks"` (default), or `"config/blocks"`
         public var path: String
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

@@ -11,13 +11,9 @@ import ToucanSerialization
 import ToucanSource
 
 struct MarkdownFile {
-    // MARK: - Properties
-
     var name: String
     var ext: String
     var markdown: Markdown
-
-    // MARK: - Lifecycle
 
     init(
         name: String,

@@ -10,16 +10,12 @@ import struct Foundation.URL
 
 /// A loader responsible for building a `Template` by collecting assets and templates from various locations.
 public struct TemplateLoader {
-    // MARK: - Properties
-
     /// The file system locations relevant to the template loading process.
     let locations: BuiltTargetSourceLocations
     /// The list of file extensions considered as templates.
     let extensions: [String]
     /// The file manager utility used to search and retrieve files.
     let fileManager: FileManagerKit
-
-    // MARK: - Lifecycle
 
     /// Creates a new instance of `TemplateLoader`.
     /// - Parameters:
@@ -36,18 +32,16 @@ public struct TemplateLoader {
         self.fileManager = fileManager
     }
 
-    // MARK: - Functions
-
-    func loadTemplate(
+    func loadView(
         at url: URL,
         path: String,
         isContentOverride: Bool = false
     ) throws -> View {
         let basePath =
             path
-            .split(separator: ".")
-            .dropLast()
-            .joined(separator: ".")
+                .split(separator: ".")
+                .dropLast()
+                .joined(separator: ".")
 
         let id =
             if isContentOverride {
@@ -114,7 +108,7 @@ public struct TemplateLoader {
             components: .init(
                 assets: assets,
                 views: templates.map {
-                    try loadTemplate(
+                    try loadView(
                         at: locations.currentTemplateViewsURL,
                         path: $0
                     )
@@ -123,7 +117,7 @@ public struct TemplateLoader {
             overrides: .init(
                 assets: assetOverrides,
                 views: templateOverrides.map {
-                    try loadTemplate(
+                    try loadView(
                         at: locations.currentTemplateViewsOverridesURL,
                         path: $0
                     )
@@ -132,7 +126,7 @@ public struct TemplateLoader {
             content: .init(
                 assets: contentAssetOverrides,
                 views: contentTemplateOverrides.map {
-                    try loadTemplate(
+                    try loadView(
                         at: locations.contentsURL,
                         path: $0,
                         isContentOverride: true
@@ -154,7 +148,7 @@ public struct TemplateLoader {
 
         let views =
             template.components.views + template.overrides.views
-            + template.content.views
+                + template.content.views
 
         for view in views {
             results[view.id] = view.contents

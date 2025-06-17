@@ -15,16 +15,16 @@ struct MarkdownBlockDirectiveTestSuite {
     func simpleCustomBlockDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.faq()
+                MarkdownBlockDirective.Mocks.faq(),
             ],
             paragraphStyles: [:]
         )
 
         let input = #"""
-            @FAQ {
-                Lorem ipsum
-            }
-            """#
+        @FAQ {
+            Lorem ipsum
+        }
+        """#
 
         let output = renderer.renderHTML(
             markdown: input,
@@ -34,8 +34,8 @@ struct MarkdownBlockDirectiveTestSuite {
         )
 
         let expectation = #"""
-            <div class="faq"><p>Lorem ipsum</p></div>
-            """#
+        <div class="faq"><p>Lorem ipsum</p></div>
+        """#
 
         #expect(output == expectation)
     }
@@ -52,16 +52,16 @@ struct MarkdownBlockDirectiveTestSuite {
                     tag: nil,
                     attributes: nil,
                     output: #"<div class="faq">{{contents}}</div>"#
-                )
+                ),
             ],
             paragraphStyles: [:]
         )
 
         let input = #"""
-            @FAQ {
-                Lorem ipsum
-            }
-            """#
+        @FAQ {
+            Lorem ipsum
+        }
+        """#
 
         let output = renderer.renderHTML(
             markdown: input,
@@ -71,8 +71,8 @@ struct MarkdownBlockDirectiveTestSuite {
         )
 
         let expectation = #"""
-            <div class="faq"><p>Lorem ipsum</p></div>
-            """#
+        <div class="faq"><p>Lorem ipsum</p></div>
+        """#
 
         #expect(output == expectation)
     }
@@ -88,25 +88,25 @@ struct MarkdownBlockDirectiveTestSuite {
                             label: "columns",
                             isRequired: true,
                             defaultValue: nil
-                        )
+                        ),
                     ],
                     requiresParentDirective: nil,
                     removesChildParagraph: nil,
                     tag: "div",
                     attributes: [
-                        .init(name: "columns", value: "grid-{{columns}}")
+                        .init(name: "columns", value: "grid-{{columns}}"),
                     ],
                     output: nil
-                )
+                ),
             ],
             paragraphStyles: [:]
         )
 
         let input = #"""
-            @Grid(columns: 3) {
-                Lorem ipsum
-            }
-            """#
+        @Grid(columns: 3) {
+            Lorem ipsum
+        }
+        """#
 
         let output = renderer.renderHTML(
             markdown: input,
@@ -116,8 +116,8 @@ struct MarkdownBlockDirectiveTestSuite {
         )
 
         let expectation = #"""
-            <div columns="grid-3"><p>Lorem ipsum</p></div>
-            """#
+        <div columns="grid-3"><p>Lorem ipsum</p></div>
+        """#
 
         #expect(output == expectation)
     }
@@ -133,24 +133,24 @@ struct MarkdownBlockDirectiveTestSuite {
                             label: "columns",
                             isRequired: true,
                             defaultValue: nil
-                        )
+                        ),
                     ],
                     requiresParentDirective: nil,
                     removesChildParagraph: nil,
                     tag: nil,
                     attributes: nil,
                     output:
-                        #"<div columns="grid-{{columns}}">{{contents}}</div>"#
-                )
+                    #"<div columns="grid-{{columns}}">{{contents}}</div>"#
+                ),
             ],
             paragraphStyles: [:]
         )
 
         let input = #"""
-            @Grid(columns: 3) {
-                Lorem ipsum
-            }
-            """#
+        @Grid(columns: 3) {
+            Lorem ipsum
+        }
+        """#
 
         let output = renderer.renderHTML(
             markdown: input,
@@ -160,8 +160,8 @@ struct MarkdownBlockDirectiveTestSuite {
         )
 
         let expectation = #"""
-            <div columns="grid-3"><p>Lorem ipsum</p></div>
-            """#
+        <div columns="grid-3"><p>Lorem ipsum</p></div>
+        """#
 
         #expect(output == expectation)
     }
@@ -170,15 +170,15 @@ struct MarkdownBlockDirectiveTestSuite {
     func unrecognizedDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.faq()
+                MarkdownBlockDirective.Mocks.faq(),
             ]
         )
 
         let input = #"""
-            @unrecognized {
-                Lorem ipsum
-            }
-            """#
+        @unrecognized {
+            Lorem ipsum
+        }
+        """#
 
         let output = renderer.renderHTML(
             markdown: input,
@@ -194,14 +194,14 @@ struct MarkdownBlockDirectiveTestSuite {
     func parseError() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.badDirective()
+                MarkdownBlockDirective.Mocks.badDirective(),
             ]
         )
         let input = #"""
-            @BAD(columns: bad, columns: bad) {
-                Lorem ipsum 
-            }
-            """#
+        @BAD(columns: bad, columns: bad) {
+            Lorem ipsum 
+        }
+        """#
 
         _ = renderer.renderHTML(
             markdown: input,
@@ -215,14 +215,14 @@ struct MarkdownBlockDirectiveTestSuite {
     func requiredParameterErrors() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.badDirective()
-            ],
+                MarkdownBlockDirective.Mocks.badDirective(),
+            ]
         )
         let input = #"""
-            @BAD() {
-                Lorem ipsum 
-            }
-            """#
+        @BAD() {
+            Lorem ipsum 
+        }
+        """#
 
         _ = renderer.renderHTML(
             markdown: input,

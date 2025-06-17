@@ -16,8 +16,6 @@ enum BuildTargetSourceRendererError: ToucanError {
     case invalidEngine(String)
     case unknown(Error)
 
-    // MARK: - Computed Properties
-
     var underlyingErrors: [any Error] {
         switch self {
         case let .unknown(error):
@@ -52,8 +50,6 @@ enum BuildTargetSourceRendererError: ToucanError {
 /// resolves content and site-level context, and outputs rendered content using templates
 /// or encoded formats.
 public struct BuildTargetSourceRenderer {
-    // MARK: - Properties
-
     /// Site configuration + all raw content
     let buildTargetSource: BuildTargetSource
     /// Template identifiers and contents.
@@ -64,8 +60,6 @@ public struct BuildTargetSourceRenderer {
     let logger: Logger
     /// Cache
     var contentContextCache: [String: [String: AnyCodable]] = [:]
-
-    // MARK: - Lifecycle
 
     /// Initializes a renderer from a source bundle.
     ///
@@ -85,8 +79,6 @@ public struct BuildTargetSourceRenderer {
         self.generatorInfo = generatorInfo
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Returns the last content update based on the pipeline config
     private func getLastContentUpdate(
@@ -111,7 +103,7 @@ public struct BuildTargetSourceRenderer {
                             .init(
                                 key: "lastUpdate",
                                 direction: .desc
-                            )
+                            ),
                         ]
                     ),
                     now: now
@@ -210,7 +202,7 @@ public struct BuildTargetSourceRenderer {
             )
         }
         return [
-            "context": .init(rawContext)
+            "context": .init(rawContext),
         ]
     }
 
@@ -243,7 +235,7 @@ public struct BuildTargetSourceRenderer {
                     "items": .init(itemContext),
                     "links": .init(iteratorInfo.links),
                 ] as [String: AnyCodable]
-            )
+            ),
         ]
     }
 
@@ -273,10 +265,10 @@ public struct BuildTargetSourceRenderer {
         )
 
         let context: [String: AnyCodable] = [
-            "page": .init(pageContext)
+            "page": .init(pageContext),
         ]
-        .recursivelyMerged(with: iteratorContext)
-        .recursivelyMerged(with: pipelineContext)
+            .recursivelyMerged(with: iteratorContext)
+            .recursivelyMerged(with: pipelineContext)
 
         var outputArgs: [String: String] = [
             "{{id}}": content.typeAwareID,
@@ -311,7 +303,7 @@ public struct BuildTargetSourceRenderer {
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval,
         scopeKey: String,
-        allowSubQueries: Bool = true  // allow top level queries only,
+        allowSubQueries: Bool = true // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
@@ -342,7 +334,7 @@ public struct BuildTargetSourceRenderer {
             scopeKey,
             String(allowSubQueries),
         ]
-        .joined(separator: "_")
+            .joined(separator: "_")
 
         if let cachedContext = contentContextCache[cacheKey] {
             return cachedContext
@@ -405,7 +397,7 @@ public struct BuildTargetSourceRenderer {
             let renderer = MarkdownRenderer(
                 configuration: .init(
                     markdown: .init(
-                        customBlockDirectives: buildTargetSource.blockDirectives
+                        customBlockDirectives: buildTargetSource.blocks
                             .map {
                                 .init(
                                     name: $0.name,
@@ -457,7 +449,7 @@ public struct BuildTargetSourceRenderer {
 
             let contents = renderer.render(
                 content: content.rawValue.markdown.contents,
-                typeAwareId: content.typeAwareID,
+                typeAwareID: content.typeAwareID,
                 slug: content.slug.value,
                 assetsPath: buildTargetSource.config.contents.assets.path,
                 baseURL: baseURL()
@@ -599,7 +591,7 @@ public struct BuildTargetSourceRenderer {
         ]
 
         let contentTypeResolver = ContentTypeResolver(
-            types: buildTargetSource.contentDefinitions,
+            types: buildTargetSource.types,
             pipelines: buildTargetSource.pipelines
         )
 

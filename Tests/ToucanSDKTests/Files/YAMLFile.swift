@@ -10,13 +10,9 @@ import FileManagerKitBuilder
 import ToucanSerialization
 
 struct YAMLFile<T: Encodable> {
-    // MARK: - Properties
-
     var name: String
     var ext: String
     var contents: T
-
-    // MARK: - Lifecycle
 
     init(
         name: String,

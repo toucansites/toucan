@@ -9,12 +9,8 @@ import class Yams.YAMLDecoder
 
 /// An implementation of `ToucanDecoder` that uses `YAMLDecoder`.
 public struct ToucanYAMLDecoder: ToucanDecoder {
-    // MARK: - Lifecycle
-
     /// Creates a new YAML decoder instance for use in the Toucan system.
     public init() {}
-
-    // MARK: - Functions
 
     /// Decodes a YAML-formatted `Data` object into a strongly typed model.
     ///

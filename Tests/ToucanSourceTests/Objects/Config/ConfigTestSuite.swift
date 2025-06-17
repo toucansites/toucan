@@ -107,7 +107,7 @@ struct ConfigTestSuite {
         expectation.dataTypes.date.formats["test1"] = .init(
             localization: .init(
                 locale: "hu-HU",
-                timeZone: "CET",
+                timeZone: "CET"
             ),
             format: "his"
         )
@@ -115,8 +115,8 @@ struct ConfigTestSuite {
         expectation.renderer.outlineLevels = [4]
         expectation.renderer.paragraphStyles.styles = [
             "test": [
-                "test1"
-            ]
+                "test1",
+            ],
         ]
         expectation.renderer.wordsPerMinute = 42
         expectation.site.assets.path = "custom5"

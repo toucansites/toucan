@@ -10,7 +10,6 @@ import ToucanSDK
 
 @Suite
 struct SlugTests {
-
     @Test
     func permalink() throws {
         let slug = Slug("slug")

@@ -1,5 +1,5 @@
 //
-//  Mocks+ContentDefinitions.swift
+//  Mocks+ContentTypes.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
@@ -7,13 +7,13 @@
 
 import ToucanSource
 
-extension Mocks.ContentDefinitions {
-    static func page() -> ContentDefinition {
+extension Mocks.ContentTypes {
+    static func page() -> ContentType {
         .init(
             id: "page",
             default: true,
             paths: [
-                "pages"
+                "pages",
             ],
             properties: [
                 "draft": .init(
@@ -35,11 +35,11 @@ extension Mocks.ContentDefinitions {
         )
     }
 
-    static func author() -> ContentDefinition {
+    static func author() -> ContentType {
         .init(
             id: "author",
             paths: [
-                "blog/authors"
+                "blog/authors",
             ],
             properties: [
                 "draft": .init(
@@ -82,18 +82,18 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .desc
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         )
     }
 
-    static func tag() -> ContentDefinition {
+    static func tag() -> ContentType {
         .init(
             id: "tag",
             paths: [
-                "blog/tags"
+                "blog/tags",
             ],
             properties: [
                 "draft": .init(
@@ -124,18 +124,18 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .desc
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         )
     }
 
-    static func post() -> ContentDefinition {
+    static func post() -> ContentType {
         .init(
             id: "post",
             paths: [
-                "blog/posts"
+                "blog/posts",
             ],
             properties: [
                 "draft": .init(
@@ -176,7 +176,7 @@ extension Mocks.ContentDefinitions {
                 ),
                 "rating": .init(
                     propertyType: .double,
-                    isRequired: false,
+                    isRequired: false
                 ),
             ],
             relations: [
@@ -210,7 +210,7 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .desc
-                        )
+                        ),
                     ]
                 ),
 
@@ -226,7 +226,7 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .asc
-                        )
+                        ),
                     ]
                 ),
                 "related": .init(
@@ -274,11 +274,11 @@ extension Mocks.ContentDefinitions {
         )
     }
 
-    static func category() -> ContentDefinition {
+    static func category() -> ContentType {
         .init(
             id: "category",
             paths: [
-                "docs/categories"
+                "docs/categories",
             ],
             properties: [
                 "draft": .init(
@@ -314,18 +314,18 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "order",
                             direction: .asc
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         )
     }
 
-    static func guide() -> ContentDefinition {
+    static func guide() -> ContentType {
         .init(
             id: "guide",
             paths: [
-                "docs/guides"
+                "docs/guides",
             ],
             properties: [
                 "draft": .init(
@@ -351,13 +351,13 @@ extension Mocks.ContentDefinitions {
                 "category": .init(
                     references: "category",
                     relationType: .one
-                )
+                ),
             ],
             queries: [:]
         )
     }
 
-    static func redirect() -> ContentDefinition {
+    static func redirect() -> ContentType {
         .init(
             id: "redirect",
             paths: [],

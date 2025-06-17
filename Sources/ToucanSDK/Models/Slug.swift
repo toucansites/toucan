@@ -7,12 +7,8 @@
 
 /// A value type representing a URL-friendly identifier for a content item.
 public struct Slug: Equatable {
-    // MARK: - Properties
-
     /// The raw slug string (e.g., `"blog/welcome"`, `"about"`, `""`).
     public var value: String
-
-    // MARK: - Lifecycle
 
     /// Initializes a new slug.
     ///
@@ -22,8 +18,6 @@ public struct Slug: Equatable {
     ) {
         self.value = value
     }
-
-    // MARK: - Functions
 
     // MARK: - Iterator ID Extraction
 
@@ -63,7 +57,6 @@ public struct Slug: Equatable {
             .joined(separator: "/")
             .ensureTrailingSlash()
     }
-
 }
 
 extension Slug: Codable {

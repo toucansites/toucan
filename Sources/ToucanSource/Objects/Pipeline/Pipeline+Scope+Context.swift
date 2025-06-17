@@ -8,8 +8,6 @@
 public extension Pipeline.Scope {
     /// Represents the available data context for a rendering `Scope`.
     struct Context: OptionSet, Codable {
-        // MARK: - Static Computed Properties
-
         // MARK: - Bitmask Flags (Simple Contexts)
 
         /// Includes user-defined metadata and settings.
@@ -62,14 +60,10 @@ public extension Pipeline.Scope {
             ]
         }
 
-        // MARK: - Properties
-
         // MARK: - Raw Value Backing
 
         /// The underlying raw bitmask value used to represent the context.
         public let rawValue: UInt
-
-        // MARK: - Computed Properties
 
         /// Returns the mapping of context options to their string names.
         private var allOptions: [(Context, String)] {
@@ -89,8 +83,6 @@ public extension Pipeline.Scope {
         public var stringValues: [String] {
             allOptions.compactMap { contains($0.0) ? $0.1 : nil }
         }
-
-        // MARK: - Lifecycle
 
         /// Initializes the context using a raw value.
         ///
@@ -161,8 +153,6 @@ public extension Pipeline.Scope {
                 )
             }
         }
-
-        // MARK: - Functions
 
         /// Encodes the context as a string or array of strings using the defined string values.
         ///

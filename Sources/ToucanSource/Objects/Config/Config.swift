@@ -9,8 +9,6 @@ import Foundation
 
 /// Represents the top-level configuration for a content rendering system.
 public struct Config: Codable, Equatable {
-    // MARK: - Nested Types
-
     // MARK: - Coding Keys
 
     private enum CodingKeys: CodingKey {
@@ -23,8 +21,6 @@ public struct Config: Codable, Equatable {
         case dataTypes
         case renderer
     }
-
-    // MARK: - Static Computed Properties
 
     // MARK: - Defaults
 
@@ -43,8 +39,6 @@ public struct Config: Codable, Equatable {
             renderer: .defaults
         )
     }
-
-    // MARK: - Properties
 
     /// Global site configuration.
     public var site: Site
@@ -69,8 +63,6 @@ public struct Config: Codable, Equatable {
 
     /// Additional content-specific overrides or configuration extensions.
     public var renderer: RendererConfig
-
-    // MARK: - Lifecycle
 
     // MARK: - Initialization
 

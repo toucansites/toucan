@@ -8,8 +8,6 @@
 /// A hierarchical representation of an outline element, used for
 /// structuring headings or sections in a document or interface.
 public struct Outline: Equatable, Codable {
-    // MARK: - Properties
-
     /// The depth level of the outline node (e.g., 1 for top-level, 2 for a subheading, etc.).
     public var level: Int
 
@@ -21,8 +19,6 @@ public struct Outline: Equatable, Codable {
 
     /// A list of child outlines, representing nested structure under this node.
     public var children: [Outline]
-
-    // MARK: - Lifecycle
 
     /// Initializes a new `Outline` instance.
     ///

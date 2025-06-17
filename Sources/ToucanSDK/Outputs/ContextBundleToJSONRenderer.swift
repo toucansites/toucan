@@ -10,8 +10,6 @@ import Logging
 import ToucanSource
 
 struct ContextBundleToJSONRenderer {
-    // MARK: - Properties
-
     let pipeline: Pipeline
     let encoder: JSONEncoder
 
@@ -19,8 +17,6 @@ struct ContextBundleToJSONRenderer {
 
     let keyPath: String?
     let keyPaths: [String: AnyCodable]?
-
-    // MARK: - Lifecycle
 
     init(
         pipeline: Pipeline,
@@ -43,8 +39,6 @@ struct ContextBundleToJSONRenderer {
             as: [String: AnyCodable].self
         )
     }
-
-    // MARK: - Functions
 
     private func data(
         from context: [String: Any],
@@ -94,7 +88,7 @@ struct ContextBundleToJSONRenderer {
 
     func render(_ contextBundle: ContextBundle) -> PipelineResult? {
         let metadata: Logger.Metadata = [
-            "slug": "\(contextBundle.content.slug.value)"
+            "slug": "\(contextBundle.content.slug.value)",
         ]
 
         let context = contextBundle.context

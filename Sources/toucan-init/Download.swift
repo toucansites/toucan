@@ -9,14 +9,10 @@ import Foundation
 import SwiftCommand
 
 struct Download {
-    // MARK: - Properties
-
     let id = UUID().uuidString
     let sourceURL: URL
     let targetDirURL: URL
     let fileManager: FileManager
-
-    // MARK: - Computed Properties
 
     private var url: URL {
         fileManager.temporaryDirectory.appendingPathComponent(id)
@@ -25,8 +21,6 @@ struct Download {
     private var zipURL: URL {
         url.appendingPathExtension("zip")
     }
-
-    // MARK: - Functions
 
     func resolve() async throws {
         /// Ensure working directory exists
@@ -42,13 +36,13 @@ struct Download {
         }
         _ =
             try await curl
-            .addArguments([
-                "-L",
-                sourceURL.absoluteString,
-                "-o",
-                zipURL.path,
-            ])
-            .output
+                .addArguments([
+                    "-L",
+                    sourceURL.absoluteString,
+                    "-o",
+                    zipURL.path,
+                ])
+                .output
 
         /// Find and run `unzip` using SwiftCommand
         guard let unzipExe = Command.findInPath(withName: "unzip") else {
@@ -56,8 +50,8 @@ struct Download {
         }
         _ =
             try await unzipExe
-            .addArguments([zipURL.path, "-d", url.path])
-            .output
+                .addArguments([zipURL.path, "-d", url.path])
+                .output
 
         /// Remove existing target directory
         try? fileManager.removeItem(at: targetDirURL)

@@ -11,8 +11,6 @@ public extension Pipeline {
     /// Assets include static files like JavaScript, CSS, and images that are attached
     /// to the output content, either by setting paths, loading files, or parsing content.
     struct Assets: Codable {
-        // MARK: - Nested Types
-
         private enum CodingKeys: CodingKey {
             case behaviors
             case properties
@@ -20,7 +18,7 @@ public extension Pipeline {
 
         /// Describes the file location for the asset.
         public struct Location: Codable {
-            // MARK: - Properties
+            //
 
             /// An optional path to the asset file.
             public var path: String?
@@ -29,7 +27,7 @@ public extension Pipeline {
             /// The file extension (e.g., `"css"`, `"js"`).
             public var ext: String
 
-            // MARK: - Lifecycle
+            //
 
             /// Initializes a new `Input` describing an asset file.
             ///
@@ -58,7 +56,7 @@ public extension Pipeline {
         ///   - input: The source location of the asset.
         ///   - output: The destination location for the processed asset.
         public struct Behavior: Codable {
-            // MARK: - Nested Types
+            //
 
             private enum CodingKeys: CodingKey {
                 case id
@@ -66,7 +64,7 @@ public extension Pipeline {
                 case output
             }
 
-            // MARK: - Properties
+            //
 
             /// The unique identifier for the behavior.
             public var id: String
@@ -75,7 +73,7 @@ public extension Pipeline {
             /// The output location for the behavior.
             public var output: Location
 
-            // MARK: - Lifecycle
+            //
 
             /// Initializes a behavior
             ///
@@ -133,7 +131,7 @@ public extension Pipeline {
 
         /// Represents a single asset manipulation instruction within the `Assets` configuration.
         public struct Property: Codable {
-            // MARK: - Nested Types
+            //
 
             /// Defines how the asset should be applied or processed.
             public enum Action: String, Codable {
@@ -147,7 +145,7 @@ public extension Pipeline {
                 case parse
             }
 
-            // MARK: - Properties
+            //
 
             /// The action to perform for this asset.
             public var action: Action
@@ -158,7 +156,7 @@ public extension Pipeline {
             /// Describes the input file for the asset.
             public var input: Location
 
-            // MARK: - Lifecycle
+            //
 
             /// Initializes a new `Property` describing an asset manipulation.
             ///
@@ -180,8 +178,6 @@ public extension Pipeline {
             }
         }
 
-        // MARK: - Static Computed Properties
-
         /// Returns a default asset configuration commonly used for HTML pipelines.
         public static var defaults: Self {
             .init(
@@ -190,15 +186,11 @@ public extension Pipeline {
             )
         }
 
-        // MARK: - Properties
-
         /// A list of asset behaviors
         public var behaviors: [Behavior]
 
         /// A list of asset manipulation rules.
         public var properties: [Property]
-
-        // MARK: - Lifecycle
 
         /// Initializes an `Assets` instance with a given set of properties.
         ///

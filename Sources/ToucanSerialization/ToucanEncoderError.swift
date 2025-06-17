@@ -26,14 +26,10 @@ extension EncodingError: ToucanError {
 ///
 /// Wraps an optional underlying error and includes the associated type information.
 public struct ToucanEncoderError: ToucanError {
-    // MARK: - Properties
-
     /// The type that failed to encode.
     let type: Any.Type
     /// An optional underlying error providing additional context.
     let error: Error?
-
-    // MARK: - Computed Properties
 
     /// An array containing the underlying error, if present.
     public var underlyingErrors: [any Error] {
@@ -49,8 +45,6 @@ public struct ToucanEncoderError: ToucanError {
     public var userFriendlyMessage: String {
         "Could not encode object."
     }
-
-    // MARK: - Lifecycle
 
     /// Creates a new `ToucanEncoderError`.
     ///

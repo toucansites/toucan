@@ -15,8 +15,6 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-    // MARK: - Static Properties
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-init",
@@ -29,8 +27,6 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - Properties
-
     // MARK: - arguments
 
     @Argument(help: "The name of the site directory (default: site).")
@@ -38,8 +34,6 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
-
-    // MARK: - Functions
 
     // MARK: - run
 
@@ -94,14 +88,14 @@ extension Entrypoint {
     var minimalSourceURL: URL {
         .init(
             string:
-                "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
+            "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
         )!
     }
 
     var minimalTemplateURL: URL {
         .init(
             string:
-                "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
+            "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
         )!
     }
 

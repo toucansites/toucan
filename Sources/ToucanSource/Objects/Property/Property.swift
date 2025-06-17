@@ -8,15 +8,11 @@
 /// Represents a single content property definition, including its type,
 /// whether it's required, and an optional default value.
 public struct Property: Codable, Equatable {
-    // MARK: - Nested Types
-
     /// Coding keys used for decoding optional metadata fields.
     enum CodingKeys: String, CodingKey {
         case required
         case `default`
     }
-
-    // MARK: - Properties
 
     /// The type of the property (e.g., string, number, boolean, etc.).
     public var type: PropertyType
@@ -28,8 +24,6 @@ public struct Property: Codable, Equatable {
 
     /// An optional default value to use if the property is missing in the content.
     public var `default`: AnyCodable?
-
-    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -76,8 +70,6 @@ public struct Property: Codable, Equatable {
             defaultValue: anyValue
         )
     }
-
-    // MARK: - Functions
 
     /// Encodes the `Property` into a keyed container
     ///

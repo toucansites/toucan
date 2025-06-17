@@ -21,7 +21,7 @@ struct TypesTestSuite {
             """
 
         let decoder = ToucanYAMLDecoder()
-        let result = try decoder.decode(ContentDefinition.self, from: data)
+        let result = try decoder.decode(ContentType.self, from: data)
 
         #expect(result.id == "post")
     }
@@ -103,7 +103,7 @@ struct TypesTestSuite {
             """
 
         let decoder = ToucanYAMLDecoder()
-        let result = try decoder.decode(ContentDefinition.self, from: data)
+        let result = try decoder.decode(ContentType.self, from: data)
 
         #expect(result.id == "post")
     }

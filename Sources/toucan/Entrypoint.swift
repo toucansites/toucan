@@ -19,8 +19,6 @@ extension Array {
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-    // MARK: - Static Properties
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan",
@@ -33,14 +31,10 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - Properties
-
     // MARK: - arguments
 
     @Argument(parsing: .allUnrecognized)
     var subcommand: [String]
-
-    // MARK: - Functions
 
     func run() async throws {
         var args = CommandLine.arguments
@@ -61,10 +55,10 @@ struct Entrypoint: AsyncParsableCommand {
         }
         let cmd =
             exe
-            .addArguments(args)
-            .setStdin(.pipe(closeImplicitly: false))
-            .setStdout(.inherit)
-            .setStderr(.inherit)
+                .addArguments(args)
+                .setStdin(.pipe(closeImplicitly: false))
+                .setStdout(.inherit)
+                .setStderr(.inherit)
 
         let subprocess = try cmd.spawn()
 
@@ -72,7 +66,7 @@ struct Entrypoint: AsyncParsableCommand {
             signal: SIGINT,
             queue: .main
         )
-        signal(SIGINT, SIG_IGN)  // Ignore default SIGINT behavior
+        signal(SIGINT, SIG_IGN) // Ignore default SIGINT behavior
 
         signalSource.setEventHandler {
             if subprocess.isRunning {

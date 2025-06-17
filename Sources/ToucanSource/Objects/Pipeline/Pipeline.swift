@@ -10,8 +10,6 @@
 ///
 /// A pipeline defines how data flows from content source to final rendered output.
 public struct Pipeline: Codable {
-    // MARK: - Nested Types
-
     // MARK: - Coding Keys
 
     private enum CodingKeys: CodingKey {
@@ -27,8 +25,6 @@ public struct Pipeline: Codable {
         case engine
         case output
     }
-
-    // MARK: - Properties
 
     /// Unique identifier for the pipeline.
     public var id: String
@@ -64,8 +60,6 @@ public struct Pipeline: Codable {
 
     /// Output configuration for file generation and routing.
     public var output: Output
-
-    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -161,7 +155,7 @@ public struct Pipeline: Codable {
         self.init(
             id: id,
             definesType: definesType,
-            scopes: userScopes,  // TODO: fix this
+            scopes: userScopes, // TODO: fix this
             queries: queries,
             dataTypes: dataTypes,
             contentTypes: contentTypes,
@@ -172,8 +166,6 @@ public struct Pipeline: Codable {
             output: output
         )
     }
-
-    // MARK: - Functions
 
     // MARK: - Scope Helpers
 

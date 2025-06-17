@@ -10,8 +10,6 @@ import Markdown
 
 /// A renderer that converts Markdown text to HTML, with support for custom block directives and paragraph styling.
 public struct MarkdownToHTMLRenderer {
-    // MARK: - Properties
-
     /// Custom block directives to extend Markdown syntax.
     public let customBlockDirectives: [MarkdownBlockDirective]
 
@@ -20,8 +18,6 @@ public struct MarkdownToHTMLRenderer {
 
     /// Logger instance
     public let logger: Logger
-
-    // MARK: - Lifecycle
 
     /// Initializes a `MarkdownToHTMLRenderer`.
     ///
@@ -38,8 +34,6 @@ public struct MarkdownToHTMLRenderer {
         self.paragraphStyles = paragraphStyles
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     // MARK: - render api
 
@@ -72,7 +66,7 @@ public struct MarkdownToHTMLRenderer {
             slug: slug,
             assetsPath: assetsPath,
             baseURL: baseURL,
-            logger: logger,
+            logger: logger
         )
 
         // Generate HTML by visiting the document tree.

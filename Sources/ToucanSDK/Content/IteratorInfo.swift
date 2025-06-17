@@ -8,12 +8,8 @@
 /// Provides pagination and iteration metadata for a content collection,
 /// used when rendering paginated list views.
 public struct IteratorInfo {
-    // MARK: - Nested Types
-
     /// Represents a navigation link within a paginated content sequence.
     public struct Link: Codable {
-        // MARK: - Properties
-
         /// The page number this link points to.
         public var number: Int
 
@@ -22,8 +18,6 @@ public struct IteratorInfo {
 
         /// Whether this link refers to the currently active page.
         public var isCurrent: Bool
-
-        // MARK: - Lifecycle
 
         /// Initializes a new pagination link.
         ///
@@ -41,8 +35,6 @@ public struct IteratorInfo {
             self.isCurrent = isCurrent
         }
     }
-
-    // MARK: - Properties
 
     // MARK: - Pagination Info
 
@@ -70,8 +62,6 @@ public struct IteratorInfo {
     /// This can help differentiate between multiple iterators for the same content type
     /// (e.g., "allPosts", "featuredPosts").
     public var scope: String?
-
-    // MARK: - Lifecycle
 
     // MARK: - Initialization
 

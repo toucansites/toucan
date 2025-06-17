@@ -33,9 +33,9 @@ struct BuildTargetSourceRendererTestSuite {
                             .init(
                                 key: "publication",
                                 direction: .desc
-                            )
+                            ),
                         ]
-                    )
+                    ),
                 ],
                 dataTypes: .defaults,
                 contentTypes: .init(
@@ -48,7 +48,7 @@ struct BuildTargetSourceRendererTestSuite {
                     "api.posts.pagination": .init(
                         contentType: "post",
                         limit: 2
-                    )
+                    ),
                 ],
                 assets: .defaults,
                 transformers: [:],
@@ -61,7 +61,7 @@ struct BuildTargetSourceRendererTestSuite {
                     file: "{{slug}}",
                     ext: "json"
                 )
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -72,7 +72,7 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 markdown: .init(
                     frontMatter: [
-                        "type": "api"
+                        "type": "api",
                     ]
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
@@ -85,8 +85,8 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 markdown: .init(
                     frontMatter: [
-                        "type": "api"
-                    ],
+                        "type": "api",
+                    ]
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: []
@@ -145,7 +145,7 @@ struct BuildTargetSourceRendererTestSuite {
                     transformers: [:],
                     engine: .init(id: "wrong", options: [:]),
                     output: .init(path: "", file: "context", ext: "json")
-                )
+                ),
             ]
         )
 
@@ -193,7 +193,7 @@ struct BuildTargetSourceRendererTestSuite {
                 transformers: [:],
                 engine: .init(id: "json", options: [:]),
                 output: .init(path: "", file: "context", ext: "json")
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -207,7 +207,7 @@ struct BuildTargetSourceRendererTestSuite {
                         "title": "Home",
                         "description": "Home description",
                         "foo": [
-                            "bar": "baz"
+                            "bar": "baz",
                         ],
                     ],
                     contents: """
@@ -218,7 +218,7 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: []
-            )
+            ),
         ]
 
         let buildTargetSource = BuildTargetSource(
@@ -230,8 +230,8 @@ struct BuildTargetSourceRendererTestSuite {
             config: config,
             settings: settings,
             pipelines: pipelines,
-            contentDefinitions: [
-                Mocks.ContentDefinitions.page()
+            types: [
+                Mocks.ContentTypes.page(),
             ],
             rawContents: rawContents,
             blockDirectives: []
@@ -259,8 +259,6 @@ struct BuildTargetSourceRendererTestSuite {
             let generator: GeneratorInfo
         }
 
-        //        print(value)
-
         let data = try #require(value.data(using: .utf8))
         let exp = try decoder.decode(Exp.self, from: data)
         let info = GeneratorInfo.current
@@ -283,7 +281,7 @@ struct BuildTargetSourceRendererTestSuite {
                 dataTypes: .defaults,
                 contentTypes: .init(
                     include: [
-                        "test"
+                        "test",
                     ],
                     exclude: [],
                     lastUpdate: [],
@@ -292,7 +290,7 @@ struct BuildTargetSourceRendererTestSuite {
                             key: "title",
                             operator: .equals,
                             value: "foo"
-                        )
+                        ),
                     ]
                 ),
                 iterators: [:],
@@ -300,7 +298,7 @@ struct BuildTargetSourceRendererTestSuite {
                 transformers: [:],
                 engine: .init(id: "json", options: [:]),
                 output: .init(path: "", file: "context", ext: "json")
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -315,7 +313,7 @@ struct BuildTargetSourceRendererTestSuite {
                         "title": "Home",
                         "description": "Home description",
                         "foo": [
-                            "bar": "baz"
+                            "bar": "baz",
                         ],
                     ],
                     contents: """
@@ -326,10 +324,10 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: []
-            )
+            ),
         ]
 
-        let contentDefinitions: [ContentDefinition] = [
+        let types: [ContentType] = [
             .init(
                 id: "test",
                 default: true,
@@ -338,17 +336,17 @@ struct BuildTargetSourceRendererTestSuite {
                     "title": .init(
                         propertyType: .string,
                         isRequired: true
-                    )
+                    ),
                 ],
                 relations: [:],
                 queries: [:]
-            )
+            ),
         ]
 
         var buildTargetSource = Mocks.buildTargetSource(now: now)
         buildTargetSource.pipelines = pipelines
         buildTargetSource.rawContents = rawContents
-        buildTargetSource.contentDefinitions = contentDefinitions
+        buildTargetSource.types = types
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
@@ -470,7 +468,7 @@ struct BuildTargetSourceRendererTestSuite {
         let buildTargetSource = getMockAPIBuildTargetSource(
             now: now,
             options: [
-                "keyPath": "context.posts"
+                "keyPath": "context.posts",
             ]
         )
 
@@ -514,7 +512,7 @@ struct BuildTargetSourceRendererTestSuite {
                 "keyPaths": [
                     "context.posts": "items",
                     "generator": "info",
-                ]
+                ],
             ]
         )
 
@@ -628,18 +626,18 @@ struct BuildTargetSourceRendererTestSuite {
                                 name: "style",
                                 ext: "css"
                             )
-                        )
+                        ),
                     ]
                 ),
                 transformers: [:],
                 engine: .init(
                     id: "json",
                     options: [
-                        "keyPath": "page"
+                        "keyPath": "page",
                     ]
                 ),
                 output: .init(path: "", file: "context", ext: "json")
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -652,23 +650,23 @@ struct BuildTargetSourceRendererTestSuite {
                     frontMatter: [
                         "type": "test",
                         "css": [
-                            "https://test.css"
+                            "https://test.css",
                         ],
                     ]
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: [
-                    "style.css"
+                    "style.css",
                 ]
-            )
+            ),
         ]
 
-        let contentDefinitions: [ContentDefinition] = []
+        let types: [ContentType] = []
 
         var buildTargetSource = Mocks.buildTargetSource(now: now)
         buildTargetSource.pipelines = pipelines
         buildTargetSource.rawContents = rawContents
-        buildTargetSource.contentDefinitions = contentDefinitions
+        buildTargetSource.types = types
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
@@ -730,18 +728,18 @@ struct BuildTargetSourceRendererTestSuite {
                                 name: "*",
                                 ext: "css"
                             )
-                        )
+                        ),
                     ]
                 ),
                 transformers: [:],
                 engine: .init(
                     id: "json",
                     options: [
-                        "keyPath": "page"
+                        "keyPath": "page",
                     ]
                 ),
                 output: .init(path: "", file: "context", ext: "json")
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -754,7 +752,7 @@ struct BuildTargetSourceRendererTestSuite {
                     frontMatter: [
                         "type": "test",
                         "css": [
-                            "https://test.css"
+                            "https://test.css",
                         ],
                     ]
                 ),
@@ -763,15 +761,15 @@ struct BuildTargetSourceRendererTestSuite {
                     "foo.css",
                     "bar.css",
                 ]
-            )
+            ),
         ]
 
-        let contentDefinitions: [ContentDefinition] = []
+        let types: [ContentType] = []
 
         var buildTargetSource = Mocks.buildTargetSource(now: now)
         buildTargetSource.pipelines = pipelines
         buildTargetSource.rawContents = rawContents
-        buildTargetSource.contentDefinitions = contentDefinitions
+        buildTargetSource.types = types
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
@@ -834,18 +832,18 @@ struct BuildTargetSourceRendererTestSuite {
                                 name: "cover",
                                 ext: "jpg"
                             )
-                        )
+                        ),
                     ]
                 ),
                 transformers: [:],
                 engine: .init(
                     id: "json",
                     options: [
-                        "keyPath": "page"
+                        "keyPath": "page",
                     ]
                 ),
                 output: .init(path: "", file: "context", ext: "json")
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -856,22 +854,22 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 markdown: .init(
                     frontMatter: [
-                        "type": "test"
+                        "type": "test",
                     ]
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: [
-                    "cover.jpg"
+                    "cover.jpg",
                 ]
-            )
+            ),
         ]
 
-        let contentDefinitions: [ContentDefinition] = []
+        let types: [ContentType] = []
 
         var buildTargetSource = Mocks.buildTargetSource(now: now)
         buildTargetSource.pipelines = pipelines
         buildTargetSource.rawContents = rawContents
-        buildTargetSource.contentDefinitions = contentDefinitions
+        buildTargetSource.types = types
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,
@@ -926,18 +924,18 @@ struct BuildTargetSourceRendererTestSuite {
                                 name: "*",
                                 ext: "png"
                             )
-                        )
+                        ),
                     ]
                 ),
                 transformers: [:],
                 engine: .init(
                     id: "json",
                     options: [
-                        "keyPath": "page"
+                        "keyPath": "page",
                     ]
                 ),
                 output: .init(path: "", file: "context", ext: "json")
-            )
+            ),
         ]
 
         let rawContents: [RawContent] = [
@@ -948,7 +946,7 @@ struct BuildTargetSourceRendererTestSuite {
                 ),
                 markdown: .init(
                     frontMatter: [
-                        "type": "test"
+                        "type": "test",
                     ]
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
@@ -957,15 +955,15 @@ struct BuildTargetSourceRendererTestSuite {
                     "foo.png",
                     "bar.png",
                 ]
-            )
+            ),
         ]
 
-        let contentDefinitions: [ContentDefinition] = []
+        let types: [ContentType] = []
 
         var buildTargetSource = Mocks.buildTargetSource(now: now)
         buildTargetSource.pipelines = pipelines
         buildTargetSource.rawContents = rawContents
-        buildTargetSource.contentDefinitions = contentDefinitions
+        buildTargetSource.types = types
 
         var renderer = BuildTargetSourceRenderer(
             buildTargetSource: buildTargetSource,

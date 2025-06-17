@@ -33,7 +33,8 @@ public extension Dictionary where Key == String {
     ) -> [String: Value] {
         var result = self
         for (key, value) in other {
-            if let existingValue = result[key] as? [String: Value],
+            if
+                let existingValue = result[key] as? [String: Value],
                 let newValue = value as? [String: Value]
             {
                 result[key] =
@@ -63,7 +64,8 @@ public extension Dictionary where Key == String {
                 continue
             }
 
-            if let array = current as? [Any], let index = Int(key),
+            if
+                let array = current as? [Any], let index = Int(key),
                 array.indices.contains(index)
             {
                 current = array[index]

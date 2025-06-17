@@ -8,8 +8,6 @@
 public extension Config.DataTypes {
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
@@ -17,8 +15,6 @@ public extension Config.DataTypes {
             case output
             case formats
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -30,8 +26,6 @@ public extension Config.DataTypes {
                 formats: [:]
             )
         }
-
-        // MARK: - Properties
 
         /// The expected format for parsing date input strings (typically from front matter or JSON).
         ///
@@ -50,8 +44,6 @@ public extension Config.DataTypes {
         ///   full: { format: "MMMM d, yyyy" }
         /// ```
         public var formats: [String: DateFormatterConfig]
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

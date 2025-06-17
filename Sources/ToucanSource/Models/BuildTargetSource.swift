@@ -13,8 +13,6 @@ import struct Foundation.URL
 /// Typically, this structure is built after parsing a content directory
 /// and used as input to render or transform content.
 public struct BuildTargetSource {
-    // MARK: - Properties
-
     /// The root location of the source on the filesystem.
     public var locations: BuiltTargetSourceLocations
 
@@ -31,15 +29,13 @@ public struct BuildTargetSource {
     public var pipelines: [Pipeline]
 
     /// Definitions for content types, typically used to classify and validate content entries.
-    public var contentDefinitions: [ContentDefinition]
+    public var types: [ContentType]
 
     /// A list of raw content items parsed from the source directory.
     public var rawContents: [RawContent]
 
     /// A list of custom block directives used in Markdown rendering.
-    public var blockDirectives: [Block]
-
-    // MARK: - Lifecycle
+    public var blocks: [Block]
 
     // MARK: - Initialization
 
@@ -51,7 +47,7 @@ public struct BuildTargetSource {
     ///   - config: The main configuration for the site/project.
     ///   - settings: Site-level metadata like title, language, etc.
     ///   - pipelines: Any content transformation pipelines to apply.
-    ///   - contentDefinitions: Definitions for content types in this source.
+    ///   - types: Definitions for content types in this source.
     ///   - rawContents: Parsed content entries from the source.
     ///   - blockDirectives: Definitions of custom Markdown block directives.
     public init(
@@ -60,17 +56,17 @@ public struct BuildTargetSource {
         config: Config = .defaults,
         settings: Settings = .defaults,
         pipelines: [Pipeline] = [],
-        contentDefinitions: [ContentDefinition] = [],
+        types: [ContentType] = [],
         rawContents: [RawContent] = [],
-        blockDirectives: [Block] = [],
+        blockDirectives: [Block] = []
     ) {
         self.locations = locations
         self.target = target
         self.config = config
         self.settings = settings
         self.pipelines = pipelines
-        self.contentDefinitions = contentDefinitions
+        self.types = types
         self.rawContents = rawContents
-        self.blockDirectives = blockDirectives
+        self.blocks = blockDirectives
     }
 }

@@ -18,7 +18,7 @@ struct ToucanDateFormatterTestSuite {
         let config = Config.defaults
 
         let dateFormatter = ToucanInputDateFormatter(
-            dateConfig: config.dataTypes.date,
+            dateConfig: config.dataTypes.date
         )
 
         let dateString = "2001-01-01T00:00:00.000Z"
@@ -59,7 +59,6 @@ struct ToucanDateFormatterTestSuite {
 
         let date = Date(timeIntervalSinceReferenceDate: 0)
         let ctx = dateFormatter.format(date)
-        dump(ctx)
 
         #expect(ctx.date.full == "2001. január 1., hétfő")
         #expect(ctx.date.long == "2001. január 1.")
@@ -83,21 +82,13 @@ struct ToucanDateFormatterTestSuite {
     //    func locale_DE_HtmlOutput_DefaultDateFormat() throws {
     //        let logger = Logger(label: "DateFormatterTestSuite")
     //        let now = Date()
-    //        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
-    //
-    //        var target = Target.standard
-    //        target.locale = "de-DE"
-    //
-    //        let sourceConfig = SourceLocations(
+    //        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)    //        var target = Target.standard
+    //        target.locale = "de-DE"    //        let sourceConfig = SourceLocations(
     //            sourceUrl: .init(fileURLWithPath: ""),
     //            config: .defaults
-    //        )
-    //
-    //        let inputFormatter = target.dateFormatter(
+    //        )    //        let inputFormatter = target.dateFormatter(
     //            sourceConfig.config.dateFormats.input
-    //        )
-    //
-    //        let postDefinition = ContentDefinition(
+    //        )    //        let postDefinition = ContentType(
     //            id: "post",
     //            paths: ["blog/posts"],
     //            properties: [
@@ -125,25 +116,19 @@ struct ToucanDateFormatterTestSuite {
     //                "publication": .init(inputFormatter.string(from: publication)),
     //            ],
     //            markdown: """
-    //                # Post
-    //
-    //                Lorem ipsum dolor sit amet
+    //                # Post    //                Lorem ipsum dolor sit amet
     //                """,
     //            lastModificationDate: now.timeIntervalSince1970,
     //            assets: []
     //        )
-    //        let converter = ContentDefinitionConverter(
-    //            contentDefinition: postDefinition,
+    //        let converter = ContentTypeConverter(
+    //            type: postDefinition,
     //            dateFormatter: inputFormatter,
     //            logger: logger
     //        )
-    //        let postContent = converter.convert(rawContent: rawPostContent)
-    //
-    //        let templates: [String: String] = [
+    //        let postContent = converter.convert(rawContent: rawPostContent)    //        let templates: [String: String] = [
     //            "post.default": Templates.Mocks.post()
-    //        ]
-    //
-    //        let buildTargetSource = BuildTargetSource(
+    //        ]    //        let buildTargetSource = BuildTargetSource(
     //            location: .init(filePath: ""),
     //            target: target,
     //            config: sourceConfig.config,
@@ -154,18 +139,12 @@ struct ToucanDateFormatterTestSuite {
     //            blockDirectives: [],
     //            templates: templates,
     //            baseUrl: ""
-    //        )
-    //
-    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
+    //        )    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
     //            buildTargetSource: buildTargetSource,
     //            fileManager: FileManager.default,
     //            logger: logger
-    //        )
-    //
-    //        let results = try buildTargetSourceRenderer.render(now: now)
-    //        #expect(results.count == 1)
-    //
-    //        let expectation = """
+    //        )    //        let results = try buildTargetSourceRenderer.render(now: now)
+    //        #expect(results.count == 1)    //        let expectation = """
     //            <html>
     //                <head>
     //                </head>
@@ -177,26 +156,18 @@ struct ToucanDateFormatterTestSuite {
     //                    02:36<br>
     //                </body>
     //            </html>
-    //            """
-    //
-    //        switch results[0].source {
+    //            """    //        switch results[0].source {
     //        case .assetFile(_), .asset(_):
     //            #expect(Bool(false))
     //        case .content(let value):
     //            #expect(value == expectation)
     //        }
-    //    }
-    //
-    //    @Test
+    //    }    //    @Test
     //    func locale_DE_ContextOutput_CustomDateFormat() throws {
     //        let logger = Logger(label: "DateFormatterTestSuite")
     //        let now = Date()
-    //        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
-    //
-    //        var target = Target.standard
-    //        target.locale = "de-DE"
-    //
-    //        var config = Config.defaults
+    //        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)    //        var target = Target.standard
+    //        target.locale = "de-DE"    //        var config = Config.defaults
     //        config.dateFormats.output = [
     //            "my-date-format": .init(format: "y | MM | dd"),
     //            "my-time-format": .init(
@@ -204,16 +175,10 @@ struct ToucanDateFormatterTestSuite {
     //                timeZone: "CET",
     //                format: "HH | mm | ss"
     //            ),
-    //        ]
-    //
-    //        let sourceConfig = SourceLocations(
+    //        ]    //        let sourceConfig = SourceLocations(
     //            sourceUrl: .init(fileURLWithPath: ""),
     //            config: config
-    //        )
-    //
-    //        let inputFormatter = target.dateFormatter(config.dateFormats.input)
-    //
-    //        let postDefinition = ContentDefinition(
+    //        )    //        let inputFormatter = target.dateFormatter(config.dateFormats.input)    //        let postDefinition = ContentType(
     //            id: "post",
     //            paths: ["blog/posts"],
     //            properties: [
@@ -241,21 +206,17 @@ struct ToucanDateFormatterTestSuite {
     //                "publication": .init(inputFormatter.string(from: publication)),
     //            ],
     //            markdown: """
-    //                # Post
-    //
-    //                Lorem ipsum dolor sit amet
+    //                # Post    //                Lorem ipsum dolor sit amet
     //                """,
     //            lastModificationDate: now.timeIntervalSince1970,
     //            assets: []
     //        )
-    //        let converter = ContentDefinitionConverter(
-    //            contentDefinition: postDefinition,
+    //        let converter = ContentTypeConverter(
+    //            type: postDefinition,
     //            dateFormatter: inputFormatter,
     //            logger: logger
     //        )
-    //        let postContent = converter.convert(rawContent: rawPostContent)
-    //
-    //        let templates: [String: String] = [
+    //        let postContent = converter.convert(rawContent: rawPostContent)    //        let templates: [String: String] = [
     //            "post.default": """
     //            <html>
     //                <head>
@@ -269,9 +230,7 @@ struct ToucanDateFormatterTestSuite {
     //                </body>
     //            </html>
     //            """
-    //        ]
-    //
-    //        let buildTargetSource = BuildTargetSource(
+    //        ]    //        let buildTargetSource = BuildTargetSource(
     //            location: .init(filePath: ""),
     //            target: target,
     //            config: config,
@@ -282,18 +241,12 @@ struct ToucanDateFormatterTestSuite {
     //            blockDirectives: [],
     //            templates: templates,
     //            baseUrl: ""
-    //        )
-    //
-    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
+    //        )    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
     //            buildTargetSource: buildTargetSource,
     //            fileManager: FileManager.default,
     //            logger: logger
-    //        )
-    //
-    //        let results = try buildTargetSourceRenderer.render(now: now)
-    //        #expect(results.count == 1)
-    //
-    //        let expectation = """
+    //        )    //        let results = try buildTargetSourceRenderer.render(now: now)
+    //        #expect(results.count == 1)    //        let expectation = """
     //            <html>
     //                <head>
     //                </head>
@@ -312,31 +265,19 @@ struct ToucanDateFormatterTestSuite {
     //        case .content(let value):
     //            #expect(value == expectation)
     //        }
-    //    }
-    //
-    //    @Test
+    //    }    //    @Test
     //    func locale_DE_ContextOutput_DateFormatOverride() throws {
     //        let logger = Logger(label: "DateFormatterTestSuite")
     //        let now = Date()
-    //        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)
-    //
-    //        var target = Target.standard
-    //        target.locale = "de-DE"
-    //
-    //        var config = Config.defaults
+    //        let publication = Date.init(timeIntervalSinceReferenceDate: 99_887_766)    //        var target = Target.standard
+    //        target.locale = "de-DE"    //        var config = Config.defaults
     //        config.dateFormats.output = [
     //            "date.full": .init(format: "y | MM | dd"),
     //            "time.short": .init(format: "HH | mm | ss"),
-    //        ]
-    //
-    //        let sourceConfig = SourceLocations(
+    //        ]    //        let sourceConfig = SourceLocations(
     //            sourceUrl: .init(fileURLWithPath: ""),
     //            config: config
-    //        )
-    //
-    //        let inputFormatter = target.dateFormatter(config.dateFormats.input)
-    //
-    //        let postDefinition = ContentDefinition(
+    //        )    //        let inputFormatter = target.dateFormatter(config.dateFormats.input)    //        let postDefinition = ContentType(
     //            id: "post",
     //            paths: ["blog/posts"],
     //            properties: [
@@ -364,21 +305,17 @@ struct ToucanDateFormatterTestSuite {
     //                "publication": .init(inputFormatter.string(from: publication)),
     //            ],
     //            markdown: """
-    //                # Post
-    //
-    //                Lorem ipsum dolor sit amet
+    //                # Post    //                Lorem ipsum dolor sit amet
     //                """,
     //            lastModificationDate: now.timeIntervalSince1970,
     //            assets: []
     //        )
-    //        let converter = ContentDefinitionConverter(
-    //            contentDefinition: postDefinition,
+    //        let converter = ContentTypeConverter(
+    //            type: postDefinition,
     //            dateFormatter: inputFormatter,
     //            logger: logger
     //        )
-    //        let postContent = converter.convert(rawContent: rawPostContent)
-    //
-    //        let templates: [String: String] = [
+    //        let postContent = converter.convert(rawContent: rawPostContent)    //        let templates: [String: String] = [
     //            "post.default": """
     //            <html>
     //                <head>
@@ -392,9 +329,7 @@ struct ToucanDateFormatterTestSuite {
     //                </body>
     //            </html>
     //            """
-    //        ]
-    //
-    //        let buildTargetSource = BuildTargetSource(
+    //        ]    //        let buildTargetSource = BuildTargetSource(
     //            location: .init(filePath: ""),
     //            target: target,
     //            config: config,
@@ -405,18 +340,12 @@ struct ToucanDateFormatterTestSuite {
     //            blockDirectives: [],
     //            templates: templates,
     //            baseUrl: ""
-    //        )
-    //
-    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
+    //        )    //        var buildTargetSourceRenderer = BuildTargetSourceRenderer(
     //            buildTargetSource: buildTargetSource,
     //            fileManager: FileManager.default,
     //            logger: logger
-    //        )
-    //
-    //        let results = try buildTargetSourceRenderer.render(now: now)
-    //        #expect(results.count == 1)
-    //
-    //        let expectation = """
+    //        )    //        let results = try buildTargetSourceRenderer.render(now: now)
+    //        #expect(results.count == 1)    //        let expectation = """
     //            <html>
     //                <head>
     //                </head>

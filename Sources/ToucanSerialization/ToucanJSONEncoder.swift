@@ -10,12 +10,8 @@ import class Foundation.JSONEncoder
 
 /// An implementation of `ToucanEncoder` that uses JSON`.
 public struct ToucanJSONEncoder: ToucanEncoder {
-    // MARK: - Lifecycle
-
     /// Initializes a new instance of the JSON encoder.
     public init() {}
-
-    // MARK: - Functions
 
     /// Encodes a given `Encodable` object into a JSON `String`.
     ///
@@ -41,7 +37,7 @@ public struct ToucanJSONEncoder: ToucanEncoder {
                         .init(
                             codingPath: [],
                             debugDescription:
-                                "The data cannot be represetned as UTF-8 encoded string."
+                            "The data cannot be represetned as UTF-8 encoded string."
                         )
                     )
                 )

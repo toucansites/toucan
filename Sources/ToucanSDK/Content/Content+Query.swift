@@ -36,10 +36,10 @@ public extension Content {
                     fields[key] = .init([])
                 }
                 else {
-                    fields[key] = .init(relation.identifiers[0])  // Single ID
+                    fields[key] = .init(relation.identifiers[0]) // Single ID
                 }
             case .many:
-                fields[key] = .init(relation.identifiers)  // Array of IDs
+                fields[key] = .init(relation.identifiers) // Array of IDs
             }
         }
 
@@ -70,7 +70,7 @@ public extension [Content] {
             contents: contents,
             using: query.resolveFilterParameters(
                 with: [
-                    "date.now": .init(now)
+                    "date.now": .init(now),
                 ]
             )
         )
@@ -140,25 +140,29 @@ public extension [Content] {
 
     /// Compares two values for equality, supporting multiple types.
     private func equals(_ valueA: AnyCodable, _ valueB: AnyCodable) -> Bool {
-        if let a = valueA.value(as: Bool.self),
+        if
+            let a = valueA.value(as: Bool.self),
             let b = valueB.value(as: Bool.self)
         {
             return a == b
         }
 
-        if let a = valueA.value(as: Int.self),
+        if
+            let a = valueA.value(as: Int.self),
             let b = valueB.value(as: Int.self)
         {
             return a == b
         }
 
-        if let a = valueA.value(as: Double.self),
+        if
+            let a = valueA.value(as: Double.self),
             let b = valueB.value(as: Double.self)
         {
             return a == b
         }
 
-        if let a = valueA.value(as: String.self),
+        if
+            let a = valueA.value(as: String.self),
             let b = valueB.value(as: String.self)
         {
             return a == b
@@ -174,21 +178,24 @@ public extension [Content] {
         ascending: Bool,
         isInclusive: Bool = false
     ) -> Bool {
-        if let a = valueA.value(as: Int.self),
+        if
+            let a = valueA.value(as: Int.self),
             let b = valueB.value(as: Int.self)
         {
             return isInclusive
                 ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
         }
 
-        if let a = valueA.value(as: Double.self),
+        if
+            let a = valueA.value(as: Double.self),
             let b = valueB.value(as: Double.self)
         {
             return isInclusive
                 ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
         }
 
-        if let a = valueA.value(as: String.self),
+        if
+            let a = valueA.value(as: String.self),
             let b = valueB.value(as: String.self)
         {
             return isInclusive
@@ -240,17 +247,20 @@ public extension [Content] {
                 ?? false
 
         case .in:
-            if let v = fieldValue.value(as: Int.self),
+            if
+                let v = fieldValue.value(as: Int.self),
                 let arr = value.value(as: [Int].self)
             {
                 return arr.contains(v)
             }
-            if let v = fieldValue.value(as: Double.self),
+            if
+                let v = fieldValue.value(as: Double.self),
                 let arr = value.value(as: [Double].self)
             {
                 return arr.contains(v)
             }
-            if let v = fieldValue.value(as: String.self),
+            if
+                let v = fieldValue.value(as: String.self),
                 let arr = value.value(as: [String].self)
             {
                 return arr.contains(v)
@@ -258,17 +268,20 @@ public extension [Content] {
             return false
 
         case .contains:
-            if let arr = fieldValue.value(as: [Int].self),
+            if
+                let arr = fieldValue.value(as: [Int].self),
                 let v = value.value(as: Int.self)
             {
                 return arr.contains(v)
             }
-            if let arr = fieldValue.value(as: [Double].self),
+            if
+                let arr = fieldValue.value(as: [Double].self),
                 let v = value.value(as: Double.self)
             {
                 return arr.contains(v)
             }
-            if let arr = fieldValue.value(as: [String].self),
+            if
+                let arr = fieldValue.value(as: [String].self),
                 let v = value.value(as: String.self)
             {
                 return arr.contains(v)
@@ -276,17 +289,20 @@ public extension [Content] {
             return false
 
         case .matching:
-            if let arr = fieldValue.value(as: [Int].self),
+            if
+                let arr = fieldValue.value(as: [Int].self),
                 let other = value.value(as: [Int].self)
             {
                 return !Set(arr).intersection(other).isEmpty
             }
-            if let arr = fieldValue.value(as: [Double].self),
+            if
+                let arr = fieldValue.value(as: [Double].self),
                 let other = value.value(as: [Double].self)
             {
                 return !Set(arr).intersection(other).isEmpty
             }
-            if let arr = fieldValue.value(as: [String].self),
+            if
+                let arr = fieldValue.value(as: [String].self),
                 let other = value.value(as: [String].self)
             {
                 return !Set(arr).intersection(other).isEmpty

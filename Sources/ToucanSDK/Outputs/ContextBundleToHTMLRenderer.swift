@@ -10,14 +10,10 @@ import Logging
 import ToucanSource
 
 struct ContextBundleToHTMLRenderer {
-    // MARK: - Properties
-
     let mustacheTemplateRenderer: MustacheTemplateRenderer
     let contentTypesOptions: [String: AnyCodable]
 
     let logger: Logger
-
-    // MARK: - Lifecycle
 
     init(
         pipeline: Pipeline,
@@ -33,8 +29,6 @@ struct ContextBundleToHTMLRenderer {
         self.contentTypesOptions = pipeline.engine.options.dict("contentTypes")
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     func render(_ contextBundles: [ContextBundle]) -> [PipelineResult] {
         contextBundles.compactMap {

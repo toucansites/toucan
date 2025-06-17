@@ -7,16 +7,12 @@
 
 /// A structure that holds a list of deployment targets and resolves the default one.
 public struct TargetConfig: Codable, Equatable {
-    // MARK: - Nested Types
-
     // MARK: - Coding Keys
 
     /// Keys explicitly defined for decoding known fields from the input source.
     enum CodingKeys: CodingKey {
         case targets
     }
-
-    // MARK: - Static Computed Properties
 
     // MARK: - Defaults
 
@@ -25,19 +21,13 @@ public struct TargetConfig: Codable, Equatable {
         .init(targets: [Target.standard])
     }
 
-    // MARK: - Properties
-
     /// All defined targets.
     public var targets: [Target]
-
-    // MARK: - Computed Properties
 
     /// The default target (first one with `isDefault == true`, or first in the list, or fallback).
     public var `default`: Target {
         targets.first(where: { $0.isDefault }) ?? targets[0]
     }
-
-    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -72,10 +62,10 @@ public struct TargetConfig: Codable, Equatable {
         let container = try? decoder.container(keyedBy: CodingKeys.self)
         let all =
             try container?
-            .decodeIfPresent(
-                [Target].self,
-                forKey: .targets
-            ) ?? []
+                .decodeIfPresent(
+                    [Target].self,
+                    forKey: .targets
+                ) ?? []
 
         let defaultCount = all.filter(\.isDefault).count
         guard defaultCount <= 1 else {
@@ -83,14 +73,12 @@ public struct TargetConfig: Codable, Equatable {
                 .init(
                     codingPath: container?.codingPath ?? [],
                     debugDescription:
-                        "Only one target can be marked as default."
+                    "Only one target can be marked as default."
                 )
             )
         }
         self.init(targets: all)
     }
-
-    // MARK: - Functions
 
     /// Encodes this instance into the given encoder.
     ///

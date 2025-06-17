@@ -19,8 +19,6 @@ public enum Condition: Codable, Equatable {
     /// A logical OR of multiple conditions (at least one must be true).
     case or([Condition])
 
-    // MARK: - Nested Types
-
     // MARK: - Internal Keys for Decoding
 
     /// Internal keys used for encoding and decoding `Condition` enum cases.
@@ -32,8 +30,6 @@ public enum Condition: Codable, Equatable {
         case or
     }
 
-    // MARK: - Lifecycle
-
     // MARK: - Decoding
 
     /// Decodes a `Condition` from a decoder, supporting `.field`, `.and`, and `.or` branches.
@@ -44,7 +40,8 @@ public enum Condition: Codable, Equatable {
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        if let key = try? container.decode(String.self, forKey: .key),
+        if
+            let key = try? container.decode(String.self, forKey: .key),
             let op = try? container.decode(Operator.self, forKey: .operator),
             let anyValue = try? container.decode(
                 AnyCodable.self,
@@ -53,16 +50,20 @@ public enum Condition: Codable, Equatable {
         {
             self = .field(key: key, operator: op, value: anyValue)
         }
-        else if let values = try? container.decode(
-            [Condition].self,
-            forKey: .and
-        ) {
+        else if
+            let values = try? container.decode(
+                [Condition].self,
+                forKey: .and
+            )
+        {
             self = .and(values)
         }
-        else if let values = try? container.decode(
-            [Condition].self,
-            forKey: .or
-        ) {
+        else if
+            let values = try? container.decode(
+                [Condition].self,
+                forKey: .or
+            )
+        {
             self = .or(values)
         }
         else {
@@ -74,8 +75,6 @@ public enum Condition: Codable, Equatable {
             )
         }
     }
-
-    // MARK: - Functions
 
     /// Encodes this `Condition` instance into the given encoder.
     ///

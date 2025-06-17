@@ -166,7 +166,7 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
-                    "type": "rss"
+                    "type": "rss",
                 ],
                 contents: ""
             ),
@@ -185,7 +185,7 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
-                    "type": "sitemap"
+                    "type": "sitemap",
                 ],
                 contents: ""
             ),
@@ -243,11 +243,11 @@ extension Mocks.RawContents {
                     # Author #\(id)
 
                     Author page contents
-                    """,
+                    """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: [
-                "author-\(id).jpg"
+                "author-\(id).jpg",
             ]
         )
     }
@@ -271,7 +271,7 @@ extension Mocks.RawContents {
                     # Tag #\(id)
 
                     Tag page contents
-                    """,
+                    """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -311,11 +311,11 @@ extension Mocks.RawContents {
                     # Post #\(id)
 
                     Post page contents
-                    """,
+                    """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: [
-                "cover.jpg"
+                "cover.jpg",
             ]
         )
     }
@@ -339,7 +339,7 @@ extension Mocks.RawContents {
                     # Post pagination page {{number}} / {{total}}
 
                     Post pagination page contents
-                    """,
+                    """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -366,7 +366,7 @@ extension Mocks.RawContents {
                     # Category #\(id)
 
                     Category page contents
-                    """,
+                    """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -395,7 +395,7 @@ extension Mocks.RawContents {
                     # Guide #\(id)
 
                     Guide page contents
-                    """,
+                    """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []

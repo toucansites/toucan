@@ -15,8 +15,6 @@ import ToucanSerialization
 ///
 /// Uses dependency-injected tools to fetch, decode, and construct structured data from source files.
 public struct BuildTargetSourceLoader {
-    // MARK: - Properties
-
     /// The URL of the root source directory.
     var sourceURL: URL
     /// Metadata describing the current build target.
@@ -31,8 +29,6 @@ public struct BuildTargetSourceLoader {
 
     /// Logger instance for emitting structured debug information.
     var logger: Logger
-
-    // MARK: - Lifecycle
 
     // MARK: -
 
@@ -60,8 +56,6 @@ public struct BuildTargetSourceLoader {
         self.decoder = decoder
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Loads raw contents from the source using the provided configuration.
     ///
@@ -167,8 +161,8 @@ public struct BuildTargetSourceLoader {
             let targetConfigName = "config-\(target.name)"
             let targetConfigLocation =
                 fileManager
-                .find(extensions: ["yml", "yaml"], at: configURL)
-                .first { $0.hasPrefix(targetConfigName) }
+                    .find(extensions: ["yml", "yaml"], at: configURL)
+                    .first { $0.hasPrefix(targetConfigName) }
 
             if targetConfigLocation != nil {
                 return try load(
@@ -240,13 +234,13 @@ public struct BuildTargetSourceLoader {
     /// Loads content types
     ///
     /// - Parameter locations: The source locations to use.
-    /// - Returns: An array of `ContentDefinition` objects.
+    /// - Returns: An array of `ContentType` objects.
     /// - Throws: A `SourceLoaderError` if loading fails.
     func loadTypes(
         using locations: BuiltTargetSourceLocations
-    ) throws(SourceLoaderError) -> [ContentDefinition] {
+    ) throws(SourceLoaderError) -> [ContentType] {
         try load(
-            type: ContentDefinition.self,
+            type: ContentType.self,
             at: locations.typesURL
         )
         .sorted { $0.id < $1.id }
@@ -288,7 +282,7 @@ public struct BuildTargetSourceLoader {
             config: config,
             settings: settings,
             pipelines: pipelines,
-            contentDefinitions: types,
+            types: types,
             rawContents: rawContents,
             blockDirectives: blocks
         )

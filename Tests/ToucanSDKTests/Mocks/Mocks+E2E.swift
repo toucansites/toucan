@@ -12,20 +12,20 @@ import ToucanSource
 
 extension Mocks.E2E {
     static func types(
-        postType: ContentDefinition
+        postType: ContentType
     ) -> Directory {
         Directory(name: "types") {
             YAMLFile(
                 name: "page",
-                contents: Mocks.ContentDefinitions.page()
+                contents: Mocks.ContentTypes.page()
             )
             YAMLFile(
                 name: "author",
-                contents: Mocks.ContentDefinitions.author()
+                contents: Mocks.ContentTypes.author()
             )
             YAMLFile(
                 name: "tag",
-                contents: Mocks.ContentDefinitions.tag()
+                contents: Mocks.ContentTypes.tag()
             )
             YAMLFile(
                 name: "post",
@@ -33,11 +33,11 @@ extension Mocks.E2E {
             )
             YAMLFile(
                 name: "category",
-                contents: Mocks.ContentDefinitions.category()
+                contents: Mocks.ContentTypes.category()
             )
             YAMLFile(
                 name: "guide",
-                contents: Mocks.ContentDefinitions.guide()
+                contents: Mocks.ContentTypes.guide()
             )
         }
     }
@@ -207,7 +207,7 @@ extension Mocks.E2E {
             dateConfig: config.dataTypes.date
         )
 
-        let postType = Mocks.ContentDefinitions.post()
+        let postType = Mocks.ContentTypes.post()
         guard
             case let .date(
                 publicationConfig

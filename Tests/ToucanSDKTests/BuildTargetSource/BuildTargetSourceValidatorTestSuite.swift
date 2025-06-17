@@ -36,22 +36,6 @@ struct BuildTargetSourceValidatorTestSuite {
                 return
             }
         }
-
-        //        catch let error as ToucanError {
-        //            print(error.logMessageStack())
-        //            if let context = error.lookup({
-        //                if case DecodingError.dataCorrupted(let ctx) = $0 {
-        //                    return ctx
-        //                }
-        //                return nil
-        //            }) {
-        //                let expected = "The given data was not valid YAML."
-        //                #expect(context.debugDescription == expected)
-        //            }
-        //            else {
-        //                throw error
-        //            }
-        //        }
     }
 
     @Test
@@ -61,7 +45,7 @@ struct BuildTargetSourceValidatorTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(id: "foo"),
                 .init(id: "bar"),
             ]
@@ -89,7 +73,7 @@ struct BuildTargetSourceValidatorTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "foo",
                     default: true

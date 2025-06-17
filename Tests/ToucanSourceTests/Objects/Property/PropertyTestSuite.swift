@@ -78,7 +78,7 @@ struct PropertyTestSuite {
                     config: .init(
                         localization: .init(
                             locale: "en-US",
-                            timeZone: "EST",
+                            timeZone: "EST"
                         ),
                         format: "ymd"
                     )

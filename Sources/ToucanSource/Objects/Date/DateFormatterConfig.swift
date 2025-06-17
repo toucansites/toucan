@@ -10,14 +10,10 @@
 /// This type holds both localization options and a format string, allowing
 /// dates to be formatted according to locale, time zone, and pattern.
 public struct DateFormatterConfig: Sendable, Codable, Equatable {
-    // MARK: - Nested Types
-
     /// The keys used for encoding and decoding top-level date formatter properties.
     private enum CodingKeys: String, CodingKey {
         case format
     }
-
-    // MARK: - Static Computed Properties
 
     /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
     public static var defaults: Self {
@@ -27,15 +23,11 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
         )
     }
 
-    // MARK: - Properties
-
     /// The locale and time zone options to apply when formatting dates.
     public var localization: DateLocalization
 
     /// The date format string (e.g., `"yyyy-MM-dd"`, `"MMMM d, yyyy"`).
     public var format: String
-
-    // MARK: - Lifecycle
 
     /// Creates a new date formatter options instance.
     ///
@@ -74,8 +66,6 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
         }
         self.format = format
     }
-
-    // MARK: - Functions
 
     /// Encodes this `DateFormatterOptions` into the given encoder.
     ///

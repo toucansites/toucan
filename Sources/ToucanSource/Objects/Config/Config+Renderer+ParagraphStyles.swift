@@ -8,8 +8,6 @@
 public extension Config.RendererConfig {
     /// Defines paragraph style aliases for block-level directives
     struct ParagraphStyles: Codable, Equatable {
-        // MARK: - Static Computed Properties
-
         // MARK: - Defaults
 
         /// Returns a standard `ParagraphStyles` configuration with common alias values.
@@ -25,12 +23,8 @@ public extension Config.RendererConfig {
             )
         }
 
-        // MARK: - Properties
-
         /// A dictionary mapping style group names to arrays of individual paragraph styles.
         public var styles: [String: [String]]
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -38,7 +32,7 @@ public extension Config.RendererConfig {
         ///
         /// - Parameter styles: A style group representing the paragraph styles.
         public init(
-            styles: [String: [String]],
+            styles: [String: [String]]
         ) {
             self.styles = styles
         }
@@ -60,8 +54,6 @@ public extension Config.RendererConfig {
             }
             self.styles = styles
         }
-
-        // MARK: - Functions
 
         /// Encodes this  instance into the given encoder.
         ///

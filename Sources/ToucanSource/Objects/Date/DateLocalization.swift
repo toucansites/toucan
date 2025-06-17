@@ -13,15 +13,11 @@ import struct Foundation.TimeZone
 /// This type holds the locale and time zone identifiers that will be used
 /// by a date formatter to localize its output.
 public struct DateLocalization: Sendable, Codable, Equatable {
-    // MARK: - Nested Types
-
     /// The keys used for encoding and decoding top-level date formatter properties.
     enum CodingKeys: CodingKey {
         case locale
         case timeZone
     }
-
-    // MARK: - Static Computed Properties
 
     /// The default date localization options using the system’s default locale
     /// (`"en-US"`) and time zone (`"GMT"`).
@@ -32,8 +28,6 @@ public struct DateLocalization: Sendable, Codable, Equatable {
         )
     }
 
-    // MARK: - Properties
-
     /// The locale identifier used for formatting (e.g., `"en_US"`, `"fr_FR"`).
     /// If `nil`, the system’s default locale will be used.
     public var locale: String
@@ -41,8 +35,6 @@ public struct DateLocalization: Sendable, Codable, Equatable {
     /// The time zone identifier (e.g., `"UTC"`, `"Europe/Budapest"`).
     /// If `nil`, the system’s default time zone will be used.
     public var timeZone: String
-
-    // MARK: - Lifecycle
 
     /// Creates a new date localization options instance.
     ///
@@ -101,8 +93,6 @@ public struct DateLocalization: Sendable, Codable, Equatable {
         self.locale = locale
         self.timeZone = timeZone
     }
-
-    // MARK: - Functions
 
     /// Encodes this `DateFormatterOptions` into the given encoder.
     ///

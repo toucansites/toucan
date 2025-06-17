@@ -50,14 +50,10 @@ extension DecodingError: ToucanError {
 ///
 /// Wraps an optional underlying error and includes type information for logging.
 public struct ToucanDecoderError: ToucanError {
-    // MARK: - Properties
-
     /// The type that failed to decode.
     let type: Any.Type
     /// An optional underlying error providing more context.
     let error: Error?
-
-    // MARK: - Computed Properties
 
     /// An array containing the underlying error, if any.
     public var underlyingErrors: [any Error] {
@@ -73,8 +69,6 @@ public struct ToucanDecoderError: ToucanError {
     public var userFriendlyMessage: String {
         "Could not decode object."
     }
-
-    // MARK: - Lifecycle
 
     /// Creates a new `ToucanDecoderError`.
     ///

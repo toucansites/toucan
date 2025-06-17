@@ -9,14 +9,10 @@ import class Foundation.JSONDecoder
 
 /// An implementation of `ToucanDecoder` that uses `JSONDecoder`.
 public struct ToucanJSONDecoder: ToucanDecoder {
-    // MARK: - Lifecycle
-
     /// Initializes a new instance of `ToucanJSONDecoder`.
     ///
     /// Uses a `JSONDecoder` that allows JSON5 parsing by default.
     public init() {}
-
-    // MARK: - Functions
 
     /// Decodes a JSON or JSON5-encoded `Data` object into a strongly-typed model.
     ///

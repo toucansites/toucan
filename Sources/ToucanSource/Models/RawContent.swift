@@ -9,8 +9,6 @@
 ///
 /// Includes both the Markdown body and its front matter metadata, along with file origin and assets.
 public struct RawContent: Equatable {
-    // MARK: - Properties
-
     /// The origin of the content file, including its path and slug.
     public var origin: Origin
 
@@ -22,8 +20,6 @@ public struct RawContent: Equatable {
 
     /// A list of asset paths associated with this content (e.g., images, attachments).
     public var assets: [String]
-
-    // MARK: - Lifecycle
 
     /// Initializes a new `RawContent` instance.
     ///

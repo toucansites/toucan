@@ -8,8 +8,6 @@
 /// Represents the output of a content transformation pipeline, including the
 /// transformed content and its intended destination.
 public struct PipelineResult: Sendable {
-    // MARK: - Nested Types
-
     /// The source material for the pipeline result.
     public enum Source: Sendable {
         /// An asset source, that needs top be copied.
@@ -18,8 +16,6 @@ public struct PipelineResult: Sendable {
         case asset(String)
         /// The final transformed content (e.g., HTML, Markdown, etc.).
         case content(String)
-
-        // MARK: - Computed Properties
 
         /// A Boolean value indicating whether the pipeline result's source is content-based.
         /// Returns `true` if the source is `.content`, otherwise `false`.
@@ -41,15 +37,11 @@ public struct PipelineResult: Sendable {
         }
     }
 
-    // MARK: - Properties
-
     /// The source material.
     public var source: Source
 
     /// The destination metadata describing where or how the content should be output.
     public var destination: Destination
-
-    // MARK: - Lifecycle
 
     /// Initializes a new `PipelineResult` with transformed content and a destination.
     ///

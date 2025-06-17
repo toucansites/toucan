@@ -9,12 +9,8 @@ import Foundation
 
 /// A value type representing a path for a raw content item.
 public struct Path: Equatable {
-    // MARK: - Properties
-
     /// The raw value as a string.
     public var value: String
-
-    // MARK: - Lifecycle
 
     /// Initializes a new path.
     ///
@@ -63,9 +59,9 @@ public extension Path {
     func basePath() -> Path {
         let rawPath =
             value
-            .split(separator: "/")
-            .dropLast()
-            .joined(separator: "/")
+                .split(separator: "/")
+                .dropLast()
+                .joined(separator: "/")
 
         return .init(rawPath)
     }

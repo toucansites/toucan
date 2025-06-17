@@ -24,18 +24,12 @@ import struct Foundation.URL
 
 /// Represents a template used by the Toucan system, including paths to assets and templates for both base and override components.
 public struct Template {
-    // MARK: - Nested Types
-
     /// A group of assets and templates that make up a template component.
     public struct Components {
-        // MARK: - Properties
-
         /// A list of asset file paths associated with the component.
         public var assets: [String]
         /// A list of templates associated with the component.
         public var views: [View]
-
-        // MARK: - Lifecycle
 
         /// Creates a new `Components` instance.
         ///
@@ -51,8 +45,6 @@ public struct Template {
         }
     }
 
-    // MARK: - Properties
-
     /// The base URL where the template is located.
     public var baseURL: URL
     /// The primary components of the template.
@@ -61,8 +53,6 @@ public struct Template {
     public var overrides: Components
     /// Content-specific components such as assets and templates used within the template.
     public var content: Components
-
-    // MARK: - Lifecycle
 
     /// Creates a new instance.
     ///

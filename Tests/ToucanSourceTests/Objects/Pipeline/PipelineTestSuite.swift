@@ -136,13 +136,9 @@ struct PipelineTestSuite {
         //        let defaultScope = try #require(result.scopes["*"])
         //        let defaultReferenceScope = try #require(defaultScope["reference"])
         //        let defaultListScope = try #require(defaultScope["list"])
-        //        let defaultDetailScope = try #require(defaultScope["detail"])
-        //
-        //        #expect(defaultReferenceScope.context == .reference)
+        //        let defaultDetailScope = try #require(defaultScope["detail"])        //        #expect(defaultReferenceScope.context == .reference)
         //        #expect(defaultListScope.context == .list)
-        //        #expect(defaultDetailScope.context == .detail)
-        //
-        //        let dateFormat = try #require(result.dataTypes.date.dateFormats["test"])
+        //        #expect(defaultDetailScope.context == .detail)        //        let dateFormat = try #require(result.dataTypes.date.dateFormats["test"])
         //        #expect(
         //            dateFormat
         //                == .init(
@@ -150,10 +146,125 @@ struct PipelineTestSuite {
         //                    timeZone: "EST",
         //                    format: "ymd"
         //                )
-        //        )
-        //
-        //        let postScope = try #require(result.scopes["post"])
+        //        )        //        let postScope = try #require(result.scopes["post"])
         //        let postListScope = try #require(postScope["list"])
         //        #expect(postListScope.context == .detail)
     }
+
+    // MARK: - pipelines
+
+    //    @Test
+    //    func basicLoad() throws {
+    //        let logger = Logger(label: "PipelineLoaderTestSuite")
+    //        try FileManagerPlayground {
+    //            Directory(name: "src") {
+    //                Directory(name: "pipelines") {
+    //                    pipeline404(addTransformers: true)
+    //                    pipelineRedirect()
+    //                }
+    //                File(
+    //                    "config.yml",
+    //                    string: """
+    //                        pipelines:
+    //                            path: pipelines
+    //                        """
+    //                )
+    //            }
+    //        }
+    //        .test {
+    //            let sourceURL = $1.appending(path: "src")
+    //            let loader = ConfigLoaderTestSuite.getConfigLoader(
+    //                url: sourceURL,
+    //                logger: logger
+    //            )
+    //            let config = try loader.load(Config.self)    //            let sourceConfig = SourceConfig(
+    //                sourceUrl: sourceURL,
+    //                config: config
+    //            )    //            let fs = ToucanFileSystem(fileManager: $0)
+    //            let pipelineLocations = fs.pipelineLocator.locate(
+    //                at: sourceConfig.pipelinesURL
+    //            )
+    //            let pipelineLoader = PipelineLoader(
+    //                url: sourceConfig.pipelinesURL,
+    //                locations: pipelineLocations,
+    //                decoder: ToucanYAMLDecoder(),
+    //                logger: logger
+    //            )
+    //            let pipelines = try pipelineLoader.load()
+    //            #expect(pipelines.count == 2)
+    //            #expect(pipelines[1].transformers.count == 2)
+    //        }    //    }    //    @Test
+    //    func loadAssets() throws {
+    //        let logger = Logger(label: "PipelineLoaderTestSuite")
+    //        try FileManagerPlayground {
+    //            Directory(name: "src") {
+    //                Directory(name: "pipelines") {
+    //                    pipelineSitemap(
+    //                        """
+    //                        assets:
+    //                          properties:
+    //                            - action: add
+    //                              property: js
+    //                              resolvePath: false
+    //                              input:
+    //                                name: main
+    //                                ext: js
+    //                            - action: set
+    //                              property: image
+    //                              resolvePath: true
+    //                              input:
+    //                                name: cover
+    //                                ext: jpg
+    //                            - action: load
+    //                              property: svgs
+    //                              resolvePath: false
+    //                              input:
+    //                                name: "*"
+    //                                ext: svg
+    //                            - action: parse
+    //                              property: data
+    //                              resolvePath: false
+    //                              input:
+    //                                name: "*"
+    //                                ext: json
+    //                        """
+    //                    )
+    //                }
+    //                File(
+    //                    "config.yml",
+    //                    string: """
+    //                        pipelines:
+    //                            path: pipelines
+    //                        """
+    //                )
+    //            }
+    //        }
+    //        .test {
+    //            let sourceURL = $1.appending(path: "src")
+    //            let loader = ConfigLoaderTestSuite.getConfigLoader(
+    //                url: sourceURL,
+    //                logger: logger
+    //            )
+    //            let config = try loader.load(Config.self)    //            let sourceConfig = SourceConfig(
+    //                sourceUrl: sourceURL,
+    //                config: config
+    //            )    //            let fs = ToucanFileSystem(fileManager: $0)
+    //            let pipelineLocations = fs.pipelineLocator.locate(
+    //                at: sourceConfig.pipelinesURL
+    //            )
+    //            let pipelineLoader = PipelineLoader(
+    //                url: sourceConfig.pipelinesURL,
+    //                locations: pipelineLocations,
+    //                decoder: ToucanYAMLDecoder(),
+    //                logger: logger
+    //            )
+    //            let pipelines = try pipelineLoader.load()
+    //            #expect(pipelines.count == 1)
+    //            #expect(pipelines[0].assets.properties.count == 4)
+    //            #expect(pipelines[0].assets.properties[0].action == .add)
+    //            #expect(pipelines[0].assets.properties[1].action == .set)
+    //            #expect(pipelines[0].assets.properties[2].action == .load)
+    //            #expect(pipelines[0].assets.properties[3].action == .parse)
+    //        }
+    //    }
 }
