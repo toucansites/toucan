@@ -195,7 +195,7 @@ struct AnyCodableTestSuite {
             dictionary1["dict"]?.value as? [String: String] == dictionary2[
                 "dict"
             ]?
-                .value as? [String: String]
+            .value as? [String: String]
         )
         #expect(dictionary1["null"]?.value == nil)
         #expect(dictionary2["null"]?.value == nil)
@@ -311,8 +311,7 @@ struct AnyCodableTestSuite {
         )
         #expect(
             arrayValue.debugDescription
-                ==
-                "AnyCodable([AnyCodable(\"string\"), AnyCodable(\"string2\")])"
+                == "AnyCodable([AnyCodable(\"string\"), AnyCodable(\"string2\")])"
         )
         #expect(dictValue.description == "[\"key\": AnyCodable(\"value\")]")
         #expect(

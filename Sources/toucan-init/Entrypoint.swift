@@ -88,14 +88,14 @@ extension Entrypoint {
     var minimalSourceURL: URL {
         .init(
             string:
-            "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
+                "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
         )!
     }
 
     var minimalTemplateURL: URL {
         .init(
             string:
-            "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
+                "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
         )!
     }
 

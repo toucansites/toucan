@@ -47,7 +47,7 @@ public extension ToucanEncoder {
                     .init(
                         codingPath: [],
                         debugDescription:
-                        "The string cannot be represetned as UTF-8 encoded data."
+                            "The string cannot be represetned as UTF-8 encoded data."
                     )
                 )
             )

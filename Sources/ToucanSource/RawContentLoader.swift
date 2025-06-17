@@ -271,7 +271,7 @@ public struct RawContentLoader {
 
             switch true {
             case indexFile.hasSuffix("markdown"),
-                 indexFile.hasSuffix("md"):
+                indexFile.hasSuffix("md"):
                 logger.trace(
                     "Loading index Markdown file",
                     metadata: [
@@ -287,7 +287,7 @@ public struct RawContentLoader {
                 )
                 contents = markdown.contents
             case indexFile.hasSuffix("yaml"),
-                 indexFile.hasSuffix("yml"):
+                indexFile.hasSuffix("yml"):
                 logger.trace(
                     "Loading index YAML file",
                     metadata: [
@@ -322,6 +322,7 @@ public struct RawContentLoader {
                 contents: contents
             ),
             lastModificationDate: modificationDate.timeIntervalSince1970,
+            assetsPath: assetsPath,
             assets: assets.sorted()
         )
     }
@@ -337,7 +338,7 @@ public struct RawContentLoader {
         logger.debug(
             "Loading raw contents.",
             metadata: [
-                "path": .string(contentsURL.path()),
+                "path": .string(contentsURL.path())
             ]
         )
         return try locateOrigins()

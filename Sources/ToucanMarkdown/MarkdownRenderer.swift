@@ -171,7 +171,7 @@ public struct MarkdownRenderer {
     ///
     /// - Parameters:
     ///   - content: The raw Markdown content to process.
-    ///   - typeAwareId: A unique identifier used for transformation and rendering context.
+    ///   - typeAwareID: A unique identifier used for transformation and rendering context.
     ///   - slug: The slug of the content.
     ///   - assetsPath: Path to associated assets (e.g., images or includes).
     ///   - baseURL: The base URL for resolving relative paths or links.

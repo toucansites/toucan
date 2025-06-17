@@ -15,9 +15,9 @@ private extension Path {
     func getTypeAwareIdentifier() -> String {
         let newRawPath =
             value
-                .split(separator: "/")
-                .last
-                .map(String.init) ?? ""
+            .split(separator: "/")
+            .last
+            .map(String.init) ?? ""
         return Path(newRawPath).trimmingBracketsContent()
     }
 }
@@ -102,7 +102,7 @@ struct ContentResolver {
         _ value: inout String
     ) {
         value = value.replacingOccurrences([
-            "{{\(iteratorID)}}": String(pageIndex),
+            "{{\(iteratorID)}}": String(pageIndex)
         ])
     }
 
@@ -182,7 +182,7 @@ struct ContentResolver {
             omittingEmptySubsequences: false
         )
         guard parts.count >= 2 else {
-            return (String(safePath), "") // No extension
+            return (String(safePath), "")  // No extension
         }
 
         let ext = String(parts.last!)
@@ -341,8 +341,8 @@ struct ContentResolver {
         // Filter out reserved keys and schema-mapped fields to extract user-defined fields
         let keysToRemove =
             ["id", "type", "slug"]
-                + contentType.properties.keys
-                + contentType.relations.keys
+            + contentType.properties.keys
+            + contentType.relations.keys
 
         var userDefined = rawContent.markdown.frontMatter
         for key in keysToRemove {
@@ -356,12 +356,10 @@ struct ContentResolver {
 
         // Extract `slug` from front matter or fallback to origin slug
         var slug: String = rawContent.origin.slug
-        if
-            let rawSlug = rawContent.markdown.frontMatter.string(
-                "slug",
-                allowingEmptyValue: true
-            )
-        {
+        if let rawSlug = rawContent.markdown.frontMatter.string(
+            "slug",
+            allowingEmptyValue: true
+        ) {
             slug = rawSlug
         }
 
@@ -587,9 +585,8 @@ struct ContentResolver {
 
                 switch property.action {
                 case .add:
-                    if
-                        let originalItems = frontMatter[property.property]?
-                            .arrayValue(as: String.self)
+                    if let originalItems = frontMatter[property.property]?
+                        .arrayValue(as: String.self)
                     {
                         item.properties[property.property] = .init(
                             originalItems + finalAssets
@@ -657,8 +654,6 @@ struct ContentResolver {
         return results
     }
 
-    // TODO: Behavior protocol?
-
     func applyBehaviors(
         pipeline: Pipeline,
         to contents: [Content],
@@ -697,7 +692,7 @@ struct ContentResolver {
                         assetsPath,
                         inputAsset,
                     ]
-                        .joined(separator: "/")
+                    .joined(separator: "/")
 
                     let file = getNameAndExtension(from: inputAsset)
 
@@ -706,11 +701,11 @@ struct ContentResolver {
                         content.slug.value,
                         inputAsset,
                     ]
-                        .filter { !$0.isEmpty }
-                        .joined(separator: "/")
-                        .split(separator: "/")
-                        .dropLast()
-                        .joined(separator: "/")
+                    .filter { !$0.isEmpty }
+                    .joined(separator: "/")
+                    .split(separator: "/")
+                    .dropLast()
+                    .joined(separator: "/")
 
                     logger.trace(
                         "Resolving matching asset behavior.",
@@ -755,7 +750,7 @@ struct ContentResolver {
                             )
                         )
 
-                    default: // copy
+                    default:  // copy
                         results.append(
                             .init(
                                 source: .assetFile(sourcePath),

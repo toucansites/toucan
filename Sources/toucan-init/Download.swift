@@ -36,13 +36,13 @@ struct Download {
         }
         _ =
             try await curl
-                .addArguments([
-                    "-L",
-                    sourceURL.absoluteString,
-                    "-o",
-                    zipURL.path,
-                ])
-                .output
+            .addArguments([
+                "-L",
+                sourceURL.absoluteString,
+                "-o",
+                zipURL.path,
+            ])
+            .output
 
         /// Find and run `unzip` using SwiftCommand
         guard let unzipExe = Command.findInPath(withName: "unzip") else {
@@ -50,8 +50,8 @@ struct Download {
         }
         _ =
             try await unzipExe
-                .addArguments([zipURL.path, "-d", url.path])
-                .output
+            .addArguments([zipURL.path, "-d", url.path])
+            .output
 
         /// Remove existing target directory
         try? fileManager.removeItem(at: targetDirURL)

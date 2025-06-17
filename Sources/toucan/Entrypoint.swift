@@ -55,10 +55,10 @@ struct Entrypoint: AsyncParsableCommand {
         }
         let cmd =
             exe
-                .addArguments(args)
-                .setStdin(.pipe(closeImplicitly: false))
-                .setStdout(.inherit)
-                .setStderr(.inherit)
+            .addArguments(args)
+            .setStdin(.pipe(closeImplicitly: false))
+            .setStdout(.inherit)
+            .setStderr(.inherit)
 
         let subprocess = try cmd.spawn()
 
@@ -66,7 +66,7 @@ struct Entrypoint: AsyncParsableCommand {
             signal: SIGINT,
             queue: .main
         )
-        signal(SIGINT, SIG_IGN) // Ignore default SIGINT behavior
+        signal(SIGINT, SIG_IGN)  // Ignore default SIGINT behavior
 
         signalSource.setEventHandler {
             if subprocess.isRunning {

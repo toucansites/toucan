@@ -46,9 +46,9 @@ public struct MarkdownParser {
         if markdown.starts(with: separator) {
             return
                 markdown
-                    .split(separator: separator)
-                    .dropFirst()
-                    .joined(separator: separator)
+                .split(separator: separator)
+                .dropFirst()
+                .joined(separator: separator)
         }
         return markdown
     }
@@ -75,8 +75,7 @@ public struct MarkdownParser {
             omittingEmptySubsequences: true
         )
 
-        // TODO: maybe check count
-        let rawFrontMatter = String(parts[0])
+        let rawFrontMatter = String(parts.first ?? "")
         let frontMatter = try decoder.decode(
             [String: AnyCodable].self,
             from: rawFrontMatter

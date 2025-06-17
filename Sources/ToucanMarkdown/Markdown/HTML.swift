@@ -36,8 +36,8 @@ struct HTML {
     func render() -> String {
         let attributeString =
             attributes
-                .map { #"\#($0.key)="\#($0.value)""# }
-                .joined(separator: " ")
+            .map { #"\#($0.key)="\#($0.value)""# }
+            .joined(separator: " ")
 
         let tag = [name, attributeString]
             .filter { !$0.isEmpty }

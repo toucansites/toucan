@@ -98,10 +98,10 @@ public struct Target: Codable, Equatable {
 
         self.url =
             try container
-                .decodeIfPresent(
-                    String.self,
-                    forKey: .url
-                ) ?? base.url
+            .decodeIfPresent(
+                String.self,
+                forKey: .url
+            ) ?? base.url
 
         self.output =
             try container.decodeIfPresent(String.self, forKey: .output)

@@ -62,10 +62,10 @@ public struct TargetConfig: Codable, Equatable {
         let container = try? decoder.container(keyedBy: CodingKeys.self)
         let all =
             try container?
-                .decodeIfPresent(
-                    [Target].self,
-                    forKey: .targets
-                ) ?? []
+            .decodeIfPresent(
+                [Target].self,
+                forKey: .targets
+            ) ?? []
 
         let defaultCount = all.filter(\.isDefault).count
         guard defaultCount <= 1 else {
@@ -73,7 +73,7 @@ public struct TargetConfig: Codable, Equatable {
                 .init(
                     codingPath: container?.codingPath ?? [],
                     debugDescription:
-                    "Only one target can be marked as default."
+                        "Only one target can be marked as default."
                 )
             )
         }

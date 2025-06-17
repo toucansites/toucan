@@ -88,7 +88,7 @@ struct ContextBundleToJSONRenderer {
 
     func render(_ contextBundle: ContextBundle) -> PipelineResult? {
         let metadata: Logger.Metadata = [
-            "slug": "\(contextBundle.content.slug.value)",
+            "slug": "\(contextBundle.content.slug.value)"
         ]
 
         let context = contextBundle.context

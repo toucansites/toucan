@@ -103,14 +103,12 @@ struct DateFormattingTestSuite {
             _ = try decoder.decode(DateLocalization.self, from: yaml)
         }
         catch {
-            if
-                let context = error.lookup({
-                    if case let DecodingError.dataCorrupted(ctx) = $0 {
-                        return ctx
-                    }
-                    return nil
-                })
-            {
+            if let context = error.lookup({
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
                 let expected = "Invalid locale identifier."
                 #expect(context.debugDescription == expected)
             }
@@ -133,14 +131,12 @@ struct DateFormattingTestSuite {
             _ = try decoder.decode(DateLocalization.self, from: yaml)
         }
         catch {
-            if
-                let context = error.lookup({
-                    if case let DecodingError.dataCorrupted(ctx) = $0 {
-                        return ctx
-                    }
-                    return nil
-                })
-            {
+            if let context = error.lookup({
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
                 let expected = "Invalid time zone identifier."
                 #expect(context.debugDescription == expected)
             }
@@ -163,14 +159,12 @@ struct DateFormattingTestSuite {
             _ = try decoder.decode(DateFormatterConfig.self, from: yaml)
         }
         catch {
-            if
-                let context = error.lookup({
-                    if case let DecodingError.dataCorrupted(ctx) = $0 {
-                        return ctx
-                    }
-                    return nil
-                })
-            {
+            if let context = error.lookup({
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
                 let expected = "Empty date format value."
                 #expect(context.debugDescription == expected)
             }

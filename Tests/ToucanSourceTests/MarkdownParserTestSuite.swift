@@ -16,13 +16,13 @@ struct MarkdownParserTestSuite {
     func basicParserLogic() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        ---
-        slug: lorem-ipsum
-        title: Lorem ipsum
-        ---
+            ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
+            ---
 
-        Lorem ipsum dolor sit amet.
-        """#
+            Lorem ipsum dolor sit amet.
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -38,11 +38,11 @@ struct MarkdownParserTestSuite {
     func frontMatterNoContent() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        ---
-        slug: lorem-ipsum
-        title: Lorem ipsum
-        ---
-        """#
+            ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
+            ---
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -58,13 +58,13 @@ struct MarkdownParserTestSuite {
     func frontMatterWithSeparatorInContent() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        ---
-        slug: lorem-ipsum
-        title: Lorem ipsum
-        ---
+            ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
+            ---
 
-        Text with '---' separator as content
-        """#
+            Text with '---' separator as content
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -80,12 +80,12 @@ struct MarkdownParserTestSuite {
     func firstMissingSeparator() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        slug: lorem-ipsum
-        title: Lorem ipsum
-        ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
+            ---
 
-        Lorem ipsum dolor sit amet.
-        """#
+            Lorem ipsum dolor sit amet.
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -100,12 +100,12 @@ struct MarkdownParserTestSuite {
     func firstMissingSeparatorWithSeparatorInContent() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        slug: lorem-ipsum
-        title: Lorem ipsum
-        ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
+            ---
 
-        Text with '---' separator as content
-        """#
+            Text with '---' separator as content
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -120,12 +120,12 @@ struct MarkdownParserTestSuite {
     func secondMissingSeparator() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        ---
-        slug: lorem-ipsum
-        title: Lorem ipsum
+            ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
 
-        Lorem ipsum dolor sit amet.
-        """#
+            Lorem ipsum dolor sit amet.
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -155,12 +155,12 @@ struct MarkdownParserTestSuite {
     func secondMissingSeparatorWithSeparatorInContent() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        ---
-        slug: lorem-ipsum
-        title: Lorem ipsum
+            ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
 
-        Text with '---' separator as content
-        """#
+            Text with '---' separator as content
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -171,14 +171,12 @@ struct MarkdownParserTestSuite {
             _ = try parser.parse(input)
         }
         catch let error as ToucanError {
-            if
-                let context = error.lookup({
-                    if case let DecodingError.dataCorrupted(ctx) = $0 {
-                        return ctx
-                    }
-                    return nil
-                })
-            {
+            if let context = error.lookup({
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
                 let expected = "The given data was not valid YAML."
                 #expect(context.debugDescription == expected)
             }
@@ -192,13 +190,13 @@ struct MarkdownParserTestSuite {
     func withManySeparators() throws {
         let logger: Logger = .init(label: "MarkdownParserTestSuite")
         let input = #"""
-        --- --- ---
-        slug: lorem-ipsum
-        title: Lorem ipsum
-        --- --- ---
+            --- --- ---
+            slug: lorem-ipsum
+            title: Lorem ipsum
+            --- --- ---
 
-        Text with '---' separator as content
-        """#
+            Text with '---' separator as content
+            """#
 
         let parser = MarkdownParser(
             decoder: ToucanYAMLDecoder(),
@@ -209,14 +207,12 @@ struct MarkdownParserTestSuite {
             _ = try parser.parse(input)
         }
         catch let error as ToucanError {
-            if
-                let context = error.lookup({
-                    if case let DecodingError.typeMismatch(_, ctx) = $0 {
-                        return ctx
-                    }
-                    return nil
-                })
-            {
+            if let context = error.lookup({
+                if case let DecodingError.typeMismatch(_, ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
                 let exp = "Expected to decode Mapping but found Node instead."
                 #expect(context.debugDescription == exp)
             }

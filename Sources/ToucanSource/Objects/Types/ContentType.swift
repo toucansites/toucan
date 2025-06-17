@@ -91,32 +91,35 @@ public struct ContentType: Codable, Equatable {
             forKey: .id
         )
 
-        let `default` = (
-            try? container.decode(
+        let `default` =
+            (try? container.decode(
                 Bool.self,
                 forKey: .default
-            )
-        ) ?? false
+            )) ?? false
 
-        let paths = try container.decodeIfPresent(
-            [String].self,
-            forKey: .paths
-        ) ?? []
+        let paths =
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .paths
+            ) ?? []
 
-        let properties = try container.decodeIfPresent(
-            [String: Property].self,
-            forKey: .properties
-        ) ?? [:]
+        let properties =
+            try container.decodeIfPresent(
+                [String: Property].self,
+                forKey: .properties
+            ) ?? [:]
 
-        let relations = try container.decodeIfPresent(
-            [String: Relation].self,
-            forKey: .relations
-        ) ?? [:]
+        let relations =
+            try container.decodeIfPresent(
+                [String: Relation].self,
+                forKey: .relations
+            ) ?? [:]
 
-        let queries = try container.decodeIfPresent(
-            [String: Query].self,
-            forKey: .queries
-        ) ?? [:]
+        let queries =
+            try container.decodeIfPresent(
+                [String: Query].self,
+                forKey: .queries
+            ) ?? [:]
 
         self.init(
             id: id,

@@ -115,8 +115,8 @@ struct ConfigTestSuite {
         expectation.renderer.outlineLevels = [4]
         expectation.renderer.paragraphStyles.styles = [
             "test": [
-                "test1",
-            ],
+                "test1"
+            ]
         ]
         expectation.renderer.wordsPerMinute = 42
         expectation.site.assets.path = "custom5"

@@ -81,7 +81,7 @@ public struct Toucan {
         try ObjectLoader(
             url: inputURL,
             locations:
-            fileManager
+                fileManager
                 .find(
                     name: "toucan",
                     extensions: ["yml", "yaml"],
@@ -97,7 +97,6 @@ public struct Toucan {
     func getActiveBuildTargets(
         _ targetConfig: TargetConfig
     ) -> [Target] {
-        // TODO: maybe support --targets flag
         var buildTargets = targetConfig.targets.filter {
             targetsToBuild.contains($0.name)
         }
@@ -184,8 +183,8 @@ public struct Toucan {
 
                     let resultOutputURL =
                         destinationFolder
-                            .appending(path: result.destination.file)
-                            .appendingPathExtension(result.destination.ext)
+                        .appending(path: result.destination.file)
+                        .appendingPathExtension(result.destination.ext)
 
                     switch result.source {
                     case let .assetFile(path):
@@ -203,16 +202,15 @@ public struct Toucan {
 
                 // MARK: - Finalize and cleanup
 
-                // TODO: make sure output url works well in all cases
                 var outputURL = getSafeURL(
                     for: target.output,
                     using: fileManager
                 )
                 if !outputURL.path().hasPrefix("/") {
-                    outputURL = inputURL.deletingLastPathComponent()
-                        .appending(
-                            path: target.output
-                        )
+                    outputURL =
+                        inputURL
+                        .deletingLastPathComponent()
+                        .appendingPathIfPresent(target.output)
                 }
 
                 try resetDirectory(at: outputURL)

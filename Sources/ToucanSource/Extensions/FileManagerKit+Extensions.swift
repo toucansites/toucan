@@ -61,24 +61,21 @@ public extension FileManagerKit {
         if skipHiddenFiles {
             items = items.filter { !$0.hasPrefix(".") }
         }
-        return
-            items
-                .filter { fileName in
-                    let fileURL = URL(fileURLWithPath: fileName)
-                    let baseName = fileURL.deletingPathExtension()
-                        .lastPathComponent
-                    let ext = fileURL.pathExtension
+        return items.filter { fileName in
+            let fileURL = URL(fileURLWithPath: fileName)
+            let baseName = fileURL.deletingPathExtension().lastPathComponent
+            let ext = fileURL.pathExtension
 
-                    switch (name, extensions) {
-                    case (nil, nil):
-                        return true
-                    case (let name?, nil):
-                        return baseName == name
-                    case (nil, let extensions?):
-                        return extensions.contains(ext)
-                    case let (name?, extensions?):
-                        return baseName == name && extensions.contains(ext)
-                    }
-                }
+            switch (name, extensions) {
+            case (nil, nil):
+                return true
+            case (let name?, nil):
+                return baseName == name
+            case (nil, let extensions?):
+                return extensions.contains(ext)
+            case let (name?, extensions?):
+                return baseName == name && extensions.contains(ext)
+            }
+        }
     }
 }

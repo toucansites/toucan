@@ -217,7 +217,7 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate,
+                .modificationDate: modificationDate
             ],
             string: """
                 ---
@@ -238,7 +238,7 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate,
+                .modificationDate: modificationDate
             ],
             string: """
                 title: "Hello index.\(ext)"
@@ -263,23 +263,24 @@ struct RawContentLoaderTestSuite {
             origin: testBlogArticleOrigin(),
             markdown: .init(
                 frontMatter: [
-                    "title": "Hello index.\(ext)",
+                    "title": "Hello index.\(ext)"
                 ],
                 contents: emptyContents
                     ? ""
                     : """
-                        # Hello index.\(ext)
+                    # Hello index.\(ext)
 
-                        Lorem ipsum dolor sit amet
-                        """
+                    Lorem ipsum dolor sit amet
+                    """
             ),
             lastModificationDate: modificationDate.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: [
                 "cover.png",
                 "main.js",
                 "style.css",
             ]
-                .sorted()
+            .sorted()
         )
     }
 
@@ -378,7 +379,7 @@ struct RawContentLoaderTestSuite {
                 origin: testBlogArticleOrigin(),
                 markdown: .init(
                     frontMatter: [
-                        "title": "Hello index.yml",
+                        "title": "Hello index.yml"
                     ],
                     contents: """
                         # Hello index.md
@@ -387,12 +388,13 @@ struct RawContentLoaderTestSuite {
                         """
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
+                assetsPath: "assets",
                 assets: [
                     "cover.png",
                     "main.js",
                     "style.css",
                 ]
-                    .sorted()
+                .sorted()
             )
 
             #expect(content.origin == exp.origin)
@@ -439,6 +441,7 @@ struct RawContentLoaderTestSuite {
                             """
                     ),
                     lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
                     assets: []
                 ),
                 .init(
@@ -451,6 +454,7 @@ struct RawContentLoaderTestSuite {
                         contents: ""
                     ),
                     lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
                     assets: []
                 ),
             ]

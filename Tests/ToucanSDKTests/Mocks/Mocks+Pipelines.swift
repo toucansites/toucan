@@ -22,7 +22,7 @@ extension Mocks.Pipelines {
                         operator: .equals,
                         value: true
                     )
-                ),
+                )
             ],
             dataTypes: .init(
                 date: .init(
@@ -90,7 +90,7 @@ extension Mocks.Pipelines {
                 "post.pagination": .init(
                     contentType: "post",
                     limit: 2
-                ),
+                )
             ],
             assets: .init(
                 behaviors: [
@@ -98,7 +98,7 @@ extension Mocks.Pipelines {
                         id: "copy",
                         input: .init(name: "*", ext: "*"),
                         output: .init(name: "*", ext: "*")
-                    ),
+                    )
                 ],
                 properties: [
                     .init(
@@ -165,24 +165,24 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "page": [
-                            "template": "pages.default",
+                            "template": "pages.default"
                         ],
                         "post": [
-                            "template": "blog.post.default",
+                            "template": "blog.post.default"
                         ],
                         "author": [
-                            "template": "blog.author.default",
+                            "template": "blog.author.default"
                         ],
                         "tag": [
-                            "template": "blog.tag.default",
+                            "template": "blog.tag.default"
                         ],
                         "category": [
-                            "template": "docs.category.default",
+                            "template": "docs.category.default"
                         ],
                         "guide": [
-                            "template": "docs.guide.default",
+                            "template": "docs.guide.default"
                         ],
-                    ],
+                    ]
                 ]
             ),
             output: .init(
@@ -202,7 +202,7 @@ extension Mocks.Pipelines {
             dataTypes: .defaults,
             contentTypes: .init(
                 include: [
-                    "not-found",
+                    "not-found"
                 ],
                 exclude: [],
                 lastUpdate: [],
@@ -216,9 +216,9 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "not-found": [
-                            "template": "pages.404",
-                        ],
-                    ],
+                            "template": "pages.404"
+                        ]
+                    ]
                 ]
             ),
             output: .init(
@@ -238,7 +238,7 @@ extension Mocks.Pipelines {
             dataTypes: .defaults,
             contentTypes: .init(
                 include: [
-                    "redirect",
+                    "redirect"
                 ],
                 exclude: [],
                 lastUpdate: [],
@@ -252,9 +252,9 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "redirect": [
-                            "template": "redirect",
-                        ],
-                    ],
+                            "template": "redirect"
+                        ]
+                    ]
                 ]
             ),
             output: .init(
@@ -275,9 +275,9 @@ extension Mocks.Pipelines {
                     contentType: "post",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc),
+                        .init(key: "lastUpdate", direction: .desc)
                     ]
-                ),
+                )
             ],
             dataTypes: .init(
                 date: .init(
@@ -286,17 +286,17 @@ extension Mocks.Pipelines {
                         "rss": .init(
                             localization: .defaults,
                             format: "EEE, dd MMM yyyy HH:mm:ss Z"
-                        ),
+                        )
                     ]
                 )
             ),
             contentTypes: .init(
                 include: [
-                    "rss",
+                    "rss"
                 ],
                 exclude: [],
                 lastUpdate: [
-                    "post",
+                    "post"
                 ],
                 filterRules: [:]
             ),
@@ -308,9 +308,9 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "rss": [
-                            "template": "rss",
-                        ],
-                    ],
+                            "template": "rss"
+                        ]
+                    ]
                 ]
             ),
             output: .init(
@@ -331,28 +331,28 @@ extension Mocks.Pipelines {
                     contentType: "page",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc),
+                        .init(key: "lastUpdate", direction: .desc)
                     ]
                 ),
                 "posts": .init(
                     contentType: "post",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc),
+                        .init(key: "lastUpdate", direction: .desc)
                     ]
                 ),
                 "authors": .init(
                     contentType: "author",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc),
+                        .init(key: "lastUpdate", direction: .desc)
                     ]
                 ),
                 "tags": .init(
                     contentType: "tag",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc),
+                        .init(key: "lastUpdate", direction: .desc)
                     ]
                 ),
             ],
@@ -363,13 +363,13 @@ extension Mocks.Pipelines {
                         "sitemap": .init(
                             localization: .defaults,
                             format: "yyyy-MM-dd"
-                        ),
+                        )
                     ]
                 )
             ),
             contentTypes: .init(
                 include: [
-                    "sitemap",
+                    "sitemap"
                 ],
                 exclude: [],
                 lastUpdate: [],
@@ -379,7 +379,7 @@ extension Mocks.Pipelines {
                 "post.pagination": .init(
                     contentType: "post",
                     limit: 2
-                ),
+                )
             ],
             assets: .init(
                 behaviors: [],
@@ -391,9 +391,9 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "sitemap": [
-                            "template": "sitemap",
-                        ],
-                    ],
+                            "template": "sitemap"
+                        ]
+                    ]
                 ]
             ),
             output: .init(
@@ -417,9 +417,9 @@ extension Mocks.Pipelines {
                         .init(
                             key: "publication",
                             direction: .desc
-                        ),
+                        )
                     ]
-                ),
+                )
             ],
             dataTypes: .defaults,
             contentTypes: .init(
@@ -432,14 +432,14 @@ extension Mocks.Pipelines {
                 "post.pagination": .init(
                     contentType: "post",
                     limit: 2
-                ),
+                )
             ],
             assets: .defaults,
             transformers: [:],
             engine: .init(
                 id: "json",
                 options: [
-                    "keyPath": "context.posts",
+                    "keyPath": "context.posts"
                 ]
             ),
             output: .init(

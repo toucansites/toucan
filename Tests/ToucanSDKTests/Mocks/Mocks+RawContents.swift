@@ -29,6 +29,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -54,6 +55,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -82,6 +84,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: [
                 "style.css",
                 "main.js",
@@ -110,6 +113,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -131,6 +135,7 @@ extension Mocks.RawContents {
                 contents: ""
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -152,6 +157,7 @@ extension Mocks.RawContents {
                 contents: ""
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -166,11 +172,12 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
-                    "type": "rss",
+                    "type": "rss"
                 ],
                 contents: ""
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -185,11 +192,12 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
-                    "type": "sitemap",
+                    "type": "sitemap"
                 ],
                 contents: ""
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -217,6 +225,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -246,8 +255,9 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: [
-                "author-\(id).jpg",
+                "author-\(id).jpg"
             ]
         )
     }
@@ -274,6 +284,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -314,8 +325,9 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: [
-                "cover.jpg",
+                "cover.jpg"
             ]
         )
     }
@@ -342,6 +354,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -369,6 +382,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }
@@ -398,6 +412,7 @@ extension Mocks.RawContents {
                     """
             ),
             lastModificationDate: now.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: []
         )
     }

@@ -63,7 +63,7 @@ struct E2ETestSuite {
             let nowString = formatter.format(now).formats["rss"] ?? ""
             let post1date =
                 formatter.format(now.addingTimeInterval(-86400)).formats["rss"]
-                    ?? ""
+                ?? ""
             let post2date =
                 formatter.format(now.addingTimeInterval(-86400 * 2))
                 .formats["rss"] ?? ""
@@ -72,42 +72,42 @@ struct E2ETestSuite {
                 .formats["rss"] ?? ""
 
             let expectation = #"""
-            <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-            <channel>
-                <title>Test site name</title>
-                <description>Test site description</description>
-                <link>http://localhost:3000</link>
-                <language>en-US</language>
-                <lastBuildDate>\#(nowString)</lastBuildDate>
-                <pubDate>\#(nowString)</pubDate>
-                <ttl>250</ttl>
-                <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+                <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+                <channel>
+                    <title>Test site name</title>
+                    <description>Test site description</description>
+                    <link>http://localhost:3000</link>
+                    <language>en-US</language>
+                    <lastBuildDate>\#(nowString)</lastBuildDate>
+                    <pubDate>\#(nowString)</pubDate>
+                    <ttl>250</ttl>
+                    <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
 
-                <item>
-                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
-                    <title><![CDATA[ Post #1 ]]></title>
-                    <description><![CDATA[ Post #1 description ]]></description>
-                    <link>http://localhost:3000/blog/posts/post-1/</link>
-                    <pubDate>\#(post1date)</pubDate>
-                </item>
-                <item>
-                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-2/</guid>
-                    <title><![CDATA[ Post #2 ]]></title>
-                    <description><![CDATA[ Post #2 description ]]></description>
-                    <link>http://localhost:3000/blog/posts/post-2/</link>
-                    <pubDate>\#(post2date)</pubDate>
-                </item>
-                <item>
-                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-3/</guid>
-                    <title><![CDATA[ Post #3 ]]></title>
-                    <description><![CDATA[ Post #3 description ]]></description>
-                    <link>http://localhost:3000/blog/posts/post-3/</link>
-                    <pubDate>\#(post3date)</pubDate>
-                </item>
+                    <item>
+                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
+                        <title><![CDATA[ Post #1 ]]></title>
+                        <description><![CDATA[ Post #1 description ]]></description>
+                        <link>http://localhost:3000/blog/posts/post-1/</link>
+                        <pubDate>\#(post1date)</pubDate>
+                    </item>
+                    <item>
+                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-2/</guid>
+                        <title><![CDATA[ Post #2 ]]></title>
+                        <description><![CDATA[ Post #2 description ]]></description>
+                        <link>http://localhost:3000/blog/posts/post-2/</link>
+                        <pubDate>\#(post2date)</pubDate>
+                    </item>
+                    <item>
+                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-3/</guid>
+                        <title><![CDATA[ Post #3 ]]></title>
+                        <description><![CDATA[ Post #3 description ]]></description>
+                        <link>http://localhost:3000/blog/posts/post-3/</link>
+                        <pubDate>\#(post3date)</pubDate>
+                    </item>
 
-            </channel>
-            </rss>
-            """#
+                </channel>
+                </rss>
+                """#
 
             #expect(
                 rss.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -141,52 +141,52 @@ struct E2ETestSuite {
             let nowString = formatter.format(now).formats["sitemap"] ?? ""
 
             let expectation = #"""
-            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-                <url>
+                <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                    <url>
 
-                    <loc>http://localhost:3000/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/about/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/posts/pages/1/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/posts/pages/2/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/context/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/pages/page-1/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/pages/page-2/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/pages/page-3/</loc>
-                    <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/about/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/pages/1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/pages/2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/context/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/pages/page-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/pages/page-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/pages/page-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
 
-                    <loc>http://localhost:3000/blog/posts/post-1/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/posts/post-2/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/posts/post-3/</loc>
-                    <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/post-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/post-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/posts/post-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
 
-                    <loc>http://localhost:3000/blog/authors/author-1/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/authors/author-2/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/authors/author-3/</loc>
-                    <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/authors/author-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/authors/author-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/authors/author-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
 
-                    <loc>http://localhost:3000/blog/tags/tag-1/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/tags/tag-2/</loc>
-                    <lastmod>\#(nowString)</lastmod>
-                    <loc>http://localhost:3000/blog/tags/tag-3/</loc>
-                    <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/tags/tag-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/tags/tag-2/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/blog/tags/tag-3/</loc>
+                        <lastmod>\#(nowString)</lastmod>
 
 
 
-                </url>
-            </urlset>
-            """#
+                    </url>
+                </urlset>
+                """#
 
             #expect(
                 sitemap.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -215,18 +215,18 @@ struct E2ETestSuite {
             )
             let redirect1 = try String(contentsOf: redirect1URL)
             let expectation1 = #"""
-            <!DOCTYPE html>
-            <html lang="en-US">
-              <meta charset="utf-8">
-              <title>Redirecting&hellip;</title>
-              <link rel="canonical" href="http://localhost:3000/">
-              <script>location="http://localhost:3000/"</script>
-              <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
-              <meta name="robots" content="noindex">
-              <h1>Redirecting&hellip;</h1>
-              <a href="http://localhost:3000/">Click here if you are not redirected.</a>
-            </html>
-            """#
+                <!DOCTYPE html>
+                <html lang="en-US">
+                  <meta charset="utf-8">
+                  <title>Redirecting&hellip;</title>
+                  <link rel="canonical" href="http://localhost:3000/">
+                  <script>location="http://localhost:3000/"</script>
+                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
+                  <meta name="robots" content="noindex">
+                  <h1>Redirecting&hellip;</h1>
+                  <a href="http://localhost:3000/">Click here if you are not redirected.</a>
+                </html>
+                """#
 
             #expect(
                 redirect1.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -240,18 +240,18 @@ struct E2ETestSuite {
             )
             let redirect2 = try String(contentsOf: redirect2URL)
             let expectation2 = #"""
-            <!DOCTYPE html>
-            <html lang="en-US">
-              <meta charset="utf-8">
-              <title>Redirecting&hellip;</title>
-              <link rel="canonical" href="http://localhost:3000/about">
-              <script>location="http://localhost:3000/about"</script>
-              <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
-              <meta name="robots" content="noindex">
-              <h1>Redirecting&hellip;</h1>
-              <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
-            </html>
-            """#
+                <!DOCTYPE html>
+                <html lang="en-US">
+                  <meta charset="utf-8">
+                  <title>Redirecting&hellip;</title>
+                  <link rel="canonical" href="http://localhost:3000/about">
+                  <script>location="http://localhost:3000/about"</script>
+                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
+                  <meta name="robots" content="noindex">
+                  <h1>Redirecting&hellip;</h1>
+                  <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
+                </html>
+                """#
 
             #expect(
                 redirect2.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -272,8 +272,8 @@ struct E2ETestSuite {
             Mocks.E2E.src(
                 now: now,
                 debugContext: #"""
-                {{page}}
-                """#
+                    {{page}}
+                    """#
             )
         }
         .test {
@@ -288,7 +288,7 @@ struct E2ETestSuite {
                 context
                     .replacingOccurrences(
                         [
-                            "&quot;": "\"",
+                            "&quot;": "\""
                         ]
                     )
                     .contains("Context page description")
@@ -335,14 +335,14 @@ struct E2ETestSuite {
                                             name: "icon",
                                             ext: "svg"
                                         )
-                                    ),
+                                    )
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -372,10 +372,11 @@ struct E2ETestSuite {
                             ),
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             ),
                             lastModificationDate: now.timeIntervalSince1970,
+                            assetsPath: "assets",
                             assets: [
                                 "icon.svg",
                                 "foo.svg",
@@ -443,14 +444,14 @@ struct E2ETestSuite {
                                             name: "*",
                                             ext: "svg"
                                         )
-                                    ),
+                                    )
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -480,10 +481,11 @@ struct E2ETestSuite {
                             ),
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             ),
                             lastModificationDate: now.timeIntervalSince1970,
+                            assetsPath: "assets",
                             assets: [
                                 "cover.jpg",
                                 "foo.svg",
@@ -560,14 +562,14 @@ struct E2ETestSuite {
                                             name: "data",
                                             ext: "yaml"
                                         )
-                                    ),
+                                    )
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -602,7 +604,7 @@ struct E2ETestSuite {
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             )
                         )
@@ -668,14 +670,14 @@ struct E2ETestSuite {
                                             name: "*",
                                             ext: "yaml"
                                         )
-                                    ),
+                                    )
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -715,7 +717,7 @@ struct E2ETestSuite {
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             )
                         )
@@ -783,7 +785,7 @@ struct E2ETestSuite {
                                             name: "style.min",
                                             ext: "css"
                                         )
-                                    ),
+                                    )
                                 ],
                                 properties: []
                             ),
@@ -791,7 +793,7 @@ struct E2ETestSuite {
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -831,7 +833,7 @@ struct E2ETestSuite {
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             )
                         )
@@ -895,7 +897,7 @@ struct E2ETestSuite {
                                             name: "style",
                                             ext: "css"
                                         )
-                                    ),
+                                    )
                                 ],
                                 properties: []
                             ),
@@ -903,7 +905,7 @@ struct E2ETestSuite {
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -942,7 +944,7 @@ struct E2ETestSuite {
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             )
                         )
@@ -1011,7 +1013,7 @@ struct E2ETestSuite {
                                             name: "style",
                                             ext: "css"
                                         )
-                                    ),
+                                    )
                                 ],
                                 properties: []
                             ),
@@ -1019,7 +1021,7 @@ struct E2ETestSuite {
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page",
+                                    "keyPath": "page"
                                 ]
                             ),
                             output: .init(
@@ -1063,7 +1065,7 @@ struct E2ETestSuite {
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test",
+                                    "type": "test"
                                 ]
                             )
                         )
@@ -1133,21 +1135,22 @@ struct E2ETestSuite {
                                 "test": .init(
                                     run: [
                                         .init(
-                                            path: "\(rootURL.path())/\(rootName)/src/transformers",
+                                            path:
+                                                "\(rootURL.path())/\(rootName)/src/transformers",
                                             name: "replace"
-                                        ),
+                                        )
                                     ],
                                     isMarkdownResult: false
-                                ),
+                                )
                             ],
                             engine: .init(
                                 id: "mustache",
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "template": "test",
-                                        ],
-                                    ],
+                                            "template": "test"
+                                        ]
+                                    ]
                                 ]
                             ),
                             output: .init(
@@ -1298,7 +1301,7 @@ struct E2ETestSuite {
                                     "minimal": .init(
                                         context: .properties,
                                         fields: [
-                                            "slug",
+                                            "slug"
                                         ]
                                     ),
                                     "detail": .init(
@@ -1308,13 +1311,13 @@ struct E2ETestSuite {
                                             "slug",
                                         ]
                                     ),
-                                ],
+                                ]
                             ],
                             queries: [
                                 "minimal": .init(
                                     contentType: "test",
                                     scope: "minimal"
-                                ),
+                                )
                             ],
                             dataTypes: .defaults,
                             contentTypes: .defaults,

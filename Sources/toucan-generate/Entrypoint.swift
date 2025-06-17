@@ -59,7 +59,7 @@ struct Entrypoint: AsyncParsableCommand {
 
         if generator.generateAndLogErrors(logger) {
             let metadata: Logger.Metadata = [
-                "input": "\(input)",
+                "input": "\(input)"
             ]
             logger.info("Site generated successfully.", metadata: metadata)
         }

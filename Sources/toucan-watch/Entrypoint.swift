@@ -109,7 +109,7 @@ struct Entrypoint: AsyncParsableCommand {
             let last = lastGenerationTime
             let diff = abs(last.timeIntervalSince(now))
 
-            guard diff > Double(seconds) else { // 3 sec treshold
+            guard diff > Double(seconds) else {  // 3 sec treshold
                 logger.trace("Skipping generation due to treshold...")
                 continue
             }

@@ -12,7 +12,33 @@ import ToucanSerialization
 
 @Suite
 struct PipelineTestSuite {
-    // MARK: - order
+
+    @Test
+    func minimal() throws {
+        let data = """
+            id: test
+            engine: 
+                id: engine
+            output:
+                path: path
+                file: file
+                ext: ext
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Pipeline.self,
+            from: data
+        )
+
+        #expect(result.id == "test")
+        #expect(result.engine.id == "engine")
+        #expect(result.output.path == "path")
+        #expect(result.output.file == "file")
+        #expect(result.output.ext == "ext")
+    }
 
     @Test
     func standard() throws {
@@ -107,13 +133,6 @@ struct PipelineTestSuite {
                         context: 
                             - detail
                         fields:
-            dataTypes:
-                date:
-                    dateFormats:
-                        test: 
-                            locale: en-US
-                            timeZone: EST
-                            format: ymd
             engine: 
                 id: test
             output:
@@ -132,139 +151,69 @@ struct PipelineTestSuite {
 
         #expect(result.contentTypes.include.isEmpty)
         #expect(result.engine.id == "test")
-
-        //        let defaultScope = try #require(result.scopes["*"])
-        //        let defaultReferenceScope = try #require(defaultScope["reference"])
-        //        let defaultListScope = try #require(defaultScope["list"])
-        //        let defaultDetailScope = try #require(defaultScope["detail"])        //        #expect(defaultReferenceScope.context == .reference)
-        //        #expect(defaultListScope.context == .list)
-        //        #expect(defaultDetailScope.context == .detail)        //        let dateFormat = try #require(result.dataTypes.date.dateFormats["test"])
-        //        #expect(
-        //            dateFormat
-        //                == .init(
-        //                    locale: "en-US",
-        //                    timeZone: "EST",
-        //                    format: "ymd"
-        //                )
-        //        )        //        let postScope = try #require(result.scopes["post"])
-        //        let postListScope = try #require(postScope["list"])
-        //        #expect(postListScope.context == .detail)
+        let defaultScope = try #require(result.scopes["*"])
+        let defaultReferenceScope = try #require(defaultScope["reference"])
+        let defaultListScope = try #require(defaultScope["list"])
+        let defaultDetailScope = try #require(defaultScope["detail"])
+        #expect(defaultReferenceScope.context == .reference)
+        #expect(defaultListScope.context == .list)
+        #expect(defaultDetailScope.context == .detail)
+        let postScope = try #require(result.scopes["post"])
+        let postListScope = try #require(postScope["list"])
+        #expect(postListScope.context == .detail)
     }
 
-    // MARK: - pipelines
+    @Test
+    func assets() throws {
+        let data = """
+            id: test
+            assets:
+                properties:
+                    - action: add
+                      property: js
+                      resolvePath: false
+                      input:
+                        name: main
+                        ext: js
+                    - action: set
+                      property: image
+                      resolvePath: true
+                      input:
+                        name: cover
+                        ext: jpg
+                    - action: load
+                      property: svgs
+                      resolvePath: false
+                      input:
+                        name: "*"
+                        ext: svg
+                    - action: parse
+                      property: data
+                      resolvePath: false
+                      input:
+                        name: "*"
+                        ext: json
+            engine: 
+                id: engine
+            output:
+                path: path
+                file: file
+                ext: ext
+            """
+            .data(using: .utf8)!
 
-    //    @Test
-    //    func basicLoad() throws {
-    //        let logger = Logger(label: "PipelineLoaderTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "pipelines") {
-    //                    pipeline404(addTransformers: true)
-    //                    pipelineRedirect()
-    //                }
-    //                File(
-    //                    "config.yml",
-    //                    string: """
-    //                        pipelines:
-    //                            path: pipelines
-    //                        """
-    //                )
-    //            }
-    //        }
-    //        .test {
-    //            let sourceURL = $1.appending(path: "src")
-    //            let loader = ConfigLoaderTestSuite.getConfigLoader(
-    //                url: sourceURL,
-    //                logger: logger
-    //            )
-    //            let config = try loader.load(Config.self)    //            let sourceConfig = SourceConfig(
-    //                sourceUrl: sourceURL,
-    //                config: config
-    //            )    //            let fs = ToucanFileSystem(fileManager: $0)
-    //            let pipelineLocations = fs.pipelineLocator.locate(
-    //                at: sourceConfig.pipelinesURL
-    //            )
-    //            let pipelineLoader = PipelineLoader(
-    //                url: sourceConfig.pipelinesURL,
-    //                locations: pipelineLocations,
-    //                decoder: ToucanYAMLDecoder(),
-    //                logger: logger
-    //            )
-    //            let pipelines = try pipelineLoader.load()
-    //            #expect(pipelines.count == 2)
-    //            #expect(pipelines[1].transformers.count == 2)
-    //        }    //    }    //    @Test
-    //    func loadAssets() throws {
-    //        let logger = Logger(label: "PipelineLoaderTestSuite")
-    //        try FileManagerPlayground {
-    //            Directory(name: "src") {
-    //                Directory(name: "pipelines") {
-    //                    pipelineSitemap(
-    //                        """
-    //                        assets:
-    //                          properties:
-    //                            - action: add
-    //                              property: js
-    //                              resolvePath: false
-    //                              input:
-    //                                name: main
-    //                                ext: js
-    //                            - action: set
-    //                              property: image
-    //                              resolvePath: true
-    //                              input:
-    //                                name: cover
-    //                                ext: jpg
-    //                            - action: load
-    //                              property: svgs
-    //                              resolvePath: false
-    //                              input:
-    //                                name: "*"
-    //                                ext: svg
-    //                            - action: parse
-    //                              property: data
-    //                              resolvePath: false
-    //                              input:
-    //                                name: "*"
-    //                                ext: json
-    //                        """
-    //                    )
-    //                }
-    //                File(
-    //                    "config.yml",
-    //                    string: """
-    //                        pipelines:
-    //                            path: pipelines
-    //                        """
-    //                )
-    //            }
-    //        }
-    //        .test {
-    //            let sourceURL = $1.appending(path: "src")
-    //            let loader = ConfigLoaderTestSuite.getConfigLoader(
-    //                url: sourceURL,
-    //                logger: logger
-    //            )
-    //            let config = try loader.load(Config.self)    //            let sourceConfig = SourceConfig(
-    //                sourceUrl: sourceURL,
-    //                config: config
-    //            )    //            let fs = ToucanFileSystem(fileManager: $0)
-    //            let pipelineLocations = fs.pipelineLocator.locate(
-    //                at: sourceConfig.pipelinesURL
-    //            )
-    //            let pipelineLoader = PipelineLoader(
-    //                url: sourceConfig.pipelinesURL,
-    //                locations: pipelineLocations,
-    //                decoder: ToucanYAMLDecoder(),
-    //                logger: logger
-    //            )
-    //            let pipelines = try pipelineLoader.load()
-    //            #expect(pipelines.count == 1)
-    //            #expect(pipelines[0].assets.properties.count == 4)
-    //            #expect(pipelines[0].assets.properties[0].action == .add)
-    //            #expect(pipelines[0].assets.properties[1].action == .set)
-    //            #expect(pipelines[0].assets.properties[2].action == .load)
-    //            #expect(pipelines[0].assets.properties[3].action == .parse)
-    //        }
-    //    }
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Pipeline.self,
+            from: data
+        )
+
+        #expect(result.assets.behaviors.isEmpty)
+        #expect(result.assets.properties.count == 4)
+        #expect(result.assets.properties[0].action == .add)
+        #expect(result.assets.properties[1].action == .set)
+        #expect(result.assets.properties[2].action == .load)
+        #expect(result.assets.properties[3].action == .parse)
+    }
 }
