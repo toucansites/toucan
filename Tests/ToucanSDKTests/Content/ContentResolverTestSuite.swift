@@ -551,12 +551,22 @@ struct ContentResolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convert(
-            rawContents: buildTargetSource.rawContents
-        )
-        #expect(targetContents.count == 1)
-        let result = try #require(targetContents.first).properties
-        #expect(result.isEmpty)
+        do {
+            _ = try resolver.convert(
+                rawContents: buildTargetSource.rawContents
+            )
+            Issue.record("Should result in an invalid property error.")
+        }
+        catch {
+            switch error {
+            case let .invalidProperty(name, value, slug):
+                #expect(name == "monthAndDay")
+                #expect(value == "2021-03-05")
+                #expect(slug == "test")
+            default:
+                Issue.record("Invalid error result.")
+            }
+        }
     }
 
     @Test()
@@ -622,12 +632,22 @@ struct ContentResolverTestSuite {
             )
         )
 
-        let targetContents = try resolver.convert(
-            rawContents: buildTargetSource.rawContents
-        )
-        #expect(targetContents.count == 1)
-        let result = try #require(targetContents.first).properties
-        #expect(result.isEmpty)
+        do {
+            _ = try resolver.convert(
+                rawContents: buildTargetSource.rawContents
+            )
+            Issue.record("Should result in an invalid property error.")
+        }
+        catch {
+            switch error {
+            case let .invalidProperty(name, value, slug):
+                #expect(name == "monthAndDay")
+                #expect(value == "2021-03-05")
+                #expect(slug == "test")
+            default:
+                Issue.record("Invalid error result.")
+            }
+        }
     }
 
     @Test()

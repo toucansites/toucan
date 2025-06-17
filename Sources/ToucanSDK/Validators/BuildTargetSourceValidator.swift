@@ -97,13 +97,36 @@ struct BuildTargetSourceValidator {
     // MARK: - Functions
 
     func validate() throws(BuildTargetSourceValidatorError) {
-        try validateContentTypes()
         try validatePipelines()
-        try validateRawContents()
         try validateBlocks()
+        try validateContentTypes()
+        try validateRawContents()
+    }
 
-        /// Validate frontMatters
-        // validateFrontMatters(buildTargetSource)
+    func validatePipelines() throws(BuildTargetSourceValidatorError) {
+        let ids = buildTargetSource.pipelines.map(\.id)
+        let duplicates = Dictionary(grouping: ids, by: { $0 })
+            .mapValues { $0.count }
+            .filter { $1 > 1 }
+
+        if !duplicates.isEmpty {
+            throw .duplicateContentTypes(
+                duplicates.keys.map { String($0) }.sorted()
+            )
+        }
+    }
+
+    func validateBlocks() throws(BuildTargetSourceValidatorError) {
+        let names = buildTargetSource.blockDirectives.map(\.name)
+        let duplicates = Dictionary(grouping: names, by: { $0 })
+            .mapValues { $0.count }
+            .filter { $1 > 1 }
+
+        if !duplicates.isEmpty {
+            throw .duplicateContentTypes(
+                duplicates.keys.map { String($0) }.sorted()
+            )
+        }
     }
 
     func validateContentTypes() throws(BuildTargetSourceValidatorError) {
@@ -126,21 +149,7 @@ struct BuildTargetSourceValidator {
         }
     }
 
-    func validatePipelines() throws(BuildTargetSourceValidatorError) {
-        let ids = buildTargetSource.pipelines.map(\.id)
-        let duplicates = Dictionary(grouping: ids, by: { $0 })
-            .mapValues { $0.count }
-            .filter { $1 > 1 }
-
-        if !duplicates.isEmpty {
-            throw .duplicateContentTypes(
-                duplicates.keys.map { String($0) }.sorted()
-            )
-        }
-    }
-
     func validateRawContents() throws(BuildTargetSourceValidatorError) {
-        /// validate slugs
         let slugs = buildTargetSource.rawContents.map(\.origin.slug)
         let duplicates = Dictionary(grouping: slugs, by: { $0 })
             .mapValues { $0.count }
@@ -148,52 +157,6 @@ struct BuildTargetSourceValidator {
 
         if !duplicates.isEmpty {
             throw .duplicateRawContentSlugs(
-                duplicates.keys.map { String($0) }.sorted()
-            )
-        }
-
-        // validate front matters
-    }
-
-    //    func validateFrontMatters(_ buildTargetSource: BuildTargetSource) {
-    //        for content in buildTargetSource.contents {
-    //            let metadata: Logger.Metadata = ["slug": "\(content.slug.value)"]
-    //            let frontMatter = content.rawValue.frontMatter
-    //
-    //            let missingProperties = content.definition.properties
-    //                .filter { name, property in
-    //                    property.required && frontMatter[name] == nil
-    //                        && property.default?.value == nil
-    //                }
-    //
-    //            for name in missingProperties.keys {
-    //                logger.warning(
-    //                    "Missing content property: `\(name)`",
-    //                    metadata: metadata
-    //                )
-    //            }
-    //
-    //            let missingRelations = content.definition.relations.keys.filter {
-    //                frontMatter[$0] == nil
-    //            }
-    //
-    //            for name in missingRelations {
-    //                logger.warning(
-    //                    "Missing content relation: `\(name)`",
-    //                    metadata: metadata
-    //                )
-    //            }
-    //        }
-    //    }
-
-    func validateBlocks() throws(BuildTargetSourceValidatorError) {
-        let names = buildTargetSource.blockDirectives.map(\.name)
-        let duplicates = Dictionary(grouping: names, by: { $0 })
-            .mapValues { $0.count }
-            .filter { $1 > 1 }
-
-        if !duplicates.isEmpty {
-            throw .duplicateContentTypes(
                 duplicates.keys.map { String($0) }.sorted()
             )
         }

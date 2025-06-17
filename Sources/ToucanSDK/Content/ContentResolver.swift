@@ -13,17 +13,19 @@ import ToucanSource
 
 private extension Path {
     func getTypeLocalIdentifier() -> String {
-        let newRawPath =
-            value
-                .split(separator: "/")
-                .last
-                .map(String.init) ?? ""
+        let newRawPath = value
+            .split(separator: "/")
+            .last
+            .map(String.init) ?? ""
         return Path(newRawPath).trimmingBracketsContent()
     }
 }
 
 enum ContentResolverError: ToucanError {
     case contentType(ContentTypeResolverError)
+    case missingProperty(String, String)
+    case missingRelation(String, String)
+    case invalidProperty(String, String, String)
     case unknown(Error)
 
     // MARK: - Computed Properties
@@ -32,6 +34,12 @@ enum ContentResolverError: ToucanError {
         switch self {
         case let .contentType(error):
             [error]
+        case .missingProperty:
+            []
+        case .missingRelation:
+            []
+        case .invalidProperty:
+            []
         case let .unknown(error):
             [error]
         }
@@ -40,7 +48,13 @@ enum ContentResolverError: ToucanError {
     var logMessage: String {
         switch self {
         case let .contentType(error):
-            "Content type related error: \(error.logMessage)"
+            "Content type related error: \(error.logMessage)."
+        case let .missingProperty(name, slug):
+            "Missing property `\(name)` for content: \(slug)."
+        case let .missingRelation(name, slug):
+            "Missing property `\(name)` for content: \(slug)."
+        case let .invalidProperty(name, value, slug):
+            "Invalid property `\(name): \(value)` for content: \(value)."
         case let .unknown(error):
             error.localizedDescription
         }
@@ -50,6 +64,12 @@ enum ContentResolverError: ToucanError {
         switch self {
         case let .contentType(error):
             "Content type related error: \(error.userFriendlyMessage)"
+        case let .missingProperty(name, slug):
+            "Missing property `\(name)` for content: `\(slug)`."
+        case let .missingRelation(name, slug):
+            "Missing property `\(name)` for content: `\(slug)`."
+        case let .invalidProperty(name, value, slug):
+            "Invalid property `\(name): \(value)` for content: \(value)."
         case .unknown:
             "Unknown content conversion error."
         }
@@ -215,12 +235,12 @@ struct ContentResolver {
 
     // MARK: - conversion helpers
 
-    // TODO: throw instead of warning...
     func convert(
         property: Property,
         rawValue: AnyCodable?,
-        forKey key: String
-    ) -> AnyCodable? {
+        forKey key: String,
+        slug: String
+    ) throws(ContentResolverError) -> AnyCodable? {
         let value = rawValue ?? property.default
 
         switch property.type {
@@ -228,10 +248,11 @@ struct ContentResolver {
             guard
                 let rawDateValue = value?.value(as: String.self)
             else {
-                logger.warning(
-                    "Date property is not a string (\(key): \(value?.value ?? "nil"))."
+                throw .invalidProperty(
+                    key,
+                    value?.stringValue() ?? "nil",
+                    slug
                 )
-                return nil
             }
             guard
                 let date = dateFormatter.date(
@@ -239,10 +260,11 @@ struct ContentResolver {
                     using: config
                 )
             else {
-                logger.warning(
-                    "Date property is not valid (\(key): \(rawDateValue))."
+                throw .invalidProperty(
+                    key,
+                    value?.stringValue() ?? "nil",
+                    slug
                 )
-                return nil
             }
             return .init(date.timeIntervalSince1970)
         default:
@@ -253,8 +275,6 @@ struct ContentResolver {
     func convert(
         rawContent: RawContent
     ) throws(ContentResolverError) -> Content {
-        //        logger.debug("Converting raw content")
-
         let typeID = rawContent.markdown.frontMatter.string("type")
 
         let contentType = try getContentType(
@@ -264,17 +284,38 @@ struct ContentResolver {
 
         var properties: [String: AnyCodable] = [:]
 
+        // validate properties
+        let frontMatter = rawContent.markdown.frontMatter
+        let missingProperties = contentType.properties
+            .filter { name, property in
+                property.required && frontMatter[name] == nil
+                    && property.default?.value == nil
+            }
+
+        for name in missingProperties.keys {
+            throw .missingProperty(name, rawContent.origin.slug)
+        }
+
+        /// validate relations
+        let missingRelations = contentType.relations.keys.filter {
+            frontMatter[$0] == nil
+        }
+
+        for name in missingRelations {
+            throw .missingRelation(name, rawContent.origin.slug)
+        }
+
         // Convert schema-defined properties
         for (key, property) in contentType.properties.sorted(by: {
             $0.key < $1.key
         }) {
             let rawValue = rawContent.markdown.frontMatter[key]
 
-            //            logger.debug("Converting property")
-            properties[key] = convert(
+            properties[key] = try convert(
                 property: property,
                 rawValue: rawValue,
-                forKey: key
+                forKey: key,
+                slug: rawContent.origin.slug
             )
         }
 
@@ -331,16 +372,21 @@ struct ContentResolver {
             slug = rawSlug
         }
 
-        //                print("------------------------")
-        //                print(contentType.id)
-        //                print(typeAwareID)
-        //                print(".")
-        //                print(rawContent.origin.path.value)
-        //                print(rawContent.origin.slug)
-        //                print(slug)
-        //                print("------------------------")
+        logger.trace(
+            "Converting content",
+            metadata: [
+                "type": .string(contentType.id),
+                "typeAwareID": .string(typeAwareID),
+                "slug": .string(slug),
+                "origin": .dictionary(
+                    [
+                        "path": .string(rawContent.origin.path.value),
+                        "slug": .string(rawContent.origin.slug),
+                    ]
+                ),
+            ]
+        )
 
-        // Final assembled content object
         return .init(
             type: contentType,
             typeAwareID: typeAwareID,
@@ -660,8 +706,6 @@ struct ContentResolver {
                     ]
                     .joined(separator: "/")
 
-                    // TODO: log trace
-
                     let file = getNameAndExtension(from: inputAsset)
 
                     let destPath = [
@@ -674,6 +718,15 @@ struct ContentResolver {
                     .split(separator: "/")
                     .dropLast()
                     .joined(separator: "/")
+
+                    logger.trace(
+                        "Resolving matching asset behavior.",
+                        metadata: [
+                            "behavior": .string(behavior.id),
+                            "source": .string(sourcePath),
+                            "destination": .string(destPath),
+                        ]
+                    )
 
                     let fileURL = contentsURL.appending(path: sourcePath)
 

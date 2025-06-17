@@ -214,12 +214,6 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "ToucanSerializationTests",
-            dependencies: [
-                .target(name: "ToucanSerialization"),
-            ]
-        ),
-        .testTarget(
             name: "ToucanMarkdownTests",
             dependencies: [
                 .target(name: "ToucanMarkdown"),

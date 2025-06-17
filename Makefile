@@ -4,7 +4,7 @@ SHELL=/bin/bash
 
 baseUrl = https://raw.githubusercontent.com/BinaryBirds/github-workflows/refs/heads/main/scripts
 
-check: symlinks language deps lint headers
+check: symlinks language deps headers
 
 symlinks:
 	curl -s $(baseUrl)/check-broken-symlinks.sh | bash
@@ -17,6 +17,9 @@ deps:
 	
 lint:
 	curl -s $(baseUrl)/run-swift-format.sh | bash
+
+fmt:
+	swiftformat .
 
 format:
 	curl -s $(baseUrl)/run-swift-format.sh | bash -s -- --fix
