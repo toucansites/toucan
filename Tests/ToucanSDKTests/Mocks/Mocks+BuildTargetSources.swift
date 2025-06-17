@@ -159,7 +159,7 @@ extension Mocks {
                 Mocks.RawContents.guide(id: 9, categoryID: 3, now: now),
             ],
             blockDirectives: [
-                Mocks.Blocks.link(),
+                Mocks.Blocks.link()
             ]
         )
     }

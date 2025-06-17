@@ -98,26 +98,26 @@ public struct Target: Codable, Equatable {
 
         self.name =
             try container.decodeIfPresent(String.self, forKey: .name)
-                ?? base.name
+            ?? base.name
 
         self.config =
             try container.decodeIfPresent(String.self, forKey: .config)
-                ?? base.config
+            ?? base.config
 
         self.url =
             try container
-                .decodeIfPresent(
-                    String.self,
-                    forKey: .url
-                ) ?? base.url
+            .decodeIfPresent(
+                String.self,
+                forKey: .url
+            ) ?? base.url
 
         self.output =
             try container.decodeIfPresent(String.self, forKey: .output)
-                ?? base.output
+            ?? base.output
 
         self.isDefault =
             try container.decodeIfPresent(Bool.self, forKey: .default)
-                ?? base.isDefault
+            ?? base.isDefault
     }
 
     // MARK: - Functions

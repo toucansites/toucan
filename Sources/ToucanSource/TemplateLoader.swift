@@ -45,9 +45,9 @@ public struct TemplateLoader {
     ) throws -> View {
         let basePath =
             path
-                .split(separator: ".")
-                .dropLast()
-                .joined(separator: ".")
+            .split(separator: ".")
+            .dropLast()
+            .joined(separator: ".")
 
         let id =
             if isContentOverride {
@@ -154,7 +154,7 @@ public struct TemplateLoader {
 
         let views =
             template.components.views + template.overrides.views
-                + template.content.views
+            + template.content.views
 
         for view in views {
             results[view.id] = view.contents

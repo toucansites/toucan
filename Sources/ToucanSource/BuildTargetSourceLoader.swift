@@ -167,8 +167,8 @@ public struct BuildTargetSourceLoader {
             let targetConfigName = "config-\(target.name)"
             let targetConfigLocation =
                 fileManager
-                    .find(extensions: ["yml", "yaml"], at: configURL)
-                    .first { $0.hasPrefix(targetConfigName) }
+                .find(extensions: ["yml", "yaml"], at: configURL)
+                .first { $0.hasPrefix(targetConfigName) }
 
             if targetConfigLocation != nil {
                 return try load(

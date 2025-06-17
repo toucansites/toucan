@@ -185,7 +185,7 @@ public struct MarkdownRenderer {
     ///
     /// - Parameters:
     ///   - content: The raw Markdown content to process.
-    ///   - id: A unique identifier used for transformation and rendering context.
+    ///   - typeAwareId: A unique identifier used for transformation and rendering context.
     ///   - slug: The slug of the content.
     ///   - assetsPath: Path to associated assets (e.g., images or includes).
     ///   - baseURL: The base URL for resolving relative paths or links.
@@ -193,7 +193,7 @@ public struct MarkdownRenderer {
     /// - Returns: A structured `Output` containing HTML, reading time, and outline.
     public func render(
         content: String,
-        id: String,
+        typeAwareId: String,
         slug: String,
         assetsPath: String,
         baseURL: String
@@ -212,7 +212,7 @@ public struct MarkdownRenderer {
                 do {
                     finalHtml = try executor.transform(
                         contents: finalHtml,
-                        id: id,
+                        id: typeAwareId,
                         slug: slug
                     )
                 }

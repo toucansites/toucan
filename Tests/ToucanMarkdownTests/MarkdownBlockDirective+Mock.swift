@@ -27,7 +27,7 @@ public extension MarkdownBlockDirective.Mocks {
                         .init(
                             name: "class",
                             value: "highlighted-text"
-                        ),
+                        )
                     ],
                     output: nil
                 )
@@ -42,7 +42,7 @@ public extension MarkdownBlockDirective.Mocks {
             removesChildParagraph: nil,
             tag: "div",
             attributes: [
-                .init(name: "class", value: "faq"),
+                .init(name: "class", value: "faq")
             ],
             output: nil
         )
@@ -55,13 +55,13 @@ public extension MarkdownBlockDirective.Mocks {
                 .init(
                     label: "label",
                     isRequired: true
-                ),
+                )
             ],
             requiresParentDirective: "true",
             removesChildParagraph: nil,
             tag: "div",
             attributes: [
-                .init(name: "att", value: "none"),
+                .init(name: "att", value: "none")
             ],
             output: nil
         )

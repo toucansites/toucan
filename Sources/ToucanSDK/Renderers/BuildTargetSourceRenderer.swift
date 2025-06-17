@@ -111,7 +111,7 @@ public struct BuildTargetSourceRenderer {
                             .init(
                                 key: "lastUpdate",
                                 direction: .desc
-                            ),
+                            )
                         ]
                     ),
                     now: now
@@ -210,7 +210,7 @@ public struct BuildTargetSourceRenderer {
             )
         }
         return [
-            "context": .init(rawContext),
+            "context": .init(rawContext)
         ]
     }
 
@@ -243,7 +243,7 @@ public struct BuildTargetSourceRenderer {
                     "items": .init(itemContext),
                     "links": .init(iteratorInfo.links),
                 ] as [String: AnyCodable]
-            ),
+            )
         ]
     }
 
@@ -273,7 +273,7 @@ public struct BuildTargetSourceRenderer {
         )
 
         let context: [String: AnyCodable] = [
-            "page": .init(pageContext),
+            "page": .init(pageContext)
         ]
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
@@ -311,7 +311,7 @@ public struct BuildTargetSourceRenderer {
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval,
         scopeKey: String,
-        allowSubQueries: Bool = true // allow top level queries only,
+        allowSubQueries: Bool = true  // allow top level queries only,
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
@@ -457,7 +457,7 @@ public struct BuildTargetSourceRenderer {
 
             let contents = renderer.render(
                 content: content.rawValue.markdown.contents,
-                id: content.slug.contextAwareIdentifier(),
+                typeAwareId: content.typeAwareID,
                 slug: content.slug.value,
                 assetsPath: buildTargetSource.config.contents.assets.path,
                 baseURL: baseURL()
@@ -689,7 +689,8 @@ public struct BuildTargetSourceRenderer {
                     "context": .array(
                         contextBundles.map(
                             \.content.slug.value
-                        ).map { .string($0) }
+                        )
+                        .map { .string($0) }
                     ),
                 ]
             )

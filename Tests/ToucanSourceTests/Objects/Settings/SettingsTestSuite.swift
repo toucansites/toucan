@@ -41,8 +41,8 @@ struct SettingsTestSuite {
     @Test
     func custom() throws {
         let value = """
-        foo: bar
-        """ + "\n"
+            foo: bar
+            """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()

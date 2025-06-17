@@ -22,11 +22,11 @@ struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "toucan-watch",
         abstract: """
-        Toucan Watch Command
-        """,
+            Toucan Watch Command
+            """,
         discussion: """
-        A markdown-based Static Site Generator (SSG) written in Swift.
-        """,
+            A markdown-based Static Site Generator (SSG) written in Swift.
+            """,
         version: GeneratorInfo.current.version
     )
 
@@ -117,7 +117,7 @@ struct Entrypoint: AsyncParsableCommand {
             let last = lastGenerationTime
             let diff = abs(last.timeIntervalSince(now))
 
-            guard diff > Double(seconds) else { // 3 sec treshold
+            guard diff > Double(seconds) else {  // 3 sec treshold
                 logger.trace("Skipping generation due to treshold...")
                 continue
             }

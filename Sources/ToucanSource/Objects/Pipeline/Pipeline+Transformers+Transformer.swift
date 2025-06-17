@@ -51,7 +51,7 @@ public extension Pipeline.Transformers {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.path =
                 (try? container.decode(String.self, forKey: .path))
-                    ?? "/usr/local/bin"
+                ?? "/usr/local/bin"
             self.name = try container.decode(String.self, forKey: .name)
         }
     }

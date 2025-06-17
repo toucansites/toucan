@@ -12,8 +12,9 @@ import ToucanSerialization
 import ToucanSource
 
 private extension Path {
-    func getTypeLocalIdentifier() -> String {
-        let newRawPath = value
+    func getTypeAwareIdentifier() -> String {
+        let newRawPath =
+            value
             .split(separator: "/")
             .last
             .map(String.init) ?? ""
@@ -54,7 +55,7 @@ enum ContentResolverError: ToucanError {
         case let .missingRelation(name, slug):
             "Missing property `\(name)` for content: \(slug)."
         case let .invalidProperty(name, value, slug):
-            "Invalid property `\(name): \(value)` for content: \(value)."
+            "Invalid property `\(name): \(value)` for content: \(slug)."
         case let .unknown(error):
             error.localizedDescription
         }
@@ -69,7 +70,7 @@ enum ContentResolverError: ToucanError {
         case let .missingRelation(name, slug):
             "Missing property `\(name)` for content: `\(slug)`."
         case let .invalidProperty(name, value, slug):
-            "Invalid property `\(name): \(value)` for content: \(value)."
+            "Invalid property `\(name): \(value)` for content: \(slug)."
         case .unknown:
             "Unknown content conversion error."
         }
@@ -109,7 +110,7 @@ struct ContentResolver {
         _ value: inout String
     ) {
         value = value.replacingOccurrences([
-            "{{\(iteratorID)}}": String(pageIndex),
+            "{{\(iteratorID)}}": String(pageIndex)
         ])
     }
 
@@ -189,7 +190,7 @@ struct ContentResolver {
             omittingEmptySubsequences: false
         )
         guard parts.count >= 2 else {
-            return (String(safePath), "") // No extension
+            return (String(safePath), "")  // No extension
         }
 
         let ext = String(parts.last!)
@@ -348,27 +349,25 @@ struct ContentResolver {
         // Filter out reserved keys and schema-mapped fields to extract user-defined fields
         let keysToRemove =
             ["id", "type", "slug"]
-                + contentType.properties.keys
-                + contentType.relations.keys
+            + contentType.properties.keys
+            + contentType.relations.keys
 
         var userDefined = rawContent.markdown.frontMatter
         for key in keysToRemove {
             userDefined.removeValue(forKey: key)
         }
 
-        var typeAwareID = rawContent.origin.path.getTypeLocalIdentifier()
+        var typeAwareID = rawContent.origin.path.getTypeAwareIdentifier()
         if let id = rawContent.markdown.frontMatter.string("id") {
             typeAwareID = id
         }
 
         // Extract `slug` from front matter or fallback to origin slug
         var slug: String = rawContent.origin.slug
-        if
-            let rawSlug = rawContent.markdown.frontMatter.string(
-                "slug",
-                allowingEmptyValue: true
-            )
-        {
+        if let rawSlug = rawContent.markdown.frontMatter.string(
+            "slug",
+            allowingEmptyValue: true
+        ) {
             slug = rawSlug
         }
 
@@ -594,9 +593,8 @@ struct ContentResolver {
 
                 switch property.action {
                 case .add:
-                    if
-                        let originalItems = frontMatter[property.property]?
-                            .arrayValue(as: String.self)
+                    if let originalItems = frontMatter[property.property]?
+                        .arrayValue(as: String.self)
                     {
                         item.properties[property.property] = .init(
                             originalItems + finalAssets
@@ -762,7 +760,7 @@ struct ContentResolver {
                             )
                         )
 
-                    default: // copy
+                    default:  // copy
                         results.append(
                             .init(
                                 source: .assetFile(sourcePath),

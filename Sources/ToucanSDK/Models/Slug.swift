@@ -64,16 +64,6 @@ public struct Slug: Equatable {
             .ensureTrailingSlash()
     }
 
-    // MARK: - Identifier
-
-    /// Extracts the final path component of the slug as a simplified identifier.
-    ///
-    /// Useful for labeling pages or assigning anchor references.
-    ///
-    /// - Returns: The last segment of the slug (e.g., `"welcome"` from `"blog/welcome"`).
-    public func contextAwareIdentifier() -> String {
-        .init(value.split(separator: "/").last ?? "")
-    }
 }
 
 extension Slug: Codable {

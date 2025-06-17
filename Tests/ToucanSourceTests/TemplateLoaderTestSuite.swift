@@ -27,8 +27,8 @@ struct TemplateLoaderTestSuite {
                         File(
                             name: "pages.about.mustache",
                             string: """
-                            about content override
-                            """
+                                about content override
+                                """
                         )
                     }
                 }
@@ -42,27 +42,27 @@ struct TemplateLoaderTestSuite {
                                 File(
                                     name: "default.mustache",
                                     string: """
-                                    default
-                                    """
+                                        default
+                                        """
                                 )
                                 File(
                                     name: "about.mustache",
                                     string: """
-                                    about
-                                    """
+                                        about
+                                        """
                                 )
                                 File(
                                     name: "test.html",
                                     string: """
-                                    test.html
-                                    """
+                                        test.html
+                                        """
                                 )
                             }
                             File(
                                 name: "html.mustache",
                                 string: """
-                                html
-                                """
+                                    html
+                                    """
                             )
                             "README.md"
                         }
@@ -78,14 +78,14 @@ struct TemplateLoaderTestSuite {
                                     File(
                                         name: "default.mustache",
                                         string: """
-                                        default override
-                                        """
+                                            default override
+                                            """
                                     )
                                     File(
                                         name: "about.mustache",
                                         string: """
-                                        about override
-                                        """
+                                            about override
+                                            """
                                     )
                                 }
                                 "README.md"
@@ -115,7 +115,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.components.assets.sorted()
                     == [
-                        "template.css",
+                        "template.css"
                     ]
                     .sorted()
             )
@@ -133,7 +133,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.overrides.assets.sorted()
                     == [
-                        "template.css",
+                        "template.css"
                     ]
                     .sorted()
             )
@@ -149,14 +149,14 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.content.assets.sorted()
                     == [
-                        "style.css",
+                        "style.css"
                     ]
                     .sorted()
             )
             #expect(
                 template.content.views.map(\.path).sorted()
                     == [
-                        "about/pages.about.mustache",
+                        "about/pages.about.mustache"
                     ]
                     .sorted()
             )

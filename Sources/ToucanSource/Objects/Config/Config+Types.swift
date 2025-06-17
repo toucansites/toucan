@@ -63,7 +63,7 @@ public extension Config {
 
             self.path =
                 try container.decodeIfPresent(String.self, forKey: .path)
-                    ?? defaults.path
+                ?? defaults.path
         }
     }
 }

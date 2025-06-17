@@ -217,17 +217,17 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate,
+                .modificationDate: modificationDate
             ],
             string: """
-            ---
-            title: "Hello index.\(ext)"
-            ---
+                ---
+                title: "Hello index.\(ext)"
+                ---
 
-            # Hello index.\(ext)
+                # Hello index.\(ext)
 
-            Lorem ipsum dolor sit amet
-            """
+                Lorem ipsum dolor sit amet
+                """
         )
     }
 
@@ -238,11 +238,11 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate,
+                .modificationDate: modificationDate
             ],
             string: """
-            title: "Hello index.\(ext)"
-            """
+                title: "Hello index.\(ext)"
+                """
         )
     }
 
@@ -263,7 +263,7 @@ struct RawContentLoaderTestSuite {
             origin: testBlogArticleOrigin(),
             markdown: .init(
                 frontMatter: [
-                    "title": "Hello index.\(ext)",
+                    "title": "Hello index.\(ext)"
                 ],
                 contents: emptyContents
                     ? ""
@@ -378,13 +378,13 @@ struct RawContentLoaderTestSuite {
                 origin: testBlogArticleOrigin(),
                 markdown: .init(
                     frontMatter: [
-                        "title": "Hello index.yml",
+                        "title": "Hello index.yml"
                     ],
                     contents: """
-                    # Hello index.md
+                        # Hello index.md
 
-                    Lorem ipsum dolor sit amet
-                    """
+                        Lorem ipsum dolor sit amet
+                        """
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: [
@@ -433,10 +433,10 @@ struct RawContentLoaderTestSuite {
                     markdown: .init(
                         frontMatter: ["title": "Hello index.md"],
                         contents: """
-                        # Hello index.md
+                            # Hello index.md
 
-                        Lorem ipsum dolor sit amet
-                        """
+                            Lorem ipsum dolor sit amet
+                            """
                     ),
                     lastModificationDate: now.timeIntervalSince1970,
                     assets: []

@@ -38,11 +38,11 @@ extension MarkdownFile: BuildableItem {
             .init(
                 name: name + "." + ext,
                 string: """
-                ---
-                \(yml)
-                ---
-                \(markdown.contents)
-                """
+                    ---
+                    \(yml)
+                    ---
+                    \(markdown.contents)
+                    """
             )
         )
     }

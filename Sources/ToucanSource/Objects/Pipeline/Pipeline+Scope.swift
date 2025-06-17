@@ -51,7 +51,7 @@ public extension Pipeline {
         /// The default fallback scope set, applied to all content types via the `*` wildcard.
         public static var `default`: [String: [String: Scope]] {
             [
-                "*": standard,
+                "*": standard
             ]
         }
 
@@ -94,10 +94,10 @@ public extension Pipeline {
 
             let context =
                 try container.decodeIfPresent(Context.self, forKey: .context)
-                    ?? .detail
+                ?? .detail
             let fields =
                 try container.decodeIfPresent([String].self, forKey: .fields)
-                    ?? []
+                ?? []
 
             self.init(context: context, fields: fields)
         }

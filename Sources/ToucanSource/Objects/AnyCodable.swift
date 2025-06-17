@@ -59,11 +59,9 @@ public struct AnyCodable: Codable {
         else if let array = try? container.decode([AnyCodable].self) {
             self.init(array.map(\.value))
         }
-        else if
-            let dictionary = try? container.decode(
-                [String: AnyCodable].self
-            )
-        {
+        else if let dictionary = try? container.decode(
+            [String: AnyCodable].self
+        ) {
             self.init(dictionary.mapValues { $0 })
         }
         else {
@@ -306,7 +304,7 @@ extension AnyCodable: Hashable {
         case let value as [AnyCodable]:
             hasher.combine(value)
         default:
-            break // Non-hashable values are ignored
+            break  // Non-hashable values are ignored
         }
     }
 }
