@@ -1,12 +1,12 @@
 --swiftversion 6
 
-
 --indent 4
 --maxwidth 80
 --trimwhitespace always
 --self init-only
 --elseposition next-line
 --guardelse next-line
+--ranges nospace
 
 --wraparguments before-first
 --wrapparameters before-first

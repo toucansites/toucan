@@ -7,11 +7,12 @@
 
 import Foundation
 import Logging
-import ToucanSerialization
 import ToucanCore
+import ToucanSerialization
 
 /// A utility to load and decode objects from files using a specified set of encoders and decoders.
 public struct ObjectLoader {
+    // MARK: - Properties
 
     /// The base directory where the files are located.
     let url: URL
@@ -27,6 +28,8 @@ public struct ObjectLoader {
 
     /// Logger instance for emitting debug output during loading.
     let logger: Logger
+
+    // MARK: - Lifecycle
 
     /// Initializes a new `ObjectLoader` instance.
     ///
@@ -50,6 +53,8 @@ public struct ObjectLoader {
         self.logger = logger
     }
 
+    // MARK: - Functions
+
     /// Loads and decodes each file separately into an array of the specified type.
     ///
     /// - Parameter value: The `Codable` type to decode each file into.
@@ -62,21 +67,21 @@ public struct ObjectLoader {
             "Loading each \(type(of: value)) files (\(locations)) at: `\(url.absoluteString)`"
         )
 
-        var lastUrl: URL?
+        var lastURL: URL?
         do {
             return
                 try locations
-                .map {
-                    let fileUrl = url.appendingPathComponent($0)
-                    lastUrl = fileUrl
-                    return fileUrl
-                }
-                .map { try Data(contentsOf: $0) }
-                .map { try decoder.decode(T.self, from: $0) }
+                    .map {
+                        let fileURL = url.appendingPathComponent($0)
+                        lastURL = fileURL
+                        return fileURL
+                    }
+                    .map { try Data(contentsOf: $0) }
+                    .map { try decoder.decode(T.self, from: $0) }
         }
         catch {
             throw .init(
-                url: lastUrl ?? url,
+                url: lastURL ?? url,
                 error: error
             )
         }
@@ -94,26 +99,30 @@ public struct ObjectLoader {
             "Loading and combining \(type(of: value)) files (\(locations)) at: `\(url.absoluteString)`"
         )
 
-        var lastUrl: URL?
+        var lastURL: URL?
         do {
             let combinedRawCodableObject =
                 try locations
-                .map {
-                    let fileUrl = url.appendingPathComponent($0)
-                    lastUrl = fileUrl
-                    return fileUrl
-                }
-                .map { try Data(contentsOf: $0) }
-                .map { try decoder.decode([String: AnyCodable].self, from: $0) }
-                .reduce([:]) { $0.recursivelyMerged(with: $1) }
+                    .map {
+                        let fileURL = url.appendingPathComponent($0)
+                        lastURL = fileURL
+                        return fileURL
+                    }
+                    .map { try Data(contentsOf: $0) }
+                    .map {
+                        try decoder.decode(
+                            [String: AnyCodable].self,
+                            from: $0
+                        )
+                    }
+                    .reduce([:]) { $0.recursivelyMerged(with: $1) }
 
             let data: Data = try encoder.encode(combinedRawCodableObject)
             return try decoder.decode(T.self, from: data)
-
         }
         catch {
             throw .init(
-                url: lastUrl ?? url,
+                url: lastURL ?? url,
                 error: error
             )
         }

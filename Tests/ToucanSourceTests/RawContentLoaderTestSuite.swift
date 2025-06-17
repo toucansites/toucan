@@ -5,21 +5,20 @@
 //  Created by Tibor Bödecs on 2025. 05. 19..
 //
 
-import Testing
-import Foundation
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import Foundation
 import Logging
+import Testing
+import ToucanSerialization
 
 @testable import ToucanSource
 
 @Suite
 struct RawContentLoaderTestSuite {
-
     private func testSourceContentsHierarchy(
-        @FileManagerPlayground.DirectoryBuilder
-        _ builder: () -> [FileManagerPlayground.Item]
+        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+            [FileManagerPlayground.Item]
     ) -> Directory {
         Directory(name: "src") {
             Directory(name: "contents", builder)
@@ -36,11 +35,11 @@ struct RawContentLoaderTestSuite {
         let decoder = ToucanYAMLDecoder()
         let config = Config.defaults
         let locations = BuiltTargetSourceLocations(
-            sourceUrl: url,
+            sourceURL: url,
             config: config
         )
         let loader = RawContentLoader(
-            contentsURL: locations.contentsUrl,
+            contentsURL: locations.contentsURL,
             assetsPath: config.contents.assets.path,
             decoder: .init(),
             markdownParser: .init(decoder: decoder),
@@ -48,6 +47,43 @@ struct RawContentLoaderTestSuite {
             logger: logger
         )
         return loader
+    }
+
+    // MARK: - locate origin index file types
+
+    private func testBlogArticleHierarchy(
+        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+            [FileManagerPlayground.Item]
+    ) -> Directory {
+        testSourceContentsHierarchy {
+            Directory(name: "blog") {
+                Directory(name: "articles") {
+                    "noindex.yaml"
+                    Directory(name: "first-beta-release", builder)
+                }
+            }
+        }
+    }
+
+    private func testBlogArticleOrigin() -> Origin {
+        .init(
+            path: .init("blog/articles/first-beta-release"),
+            slug: "blog/first-beta-release",
+        )
+    }
+
+    private func testExpectationRequirements(
+        fileManager: FileManagerKit,
+        url: URL
+    ) throws {
+        let loader = testRawContentLoader(fileManager: fileManager, url: url)
+        let results = loader.locateOrigins()
+        #expect(results.count == 1)
+
+        let result = try #require(results.first)
+        let expected = testBlogArticleOrigin()
+
+        #expect(result == expected)
     }
 
     // MARK: - origins
@@ -132,7 +168,6 @@ struct RawContentLoaderTestSuite {
                         }
                     }
                 }
-
             }
         }
         .test {
@@ -153,43 +188,6 @@ struct RawContentLoaderTestSuite {
         }
     }
 
-    // MARK: - locate origin index file types
-
-    private func testBlogArticleHierarchy(
-        @FileManagerPlayground.DirectoryBuilder
-        _ builder: () -> [FileManagerPlayground.Item]
-    ) -> Directory {
-        testSourceContentsHierarchy {
-            Directory(name: "blog") {
-                Directory(name: "articles") {
-                    "noindex.yaml"
-                    Directory(name: "first-beta-release", builder)
-                }
-            }
-        }
-    }
-
-    private func testBlogArticleOrigin() -> Origin {
-        .init(
-            path: .init("blog/articles/first-beta-release"),
-            slug: "blog/first-beta-release",
-        )
-    }
-
-    private func testExpectationRequirements(
-        fileManager: FileManagerKit,
-        url: URL
-    ) throws {
-        let loader = testRawContentLoader(fileManager: fileManager, url: url)
-        let results = loader.locateOrigins()
-        #expect(results.count == 1)
-
-        let result = try #require(results.first)
-        let expected = testBlogArticleOrigin()
-
-        #expect(result == expected)
-    }
-
     @Test(
         arguments: [
             ["index.md"],
@@ -203,7 +201,7 @@ struct RawContentLoaderTestSuite {
     )
     func locateFiles(files: [String]) async throws {
         try FileManagerPlayground {
-            testBlogArticleHierarchy({ files.map { .file(.init(name: $0)) } })
+            testBlogArticleHierarchy { files.map { .file(.init(name: $0)) } }
         }
         .test {
             try testExpectationRequirements(fileManager: $0, url: $1)
@@ -219,17 +217,17 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate
+                .modificationDate: modificationDate,
             ],
             string: """
-                ---
-                title: "Hello index.\(ext)"
-                ---
+            ---
+            title: "Hello index.\(ext)"
+            ---
 
-                # Hello index.\(ext)
+            # Hello index.\(ext)
 
-                Lorem ipsum dolor sit amet
-                """
+            Lorem ipsum dolor sit amet
+            """
         )
     }
 
@@ -240,11 +238,11 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate
+                .modificationDate: modificationDate,
             ],
             string: """
-                title: "Hello index.\(ext)"
-                """
+            title: "Hello index.\(ext)"
+            """
         )
     }
 
@@ -265,7 +263,7 @@ struct RawContentLoaderTestSuite {
             origin: testBlogArticleOrigin(),
             markdown: .init(
                 frontMatter: [
-                    "title": "Hello index.\(ext)"
+                    "title": "Hello index.\(ext)",
                 ],
                 contents: emptyContents
                     ? ""
@@ -380,13 +378,13 @@ struct RawContentLoaderTestSuite {
                 origin: testBlogArticleOrigin(),
                 markdown: .init(
                     frontMatter: [
-                        "title": "Hello index.yml"
+                        "title": "Hello index.yml",
                     ],
                     contents: """
-                        # Hello index.md
+                    # Hello index.md
 
-                        Lorem ipsum dolor sit amet
-                        """
+                    Lorem ipsum dolor sit amet
+                    """
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
                 assets: [
@@ -435,10 +433,10 @@ struct RawContentLoaderTestSuite {
                     markdown: .init(
                         frontMatter: ["title": "Hello index.md"],
                         contents: """
-                            # Hello index.md
+                        # Hello index.md
 
-                            Lorem ipsum dolor sit amet
-                            """
+                        Lorem ipsum dolor sit amet
+                        """
                     ),
                     lastModificationDate: now.timeIntervalSince1970,
                     assets: []
@@ -460,5 +458,4 @@ struct RawContentLoaderTestSuite {
             #expect(results == expected)
         }
     }
-
 }

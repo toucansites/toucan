@@ -5,21 +5,19 @@
 //  Created by Tibor Bödecs on 2025. 02. 19..
 //
 
-import Markdown
 import Logging
+import Markdown
 import ToucanCore
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
 private extension Markup {
-
     var isInsideList: Bool {
         self is ListItemContainer || parent?.isInsideList == true
     }
 }
 
 private extension [DirectiveArgument] {
-
     func getFirstValueBy(key name: String) -> String? {
         first(where: { $0.name == name })?.value
     }
@@ -28,31 +26,38 @@ private extension [DirectiveArgument] {
 // MARK: - HTML visitor
 
 struct HTMLVisitor: MarkupVisitor {
+    // MARK: - Nested Types
 
     typealias Result = String
+
+    // MARK: - Properties
 
     var customBlockDirectives: [MarkdownBlockDirective]
     var paragraphStyles: [String: [String]]
     var logger: Logger
     var slug: String
     var assetsPath: String
-    var baseUrl: String
+    var baseURL: String
+
+    // MARK: - Lifecycle
 
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: [String: [String]],
         slug: String,
         assetsPath: String,
-        baseUrl: String,
+        baseURL: String,
         logger: Logger = .init(label: "HTMLVisitor"),
     ) {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
         self.slug = slug
         self.assetsPath = assetsPath
-        self.baseUrl = baseUrl
+        self.baseURL = baseURL
         self.logger = logger
     }
+
+    // MARK: - Functions
 
     // MARK: - visitor functions
 
@@ -93,19 +98,19 @@ struct HTMLVisitor: MarkupVisitor {
     // MARK: - simple HTML elements
 
     mutating func visitSoftBreak(
-        _ softBreak: SoftBreak
+        _: SoftBreak
     ) -> Result {
         HTML(name: "br", type: .short).render()
     }
 
     mutating func visitLineBreak(
-        _ lineBreak: LineBreak
+        _: LineBreak
     ) -> Result {
         HTML(name: "br", type: .short).render()
     }
 
     mutating func visitThematicBreak(
-        _ thematicBreak: ThematicBreak
+        _: ThematicBreak
     ) -> Result {
         HTML(name: "hr", type: .short).render()
     }
@@ -155,13 +160,13 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitParagraph(
         _ paragraph: Paragraph
     ) -> Result {
-
         let filterBlocks =
             customBlockDirectives
-            .filter { $0.removesChildParagraph ?? false }
-            .map(\.name)
+                .filter { $0.removesChildParagraph ?? false }
+                .map(\.name)
 
-        if let block = paragraph.parent as? BlockDirective,
+        if
+            let block = paragraph.parent as? BlockDirective,
             filterBlocks.contains(block.name.lowercased())
         {
             return visit(paragraph.children)
@@ -213,11 +218,11 @@ struct HTMLVisitor: MarkupVisitor {
         let pTagCount = 3
         let contents =
             paragraph.prefix(pTagCount)
-            + paragraph.dropFirst(pTagCount).dropFirst(dropCount)
+                + paragraph.dropFirst(pTagCount).dropFirst(dropCount)
         return HTML(
             name: "blockquote",
             attributes: [
-                .init(key: "class", value: type)
+                .init(key: "class", value: type),
             ],
             contents: String(contents)
         )
@@ -244,9 +249,9 @@ struct HTMLVisitor: MarkupVisitor {
                     [
                         #"<"#: #"&lt;"#,
                         #">"#: #"&gt;"#,
-                            //#"&"#: #"&amp;"#,
-                            //#"'"#: #"&apos;"#,
-                            //#"""#: #"&quot;"#,
+                        // #"&"#: #"&amp;"#,
+                        // #"'"#: #"&apos;"#,
+                        // #"""#: #"&quot;"#,
                     ]
                 )
                 .replacingOccurrences(
@@ -264,13 +269,11 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitHeading(
         _ heading: Heading
     ) -> Result {
-
         var attributes: [HTML.Attribute] = []
         if [2, 3].contains(heading.level) {
             let fragment = heading.plainText.lowercased().slugify()
             let id = HTML.Attribute(key: "id", value: "\(fragment)")
             attributes.append(id)
-
         }
         return HTML(
             name: "h\(heading.level)",
@@ -286,7 +289,6 @@ struct HTMLVisitor: MarkupVisitor {
         var attributes: [HTML.Attribute] = []
 
         if let destination = link.destination {
-
             let anchorPrefix = "#[name]"
             if destination.hasPrefix(anchorPrefix) {
                 attributes.append(
@@ -300,7 +302,7 @@ struct HTMLVisitor: MarkupVisitor {
                 var hrefDestination = destination
                 if destination.hasPrefix("/") {
                     hrefDestination =
-                        "\(baseUrl.ensureTrailingSlash())\(destination.dropFirst())"
+                        "\(baseURL.ensureTrailingSlash())\(destination.dropFirst())"
                 }
                 attributes.append(
                     .init(
@@ -310,7 +312,8 @@ struct HTMLVisitor: MarkupVisitor {
                 )
             }
 
-            if !destination.hasPrefix("."),
+            if
+                !destination.hasPrefix("."),
                 !destination.hasPrefix("/"),
                 !destination.hasPrefix("#")
             {
@@ -336,7 +339,7 @@ struct HTMLVisitor: MarkupVisitor {
             return ""
         }
         let imagePath = source.resolveAsset(
-            baseUrl: baseUrl,
+            baseURL: baseURL,
             assetsPath: assetsPath,
             slug: slug
         )
@@ -405,8 +408,8 @@ struct HTMLVisitor: MarkupVisitor {
         guard parseErrors.isEmpty else {
             let errors =
                 parseErrors
-                .map { String(describing: $0) }
-                .joined(separator: ", ")
+                    .map { String(describing: $0) }
+                    .joined(separator: ", ")
             logger.warning("\(errors)")
             return ""
         }
@@ -468,15 +471,14 @@ struct HTMLVisitor: MarkupVisitor {
         }
 
         if let name = block.tag {
-
             let attributes: [HTML.Attribute] =
                 block.attributes?
-                .map { a in
-                    .init(
-                        key: a.name,
-                        value: a.value.replacingOccurrences(templateParams)
-                    )
-                } ?? []
+                    .map { a in
+                        .init(
+                            key: a.name,
+                            value: a.value.replacingOccurrences(templateParams)
+                        )
+                    } ?? []
 
             return HTML(
                 name: name,
@@ -487,5 +489,4 @@ struct HTMLVisitor: MarkupVisitor {
         }
         return ""
     }
-
 }

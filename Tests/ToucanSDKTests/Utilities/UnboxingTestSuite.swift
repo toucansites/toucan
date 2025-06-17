@@ -5,13 +5,13 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 05. 09..
 //
 //
-//import Foundation
-//import Testing
+// import Foundation
+// import Testing
 //
-//import ToucanMarkdown
+// import ToucanMarkdown
 //
-//@Suite
-//struct UnboxingTests {
+// @Suite
+// struct UnboxingTests {
 //
 //    @Test
 //    func unboxing() throws {
@@ -46,7 +46,7 @@
 //                            )
 //                        ),
 //                        "description": AnyCodable(
-//                            "Migration guide for Toucan Beta 3: covering changes to content structure, theme changes and rendering features."
+//                            "Migration guide for Toucan Beta 3: covering changes to content structure, template changes and rendering features."
 //                        ),
 //                        "featured": AnyCodable(true),
 //                        "contents": AnyCodable([
@@ -68,9 +68,9 @@
 //                                    Optional(
 //                                        Outline(
 //                                            level: 2,
-//                                            text: "Changes in theme",
+//                                            text: "Changes in templates",
 //                                            fragment: Optional(
-//                                                "changes-in-theme"
+//                                                "changes-in-templates"
 //                                            ),
 //                                            children: []
 //                                        )
@@ -193,4 +193,4 @@
 //        )
 //        #expect(publicationDateFull == "Tuesday, April 15, 2025")
 //    }
-//}
+// }

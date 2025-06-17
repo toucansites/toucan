@@ -5,29 +5,28 @@
 //  Created by Tibor Bödecs on 2025. 05. 12..
 //
 
-import Foundation
 import DartSass
+import Foundation
 
 struct CompileSASSBehavior: Behavior {
+    // MARK: - Static Properties
 
     static let id = "compile-sass"
 
+    // MARK: - Properties
+
     var compiler: Compiler
+
+    // MARK: - Lifecycle
 
     init() throws {
         self.compiler = try .init()
     }
 
-    func run(fileUrl: URL) throws -> String {
-
-        let css = unsafeSyncCompile(fileUrl: fileUrl)
-
-        return css
-    }
+    // MARK: - Functions
 
     /// NOTE: This is horrible... but we can live with it for a while :)
-    private func unsafeSyncCompile(fileUrl: URL) -> String {
-
+    private func unsafeSyncCompile(fileURL: URL) -> String {
         final class Enclosure: @unchecked Sendable {
             var value: CompilerResults!
         }
@@ -39,11 +38,11 @@ struct CompileSASSBehavior: Behavior {
             do {
                 enclosure.value =
                     try await compiler.compile(
-                        fileURL: fileUrl
+                        fileURL: fileURL
                     )
             }
             catch {
-                fatalError("\(error) - \(fileUrl.path())")
+                fatalError("\(error) - \(fileURL.path())")
             }
 
             semaphore.signal()
@@ -51,5 +50,11 @@ struct CompileSASSBehavior: Behavior {
 
         semaphore.wait()
         return enclosure.value.css
+    }
+
+    func run(fileURL: URL) throws -> String {
+        let css = unsafeSyncCompile(fileURL: fileURL)
+
+        return css
     }
 }

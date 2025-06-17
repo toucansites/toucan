@@ -11,13 +11,14 @@
 /// to its author or related articles. It includes the type of relation,
 /// reference key(s), and optional ordering rules.
 public struct Relation: Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
     /// Keys used to decode the relation from serialized formats like JSON or YAML.
     enum CodingKeys: CodingKey {
         case references
-        case `type`
+        case type
         case order
     }
 
@@ -29,10 +30,12 @@ public struct Relation: Codable, Equatable {
     public var references: String
 
     /// The type of relation, describing how the content is linked (e.g., one-to-one, many-to-one).
-    public var `type`: RelationType
+    public var type: RelationType
 
     /// Optional sorting logic to apply to related content (e.g., by date or title).
     public var order: Order?
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -48,7 +51,7 @@ public struct Relation: Codable, Equatable {
         order: Order? = nil
     ) {
         self.references = references
-        self.`type` = relationType
+        self.type = relationType
         self.order = order
     }
 

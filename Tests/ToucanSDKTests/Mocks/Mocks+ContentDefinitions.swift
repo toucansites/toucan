@@ -8,13 +8,12 @@
 import ToucanSource
 
 extension Mocks.ContentDefinitions {
-
     static func page() -> ContentDefinition {
         .init(
             id: "page",
             default: true,
             paths: [
-                "pages"
+                "pages",
             ],
             properties: [
                 "draft": .init(
@@ -40,7 +39,7 @@ extension Mocks.ContentDefinitions {
         .init(
             id: "author",
             paths: [
-                "blog/authors"
+                "blog/authors",
             ],
             properties: [
                 "draft": .init(
@@ -83,9 +82,9 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .desc
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         )
     }
@@ -94,7 +93,7 @@ extension Mocks.ContentDefinitions {
         .init(
             id: "tag",
             paths: [
-                "blog/tags"
+                "blog/tags",
             ],
             properties: [
                 "draft": .init(
@@ -125,9 +124,9 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .desc
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         )
     }
@@ -136,7 +135,7 @@ extension Mocks.ContentDefinitions {
         .init(
             id: "post",
             paths: [
-                "blog/posts"
+                "blog/posts",
             ],
             properties: [
                 "draft": .init(
@@ -211,7 +210,7 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .desc
-                        )
+                        ),
                     ]
                 ),
 
@@ -227,7 +226,7 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "publication",
                             direction: .asc
-                        )
+                        ),
                     ]
                 ),
                 "related": .init(
@@ -279,7 +278,7 @@ extension Mocks.ContentDefinitions {
         .init(
             id: "category",
             paths: [
-                "docs/categories"
+                "docs/categories",
             ],
             properties: [
                 "draft": .init(
@@ -315,9 +314,9 @@ extension Mocks.ContentDefinitions {
                         .init(
                             key: "order",
                             direction: .asc
-                        )
+                        ),
                     ]
-                )
+                ),
             ]
         )
     }
@@ -326,7 +325,7 @@ extension Mocks.ContentDefinitions {
         .init(
             id: "guide",
             paths: [
-                "docs/guides"
+                "docs/guides",
             ],
             properties: [
                 "draft": .init(
@@ -352,7 +351,7 @@ extension Mocks.ContentDefinitions {
                 "category": .init(
                     references: "category",
                     relationType: .one
-                )
+                ),
             ],
             queries: [:]
         )

@@ -9,7 +9,7 @@ enum Mocks {
     enum ContentDefinitions {}
     enum RawContents {}
     enum Pipelines {}
-    enum Templates {}
+    enum Views {}
     enum Blocks {}
     enum E2E {}
 }

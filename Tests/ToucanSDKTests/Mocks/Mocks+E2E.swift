@@ -5,13 +5,12 @@
 //  Created by Tibor Bödecs on 2025. 06. 08..
 //
 
-import Foundation
 import FileManagerKitBuilder
-import ToucanSource
+import Foundation
 import ToucanSDK
+import ToucanSource
 
 extension Mocks.E2E {
-
     static func types(
         postType: ContentDefinition
     ) -> Directory {
@@ -81,52 +80,52 @@ extension Mocks.E2E {
         }
     }
 
-    static func themes(
+    static func templates(
         debugContext: String
     ) -> Directory {
-        Directory(name: "themes") {
+        Directory(name: "templates") {
             Directory(name: "default") {
                 Directory(name: "assets") {
                     Directory(name: "css") {
                         File(
-                            name: "theme.css",
+                            name: "template.css",
                             string: """
-                                body { background: #000; }
-                                """
+                            body { background: #000; }
+                            """
                         )
                     }
                 }
-                Directory(name: "templates") {
+                Directory(name: "views") {
                     MustacheFile(
                         name: "test",
-                        template: Mocks.Templates.page()
+                        template: Mocks.Views.page()
                     )
                     Directory(name: "docs") {
                         Directory(name: "category") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.category()
+                                template: Mocks.Views.category()
                             )
                         }
                         Directory(name: "guide") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.guide()
+                                template: Mocks.Views.guide()
                             )
                         }
                     }
                     Directory(name: "pages") {
                         MustacheFile(
                             name: "default",
-                            template: Mocks.Templates.page()
+                            template: Mocks.Views.page()
                         )
                         MustacheFile(
                             name: "404",
-                            template: Mocks.Templates.notFound()
+                            template: Mocks.Views.notFound()
                         )
                         MustacheFile(
                             name: "context",
-                            template: Mocks.Templates.context(
+                            template: Mocks.Views.context(
                                 value: debugContext
                             )
                         )
@@ -135,19 +134,19 @@ extension Mocks.E2E {
                         Directory(name: "tag") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.tag()
+                                template: Mocks.Views.tag()
                             )
                         }
                         Directory(name: "post") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.post()
+                                template: Mocks.Views.post()
                             )
                         }
                         Directory(name: "author") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Templates.author()
+                                template: Mocks.Views.author()
                             )
                         }
                     }
@@ -155,43 +154,43 @@ extension Mocks.E2E {
                         Directory(name: "blog") {
                             MustacheFile(
                                 name: "author",
-                                template: Mocks.Templates.partialAuthor()
+                                template: Mocks.Views.partialAuthor()
                             )
                             MustacheFile(
                                 name: "tag",
-                                template: Mocks.Templates.partialTag()
+                                template: Mocks.Views.partialTag()
                             )
                             MustacheFile(
                                 name: "post",
-                                template: Mocks.Templates.partialPost()
+                                template: Mocks.Views.partialPost()
                             )
                         }
                         Directory(name: "docs") {
                             MustacheFile(
                                 name: "category",
-                                template: Mocks.Templates.partialCategory()
+                                template: Mocks.Views.partialCategory()
                             )
                             MustacheFile(
                                 name: "guide",
-                                template: Mocks.Templates.partialGuide()
+                                template: Mocks.Views.partialGuide()
                             )
                         }
                     }
                     MustacheFile(
                         name: "html",
-                        template: Mocks.Templates.html()
+                        template: Mocks.Views.html()
                     )
                     MustacheFile(
                         name: "redirect",
-                        template: Mocks.Templates.redirect()
+                        template: Mocks.Views.redirect()
                     )
                     MustacheFile(
                         name: "rss",
-                        template: Mocks.Templates.rss()
+                        template: Mocks.Views.rss()
                     )
                     MustacheFile(
                         name: "sitemap",
-                        template: Mocks.Templates.sitemap()
+                        template: Mocks.Views.sitemap()
                     )
                 }
             }
@@ -202,7 +201,6 @@ extension Mocks.E2E {
         now: Date,
         debugContext: String = "{{.}}"
     ) -> Directory {
-
         let config: Config = .defaults
 
         let formatter = ToucanInputDateFormatter(
@@ -301,17 +299,17 @@ extension Mocks.E2E {
                                 now: now,
                                 // near past
                                 publication: formatter.string(
-                                    from: now.addingTimeInterval(-86_400),
+                                    from: now.addingTimeInterval(-86400),
                                     using: publicationConfig
                                 ),
                                 // near future
                                 expiration: formatter.string(
-                                    from: now.addingTimeInterval(86_400),
+                                    from: now.addingTimeInterval(86400),
                                     using: expirationConfig
                                 ),
                                 featured: false,
-                                authorIds: [1, 2],
-                                tagIds: [1, 2]
+                                authorIDs: [1, 2],
+                                tagIDs: [1, 2]
                             )
                         )
                         RawContentBundle(
@@ -322,20 +320,20 @@ extension Mocks.E2E {
                                 // past
                                 publication: formatter.string(
                                     from: now.addingTimeInterval(
-                                        -86_400 * 2
+                                        -86400 * 2
                                     ),
                                     using: publicationConfig
                                 ),
                                 // future
                                 expiration: formatter.string(
                                     from: now.addingTimeInterval(
-                                        86_400 * 2
+                                        86400 * 2
                                     ),
                                     using: expirationConfig
                                 ),
                                 featured: true,
-                                authorIds: [1, 2, 3],
-                                tagIds: [2]
+                                authorIDs: [1, 2, 3],
+                                tagIDs: [2]
                             )
                         )
                         RawContentBundle(
@@ -346,20 +344,20 @@ extension Mocks.E2E {
                                 // distant past
                                 publication: formatter.string(
                                     from: now.addingTimeInterval(
-                                        -86_400 * 3
+                                        -86400 * 3
                                     ),
                                     using: publicationConfig
                                 ),
                                 // distant future
                                 expiration: formatter.string(
                                     from: now.addingTimeInterval(
-                                        86_400 * 3
+                                        86400 * 3
                                     ),
                                     using: expirationConfig
                                 ),
                                 featured: false,
-                                authorIds: [2, 3],
-                                tagIds: [2, 3]
+                                authorIDs: [2, 3],
+                                tagIDs: [2, 3]
                             )
                         )
                         Directory(name: "pages") {
@@ -441,7 +439,7 @@ extension Mocks.E2E {
                             name: "guide-1",
                             rawContent: Mocks.RawContents.guide(
                                 id: 1,
-                                categoryId: 1,
+                                categoryID: 1,
                                 now: now
                             )
                         )
@@ -449,7 +447,7 @@ extension Mocks.E2E {
                             name: "guide-2",
                             rawContent: Mocks.RawContents.guide(
                                 id: 2,
-                                categoryId: 1,
+                                categoryID: 1,
                                 now: now
                             )
                         )
@@ -457,7 +455,7 @@ extension Mocks.E2E {
                             name: "guide-3",
                             rawContent: Mocks.RawContents.guide(
                                 id: 3,
-                                categoryId: 1,
+                                categoryID: 1,
                                 now: now
                             )
                         )
@@ -465,7 +463,7 @@ extension Mocks.E2E {
                             name: "guide-4",
                             rawContent: Mocks.RawContents.guide(
                                 id: 4,
-                                categoryId: 2,
+                                categoryID: 2,
                                 now: now
                             )
                         )
@@ -473,7 +471,7 @@ extension Mocks.E2E {
                             name: "guide-5",
                             rawContent: Mocks.RawContents.guide(
                                 id: 5,
-                                categoryId: 2,
+                                categoryID: 2,
                                 now: now
                             )
                         )
@@ -481,7 +479,7 @@ extension Mocks.E2E {
                             name: "guide-6",
                             rawContent: Mocks.RawContents.guide(
                                 id: 6,
-                                categoryId: 2,
+                                categoryID: 2,
                                 now: now
                             )
                         )
@@ -489,7 +487,7 @@ extension Mocks.E2E {
                             name: "guide-7",
                             rawContent: Mocks.RawContents.guide(
                                 id: 7,
-                                categoryId: 3,
+                                categoryID: 3,
                                 now: now
                             )
                         )
@@ -497,7 +495,7 @@ extension Mocks.E2E {
                             name: "guide-8",
                             rawContent: Mocks.RawContents.guide(
                                 id: 8,
-                                categoryId: 3,
+                                categoryID: 3,
                                 now: now
                             )
                         )
@@ -505,7 +503,7 @@ extension Mocks.E2E {
                             name: "guide-9",
                             rawContent: Mocks.RawContents.guide(
                                 id: 9,
-                                categoryId: 3,
+                                categoryID: 3,
                                 now: now
                             )
                         )
@@ -515,8 +513,7 @@ extension Mocks.E2E {
             Mocks.E2E.types(postType: postType)
             Mocks.E2E.pipelines()
             Mocks.E2E.blocks()
-            Mocks.E2E.themes(debugContext: debugContext)
+            Mocks.E2E.templates(debugContext: debugContext)
         }
     }
-
 }

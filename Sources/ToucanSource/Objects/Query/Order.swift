@@ -9,6 +9,7 @@
 ///
 /// Each `Order` defines a content field to sort by and the direction of sorting.
 public struct Order: Sendable, Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -26,6 +27,8 @@ public struct Order: Sendable, Codable, Equatable {
 
     /// The direction to sort the field (`asc` or `desc`).
     public var direction: Direction
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 
@@ -54,13 +57,15 @@ public struct Order: Sendable, Codable, Equatable {
         let key = try container.decode(String.self, forKey: .key)
         let direction =
             try container.decodeIfPresent(Direction.self, forKey: .direction)
-            ?? .defaults
+                ?? .defaults
 
         self.init(
             key: key,
             direction: direction
         )
     }
+
+    // MARK: - Functions
 
     /// Encodes this `Order` instance into the given encoder.
     ///

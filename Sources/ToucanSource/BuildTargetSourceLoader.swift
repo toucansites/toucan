@@ -5,9 +5,9 @@
 //  Created by Tibor Bödecs on 2025. 04. 04..
 //
 
+import FileManagerKit
 import Foundation
 import Logging
-import FileManagerKit
 import ToucanCore
 import ToucanSerialization
 
@@ -15,9 +15,10 @@ import ToucanSerialization
 ///
 /// Uses dependency-injected tools to fetch, decode, and construct structured data from source files.
 public struct BuildTargetSourceLoader {
+    // MARK: - Properties
 
     /// The URL of the root source directory.
-    var sourceUrl: URL
+    var sourceURL: URL
     /// Metadata describing the current build target.
     var target: Target
 
@@ -31,26 +32,28 @@ public struct BuildTargetSourceLoader {
     /// Logger instance for emitting structured debug information.
     var logger: Logger
 
+    // MARK: - Lifecycle
+
     // MARK: -
 
     /// Initializes a new instance of `BuildTargetSourceLoader`.
     ///
     /// - Parameters:
-    ///   - sourceUrl: The root directory containing source files.
+    ///   - sourceURL: The root directory containing source files.
     ///   - target: The build target metadata.
     ///   - fileManager: File system access helper.
     ///   - encoder: The encoder used for serialization.
     ///   - decoder: The decoder used for deserialization.
     ///   - logger: Optional logger for debugging and diagnostics.
     public init(
-        sourceUrl: URL,
+        sourceURL: URL,
         target: Target,
         fileManager: FileManagerKit,
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
         logger: Logger = .subsystem("source-loader")
     ) {
-        self.sourceUrl = sourceUrl
+        self.sourceURL = sourceURL
         self.target = target
         self.fileManager = fileManager
         self.encoder = encoder
@@ -58,32 +61,7 @@ public struct BuildTargetSourceLoader {
         self.logger = logger
     }
 
-    /// Loads and processes source content from the specified source URL.
-    /// This function retrieves configuration, settings, content definitions, block directives,
-    /// and raw contents, then transforms them into structured content.
-    ///
-    /// - Returns: A `BuildTargetSource` containing the loaded and processed data.
-    /// - Throws: An error if any of the loading operations fail.
-    public func load() throws(SourceLoaderError) -> BuildTargetSource {
-        let config = try loadConfig()
-        let locations = getLocations(using: config)
-        let settings = try loadSettings(using: locations)
-        let pipelines = try loadPipelines(using: locations)
-        let types = try loadTypes(using: locations)
-        let blocks = try loadBlocks(using: locations)
-        let rawContents = try loadRawContents(using: config)
-
-        return .init(
-            locations: locations,
-            target: target,
-            config: config,
-            settings: settings,
-            pipelines: pipelines,
-            contentDefinitions: types,
-            rawContents: rawContents,
-            blockDirectives: blocks
-        )
-    }
+    // MARK: - Functions
 
     /// Loads raw contents from the source using the provided configuration.
     ///
@@ -95,11 +73,11 @@ public struct BuildTargetSourceLoader {
     ) throws(SourceLoaderError) -> [RawContent] {
         do {
             let locations = BuiltTargetSourceLocations(
-                sourceUrl: sourceUrl,
+                sourceURL: sourceURL,
                 config: config
             )
             let rawContentsLoader = RawContentLoader(
-                contentsURL: locations.contentsUrl,
+                contentsURL: locations.contentsURL,
                 assetsPath: config.contents.assets.path,
                 decoder: .init(),
                 markdownParser: .init(decoder: decoder),
@@ -185,25 +163,25 @@ public struct BuildTargetSourceLoader {
     /// - Throws: A `SourceLoaderError` if loading fails or parsing the located configuration file fails.
     func loadConfig() throws(SourceLoaderError) -> Config {
         do {
-            let configUrl = sourceUrl.appendingPathIfPresent(target.config)
+            let configURL = sourceURL.appendingPathIfPresent(target.config)
             let targetConfigName = "config-\(target.name)"
             let targetConfigLocation =
                 fileManager
-                .find(extensions: ["yml", "yaml"], at: configUrl)
-                .first { $0.hasPrefix(targetConfigName) }
+                    .find(extensions: ["yml", "yaml"], at: configURL)
+                    .first { $0.hasPrefix(targetConfigName) }
 
             if targetConfigLocation != nil {
                 return try load(
                     type: Config.self,
                     named: targetConfigName,
-                    at: configUrl
+                    at: configURL
                 )
             }
 
             return try load(
                 type: Config.self,
                 named: "config",
-                at: configUrl
+                at: configURL
             )
         }
         catch {
@@ -219,7 +197,7 @@ public struct BuildTargetSourceLoader {
         using config: Config
     ) -> BuiltTargetSourceLocations {
         .init(
-            sourceUrl: sourceUrl,
+            sourceURL: sourceURL,
             config: config
         )
     }
@@ -254,7 +232,7 @@ public struct BuildTargetSourceLoader {
     ) throws(SourceLoaderError) -> [Pipeline] {
         try load(
             type: Pipeline.self,
-            at: locations.pipelinesUrl
+            at: locations.pipelinesURL
         )
         .sorted { $0.id < $1.id }
     }
@@ -269,7 +247,7 @@ public struct BuildTargetSourceLoader {
     ) throws(SourceLoaderError) -> [ContentDefinition] {
         try load(
             type: ContentDefinition.self,
-            at: locations.typesUrl
+            at: locations.typesURL
         )
         .sorted { $0.id < $1.id }
     }
@@ -284,8 +262,35 @@ public struct BuildTargetSourceLoader {
     ) throws(SourceLoaderError) -> [Block] {
         try load(
             type: Block.self,
-            at: locations.blocksUrl
+            at: locations.blocksURL
         )
         .sorted { $0.name < $1.name }
+    }
+
+    /// Loads and processes source content from the specified source URL.
+    /// This function retrieves configuration, settings, content definitions, block directives,
+    /// and raw contents, then transforms them into structured content.
+    ///
+    /// - Returns: A `BuildTargetSource` containing the loaded and processed data.
+    /// - Throws: An error if any of the loading operations fail.
+    public func load() throws(SourceLoaderError) -> BuildTargetSource {
+        let config = try loadConfig()
+        let locations = getLocations(using: config)
+        let settings = try loadSettings(using: locations)
+        let pipelines = try loadPipelines(using: locations)
+        let types = try loadTypes(using: locations)
+        let blocks = try loadBlocks(using: locations)
+        let rawContents = try loadRawContents(using: config)
+
+        return .init(
+            locations: locations,
+            target: target,
+            config: config,
+            settings: settings,
+            pipelines: pipelines,
+            contentDefinitions: types,
+            rawContents: rawContents,
+            blockDirectives: blocks
+        )
     }
 }

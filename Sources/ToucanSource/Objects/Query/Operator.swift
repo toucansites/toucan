@@ -7,7 +7,6 @@
 
 /// Represents a comparison or filtering operator used in queries.
 public enum Operator: String, Sendable, Codable, Equatable, CaseIterable {
-
     // bool, int, double, string
     case equals
 
@@ -43,5 +42,4 @@ public enum Operator: String, Sendable, Codable, Equatable, CaseIterable {
     // field is an array check intersection with array value
     // array values both int, double, string
     case matching
-
 }

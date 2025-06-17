@@ -7,6 +7,7 @@
 
 /// A representation of a custom block directive in Markdown, used for extending Markdown syntax with special tags or behaviors.
 public struct Block: Sendable, Codable, Equatable {
+    // MARK: - Properties
 
     /// The name of the directive.
     public var name: String
@@ -28,6 +29,8 @@ public struct Block: Sendable, Codable, Equatable {
 
     /// Custom output HTML string that overrides default rendering behavior, if provided.
     public var output: String?
+
+    // MARK: - Lifecycle
 
     /// Initializes a `MarkdownBlockDirective`.
     ///

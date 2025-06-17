@@ -9,6 +9,7 @@ import ToucanSource
 
 /// Represents a unit of structured content, with associated metadata, relationships, and rendering information.
 public struct Content {
+    // MARK: - Properties
 
     // MARK: - Core Identifiers
 
@@ -44,8 +45,12 @@ public struct Content {
     /// Optional iterator metadata if the content is generated through iteration (e.g., paginated or list item).
     public var iteratorInfo: IteratorInfo?
 
+    // MARK: - Computed Properties
+
     /// A computed flag indicating whether this content instance was generated via iteration.
     public var isIterator: Bool { iteratorInfo != nil }
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 

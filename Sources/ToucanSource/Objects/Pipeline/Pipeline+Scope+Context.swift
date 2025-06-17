@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
-extension Pipeline.Scope {
-
+public extension Pipeline.Scope {
     /// Represents the available data context for a rendering `Scope`.
-    public struct Context: OptionSet, Codable {
+    struct Context: OptionSet, Codable {
+        // MARK: - Static Computed Properties
 
         // MARK: - Bitmask Flags (Simple Contexts)
 
@@ -62,10 +62,14 @@ extension Pipeline.Scope {
             ]
         }
 
+        // MARK: - Properties
+
         // MARK: - Raw Value Backing
 
         /// The underlying raw bitmask value used to represent the context.
         public let rawValue: UInt
+
+        // MARK: - Lifecycle
 
         /// Initializes the context using a raw value.
         ///
@@ -136,6 +140,8 @@ extension Pipeline.Scope {
                 )
             }
         }
+
+        // MARK: - Functions
 
         /// Encodes the context as a string or array of strings using the defined string values.
         ///

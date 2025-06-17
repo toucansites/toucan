@@ -10,6 +10,7 @@
 ///
 /// A pipeline defines how data flows from content source to final rendered output.
 public struct Pipeline: Codable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -64,6 +65,8 @@ public struct Pipeline: Codable {
     /// Output configuration for file generation and routing.
     public var output: Output
 
+    // MARK: - Lifecycle
+
     // MARK: - Initialization
 
     /// Initializes a fully-defined `Pipeline` object.
@@ -106,7 +109,7 @@ public struct Pipeline: Codable {
         let id = try container.decode(String.self, forKey: .id)
         let definesType =
             try container.decodeIfPresent(Bool.self, forKey: .definesType)
-            ?? false
+                ?? false
 
         //        let defaultScopes = Scope.default
         let userScopes =
@@ -158,7 +161,7 @@ public struct Pipeline: Codable {
         self.init(
             id: id,
             definesType: definesType,
-            scopes: userScopes,  // TODO: fix this
+            scopes: userScopes, // TODO: fix this
             queries: queries,
             dataTypes: dataTypes,
             contentTypes: contentTypes,
@@ -169,6 +172,8 @@ public struct Pipeline: Codable {
             output: output
         )
     }
+
+    // MARK: - Functions
 
     // MARK: - Scope Helpers
 

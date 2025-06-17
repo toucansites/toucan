@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct RelationTypeTestSuite {
-
     @Test
     func basics() throws {
         let object = [RelationType.one, RelationType.many]

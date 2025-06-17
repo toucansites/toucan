@@ -13,6 +13,7 @@ import ToucanSerialization
 ///
 /// Utilizes a configurable separator, a decoder conforming to `ToucanDecoder`, and a logger.
 public struct MarkdownParser {
+    // MARK: - Properties
 
     /// The string used to separate front matter from content in the markdown input.
     var separator: String
@@ -20,6 +21,8 @@ public struct MarkdownParser {
     var decoder: ToucanDecoder
     /// A logger used to emit parsing-related debug messages.
     var logger: Logger
+
+    // MARK: - Lifecycle
 
     /// Creates a new `MarkdownParser` instance.
     ///
@@ -37,6 +40,8 @@ public struct MarkdownParser {
         self.logger = logger
     }
 
+    // MARK: - Functions
+
     /// Removes the front matter section from the given markdown string.
     ///
     /// - Parameter markdown: The markdown string containing optional front matter.
@@ -47,9 +52,9 @@ public struct MarkdownParser {
         if markdown.starts(with: separator) {
             return
                 markdown
-                .split(separator: separator)
-                .dropFirst()
-                .joined(separator: separator)
+                    .split(separator: separator)
+                    .dropFirst()
+                    .joined(separator: separator)
         }
         return markdown
     }

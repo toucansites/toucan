@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct ConfigTestSuite {
-
     @Test
     func defaults() throws {
         let object = Config.defaults
@@ -42,52 +41,52 @@ struct ConfigTestSuite {
     @Test
     func custom() throws {
         let value = """
-            blocks:
-              path: custom1
-            contents:
-              assets:
-                path: custom2
-              path: custom3
-            dataTypes:
-              date:
-                formats:
-                  test1:
-                    format: his
-                    locale: hu-HU
-                    timeZone: CET
-                input:
-                  format: ymd
-                output:
-                  locale: en-GB
-                  timeZone: PST
-            pipelines:
-              path: custom4
-            renderer:
-              outlineLevels:
-              - 4
-              paragraphStyles:
-                test:
-                - test1
-              wordsPerMinute: 42
-            site:
-              assets:
-                path: custom5
-              settings:
-                path: custom6
-            themes:
-              assets:
-                path: custom7
-              current:
-                path: custom8
-              location:
-                path: custom9
-              overrides:
-                path: custom10
-              templates:
-                path: custom11
-            types:
-              path: custom12
-            """ + "\n"
+        blocks:
+          path: custom1
+        contents:
+          assets:
+            path: custom2
+          path: custom3
+        dataTypes:
+          date:
+            formats:
+              test1:
+                format: his
+                locale: hu-HU
+                timeZone: CET
+            input:
+              format: ymd
+            output:
+              locale: en-GB
+              timeZone: PST
+        pipelines:
+          path: custom4
+        renderer:
+          outlineLevels:
+          - 4
+          paragraphStyles:
+            test:
+            - test1
+          wordsPerMinute: 42
+        site:
+          assets:
+            path: custom5
+          settings:
+            path: custom6
+        templates:
+          assets:
+            path: custom7
+          current:
+            path: custom8
+          location:
+            path: custom9
+          overrides:
+            path: custom10
+          views:
+            path: custom11
+        types:
+          path: custom12
+        """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
@@ -116,17 +115,17 @@ struct ConfigTestSuite {
         expectation.renderer.outlineLevels = [4]
         expectation.renderer.paragraphStyles.styles = [
             "test": [
-                "test1"
-            ]
+                "test1",
+            ],
         ]
         expectation.renderer.wordsPerMinute = 42
         expectation.site.assets.path = "custom5"
         expectation.site.settings.path = "custom6"
-        expectation.themes.assets.path = "custom7"
-        expectation.themes.current.path = "custom8"
-        expectation.themes.location.path = "custom9"
-        expectation.themes.overrides.path = "custom10"
-        expectation.themes.templates.path = "custom11"
+        expectation.templates.assets.path = "custom7"
+        expectation.templates.current.path = "custom8"
+        expectation.templates.location.path = "custom9"
+        expectation.templates.overrides.path = "custom10"
+        expectation.templates.views.path = "custom11"
         expectation.types.path = "custom12"
 
         #expect(result.blocks == expectation.blocks)
@@ -135,7 +134,7 @@ struct ConfigTestSuite {
         #expect(result.pipelines == expectation.pipelines)
         #expect(result.renderer == expectation.renderer)
         #expect(result.site == expectation.site)
-        #expect(result.themes == expectation.themes)
+        #expect(result.templates == expectation.templates)
         #expect(result.types == expectation.types)
 
         let encodedValue: String = try encoder.encode(expectation)

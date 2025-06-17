@@ -9,7 +9,6 @@ import Foundation
 import ToucanSource
 
 extension Mocks.RawContents {
-
     static func homePage(
         now: Date = .init()
     ) -> RawContent {
@@ -24,10 +23,10 @@ extension Mocks.RawContents {
                     "description": "Home page description",
                 ],
                 contents: """
-                    # Home page
+                # Home page
 
-                    Home page contents
-                    """
+                Home page contents
+                """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -49,10 +48,10 @@ extension Mocks.RawContents {
                     "description": "Not found page description",
                 ],
                 contents: """
-                    # Not found
+                # Not found
 
-                    Not found page contents
-                    """
+                Not found page contents
+                """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -77,10 +76,10 @@ extension Mocks.RawContents {
                     ],
                 ],
                 contents: """
-                    # About page
+                # About page
 
-                    About page contents
-                    """
+                About page contents
+                """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: [
@@ -105,10 +104,10 @@ extension Mocks.RawContents {
                     "template": "pages.context",
                 ],
                 contents: """
-                    # Context page
+                # Context page
 
-                    Context page contents
-                    """
+                Context page contents
+                """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -167,7 +166,7 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
-                    "type": "rss"
+                    "type": "rss",
                 ],
                 contents: ""
             ),
@@ -186,7 +185,7 @@ extension Mocks.RawContents {
             ),
             markdown: .init(
                 frontMatter: [
-                    "type": "sitemap"
+                    "type": "sitemap",
                 ],
                 contents: ""
             ),
@@ -212,10 +211,10 @@ extension Mocks.RawContents {
                     "description": "Page #\(id) description",
                 ],
                 contents: """
-                    # Page #\(id)
+                # Page #\(id)
 
-                    Page #\(id) contents
-                    """
+                Page #\(id) contents
+                """
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -241,14 +240,14 @@ extension Mocks.RawContents {
                 ],
 
                 contents: """
-                    # Author #\(id)
+                # Author #\(id)
 
-                    Author page contents
-                    """,
+                Author page contents
+                """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: [
-                "author-\(id).jpg"
+                "author-\(id).jpg",
             ]
         )
     }
@@ -269,10 +268,10 @@ extension Mocks.RawContents {
                 ],
 
                 contents: """
-                    # Tag #\(id)
+                # Tag #\(id)
 
-                    Tag page contents
-                    """,
+                Tag page contents
+                """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -286,10 +285,10 @@ extension Mocks.RawContents {
         expiration: String,
         draft: Bool = false,
         featured: Bool = false,
-        authorIds: [Int] = [],
-        tagIds: [Int] = []
+        authorIDs: [Int] = [],
+        tagIDs: [Int] = []
     ) -> RawContent {
-        return .init(
+        .init(
             origin: .init(
                 path: .init("blog/posts/post-\(id)"),
                 slug: "blog/posts/post-\(id)"
@@ -302,21 +301,21 @@ extension Mocks.RawContents {
                     "expiration": .init(expiration),
                     "draft": .init(draft),
                     "featured": .init(featured),
-                    "authors": .init(authorIds.map { "author-\($0)" }),
-                    "tags": .init(tagIds.map { "tag-\($0)" }),
+                    "authors": .init(authorIDs.map { "author-\($0)" }),
+                    "tags": .init(tagIDs.map { "tag-\($0)" }),
                     "rating": .init(Double(id)),
                     "image": "cover-\(id).jpg",
                 ],
 
                 contents: """
-                    # Post #\(id)
+                # Post #\(id)
 
-                    Post page contents
-                    """,
+                Post page contents
+                """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: [
-                "cover.jpg"
+                "cover.jpg",
             ]
         )
     }
@@ -337,10 +336,10 @@ extension Mocks.RawContents {
                 ],
 
                 contents: """
-                    # Post pagination page {{number}} / {{total}}
+                # Post pagination page {{number}} / {{total}}
 
-                    Post pagination page contents
-                    """,
+                Post pagination page contents
+                """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -364,10 +363,10 @@ extension Mocks.RawContents {
                 ],
 
                 contents: """
-                    # Category #\(id)
+                # Category #\(id)
 
-                    Category page contents
-                    """,
+                Category page contents
+                """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []
@@ -376,7 +375,7 @@ extension Mocks.RawContents {
 
     static func guide(
         id: Int,
-        categoryId: Int,
+        categoryID: Int,
         now: Date = .init()
     ) -> RawContent {
         .init(
@@ -388,15 +387,15 @@ extension Mocks.RawContents {
                 frontMatter: [
                     "title": "Guide #\(id)",
                     "description": "Guide #\(id) description",
-                    "category": "category-\(categoryId)",
+                    "category": "category-\(categoryID)",
                     "order": .init(id),
                 ],
 
                 contents: """
-                    # Guide #\(id)
+                # Guide #\(id)
 
-                    Guide page contents
-                    """,
+                Guide page contents
+                """,
             ),
             lastModificationDate: now.timeIntervalSince1970,
             assets: []

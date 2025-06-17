@@ -6,20 +6,19 @@
 //
 //
 import Foundation
-import Testing
 import Logging
+import Testing
 import ToucanCore
-import ToucanSource
 @testable import ToucanSDK
+import ToucanSource
 
 @Suite
 struct BuildTargetSourceValidatorTestSuite {
-
     @Test
     func emptyContentTypes() throws {
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             )
         )
@@ -59,7 +58,7 @@ struct BuildTargetSourceValidatorTestSuite {
     func noDefaultContentType() throws {
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -87,7 +86,7 @@ struct BuildTargetSourceValidatorTestSuite {
     func multipleDefaultContentTypes() throws {
         let buildTargetSource = BuildTargetSource(
             locations: .init(
-                sourceUrl: .init(filePath: ""),
+                sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
             contentDefinitions: [
@@ -110,7 +109,7 @@ struct BuildTargetSourceValidatorTestSuite {
             try validator.validate()
         }
         catch {
-            guard case .multipleDefaultContentTypes(let values) = error else {
+            guard case let .multipleDefaultContentTypes(values) = error else {
                 Issue.record("Invalid error.")
                 return
             }

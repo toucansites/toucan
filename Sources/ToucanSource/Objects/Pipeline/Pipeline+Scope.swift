@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
-extension Pipeline {
-
+public extension Pipeline {
     /// Describes a rendering scope within a content pipeline.
-    public struct Scope: Codable {
+    struct Scope: Codable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -18,64 +18,7 @@ extension Pipeline {
             case fields
         }
 
-        // MARK: - Properties
-
-        /// The rendering context this scope applies to (e.g., `.detail`, `.list`, `.reference`).
-        public var context: Context
-
-        /// The specific content fields to include when rendering in this scope.
-        /// If empty, all fields may be included by default.
-        public var fields: [String]
-
-        // MARK: - Initialization
-
-        /// Initializes a `Scope` with a given context and set of fields.
-        ///
-        /// - Parameters:
-        ///   - context: The rendering context.
-        ///   - fields: The fields to expose in this scope.
-        public init(
-            context: Context = .detail,
-            fields: [String] = []
-        ) {
-            self.context = context
-            self.fields = fields
-        }
-
-        // MARK: - Decoding
-
-        /// Decodes a `Scope` from configuration data, with fallback defaults.
-        ///
-        /// If `context` is not specified, defaults to `.detail`.
-        /// If `fields` are not specified, defaults to an empty list.
-        public init(
-            from decoder: any Decoder
-        ) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-
-            let context =
-                try container.decodeIfPresent(Context.self, forKey: .context)
-                ?? .detail
-            let fields =
-                try container.decodeIfPresent([String].self, forKey: .fields)
-                ?? []
-
-            self.init(context: context, fields: fields)
-        }
-
-        /// Encodes this `Scope` instance into the given encoder.
-        ///
-        /// This method encodes the `context` and `fields` properties using keyed encoding.
-        ///
-        /// - Parameter encoder: The encoder to write data to.
-        /// - Throws: An error if any values are invalid for the encoder’s format.
-        public func encode(
-            to encoder: any Encoder
-        ) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(context, forKey: .context)
-            try container.encode(fields, forKey: .fields)
-        }
+        // MARK: - Static Computed Properties
 
         // MARK: - Predefined Scopes
 
@@ -108,8 +51,71 @@ extension Pipeline {
         /// The default fallback scope set, applied to all content types via the `*` wildcard.
         public static var `default`: [String: [String: Scope]] {
             [
-                "*": standard
+                "*": standard,
             ]
+        }
+
+        // MARK: - Properties
+
+        /// The rendering context this scope applies to (e.g., `.detail`, `.list`, `.reference`).
+        public var context: Context
+
+        /// The specific content fields to include when rendering in this scope.
+        /// If empty, all fields may be included by default.
+        public var fields: [String]
+
+        // MARK: - Lifecycle
+
+        // MARK: - Initialization
+
+        /// Initializes a `Scope` with a given context and set of fields.
+        ///
+        /// - Parameters:
+        ///   - context: The rendering context.
+        ///   - fields: The fields to expose in this scope.
+        public init(
+            context: Context = .detail,
+            fields: [String] = []
+        ) {
+            self.context = context
+            self.fields = fields
+        }
+
+        // MARK: - Decoding
+
+        /// Decodes a `Scope` from configuration data, with fallback defaults.
+        ///
+        /// If `context` is not specified, defaults to `.detail`.
+        /// If `fields` are not specified, defaults to an empty list.
+        public init(
+            from decoder: any Decoder
+        ) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            let context =
+                try container.decodeIfPresent(Context.self, forKey: .context)
+                    ?? .detail
+            let fields =
+                try container.decodeIfPresent([String].self, forKey: .fields)
+                    ?? []
+
+            self.init(context: context, fields: fields)
+        }
+
+        // MARK: - Functions
+
+        /// Encodes this `Scope` instance into the given encoder.
+        ///
+        /// This method encodes the `context` and `fields` properties using keyed encoding.
+        ///
+        /// - Parameter encoder: The encoder to write data to.
+        /// - Throws: An error if any values are invalid for the encoder’s format.
+        public func encode(
+            to encoder: any Encoder
+        ) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(context, forKey: .context)
+            try container.encode(fields, forKey: .fields)
         }
     }
 }

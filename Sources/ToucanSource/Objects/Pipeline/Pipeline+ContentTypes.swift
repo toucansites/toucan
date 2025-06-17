@@ -5,13 +5,13 @@
 //  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
-extension Pipeline {
-
+public extension Pipeline {
     /// Defines rules for selecting and filtering content types used in a pipeline.
     ///
     /// `ContentTypes` allows explicit inclusion or exclusion of types, as well as
     /// optional tracking for last modification timestamps.
-    public struct ContentTypes: Codable {
+    struct ContentTypes: Codable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -20,6 +20,20 @@ extension Pipeline {
             case exclude
             case lastUpdate
             case filterRules
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Default configuration with no filtering or update tracking.
+        public static var defaults: Self {
+            .init(
+                include: [],
+                exclude: [],
+                lastUpdate: [],
+                filterRules: [:]
+            )
         }
 
         // MARK: - Properties
@@ -46,17 +60,7 @@ extension Pipeline {
         /// If a content type is not listed in `filterRules`, it is not subject to condition-based filtering.
         public var filterRules: [String: Condition]
 
-        // MARK: - Defaults
-
-        /// Default configuration with no filtering or update tracking.
-        public static var defaults: Self {
-            .init(
-                include: [],
-                exclude: [],
-                lastUpdate: [],
-                filterRules: [:]
-            )
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -91,10 +95,10 @@ extension Pipeline {
 
             let include =
                 try container.decodeIfPresent([String].self, forKey: .include)
-                ?? []
+                    ?? []
             let exclude =
                 try container.decodeIfPresent([String].self, forKey: .exclude)
-                ?? []
+                    ?? []
             let lastUpdate =
                 try container.decodeIfPresent(
                     [String].self,
@@ -114,6 +118,8 @@ extension Pipeline {
                 filterRules: filterRules
             )
         }
+
+        // MARK: - Functions
 
         // MARK: - Evaluation
 

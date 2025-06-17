@@ -5,17 +5,16 @@
 //  Created by Tibor Bödecs on 2025. 06. 11..
 //
 
-import Foundation
-import Testing
-import Logging
-import ToucanCore
-import ToucanSource
 import FileManagerKitBuilder
+import Foundation
+import Logging
+import Testing
+import ToucanCore
 @testable import ToucanSDK
+import ToucanSource
 
 @Suite
 struct E2ETestSuite {
-
     // MARK: - html files
 
     @Test
@@ -32,8 +31,8 @@ struct E2ETestSuite {
             try Toucan(input: input.path()).generate(now: now)
 
             let output = $1.appendingPathIfPresent("docs")
-            let notFoundUrl = output.appendingPathIfPresent("404.html")
-            let notFound = try String(contentsOf: notFoundUrl)
+            let notFoundURL = output.appendingPathIfPresent("404.html")
+            let notFound = try String(contentsOf: notFoundURL)
 
             #expect(notFound.contains("Not found page contents"))
         }
@@ -63,52 +62,52 @@ struct E2ETestSuite {
 
             let nowString = formatter.format(now).formats["rss"] ?? ""
             let post1date =
-                formatter.format(now.addingTimeInterval(-86_400)).formats["rss"]
-                ?? ""
+                formatter.format(now.addingTimeInterval(-86400)).formats["rss"]
+                    ?? ""
             let post2date =
-                formatter.format(now.addingTimeInterval(-86_400 * 2))
-                .formats["rss"] ?? ""
+                formatter.format(now.addingTimeInterval(-86400 * 2))
+                    .formats["rss"] ?? ""
             let post3date =
-                formatter.format(now.addingTimeInterval(-86_400 * 3))
-                .formats["rss"] ?? ""
+                formatter.format(now.addingTimeInterval(-86400 * 3))
+                    .formats["rss"] ?? ""
 
             let expectation = #"""
-                <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-                <channel>
-                    <title>Test site name</title>
-                    <description>Test site description</description>
-                    <link>http://localhost:3000</link>
-                    <language>en-US</language>
-                    <lastBuildDate>\#(nowString)</lastBuildDate>
-                    <pubDate>\#(nowString)</pubDate>
-                    <ttl>250</ttl>
-                    <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
+            <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+            <channel>
+                <title>Test site name</title>
+                <description>Test site description</description>
+                <link>http://localhost:3000</link>
+                <language>en-US</language>
+                <lastBuildDate>\#(nowString)</lastBuildDate>
+                <pubDate>\#(nowString)</pubDate>
+                <ttl>250</ttl>
+                <atom:link href="http://localhost:3000/rss.xml" rel="self" type="application/rss+xml"/>
 
-                    <item>
-                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
-                        <title><![CDATA[ Post #1 ]]></title>
-                        <description><![CDATA[ Post #1 description ]]></description>
-                        <link>http://localhost:3000/blog/posts/post-1/</link>
-                        <pubDate>\#(post1date)</pubDate>
-                    </item>
-                    <item>
-                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-2/</guid>
-                        <title><![CDATA[ Post #2 ]]></title>
-                        <description><![CDATA[ Post #2 description ]]></description>
-                        <link>http://localhost:3000/blog/posts/post-2/</link>
-                        <pubDate>\#(post2date)</pubDate>
-                    </item>
-                    <item>
-                        <guid isPermaLink="true">http://localhost:3000/blog/posts/post-3/</guid>
-                        <title><![CDATA[ Post #3 ]]></title>
-                        <description><![CDATA[ Post #3 description ]]></description>
-                        <link>http://localhost:3000/blog/posts/post-3/</link>
-                        <pubDate>\#(post3date)</pubDate>
-                    </item>
+                <item>
+                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-1/</guid>
+                    <title><![CDATA[ Post #1 ]]></title>
+                    <description><![CDATA[ Post #1 description ]]></description>
+                    <link>http://localhost:3000/blog/posts/post-1/</link>
+                    <pubDate>\#(post1date)</pubDate>
+                </item>
+                <item>
+                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-2/</guid>
+                    <title><![CDATA[ Post #2 ]]></title>
+                    <description><![CDATA[ Post #2 description ]]></description>
+                    <link>http://localhost:3000/blog/posts/post-2/</link>
+                    <pubDate>\#(post2date)</pubDate>
+                </item>
+                <item>
+                    <guid isPermaLink="true">http://localhost:3000/blog/posts/post-3/</guid>
+                    <title><![CDATA[ Post #3 ]]></title>
+                    <description><![CDATA[ Post #3 description ]]></description>
+                    <link>http://localhost:3000/blog/posts/post-3/</link>
+                    <pubDate>\#(post3date)</pubDate>
+                </item>
 
-                </channel>
-                </rss>
-                """#
+            </channel>
+            </rss>
+            """#
 
             #expect(
                 rss.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -142,52 +141,52 @@ struct E2ETestSuite {
             let nowString = formatter.format(now).formats["sitemap"] ?? ""
 
             let expectation = #"""
-                <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-                    <url>
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                <url>
 
-                        <loc>http://localhost:3000/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/about/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/posts/pages/1/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/posts/pages/2/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/context/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/pages/page-1/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/pages/page-2/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/pages/page-3/</loc>
-                        <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/about/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/posts/pages/1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/posts/pages/2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/context/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/pages/page-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/pages/page-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/pages/page-3/</loc>
+                    <lastmod>\#(nowString)</lastmod>
 
-                        <loc>http://localhost:3000/blog/posts/post-1/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/posts/post-2/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/posts/post-3/</loc>
-                        <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/posts/post-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/posts/post-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/posts/post-3/</loc>
+                    <lastmod>\#(nowString)</lastmod>
 
-                        <loc>http://localhost:3000/blog/authors/author-1/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/authors/author-2/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/authors/author-3/</loc>
-                        <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/authors/author-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/authors/author-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/authors/author-3/</loc>
+                    <lastmod>\#(nowString)</lastmod>
 
-                        <loc>http://localhost:3000/blog/tags/tag-1/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/tags/tag-2/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/tags/tag-3/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                    
+                    <loc>http://localhost:3000/blog/tags/tag-1/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/tags/tag-2/</loc>
+                    <lastmod>\#(nowString)</lastmod>
+                    <loc>http://localhost:3000/blog/tags/tag-3/</loc>
+                    <lastmod>\#(nowString)</lastmod>
 
 
-                    </url>
-                </urlset>
-                """#
+
+                </url>
+            </urlset>
+            """#
 
             #expect(
                 sitemap.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -216,18 +215,18 @@ struct E2ETestSuite {
             )
             let redirect1 = try String(contentsOf: redirect1URL)
             let expectation1 = #"""
-                <!DOCTYPE html>
-                <html lang="en-US">
-                  <meta charset="utf-8">
-                  <title>Redirecting&hellip;</title>
-                  <link rel="canonical" href="http://localhost:3000/">
-                  <script>location="http://localhost:3000/"</script>
-                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
-                  <meta name="robots" content="noindex">
-                  <h1>Redirecting&hellip;</h1>
-                  <a href="http://localhost:3000/">Click here if you are not redirected.</a>
-                </html>
-                """#
+            <!DOCTYPE html>
+            <html lang="en-US">
+              <meta charset="utf-8">
+              <title>Redirecting&hellip;</title>
+              <link rel="canonical" href="http://localhost:3000/">
+              <script>location="http://localhost:3000/"</script>
+              <meta http-equiv="refresh" content="0; url=http://localhost:3000/">
+              <meta name="robots" content="noindex">
+              <h1>Redirecting&hellip;</h1>
+              <a href="http://localhost:3000/">Click here if you are not redirected.</a>
+            </html>
+            """#
 
             #expect(
                 redirect1.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -241,18 +240,18 @@ struct E2ETestSuite {
             )
             let redirect2 = try String(contentsOf: redirect2URL)
             let expectation2 = #"""
-                <!DOCTYPE html>
-                <html lang="en-US">
-                  <meta charset="utf-8">
-                  <title>Redirecting&hellip;</title>
-                  <link rel="canonical" href="http://localhost:3000/about">
-                  <script>location="http://localhost:3000/about"</script>
-                  <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
-                  <meta name="robots" content="noindex">
-                  <h1>Redirecting&hellip;</h1>
-                  <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
-                </html>
-                """#
+            <!DOCTYPE html>
+            <html lang="en-US">
+              <meta charset="utf-8">
+              <title>Redirecting&hellip;</title>
+              <link rel="canonical" href="http://localhost:3000/about">
+              <script>location="http://localhost:3000/about"</script>
+              <meta http-equiv="refresh" content="0; url=http://localhost:3000/about">
+              <meta name="robots" content="noindex">
+              <h1>Redirecting&hellip;</h1>
+              <a href="http://localhost:3000/about">Click here if you are not redirected.</a>
+            </html>
+            """#
 
             #expect(
                 redirect2.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -273,8 +272,8 @@ struct E2ETestSuite {
             Mocks.E2E.src(
                 now: now,
                 debugContext: #"""
-                    {{page}}
-                    """#
+                {{page}}
+                """#
             )
         }
         .test {
@@ -286,7 +285,6 @@ struct E2ETestSuite {
             let context = try String(contentsOf: contextURL)
 
             print(context.replacingOccurrences(["&quot;": "\""]))
-
         }
     }
 
@@ -329,14 +327,14 @@ struct E2ETestSuite {
                                             name: "icon",
                                             ext: "svg"
                                         )
-                                    )
+                                    ),
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -366,7 +364,7 @@ struct E2ETestSuite {
                             ),
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             ),
                             lastModificationDate: now.timeIntervalSince1970,
@@ -437,14 +435,14 @@ struct E2ETestSuite {
                                             name: "*",
                                             ext: "svg"
                                         )
-                                    )
+                                    ),
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -474,7 +472,7 @@ struct E2ETestSuite {
                             ),
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             ),
                             lastModificationDate: now.timeIntervalSince1970,
@@ -514,7 +512,6 @@ struct E2ETestSuite {
                     ]
                     .sorted()
             )
-
         }
     }
 
@@ -555,14 +552,14 @@ struct E2ETestSuite {
                                             name: "data",
                                             ext: "yaml"
                                         )
-                                    )
+                                    ),
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -588,16 +585,16 @@ struct E2ETestSuite {
                             File(
                                 name: "data.yaml",
                                 string: """
-                                    foo: value1
-                                    bar: value2
-                                    """
+                                foo: value1
+                                bar: value2
+                                """
                             )
                         }
                         MarkdownFile(
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             )
                         )
@@ -663,14 +660,14 @@ struct E2ETestSuite {
                                             name: "*",
                                             ext: "yaml"
                                         )
-                                    )
+                                    ),
                                 ]
                             ),
                             transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -696,21 +693,21 @@ struct E2ETestSuite {
                             File(
                                 name: "foo.yaml",
                                 string: """
-                                    foo: value1
-                                    """
+                                foo: value1
+                                """
                             )
                             File(
                                 name: "bar.yaml",
                                 string: """
-                                    bar: value2
-                                    """
+                                bar: value2
+                                """
                             )
                         }
                         MarkdownFile(
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             )
                         )
@@ -742,7 +739,7 @@ struct E2ETestSuite {
     // MARK: - asset behaviors
 
     @Test
-    func testMinifyCSSAsset() async throws {
+    func minifyCSSAsset() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -778,7 +775,7 @@ struct E2ETestSuite {
                                             name: "style.min",
                                             ext: "css"
                                         )
-                                    )
+                                    ),
                                 ],
                                 properties: []
                             ),
@@ -786,7 +783,7 @@ struct E2ETestSuite {
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -812,21 +809,21 @@ struct E2ETestSuite {
                             File(
                                 name: "style.css",
                                 string: """
-                                    html {
-                                        margin: 0;
-                                        padding: 0;
-                                    }
-                                    body {
-                                        background: red;
-                                    }
-                                    """
+                                html {
+                                    margin: 0;
+                                    padding: 0;
+                                }
+                                body {
+                                    background: red;
+                                }
+                                """
                             )
                         }
                         MarkdownFile(
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             )
                         )
@@ -854,7 +851,7 @@ struct E2ETestSuite {
     }
 
     @Test
-    func testSASSAsset() async throws {
+    func sASSAsset() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -890,7 +887,7 @@ struct E2ETestSuite {
                                             name: "style",
                                             ext: "css"
                                         )
-                                    )
+                                    ),
                                 ],
                                 properties: []
                             ),
@@ -898,7 +895,7 @@ struct E2ETestSuite {
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -924,20 +921,20 @@ struct E2ETestSuite {
                             File(
                                 name: "style.sass",
                                 string: """
-                                    $font-stack: Helvetica, sans-serif
-                                    $primary-color: #333
+                                $font-stack: Helvetica, sans-serif
+                                $primary-color: #333
 
-                                    body
-                                      font: 100% $font-stack
-                                      color: $primary-color
-                                    """
+                                body
+                                  font: 100% $font-stack
+                                  color: $primary-color
+                                """
                             )
                         }
                         MarkdownFile(
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             )
                         )
@@ -970,7 +967,7 @@ struct E2ETestSuite {
     }
 
     @Test
-    func testSCSSModuleLoader() async throws {
+    func sCSSModuleLoader() async throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -1006,7 +1003,7 @@ struct E2ETestSuite {
                                             name: "style",
                                             ext: "css"
                                         )
-                                    )
+                                    ),
                                 ],
                                 properties: []
                             ),
@@ -1014,7 +1011,7 @@ struct E2ETestSuite {
                             engine: .init(
                                 id: "json",
                                 options: [
-                                    "keyPath": "page"
+                                    "keyPath": "page",
                                 ]
                             ),
                             output: .init(
@@ -1040,25 +1037,25 @@ struct E2ETestSuite {
                             File(
                                 name: "_colors.scss",
                                 string: """
-                                    $primary: blue;
-                                    """
+                                $primary: blue;
+                                """
                             )
                             File(
                                 name: "style.scss",
                                 string: """
-                                    @use "colors";
+                                @use "colors";
 
-                                    body {
-                                      color: colors.$primary;
-                                    }
-                                    """
+                                body {
+                                  color: colors.$primary;
+                                }
+                                """
                             )
                         }
                         MarkdownFile(
                             name: "index",
                             markdown: .init(
                                 frontMatter: [
-                                    "type": "test"
+                                    "type": "test",
                                 ]
                             )
                         )
@@ -1095,11 +1092,11 @@ struct E2ETestSuite {
     func transformerRunTest() async throws {
         let now = Date()
         let fileManager = FileManager.default
-        let rootUrl = FileManager.default.temporaryDirectory
+        let rootURL = FileManager.default.temporaryDirectory
         let rootName = "FileManagerPlayground_\(UUID().uuidString)"
 
         try FileManagerPlayground(
-            rootUrl: rootUrl,
+            rootURL: rootURL,
             rootName: rootName,
             fileManager: fileManager
         ) {
@@ -1129,21 +1126,21 @@ struct E2ETestSuite {
                                     run: [
                                         .init(
                                             path:
-                                                "\(rootUrl.path())/\(rootName)/src/transformers",
+                                            "\(rootURL.path())/\(rootName)/src/transformers",
                                             name: "replace"
-                                        )
+                                        ),
                                     ],
                                     isMarkdownResult: false
-                                )
+                                ),
                             ],
                             engine: .init(
                                 id: "mustache",
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "template": "test"
-                                        ]
-                                    ]
+                                            "template": "test",
+                                        ],
+                                    ],
                                 ]
                             ),
                             output: .init(
@@ -1168,19 +1165,19 @@ struct E2ETestSuite {
                         File(
                             name: "index.yaml",
                             string: """
-                                type: test
-                                description: Desc1
-                                label: label1
-                                """
+                            type: test
+                            description: Desc1
+                            label: label1
+                            """
                         )
                         File(
                             name: "index.md",
                             string: """
-                                ---
-                                title: "First beta release"
-                                ---
-                                Character to replace => :
-                                """
+                            ---
+                            title: "First beta release"
+                            ---
+                            Character to replace => :
+                            """
                         )
                     }
                 }
@@ -1189,44 +1186,42 @@ struct E2ETestSuite {
                         name: "replace",
                         attributes: [.posixPermissions: 0o777],
                         string: """
-                            #!/bin/bash
-                            # Replaces all colons `:` with dashes `-` in the given file.
-                            # Usage: replace-char --file <path>
-                            UNKNOWN_ARGS=()
-                            while [[ $# -gt 0 ]]; do
-                                case $1 in
-                                    --file)
-                                        TOUCAN_FILE="$2"
-                                        shift
-                                        shift
-                                        ;;
-                                    -*|--*)
-                                        UNKNOWN_ARGS+=("$1" "$2")
-                                        shift
-                                        shift
-                                        ;;
-                                    *)
-                                        shift
-                                        ;;
-                                esac
-                            done
-                            if [[ -z "${TOUCAN_FILE}" ]]; then
-                                echo "❌ No file specified with --file."
-                                exit 1
-                            fi
-                            echo "📄 Processing file: ${TOUCAN_FILE}"
-                            if [[ ${#UNKNOWN_ARGS[@]} -gt 0 ]]; then
-                                echo "ℹ️ Ignored unknown options: ${UNKNOWN_ARGS[*]}"
-                            fi
-                            sed 's/:/-/g' "${TOUCAN_FILE}" > "${TOUCAN_FILE}.tmp" && mv "${TOUCAN_FILE}.tmp" "${TOUCAN_FILE}"
-                            echo "✅ Done replacing characters."
-                            """
+                        #!/bin/bash
+                        # Replaces all colons `:` with dashes `-` in the given file.
+                        # Usage: replace-char --file <path>
+                        UNKNOWN_ARGS=()
+                        while [[ $# -gt 0 ]]; do
+                            case $1 in
+                                --file)
+                                    TOUCAN_FILE="$2"
+                                    shift
+                                    shift
+                                    ;;
+                                -*|--*)
+                                    UNKNOWN_ARGS+=("$1" "$2")
+                                    shift
+                                    shift
+                                    ;;
+                                *)
+                                    shift
+                                    ;;
+                            esac
+                        done
+                        if [[ -z "${TOUCAN_FILE}" ]]; then
+                            echo "❌ No file specified with --file."
+                            exit 1
+                        fi
+                        echo "📄 Processing file: ${TOUCAN_FILE}"
+                        if [[ ${#UNKNOWN_ARGS[@]} -gt 0 ]]; then
+                            echo "ℹ️ Ignored unknown options: ${UNKNOWN_ARGS[*]}"
+                        fi
+                        sed 's/:/-/g' "${TOUCAN_FILE}" > "${TOUCAN_FILE}.tmp" && mv "${TOUCAN_FILE}.tmp" "${TOUCAN_FILE}"
+                        echo "✅ Done replacing characters."
+                        """
                     )
                 }
-                Mocks.E2E.themes(debugContext: "{{.}}")
-
+                Mocks.E2E.templates(debugContext: "{{.}}")
             }
-
         }
         .test {
             let input = $1.appendingPathIfPresent("src")
@@ -1242,7 +1237,7 @@ struct E2ETestSuite {
     }
 
     @Test
-    func testPaginationPages() throws {
+    func paginationPages() throws {
         let now = Date()
 
         try FileManagerPlayground {
@@ -1296,7 +1291,7 @@ struct E2ETestSuite {
                                     "minimal": .init(
                                         context: .properties,
                                         fields: [
-                                            "slug"
+                                            "slug",
                                         ]
                                     ),
                                     "detail": .init(
@@ -1306,13 +1301,13 @@ struct E2ETestSuite {
                                             "slug",
                                         ]
                                     ),
-                                ]
+                                ],
                             ],
                             queries: [
                                 "minimal": .init(
                                     contentType: "test",
                                     scope: "minimal"
-                                )
+                                ),
                             ],
                             dataTypes: .defaults,
                             contentTypes: .defaults,
@@ -1373,15 +1368,17 @@ struct E2ETestSuite {
                     let slug: String
                     let title: String
                 }
+
                 struct Context: Decodable {
                     struct Minimal: Decodable {
                         let slug: String
                     }
+
                     let minimal: [Minimal]
                 }
+
                 let page: Page
                 let context: Context
-
             }
 
             let exp = try decoder.decode(Exp.self, from: data)

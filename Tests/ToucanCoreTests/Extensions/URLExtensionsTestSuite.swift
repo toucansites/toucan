@@ -12,7 +12,6 @@ import Testing
 
 @Suite
 struct URLExtensionsTestSuite {
-
     @Test
     func appendingValidPath() {
         let base = URL(string: "https://example.com")!

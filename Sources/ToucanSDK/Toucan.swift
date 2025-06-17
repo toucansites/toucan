@@ -5,14 +5,14 @@
 //  Created by Tibor Bödecs on 2025. 04. 17..
 //
 
-import Foundation
 import FileManagerKit
+import Foundation
 import Logging
+import ToucanCore
 import ToucanSerialization
 import ToucanSource
-import ToucanCore
 
-private func getSafeUrl(
+private func getSafeURL(
     for path: String,
     using fileManager: FileManagerKit
 ) -> URL {
@@ -26,8 +26,9 @@ private func getSafeUrl(
 
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
+    // MARK: - Properties
 
-    let inputUrl: URL
+    let inputURL: URL
     let targetsToBuild: [String]
     let logger: Logger
 
@@ -35,6 +36,8 @@ public struct Toucan {
     //    let markdownParser: MarkdownParser
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
+
+    // MARK: - Lifecycle
 
     /// Initialize a new instance.
     /// - Parameters:
@@ -49,10 +52,12 @@ public struct Toucan {
         self.fileManager = FileManager.default
         self.encoder = ToucanYAMLEncoder()
         self.decoder = ToucanYAMLDecoder()
-        self.inputUrl = getSafeUrl(for: input, using: fileManager)
+        self.inputURL = getSafeURL(for: input, using: fileManager)
         self.targetsToBuild = targetsToBuild
         self.logger = logger
     }
+
+    // MARK: - Functions
 
     // MARK: - helpers
 
@@ -80,13 +85,13 @@ public struct Toucan {
 
     func loadTargetConfig() throws -> TargetConfig {
         try ObjectLoader(
-            url: inputUrl,
+            url: inputURL,
             locations:
-                fileManager
+            fileManager
                 .find(
                     name: "toucan",
                     extensions: ["yml", "yaml"],
-                    at: inputUrl
+                    at: inputURL
                 ),
             encoder: encoder,
             decoder: decoder,
@@ -114,7 +119,7 @@ public struct Toucan {
     public func generate(
         now: Date = .init()
     ) throws {
-        let workDirUrl = try prepareWorkingDirectory()
+        let workDirURL = try prepareWorkingDirectory()
 
         do {
             let targetConfig = try loadTargetConfig()
@@ -126,7 +131,7 @@ public struct Toucan {
                     metadata: [:]
                 )
                 let buildTargetSourceLoader = BuildTargetSourceLoader(
-                    sourceUrl: inputUrl,
+                    sourceURL: inputURL,
                     target: target,
                     fileManager: fileManager,
                     encoder: encoder,
@@ -136,13 +141,15 @@ public struct Toucan {
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
 
-                let themeLoader = ThemeLoader(
+                let templateLoader = TemplateLoader(
                     locations: buildTargetSource.locations,
                     fileManager: fileManager
                 )
 
-                let theme = try themeLoader.load()
-                let templates = themeLoader.getTemplatesIDsWithContents(theme)
+                let template = try templateLoader.load()
+                let templates = templateLoader.getTemplatesIDsWithContents(
+                    template
+                )
 
                 let validator = BuildTargetSourceValidator(
                     buildTargetSource: buildTargetSource
@@ -157,43 +164,43 @@ public struct Toucan {
 
                 let results = try renderer.render(now: now)
 
-                try resetDirectory(at: workDirUrl)
+                try resetDirectory(at: workDirURL)
 
                 // MARK: - Copy default assets
 
                 let copyManager = CopyManager(
                     fileManager: fileManager,
                     sources: [
-                        buildTargetSource.locations.currentThemeAssetsUrl,
+                        buildTargetSource.locations.currentTemplateAssetsURL,
                         buildTargetSource.locations
-                            .currentThemeAssetOverridesUrl,
-                        buildTargetSource.locations.siteAssetsUrl,
+                            .currentTemplateAssetOverridesURL,
+                        buildTargetSource.locations.siteAssetsURL,
                     ],
-                    destination: workDirUrl
+                    destination: workDirURL
                 )
                 try copyManager.copy()
 
                 // MARK: - Writing results
 
                 for result in results {
-                    let destinationFolder = workDirUrl.appending(
+                    let destinationFolder = workDirURL.appending(
                         path: result.destination.path
                     )
                     try fileManager.createDirectory(at: destinationFolder)
 
-                    let resultOutputUrl =
+                    let resultOutputURL =
                         destinationFolder
-                        .appending(path: result.destination.file)
-                        .appendingPathExtension(result.destination.ext)
+                            .appending(path: result.destination.file)
+                            .appendingPathExtension(result.destination.ext)
 
                     switch result.source {
-                    case .assetFile(let path):
-                        let srcUrl = buildTargetSource.locations.contentsUrl
+                    case let .assetFile(path):
+                        let srcURL = buildTargetSource.locations.contentsURL
                             .appending(path: path)
-                        try fileManager.copy(from: srcUrl, to: resultOutputUrl)
-                    case .asset(let string), .content(let string):
+                        try fileManager.copy(from: srcURL, to: resultOutputURL)
+                    case let .asset(string), let .content(string):
                         try string.write(
-                            to: resultOutputUrl,
+                            to: resultOutputURL,
                             atomically: true,
                             encoding: .utf8
                         )
@@ -203,29 +210,28 @@ public struct Toucan {
                 // MARK: - Finalize and cleanup
 
                 // TODO: make sure output url works well in all cases
-                var outputUrl = getSafeUrl(
+                var outputURL = getSafeURL(
                     for: target.output,
                     using: fileManager
                 )
-                if !outputUrl.path().hasPrefix("/") {
-                    outputUrl = inputUrl.deletingLastPathComponent()
+                if !outputURL.path().hasPrefix("/") {
+                    outputURL = inputURL.deletingLastPathComponent()
                         .appending(
                             path: target.output
                         )
                 }
 
-                try resetDirectory(at: outputUrl)
-                try fileManager.copyRecursively(from: workDirUrl, to: outputUrl)
-                try? fileManager.delete(at: workDirUrl)
+                try resetDirectory(at: outputURL)
+                try fileManager.copyRecursively(from: workDirURL, to: outputURL)
+                try? fileManager.delete(at: workDirURL)
             }
         }
         catch {
-            try? fileManager.delete(at: workDirUrl)
+            try? fileManager.delete(at: workDirURL)
             //            if let error = error as? ToucanError {
             //                print(error.logMessageStack())
             //            }
             throw error
         }
     }
-
 }

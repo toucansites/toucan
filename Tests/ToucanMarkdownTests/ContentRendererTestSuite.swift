@@ -5,14 +5,13 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import Foundation
-import Testing
 import Logging
+import Testing
 
 @testable import ToucanMarkdown
 
 @Suite
 struct MarkdownRendererTestSuite {
-
     @Test
     func basicRendering() throws {
         let logger = Logger(label: "ContentRendererTestSuite")
@@ -20,7 +19,7 @@ struct MarkdownRendererTestSuite {
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [
-                        MarkdownBlockDirective.Mocks.faq()
+                        MarkdownBlockDirective.Mocks.faq(),
                     ]
                 ),
                 outline: .init(
@@ -36,23 +35,23 @@ struct MarkdownRendererTestSuite {
         )
 
         let input = #"""
-            @FAQ {
-                ## test 
-                Lorem ipsum
-            }
-            """#
+        @FAQ {
+            ## test 
+            Lorem ipsum
+        }
+        """#
 
         let contents = renderer.render(
             content: input,
             id: "",
             slug: "",
             assetsPath: "",
-            baseUrl: ""
+            baseURL: ""
         )
 
         let html = #"""
-            <div class="faq"><h2 id="test">test</h2><p>Lorem ipsum</p></div>
-            """#
+        <div class="faq"><h2 id="test">test</h2><p>Lorem ipsum</p></div>
+        """#
 
         #expect(contents.html == html)
         #expect(
@@ -61,10 +60,9 @@ struct MarkdownRendererTestSuite {
                     level: 2,
                     text: "test",
                     fragment: "test"
-                )
+                ),
             ]
         )
         #expect(contents.readingTime == 1)
     }
-
 }

@@ -9,7 +9,6 @@ import Foundation
 import ToucanSource
 
 public extension [String: AnyCodable] {
-
     /// Returns a dictionary with the same keys as the original, where each value has been unwrapped or transformed using the `unboxed` method.
     ///
     /// - Returns: A `[String: Any]` dictionary with unboxed values.

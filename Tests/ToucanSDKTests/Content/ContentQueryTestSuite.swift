@@ -7,13 +7,12 @@
 import Foundation
 import Testing
 import ToucanCore
+@testable import ToucanSDK
 import ToucanSerialization
 import ToucanSource
-@testable import ToucanSDK
 
 @Suite
 struct ContentQueryTestSuite {
-
     func getMockContents(now: Date) throws -> [Content] {
         let buildTargetSource = Mocks.buildTargetSource(now: now)
         let encoder = ToucanYAMLEncoder()
@@ -421,7 +420,7 @@ struct ContentQueryTestSuite {
                 ),
             ]),
             orderBy: [
-                .init(key: "name", direction: .desc)
+                .init(key: "name", direction: .desc),
             ]
         )
 
@@ -455,7 +454,7 @@ struct ContentQueryTestSuite {
                 ),
             ]),
             orderBy: [
-                .init(key: "name", direction: .desc)
+                .init(key: "name", direction: .desc),
             ]
         )
 
@@ -483,7 +482,7 @@ struct ContentQueryTestSuite {
                 ),
             ]),
             orderBy: [
-                .init(key: "name", direction: .desc)
+                .init(key: "name", direction: .desc),
             ]
         )
 
@@ -507,7 +506,7 @@ struct ContentQueryTestSuite {
                 value: .init(["Author #2", "Author #3"])
             ),
             orderBy: [
-                .init(key: "name")
+                .init(key: "name"),
             ]
         )
 
@@ -534,7 +533,7 @@ struct ContentQueryTestSuite {
                 value: .init([21, 42])
             ),
             orderBy: [
-                .init(key: "name")
+                .init(key: "name"),
             ]
         )
 
@@ -561,7 +560,7 @@ struct ContentQueryTestSuite {
                 value: .init([1.0, 3.0])
             ),
             orderBy: [
-                .init(key: "title")
+                .init(key: "title"),
             ]
         )
 
@@ -782,9 +781,9 @@ struct ContentQueryTestSuite {
         let contents = try getMockContents(now: now)
         let pastDate =
             now
-            .addingTimeInterval(-86_400 * 2)
-            // TODO: double check this
-            .addingTimeInterval(-1)
+                .addingTimeInterval(-86400 * 2)
+                // TODO: double check this
+                .addingTimeInterval(-1)
 
         let query1 = Query(
             contentType: "post",
@@ -797,7 +796,7 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "publication",
                     direction: .asc
-                )
+                ),
             ]
         )
         let results1 = contents.run(
@@ -826,7 +825,7 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "publication",
                     direction: .desc
-                )
+                ),
             ]
         )
 
@@ -867,7 +866,7 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "order",
                     direction: .asc
-                )
+                ),
             ]
         )
 
@@ -879,7 +878,7 @@ struct ContentQueryTestSuite {
     }
 
     @Test
-    func resolveFilterParametersUsingId() async throws {
+    func resolveFilterParametersUsingID() async throws {
         let now = Date()
         let contents = try getMockContents(now: now)
 
@@ -894,12 +893,12 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "order",
                     direction: .asc
-                )
+                ),
             ]
         )
         .resolveFilterParameters(
             with: [
-                "id": "category-1"
+                "id": "category-1",
             ]
         )
 

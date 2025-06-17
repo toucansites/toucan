@@ -11,24 +11,14 @@ import ToucanCore
 ///
 /// Wraps the type of failure and an optional underlying error for context.
 public struct SourceLoaderError: ToucanError {
+    // MARK: - Properties
 
     /// A string representing the type of component that failed to load.
     let type: String
     /// An optional error providing additional context about the failure.
     let error: Error?
 
-    /// Initializes a new `SourceLoaderError`.
-    ///
-    /// - Parameters:
-    ///   - type: A string indicating the failed component type.
-    ///   - error: An optional error that triggered the failure.
-    init(
-        type: String,
-        error: Error? = nil
-    ) {
-        self.type = type
-        self.error = error
-    }
+    // MARK: - Computed Properties
 
     /// An array containing the underlying error if available, used for nested error representation.
     public var underlyingErrors: [Error] {
@@ -43,5 +33,20 @@ public struct SourceLoaderError: ToucanError {
     /// A user-facing message indicating a generic failure to load source content.
     public var userFriendlyMessage: String {
         "Could not load source."
+    }
+
+    // MARK: - Lifecycle
+
+    /// Initializes a new `SourceLoaderError`.
+    ///
+    /// - Parameters:
+    ///   - type: A string indicating the failed component type.
+    ///   - error: An optional error that triggered the failure.
+    init(
+        type: String,
+        error: Error? = nil
+    ) {
+        self.type = type
+        self.error = error
     }
 }

@@ -5,15 +5,18 @@
 //  Created by Tibor Bödecs on 2025. 06. 04..
 //
 
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import ToucanSerialization
 
 struct MustacheFile {
+    // MARK: - Properties
 
     var name: String
     var ext: String
     var template: String
+
+    // MARK: - Lifecycle
 
     init(
         name: String,
@@ -27,9 +30,8 @@ struct MustacheFile {
 }
 
 extension MustacheFile: BuildableItem {
-
     func buildItem() -> FileManagerPlayground.Item {
-        return .file(
+        .file(
             .init(
                 name: name + "." + ext,
                 string: template

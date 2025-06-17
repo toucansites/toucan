@@ -5,11 +5,12 @@
 //  Created by Tibor Bödecs on 2025. 02. 19..
 //
 
-import Markdown
 import Logging
+import Markdown
 
 /// A renderer that converts Markdown text to HTML, with support for custom block directives and paragraph styling.
 public struct MarkdownToHTMLRenderer {
+    // MARK: - Properties
 
     /// Custom block directives to extend Markdown syntax.
     public let customBlockDirectives: [MarkdownBlockDirective]
@@ -19,6 +20,8 @@ public struct MarkdownToHTMLRenderer {
 
     /// Logger instance
     public let logger: Logger
+
+    // MARK: - Lifecycle
 
     /// Initializes a `MarkdownToHTMLRenderer`.
     ///
@@ -36,6 +39,8 @@ public struct MarkdownToHTMLRenderer {
         self.logger = logger
     }
 
+    // MARK: - Functions
+
     // MARK: - render api
 
     /// Renders the provided Markdown string to an HTML string.
@@ -44,14 +49,14 @@ public struct MarkdownToHTMLRenderer {
     ///   - markdown: The input Markdown text to render.
     ///   - slug: A slug identifier used for generating.
     ///   - assetsPath: The path to the assets folder used for resource resolution.
-    ///   - baseUrl: The base URL used to resolve relative links within the Markdown.
+    ///   - baseURL: The base URL used to resolve relative links within the Markdown.
     ///
     /// - Returns: A fully rendered HTML string.
     public func renderHTML(
         markdown: String,
         slug: String,
         assetsPath: String,
-        baseUrl: String
+        baseURL: String
     ) -> String {
         // Create a Markdown document, enabling block directives if any are provided.
         let document = Document(
@@ -66,7 +71,7 @@ public struct MarkdownToHTMLRenderer {
             paragraphStyles: paragraphStyles,
             slug: slug,
             assetsPath: assetsPath,
-            baseUrl: baseUrl,
+            baseURL: baseURL,
             logger: logger,
         )
 

@@ -7,8 +7,7 @@
 
 import ToucanSource
 
-extension Condition {
-
+public extension Condition {
     /// Recursively resolves dynamic placeholders in the condition using a parameter map.
     ///
     /// Placeholders must be strings in the form `{{parameterKey}}` and will be
@@ -16,9 +15,9 @@ extension Condition {
     ///
     /// - Parameter parameters: A dictionary of key-value pairs to substitute into the condition.
     /// - Returns: A new `Condition` with resolved values where applicable.
-    public func resolve(with parameters: [String: AnyCodable]) -> Self {
+    func resolve(with parameters: [String: AnyCodable]) -> Self {
         switch self {
-        case .field(let key, let op, let value):
+        case let .field(key, op, value):
             guard
                 let stringValue = value.value(as: String.self),
                 stringValue.count > 4,
@@ -35,24 +34,23 @@ extension Condition {
 
             return .field(key: key, operator: op, value: newValue)
 
-        case .and(let conditions):
+        case let .and(conditions):
             return .and(conditions.map { $0.resolve(with: parameters) })
 
-        case .or(let conditions):
+        case let .or(conditions):
             return .or(conditions.map { $0.resolve(with: parameters) })
         }
     }
 }
 
-extension Query {
-
+public extension Query {
     /// Resolves dynamic filter parameters by injecting values into the filter condition tree.
     ///
     /// This is useful when filters include placeholders that need to be resolved at runtime.
     ///
     /// - Parameter parameters: A dictionary of key-value pairs to replace placeholders in the filter.
     /// - Returns: A new `Query` instance with resolved filter conditions.
-    public func resolveFilterParameters(
+    func resolveFilterParameters(
         with parameters: [String: AnyCodable]
     ) -> Self {
         .init(

@@ -5,15 +5,24 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 04. 18..
 //
 
-extension Config {
-
+public extension Config {
     /// Represents the location of block configuration files.
-    public struct Blocks: Codable, Equatable {
+    struct Blocks: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Provides a default `Blocks` configuration pointing to `"blocks"`.
+        public static var defaults: Self {
+            .init(path: "blocks")
         }
 
         // MARK: - Properties
@@ -23,12 +32,7 @@ extension Config {
         /// Example: `"blocks"` (default), or `"config/blocks"`
         public var path: String
 
-        // MARK: - Defaults
-
-        /// Provides a default `Blocks` configuration pointing to `"blocks"`.
-        public static var defaults: Self {
-            .init(path: "blocks")
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -57,7 +61,7 @@ extension Config {
 
             self.path =
                 try container.decodeIfPresent(String.self, forKey: .path)
-                ?? defaults.path
+                    ?? defaults.path
         }
     }
 }

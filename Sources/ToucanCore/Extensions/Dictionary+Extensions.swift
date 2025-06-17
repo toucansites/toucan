@@ -6,7 +6,6 @@
 //
 
 public extension Dictionary {
-
     /// Transforms the keys of the dictionary using the given closure, preserving the associated values.
     ///
     /// This method applies the provided transformation to each key in the dictionary,
@@ -17,15 +16,14 @@ public extension Dictionary {
     func mapKeys<T>(
         _ t: (Key) throws -> T
     ) rethrows -> [T: Value] {
-        .init(
-            uniqueKeysWithValues: try map { (try t($0.key), $0.value) }
+        try .init(
+            uniqueKeysWithValues: map { try (t($0.key), $0.value) }
         )
     }
 }
 
 /// This extension allows recursive merging of dictionaries with String keys and Any values.
 public extension Dictionary where Key == String {
-
     /// Recursively merges another `[String: Value]` dictionary into the current dictionary and returns a new dictionary.
     ///
     /// - Parameter other: The dictionary to merge into the current dictionary.
@@ -35,7 +33,8 @@ public extension Dictionary where Key == String {
     ) -> [String: Value] {
         var result = self
         for (key, value) in other {
-            if let existingValue = result[key] as? [String: Value],
+            if
+                let existingValue = result[key] as? [String: Value],
                 let newValue = value as? [String: Value]
             {
                 result[key] =
@@ -65,7 +64,8 @@ public extension Dictionary where Key == String {
                 continue
             }
 
-            if let array = current as? [Any], let index = Int(key),
+            if
+                let array = current as? [Any], let index = Int(key),
                 array.indices.contains(index)
             {
                 current = array[index]

@@ -8,6 +8,7 @@
 /// Represents a content query used to fetch or filter content entries
 /// based on content type, pagination, sorting, and filtering criteria.
 public struct Query: Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -40,6 +41,8 @@ public struct Query: Codable, Equatable {
 
     /// A list of fields and directions for ordering results.
     public var orderBy: [Order]
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 

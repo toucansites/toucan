@@ -2,37 +2,84 @@
 //  Template.swift
 //  Toucan
 //
-//  Created by Tibor Bödecs on 2025. 01. 31..
+//  Created by Tibor Bödecs on 2025. 05. 21..
 //
 
-import Foundation
+import struct Foundation.URL
 
-/// Represents the physical location of a template file, identified by a logical ID.
-public struct Template: Equatable {
+/**
+ Templates directory structure:
 
-    /// A unique identifier for the template
-    public var id: String
+ ```
+ templates
+    default
+        assets
+        views
+    overrides
+        default
+            assets
+            views
+ ```
+ */
 
-    /// The file system path to the template file relative from the selected template directory.
-    public var path: String
+/// Represents a template used by the Toucan system, including paths to assets and templates for both base and override components.
+public struct Template {
+    // MARK: - Nested Types
 
-    /// The contents of the template file.
-    public var contents: String
+    /// A group of assets and templates that make up a template component.
+    public struct Components {
+        // MARK: - Properties
 
-    /// Creates a new template instance.
-    ///
-    /// - Parameters:
-    ///   - id: A unique identifier for the template.
-    ///   - path: The relative file system path of the template file.
-    ///   - contents: The full contents of the template file.
-    public init(
-        id: String,
-        path: String,
-        contents: String
-    ) {
-        self.id = id
-        self.path = path
-        self.contents = contents
+        /// A list of asset file paths associated with the component.
+        public var assets: [String]
+        /// A list of templates associated with the component.
+        public var views: [View]
+
+        // MARK: - Lifecycle
+
+        /// Creates a new `Components` instance.
+        ///
+        /// - Parameters:
+        ///   - assets: A list of asset file paths.
+        ///   - views: A list of views.
+        public init(
+            assets: [String],
+            views: [View]
+        ) {
+            self.assets = assets
+            self.views = views
+        }
     }
 
+    // MARK: - Properties
+
+    /// The base URL where the template is located.
+    public var baseURL: URL
+    /// The primary components of the template.
+    public var components: Components
+    /// Override components that can replace or augment the default components.
+    public var overrides: Components
+    /// Content-specific components such as assets and templates used within the template.
+    public var content: Components
+
+    // MARK: - Lifecycle
+
+    /// Creates a new instance.
+    ///
+    /// - Parameters:
+    ///   - baseURL: The base URL where the template is located.
+    ///   - components: The primary components of the template.
+    ///   - overrides: Override components that can replace or augment the default components.
+    ///   - content: Content-specific components such as assets and templates used within the template.
+    public init(
+        baseURL: URL,
+        components: Components,
+        overrides: Components,
+        content: Components
+    ) {
+        self.baseURL = baseURL
+        self.components = components
+        self.overrides = overrides
+        self.content = content
+    }
 }

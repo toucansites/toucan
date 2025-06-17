@@ -6,63 +6,66 @@
 //
 
 import Foundation
-import ToucanCore
-import ToucanSource
-import ToucanSerialization
 import Logging
+import ToucanCore
+import ToucanSerialization
+import ToucanSource
 
-fileprivate extension Path {
-
+private extension Path {
     func getTypeLocalIdentifier() -> String {
         let newRawPath =
-            self.value
-            .split(separator: "/")
-            .last
-            .map(String.init) ?? ""
+            value
+                .split(separator: "/")
+                .last
+                .map(String.init) ?? ""
         return Path(newRawPath).trimmingBracketsContent()
     }
 }
 
 enum ContentResolverError: ToucanError {
-
     case contentType(ContentTypeResolverError)
     case unknown(Error)
 
+    // MARK: - Computed Properties
+
     var underlyingErrors: [any Error] {
         switch self {
-        case .contentType(let error):
-            return [error]
-        case .unknown(let error):
-            return [error]
+        case let .contentType(error):
+            [error]
+        case let .unknown(error):
+            [error]
         }
     }
 
     var logMessage: String {
         switch self {
-        case .contentType(let error):
-            return "Content type related error: \(error.logMessage)"
-        case .unknown(let error):
-            return error.localizedDescription
+        case let .contentType(error):
+            "Content type related error: \(error.logMessage)"
+        case let .unknown(error):
+            error.localizedDescription
         }
     }
 
     var userFriendlyMessage: String {
         switch self {
-        case .contentType(let error):
-            return "Content type related error: \(error.userFriendlyMessage)"
+        case let .contentType(error):
+            "Content type related error: \(error.userFriendlyMessage)"
         case .unknown:
-            return "Unknown content conversion error."
+            "Unknown content conversion error."
         }
     }
 }
 
 struct ContentResolver {
+    // MARK: - Properties
 
     var contentTypeResolver: ContentTypeResolver
     var encoder: ToucanEncoder
     var decoder: ToucanDecoder
     var dateFormatter: ToucanInputDateFormatter
     var logger: Logger
+
+    // MARK: - Lifecycle
 
     init(
         contentTypeResolver: ContentTypeResolver,
@@ -76,6 +79,103 @@ struct ContentResolver {
         self.decoder = decoder
         self.dateFormatter = dateFormatter
         self.logger = logger
+    }
+
+    // MARK: - Functions
+
+    private func rewrite(
+        iteratorID: String,
+        pageIndex: Int,
+        _ value: inout String
+    ) {
+        value = value.replacingOccurrences([
+            "{{\(iteratorID)}}": String(pageIndex),
+        ])
+    }
+
+    private func rewrite(
+        number: Int,
+        total: Int,
+        _ array: inout [String: AnyCodable]
+    ) {
+        for (key, _) in array {
+            if let stringValue = array[key]?.stringValue() {
+                array[key] = .init(
+                    replace(
+                        in: stringValue,
+                        number: number,
+                        total: total
+                    )
+                )
+            }
+        }
+    }
+
+    private func replace(
+        in value: String,
+        number: Int,
+        total: Int
+    ) -> String {
+        value.replacingOccurrences([
+            "{{number}}": String(number),
+            "{{total}}": String(total),
+        ])
+    }
+
+    private func createDictionaryValues(
+        assetKeys: [String],
+        array: [String]
+    ) -> [String: AnyCodable] {
+        var values: [String: AnyCodable] = [:]
+        for i in 0..<array.count {
+            values[assetKeys[i]] = .init(array[i])
+        }
+        return values
+    }
+
+    private func filterFilePaths(
+        from paths: [String],
+        input: Pipeline.Assets.Location
+    ) -> [String] {
+        paths.filter { filePath in
+            guard let url = URL(string: filePath) else {
+                return false
+            }
+
+            let path = url.deletingLastPathComponent().path
+            let name = url.deletingPathExtension().lastPathComponent
+            let ext = url.pathExtension
+
+            let inputPath = input.path ?? ""
+            let pathMatches =
+                inputPath == "*" || inputPath.isEmpty || path == inputPath
+            let nameMatches =
+                input.name == "*" || input.name.isEmpty || name == input.name
+            let extMatches =
+                input.ext == "*" || input.ext.isEmpty || ext == input.ext
+            return pathMatches && nameMatches && extMatches
+        }
+    }
+
+    // MARK: - asset behaviors
+
+    private func getNameAndExtension(
+        from path: String
+    ) -> (name: String, ext: String) {
+        let safePath = path.split(separator: "/").last.map(String.init) ?? ""
+
+        let parts = safePath.split(
+            separator: ".",
+            omittingEmptySubsequences: false
+        )
+        guard parts.count >= 2 else {
+            return (String(safePath), "") // No extension
+        }
+
+        let ext = String(parts.last!)
+        let filename = parts.dropLast().joined(separator: ".")
+
+        return (filename, ext)
     }
 
     // MARK: - conversion
@@ -124,7 +224,7 @@ struct ContentResolver {
         let value = rawValue ?? property.default
 
         switch property.type {
-        case .date(let config):
+        case let .date(config):
             guard
                 let rawDateValue = value?.value(as: String.self)
             else {
@@ -153,14 +253,13 @@ struct ContentResolver {
     func convert(
         rawContent: RawContent
     ) throws(ContentResolverError) -> Content {
-
         //        logger.debug("Converting raw content")
 
-        let typeId = rawContent.markdown.frontMatter.string("type")
+        let typeID = rawContent.markdown.frontMatter.string("type")
 
         let contentType = try getContentType(
             for: rawContent.origin,
-            using: typeId
+            using: typeID
         )
 
         var properties: [String: AnyCodable] = [:]
@@ -169,7 +268,6 @@ struct ContentResolver {
         for (key, property) in contentType.properties.sorted(by: {
             $0.key < $1.key
         }) {
-
             let rawValue = rawContent.markdown.frontMatter[key]
 
             //            logger.debug("Converting property")
@@ -209,8 +307,8 @@ struct ContentResolver {
         // Filter out reserved keys and schema-mapped fields to extract user-defined fields
         let keysToRemove =
             ["id", "type", "slug"]
-            + contentType.properties.keys
-            + contentType.relations.keys
+                + contentType.properties.keys
+                + contentType.relations.keys
 
         var userDefined = rawContent.markdown.frontMatter
         for key in keysToRemove {
@@ -224,10 +322,12 @@ struct ContentResolver {
 
         // Extract `slug` from front matter or fallback to origin slug
         var slug: String = rawContent.origin.slug
-        if let rawSlug = rawContent.markdown.frontMatter.string(
-            "slug",
-            allowingEmptyValue: true
-        ) {
+        if
+            let rawSlug = rawContent.markdown.frontMatter.string(
+                "slug",
+                allowingEmptyValue: true
+            )
+        {
             slug = rawSlug
         }
 
@@ -299,9 +399,9 @@ struct ContentResolver {
         var finalContents: [Content] = []
 
         for content in contents {
-            if let iteratorId = content.slug.extractIteratorId() {
+            if let iteratorID = content.slug.extractIteratorID() {
                 guard
-                    let query = iterators[iteratorId]
+                    let query = iterators[iteratorID]
                 else {
                     continue
                 }
@@ -325,12 +425,12 @@ struct ContentResolver {
 
                     var alteredContent = content
                     rewrite(
-                        iteratorId: iteratorId,
+                        iteratorID: iteratorID,
                         pageIndex: currentPageIndex,
                         &alteredContent.typeAwareID
                     )
                     rewrite(
-                        iteratorId: iteratorId,
+                        iteratorID: iteratorID,
                         pageIndex: currentPageIndex,
                         &alteredContent.slug.value
                     )
@@ -357,12 +457,13 @@ struct ContentResolver {
                         .map { i in
                             let pageIndex = i + 1
                             let permalink = content.slug.permalink(
-                                baseUrl: baseURL,
+                                baseURL: baseURL,
                             )
                             return IteratorInfo.Link(
                                 number: pageIndex,
                                 permalink: permalink.replacingOccurrences(
-                                    ["{{\(iteratorId)}}": String(pageIndex)]),
+                                    ["{{\(iteratorID)}}": String(pageIndex)]
+                                ),
                                 isCurrent: pageIndex == currentPageIndex
                             )
                         }
@@ -389,7 +490,6 @@ struct ContentResolver {
 
                     finalContents.append(alteredContent)
                 }
-
             }
             else {
                 finalContents.append(content)
@@ -398,53 +498,14 @@ struct ContentResolver {
         return finalContents
     }
 
-    private func rewrite(
-        iteratorId: String,
-        pageIndex: Int,
-        _ value: inout String
-    ) {
-        value = value.replacingOccurrences([
-            "{{\(iteratorId)}}": String(pageIndex)
-        ])
-    }
-
-    private func rewrite(
-        number: Int,
-        total: Int,
-        _ array: inout [String: AnyCodable]
-    ) {
-        for (key, _) in array {
-            if let stringValue = array[key]?.stringValue() {
-                array[key] = .init(
-                    replace(
-                        in: stringValue,
-                        number: number,
-                        total: total
-                    )
-                )
-            }
-        }
-    }
-
-    private func replace(
-        in value: String,
-        number: Int,
-        total: Int
-    ) -> String {
-        value.replacingOccurrences([
-            "{{number}}": String(number),
-            "{{total}}": String(total),
-        ])
-    }
-
     // MARK: - asset resolution
 
     func apply(
         assetProperties: [Pipeline.Assets.Property],
         to contents: [Content],
-        contentsUrl: URL,
+        contentsURL: URL,
         assetsPath: String,
-        baseUrl: String,
+        baseURL: String,
     ) throws -> [Content] {
         var results: [Content] = []
 
@@ -453,8 +514,8 @@ struct ContentResolver {
 
             for property in assetProperties {
                 let path = item.rawValue.origin.path
-                let url = contentsUrl.appendingPathComponent(path.value)
-                let assetsUrl = url.appending(path: assetsPath)
+                let url = contentsURL.appendingPathComponent(path.value)
+                let assetsURL = url.appending(path: assetsPath)
 
                 let filteredAssets = filterFilePaths(
                     from: content.rawValue.assets,
@@ -474,7 +535,7 @@ struct ContentResolver {
                 let resolvedAssets = filteredAssets.map {
                     "./\(assetsPath)/\($0)"
                         .resolveAsset(
-                            baseUrl: baseUrl,
+                            baseURL: baseURL,
                             assetsPath: assetsPath,
                             slug: content.slug.value
                         )
@@ -487,8 +548,9 @@ struct ContentResolver {
 
                 switch property.action {
                 case .add:
-                    if let originalItems = frontMatter[property.property]?
-                        .arrayValue(as: String.self)
+                    if
+                        let originalItems = frontMatter[property.property]?
+                            .arrayValue(as: String.self)
                     {
                         item.properties[property.property] = .init(
                             originalItems + finalAssets
@@ -513,7 +575,7 @@ struct ContentResolver {
                 case .load:
                     if filteredAssets.count == 1 {
                         let asset = filteredAssets[0]
-                        let url = assetsUrl.appending(path: asset)
+                        let url = assetsURL.appending(path: asset)
                         let contents = try String(contentsOf: url)
                         item.properties[property.property] = .init(contents)
                     }
@@ -521,7 +583,7 @@ struct ContentResolver {
                         var values: [String: AnyCodable] = [:]
                         for i in 0..<filteredAssets.count {
                             let asset = filteredAssets[i]
-                            let url = assetsUrl.appending(path: asset)
+                            let url = assetsURL.appending(path: asset)
                             let contents = try String(contentsOf: url)
                             values[assetKeys[i]] = .init(contents)
                         }
@@ -531,7 +593,7 @@ struct ContentResolver {
                 case .parse:
                     if filteredAssets.count == 1 {
                         let asset = filteredAssets[0]
-                        let url = assetsUrl.appending(path: asset)
+                        let url = assetsURL.appending(path: asset)
                         let data = try Data(contentsOf: url)
                         let yaml = try ToucanYAMLDecoder()
                             .decode(AnyCodable.self, from: data)
@@ -541,7 +603,7 @@ struct ContentResolver {
                         var values: [String: AnyCodable] = [:]
                         for i in 0..<filteredAssets.count {
                             let asset = filteredAssets[i]
-                            let url = assetsUrl.appending(path: asset)
+                            let url = assetsURL.appending(path: asset)
                             let data = try Data(contentsOf: url)
                             let yaml = try ToucanYAMLDecoder()
                                 .decode(AnyCodable.self, from: data)
@@ -556,69 +618,12 @@ struct ContentResolver {
         return results
     }
 
-    private func createDictionaryValues(
-        assetKeys: [String],
-        array: [String]
-    ) -> [String: AnyCodable] {
-        var values: [String: AnyCodable] = [:]
-        for i in 0..<array.count {
-            values[assetKeys[i]] = .init(array[i])
-        }
-        return values
-    }
-
-    private func filterFilePaths(
-        from paths: [String],
-        input: Pipeline.Assets.Location
-    ) -> [String] {
-        paths.filter { filePath in
-            guard let url = URL(string: filePath) else {
-                return false
-            }
-
-            let path = url.deletingLastPathComponent().path
-            let name = url.deletingPathExtension().lastPathComponent
-            let ext = url.pathExtension
-
-            let inputPath = input.path ?? ""
-            let pathMatches =
-                inputPath == "*" || inputPath.isEmpty || path == inputPath
-            let nameMatches =
-                input.name == "*" || input.name.isEmpty || name == input.name
-            let extMatches =
-                input.ext == "*" || input.ext.isEmpty || ext == input.ext
-            return pathMatches && nameMatches && extMatches
-        }
-    }
-
-    // MARK: - asset behaviors
-
-    private func getNameAndExtension(
-        from path: String
-    ) -> (name: String, ext: String) {
-
-        let safePath = path.split(separator: "/").last.map(String.init) ?? ""
-
-        let parts = safePath.split(
-            separator: ".",
-            omittingEmptySubsequences: false
-        )
-        guard parts.count >= 2 else {
-            return (String(safePath), "")  // No extension
-        }
-
-        let ext = String(parts.last!)
-        let filename = parts.dropLast().joined(separator: ".")
-
-        return (filename, ext)
-    }
-
     // TODO: Behavior protocol?
 
     func applyBehaviors(
         pipeline: Pipeline,
         to contents: [Content],
-        contentsUrl: URL,
+        contentsURL: URL,
         assetsPath: String
     ) throws -> [PipelineResult] {
         var results: [PipelineResult] = []
@@ -670,12 +675,12 @@ struct ContentResolver {
                     .dropLast()
                     .joined(separator: "/")
 
-                    let fileUrl = contentsUrl.appending(path: sourcePath)
+                    let fileURL = contentsURL.appending(path: sourcePath)
 
                     switch behavior.id {
                     case CompileSASSBehavior.id:
                         let script = try CompileSASSBehavior()
-                        let css = try script.run(fileUrl: fileUrl)
+                        let css = try script.run(fileURL: fileURL)
 
                         // TODO: proper output management later on
                         results.append(
@@ -691,7 +696,7 @@ struct ContentResolver {
 
                     case MinifyCSSBehavior.id:
                         let script = MinifyCSSBehavior()
-                        let css = try script.run(fileUrl: fileUrl)
+                        let css = try script.run(fileURL: fileURL)
 
                         results.append(
                             .init(
@@ -704,7 +709,7 @@ struct ContentResolver {
                             )
                         )
 
-                    default:  // copy
+                    default: // copy
                         results.append(
                             .init(
                                 source: .assetFile(sourcePath),

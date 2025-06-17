@@ -12,47 +12,46 @@ import ToucanSerialization
 
 @Suite
 struct PipelineTestSuite {
-
     // MARK: - order
 
     @Test
     func standard() throws {
         let data = """
-            id: test
-            queries: 
-                featured:
-                    contentType: post
-                    limit: 10
-                    filter:
-                        key: featured
-                        operator: equals
-                        value: true
-                    orderBy:
-                        - key: publication
-                          direction: desc
+        id: test
+        queries: 
+            featured:
+                contentType: post
+                limit: 10
+                filter:
+                    key: featured
+                    operator: equals
+                    value: true
+                orderBy:
+                    - key: publication
+                      direction: desc
 
-            contentTypes: 
-                include:
-                    - page
-                    - post
-            engine: 
-                id: test
-                options:
-                    foo: bar
-                    foo2: 
-                    bool: false
-                    double: 2.0
-                    int: 100
-                    date: 01/16/2023
-                    array:
-                        - value1
-                        - value2
-            output:
-                path: "{{slug}}"
-                file: "{{id}}"
-                ext: json
-            """
-            .data(using: .utf8)!
+        contentTypes: 
+            include:
+                - page
+                - post
+        engine: 
+            id: test
+            options:
+                foo: bar
+                foo2: 
+                bool: false
+                double: 2.0
+                int: 100
+                date: 01/16/2023
+                array:
+                    - value1
+                    - value2
+        output:
+            path: "{{slug}}"
+            file: "{{id}}"
+            ext: json
+        """
+        .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -101,28 +100,28 @@ struct PipelineTestSuite {
     @Test
     func scopes() throws {
         let data = """
+        id: test
+        scopes: 
+            post:
+                list:
+                    context: 
+                        - detail
+                    fields:
+        dataTypes:
+            date:
+                dateFormats:
+                    test: 
+                        locale: en-US
+                        timeZone: EST
+                        format: ymd
+        engine: 
             id: test
-            scopes: 
-                post:
-                    list:
-                        context: 
-                            - detail
-                        fields:
-            dataTypes:
-                date:
-                    dateFormats:
-                        test: 
-                            locale: en-US
-                            timeZone: EST
-                            format: ymd
-            engine: 
-                id: test
-            output:
-                path: "{{slug}}"
-                file: index
-                ext: html
-            """
-            .data(using: .utf8)!
+        output:
+            path: "{{slug}}"
+            file: index
+            ext: html
+        """
+        .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 

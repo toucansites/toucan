@@ -6,12 +6,11 @@
 //
 
 import Foundation
+import Testing
 import ToucanSDK
 import ToucanSource
-import Testing
 
 extension Mocks {
-
     static func buildTargetSource(
         location: URL = .init(filePath: ""),
         now: Date,
@@ -19,7 +18,6 @@ extension Mocks {
         config: Config = .defaults,
         settings: Settings = .defaults
     ) -> BuildTargetSource {
-
         let formatter = ToucanInputDateFormatter(
             dateConfig: config.dataTypes.date
         )
@@ -46,7 +44,7 @@ extension Mocks {
 
         return .init(
             locations: .init(
-                sourceUrl: location,
+                sourceURL: location,
                 config: config
             ),
             target: target,
@@ -98,51 +96,51 @@ extension Mocks {
                     now: now,
                     // near past
                     publication: formatter.string(
-                        from: now.addingTimeInterval(-86_400),
+                        from: now.addingTimeInterval(-86400),
                         using: publicationConfig
                     ),
                     // near future
                     expiration: formatter.string(
-                        from: now.addingTimeInterval(86_400),
+                        from: now.addingTimeInterval(86400),
                         using: expirationConfig
                     ),
                     featured: false,
-                    authorIds: [1, 2],
-                    tagIds: [1, 2]
+                    authorIDs: [1, 2],
+                    tagIDs: [1, 2]
                 ),
                 Mocks.RawContents.post(
                     id: 2,
                     now: now,
                     // past
                     publication: formatter.string(
-                        from: now.addingTimeInterval(-86_400 * 2),
+                        from: now.addingTimeInterval(-86400 * 2),
                         using: publicationConfig
                     ),
                     // future
                     expiration: formatter.string(
-                        from: now.addingTimeInterval(86_400 * 2),
+                        from: now.addingTimeInterval(86400 * 2),
                         using: expirationConfig
                     ),
                     featured: true,
-                    authorIds: [1, 2, 3],
-                    tagIds: [2]
+                    authorIDs: [1, 2, 3],
+                    tagIDs: [2]
                 ),
                 Mocks.RawContents.post(
                     id: 3,
                     now: now,
                     // distant past
                     publication: formatter.string(
-                        from: now.addingTimeInterval(-86_400 * 3),
+                        from: now.addingTimeInterval(-86400 * 3),
                         using: publicationConfig
                     ),
                     // distant future
                     expiration: formatter.string(
-                        from: now.addingTimeInterval(86_400 * 3),
+                        from: now.addingTimeInterval(86400 * 3),
                         using: expirationConfig
                     ),
                     featured: false,
-                    authorIds: [2, 3],
-                    tagIds: [2, 3]
+                    authorIDs: [2, 3],
+                    tagIDs: [2, 3]
                 ),
                 Mocks.RawContents.postPagination(now: now),
 
@@ -150,18 +148,18 @@ extension Mocks {
                 Mocks.RawContents.category(id: 2, now: now),
                 Mocks.RawContents.category(id: 3, now: now),
 
-                Mocks.RawContents.guide(id: 1, categoryId: 1, now: now),
-                Mocks.RawContents.guide(id: 2, categoryId: 1, now: now),
-                Mocks.RawContents.guide(id: 3, categoryId: 1, now: now),
-                Mocks.RawContents.guide(id: 4, categoryId: 2, now: now),
-                Mocks.RawContents.guide(id: 5, categoryId: 2, now: now),
-                Mocks.RawContents.guide(id: 6, categoryId: 2, now: now),
-                Mocks.RawContents.guide(id: 7, categoryId: 3, now: now),
-                Mocks.RawContents.guide(id: 8, categoryId: 3, now: now),
-                Mocks.RawContents.guide(id: 9, categoryId: 3, now: now),
+                Mocks.RawContents.guide(id: 1, categoryID: 1, now: now),
+                Mocks.RawContents.guide(id: 2, categoryID: 1, now: now),
+                Mocks.RawContents.guide(id: 3, categoryID: 1, now: now),
+                Mocks.RawContents.guide(id: 4, categoryID: 2, now: now),
+                Mocks.RawContents.guide(id: 5, categoryID: 2, now: now),
+                Mocks.RawContents.guide(id: 6, categoryID: 2, now: now),
+                Mocks.RawContents.guide(id: 7, categoryID: 3, now: now),
+                Mocks.RawContents.guide(id: 8, categoryID: 3, now: now),
+                Mocks.RawContents.guide(id: 9, categoryID: 3, now: now),
             ],
             blockDirectives: [
-                Mocks.Blocks.link()
+                Mocks.Blocks.link(),
             ]
         )
     }

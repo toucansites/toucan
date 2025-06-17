@@ -1,5 +1,5 @@
 //
-//  Mocks+Templates.swift
+//  Mocks+Views.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
@@ -7,34 +7,33 @@
 
 import ToucanSource
 
-extension Mocks.Templates {
-
+extension Mocks.Views {
     static func all(
         contextValue: String = "{{.}}"
     ) -> [String: String] {
         [
-            "html": Mocks.Templates.html(),
-            "redirect": Mocks.Templates.redirect(),
-            "rss": Mocks.Templates.rss(),
-            "sitemap": Mocks.Templates.sitemap(),
+            "html": html(),
+            "redirect": redirect(),
+            "rss": rss(),
+            "sitemap": sitemap(),
 
-            "pages.default": Mocks.Templates.page(),
-            "pages.404": Mocks.Templates.notFound(),
-            "pages.context": Mocks.Templates.context(value: contextValue),
+            "pages.default": page(),
+            "pages.404": notFound(),
+            "pages.context": context(value: contextValue),
 
-            "docs.category.default": Mocks.Templates.category(),
-            "docs.guide.default": Mocks.Templates.guide(),
+            "docs.category.default": category(),
+            "docs.guide.default": guide(),
 
-            "blog.post.default": Mocks.Templates.post(),
-            "blog.author.default": Mocks.Templates.author(),
-            "blog.tag.default": Mocks.Templates.tag(),
+            "blog.post.default": post(),
+            "blog.author.default": author(),
+            "blog.tag.default": tag(),
 
-            "partials.blog.author": Mocks.Templates.partialAuthor(),
-            "partials.blog.tag": Mocks.Templates.partialTag(),
-            "partials.blog.post": Mocks.Templates.partialPost(),
+            "partials.blog.author": partialAuthor(),
+            "partials.blog.tag": partialTag(),
+            "partials.blog.post": partialPost(),
 
-            "partials.docs.category": Mocks.Templates.partialCategory(),
-            "partials.docs.guide": Mocks.Templates.partialGuide(),
+            "partials.docs.category": partialCategory(),
+            "partials.docs.guide": partialGuide(),
         ]
     }
 
@@ -106,7 +105,7 @@ extension Mocks.Templates {
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
             {{/context.tags}}
-            
+
             {{#context.categories}}
                 <loc>{{permalink}}</loc>
                 <lastmod>{{lastUpdate.formats.sitemap}}</lastmod>
@@ -142,8 +141,8 @@ extension Mocks.Templates {
             {{#page.next}}<link rel="next" href="{{permalink}}">{{/page.next}}
 
             <link rel="stylesheet" href="{{baseUrl}}/css/style.css">
-            <link rel="stylesheet" href="{{baseUrl}}/css/theme.css">
-            
+            <link rel="stylesheet" href="{{baseUrl}}/css/template.css">
+
             {{#page.css}}<link rel="stylesheet" href="{{.}}">{{/page.css}}
         </head>
 
@@ -225,7 +224,7 @@ extension Mocks.Templates {
         {{<html}}
         {{$main}}
         <article class="post">
-            
+
             <header>
                 {{#page.image}}<img src="{{page.image}}" alt="{{page.title}}">{{/page.image}}
                 <div class="meta">
@@ -235,14 +234,14 @@ extension Mocks.Templates {
                 <h1>{{page.title}}</h1>
                 <hr>
                 <p class="excerpt">{{page.description}}</p>
-                
-                
+
+
             </header>
 
             <section>
-            
+
             {{& page.contents.html}}
-                
+
             </section>
 
             <footer class="grid grid-221">
@@ -259,7 +258,7 @@ extension Mocks.Templates {
                 {{/page.tags}}
                 </div>
             </footer>
-            
+
             <section>
             {{#empty(page.related)}}
             {{/empty(page.related)}}
@@ -304,7 +303,7 @@ extension Mocks.Templates {
             {{/iterator.items}}
             </div>
             {{/empty(iterator.items)}}
-            
+
             {{#empty(iterator.links)}}
             {{/empty(iterator.links)}}
             {{^empty(iterator.links)}}
@@ -338,7 +337,7 @@ extension Mocks.Templates {
             {{#context.tags}}
                 {{> partials.blog.tag}}
             {{/context.tags}}
-            
+
             </div>
             {{/empty(context.tags)}}
         </div>
@@ -367,7 +366,7 @@ extension Mocks.Templates {
             {{/context.authors}}
             </div>
             {{/empty(context.authors)}}
-            
+
         </div>
 
         {{/main}}
@@ -394,10 +393,10 @@ extension Mocks.Templates {
             {{/context.posts}}
             </div>
             {{/empty(context.posts)}}
-            
+
             <br>
             <a href="/articles/page/1" class="cta">Browse all articles</a>
-            
+
 
             <h2>Tags</h2>
             <br>
@@ -411,7 +410,7 @@ extension Mocks.Templates {
             {{/context.tags}}
             </div>
             {{/empty(context.tags)}}
-            
+
             <h2>Authors</h2>
             <br>
             {{#empty(context.authors)}}
@@ -446,7 +445,7 @@ extension Mocks.Templates {
             </header>
 
             {{& page.contents.html}}
-            
+
             {{#empty(page.posts)}}
             Empty.
             {{/empty(page.posts)}}
@@ -469,7 +468,7 @@ extension Mocks.Templates {
         {{<html}}
         {{$main}}
         <div id="author-page">
-            
+
             <header>
                 {{#page.image}}<img class="large rounded" src="{{.}}" alt="{{page.title}}">{{/page.image}}
                 <h1>{{page.title}}</h1>
@@ -490,7 +489,7 @@ extension Mocks.Templates {
             {{/page.posts}}
             </div>
             {{/empty(page.posts)}}
-            
+
         </div>
 
         {{/main}}
@@ -511,7 +510,7 @@ extension Mocks.Templates {
                 <article>
                     <a href="/docs/">Docs</a>
                     {{& page.contents.html}}
-                
+
                     {{#empty(page.guides)}}
                     {{/empty(page.guides)}}
                     {{^empty(page.guides)}}
@@ -547,7 +546,7 @@ extension Mocks.Templates {
                     {{#page.category}}
                     <a href="{{permalink}}">{{title}}</a>
                     {{/page.category}}
-                    
+
                     {{& page.contents.html}}
 
 
@@ -563,7 +562,7 @@ extension Mocks.Templates {
                         <a href="{{permalink}}">{{title}}</a>
                     </div>
                     {{/page.guide.prev}}
-                        
+
                     {{^page.guide.next}}
                     <div></div>
                     {{/page.guide.next}}
@@ -673,11 +672,11 @@ extension Mocks.Templates {
                 <time datetime="{{publication.formats.iso8601}}">{{publication.date.short}}</time>
                 {{#contents.readingTime}} &middot; <span class="reading-time">{{.}} min read</span>{{/contents.readingTime}}
             </div>
-            
+
             <h2 class="title"><a href="{{permalink}}" target="">{{title}}</a></h2>
             <hr>
             <p>{{description}}</p>
-            
+
             <div class="grid grid-221">
                 <div class="author-list">
                 {{#authors}}
@@ -686,7 +685,7 @@ extension Mocks.Templates {
                     </a>
                 {{/authors}}
                 </div>
-                
+
                 <div class="tag-list">
                 {{#tags}}
                     <a href="{{permalink}}"><small>{{title}}</small></a>
@@ -748,5 +747,4 @@ extension Mocks.Templates {
         </a>
         """#
     }
-
 }

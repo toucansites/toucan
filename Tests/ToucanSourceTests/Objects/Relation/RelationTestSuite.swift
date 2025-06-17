@@ -12,19 +12,18 @@ import ToucanSerialization
 
 @Suite
 struct RelationTestSuite {
-
     // MARK: - order
 
     @Test
     func basicOrdering() throws {
         let data = """
-            references: post
-            type: many
-            order: 
-                key: title
-                direction: desc
-            """
-            .data(using: .utf8)!
+        references: post
+        type: many
+        order: 
+            key: title
+            direction: desc
+        """
+        .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -38,5 +37,4 @@ struct RelationTestSuite {
         #expect(result.order?.key == "title")
         #expect(result.order?.direction == .desc)
     }
-
 }

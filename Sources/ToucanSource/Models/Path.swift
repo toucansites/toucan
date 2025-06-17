@@ -9,9 +9,12 @@ import Foundation
 
 /// A value type representing a path for a raw content item.
 public struct Path: Equatable {
+    // MARK: - Properties
 
     /// The raw value as a string.
     public var value: String
+
+    // MARK: - Lifecycle
 
     /// Initializes a new path.
     ///
@@ -24,7 +27,6 @@ public struct Path: Equatable {
 }
 
 extension Path: Codable {
-
     /// Creates a new instance by decoding from the given decoder.
     ///
     /// This initializer attempts to decode the value as a single string.
@@ -35,7 +37,7 @@ extension Path: Codable {
         from decoder: Decoder
     ) throws {
         let container = try decoder.singleValueContainer()
-        value = try container.decode(String.self)
+        self.value = try container.decode(String.self)
     }
 
     /// Encodes this value into the given encoder.
@@ -52,28 +54,29 @@ extension Path: Codable {
     }
 }
 
-extension Path {
-
+public extension Path {
     /// Returns a new `Path` instance with the last component removed.
     ///
     /// Useful for extracting the base directory of a given path.
     ///
     /// - Returns: A `Path` instance without the final path component.
-    public func basePath() -> Path {
+    func basePath() -> Path {
         let rawPath =
             value
-            .split(separator: "/")
-            .dropLast()
-            .joined(separator: "/")
+                .split(separator: "/")
+                .dropLast()
+                .joined(separator: "/")
+
         return .init(rawPath)
     }
+
     /// Returns a string with all content inside brackets removed.
     ///
     /// Optionally removes percent encoding before processing.
     ///
     /// - Parameter shouldRemovePercentEncoding: A Boolean value that indicates whether to remove percent encoding.
     /// - Returns: A string without the content inside square brackets.
-    public func trimmingBracketsContent(
+    func trimmingBracketsContent(
         shouldRemovePercentEncoding: Bool = true
     ) -> String {
         var result = ""

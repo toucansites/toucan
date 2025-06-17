@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 03..
 //
 
-extension Pipeline {
-
+public extension Pipeline {
     /// Represents the rendering engine configuration used in a content pipeline.
-    public struct Engine: Codable {
+    struct Engine: Codable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -27,6 +27,8 @@ extension Pipeline {
         /// These options are engine-dependent and may define things like layout names,
         /// file extensions, or custom behaviors.
         public var options: [String: AnyCodable]
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

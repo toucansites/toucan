@@ -9,7 +9,6 @@ import Foundation
 import ToucanSource
 
 public extension Content {
-
     /// Flattens the content's core properties, relations, and metadata into a single dictionary
     /// for use in filtering, querying, or templating contexts.
     ///
@@ -37,10 +36,10 @@ public extension Content {
                     fields[key] = .init([])
                 }
                 else {
-                    fields[key] = .init(relation.identifiers[0])  // Single ID
+                    fields[key] = .init(relation.identifiers[0]) // Single ID
                 }
             case .many:
-                fields[key] = .init(relation.identifiers)  // Array of IDs
+                fields[key] = .init(relation.identifiers) // Array of IDs
             }
         }
 
@@ -55,7 +54,6 @@ public extension Content {
 }
 
 public extension [Content] {
-
     /// Executes a `Query` against the current content collection, applying filtering,
     /// sorting, and pagination.
     ///
@@ -72,7 +70,7 @@ public extension [Content] {
             contents: contents,
             using: query.resolveFilterParameters(
                 with: [
-                    "date.now": .init(now)
+                    "date.now": .init(now),
                 ]
             )
         )
@@ -89,7 +87,8 @@ public extension [Content] {
 
         for order in query.orderBy.reversed() {
             filteredContents.sort { a, b in
-                guard let valueA = a.properties[order.key],
+                guard
+                    let valueA = a.properties[order.key],
                     let valueB = b.properties[order.key]
                 else { return false }
 
@@ -119,7 +118,7 @@ public extension [Content] {
         guard let condition else { return true }
 
         switch condition {
-        case .field(let key, let `operator`, let value):
+        case let .field(key, `operator`, value):
             guard let fieldValue = props[key] else { return false }
             return evaluateField(
                 fieldValue: fieldValue,
@@ -127,12 +126,12 @@ public extension [Content] {
                 value: value
             )
 
-        case .and(let conditions):
+        case let .and(conditions):
             return conditions.allSatisfy {
                 evaluate(condition: $0, with: props)
             }
 
-        case .or(let conditions):
+        case let .or(conditions):
             return conditions.contains {
                 evaluate(condition: $0, with: props)
             }
@@ -141,25 +140,29 @@ public extension [Content] {
 
     /// Compares two values for equality, supporting multiple types.
     private func equals(_ valueA: AnyCodable, _ valueB: AnyCodable) -> Bool {
-        if let a = valueA.value(as: Bool.self),
+        if
+            let a = valueA.value(as: Bool.self),
             let b = valueB.value(as: Bool.self)
         {
             return a == b
         }
 
-        if let a = valueA.value(as: Int.self),
+        if
+            let a = valueA.value(as: Int.self),
             let b = valueB.value(as: Int.self)
         {
             return a == b
         }
 
-        if let a = valueA.value(as: Double.self),
+        if
+            let a = valueA.value(as: Double.self),
             let b = valueB.value(as: Double.self)
         {
             return a == b
         }
 
-        if let a = valueA.value(as: String.self),
+        if
+            let a = valueA.value(as: String.self),
             let b = valueB.value(as: String.self)
         {
             return a == b
@@ -175,21 +178,24 @@ public extension [Content] {
         ascending: Bool,
         isInclusive: Bool = false
     ) -> Bool {
-        if let a = valueA.value(as: Int.self),
+        if
+            let a = valueA.value(as: Int.self),
             let b = valueB.value(as: Int.self)
         {
             return isInclusive
                 ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
         }
 
-        if let a = valueA.value(as: Double.self),
+        if
+            let a = valueA.value(as: Double.self),
             let b = valueB.value(as: Double.self)
         {
             return isInclusive
                 ? (ascending ? a <= b : a >= b) : (ascending ? a < b : a > b)
         }
 
-        if let a = valueA.value(as: String.self),
+        if
+            let a = valueA.value(as: String.self),
             let b = valueB.value(as: String.self)
         {
             return isInclusive
@@ -207,9 +213,13 @@ public extension [Content] {
     ) -> Bool {
         switch `operator` {
         case .equals: return equals(fieldValue, value)
+
         case .notEquals: return !equals(fieldValue, value)
+
         case .lessThan: return compare(fieldValue, value, ascending: true)
+
         case .greaterThan: return compare(fieldValue, value, ascending: false)
+
         case .lessThanOrEquals:
             return compare(
                 fieldValue,
@@ -217,6 +227,7 @@ public extension [Content] {
                 ascending: true,
                 isInclusive: true
             )
+
         case .greaterThanOrEquals:
             return compare(
                 fieldValue,
@@ -236,17 +247,20 @@ public extension [Content] {
                 ?? false
 
         case .in:
-            if let v = fieldValue.value(as: Int.self),
+            if
+                let v = fieldValue.value(as: Int.self),
                 let arr = value.value(as: [Int].self)
             {
                 return arr.contains(v)
             }
-            if let v = fieldValue.value(as: Double.self),
+            if
+                let v = fieldValue.value(as: Double.self),
                 let arr = value.value(as: [Double].self)
             {
                 return arr.contains(v)
             }
-            if let v = fieldValue.value(as: String.self),
+            if
+                let v = fieldValue.value(as: String.self),
                 let arr = value.value(as: [String].self)
             {
                 return arr.contains(v)
@@ -254,17 +268,20 @@ public extension [Content] {
             return false
 
         case .contains:
-            if let arr = fieldValue.value(as: [Int].self),
+            if
+                let arr = fieldValue.value(as: [Int].self),
                 let v = value.value(as: Int.self)
             {
                 return arr.contains(v)
             }
-            if let arr = fieldValue.value(as: [Double].self),
+            if
+                let arr = fieldValue.value(as: [Double].self),
                 let v = value.value(as: Double.self)
             {
                 return arr.contains(v)
             }
-            if let arr = fieldValue.value(as: [String].self),
+            if
+                let arr = fieldValue.value(as: [String].self),
                 let v = value.value(as: String.self)
             {
                 return arr.contains(v)
@@ -272,17 +289,20 @@ public extension [Content] {
             return false
 
         case .matching:
-            if let arr = fieldValue.value(as: [Int].self),
+            if
+                let arr = fieldValue.value(as: [Int].self),
                 let other = value.value(as: [Int].self)
             {
                 return !Set(arr).intersection(other).isEmpty
             }
-            if let arr = fieldValue.value(as: [Double].self),
+            if
+                let arr = fieldValue.value(as: [Double].self),
                 let other = value.value(as: [Double].self)
             {
                 return !Set(arr).intersection(other).isEmpty
             }
-            if let arr = fieldValue.value(as: [String].self),
+            if
+                let arr = fieldValue.value(as: [String].self),
                 let other = value.value(as: [String].self)
             {
                 return !Set(arr).intersection(other).isEmpty
@@ -290,5 +310,4 @@ public extension [Content] {
             return false
         }
     }
-
 }

@@ -10,6 +10,7 @@ import Logging
 import ToucanSource
 
 struct ContextBundleToJSONRenderer {
+    // MARK: - Properties
 
     let pipeline: Pipeline
     let encoder: JSONEncoder
@@ -18,6 +19,8 @@ struct ContextBundleToJSONRenderer {
 
     let keyPath: String?
     let keyPaths: [String: AnyCodable]?
+
+    // MARK: - Lifecycle
 
     init(
         pipeline: Pipeline,
@@ -41,54 +44,7 @@ struct ContextBundleToJSONRenderer {
         )
     }
 
-    func render(_ contextBundles: [ContextBundle]) -> [PipelineResult] {
-        contextBundles.compactMap {
-            render($0)
-        }
-    }
-
-    func render(_ contextBundle: ContextBundle) -> PipelineResult? {
-        let metadata: Logger.Metadata = [
-            "slug": "\(contextBundle.content.slug.value)"
-        ]
-
-        let context = contextBundle.context
-        let unboxedContext = context.unboxed(encoder)
-
-        let encodedData = firstSucceeding([
-            {
-                try data(
-                    from: unboxedContext,
-                    keyPaths: keyPaths,
-                    using: encoder
-                )
-            },
-            { try data(from: unboxedContext, at: keyPath, using: encoder) },
-            { try encoder.encode(context) },
-        ])
-
-        guard let encodedData else {
-            logger.warning(
-                "Could not encode context data as JSON object.",
-                metadata: metadata
-            )
-            return nil
-        }
-
-        let json = String(data: encodedData, encoding: .utf8)
-
-        guard let json else {
-            logger.warning(
-                "Could not encode context data as JSON output.",
-                metadata: metadata
-            )
-            return nil
-        }
-        return .init(
-            source: .content(json),
-            destination: contextBundle.destination
-        )
-    }
+    // MARK: - Functions
 
     private func data(
         from context: [String: Any],
@@ -128,5 +84,54 @@ struct ContextBundleToJSONRenderer {
         }
 
         return try encoder.encode(result)
+    }
+
+    func render(_ contextBundles: [ContextBundle]) -> [PipelineResult] {
+        contextBundles.compactMap {
+            render($0)
+        }
+    }
+
+    func render(_ contextBundle: ContextBundle) -> PipelineResult? {
+        let metadata: Logger.Metadata = [
+            "slug": "\(contextBundle.content.slug.value)",
+        ]
+
+        let context = contextBundle.context
+        let unboxedContext = context.unboxed(encoder)
+
+        let encodedData = firstSucceeding([
+            {
+                try data(
+                    from: unboxedContext,
+                    keyPaths: keyPaths,
+                    using: encoder
+                )
+            },
+            { try data(from: unboxedContext, at: keyPath, using: encoder) },
+            { try encoder.encode(context) },
+        ])
+
+        guard let encodedData else {
+            logger.warning(
+                "Could not encode context data as JSON object.",
+                metadata: metadata
+            )
+            return nil
+        }
+
+        let json = String(data: encodedData, encoding: .utf8)
+
+        guard let json else {
+            logger.warning(
+                "Could not encode context data as JSON output.",
+                metadata: metadata
+            )
+            return nil
+        }
+        return .init(
+            source: .content(json),
+            destination: contextBundle.destination
+        )
     }
 }

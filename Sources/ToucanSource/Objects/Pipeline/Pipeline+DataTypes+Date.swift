@@ -5,16 +5,28 @@
 //  Created by Tibor Bödecs on 2025. 05. 30..
 //
 
-extension Pipeline.DataTypes {
-
+public extension Pipeline.DataTypes {
     /// Provides a configuration for parsing and formatting dates across the site or contents.
-    public struct Date: Codable, Equatable {
+    struct Date: Codable, Equatable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case output
             case formats
+        }
+
+        // MARK: - Static Computed Properties
+
+        // MARK: - Defaults
+
+        /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
+        public static var defaults: Self {
+            .init(
+                output: .defaults,
+                formats: [:]
+            )
         }
 
         // MARK: - Properties
@@ -32,15 +44,7 @@ extension Pipeline.DataTypes {
         /// ```
         public var formats: [String: DateFormatterConfig]
 
-        // MARK: - Defaults
-
-        /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
-        public static var defaults: Self {
-            .init(
-                output: .defaults,
-                formats: [:]
-            )
-        }
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

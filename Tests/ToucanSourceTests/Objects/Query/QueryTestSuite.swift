@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct QueryTestSuite {
-
     @Test
     func basics() throws {
         let object = Query(
@@ -25,7 +24,6 @@ struct QueryTestSuite {
                 .init(key: "publication", direction: .desc),
                 .init(key: "title"),
             ]
-
         )
 
         let encoder = ToucanYAMLEncoder()
@@ -43,10 +41,9 @@ struct QueryTestSuite {
 
     @Test
     func defaults() throws {
-
         let data = """
-            contentType: post
-            """
+        contentType: post
+        """
 
         let decoder = ToucanYAMLDecoder()
 
@@ -63,19 +60,19 @@ struct QueryTestSuite {
     @Test
     func custom() throws {
         let data = """
-            contentType: post
-            scope: list
-            limit: 1
-            offset: 0
-            filter:
-                key: name
-                operator: equals
-                value: hello
-            orderBy:
-                - key: name
-                - key: other
-                  direction: desc
-            """
+        contentType: post
+        scope: list
+        limit: 1
+        offset: 0
+        filter:
+            key: name
+            operator: equals
+            value: hello
+        orderBy:
+            - key: name
+            - key: other
+              direction: desc
+        """
 
         let decoder = ToucanYAMLDecoder()
 

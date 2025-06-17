@@ -1,23 +1,22 @@
 //
-//  ThemeLoaderTestSuite.swift
+//  TemplateLoaderTestSuite.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 03. 12..
 
-import Testing
-import Foundation
-import ToucanSerialization
 import FileManagerKit
 import FileManagerKitBuilder
+import Foundation
 import Logging
+import Testing
+import ToucanSerialization
 
 @testable import ToucanSource
 
 @Suite
-struct ThemeLoaderTestSuite {
-
+struct TemplateLoaderTestSuite {
     @Test()
-    func standardThemeLoading() async throws {
+    func standardTemplateLoading() async throws {
         try FileManagerPlayground {
             Directory(name: "src") {
                 Directory(name: "assets") {
@@ -28,42 +27,42 @@ struct ThemeLoaderTestSuite {
                         File(
                             name: "pages.about.mustache",
                             string: """
-                                about content override
-                                """
+                            about content override
+                            """
                         )
                     }
                 }
-                Directory(name: "themes") {
+                Directory(name: "templates") {
                     Directory(name: "default") {
                         Directory(name: "assets") {
-                            "theme.css"
+                            "template.css"
                         }
-                        Directory(name: "templates") {
+                        Directory(name: "views") {
                             Directory(name: "pages") {
                                 File(
                                     name: "default.mustache",
                                     string: """
-                                        default
-                                        """
+                                    default
+                                    """
                                 )
                                 File(
                                     name: "about.mustache",
                                     string: """
-                                        about
-                                        """
+                                    about
+                                    """
                                 )
                                 File(
                                     name: "test.html",
                                     string: """
-                                        test.html
-                                        """
+                                    test.html
+                                    """
                                 )
                             }
                             File(
                                 name: "html.mustache",
                                 string: """
-                                    html
-                                    """
+                                html
+                                """
                             )
                             "README.md"
                         }
@@ -72,21 +71,21 @@ struct ThemeLoaderTestSuite {
                     Directory(name: "overrides") {
                         Directory(name: "default") {
                             Directory(name: "assets") {
-                                "theme.css"
+                                "template.css"
                             }
-                            Directory(name: "templates") {
+                            Directory(name: "views") {
                                 Directory(name: "pages") {
                                     File(
                                         name: "default.mustache",
                                         string: """
-                                            default override
-                                            """
+                                        default override
+                                        """
                                     )
                                     File(
                                         name: "about.mustache",
                                         string: """
-                                            about override
-                                            """
+                                        about override
+                                        """
                                     )
                                 }
                                 "README.md"
@@ -101,27 +100,27 @@ struct ThemeLoaderTestSuite {
             let sourceURL = $1.appending(path: "src/")
             let config = Config.defaults
             let locations = BuiltTargetSourceLocations(
-                sourceUrl: sourceURL,
+                sourceURL: sourceURL,
                 config: config
             )
 
-            let loader = ThemeLoader(
+            let loader = TemplateLoader(
                 locations: locations,
                 fileManager: $0
             )
-            let theme = try loader.load()
+            let template = try loader.load()
 
-            #expect(theme.baseUrl == locations.themesUrl)
+            #expect(template.baseURL == locations.templatesURL)
 
             #expect(
-                theme.components.assets.sorted()
+                template.components.assets.sorted()
                     == [
-                        "theme.css"
+                        "template.css",
                     ]
                     .sorted()
             )
             #expect(
-                theme.components.templates.map(\.path).sorted()
+                template.components.views.map(\.path).sorted()
                     == [
                         "pages/default.mustache",
                         "pages/about.mustache",
@@ -132,14 +131,14 @@ struct ThemeLoaderTestSuite {
             )
 
             #expect(
-                theme.overrides.assets.sorted()
+                template.overrides.assets.sorted()
                     == [
-                        "theme.css"
+                        "template.css",
                     ]
                     .sorted()
             )
             #expect(
-                theme.overrides.templates.map(\.path).sorted()
+                template.overrides.views.map(\.path).sorted()
                     == [
                         "pages/about.mustache",
                         "pages/default.mustache",
@@ -148,21 +147,21 @@ struct ThemeLoaderTestSuite {
             )
 
             #expect(
-                theme.content.assets.sorted()
+                template.content.assets.sorted()
                     == [
-                        "style.css"
+                        "style.css",
                     ]
                     .sorted()
             )
             #expect(
-                theme.content.templates.map(\.path).sorted()
+                template.content.views.map(\.path).sorted()
                     == [
-                        "about/pages.about.mustache"
+                        "about/pages.about.mustache",
                     ]
                     .sorted()
             )
 
-            let results = loader.getTemplatesIDsWithContents(theme)
+            let results = loader.getTemplatesIDsWithContents(template)
 
             let exp: [String: String] = [
                 "pages.test": "test.html",
@@ -177,7 +176,6 @@ struct ThemeLoaderTestSuite {
                         uniqueKeysWithValues: exp.sorted { $0.key < $1.key }
                     )
             )
-
         }
     }
 }

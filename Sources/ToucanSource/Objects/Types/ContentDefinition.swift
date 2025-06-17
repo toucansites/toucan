@@ -10,6 +10,7 @@
 /// `ContentDefinition` is used to declare how a particular content type (e.g., blog, project, product)
 /// should be parsed, validated, and queried in the pipeline.
 public struct ContentDefinition: Codable, Equatable {
+    // MARK: - Nested Types
 
     // MARK: - Coding Keys
 
@@ -52,6 +53,8 @@ public struct ContentDefinition: Codable, Equatable {
 
     /// Named queries that can be used within scopes or as reusable filters for rendering this type.
     public var queries: [String: Query]
+
+    // MARK: - Lifecycle
 
     // MARK: - Initialization
 

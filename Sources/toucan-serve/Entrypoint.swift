@@ -5,9 +5,9 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import ArgumentParser
-import Logging
-import Hummingbird
 import Foundation
+import Hummingbird
+import Logging
 import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
@@ -15,18 +15,21 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-serve",
         abstract: """
-            Toucan Serve Command
-            """,
+        Toucan Serve Command
+        """,
         discussion: """
-            Serves a directory over a local web-server.
-            """,
+        Serves a directory over a local web-server.
+        """,
         version: GeneratorInfo.current.version
     )
+
+    // MARK: - Properties
 
     // MARK: - arguments
 
@@ -41,6 +44,8 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
+
+    // MARK: - Functions
 
     // MARK: - run
 

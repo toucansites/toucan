@@ -11,7 +11,6 @@ import ToucanCore
 ///
 /// Transforms the coding path into a readable string or returns the debug description if the path is empty.
 extension DecodingError.Context {
-
     /// A string representation of the decoding path or debug description.
     var logMessage: String {
         if codingPath.isEmpty {
@@ -25,7 +24,6 @@ extension DecodingError.Context {
 ///
 /// Provides developer and user-facing messages based on the type of decoding error.
 extension DecodingError: ToucanError {
-
     /// A detailed message describing the decoding failure, including context.
     public var logMessage: String {
         switch self {
@@ -52,24 +50,14 @@ extension DecodingError: ToucanError {
 ///
 /// Wraps an optional underlying error and includes type information for logging.
 public struct ToucanDecoderError: ToucanError {
+    // MARK: - Properties
 
     /// The type that failed to decode.
     let type: Any.Type
     /// An optional underlying error providing more context.
     let error: Error?
 
-    /// Creates a new `ToucanDecoderError`.
-    ///
-    /// - Parameters:
-    ///   - type: The type that failed decoding.
-    ///   - error: An optional underlying error.
-    init(
-        type: Any.Type,
-        error: Error? = nil
-    ) {
-        self.type = type
-        self.error = error
-    }
+    // MARK: - Computed Properties
 
     /// An array containing the underlying error, if any.
     public var underlyingErrors: [any Error] {
@@ -84,5 +72,20 @@ public struct ToucanDecoderError: ToucanError {
     /// A user-friendly message indicating a decoding failure.
     public var userFriendlyMessage: String {
         "Could not decode object."
+    }
+
+    // MARK: - Lifecycle
+
+    /// Creates a new `ToucanDecoderError`.
+    ///
+    /// - Parameters:
+    ///   - type: The type that failed decoding.
+    ///   - error: An optional underlying error.
+    init(
+        type: Any.Type,
+        error: Error? = nil
+    ) {
+        self.type = type
+        self.error = error
     }
 }

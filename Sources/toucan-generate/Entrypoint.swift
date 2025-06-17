@@ -5,27 +5,30 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import ArgumentParser
-import ToucanSDK
 import Logging
 import ToucanCore
+import ToucanSDK
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-generate",
         abstract: """
-            Toucan Generate Command
-            """,
+        Toucan Generate Command
+        """,
         discussion: """
-            A markdown-based Static Site Generator (SSG) written in Swift.
-            """,
+        A markdown-based Static Site Generator (SSG) written in Swift.
+        """,
         version: GeneratorInfo.current.version
     )
+
+    // MARK: - Properties
 
     // MARK: - arguments
 
@@ -40,6 +43,8 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
+
+    // MARK: - Functions
 
     // MARK: - run
 
@@ -60,7 +65,7 @@ struct Entrypoint: AsyncParsableCommand {
 
         if generator.generateAndLogErrors(logger) {
             let metadata: Logger.Metadata = [
-                "input": "\(input)"
+                "input": "\(input)",
             ]
             logger.info("Site generated successfully.", metadata: metadata)
         }

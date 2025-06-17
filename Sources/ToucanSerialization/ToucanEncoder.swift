@@ -9,14 +9,13 @@ import struct Foundation.Data
 
 /// A protocol representing a custom encoder that serializes `Encodable` types into `String` output.
 public protocol ToucanEncoder {
-
     /// Encodes an object conforming to `Encodable` into a `String` representation.
     ///
     /// - Parameter object: The value to encode.
     /// - Returns: A serialized string output.
     /// - Throws: `ToucanEncoderError` if encoding fails.
-    func encode<T: Encodable>(
-        _ object: T
+    func encode(
+        _ object: some Encodable
     ) throws(ToucanEncoderError) -> String
 
     /// Encodes an object conforming to `Encodable` into a `Data` representation.
@@ -24,19 +23,18 @@ public protocol ToucanEncoder {
     /// - Parameter object: The value to encode.
     /// - Returns: The Data representation of the Encodable.
     /// - Throws: `ToucanEncoderError` if encoding fails.
-    func encode<T: Encodable>(
-        _ object: T
+    func encode(
+        _ object: some Encodable
     ) throws(ToucanEncoderError) -> Data
 }
 
-extension ToucanEncoder {
-
+public extension ToucanEncoder {
     /// Encodes an object conforming to `Encodable` into a `Data` representation.
     ///
     /// - Parameter object: The value to encode.
     /// - Returns: The Data representation of the Encodable.
     /// - Throws: `ToucanEncoderError` if encoding fails.
-    public func encode<T: Encodable>(
+    func encode<T: Encodable>(
         _ object: T
     ) throws(ToucanEncoderError) -> Data {
         let string: String = try encode(object)
@@ -49,7 +47,7 @@ extension ToucanEncoder {
                     .init(
                         codingPath: [],
                         debugDescription:
-                            "The string cannot be represetned as UTF-8 encoded data."
+                        "The string cannot be represetned as UTF-8 encoded data."
                     )
                 )
             )

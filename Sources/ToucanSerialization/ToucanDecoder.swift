@@ -9,7 +9,6 @@ import struct Foundation.Data
 
 /// A protocol representing a custom decoder capable of transforming `Data` into strongly typed models.
 public protocol ToucanDecoder {
-
     /// Decodes a `Decodable` type from raw data.
     ///
     /// - Parameters:
@@ -35,8 +34,7 @@ public protocol ToucanDecoder {
     ) throws(ToucanDecoderError) -> T
 }
 
-extension ToucanDecoder {
-
+public extension ToucanDecoder {
     /// Decodes a `Decodable` type from raw data.
     ///
     /// - Parameters:
@@ -44,7 +42,7 @@ extension ToucanDecoder {
     ///   - string: The raw `String` input (e.g., file contents as String).
     /// - Returns: A decoded instance of the specified type.
     /// - Throws: `ToucanDecoderError` if decoding fails or data is invalid.
-    public func decode<T: Decodable>(
+    func decode<T: Decodable>(
         _ type: T.Type,
         from string: String
     ) throws(ToucanDecoderError) -> T {
@@ -55,7 +53,7 @@ extension ToucanDecoder {
                     .init(
                         codingPath: [],
                         debugDescription:
-                            "The string cannot be represented as UTF-8 encoded data."
+                        "The string cannot be represented as UTF-8 encoded data."
                     )
                 )
             )

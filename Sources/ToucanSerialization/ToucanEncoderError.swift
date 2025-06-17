@@ -11,7 +11,6 @@ import ToucanCore
 ///
 /// Provides developer and user-facing messages based on the encoding error.
 extension EncodingError: ToucanError {
-
     /// A detailed log message representing the encoding error.
     public var logMessage: String {
         "\(self)"
@@ -27,24 +26,14 @@ extension EncodingError: ToucanError {
 ///
 /// Wraps an optional underlying error and includes the associated type information.
 public struct ToucanEncoderError: ToucanError {
+    // MARK: - Properties
 
     /// The type that failed to encode.
     let type: Any.Type
     /// An optional underlying error providing additional context.
     let error: Error?
 
-    /// Creates a new `ToucanEncoderError`.
-    ///
-    /// - Parameters:
-    ///   - type: The type that failed encoding.
-    ///   - error: An optional underlying error.
-    init(
-        type: Any.Type,
-        error: Error? = nil
-    ) {
-        self.type = type
-        self.error = error
-    }
+    // MARK: - Computed Properties
 
     /// An array containing the underlying error, if present.
     public var underlyingErrors: [any Error] {
@@ -59,5 +48,20 @@ public struct ToucanEncoderError: ToucanError {
     /// A user-facing message indicating that the object could not be encoded.
     public var userFriendlyMessage: String {
         "Could not encode object."
+    }
+
+    // MARK: - Lifecycle
+
+    /// Creates a new `ToucanEncoderError`.
+    ///
+    /// - Parameters:
+    ///   - type: The type that failed encoding.
+    ///   - error: An optional underlying error.
+    init(
+        type: Any.Type,
+        error: Error? = nil
+    ) {
+        self.type = type
+        self.error = error
     }
 }

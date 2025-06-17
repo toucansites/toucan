@@ -5,15 +5,10 @@
 //  Created by gerp83 on 2025. 04. 17..
 //
 
-extension Config.RendererConfig {
-
+public extension Config.RendererConfig {
     /// Defines paragraph style aliases for block-level directives
-    public struct ParagraphStyles: Codable, Equatable {
-
-        // MARK: - Properties
-
-        /// A dictionary mapping style group names to arrays of individual paragraph styles.
-        public var styles: [String: [String]]
+    struct ParagraphStyles: Codable, Equatable {
+        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -29,6 +24,13 @@ extension Config.RendererConfig {
                 ]
             )
         }
+
+        // MARK: - Properties
+
+        /// A dictionary mapping style group names to arrays of individual paragraph styles.
+        public var styles: [String: [String]]
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -57,8 +59,9 @@ extension Config.RendererConfig {
                 return
             }
             self.styles = styles
-
         }
+
+        // MARK: - Functions
 
         /// Encodes this  instance into the given encoder.
         ///

@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct PropertyTypeTestSuite {
-
     @Test
     func equality() throws {
         let dateFormat = PropertyType.date(config: nil)
@@ -40,8 +39,8 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingBool() throws {
         let object = """
-            type: bool
-            """
+        type: bool
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -52,8 +51,8 @@ struct PropertyTypeTestSuite {
     @Test
     func encodingBool() throws {
         let object = """
-            type: bool
-            """
+        type: bool
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -70,8 +69,8 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingInt() throws {
         let object = """
-            type: int
-            """
+        type: int
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -82,8 +81,8 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingDouble() throws {
         let object = """
-            type: double
-            """
+        type: double
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -94,8 +93,8 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingString() throws {
         let object = """
-            type: string
-            """
+        type: string
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -106,10 +105,10 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingDate() throws {
         let object = """
-            type: date
-            config:
-                format: "y.m.d"
-            """
+        type: date
+        config:
+            format: "y.m.d"
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -128,10 +127,10 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingArrayOfBool() throws {
         let object = """
-            type: array
-            of: 
-                type: bool
-            """
+        type: array
+        of: 
+            type: bool
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -142,10 +141,10 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingArrayOfInt() throws {
         let object = """
-            type: array
-            of: 
-                type: int
-            """
+        type: array
+        of: 
+            type: int
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -156,10 +155,10 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingArrayOfDouble() throws {
         let object = """
-            type: array
-            of: 
-                type: double
-            """
+        type: array
+        of: 
+            type: double
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -170,10 +169,10 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingArrayOfString() throws {
         let object = """
-            type: array
-            of: 
-                type: string
-            """
+        type: array
+        of: 
+            type: string
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -184,12 +183,12 @@ struct PropertyTypeTestSuite {
     @Test
     func decodingArrayOfDate() throws {
         let object = """
-            type: array
-            of: 
-                type: date
-                config:
-                    format: "y.m.d"
-            """
+        type: array
+        of: 
+            type: date
+            config:
+                format: "y.m.d"
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
@@ -206,5 +205,4 @@ struct PropertyTypeTestSuite {
                 )
         )
     }
-
 }

@@ -10,6 +10,7 @@ import ToucanSource
 /// Represents the resolved value of a relation in content, including the target content type,
 /// the relation's cardinality, and the identifiers of related items.
 public struct RelationValue {
+    // MARK: - Properties
 
     /// The type of content this relation points to (e.g., `"author"`, `"post"`, `"product"`).
     public var contentType: String
@@ -20,6 +21,8 @@ public struct RelationValue {
     /// A list of string identifiers for the related content items.
     /// For `.one`, this should typically contain a single ID; for `.many`, multiple.
     public var identifiers: [String]
+
+    // MARK: - Lifecycle
 
     /// Initializes a new `RelationValue` representing the resolved target(s) of a content relation.
     ///

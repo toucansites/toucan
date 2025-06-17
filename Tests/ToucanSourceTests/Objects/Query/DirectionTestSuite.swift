@@ -13,7 +13,6 @@ import ToucanSerialization
 
 @Suite
 struct DirectionTestSuite {
-
     @Test
     func basics() throws {
         let object = Direction.allCases
@@ -29,7 +28,6 @@ struct DirectionTestSuite {
 
         #expect(object == result1)
         #expect(object == result2)
-
     }
 
     @Test

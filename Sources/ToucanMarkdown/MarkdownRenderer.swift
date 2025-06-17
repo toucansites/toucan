@@ -10,16 +10,22 @@ import Logging
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
 public struct MarkdownRenderer {
+    // MARK: - Nested Types
 
     // MARK: - Configuration
 
     /// Holds all the settings required for rendering and processing content.
     public struct Configuration {
+        // MARK: - Nested Types
 
         /// Configuration specific to Markdown processing.
         public struct Markdown {
+            // MARK: - Properties
+
             /// Custom block directives to extend the Markdown grammar.
             public var customBlockDirectives: [MarkdownBlockDirective]
+
+            // MARK: - Lifecycle
 
             /// Initializes a Markdown configuration.
             public init(
@@ -31,8 +37,12 @@ public struct MarkdownRenderer {
 
         /// Configuration for outlining logic, such as which heading levels to parse.
         public struct Outline {
+            // MARK: - Properties
+
             /// Which heading levels to include in the parsed outline.
             public var levels: [Int]
+
+            // MARK: - Lifecycle
 
             /// Initializes an Outline configuration.
             public init(
@@ -44,8 +54,12 @@ public struct MarkdownRenderer {
 
         /// Configuration for estimating reading time.
         public struct ReadingTime {
+            // MARK: - Properties
+
             /// Estimated words per minute reading speed.
             public var wordsPerMinute: Int
+
+            // MARK: - Lifecycle
 
             /// Initializes a ReadingTime configuration.
             public init(
@@ -54,6 +68,8 @@ public struct MarkdownRenderer {
                 self.wordsPerMinute = wordsPerMinute
             }
         }
+
+        // MARK: - Properties
 
         /// Markdown-specific rendering options.
         public var markdown: Markdown
@@ -69,6 +85,8 @@ public struct MarkdownRenderer {
 
         /// Paragraph styles for customizing the HTML rendering.
         public var paragraphStyles: [String: [String]]
+
+        // MARK: - Lifecycle
 
         /// Initializes a new rendering configuration.
         ///
@@ -124,6 +142,8 @@ public struct MarkdownRenderer {
     /// Logger for diagnostics and error reporting during rendering.
     public var logger: Logger
 
+    // MARK: - Lifecycle
+
     // MARK: - Initialization
 
     /// Creates a new `ContentRenderer` instance with the provided configuration, file manager, and logger.
@@ -156,6 +176,8 @@ public struct MarkdownRenderer {
         self.logger = logger
     }
 
+    // MARK: - Functions
+
     // MARK: - Rendering
 
     /// Processes the input Markdown content, optionally transforms it, renders it as HTML,
@@ -166,7 +188,7 @@ public struct MarkdownRenderer {
     ///   - id: A unique identifier used for transformation and rendering context.
     ///   - slug: The slug of the content.
     ///   - assetsPath: Path to associated assets (e.g., images or includes).
-    ///   - baseUrl: The base URL for resolving relative paths or links.
+    ///   - baseURL: The base URL for resolving relative paths or links.
     ///
     /// - Returns: A structured `Output` containing HTML, reading time, and outline.
     public func render(
@@ -174,7 +196,7 @@ public struct MarkdownRenderer {
         id: String,
         slug: String,
         assetsPath: String,
-        baseUrl: String
+        baseURL: String
     ) -> Output {
         var finalHtml = content
         var shouldRenderMarkdown = true
@@ -209,7 +231,7 @@ public struct MarkdownRenderer {
                 markdown: content,
                 slug: slug,
                 assetsPath: assetsPath,
-                baseUrl: baseUrl
+                baseURL: baseURL
             )
         }
 

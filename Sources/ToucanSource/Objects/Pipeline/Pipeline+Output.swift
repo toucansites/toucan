@@ -5,10 +5,10 @@
 //  Created by Tibor Bödecs on 2025. 02. 16..
 //
 
-extension Pipeline {
-
+public extension Pipeline {
     /// Describes the output configuration for a content pipeline.
-    public struct Output: Codable {
+    struct Output: Codable {
+        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -32,6 +32,8 @@ extension Pipeline {
 
         /// The file extension of the output file (e.g., `"html"`, `"json"`, `"xml"`).
         public var ext: String
+
+        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

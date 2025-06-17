@@ -12,16 +12,15 @@ import ToucanSerialization
 
 @Suite
 struct PropertyTestSuite {
-
     // MARK: - order
 
     @Test
     func stringType() throws {
         let data = """
-            default: hello
-            required: false
-            type: string
-            """
+        default: hello
+        required: false
+        type: string
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Property.self, from: data)
@@ -41,9 +40,9 @@ struct PropertyTestSuite {
     @Test
     func assetType() throws {
         let data = """
-            required: true
-            type: asset
-            """
+        required: true
+        type: asset
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Property.self, from: data)
@@ -62,13 +61,13 @@ struct PropertyTestSuite {
     @Test
     func dateTypeWithFormat() throws {
         let data = """
-            type: date
-            config: 
-                format: "ymd"
-                locale: en-US
-                timeZone: EST
+        type: date
+        config: 
+            format: "ymd"
+            locale: en-US
+            timeZone: EST
 
-            """
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Property.self, from: data)
@@ -92,9 +91,9 @@ struct PropertyTestSuite {
     @Test
     func dateTypeWithoutFormat() throws {
         let data = """
-            type: date
-            required: true
-            """
+        type: date
+        required: true
+        """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Property.self, from: data)

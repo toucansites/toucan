@@ -8,7 +8,6 @@
 import ToucanSource
 
 extension Mocks.Blocks {
-
     static func link() -> Block {
         .init(
             name: "link",
@@ -54,7 +53,7 @@ extension Mocks.Blocks {
                 .init(
                     name: "class",
                     value: "highlighted-text"
-                )
+                ),
             ],
             output: nil
         )
@@ -68,7 +67,7 @@ extension Mocks.Blocks {
             removesChildParagraph: nil,
             tag: "div",
             attributes: [
-                .init(name: "class", value: "faq")
+                .init(name: "class", value: "faq"),
             ],
             output: nil
         )
@@ -81,16 +80,15 @@ extension Mocks.Blocks {
                 .init(
                     label: "label",
                     isRequired: true
-                )
+                ),
             ],
             requiresParentDirective: "true",
             removesChildParagraph: nil,
             tag: "div",
             attributes: [
-                .init(name: "att", value: "none")
+                .init(name: "att", value: "none"),
             ],
             output: nil
         )
     }
-
 }
