@@ -30,21 +30,23 @@ struct ContextBundleToHTMLRenderer {
         self.logger = logger
     }
 
-    func render(_ contextBundles: [ContextBundle]) -> [PipelineResult] {
-        contextBundles.compactMap {
-            render($0)
-        }
+    func render(
+        _ contextBundles: [ContextBundle]
+    ) -> [PipelineResult] {
+        contextBundles.compactMap { render($0) }
     }
 
-    func render(_ contextBundle: ContextBundle) -> PipelineResult? {
+    func render(
+        _ contextBundle: ContextBundle
+    ) -> PipelineResult? {
         let bundleOptions = contentTypesOptions.dict(
             contextBundle.content.type.id
         )
 
-        let contentTypeTemplate = bundleOptions.string("template")
+        let contentTypeTemplate = bundleOptions.string("view")
         let contentTemplate = contextBundle.content.rawValue.markdown
             .frontMatter
-            .string("template")
+            .string("view")
         let template = contentTemplate ?? contentTypeTemplate
 
         guard let template, !template.isEmpty else {
@@ -69,7 +71,7 @@ struct ContextBundleToHTMLRenderer {
                 metadata: [
                     "slug": "\(contextBundle.content.slug)",
                     "type": "\(contextBundle.content.type.id)",
-                    "template": "\(template)",
+                    "view": "\(template)",
                 ]
             )
             return nil

@@ -1148,7 +1148,7 @@ struct E2ETestSuite {
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "template": "test"
+                                            "view": "test"
                                         ]
                                     ]
                                 ]
