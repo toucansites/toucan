@@ -5,18 +5,17 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import ArgumentParser
-import Logging
 import FileMonitor
 import Foundation
+import Logging
 import SwiftCommand
-import ToucanInfo
+import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-watch",
@@ -34,14 +33,35 @@ struct Entrypoint: AsyncParsableCommand {
     @Argument(help: "The input directory (default: src).")
     var input: String = "./src"
 
-    @Argument(help: "The output directory (default: docs).")
-    var output: String = "./docs"
+    @Option(
+        name: .shortAndLong,
+        help: "The target to build, if empty build all."
+    )
+    var target: String?
 
-    @Option(name: .shortAndLong, help: "The base url to use.")
-    var baseUrl: String? = nil
+    @Option(
+        name: .shortAndLong,
+        help: "The treshold to watch for changes in seconds."
+    )
+    var seconds: Int = 3
 
     @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .debug
+    var logLevel: Logger.Level = .info
+
+    var arguments: [String] {
+        [input] + options
+    }
+
+    var options: [String] {
+        var options: [String] = [
+            "--log-level", "\(logLevel)",
+        ]
+        if let target, !target.isEmpty {
+            options.append("--target")
+            options.append(target)
+        }
+        return options
+    }
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -63,31 +83,17 @@ struct Entrypoint: AsyncParsableCommand {
             return
         }
 
-        logger.info("👀 Watching: `\(input)` -> \(output).")
+        logger.info("👀 Watching: `\(input)`.")
 
-        var options: [String] = [
-            "--log-level", "\(logLevel)",
-        ]
-        if let baseUrl, !baseUrl.isEmpty {
-            options.append("--base-url")
-            options.append(baseUrl)
-        }
-
-        let inputUrl = safeUrl(for: input)
-        let outputUrl = safeUrl(for: output)
+        let inputURL = safeURL(for: input)
 
         var lastGenerationTime = Date()
 
-        let commandUrl = URL(fileURLWithPath: toucan)
+        let commandURL = URL(fileURLWithPath: toucan)
         let command = Command(
-            executablePath: .init(commandUrl.path() + "-generate")
+            executablePath: .init(commandURL.path() + "-generate")
         )
-        .addArguments(
-            [
-                inputUrl.path(),
-                outputUrl.path(),
-            ] + options
-        )
+        .addArguments(arguments)
 
         let generate = try await command.output.stdout
 
@@ -96,29 +102,19 @@ struct Entrypoint: AsyncParsableCommand {
             return
         }
 
-        let monitor = try FileMonitor(directory: inputUrl)
+        let monitor = try FileMonitor(directory: inputURL)
         try monitor.start()
         for await _ in monitor.stream {
             let now = Date()
             let last = lastGenerationTime
             let diff = abs(last.timeIntervalSince(now))
 
-            guard diff > 3 else {  // 3 sec treshold
+            guard diff > Double(seconds) else {  // 3 sec treshold
                 logger.trace("Skipping generation due to treshold...")
                 continue
             }
             lastGenerationTime = now
             logger.info("Generating site...")
-
-            let command = Command(
-                executablePath: .init(commandUrl.path() + "-generate")
-            )
-            .addArguments(
-                [
-                    inputUrl.path(),
-                    outputUrl.path(),
-                ] + options
-            )
 
             let generate = try await command.output.stdout
 
@@ -129,18 +125,7 @@ struct Entrypoint: AsyncParsableCommand {
         }
     }
 
-    var options: [String] {
-        var options: [String] = [
-            "--log-level", "\(logLevel)",
-        ]
-        if let baseUrl, !baseUrl.isEmpty {
-            options.append("--base-url")
-            options.append(baseUrl)
-        }
-        return options
-    }
-
-    func safeUrl(for path: String) -> URL {
+    func safeURL(for path: String) -> URL {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let replaced = path.replacingOccurrences(of: "~", with: home)
         return .init(fileURLWithPath: replaced).standardized

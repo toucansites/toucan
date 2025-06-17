@@ -4,18 +4,17 @@
 //
 //  Created by Binary Birds on 2025. 04. 15..
 
-import Foundation
 import ArgumentParser
-import Logging
 import FileManagerKit
-import ToucanInfo
+import Foundation
+import Logging
+import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-init",
@@ -42,30 +41,30 @@ struct Entrypoint: AsyncParsableCommand {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
 
-        let siteExists = fileManager.directoryExists(at: siteDirUrl)
+        let siteExists = fileManager.directoryExists(at: siteDirectoryURL)
 
         guard !siteExists else {
-            logger.error("Folder already exists: \(siteDirUrl)")
+            logger.error("Folder already exists: \(siteDirectoryURL)")
             return
         }
 
         do {
             let source = Download(
-                sourceUrl: exampleSourceUrl,
-                targetDirUrl: siteDirUrl,
+                sourceURL: minimalSourceURL,
+                targetDirURL: siteDirectoryURL,
                 fileManager: fileManager
             )
-            let theme = Download(
-                sourceUrl: exampleThemeUrl,
-                targetDirUrl: themesDefaultDirUrl,
+            let template = Download(
+                sourceURL: minimalTemplateURL,
+                targetDirURL: defaultTemplatesURL,
                 fileManager: fileManager
             )
 
             logger.info("Preparing source files.")
             try await source.resolve()
 
-            logger.info("Preparing theme files.")
-            try await theme.resolve()
+            logger.info("Preparing template files.")
+            try await template.resolve()
 
             logger.info("'\(siteDirectory)' was prepared successfully.")
         }
@@ -76,32 +75,31 @@ struct Entrypoint: AsyncParsableCommand {
 }
 
 extension Entrypoint {
-
     var fileManager: FileManager { .default }
 
-    var currentDirUrl: URL {
+    var currentDirectoryURL: URL {
         URL(fileURLWithPath: fileManager.currentDirectoryPath)
     }
 
-    var siteDirUrl: URL {
-        currentDirUrl.appendingPathComponent(siteDirectory)
+    var siteDirectoryURL: URL {
+        currentDirectoryURL.appendingPathComponent(siteDirectory)
     }
 
-    var exampleSourceUrl: URL {
+    var minimalSourceURL: URL {
         .init(
             string:
                 "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
         )!
     }
 
-    var exampleThemeUrl: URL {
+    var minimalTemplateURL: URL {
         .init(
             string:
                 "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
         )!
     }
 
-    var themesDefaultDirUrl: URL {
-        siteDirUrl.appendingPathComponent("src/themes/default")
+    var defaultTemplatesURL: URL {
+        siteDirectoryURL.appendingPathComponent("src/templates/default")
     }
 }

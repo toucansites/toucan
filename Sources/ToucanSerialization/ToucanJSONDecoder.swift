@@ -4,11 +4,11 @@
 //
 //  Created by Binary Birds on 2025. 04. 17..
 
-import Foundation
+import struct Foundation.Data
+import class Foundation.JSONDecoder
 
 /// An implementation of `ToucanDecoder` that uses `JSONDecoder`.
 public struct ToucanJSONDecoder: ToucanDecoder {
-
     /// Initializes a new instance of `ToucanJSONDecoder`.
     ///
     /// Uses a `JSONDecoder` that allows JSON5 parsing by default.
@@ -31,7 +31,7 @@ public struct ToucanJSONDecoder: ToucanDecoder {
             return try decoder.decode(type, from: data)
         }
         catch {
-            throw .decoding(error, T.self)
+            throw .init(type: T.self, error: error)
         }
     }
 }

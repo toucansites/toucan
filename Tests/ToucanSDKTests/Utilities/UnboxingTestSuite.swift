@@ -4,11 +4,12 @@
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 05. 09..
 //
-
+//
 import Foundation
 import Testing
-@testable import ToucanModels
-@testable import ToucanContent
+import ToucanSource
+import ToucanSDK
+import ToucanMarkdown
 
 @Suite
 struct UnboxingTests {
@@ -21,32 +22,32 @@ struct UnboxingTests {
                     [
                         "publication": AnyCodable(
                             Optional(
-                                ToucanModels.DateFormats(
-                                    date: ToucanModels.DateFormats.Standard(
+                                DateContext(
+                                    date: .init(
                                         full: "Tuesday, April 15, 2025",
                                         long: "April 15, 2025",
                                         medium: "Apr 15, 2025",
                                         short: "4/15/25"
                                     ),
-                                    time: ToucanModels.DateFormats.Standard(
+                                    time: .init(
                                         full: "2:00:00 PM Greenwich Mean Time",
                                         long: "2:00:00 PM GMT",
                                         medium: "2:00:00 PM",
                                         short: "2:00 PM"
                                     ),
                                     timestamp: 1744725600.0,
+                                    iso8601: "2025-04-15T14:00:00.000Z",
                                     formats: [
                                         "rss":
                                             "Tue, 15 Apr 2025 14:00:00 +0000",
                                         "sitemap": "2025-04-15",
-                                        "iso8601": "2025-04-15T14:00:00.000Z",
                                         "year": "2025",
                                     ]
                                 )
                             )
                         ),
                         "description": AnyCodable(
-                            "Migration guide for Toucan Beta 3: covering changes to content structure, theme changes and rendering features."
+                            "Migration guide for Toucan Beta 3: covering changes to content structure, template changes and rendering features."
                         ),
                         "featured": AnyCodable(true),
                         "contents": AnyCodable([
@@ -54,7 +55,7 @@ struct UnboxingTests {
                             "outline": AnyCodable([
                                 AnyCodable(
                                     Optional(
-                                        ToucanContent.Outline(
+                                        Outline(
                                             level: 2,
                                             text: "Changes in contents",
                                             fragment: Optional(
@@ -66,11 +67,11 @@ struct UnboxingTests {
                                 ),
                                 AnyCodable(
                                     Optional(
-                                        ToucanContent.Outline(
+                                        Outline(
                                             level: 2,
-                                            text: "Changes in theme",
+                                            text: "Changes in templates",
                                             fragment: Optional(
-                                                "changes-in-theme"
+                                                "changes-in-templates"
                                             ),
                                             children: []
                                         )
@@ -78,7 +79,7 @@ struct UnboxingTests {
                                 ),
                                 AnyCodable(
                                     Optional(
-                                        ToucanContent.Outline(
+                                        Outline(
                                             level: 2,
                                             text: "Pipelines",
                                             fragment: Optional("pipelines"),
@@ -88,7 +89,7 @@ struct UnboxingTests {
                                 ),
                                 AnyCodable(
                                     Optional(
-                                        ToucanContent.Outline(
+                                        Outline(
                                             level: 2,
                                             text: "Useful links",
                                             fragment: Optional("useful-links"),
@@ -114,8 +115,8 @@ struct UnboxingTests {
                                 ),
                                 "slug": AnyCodable(
                                     Optional(
-                                        ToucanModels.Slug(
-                                            value: "authors/gabor-lengyel"
+                                        Slug(
+                                            "authors/gabor-lengyel"
                                         )
                                     )
                                 ),
@@ -126,17 +127,15 @@ struct UnboxingTests {
                                 "order": AnyCodable(10),
                                 "lastUpdate": AnyCodable(
                                     Optional(
-                                        ToucanModels.DateFormats(
-                                            date: ToucanModels.DateFormats
-                                                .Standard(
-                                                    full:
-                                                        "Friday, April 18, 2025",
-                                                    long: "April 18, 2025",
-                                                    medium: "Apr 18, 2025",
-                                                    short: "4/18/25"
-                                                ),
-                                            time: ToucanModels.DateFormats
-                                                .Standard(
+                                        DateContext(
+                                            date: .init(
+                                                full: "Friday, April 18, 2025",
+                                                long: "April 18, 2025",
+                                                medium: "Apr 18, 2025",
+                                                short: "4/18/25"
+                                            ),
+                                            time:
+                                                .init(
                                                     full:
                                                         "12:45:44 PM Greenwich Mean Time",
                                                     long: "12:45:44 PM GMT",
@@ -144,12 +143,12 @@ struct UnboxingTests {
                                                     short: "12:45 PM"
                                                 ),
                                             timestamp: 1744980344.8431244,
+                                            iso8601: "2025-04-18T12:45:44.843Z",
                                             formats: [
                                                 "rss":
                                                     "Fri, 18 Apr 2025 12:45:44 +0000",
                                                 "sitemap": "2025-04-18",
-                                                "iso8601":
-                                                    "2025-04-18T12:45:44.843Z",
+
                                                 "year": "2025",
                                             ]
                                         )
@@ -159,11 +158,7 @@ struct UnboxingTests {
                         ]),
                         "image": AnyCodable(nil),
                         "slug": AnyCodable(
-                            Optional(
-                                ToucanModels.Slug(
-                                    value: "beta-3-migration-guide"
-                                )
-                            )
+                            Optional(Slug("beta-3-migration-guide"))
                         ),
                         "title": AnyCodable("Beta 3 migration guide"),
                         "permalink": AnyCodable(
@@ -178,10 +173,10 @@ struct UnboxingTests {
         let result = value.unboxed(encoder)
 
         let firstAuthorSlugValue = result.value(
-            forKeyPath: "context.posts.0.authors.0.slug.value"
+            forKeyPath: "context.posts.0.authors.0.slug"
         )
-        let slug = try #require(firstAuthorSlugValue as? String)
-        #expect(slug == "authors/gabor-lengyel")
+        let slug = try #require(firstAuthorSlugValue as? Slug)
+        #expect(slug.value == "authors/gabor-lengyel")
 
         let publicationDateFullValue = result.value(
             forKeyPath: "context.posts.0.publication.date.full"
