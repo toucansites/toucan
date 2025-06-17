@@ -69,6 +69,27 @@ public extension Pipeline.Scope {
         /// The underlying raw bitmask value used to represent the context.
         public let rawValue: UInt
 
+        // MARK: - Computed Properties
+
+        /// Returns the mapping of context options to their string names.
+        private var allOptions: [(Context, String)] {
+            [
+                (.userDefined, "userDefined"),
+                (.properties, "properties"),
+                (.contents, "contents"),
+                (.relations, "relations"),
+                (.queries, "queries"),
+                (.reference, "reference"),
+                (.list, "list"),
+                (.detail, "detail"),
+            ]
+        }
+
+        /// Returns the string names of the options contained in the context.
+        public var stringValues: [String] {
+            allOptions.compactMap { contains($0.0) ? $0.1 : nil }
+        }
+
         // MARK: - Lifecycle
 
         /// Initializes the context using a raw value.
@@ -151,17 +172,6 @@ public extension Pipeline.Scope {
             to encoder: any Encoder
         ) throws {
             var container = encoder.singleValueContainer()
-
-            let allOptions: [(Context, String)] = [
-                (.userDefined, "userDefined"),
-                (.properties, "properties"),
-                (.contents, "contents"),
-                (.relations, "relations"),
-                (.queries, "queries"),
-                (.reference, "reference"),
-                (.list, "list"),
-                (.detail, "detail"),
-            ]
 
             if let matched = allOptions.first(where: { self == $0.0 }) {
                 try container.encode(matched.1)

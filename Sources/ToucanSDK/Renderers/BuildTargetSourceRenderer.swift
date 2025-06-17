@@ -88,8 +88,6 @@ public struct BuildTargetSourceRenderer {
 
     // MARK: - Functions
 
-    // MARK: -
-
     /// Returns the last content update based on the pipeline config
     private func getLastContentUpdate(
         contents: [Content],
@@ -121,12 +119,17 @@ public struct BuildTargetSourceRenderer {
                 return items.first?.rawValue.lastModificationDate
             }
             .sorted(by: >).first
-        //        if pipeline.id == "rss" {
-        //            print("---")
-        //            print(updateTypes)
-        //            print(Date(timeIntervalSince1970: lastUpdate ?? 0))
-        //            print("---")
-        //        }
+
+        logger.trace(
+            "Last update for the pipeline.",
+            metadata: [
+                "pipeline": .string(pipeline.id),
+                "lastUpdate": .string(
+                    Date(timeIntervalSince1970: lastUpdate ?? 0).description
+                ),
+            ]
+        )
+
         return lastUpdate
     }
 
@@ -147,7 +150,19 @@ public struct BuildTargetSourceRenderer {
                 contentType: content.type.id
             )
             guard isAllowed else {
-                //                print(pipeline.id, content.definition.id, pipeline.contentTypes.exclude, pipeline.contentTypes.include)
+                logger.trace(
+                    "Skipping content type for the pipeline.",
+                    metadata: [
+                        "pipeline": .string(pipeline.id),
+                        "content-type": .string(content.type.id),
+                        "include": .array(
+                            pipeline.contentTypes.include.map { .string($0) }
+                        ),
+                        "exclude": .array(
+                            pipeline.contentTypes.exclude.map { .string($0) }
+                        ),
+                    ]
+                )
                 return nil
             }
 
@@ -305,9 +320,21 @@ public struct BuildTargetSourceRenderer {
             for: content.type.id
         )
 
-        //        print("--------------")
-        //        print(scope)
-        //        print("--------------")
+        logger.trace(
+            "Using scope for content",
+            metadata: [
+                "pipeline": .string(pipeline.id),
+                "content": .string(content.slug.value),
+                "scope": .string(scopeKey),
+                "context": .array(
+                    scope.context.stringValues.map { .string($0) }
+                ),
+                "fields": .array(
+                    scope.fields.map { .string($0) }
+                ),
+                "allowSubQueries": .string(allowSubQueries.description),
+            ]
+        )
 
         let cacheKey = [
             pipeline.id,
@@ -329,7 +356,7 @@ public struct BuildTargetSourceRenderer {
             for (k, v) in content.properties {
                 if let p = content.type.properties[k] {
                     switch p.type {
-                    // resolve assets
+                    /// resolve assets
                     case .asset:
                         guard let rawValue = v.stringValue() else {
                             continue
@@ -344,7 +371,7 @@ public struct BuildTargetSourceRenderer {
                         )
 
                         result[k] = .init(resolvedValue)
-                    // format dates
+                    /// format dates
                     case .date:
                         guard let rawValue = v.doubleValue() else {
                             continue
@@ -365,10 +392,6 @@ public struct BuildTargetSourceRenderer {
             result["permalink"] = .init(
                 content.slug.permalink(baseURL: baseURL())
             )
-            //            print("------------")
-            //            print(content.slug)
-            //            print(result["permalink"]!)
-            //            print("------------")
 
             result["lastUpdate"] = .init(
                 dateFormatter.format(content.rawValue.lastModificationDate)
@@ -517,6 +540,32 @@ public struct BuildTargetSourceRenderer {
             }
         }
 
+        logger.trace(
+            "Returning context for content",
+            metadata: [
+                "pipeline": .string(pipeline.id),
+                "content": .string(content.slug.value),
+                "scope": .string(scopeKey),
+                "context": .array(
+                    scope.context.stringValues.map { .string($0) }
+                ),
+                "fields": .array(
+                    scope.fields.map { .string($0) }
+                ),
+                "allowSubQueries": .string(allowSubQueries.description),
+                "result": .dictionary(
+                    [
+                        "slug": .string(
+                            result["slug"]?.stringValue() ?? "nil"
+                        ),
+                        "permalink": .string(
+                            result["permalink"]?.stringValue() ?? "nil"
+                        ),
+                    ]
+                ),
+            ]
+        )
+
         guard !scope.fields.isEmpty else {
             contentContextCache[cacheKey] = result
             return result
@@ -568,14 +617,11 @@ public struct BuildTargetSourceRenderer {
 
         var results: [PipelineResult] = []
         for pipeline in buildTargetSource.pipelines {
-            //            print(pipeline.id)
             let filteredContents = contentResolver.apply(
                 filterRules: pipeline.contentTypes.filterRules,
                 to: baseContents,
                 now: now
             )
-            //            print(baseContents.count)
-            //            print(filteredContents.count)
             let iteratedContents = contentResolver.apply(
                 iterators: pipeline.iterators,
                 to: filteredContents,
@@ -627,12 +673,26 @@ public struct BuildTargetSourceRenderer {
                 now: now
             )
 
-            //            print("---")
-            //            print(finalContents.count)
-            //            print(contextBundles.count)
-            //            print("---")
-            //            print(finalContents.map(\.slug.value).joined(separator: "\n"))
-            //            print(contextBundles.map(\.content.slug))
+            logger.trace(
+                "Rendering contents for pipeline",
+                metadata: [
+                    "pipeline": .string(pipeline.id),
+                    "counts": [
+                        "base": .string(baseContents.count.description),
+                        "iterated": .string(iteratedContents.count.description),
+                        "final": .string(finalContents.count.description),
+                        "context": .string(contextBundles.count.description),
+                    ],
+                    "final": .array(
+                        finalContents.map(\.slug.value).map { .string($0) }
+                    ),
+                    "context": .array(
+                        contextBundles.map(
+                            \.content.slug.value
+                        ).map { .string($0) }
+                    ),
+                ]
+            )
 
             switch pipeline.engine.id {
             case "json":
