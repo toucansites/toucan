@@ -4,14 +4,13 @@
 //
 //  Created by Binary Birds on 2025. 04. 15..
 
-import Foundation
-import Dispatch
 import ArgumentParser
+import Dispatch
+import Foundation
 import SwiftCommand
-import ToucanInfo
+import ToucanCore
 
 extension Array {
-
     mutating func popFirst() -> Element? {
         isEmpty ? nil : removeFirst()
     }
@@ -20,7 +19,6 @@ extension Array {
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan",

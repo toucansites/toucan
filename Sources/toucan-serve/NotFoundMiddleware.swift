@@ -2,13 +2,12 @@
 //  NotFoundMiddleware.swift
 //  Toucan
 //
-//  Created by Tibor Bodecs on 2025. 01. 23..
+//  Created by Tibor Bödecs on 2025. 01. 23..
 //
 
 import Hummingbird
 
 struct NotFoundMiddleware<Context: RequestContext>: RouterMiddleware {
-
     func handle(
         _ request: Request,
         context: Context,

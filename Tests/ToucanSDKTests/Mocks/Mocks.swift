@@ -1,0 +1,15 @@
+//
+//  Mocks.swift
+//  Toucan
+//
+//  Created by Tibor Bödecs on 2025. 01. 30..
+//
+
+enum Mocks {
+    enum ContentTypes {}
+    enum RawContents {}
+    enum Pipelines {}
+    enum Views {}
+    enum Blocks {}
+    enum E2E {}
+}

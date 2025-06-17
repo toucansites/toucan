@@ -5,17 +5,16 @@
 //  Created by Binary Birds on 2025. 04. 15..
 
 import ArgumentParser
-import Logging
-import Hummingbird
 import Foundation
-import ToucanInfo
+import Hummingbird
+import Logging
+import ToucanCore
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-serve",
