@@ -311,6 +311,18 @@ struct E2ETestSuite {
         )
     }
 
+    private func mockTestTypes() -> Directory {
+        Directory(name: "types") {
+            YAMLFile(
+                name: "test",
+                contents: ContentType(
+                    id: "test",
+                    default: true
+                )
+            )
+        }
+    }
+
     @Test
     func loadOneSVGFile() async throws {
         let now = Date()
@@ -351,15 +363,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     RawContentBundle(
                         name: "test",
@@ -446,15 +450,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     RawContentBundle(
                         name: "test",
@@ -549,15 +545,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -642,15 +630,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -743,15 +723,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -840,15 +812,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -941,15 +905,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -1016,15 +972,15 @@ struct E2ETestSuite {
                 mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
-                        name: "test",
+                        name: "html",
                         contents: Pipeline(
-                            id: "test",
+                            id: "html",
                             engine: .init(
                                 id: "mustache",
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "view": "test"
+                                            "view": "foo"
                                         ]
                                     ]
                                 ]
@@ -1037,24 +993,14 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         File(
                             name: "index.yaml",
                             string: """
-                                type: test
-                                description: Desc1
-
-                                view: foo
+                                views:
+                                    html: bar
                                 """
                         )
                     }
@@ -1065,7 +1011,13 @@ struct E2ETestSuite {
                             MustacheFile(
                                 name: "foo",
                                 contents: """
-                                    lorem ipsum
+                                    foo
+                                    """
+                            )
+                            MustacheFile(
+                                name: "bar",
+                                contents: """
+                                    bar
                                     """
                             )
                         }
@@ -1082,8 +1034,7 @@ struct E2ETestSuite {
             let fileURL = output.appendingPathIfPresent("test/index.html")
             let html = try String(contentsOf: fileURL)
 
-            print(html)
-            #expect(html.contains("lorem ipsum"))
+            #expect(html.contains("bar"))
         }
     }
 
@@ -1139,15 +1090,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         File(
@@ -1300,15 +1243,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         MarkdownFile(

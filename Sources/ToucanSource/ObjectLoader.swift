@@ -66,7 +66,7 @@ public struct ObjectLoader {
             return
                 try locations
                 .map {
-                    let fileURL = url.appendingPathComponent($0)
+                    let fileURL = url.appendingPathIfPresent($0)
                     lastURL = fileURL
                     return fileURL
                 }
@@ -98,7 +98,7 @@ public struct ObjectLoader {
             let combinedRawCodableObject =
                 try locations
                 .map {
-                    let fileURL = url.appendingPathComponent($0)
+                    let fileURL = url.appendingPathIfPresent($0)
                     lastURL = fileURL
                     return fileURL
                 }

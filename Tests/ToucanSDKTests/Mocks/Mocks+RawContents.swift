@@ -104,13 +104,6 @@ extension Mocks.RawContents {
                 frontMatter: [
                     "title": "Context page",
                     "description": "Context page description",
-                    // TODO: pipeline settings
-                    "pipeline": [
-                        "html": [
-                            "view": "pages.context"
-                        ]
-                    ],
-                    "view": "pages.context",
                 ],
                 contents: """
                     # Context page
