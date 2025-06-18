@@ -49,7 +49,7 @@ public struct MustacheRenderer {
         using id: String,
         with object: [String: AnyCodable]
     ) -> String? {
-        // Ensure the template ID is valid
+        // Ensure the ID is valid
         guard ids.contains(id) else {
             logger.error(
                 "Missing or invalid template file.",

@@ -162,14 +162,14 @@ extension File.Mocks {
 
     static func templateRSSView() -> MustacheFile {
         .init(
-            name: "rss.mustache",
+            name: "rss",
             contents: Mocks.Views.rss()
         )
     }
 
     static func templateSitemapView() -> MustacheFile {
         .init(
-            name: "sitemap.mustache",
+            name: "sitemap",
             contents: Mocks.Views.sitemap()
         )
     }
