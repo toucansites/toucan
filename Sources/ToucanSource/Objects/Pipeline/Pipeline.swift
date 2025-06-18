@@ -66,14 +66,14 @@ public struct Pipeline: Codable {
     /// Initializes a fully-defined `Pipeline` object.
     public init(
         id: String,
-        definesType: Bool,
-        scopes: [String: [String: Scope]],
-        queries: [String: Query],
-        dataTypes: DataTypes,
-        contentTypes: ContentTypes,
-        iterators: [String: Query],
-        assets: Assets,
-        transformers: [String: Transformers],
+        definesType: Bool = false,
+        scopes: [String: [String: Scope]] = [:],
+        queries: [String: Query] = [:],
+        dataTypes: DataTypes = .defaults,
+        contentTypes: ContentTypes = .defaults,
+        iterators: [String: Query] = [:],
+        assets: Assets = .defaults,
+        transformers: [String: Transformers] = [:],
         engine: Engine,
         output: Output
     ) {

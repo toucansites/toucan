@@ -12,16 +12,16 @@ import ToucanSerialization
 struct MustacheFile {
     var name: String
     var ext: String
-    var template: String
+    var contents: String
 
     init(
         name: String,
         ext: String = "mustache",
-        template: String
+        contents: String
     ) {
         self.name = name
         self.ext = ext
-        self.template = template
+        self.contents = contents
     }
 }
 
@@ -30,7 +30,7 @@ extension MustacheFile: BuildableItem {
         .file(
             .init(
                 name: name + "." + ext,
-                string: template
+                string: contents
             )
         )
     }

@@ -78,14 +78,14 @@ public struct Config: Codable, Equatable {
     ///   - dataTypes: Data type related configurations.
     ///   - renderer: Fine-grained control for specific content types.
     public init(
-        site: Site,
-        pipelines: Pipelines,
-        contents: Contents,
-        types: Types,
-        blocks: Blocks,
-        templates: Templates,
-        dataTypes: DataTypes,
-        renderer: RendererConfig
+        site: Site = .defaults,
+        pipelines: Pipelines = .defaults,
+        contents: Contents = .defaults,
+        types: Types = .defaults,
+        blocks: Blocks = .defaults,
+        templates: Templates = .defaults,
+        dataTypes: DataTypes = .defaults,
+        renderer: RendererConfig = .defaults
     ) {
         self.site = site
         self.pipelines = pipelines
