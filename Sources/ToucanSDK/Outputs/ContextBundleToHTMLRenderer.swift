@@ -48,8 +48,9 @@ struct ContextBundleToHTMLRenderer {
         )
         let frontMatter = contextBundle.content.rawValue.markdown.frontMatter
         let contentTypeView = contentTypeOptions.string("view")
+        let genericContentView = frontMatter.string("views.*")
         let contentView = frontMatter.string(pipelineViewKey)
-        let viewId = contentView ?? contentTypeView
+        let viewId = contentView ?? genericContentView ?? contentTypeView
 
         guard let viewId, !viewId.isEmpty else {
             logger.warning(

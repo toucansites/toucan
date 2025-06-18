@@ -265,14 +265,14 @@ struct E2ETestSuite {
     // MARK: - other tests
 
     @Test
-    func context() throws {
+    func customContextViewForAllPipeline() throws {
         let now = Date()
 
         try FileManagerPlayground {
             Mocks.E2E.src(
                 now: now,
                 debugContext: #"""
-                    {{page}}
+                    {{page.description}}
                     """#
             )
         }
@@ -281,18 +281,10 @@ struct E2ETestSuite {
             try Toucan(input: input.path()).generate(now: now)
 
             let output = $1.appendingPathIfPresent("docs")
-            let contextURL = output.appendingPathIfPresent("context/index.html")
-            let context = try String(contentsOf: contextURL)
-
-            #expect(
-                context
-                    .replacingOccurrences(
-                        [
-                            "&quot;": "\""
-                        ]
-                    )
-                    .contains("Context page description")
-            )
+            let htmlURL = output.appendingPathIfPresent("context/index.html")
+            let html = try String(contentsOf: htmlURL)
+            let exp = "Context page description"
+            #expect(html.trimmingCharacters(in: .whitespacesAndNewlines) == exp)
         }
     }
 
