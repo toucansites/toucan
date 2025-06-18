@@ -198,8 +198,8 @@ public extension Pipeline {
         ///   - behaviors: The array of asset behaviors.
         ///   - properties: The array of asset properties to include.
         public init(
-            behaviors: [Behavior],
-            properties: [Property]
+            behaviors: [Behavior] = [],
+            properties: [Property] = []
         ) {
             self.behaviors = behaviors
             self.properties = properties

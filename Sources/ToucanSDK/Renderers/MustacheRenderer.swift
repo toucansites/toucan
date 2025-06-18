@@ -1,5 +1,5 @@
 //
-//  MustacheTemplateRenderer.swift
+//  MustacheRenderer.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 16..
@@ -11,7 +11,7 @@ import Mustache
 import ToucanSource
 
 /// Renders Mustache templates using a predefined template library and a dynamic context object.
-public struct MustacheTemplateRenderer {
+public struct MustacheRenderer {
     /// A list of all available template IDs in the library.
     var ids: [String]
 
@@ -42,19 +42,19 @@ public struct MustacheTemplateRenderer {
     /// Renders a Mustache template using the given context object.
     ///
     /// - Parameters:
-    ///   - template: The ID of the template to render.
+    ///   - id: The ID of the template to render.
     ///   - object: A dictionary representing the context (`[String: AnyCodable]`).
     /// - Returns: The rendered HTML string, or `nil` if rendering fails or the template is missing.
     public func render(
-        template: String,
+        using id: String,
         with object: [String: AnyCodable]
     ) -> String? {
-        // Ensure the template ID is valid
-        guard ids.contains(template) else {
+        // Ensure the ID is valid
+        guard ids.contains(id) else {
             logger.error(
                 "Missing or invalid template file.",
                 metadata: [
-                    "id": "\(template)"
+                    "id": .string(id)
                 ]
             )
             return nil
@@ -64,16 +64,15 @@ public struct MustacheTemplateRenderer {
         let local = unwrap(object) as Any
 
         // Attempt rendering using the Mustache library
-        guard let html = library.render(local, withTemplate: template) else {
+        guard let html = library.render(local, withTemplate: id) else {
             logger.error(
                 "Could not render HTML using the template file.",
                 metadata: [
-                    "id": "\(template)"
+                    "id": .string(id)
                 ]
             )
             return nil
         }
-
         return html
     }
 }

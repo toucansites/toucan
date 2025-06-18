@@ -91,28 +91,28 @@ extension File.Mocks {
     static func template404View() -> MustacheFile {
         .init(
             name: "404",
-            template: Mocks.Views.notFound()
+            contents: Mocks.Views.notFound()
         )
     }
 
     static func templateDefaultView() -> MustacheFile {
         .init(
             name: "default",
-            template: Mocks.Views.page()
+            contents: Mocks.Views.page()
         )
     }
 
     static func templateHomeView() -> MustacheFile {
         .init(
             name: "home",
-            template: Mocks.Views.home()
+            contents: Mocks.Views.home()
         )
     }
 
     static func templateFooterView() -> MustacheFile {
         .init(
             name: "footer",
-            template: """
+            contents: """
                 <footer>
                     <p>This site was generated using <a href="https://www.swift.org/" target="_blank">Swift</a> & <a href="https://github.com/toucansites/toucan" target="_blank">Toucan</a>.</p>
 
@@ -125,7 +125,7 @@ extension File.Mocks {
     static func templateHeaderView() -> MustacheFile {
         .init(
             name: "header",
-            template: """
+            contents: """
                 <header>
                     <a id="logo" href="/">
                         <img
@@ -149,28 +149,28 @@ extension File.Mocks {
     static func templateHTMLView() -> MustacheFile {
         .init(
             name: "html",
-            template: Mocks.Views.html()
+            contents: Mocks.Views.html()
         )
     }
 
     static func templateRedirectView() -> MustacheFile {
         .init(
             name: "redirect",
-            template: Mocks.Views.redirect()
+            contents: Mocks.Views.redirect()
         )
     }
 
     static func templateRSSView() -> MustacheFile {
         .init(
-            name: "rss.mustache",
-            template: Mocks.Views.rss()
+            name: "rss",
+            contents: Mocks.Views.rss()
         )
     }
 
     static func templateSitemapView() -> MustacheFile {
         .init(
-            name: "sitemap.mustache",
-            template: Mocks.Views.sitemap()
+            name: "sitemap",
+            contents: Mocks.Views.sitemap()
         )
     }
 

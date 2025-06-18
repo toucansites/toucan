@@ -265,14 +265,14 @@ struct E2ETestSuite {
     // MARK: - other tests
 
     @Test
-    func context() throws {
+    func customContextViewForAllPipeline() throws {
         let now = Date()
 
         try FileManagerPlayground {
             Mocks.E2E.src(
                 now: now,
                 debugContext: #"""
-                    {{page}}
+                    {{page.description}}
                     """#
             )
         }
@@ -281,22 +281,39 @@ struct E2ETestSuite {
             try Toucan(input: input.path()).generate(now: now)
 
             let output = $1.appendingPathIfPresent("docs")
-            let contextURL = output.appendingPathIfPresent("context/index.html")
-            let context = try String(contentsOf: contextURL)
-
-            #expect(
-                context
-                    .replacingOccurrences(
-                        [
-                            "&quot;": "\""
-                        ]
-                    )
-                    .contains("Context page description")
-            )
+            let htmlURL = output.appendingPathIfPresent("context/index.html")
+            let html = try String(contentsOf: htmlURL)
+            let exp = "Context page description"
+            #expect(html.trimmingCharacters(in: .whitespacesAndNewlines) == exp)
         }
     }
 
     // MARK: - assets
+
+    private func mockSiteYAMLFile() -> YAMLFile<Settings> {
+        .init(
+            name: "site",
+            contents: Settings(
+                [
+                    "name": "Test site name",
+                    "description": "Test site description",
+                    "language": "en-US",
+                ]
+            )
+        )
+    }
+
+    private func mockTestTypes() -> Directory {
+        Directory(name: "types") {
+            YAMLFile(
+                name: "test",
+                contents: ContentType(
+                    id: "test",
+                    default: true
+                )
+            )
+        }
+    }
 
     @Test
     func loadOneSVGFile() async throws {
@@ -304,27 +321,13 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
-                                behaviors: [],
                                 properties: [
                                     .init(
                                         action: .load,
@@ -338,7 +341,6 @@ struct E2ETestSuite {
                                     )
                                 ]
                             ),
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
@@ -353,15 +355,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     RawContentBundle(
                         name: "test",
@@ -413,27 +407,13 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
-                                behaviors: [],
                                 properties: [
                                     .init(
                                         action: .load,
@@ -462,15 +442,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     RawContentBundle(
                         name: "test",
@@ -531,27 +503,13 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
-                                behaviors: [],
                                 properties: [
                                     .init(
                                         action: .parse,
@@ -565,7 +523,6 @@ struct E2ETestSuite {
                                     )
                                 ]
                             ),
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
@@ -580,15 +537,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -639,27 +588,13 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
-                                behaviors: [],
                                 properties: [
                                     .init(
                                         action: .parse,
@@ -673,7 +608,6 @@ struct E2ETestSuite {
                                     )
                                 ]
                             ),
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
@@ -688,15 +622,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -754,25 +680,12 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
                                 behaviors: [
                                     .init(
@@ -786,10 +699,8 @@ struct E2ETestSuite {
                                             ext: "css"
                                         )
                                     )
-                                ],
-                                properties: []
+                                ]
                             ),
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
@@ -804,15 +715,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -866,25 +769,12 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
                                 behaviors: [
                                     .init(
@@ -898,10 +788,8 @@ struct E2ETestSuite {
                                             ext: "css"
                                         )
                                     )
-                                ],
-                                properties: []
+                                ]
                             ),
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
@@ -916,15 +804,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -982,25 +862,12 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
                             assets: .init(
                                 behaviors: [
                                     .init(
@@ -1014,10 +881,8 @@ struct E2ETestSuite {
                                             ext: "css"
                                         )
                                     )
-                                ],
-                                properties: []
+                                ]
                             ),
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [
@@ -1032,15 +897,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         Directory(name: "assets") {
@@ -1096,10 +953,87 @@ struct E2ETestSuite {
         }
     }
 
+    // MARK: - custom view
+
+    @Test
+    func customView() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                mockSiteYAMLFile()
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "html",
+                        contents: Pipeline(
+                            id: "html",
+                            engine: .init(
+                                id: "mustache",
+                                options: [
+                                    "contentTypes": [
+                                        "test": [
+                                            "view": "foo"
+                                        ]
+                                    ]
+                                ]
+                            ),
+                            output: .init(
+                                path: "{{slug}}",
+                                file: "index",
+                                ext: "html"
+                            )
+                        )
+                    )
+                }
+                mockTestTypes()
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        File(
+                            name: "index.yaml",
+                            string: """
+                                views:
+                                    html: bar
+                                """
+                        )
+                    }
+                }
+                Directory(name: "templates") {
+                    Directory(name: "default") {
+                        Directory(name: "views") {
+                            MustacheFile(
+                                name: "foo",
+                                contents: """
+                                    foo
+                                    """
+                            )
+                            MustacheFile(
+                                name: "bar",
+                                contents: """
+                                    bar
+                                    """
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let input = $1.appendingPathIfPresent("src")
+            try Toucan(input: input.path()).generate(now: now)
+
+            let output = $1.appendingPathIfPresent("docs")
+
+            let fileURL = output.appendingPathIfPresent("test/index.html")
+            let html = try String(contentsOf: fileURL)
+
+            #expect(html.contains("bar"))
+        }
+    }
+
     // MARK: - transformers
 
     @Test
-    func transformerRunTest() async throws {
+    func transformerExecution() async throws {
         let now = Date()
         let fileManager = FileManager.default
         let rootURL = FileManager.default.temporaryDirectory
@@ -1111,26 +1045,13 @@ struct E2ETestSuite {
             fileManager: fileManager
         ) {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
-                            assets: .defaults,
+
                             transformers: [
                                 "test": .init(
                                     run: [
@@ -1148,7 +1069,7 @@ struct E2ETestSuite {
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "template": "test"
+                                            "view": "test"
                                         ]
                                     ]
                                 ]
@@ -1161,15 +1082,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         File(
@@ -1282,20 +1195,12 @@ struct E2ETestSuite {
 
         try FileManagerPlayground {
             Directory(name: "src") {
-                YAMLFile(
-                    name: "site",
-                    contents: [
-                        "name": "Test site name",
-                        "description": "Test site description",
-                        "language": "en-US",
-                    ] as [String: AnyCodable]
-                )
+                mockSiteYAMLFile()
                 Directory(name: "pipelines") {
                     YAMLFile(
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
                             scopes: [
                                 "test": [
                                     "minimal": .init(
@@ -1319,14 +1224,8 @@ struct E2ETestSuite {
                                     scope: "minimal"
                                 )
                             ],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
-                            assets: .defaults,
-                            transformers: [:],
                             engine: .init(
-                                id: "json",
-                                options: [:]
+                                id: "json"
                             ),
                             output: .init(
                                 path: "",
@@ -1336,15 +1235,7 @@ struct E2ETestSuite {
                         )
                     )
                 }
-                Directory(name: "types") {
-                    YAMLFile(
-                        name: "test",
-                        contents: ContentType(
-                            id: "test",
-                            default: true
-                        )
-                    )
-                }
+                mockTestTypes()
                 Directory(name: "contents") {
                     Directory(name: "test") {
                         MarkdownFile(
@@ -1450,14 +1341,6 @@ struct E2ETestSuite {
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
-                            dataTypes: .defaults,
-                            contentTypes: .defaults,
-                            iterators: [:],
-                            assets: .defaults,
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [:]
@@ -1544,12 +1427,6 @@ struct E2ETestSuite {
                 YAMLFile(
                     name: "config",
                     contents: Config(
-                        site: .defaults,
-                        pipelines: .defaults,
-                        contents: .defaults,
-                        types: .defaults,
-                        blocks: .defaults,
-                        templates: .defaults,
                         dataTypes: .init(
                             date: .init(
                                 input: .defaults,
@@ -1578,9 +1455,6 @@ struct E2ETestSuite {
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-                            definesType: false,
-                            scopes: [:],
-                            queries: [:],
                             dataTypes: .init(
                                 date: .init(
                                     output: .init(
@@ -1590,10 +1464,6 @@ struct E2ETestSuite {
                                     formats: [:]
                                 )
                             ),
-                            contentTypes: .defaults,
-                            iterators: [:],
-                            assets: .defaults,
-                            transformers: [:],
                             engine: .init(
                                 id: "json",
                                 options: [:]
