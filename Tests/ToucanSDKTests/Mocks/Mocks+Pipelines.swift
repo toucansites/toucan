@@ -165,22 +165,22 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "page": [
-                            "template": "pages.default"
+                            "view": "pages.default"
                         ],
                         "post": [
-                            "template": "blog.post.default"
+                            "view": "blog.post.default"
                         ],
                         "author": [
-                            "template": "blog.author.default"
+                            "view": "blog.author.default"
                         ],
                         "tag": [
-                            "template": "blog.tag.default"
+                            "view": "blog.tag.default"
                         ],
                         "category": [
-                            "template": "docs.category.default"
+                            "view": "docs.category.default"
                         ],
                         "guide": [
-                            "template": "docs.guide.default"
+                            "view": "docs.guide.default"
                         ],
                     ]
                 ]
@@ -216,7 +216,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "not-found": [
-                            "template": "pages.404"
+                            "view": "pages.404"
                         ]
                     ]
                 ]
@@ -252,7 +252,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "redirect": [
-                            "template": "redirect"
+                            "view": "redirect"
                         ]
                     ]
                 ]
@@ -308,7 +308,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "rss": [
-                            "template": "rss"
+                            "view": "rss"
                         ]
                     ]
                 ]
@@ -391,7 +391,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "sitemap": [
-                            "template": "sitemap"
+                            "view": "sitemap"
                         ]
                     ]
                 ]

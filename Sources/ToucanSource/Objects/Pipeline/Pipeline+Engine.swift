@@ -33,7 +33,7 @@ public extension Pipeline {
         ///   - options: A dictionary of custom configuration options.
         public init(
             id: String,
-            options: [String: AnyCodable]
+            options: [String: AnyCodable] = [:]
         ) {
             self.id = id
             self.options = options
