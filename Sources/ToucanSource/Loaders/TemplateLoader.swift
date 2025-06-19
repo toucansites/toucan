@@ -169,7 +169,7 @@ public struct TemplateLoader {
             content: .init(
                 assets: contentAssetOverrides,
                 views: contentTemplateOverrides.map {
-                    try loadTemplate(
+                    try loadView(
                         at: locations.contentsURL,
                         path: $0,
                         isContentOverride: true
