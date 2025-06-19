@@ -18,28 +18,6 @@ extension Toucan {
             try generate()
             return true
         }
-        catch let error as ToucanDecoderError {
-            logger.error("\(error.logMessageStack())")
-        }
-        catch let error as ToucanEncoderError {
-            logger.error("\(error.logMessageStack())")
-        }
-        catch let error as DecodingError {
-            switch error {
-            case let .dataCorrupted(context):
-                let underlyingError = context.underlyingError ?? error
-                let description = String(describing: underlyingError)
-                let message = "YAML corrupted: `\(description)`"
-                logger.error(.init(stringLiteral: message))
-            case let .typeMismatch(_, context):
-                let underlyingError = context.underlyingError ?? error
-                let description = String(describing: underlyingError)
-                let message = "YAML type mismatch: `\(description)`"
-                logger.error(.init(stringLiteral: message))
-            default:
-                logger.error("\(String(describing: error))")
-            }
-        }
         catch let error as ToucanError {
             logger.error("\(error.logMessageStack())")
         }
