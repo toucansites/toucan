@@ -7,12 +7,9 @@
 
 /// A value type representing a URL-friendly identifier for a content item.
 public struct Slug: Equatable {
-    // MARK: - Properties
 
     /// The raw slug string (e.g., `"blog/welcome"`, `"about"`, `""`).
     public var value: String
-
-    // MARK: - Lifecycle
 
     /// Initializes a new slug.
     ///
@@ -22,10 +19,6 @@ public struct Slug: Equatable {
     ) {
         self.value = value
     }
-
-    // MARK: - Functions
-
-    // MARK: - Iterator ID Extraction
 
     /// Extracts a dynamic iterator identifier from a slug value containing
     /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
@@ -44,8 +37,6 @@ public struct Slug: Equatable {
         return .init(value[startRange.upperBound..<endRange.lowerBound])
     }
 
-    // MARK: - Permalink Generation
-
     /// Constructs a permalink from the base URL and the slug.
     ///
     /// - Parameter baseURL: The base URL of the site (e.g., `"https://example.com"`).
@@ -63,20 +54,14 @@ public struct Slug: Equatable {
             .joined(separator: "/")
             .ensureTrailingSlash()
     }
-
-    // MARK: - Identifier
-
-    /// Extracts the final path component of the slug as a simplified identifier.
-    ///
-    /// Useful for labeling pages or assigning anchor references.
-    ///
-    /// - Returns: The last segment of the slug (e.g., `"welcome"` from `"blog/welcome"`).
-    public func contextAwareIdentifier() -> String {
-        .init(value.split(separator: "/").last ?? "")
-    }
 }
 
 extension Slug: Codable {
+    
+    public func contextAwareIdentifier() -> String {
+        .init(value.split(separator: "/").last ?? "")
+    }
+    
     /// Creates a new instance by decoding from the given decoder.
     ///
     /// This initializer attempts to decode the value as a single string.

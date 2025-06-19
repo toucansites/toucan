@@ -12,8 +12,6 @@ enum ContentTypeResolverError: ToucanError {
     case missingContentType(String)
     case unknown(Error)
 
-    // MARK: - Computed Properties
-
     var underlyingErrors: [any Error] {
         switch self {
         case let .unknown(error):
@@ -43,29 +41,24 @@ enum ContentTypeResolverError: ToucanError {
 }
 
 struct ContentTypeResolver {
-    // MARK: - Properties
 
-    let contentTypes: [ContentDefinition]
-
-    // MARK: - Lifecycle
+    let contentTypes: [ContentType]
 
     init(
-        types: [ContentDefinition],
+        types: [ContentType],
         pipelines: [Pipeline]
     ) {
         let virtualTypes = pipelines.compactMap {
-            $0.definesType ? ContentDefinition(id: $0.id) : nil
+            $0.definesType ? ContentType(id: $0.id) : nil
         }
 
         self.contentTypes = (types + virtualTypes).sorted { $0.id < $1.id }
     }
 
-    // MARK: - Functions
-
     func getContentType(
         for origin: Origin,
         using id: String?
-    ) throws(ContentTypeResolverError) -> ContentDefinition {
+    ) throws(ContentTypeResolverError) -> ContentType {
         if let id {
             guard
                 let result = contentTypes.first(where: { $0.id == id })
@@ -76,13 +69,11 @@ struct ContentTypeResolver {
             return result
         }
 
-        if
-            let type = contentTypes.first(
-                where: { type in
-                    type.paths.contains { origin.path.value.hasPrefix($0) }
-                }
-            )
-        {
+        if let type = contentTypes.first(
+            where: { type in
+                type.paths.contains { origin.path.value.hasPrefix($0) }
+            }
+        ) {
             return type
         }
 

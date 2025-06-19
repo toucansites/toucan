@@ -10,52 +10,51 @@ import Logging
 import ToucanSource
 
 struct ContextBundleToHTMLRenderer {
-    // MARK: - Properties
 
-    let mustacheTemplateRenderer: MustacheTemplateRenderer
-    let contentTypesOptions: [String: AnyCodable]
-
+    let mustacheRenderer: MustacheRenderer
+    let engineContentTypesOptions: [String: AnyCodable]
+    let pipelineViewKey: String
     let logger: Logger
-
-    // MARK: - Lifecycle
 
     init(
         pipeline: Pipeline,
         templates: [String: String],
         logger: Logger
     ) throws {
-        self.mustacheTemplateRenderer = try MustacheTemplateRenderer(
+        self.mustacheRenderer = try MustacheRenderer(
             templates: templates.mapValues {
                 try .init(string: $0)
             },
             logger: logger
         )
-        self.contentTypesOptions = pipeline.engine.options.dict("contentTypes")
+        
+        let engineOptions = pipeline.engine.options
+        self.engineContentTypesOptions = engineOptions.dict("contentTypes")
+        self.pipelineViewKey = ["views", pipeline.id].joined(separator: ".")
         self.logger = logger
     }
 
-    // MARK: - Functions
-
-    func render(_ contextBundles: [ContextBundle]) -> [PipelineResult] {
-        contextBundles.compactMap {
-            render($0)
-        }
+    func render(
+        _ contextBundles: [ContextBundle]
+    ) -> [PipelineResult] {
+        contextBundles.compactMap { render($0) }
     }
 
-    func render(_ contextBundle: ContextBundle) -> PipelineResult? {
-        let bundleOptions = contentTypesOptions.dict(
+    func render(
+        _ contextBundle: ContextBundle
+    ) -> PipelineResult? {
+        let contentTypeOptions = engineContentTypesOptions.dict(
             contextBundle.content.type.id
         )
+        let frontMatter = contextBundle.content.rawValue.markdown.frontMatter
+        let contentTypeView = contentTypeOptions.string("view")
+        let genericContentView = frontMatter.string("views.*")
+        let contentView = frontMatter.string(pipelineViewKey)
+        let viewId = contentView ?? genericContentView ?? contentTypeView
 
-        let contentTypeTemplate = bundleOptions.string("template")
-        let contentTemplate = contextBundle.content.rawValue.markdown
-            .frontMatter
-            .string("template")
-        let template = contentTemplate ?? contentTypeTemplate
-
-        guard let template, !template.isEmpty else {
+        guard let viewId, !viewId.isEmpty else {
             logger.warning(
-                "Missing mustache template file.",
+                "No view has been specified for this content.",
                 metadata: [
                     "slug": "\(contextBundle.content.slug)",
                     "type": "\(contextBundle.content.type.id)",
@@ -64,18 +63,18 @@ struct ContextBundleToHTMLRenderer {
             return nil
         }
 
-        let html = mustacheTemplateRenderer.render(
-            template: template,
+        let html = mustacheRenderer.render(
+            using: viewId,
             with: contextBundle.context
         )
 
-        guard let html, !html.isEmpty else {
+        guard let html else {
             logger.warning(
-                "Could not get valid HTML from content using template.",
+                "Could not get valid HTML from content using view.",
                 metadata: [
-                    "slug": "\(contextBundle.content.slug)",
-                    "type": "\(contextBundle.content.type.id)",
-                    "template": "\(template)",
+                    "slug": .string(contextBundle.content.slug.value),
+                    "type": .string(contextBundle.content.type.id),
+                    "view": .string(viewId),
                 ]
             )
             return nil

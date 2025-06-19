@@ -17,13 +17,13 @@ struct RelationTestSuite {
     @Test
     func basicOrdering() throws {
         let data = """
-        references: post
-        type: many
-        order: 
-            key: title
-            direction: desc
-        """
-        .data(using: .utf8)!
+            references: post
+            type: many
+            order: 
+                key: title
+                direction: desc
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 

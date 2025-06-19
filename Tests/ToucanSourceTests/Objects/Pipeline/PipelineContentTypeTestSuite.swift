@@ -15,9 +15,9 @@ struct PipelineContentTypeTestSuite {
     @Test
     func empty() throws {
         let data = """
-        foo: bar
-        """
-        .data(using: .utf8)!
+            foo: bar
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -33,14 +33,14 @@ struct PipelineContentTypeTestSuite {
     @Test
     func standard() throws {
         let data = """
-        include:
-            - post
-        exclude:
-            - rss
-        lastUpdate:
-            - page
-        """
-        .data(using: .utf8)!
+            include:
+                - post
+            exclude:
+                - rss
+            lastUpdate:
+                - page
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 

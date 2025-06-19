@@ -11,13 +11,10 @@ import ToucanSerialization
 import ToucanSource
 
 struct MarkdownFile {
-    // MARK: - Properties
 
     var name: String
     var ext: String
     var markdown: Markdown
-
-    // MARK: - Lifecycle
 
     init(
         name: String,
@@ -38,11 +35,11 @@ extension MarkdownFile: BuildableItem {
             .init(
                 name: name + "." + ext,
                 string: """
-                ---
-                \(yml)
-                ---
-                \(markdown.contents)
-                """
+                    ---
+                    \(yml)
+                    ---
+                    \(markdown.contents)
+                    """
             )
         )
     }

@@ -9,11 +9,8 @@ import DartSass
 import Foundation
 
 struct CompileSASSBehavior: Behavior {
-    // MARK: - Static Properties
 
     static let id = "compile-sass"
-
-    // MARK: - Properties
 
     var compiler: Compiler
 
@@ -22,8 +19,6 @@ struct CompileSASSBehavior: Behavior {
     init() throws {
         self.compiler = try .init()
     }
-
-    // MARK: - Functions
 
     /// NOTE: This is horrible... but we can live with it for a while :)
     private func unsafeSyncCompile(fileURL: URL) -> String {

@@ -8,9 +8,6 @@
 /// Represents a content query used to fetch or filter content entries
 /// based on content type, pagination, sorting, and filtering criteria.
 public struct Query: Codable, Equatable {
-    // MARK: - Nested Types
-
-    // MARK: - Coding Keys
 
     /// Keys used to decode the query from a structured format like YAML or JSON.
     enum CodingKeys: String, CodingKey {
@@ -21,8 +18,6 @@ public struct Query: Codable, Equatable {
         case filter
         case orderBy
     }
-
-    // MARK: - Properties
 
     /// The content type this query targets (e.g., `"blog"`, `"author"`, `"product"`).
     public var contentType: String

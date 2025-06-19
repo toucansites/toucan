@@ -26,7 +26,6 @@ private func getSafeURL(
 
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
-    // MARK: - Properties
 
     let inputURL: URL
     let targetsToBuild: [String]
@@ -57,8 +56,6 @@ public struct Toucan {
         self.logger = logger
     }
 
-    // MARK: - Functions
-
     // MARK: - helpers
 
     func resetDirectory(at url: URL) throws {
@@ -87,10 +84,10 @@ public struct Toucan {
         try ObjectLoader(
             url: inputURL,
             locations:
-            fileManager
+                fileManager
                 .find(
                     name: "toucan",
-                    extensions: ["yaml", "yml"],
+                    extensions: ["yml", "yaml"],
                     at: inputURL
                 ),
             encoder: encoder,
@@ -103,7 +100,6 @@ public struct Toucan {
     func getActiveBuildTargets(
         _ targetConfig: TargetConfig
     ) -> [Target] {
-        // TODO: maybe support --targets flag
         var buildTargets = targetConfig.targets.filter {
             targetsToBuild.contains($0.name)
         }
@@ -130,6 +126,7 @@ public struct Toucan {
                     "Building target: \(target.name)",
                     metadata: [:]
                 )
+                
                 let buildTargetSourceLoader = BuildTargetSourceLoader(
                     sourceURL: inputURL,
                     target: target,
@@ -155,6 +152,7 @@ public struct Toucan {
 
                 let templateLoader = TemplateLoader(
                     locations: buildTargetSource.locations,
+
                     fileManager: fileManager,
                     encoder: encoder,
                     decoder: decoder,
@@ -216,8 +214,8 @@ public struct Toucan {
 
                     let resultOutputURL =
                         destinationFolder
-                            .appending(path: result.destination.file)
-                            .appendingPathExtension(result.destination.ext)
+                        .appending(path: result.destination.file)
+                        .appendingPathExtension(result.destination.ext)
 
                     switch result.source {
                     case let .assetFile(path):
@@ -234,17 +232,16 @@ public struct Toucan {
                 }
 
                 // MARK: - Finalize and cleanup
-
-                // TODO: make sure output url works well in all cases
+                
                 var outputURL = getSafeURL(
                     for: target.output,
                     using: fileManager
                 )
                 if !outputURL.path().hasPrefix("/") {
-                    outputURL = inputURL.deletingLastPathComponent()
-                        .appending(
-                            path: target.output
-                        )
+                    outputURL =
+                        inputURL
+                        .deletingLastPathComponent()
+                        .appendingPathIfPresent(target.output)
                 }
 
                 try resetDirectory(at: outputURL)
@@ -254,9 +251,6 @@ public struct Toucan {
         }
         catch {
             try? fileManager.delete(at: workDirURL)
-            //            if let error = error as? ToucanError {
-            //                print(error.logMessageStack())
-            //            }
             throw error
         }
     }

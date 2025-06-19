@@ -8,17 +8,12 @@
 public extension Pipeline {
     /// Describes the output configuration for a content pipeline.
     struct Output: Codable {
-        // MARK: - Nested Types
-
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
             case file
             case ext
         }
-
-        // MARK: - Properties
 
         /// The directory path where the output file should be written.
         ///

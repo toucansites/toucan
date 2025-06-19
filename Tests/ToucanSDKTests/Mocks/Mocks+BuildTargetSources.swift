@@ -22,7 +22,8 @@ extension Mocks {
             dateConfig: config.dataTypes.date
         )
 
-        let postType = Mocks.ContentDefinitions.post()
+        let postType = Mocks.ContentTypes.post()
+
         guard
             case let .date(
                 publicationConfig
@@ -58,14 +59,14 @@ extension Mocks {
                 Mocks.Pipelines.rss(),
                 Mocks.Pipelines.api(),
             ],
-            contentDefinitions: [
-                Mocks.ContentDefinitions.page(),
+            types: [
+                Mocks.ContentTypes.page(),
                 postType,
-                Mocks.ContentDefinitions.author(),
-                Mocks.ContentDefinitions.tag(),
-                Mocks.ContentDefinitions.category(),
-                Mocks.ContentDefinitions.guide(),
-                Mocks.ContentDefinitions.redirect(),
+                Mocks.ContentTypes.author(),
+                Mocks.ContentTypes.tag(),
+                Mocks.ContentTypes.category(),
+                Mocks.ContentTypes.guide(),
+                Mocks.ContentTypes.redirect(),
             ],
             rawContents: [
                 Mocks.RawContents.homePage(now: now),
@@ -159,7 +160,7 @@ extension Mocks {
                 Mocks.RawContents.guide(id: 9, categoryID: 3, now: now),
             ],
             blockDirectives: [
-                Mocks.Blocks.link(),
+                Mocks.Blocks.link()
             ]
         )
     }

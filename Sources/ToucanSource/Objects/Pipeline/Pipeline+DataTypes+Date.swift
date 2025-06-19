@@ -8,31 +8,22 @@
 public extension Pipeline.DataTypes {
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
-        // MARK: - Nested Types
-
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case output
             case formats
         }
 
-        // MARK: - Static Computed Properties
-
-        // MARK: - Defaults
-
         /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
         public static var defaults: Self {
             .init(
-                output: .defaults,
+                output: nil,
                 formats: [:]
             )
         }
 
-        // MARK: - Properties
-
         /// A custom date localization for the standard localized output formats.
-        public var output: DateLocalization
+        public var output: DateLocalization?
 
         /// A dictionary of named output formats for rendering dates in different contexts.
         ///
@@ -44,8 +35,6 @@ public extension Pipeline.DataTypes {
         /// ```
         public var formats: [String: DateFormatterConfig]
 
-        // MARK: - Lifecycle
-
         // MARK: - Initialization
 
         /// Initializes a custom date format configuration.
@@ -54,7 +43,7 @@ public extension Pipeline.DataTypes {
         ///   - output: The date localization config for the standard date outputs.
         ///   - formats: Named formats for rendering parsed dates.
         public init(
-            output: DateLocalization,
+            output: DateLocalization?,
             formats: [String: DateFormatterConfig]
         ) {
             self.output = output

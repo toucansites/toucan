@@ -43,7 +43,7 @@ struct MarkdownRendererTestSuite {
 
         let contents = renderer.render(
             content: input,
-            id: "",
+            typeAwareID: "",
             slug: "",
             assetsPath: "",
             baseURL: ""

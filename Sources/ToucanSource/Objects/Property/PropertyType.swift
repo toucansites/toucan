@@ -32,8 +32,6 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
     /// Array type with elements of a consistent `PropertyType`.
     case array(of: PropertyType)
 
-    // MARK: - Nested Types
-
     /// Coding keys used for encoding and decoding `PropertyType`.
     private enum CodingKeys: String, CodingKey {
         case type
@@ -53,8 +51,6 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
         case date
         case array
     }
-
-    // MARK: - Lifecycle
 
     /// Creates a new instance by decoding from the given decoder.
     ///
@@ -90,8 +86,6 @@ public indirect enum PropertyType: Sendable, Codable, Equatable {
             self = .array(of: itemType)
         }
     }
-
-    // MARK: - Functions
 
     /// Encodes this value into the given encoder.
     ///

@@ -11,9 +11,6 @@
 /// to its author or related articles. It includes the type of relation,
 /// reference key(s), and optional ordering rules.
 public struct Relation: Codable, Equatable {
-    // MARK: - Nested Types
-
-    // MARK: - Coding Keys
 
     /// Keys used to decode the relation from serialized formats like JSON or YAML.
     enum CodingKeys: CodingKey {
@@ -21,8 +18,6 @@ public struct Relation: Codable, Equatable {
         case type
         case order
     }
-
-    // MARK: - Properties
 
     /// The key or query string that identifies the related content.
     ///

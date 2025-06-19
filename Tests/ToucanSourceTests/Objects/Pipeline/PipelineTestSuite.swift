@@ -12,46 +12,72 @@ import ToucanSerialization
 
 @Suite
 struct PipelineTestSuite {
-    // MARK: - order
+
+    @Test
+    func minimal() throws {
+        let data = """
+            id: test
+            engine: 
+                id: engine
+            output:
+                path: path
+                file: file
+                ext: ext
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Pipeline.self,
+            from: data
+        )
+
+        #expect(result.id == "test")
+        #expect(result.engine.id == "engine")
+        #expect(result.output.path == "path")
+        #expect(result.output.file == "file")
+        #expect(result.output.ext == "ext")
+    }
 
     @Test
     func standard() throws {
         let data = """
-        id: test
-        queries: 
-            featured:
-                contentType: post
-                limit: 10
-                filter:
-                    key: featured
-                    operator: equals
-                    value: true
-                orderBy:
-                    - key: publication
-                      direction: desc
-
-        contentTypes: 
-            include:
-                - page
-                - post
-        engine: 
             id: test
-            options:
-                foo: bar
-                foo2: 
-                bool: false
-                double: 2.0
-                int: 100
-                date: 01/16/2023
-                array:
-                    - value1
-                    - value2
-        output:
-            path: "{{slug}}"
-            file: "{{id}}"
-            ext: json
-        """
-        .data(using: .utf8)!
+            queries: 
+                featured:
+                    contentType: post
+                    limit: 10
+                    filter:
+                        key: featured
+                        operator: equals
+                        value: true
+                    orderBy:
+                        - key: publication
+                          direction: desc
+
+            contentTypes: 
+                include:
+                    - page
+                    - post
+            engine: 
+                id: test
+                options:
+                    foo: bar
+                    foo2: 
+                    bool: false
+                    double: 2.0
+                    int: 100
+                    date: 01/16/2023
+                    array:
+                        - value1
+                        - value2
+            output:
+                path: "{{slug}}"
+                file: "{{id}}"
+                ext: json
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -100,28 +126,21 @@ struct PipelineTestSuite {
     @Test
     func scopes() throws {
         let data = """
-        id: test
-        scopes: 
-            post:
-                list:
-                    context: 
-                        - detail
-                    fields:
-        dataTypes:
-            date:
-                dateFormats:
-                    test: 
-                        locale: en-US
-                        timeZone: EST
-                        format: ymd
-        engine: 
             id: test
-        output:
-            path: "{{slug}}"
-            file: index
-            ext: html
-        """
-        .data(using: .utf8)!
+            scopes: 
+                post:
+                    list:
+                        context: 
+                            - detail
+                        fields:
+            engine: 
+                id: test
+            output:
+                path: "{{slug}}"
+                file: index
+                ext: html
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -132,28 +151,5 @@ struct PipelineTestSuite {
 
         #expect(result.contentTypes.include.isEmpty)
         #expect(result.engine.id == "test")
-
-        //        let defaultScope = try #require(result.scopes["*"])
-        //        let defaultReferenceScope = try #require(defaultScope["reference"])
-        //        let defaultListScope = try #require(defaultScope["list"])
-        //        let defaultDetailScope = try #require(defaultScope["detail"])
-        //
-        //        #expect(defaultReferenceScope.context == .reference)
-        //        #expect(defaultListScope.context == .list)
-        //        #expect(defaultDetailScope.context == .detail)
-        //
-        //        let dateFormat = try #require(result.dataTypes.date.dateFormats["test"])
-        //        #expect(
-        //            dateFormat
-        //                == .init(
-        //                    locale: "en-US",
-        //                    timeZone: "EST",
-        //                    format: "ymd"
-        //                )
-        //        )
-        //
-        //        let postScope = try #require(result.scopes["post"])
-        //        let postListScope = try #require(postScope["list"])
-        //        #expect(postListScope.context == .detail)
     }
 }

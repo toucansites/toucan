@@ -328,6 +328,8 @@ public struct RawContentLoader {
                 contents: contents
             ),
             lastModificationDate: modificationDate.timeIntervalSince1970,
+            // TODO: check this! not sure if assetsPAth what we need here
+            assetsPath: assetsPath,
             assets: assets.sorted()
         )
     }
@@ -351,36 +353,4 @@ public struct RawContentLoader {
                 try loadRawContent(at: $0)
             }
     }
-}
-
-extension RawContentLoader {
-    //
-    //    func resolveImage(
-    //        frontMatter: [String: AnyCodable],
-    //        assetsPath: String,
-    //        assetLocations: [String],
-    //        slug: Slug,
-    //        imageKey: String = "image"
-    //    ) -> String? {
-    //
-    //        if let imageValue = frontMatter[imageKey]?.stringValue() {
-    //            if imageValue.hasPrefix("/") {
-    //                return .init(
-    //                    "\(baseUrl)\(baseUrl.suffixForPath())\(imageValue.dropFirst())"
-    //                )
-    //            }
-    //            else {
-    //                return .init(
-    //                    imageValue.resolveAsset(
-    //                        baseUrl: baseURL,
-    //                        assetsPath: assetsPath,
-    //                        slug: slug.value
-    //                    )
-    //                )
-    //            }
-    //        }
-    //
-    //        return nil
-    //    }
-    //
 }

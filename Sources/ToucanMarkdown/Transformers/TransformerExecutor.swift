@@ -12,7 +12,6 @@ import SwiftCommand
 /// Executes a sequence of shell-based transformation commands defined in a `TransformerPipeline`,
 /// allowing content to be programmatically modified.
 public struct TransformerExecutor {
-    // MARK: - Properties
 
     /// The transformation pipeline consisting of commands to execute.
     public var pipeline: TransformerPipeline

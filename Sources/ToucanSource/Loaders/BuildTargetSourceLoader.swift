@@ -244,9 +244,9 @@ public struct BuildTargetSourceLoader {
     /// - Throws: A `SourceLoaderError` if loading fails.
     func loadTypes(
         using locations: BuiltTargetSourceLocations
-    ) throws(SourceLoaderError) -> [ContentDefinition] {
+    ) throws(SourceLoaderError) -> [ContentType] {
         try load(
-            type: ContentDefinition.self,
+            type: ContentType.self,
             at: locations.typesURL
         )
         .sorted { $0.id < $1.id }
@@ -288,7 +288,7 @@ public struct BuildTargetSourceLoader {
             config: config,
             settings: settings,
             pipelines: pipelines,
-            contentDefinitions: types,
+            types: types,
             rawContents: rawContents,
             blockDirectives: blocks
         )

@@ -1,6 +1,10 @@
 --swiftversion 6
 
 --indent 4
+    --indentstrings true
+    --smarttabs true
+    --xcodeindentation enabled
+
 --maxwidth 80
 --trimwhitespace always
 --self init-only
@@ -22,6 +26,7 @@
     --organizationmode type
     --visibilityorder private, fileprivate, internal, package, public, open
     --categorymark "MARK: - %c"
+    --markcategories false
 
 --enable wrapAttributes
     --funcattributes prev-line
@@ -30,6 +35,8 @@
     --computedvarattrs prev-line
     --complexattrs prev-line
 
+--enable trailingCommas
+    --commas always
 
 --disable wrapSingleLineComments
 
@@ -37,4 +44,4 @@
 
 --enable acronyms
     --acronyms "ID,URL,UUID,HTTP,YML,YAML,JSON,XML"
-
+    --preserveacronyms "rootUrl"

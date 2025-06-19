@@ -53,7 +53,7 @@ public extension ToucanDecoder {
                     .init(
                         codingPath: [],
                         debugDescription:
-                        "The string cannot be represented as UTF-8 encoded data."
+                            "The string cannot be represented as UTF-8 encoded data."
                     )
                 )
             )

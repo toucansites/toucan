@@ -16,19 +16,19 @@ struct TargetConfigTestSuite {
     @Test
     func full() throws {
         let data = """
-        targets:
-          - name: dev
-            config: "./dev.yml"
-            url: "http://localhost:3000"
-            locale: "en-US"
-            timeZone: "Europe/Budapest"
-            output: "./docs/"
-            default: true
-          - name: live
-            url: "https://example.com"
-            locale: "en-GB"
-        """
-        .data(using: .utf8)!
+            targets:
+              - name: dev
+                config: "./dev.yml"
+                url: "http://localhost:3000"
+                locale: "en-US"
+                timeZone: "Europe/Budapest"
+                output: "./docs/"
+                default: true
+              - name: live
+                url: "https://example.com"
+                locale: "en-GB"
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -46,11 +46,11 @@ struct TargetConfigTestSuite {
     @Test
     func defaultFallbackToFirst() throws {
         let data = """
-        targets:
-          - name: fallback
-          - name: another
-        """
-        .data(using: .utf8)!
+            targets:
+              - name: fallback
+              - name: another
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -67,9 +67,9 @@ struct TargetConfigTestSuite {
     @Test
     func missingKeyFallback() throws {
         let data = """
-        irrelevant: true
-        """
-        .data(using: .utf8)!
+            irrelevant: true
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -85,12 +85,12 @@ struct TargetConfigTestSuite {
     @Test
     func oneDefaultIsValid() throws {
         let data = """
-        targets:
-          - name: one
-            default: true
-          - name: two
-        """
-        .data(using: .utf8)!
+            targets:
+              - name: one
+                default: true
+              - name: two
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -103,11 +103,11 @@ struct TargetConfigTestSuite {
     @Test
     func noDefaultFallsBackToFirst() throws {
         let data = """
-        targets:
-          - name: alpha
-          - name: beta
-        """
-        .data(using: .utf8)!
+            targets:
+              - name: alpha
+              - name: beta
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -121,13 +121,13 @@ struct TargetConfigTestSuite {
     @Test
     func multipleDefaultsThrows() throws {
         let data = """
-        targets:
-          - name: foo
-            default: true
-          - name: bar
-            default: true
-        """
-        .data(using: .utf8)!
+            targets:
+              - name: foo
+                default: true
+              - name: bar
+                default: true
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
         #expect(throws: (any Error).self) {
@@ -138,9 +138,9 @@ struct TargetConfigTestSuite {
     @Test
     func emptyListFallsBackToDefaults() throws {
         let data = """
-        targets: []
-        """
-        .data(using: .utf8)!
+            targets: []
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -153,9 +153,9 @@ struct TargetConfigTestSuite {
     @Test
     func missingTargetsKeyFallsBackToDefaults() throws {
         let data = """
-        unrelated: true
-        """
-        .data(using: .utf8)!
+            unrelated: true
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 

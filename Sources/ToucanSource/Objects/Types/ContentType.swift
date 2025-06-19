@@ -1,5 +1,5 @@
 //
-//  ContentDefinition.swift
+//  ContentType.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 01. 15..
@@ -7,12 +7,10 @@
 
 /// Describes a content type definition including schema, relations, and associated queries.
 ///
-/// `ContentDefinition` is used to declare how a particular content type (e.g., blog, project, product)
+/// `ContentType` is used to declare how a particular content type (e.g., blog, project, product)
 /// should be parsed, validated, and queried in the pipeline.
-public struct ContentDefinition: Codable, Equatable {
-    // MARK: - Nested Types
 
-    // MARK: - Coding Keys
+public struct ContentType: Codable, Equatable {
 
     private enum CodingKeys: CodingKey {
         case id
@@ -22,8 +20,6 @@ public struct ContentDefinition: Codable, Equatable {
         case relations
         case queries
     }
-
-    // MARK: - Properties
 
     /// A unique identifier for this content type (e.g., `"blog"`, `"author"`).
     public var id: String
@@ -58,7 +54,7 @@ public struct ContentDefinition: Codable, Equatable {
 
     // MARK: - Initialization
 
-    /// Creates a new `ContentDefinition` instance.
+    /// Creates a new instance.
     ///
     /// - Parameters:
     ///   - id: Unique identifier for the content type.
@@ -85,28 +81,42 @@ public struct ContentDefinition: Codable, Equatable {
 
     // MARK: - Decoding
 
-    /// Decodes a `ContentDefinition` from a structured format (e.g., YAML or JSON),
+    /// Decode from a structured format (e.g., YAML or JSON),
     /// applying defaults for missing optional fields.
     public init(
         from decoder: any Decoder
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let id = try container.decode(String.self, forKey: .id)
+        let id = try container.decode(
+            String.self,
+            forKey: .id
+        )
+
         let `default` =
-            (try? container.decode(Bool.self, forKey: .default)) ?? false
+            (try? container.decode(
+                Bool.self,
+                forKey: .default
+            )) ?? false
+
         let paths =
-            try container.decodeIfPresent([String].self, forKey: .paths) ?? []
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .paths
+            ) ?? []
+
         let properties =
             try container.decodeIfPresent(
                 [String: Property].self,
                 forKey: .properties
             ) ?? [:]
+
         let relations =
             try container.decodeIfPresent(
                 [String: Relation].self,
                 forKey: .relations
             ) ?? [:]
+
         let queries =
             try container.decodeIfPresent(
                 [String: Query].self,

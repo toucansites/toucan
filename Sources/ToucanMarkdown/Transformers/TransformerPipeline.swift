@@ -8,7 +8,6 @@
 /// Represents a sequence of content transformers to run before rendering,
 /// along with an indicator of whether the final result is Markdown.
 public struct TransformerPipeline {
-    // MARK: - Properties
 
     /// An ordered list of transformers (external commands or scripts) to execute.
     ///

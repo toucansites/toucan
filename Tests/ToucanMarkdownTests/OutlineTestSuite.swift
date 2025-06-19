@@ -53,7 +53,7 @@ struct ToucanToCTestSuite {
                 <h3 id="foo-bar-baz">foo, bar, baz</h3>
                 <p>lorem ipsum dolor sit amet</p>
         """#
-
+        
         let parser = OutlineParser()
 
         let toc = parser.parseHTML(html)

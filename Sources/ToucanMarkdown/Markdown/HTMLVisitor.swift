@@ -26,7 +26,6 @@ private extension [DirectiveArgument] {
 // MARK: - HTML visitor
 
 struct HTMLVisitor: MarkupVisitor {
-    // MARK: - Nested Types
 
     typealias Result = String
 
@@ -39,15 +38,13 @@ struct HTMLVisitor: MarkupVisitor {
     var assetsPath: String
     var baseURL: String
 
-    // MARK: - Lifecycle
-
     init(
         blockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: [String: [String]],
         slug: String,
         assetsPath: String,
         baseURL: String,
-        logger: Logger = .init(label: "HTMLVisitor"),
+        logger: Logger = .init(label: "HTMLVisitor")
     ) {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
@@ -249,9 +246,9 @@ struct HTMLVisitor: MarkupVisitor {
                     [
                         #"<"#: #"&lt;"#,
                         #">"#: #"&gt;"#,
-                        // #"&"#: #"&amp;"#,
-                        // #"'"#: #"&apos;"#,
-                        // #"""#: #"&quot;"#,
+                            // #"&"#: #"&amp;"#,
+                            // #"'"#: #"&apos;"#,
+                            // #"""#: #"&quot;"#,
                     ]
                 )
                 .replacingOccurrences(

@@ -17,9 +17,9 @@ struct PipelineScopeTestSuite {
     @Test
     func minimal() throws {
         let data = """
-        context: detail
-        """
-        .data(using: .utf8)!
+            context: detail
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -36,12 +36,12 @@ struct PipelineScopeTestSuite {
     @Test
     func fields() throws {
         let data = """
-        context: properties
-        fields: 
-            - foo
-            - bar
-        """
-        .data(using: .utf8)!
+            context: properties
+            fields: 
+                - foo
+                - bar
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 
@@ -58,13 +58,13 @@ struct PipelineScopeTestSuite {
     @Test
     func context() throws {
         let data = """
-        context: 
-            - contents
-            - relations
-        fields: 
-            - foo
-        """
-        .data(using: .utf8)!
+            context: 
+                - contents
+                - relations
+            fields: 
+                - foo
+            """
+            .data(using: .utf8)!
 
         let decoder = ToucanYAMLDecoder()
 

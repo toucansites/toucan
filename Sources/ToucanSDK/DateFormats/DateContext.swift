@@ -10,14 +10,12 @@
 /// `DateFormats` includes predefined formatting levels (full, long, medium, short)
 /// for both dates and times, as well as support for arbitrary format labels.
 public struct DateContext: Codable {
-    // MARK: - Nested Types
 
     /// Represents standardized formatting levels for a date or time value.
     ///
     /// These levels mirror common locale-aware date style options.
     public struct Standard: Codable {
-        // MARK: - Properties
-
+        
         /// A fully verbose date format (e.g., `"EEEE, MMMM d, yyyy"`).
         public var full: String
 

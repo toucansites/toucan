@@ -29,7 +29,7 @@ struct ContentResolverTestSuite {
 
         return .init(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -50,7 +50,7 @@ struct ContentResolverTestSuite {
 
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -78,9 +78,8 @@ struct ContentResolverTestSuite {
             let specialPages = ["", "about", "context"]
             let redirectPages = ["home-old", "about-old"]
             // check type identifiers
-            if
-                !(specialPages + redirectPages + notFoundPages)
-                    .contains(item.rawValue.origin.slug)
+            if !(specialPages + redirectPages + notFoundPages)
+                .contains(item.rawValue.origin.slug)
             {
                 #expect(item.rawValue.origin.slug.contains(item.type.id))
             }
@@ -100,31 +99,15 @@ struct ContentResolverTestSuite {
 
     // MARK: - content types
 
-    //        catch let error as ToucanError {
-    //            print(error.logMessageStack())
-    //            if let context = error.lookup({
-    //                if case DecodingError.dataCorrupted(let ctx) = $0 {
-    //                    return ctx
-    //                }
-    //                return nil
-    //            }) {
-    //                let expected = "The given data was not valid YAML."
-    //                #expect(context.debugDescription == expected)
-    //            }
-    //            else {
-    //                throw error
-    //            }
-    //        }
-
     @Test
-    func defaultContentDefinition() throws {
+    func defaultContentType() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "page",
                     default: true
@@ -139,8 +122,10 @@ struct ContentResolverTestSuite {
                         path: .init("hello"),
                         slug: "hello"
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -153,7 +138,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -172,14 +157,14 @@ struct ContentResolverTestSuite {
     }
 
     @Test
-    func explicitContentDefinition() throws {
+    func explicitContentType() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "page",
                     default: true
@@ -187,7 +172,7 @@ struct ContentResolverTestSuite {
                 .init(
                     id: "post",
                     paths: [
-                        "posts",
+                        "posts"
                     ]
                 ),
             ],
@@ -199,11 +184,13 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "type": "post",
+                            "type": "post"
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -216,7 +203,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -235,14 +222,14 @@ struct ContentResolverTestSuite {
     }
 
     @Test
-    func pathBasedContentDefinition() throws {
+    func pathBasedContentType() throws {
         let now = Date()
         let buildTargetSource = BuildTargetSource(
             locations: .init(
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "page",
                     default: true
@@ -250,7 +237,7 @@ struct ContentResolverTestSuite {
                 .init(
                     id: "post",
                     paths: [
-                        "posts",
+                        "posts"
                     ]
                 ),
             ],
@@ -260,8 +247,10 @@ struct ContentResolverTestSuite {
                         path: .init("posts/hello"),
                         slug: "posts/hello"
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -274,7 +263,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -300,7 +289,7 @@ struct ContentResolverTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "test",
                     default: true,
@@ -340,7 +329,7 @@ struct ContentResolverTestSuite {
                             defaultValue: nil
                         ),
                     ]
-                ),
+                )
             ],
             rawContents: [
                 .init(
@@ -358,8 +347,10 @@ struct ContentResolverTestSuite {
                             "array": .init(["1", "2"]),
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -372,7 +363,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -393,8 +384,7 @@ struct ContentResolverTestSuite {
         #expect(result["int"] == 42)
         #expect(result["double"] == 3.14)
         #expect(result["date"] == 1_743_326_594.87)
-        // TODO: what do we expect here?
-        // #expect(result["array"] == .init(["1", "2"]))
+        #expect(result["array"]?.value(as: [String].self) == ["1", "2"])
     }
 
     @Test()
@@ -405,7 +395,7 @@ struct ContentResolverTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "definition",
                     default: true,
@@ -423,7 +413,7 @@ struct ContentResolverTestSuite {
                                     format: "y-MM-d"
                                 )
                             ),
-                            isRequired: true,
+                            isRequired: true
                         ),
                         "customFormatDefaultValue": .init(
                             propertyType: .date(
@@ -436,7 +426,7 @@ struct ContentResolverTestSuite {
                             defaultValue: .init("2021-03-03")
                         ),
                     ]
-                ),
+                )
             ],
             rawContents: [
                 .init(
@@ -450,8 +440,10 @@ struct ContentResolverTestSuite {
                             "customFormat": "2021-03-05",
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -464,7 +456,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -499,7 +491,7 @@ struct ContentResolverTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "test",
                     default: true,
@@ -512,9 +504,9 @@ struct ContentResolverTestSuite {
                                 )
                             ),
                             isRequired: true
-                        ),
+                        )
                     ]
-                ),
+                )
             ],
             rawContents: [
                 .init(
@@ -524,11 +516,13 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "monthAndDay": .init("2021-03-05"),
+                            "monthAndDay": .init("2021-03-05")
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -541,7 +535,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -579,7 +573,7 @@ struct ContentResolverTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "test",
                     default: true,
@@ -593,9 +587,9 @@ struct ContentResolverTestSuite {
                             ),
                             isRequired: true,
                             defaultValue: .init("03-30")
-                        ),
+                        )
                     ]
-                ),
+                )
             ],
             rawContents: [
                 .init(
@@ -605,11 +599,13 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "monthAndDay": .init("2021-03-05"),
+                            "monthAndDay": .init("2021-03-05")
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
-                ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
             ]
         )
 
@@ -622,7 +618,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -677,7 +673,7 @@ struct ContentResolverTestSuite {
                             value: "1"
                         ),
                     ]
-                ),
+                )
             ],
             to: contents,
             now: now.timeIntervalSince1970
@@ -698,21 +694,20 @@ struct ContentResolverTestSuite {
         for key in expGroups.keys {
             let exp1 =
                 expGroups[key]?
-                    .filter {
-                        $0.properties["title"]?.stringValue()?.hasSuffix("1")
-                            ?? $0.properties["name"]?.stringValue()?
-                            .hasSuffix("1")
-                            ?? false
-                    } ?? []
+                .filter {
+                    $0.properties["title"]?.stringValue()?.hasSuffix("1")
+                        ?? $0.properties["name"]?.stringValue()?.hasSuffix("1")
+                        ?? false
+                } ?? []
 
             let res1 =
                 resGroups[key]?
-                    .filter {
-                        $0.properties["title"]?.stringValue()?.hasSuffix("1")
-                            ?? $0.properties["name"]?.stringValue()?
-                            .hasSuffix("1")
-                            ?? false
-                    } ?? []
+                .filter {
+                    $0.properties["title"]?.stringValue()?.hasSuffix("1")
+                        ?? $0.properties["name"]?.stringValue()?
+                        .hasSuffix("1")
+                        ?? false
+                } ?? []
 
             #expect(res1.count == exp1.count)
             for i in 0..<res1.count {
@@ -774,29 +769,29 @@ struct ContentResolverTestSuite {
         for key in expGroups.keys {
             let exp1 =
                 expGroups[key]?
-                    .filter {
-                        if key == "post" {
-                            return $0.properties["featured"]?
-                                .boolValue() ?? false
-                        }
-                        return $0.properties["title"]?.stringValue()?
-                            .hasSuffix("10") ?? $0.properties["name"]?
-                            .stringValue()?
-                            .hasSuffix("10") ?? false
-                    } ?? []
+                .filter {
+                    if key == "post" {
+                        return $0.properties["featured"]?
+                            .boolValue() ?? false
+                    }
+                    return $0.properties["title"]?.stringValue()?
+                        .hasSuffix("10") ?? $0.properties["name"]?
+                        .stringValue()?
+                        .hasSuffix("10") ?? false
+                } ?? []
 
             let res1 =
                 resGroups[key]?
-                    .filter {
-                        if key == "post" {
-                            return $0.properties["featured"]?
-                                .boolValue() ?? false
-                        }
-                        return $0.properties["title"]?.stringValue()?
-                            .hasSuffix("10") ?? $0.properties["name"]?
-                            .stringValue()?
-                            .hasSuffix("10") ?? false
-                    } ?? []
+                .filter {
+                    if key == "post" {
+                        return $0.properties["featured"]?
+                            .boolValue() ?? false
+                    }
+                    return $0.properties["title"]?.stringValue()?
+                        .hasSuffix("10") ?? $0.properties["name"]?
+                        .stringValue()?
+                        .hasSuffix("10") ?? false
+                } ?? []
 
             #expect(res1.count == exp1.count)
             for i in 0..<res1.count {
@@ -860,7 +855,7 @@ struct ContentResolverTestSuite {
                 config: .defaults
             ),
             config: config,
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "post",
                     default: true,
@@ -874,7 +869,7 @@ struct ContentResolverTestSuite {
                             isRequired: true
                         ),
                     ]
-                ),
+                )
             ],
             rawContents: [
                 .init(
@@ -899,7 +894,9 @@ struct ContentResolverTestSuite {
                             ),
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
                 ),
                 .init(
                     origin: .init(
@@ -922,7 +919,9 @@ struct ContentResolverTestSuite {
                             ),
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
                 ),
             ]
         )
@@ -936,7 +935,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -963,7 +962,7 @@ struct ContentResolverTestSuite {
                             value: "{{date.now}}"
                         ),
                     ]
-                ),
+                )
             ],
             to: contents,
             now: now.timeIntervalSince1970
@@ -981,7 +980,7 @@ struct ContentResolverTestSuite {
                 sourceURL: .init(filePath: ""),
                 config: .defaults
             ),
-            contentDefinitions: [
+            types: [
                 .init(
                     id: "post",
                     default: true,
@@ -990,9 +989,9 @@ struct ContentResolverTestSuite {
                             propertyType: .bool,
                             isRequired: false,
                             defaultValue: false
-                        ),
+                        )
                     ]
-                ),
+                )
             ],
             rawContents: [
                 .init(
@@ -1002,10 +1001,12 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "draft": false,
+                            "draft": false
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
                 ),
                 .init(
                     origin: .init(
@@ -1014,10 +1015,12 @@ struct ContentResolverTestSuite {
                     ),
                     markdown: .init(
                         frontMatter: [
-                            "draft": true,
+                            "draft": true
                         ]
                     ),
-                    lastModificationDate: now.timeIntervalSince1970
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
                 ),
             ]
         )
@@ -1031,7 +1034,7 @@ struct ContentResolverTestSuite {
         let decoder = ToucanYAMLDecoder()
         let resolver = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -1051,7 +1054,7 @@ struct ContentResolverTestSuite {
                     key: "draft",
                     operator: .equals,
                     value: false
-                ),
+                )
             ],
             to: contents,
             now: now.timeIntervalSince1970
@@ -1061,18 +1064,6 @@ struct ContentResolverTestSuite {
     }
 
     // MARK: - iterators
-
-    //    @Test
-    //    func testExtractIteratorId() throws {
-    //        let slug = Slug(value: "posts/page/{{post.pagination}}")
-    //        #expect(slug.extractIteratorId() == "post.pagination")
-    //    }
-    //
-    //    @Test
-    //    func testExtractNoneIteratorId() throws {
-    //        let slug = Slug(value: "slugWithNoPagination")
-    //        #expect(slug.extractIteratorId() == nil)
-    //    }
 
     @Test
     func iteratorResolution() async throws {
@@ -1141,7 +1132,7 @@ struct ContentResolverTestSuite {
         )
 
         let query1 = Query(
-            contentType: "post",
+            contentType: "post"
         )
 
         let results1 = contents.run(
@@ -1192,7 +1183,7 @@ struct ContentResolverTestSuite {
         )
         #expect(
             js.sorted() == [
-                "main.js",
+                "main.js"
             ]
         )
     }

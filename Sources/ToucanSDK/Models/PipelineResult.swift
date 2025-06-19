@@ -8,7 +8,6 @@
 /// Represents the output of a content transformation pipeline, including the
 /// transformed content and its intended destination.
 public struct PipelineResult: Sendable {
-    // MARK: - Nested Types
 
     /// The source material for the pipeline result.
     public enum Source: Sendable {

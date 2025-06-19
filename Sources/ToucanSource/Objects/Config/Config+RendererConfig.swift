@@ -10,7 +10,6 @@ public extension Config {
     /// including reading time settings, outline parsing depth, and
     /// paragraph styling rules for directive blocks.
     struct RendererConfig: Codable, Equatable {
-        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
@@ -19,8 +18,6 @@ public extension Config {
             case outlineLevels
             case paragraphStyles
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -32,8 +29,6 @@ public extension Config {
                 paragraphStyles: .defaults
             )
         }
-
-        // MARK: - Properties
 
         /// The average reading speed used to estimate reading time (words per minute).
         ///
@@ -47,8 +42,6 @@ public extension Config {
 
         /// Aliases for styled paragraph blocks (e.g., "note", "tip", "error").
         public var paragraphStyles: ParagraphStyles
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

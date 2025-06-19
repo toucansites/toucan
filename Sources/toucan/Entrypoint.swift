@@ -19,7 +19,6 @@ extension Array {
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
@@ -32,8 +31,6 @@ struct Entrypoint: AsyncParsableCommand {
         """,
         version: GeneratorInfo.current.version
     )
-
-    // MARK: - Properties
 
     // MARK: - arguments
 

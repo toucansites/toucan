@@ -12,7 +12,6 @@ import ToucanSource
 /// `ContextBundle` is typically used as an input for template rendering or output generation,
 /// combining the actual content with any supplemental data required for processing.
 public struct ContextBundle {
-    // MARK: - Properties
 
     /// The primary content item to be rendered or processed.
     public var content: Content

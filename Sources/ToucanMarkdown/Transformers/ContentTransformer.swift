@@ -7,7 +7,6 @@
 
 /// Represents a content transformer command used in a transformation pipeline.
 public struct ContentTransformer {
-    // MARK: - Properties
 
     /// The directory path where the executable is located.
     /// Defaults to `"/usr/local/bin"` if not explicitly specified.
@@ -15,8 +14,6 @@ public struct ContentTransformer {
 
     /// The name of the executable or script to run.
     public var name: String
-
-    // MARK: - Lifecycle
 
     /// Initializes a new `ContentTransformer` with an optional path and required name.
     ///

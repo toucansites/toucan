@@ -9,6 +9,7 @@ import Logging
 import ToucanSDK
 import ToucanSerialization
 import ToucanSource
+import ToucanCore
 
 extension Toucan {
     @discardableResult
@@ -86,10 +87,12 @@ extension Toucan {
         //                )
         //            }
         //        }
-        catch {
-            logger.error("\(String(describing: error))")
+        catch let error as ToucanError {
+            logger.error("\(error.logMessageStack())")
         }
-
+        catch {
+            logger.error("\(error)")
+        }
         return false
     }
 }

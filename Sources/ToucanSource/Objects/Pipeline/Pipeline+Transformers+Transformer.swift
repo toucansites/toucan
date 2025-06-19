@@ -10,15 +10,11 @@ import Foundation
 public extension Pipeline.Transformers {
     /// Represents a content transformer command used in a transformation pipeline.
     struct Transformer: Codable {
-        // MARK: - Nested Types
-
         /// Coding keys for decoding path and name properties.
         private enum CodingKeys: String, CodingKey {
             case path
             case name
         }
-
-        // MARK: - Properties
 
         /// The directory path where the executable is located.
         /// Defaults to `"/usr/local/bin"` if not explicitly specified.
@@ -26,8 +22,6 @@ public extension Pipeline.Transformers {
 
         /// The name of the executable or script to run.
         public var name: String
-
-        // MARK: - Lifecycle
 
         /// Initializes a new `ContentTransformer` with an optional path and required name.
         ///
@@ -51,7 +45,7 @@ public extension Pipeline.Transformers {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.path =
                 (try? container.decode(String.self, forKey: .path))
-                    ?? "/usr/local/bin"
+                ?? "/usr/local/bin"
             self.name = try container.decode(String.self, forKey: .name)
         }
     }

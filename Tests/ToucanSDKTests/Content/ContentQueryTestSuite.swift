@@ -20,7 +20,7 @@ struct ContentQueryTestSuite {
 
         let converter = ContentResolver(
             contentTypeResolver: .init(
-                types: buildTargetSource.contentDefinitions,
+                types: buildTargetSource.types,
                 pipelines: buildTargetSource.pipelines
             ),
             encoder: encoder,
@@ -560,7 +560,7 @@ struct ContentQueryTestSuite {
                 value: .init([1.0, 3.0])
             ),
             orderBy: [
-                .init(key: "title"),
+                .init(key: "title")
             ]
         )
 
@@ -781,9 +781,8 @@ struct ContentQueryTestSuite {
         let contents = try getMockContents(now: now)
         let pastDate =
             now
-                .addingTimeInterval(-86400 * 2)
-                // TODO: double check this
-                .addingTimeInterval(-1)
+            .addingTimeInterval(-86400 * 2)
+            .addingTimeInterval(-1)
 
         let query1 = Query(
             contentType: "post",
@@ -825,7 +824,7 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "publication",
                     direction: .desc
-                ),
+                )
             ]
         )
 

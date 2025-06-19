@@ -12,13 +12,8 @@ import ToucanSerialization
 
 @Suite
 struct AnyCodableTestSuite {
-    // MARK: - Nested Types
-
-    // MARK: -
 
     struct SomeCodable: Codable {
-        // MARK: - Nested Types
-
         enum CodingKeys: String, CodingKey {
             case string
             case int
@@ -26,15 +21,11 @@ struct AnyCodableTestSuite {
             case hasUnderscore = "has_underscore"
         }
 
-        // MARK: - Properties
-
         var string: String
         var int: Int
         var bool: Bool
         var hasUnderscore: String
     }
-
-    // MARK: - Functions
 
     @Test
     func decodingInt() throws {
@@ -89,9 +80,9 @@ struct AnyCodableTestSuite {
     @Test
     func decodingDictionary() throws {
         let object = """
-        key1: 1 
-        key2: value
-        """
+            key1: 1 
+            key2: value
+            """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(AnyCodable.self, from: object)
@@ -107,12 +98,12 @@ struct AnyCodableTestSuite {
     @Test
     func decodingNestedStructures() throws {
         let object = """
-        name: "Toucan"
-        description: "Static Site Generator"
-        navigation:
-            - label: "Home"
-              url: "/"
-        """
+            name: "Toucan"
+            description: "Static Site Generator"
+            navigation:
+                - label: "Home"
+                  url: "/"
+            """
 
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(AnyCodable.self, from: object)
@@ -127,21 +118,21 @@ struct AnyCodableTestSuite {
     @Test
     func jSONDecoding() throws {
         let json = """
-        {
-            "boolean": true,
-            "integer": 42,
-            "double": 3.141592653589793,
-            "string": "string",
-            "array": [1, 2, 3],
-            "dict": {
-                "a": "alpha",
-                "b": "bravo",
-                "c": "charlie"
-            },
-            "null": null
-        }
-        """
-        .data(using: .utf8)!
+            {
+                "boolean": true,
+                "integer": 42,
+                "double": 3.141592653589793,
+                "string": "string",
+                "array": [1, 2, 3],
+                "dict": {
+                    "a": "alpha",
+                    "b": "bravo",
+                    "c": "charlie"
+                },
+                "null": null
+            }
+            """
+            .data(using: .utf8)!
 
         let decoder = JSONDecoder()
         let dictionary = try decoder.decode(
@@ -167,21 +158,21 @@ struct AnyCodableTestSuite {
     @Test
     func jSONDecodingEquatable() throws {
         let json = """
-        {
-            "boolean": true,
-            "integer": 42,
-            "double": 3.141592653589793,
-            "string": "string",
-            "array": [1, 2, 3],
-            "dict": {
-                "a": "alpha",
-                "b": "bravo",
-                "c": "charlie"
-            },
-            "null": null
-        }
-        """
-        .data(using: .utf8)!
+            {
+                "boolean": true,
+                "integer": 42,
+                "double": 3.141592653589793,
+                "string": "string",
+                "array": [1, 2, 3],
+                "dict": {
+                    "a": "alpha",
+                    "b": "bravo",
+                    "c": "charlie"
+                },
+                "null": null
+            }
+            """
+            .data(using: .utf8)!
 
         let decoder = JSONDecoder()
         let dictionary1 = try decoder.decode(
@@ -246,28 +237,29 @@ struct AnyCodableTestSuite {
                 as! NSDictionary
 
         let expected = """
-        {
-            "boolean": true,
-            "integer": 42,
-            "double": 3.141592653589793,
-            "string": "string",
-            "stringInterpolation": "string 1234",
-            "array": [1, 2, 3],
-            "dict": {
-                "a": "alpha",
-                "b": "bravo",
-                "c": "charlie"
-            },
-            "someCodable": {
-                "string": "String",
-                "int": 100,
-                "bool": true,
-                "has_underscore": "another string"
-            },
-            "null": null
-        }
-        """
-        .data(using: .utf8)!
+            {
+                "boolean": true,
+                "integer": 42,
+                "double": 3.141592653589793,
+                "string": "string",
+                "stringInterpolation": "string 1234",
+                "array": [1, 2, 3],
+                "dict": {
+                    "a": "alpha",
+                    "b": "bravo",
+                    "c": "charlie"
+                },
+                "someCodable": {
+                    "string": "String",
+                    "int": 100,
+                    "bool": true,
+                    "has_underscore": "another string"
+                },
+                "null": null
+            }
+            """
+            .data(using: .utf8)!
+
         let expectedJSONObject =
             try JSONSerialization.jsonObject(
                 with: expected,

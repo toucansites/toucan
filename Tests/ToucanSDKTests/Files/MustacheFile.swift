@@ -10,31 +10,29 @@ import FileManagerKitBuilder
 import ToucanSerialization
 
 struct MustacheFile {
-    // MARK: - Properties
 
     var name: String
     var ext: String
-    var template: String
-
-    // MARK: - Lifecycle
+    var contents: String
 
     init(
         name: String,
         ext: String = "mustache",
-        template: String
+        contents: String
     ) {
         self.name = name
         self.ext = ext
-        self.template = template
+        self.contents = contents
     }
 }
 
 extension MustacheFile: BuildableItem {
+    
     func buildItem() -> FileManagerPlayground.Item {
         .file(
             .init(
                 name: name + "." + ext,
-                string: template
+                string: contents
             )
         )
     }

@@ -16,8 +16,6 @@ enum BuildTargetSourceRendererError: ToucanError {
     case invalidEngine(String)
     case unknown(Error)
 
-    // MARK: - Computed Properties
-
     var underlyingErrors: [any Error] {
         switch self {
         case let .unknown(error):
@@ -52,7 +50,6 @@ enum BuildTargetSourceRendererError: ToucanError {
 /// resolves content and site-level context, and outputs rendered content using templates
 /// or encoded formats.
 public struct BuildTargetSourceRenderer {
-    // MARK: - Properties
 
     /// Site configuration + all raw content
     let buildTargetSource: BuildTargetSource
@@ -63,8 +60,6 @@ public struct BuildTargetSourceRenderer {
     /// Cache
     var contentContextCache: [String: [String: AnyCodable]] = [:]
 
-    // MARK: - Lifecycle
-    
     /// Initializes a renderer from a source bundle.
     ///
     /// - Parameters:
@@ -81,8 +76,6 @@ public struct BuildTargetSourceRenderer {
         self.generatorInfo = generatorInfo
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Returns the last content update based on the pipeline config
     private func getLastContentUpdate(
@@ -107,7 +100,7 @@ public struct BuildTargetSourceRenderer {
                             .init(
                                 key: "lastUpdate",
                                 direction: .desc
-                            ),
+                            )
                         ]
                     ),
                     now: now
@@ -206,7 +199,7 @@ public struct BuildTargetSourceRenderer {
             )
         }
         return [
-            "context": .init(rawContext),
+            "context": .init(rawContext)
         ]
     }
 
@@ -239,7 +232,7 @@ public struct BuildTargetSourceRenderer {
                     "items": .init(itemContext),
                     "links": .init(iteratorInfo.links),
                 ] as [String: AnyCodable]
-            ),
+            )
         ]
     }
 
@@ -269,7 +262,7 @@ public struct BuildTargetSourceRenderer {
         )
 
         let context: [String: AnyCodable] = [
-            "page": .init(pageContext),
+            "page": .init(pageContext)
         ]
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
@@ -307,7 +300,7 @@ public struct BuildTargetSourceRenderer {
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval,
         scopeKey: String,
-        allowSubQueries: Bool = true // allow top level queries only,
+        allowSubQueries: Bool = true  // allow top level queries only
     ) -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
@@ -360,9 +353,7 @@ public struct BuildTargetSourceRenderer {
 
                         let resolvedValue = rawValue.resolveAsset(
                             baseURL: baseURL(),
-                            // TODO: double check this -> content.assetsPath?
-                            assetsPath: buildTargetSource.config.contents.assets
-                                .path,
+                            assetsPath: content.rawValue.assetsPath,
                             slug: content.slug.value
                         )
 
@@ -401,7 +392,7 @@ public struct BuildTargetSourceRenderer {
             let renderer = MarkdownRenderer(
                 configuration: .init(
                     markdown: .init(
-                        customBlockDirectives: buildTargetSource.blockDirectives
+                        customBlockDirectives: buildTargetSource.blocks
                             .map {
                                 .init(
                                     name: $0.name,
@@ -453,7 +444,7 @@ public struct BuildTargetSourceRenderer {
 
             let contents = renderer.render(
                 content: content.rawValue.markdown.contents,
-                id: content.slug.contextAwareIdentifier(),
+                typeAwareID: content.typeAwareID,
                 slug: content.slug.value,
                 assetsPath: buildTargetSource.config.contents.assets.path,
                 baseURL: baseURL()
@@ -596,7 +587,7 @@ public struct BuildTargetSourceRenderer {
         ]
 
         let contentTypeResolver = ContentTypeResolver(
-            types: buildTargetSource.contentDefinitions,
+            types: buildTargetSource.types,
             pipelines: buildTargetSource.pipelines
         )
 
@@ -613,8 +604,8 @@ public struct BuildTargetSourceRenderer {
         )
 
         var results: [PipelineResult] = []
-        
-        // TODO: Probably should happen in Toucan.swift
+
+        // TODO: `for` probably should happen in Toucan.swift, and we could deal with a single pipeline here
         for pipeline in buildTargetSource.pipelines {
             let filteredContents = contentResolver.apply(
                 filterRules: pipeline.contentTypes.filterRules,
@@ -688,7 +679,8 @@ public struct BuildTargetSourceRenderer {
                     "context": .array(
                         contextBundles.map(
                             \.content.slug.value
-                        ).map { .string($0) }
+                        )
+                        .map { .string($0) }
                     ),
                 ]
             )

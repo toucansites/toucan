@@ -16,7 +16,6 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
@@ -29,10 +28,6 @@ struct Entrypoint: AsyncParsableCommand {
         """,
         version: GeneratorInfo.current.version
     )
-
-    // MARK: - Properties
-
-    // MARK: - arguments
 
     @Argument(help: "The input directory (default: src).")
     var input: String = "./src"
@@ -52,8 +47,6 @@ struct Entrypoint: AsyncParsableCommand {
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
 
-    // MARK: - Computed Properties
-
     var arguments: [String] {
         [input] + options
     }
@@ -68,8 +61,6 @@ struct Entrypoint: AsyncParsableCommand {
         }
         return options
     }
-
-    // MARK: - Functions
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -117,7 +108,7 @@ struct Entrypoint: AsyncParsableCommand {
             let last = lastGenerationTime
             let diff = abs(last.timeIntervalSince(now))
 
-            guard diff > Double(seconds) else { // 3 sec treshold
+            guard diff > Double(seconds) else {  // 3 sec treshold
                 logger.trace("Skipping generation due to treshold...")
                 continue
             }

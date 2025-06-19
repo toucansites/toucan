@@ -10,8 +10,6 @@ import Foundation
 public extension Config {
     /// Defines the structure and paths for working with templates in the system.
     struct Templates: Codable, Equatable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
@@ -21,8 +19,6 @@ public extension Config {
             case views
             case overrides
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -36,8 +32,6 @@ public extension Config {
                 overrides: .init(path: "overrides")
             )
         }
-
-        // MARK: - Properties
 
         /// The base folder where all templates are stored (e.g., `"templates"`).
         public var location: Location
@@ -53,8 +47,6 @@ public extension Config {
 
         /// A folder for override files that replace core behavior or template (optional).
         public var overrides: Location
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -108,7 +100,7 @@ public extension Config {
 
             self.views =
                 try container.decodeIfPresent(Location.self, forKey: .views)
-                    ?? defaults.views
+                ?? defaults.views
 
             self.overrides =
                 try container.decodeIfPresent(Location.self, forKey: .overrides)

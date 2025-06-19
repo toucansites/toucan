@@ -11,15 +11,11 @@ public extension Config {
     /// `DataTypes` is a configuration layer that allows pipelines to specify
     /// localized or project-specific formatting and handling logic for structured data.
     struct DataTypes: Codable, Equatable {
-        // MARK: - Nested Types
-
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case date
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -28,12 +24,8 @@ public extension Config {
             .init(date: .defaults)
         }
 
-        // MARK: - Properties
-
         /// The configuration used to handle and format date values.
         public var date: Date
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

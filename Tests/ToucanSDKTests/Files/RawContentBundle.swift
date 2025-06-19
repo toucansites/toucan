@@ -19,7 +19,7 @@ extension RawContentBundle: BuildableItem {
     func buildItem() -> FileManagerPlayground.Item {
         .directory(
             Directory(name: name) {
-                Directory(name: "assets") {
+                Directory(name: rawContent.assetsPath) {
                     for asset in rawContent.assets {
                         File(name: asset, string: asset)
                     }

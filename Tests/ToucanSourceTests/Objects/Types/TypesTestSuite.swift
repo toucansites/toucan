@@ -17,11 +17,11 @@ struct TypesTestSuite {
     @Test
     func minimal() throws {
         let data = """
-        id: post
-        """
+            id: post
+            """
 
         let decoder = ToucanYAMLDecoder()
-        let result = try decoder.decode(ContentDefinition.self, from: data)
+        let result = try decoder.decode(ContentType.self, from: data)
 
         #expect(result.id == "post")
     }
@@ -29,81 +29,81 @@ struct TypesTestSuite {
     @Test
     func complex() throws {
         let data = """
-        id: post
-        properties: 
-            title: 
-                type: string
-            publication:
-                type: date
-                config: 
-                    format: "y.m.d"
-                required: true
-        relations:
-            authors:
-                references: author
-                type: many
-                order: 
-                    key: name
-            tags:
-                references: tag
-                type: many
-                order: 
-                    key: priority
-                    sort: desc
-        queries:
-            prev:
-                contentType: post
-                limit: 1
-                filter:
-                    key: publication
-                    operator: lessThan
-                    value: "{{publication}}"
-                orderBy:
-                    - key: publication
-                      direction: desc
+            id: post
+            properties: 
+                title: 
+                    type: string
+                publication:
+                    type: date
+                    config: 
+                        format: "y.m.d"
+                    required: true
+            relations:
+                authors:
+                    references: author
+                    type: many
+                    order: 
+                        key: name
+                tags:
+                    references: tag
+                    type: many
+                    order: 
+                        key: priority
+                        sort: desc
+            queries:
+                prev:
+                    contentType: post
+                    limit: 1
+                    filter:
+                        key: publication
+                        operator: lessThan
+                        value: "{{publication}}"
+                    orderBy:
+                        - key: publication
+                          direction: desc
 
-            next:
-                contentType: post
-                limit: 1
-                filter:
-                    key: publication
-                    operator: greaterThan
-                    value: "{{publication}}"
-                orderBy:
-                    - key: publication
-                      direction: asc
+                next:
+                    contentType: post
+                    limit: 1
+                    filter:
+                        key: publication
+                        operator: greaterThan
+                        value: "{{publication}}"
+                    orderBy:
+                        - key: publication
+                          direction: asc
 
-            related:
-                contentType: post
-                limit: 4
-                filter:
-                    and:
-                        - key: authors
-                          operator: matching
-                          value: "{{authors}}"
+                related:
+                    contentType: post
+                    limit: 4
+                    filter:
+                        and:
+                            - key: authors
+                              operator: matching
+                              value: "{{authors}}"
 
-                        - key: id
-                          operator: notEquals
-                          value: "{{id}}"
+                            - key: id
+                              operator: notEquals
+                              value: "{{id}}"
 
-            similar:
-                contentType: post
-                limit: 4
-                filter:
-                    and:
-                        - key: tags
-                          operator: matching
-                          value: "{{tags}}"
+                similar:
+                    contentType: post
+                    limit: 4
+                    filter:
+                        and:
+                            - key: tags
+                              operator: matching
+                              value: "{{tags}}"
 
-                        - key: id
-                          operator: notEquals
-                          value: "{{id}}"
+                            - key: id
+                              operator: notEquals
+                              value: "{{id}}"
 
 
-        """
+            """
 
         let decoder = ToucanYAMLDecoder()
-        let result = try decoder.decode(ContentDefinition.self, from: data)
+        let result = try decoder.decode(ContentType.self, from: data)
 
         #expect(result.id == "post")
     }

@@ -10,6 +10,5 @@ import Logging
 import ToucanSDK
 
 extension Entrypoint {
-    //    struct Generate: AsyncParsableCommand {
-    //
+    //    struct Generate: AsyncParsableCommand {}
 }

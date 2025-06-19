@@ -9,12 +9,9 @@ import ToucanSource
 
 /// Represents a unit of structured content, with associated metadata, relationships, and rendering information.
 public struct Content {
-    // MARK: - Properties
-
-    // MARK: - Core Identifiers
 
     /// The content type definition that describes structure and expected fields.
-    public var type: ContentDefinition
+    public var type: ContentType
 
     /// A globally unique string identifier for this content item.
     /// This value remains constant across contexts and is used for persistence or lookup.
@@ -26,10 +23,8 @@ public struct Content {
     /// The raw content representation, usually Markdown or HTML source.
     public var rawValue: RawContent
 
-    // MARK: - Data & Metadata
-
     /// A dictionary of properties that hold the parsed field values (e.g., title, date, body).
-    /// Keys are field names as defined in the `ContentDefinition`, and values are dynamically typed.
+    /// Keys are field names as defined in the `ContentType`, and values are dynamically typed.
     public var properties: [String: AnyCodable]
 
     /// A dictionary of relations to other content items, keyed by relation name.
@@ -50,10 +45,6 @@ public struct Content {
     /// A computed flag indicating whether this content instance was generated via iteration.
     public var isIterator: Bool { iteratorInfo != nil }
 
-    // MARK: - Lifecycle
-
-    // MARK: - Initialization
-
     /// Initializes a new `Content` instance.
     ///
     /// - Parameters:
@@ -66,7 +57,7 @@ public struct Content {
     ///   - userDefined: Freeform or plugin-provided metadata.
     ///   - iteratorInfo: Optional info for repeated or generated content.
     public init(
-        type: ContentDefinition,
+        type: ContentType,
         typeAwareID: String,
         slug: Slug,
         rawValue: RawContent,

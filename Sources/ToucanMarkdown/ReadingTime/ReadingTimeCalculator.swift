@@ -9,8 +9,7 @@ import Logging
 
 /// A utility to estimate the reading time of a given string of text based on words per minute.
 public struct ReadingTimeCalculator {
-    // MARK: - Properties
-
+    
     /// The number of words assumed to be read per minute.
     public var wordsPerMinute: Int
 

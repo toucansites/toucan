@@ -170,7 +170,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func unrecognizedDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.faq(),
+                MarkdownBlockDirective.Mocks.faq()
             ]
         )
 
@@ -194,7 +194,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func parseError() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.badDirective(),
+                MarkdownBlockDirective.Mocks.badDirective()
             ]
         )
         let input = #"""
@@ -215,8 +215,8 @@ struct MarkdownBlockDirectiveTestSuite {
     func requiredParameterErrors() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.badDirective(),
-            ],
+                MarkdownBlockDirective.Mocks.badDirective()
+            ]
         )
         let input = #"""
         @BAD() {

@@ -7,12 +7,9 @@
 
 /// A representation of a custom block directive in Markdown, used for extending Markdown syntax with special tags or behaviors.
 public struct MarkdownBlockDirective: Codable, Equatable {
-    // MARK: - Nested Types
 
     /// Defines a configurable parameter for a directive, which may be required and have a default value.
     public struct Parameter: Codable, Equatable {
-        // MARK: - Properties
-
         /// The label of the parameter.
         public var label: String
 

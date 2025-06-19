@@ -106,7 +106,6 @@ private extension DateFormatter {
 
 /// Holds system date and time style `DateFormatter` instances and an ISO8601 formatter.
 private struct SystemDateFormatters {
-    // MARK: - Nested Types
 
     struct Date {
         var full: DateFormatter
@@ -122,8 +121,6 @@ private struct SystemDateFormatters {
         var short: DateFormatter
     }
 
-    // MARK: - Properties
-
     var date: Date
     var time: Time
     var iso8601: DateFormatter
@@ -133,15 +130,12 @@ private struct SystemDateFormatters {
 ///
 /// Combines input parsing, system-style formatters, and user-defined formats.
 public struct ToucanInputDateFormatter {
-    // MARK: - Properties
 
     private var dateConfig: Config.DataTypes.Date
     private var inputFormatter: DateFormatter
     private var ephemeralFormatter: DateFormatter
 
     var logger: Logger
-
-    // MARK: - Lifecycle
 
     /// Initializes the date formatter utility.
     ///
@@ -157,8 +151,6 @@ public struct ToucanInputDateFormatter {
         self.ephemeralFormatter = .build { $0.use(config: dateConfig.input) }
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Parses a date string into a `Date` object.
     ///
@@ -201,7 +193,6 @@ public struct ToucanInputDateFormatter {
 ///
 /// Combines input parsing, system-style formatters, and user-defined formats.
 public struct ToucanOutputDateFormatter {
-    // MARK: - Properties
 
     private var dateConfig: Config.DataTypes.Date
     private var pipelineDateConfig: Pipeline.DataTypes.Date?
@@ -209,8 +200,6 @@ public struct ToucanOutputDateFormatter {
     private var userFormatters: [String: DateFormatter]
 
     var logger: Logger
-
-    // MARK: - Lifecycle
 
     /// Initializes the date formatter utility.
     ///
@@ -227,8 +216,8 @@ public struct ToucanOutputDateFormatter {
         self.pipelineDateConfig = pipelineDateConfig
 
         var localization = dateConfig.output
-        if let pipelineDateConfig, pipelineDateConfig.output != localization {
-            localization = pipelineDateConfig.output
+        if let outputLocalization = pipelineDateConfig?.output {
+            localization = outputLocalization
         }
 
         self.systemFormatters = .init(
@@ -261,8 +250,6 @@ public struct ToucanOutputDateFormatter {
             }
         }
     }
-
-    // MARK: - Functions
 
     /// Formats a `Date` into a `DateContext`, providing multiple style outputs and custom formats.
     ///

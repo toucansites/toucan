@@ -15,7 +15,7 @@ import ToucanSerialization
 
 @Suite
 struct TemplateLoaderTestSuite {
-    
+
     @Test()
     func standardTemplateLoading() async throws {
         try FileManagerPlayground {
@@ -28,8 +28,8 @@ struct TemplateLoaderTestSuite {
                         File(
                             name: "pages.about.mustache",
                             string: """
-                            about content override
-                            """
+                                about content override
+                                """
                         )
                     }
                 }
@@ -65,27 +65,27 @@ struct TemplateLoaderTestSuite {
                                 File(
                                     name: "default.mustache",
                                     string: """
-                                    default
-                                    """
+                                        default
+                                        """
                                 )
                                 File(
                                     name: "about.mustache",
                                     string: """
-                                    about
-                                    """
+                                        about
+                                        """
                                 )
                                 File(
                                     name: "test.html",
                                     string: """
-                                    test.html
-                                    """
+                                        test.html
+                                        """
                                 )
                             }
                             File(
                                 name: "html.mustache",
                                 string: """
-                                html
-                                """
+                                    html
+                                    """
                             )
                             "README.md"
                         }
@@ -101,14 +101,14 @@ struct TemplateLoaderTestSuite {
                                     File(
                                         name: "default.mustache",
                                         string: """
-                                        default override
-                                        """
+                                            default override
+                                            """
                                     )
                                     File(
                                         name: "about.mustache",
                                         string: """
-                                        about override
-                                        """
+                                            about override
+                                            """
                                     )
                                 }
                                 "README.md"
@@ -122,13 +122,14 @@ struct TemplateLoaderTestSuite {
         .test {
             var logger = Logger(label: "test")
             logger.logLevel = .trace
+            
             let sourceURL = $1.appending(path: "src/")
             let config = Config.defaults
             let locations = BuiltTargetSourceLocations(
                 sourceURL: sourceURL,
                 config: config
             )
-
+            
             let loader = TemplateLoader(
                 locations: locations,
                 fileManager: $0,
@@ -141,7 +142,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.components.assets.sorted()
                     == [
-                        "template.css",
+                        "template.css"
                     ]
                     .sorted()
             )
@@ -159,7 +160,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.overrides.assets.sorted()
                     == [
-                        "template.css",
+                        "template.css"
                     ]
                     .sorted()
             )
@@ -182,7 +183,7 @@ struct TemplateLoaderTestSuite {
             #expect(
                 template.content.views.map(\.path).sorted()
                     == [
-                        "about/pages.about.mustache",
+                        "about/pages.about.mustache"
                     ]
                     .sorted()
             )

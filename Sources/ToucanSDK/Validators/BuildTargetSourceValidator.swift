@@ -21,8 +21,6 @@ enum BuildTargetSourceValidatorError: ToucanError {
     case invalidTimeZone(String)
     case unknown(Error)
 
-    // MARK: - Computed Properties
-
     var underlyingErrors: [any Error] {
         switch self {
         case let .unknown(error):
@@ -90,11 +88,8 @@ enum BuildTargetSourceValidatorError: ToucanError {
 }
 
 struct BuildTargetSourceValidator {
-    // MARK: - Properties
 
     var buildTargetSource: BuildTargetSource
-
-    // MARK: - Functions
 
     func validate() throws(BuildTargetSourceValidatorError) {
         try validatePipelines()
@@ -117,7 +112,7 @@ struct BuildTargetSourceValidator {
     }
 
     func validateBlocks() throws(BuildTargetSourceValidatorError) {
-        let names = buildTargetSource.blockDirectives.map(\.name)
+        let names = buildTargetSource.blocks.map(\.name)
         let duplicates = Dictionary(grouping: names, by: { $0 })
             .mapValues { $0.count }
             .filter { $1 > 1 }
@@ -130,7 +125,7 @@ struct BuildTargetSourceValidator {
     }
 
     func validateContentTypes() throws(BuildTargetSourceValidatorError) {
-        let ids = buildTargetSource.contentDefinitions.map(\.id)
+        let ids = buildTargetSource.types.map(\.id)
         let duplicates = Dictionary(grouping: ids, by: { $0 })
             .mapValues { $0.count }
             .filter { $1 > 1 }
@@ -140,7 +135,7 @@ struct BuildTargetSourceValidator {
                 duplicates.keys.map { String($0) }.sorted()
             )
         }
-        let items = buildTargetSource.contentDefinitions.filter(\.default)
+        let items = buildTargetSource.types.filter(\.default)
         if items.isEmpty {
             throw .noDefaultContentType
         }

@@ -8,7 +8,6 @@
 public extension Block {
     /// Defines a configurable parameter for a directive, which may be required and have a default value.
     struct Parameter: Sendable, Codable, Equatable {
-        // MARK: - Properties
 
         /// The label of the parameter.
         public var label: String
@@ -18,8 +17,6 @@ public extension Block {
 
         /// A default value for the parameter, used if it is not explicitly specified in the directive.
         public var defaultValue: String?
-
-        // MARK: - Lifecycle
 
         /// Initializes a `Parameter` for a directive.
         ///

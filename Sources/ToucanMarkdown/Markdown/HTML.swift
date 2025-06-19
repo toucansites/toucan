@@ -6,7 +6,6 @@
 //
 
 struct HTML {
-    // MARK: - Nested Types
 
     enum TagType {
         case standard

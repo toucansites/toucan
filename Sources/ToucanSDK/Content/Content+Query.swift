@@ -36,10 +36,10 @@ public extension Content {
                     fields[key] = .init([])
                 }
                 else {
-                    fields[key] = .init(relation.identifiers[0]) // Single ID
+                    fields[key] = .init(relation.identifiers[0])  // Single ID
                 }
             case .many:
-                fields[key] = .init(relation.identifiers) // Array of IDs
+                fields[key] = .init(relation.identifiers)  // Array of IDs
             }
         }
 

@@ -8,17 +8,12 @@
 public extension Pipeline {
     /// Describes a rendering scope within a content pipeline.
     struct Scope: Codable {
-        // MARK: - Nested Types
-
-        // MARK: - Coding Keys
-
+        
         private enum CodingKeys: CodingKey {
             case id
             case context
             case fields
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Predefined Scopes
 
@@ -55,16 +50,12 @@ public extension Pipeline {
             ]
         }
 
-        // MARK: - Properties
-
         /// The rendering context this scope applies to (e.g., `.detail`, `.list`, `.reference`).
         public var context: Context
 
         /// The specific content fields to include when rendering in this scope.
         /// If empty, all fields may be included by default.
         public var fields: [String]
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 
@@ -94,15 +85,13 @@ public extension Pipeline {
 
             let context =
                 try container.decodeIfPresent(Context.self, forKey: .context)
-                    ?? .detail
+                ?? .detail
             let fields =
                 try container.decodeIfPresent([String].self, forKey: .fields)
-                    ?? []
+                ?? []
 
             self.init(context: context, fields: fields)
         }
-
-        // MARK: - Functions
 
         /// Encodes this `Scope` instance into the given encoder.
         ///

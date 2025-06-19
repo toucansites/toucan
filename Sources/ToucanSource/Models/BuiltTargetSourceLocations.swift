@@ -11,7 +11,6 @@ import ToucanCore
 
 /// A computed mapping of project-relative URLs based on the loaded configuration and project root.
 public struct BuiltTargetSourceLocations {
-    // MARK: - Properties
 
     /// The base URL of the source directory.
     public var baseURL: URL
@@ -42,8 +41,6 @@ public struct BuiltTargetSourceLocations {
     /// The URL for overridden views in the current template.
     public var currentTemplateViewsOverridesURL: URL
 
-    // MARK: - Lifecycle
-
     // MARK: - Initialization
 
     /// Creates a new `BuiltTargetSourceLocations` instance by computing file paths based on the project configuration.
@@ -59,48 +56,48 @@ public struct BuiltTargetSourceLocations {
 
         let contents =
             base
-                .appendingPathIfPresent(config.contents.path)
+            .appendingPathIfPresent(config.contents.path)
 
         let settings =
             base
-                .appendingPathIfPresent(config.site.settings.path)
+            .appendingPathIfPresent(config.site.settings.path)
         let assets =
             base
-                .appendingPathIfPresent(config.site.assets.path)
+            .appendingPathIfPresent(config.site.assets.path)
 
         let types =
             base
-                .appendingPathIfPresent(config.types.path)
+            .appendingPathIfPresent(config.types.path)
         let blocks =
             base
-                .appendingPathIfPresent(config.blocks.path)
+            .appendingPathIfPresent(config.blocks.path)
         let pipelines =
             base
-                .appendingPathIfPresent(config.pipelines.path)
+            .appendingPathIfPresent(config.pipelines.path)
         let templates =
             base
-                .appendingPathIfPresent(config.templates.location.path)
+            .appendingPathIfPresent(config.templates.location.path)
 
         let currentTemplate =
             templates
-                .appendingPathIfPresent(config.templates.current.path)
+            .appendingPathIfPresent(config.templates.current.path)
         let currentTemplateAssets =
             currentTemplate
-                .appendingPathIfPresent(config.templates.assets.path)
+            .appendingPathIfPresent(config.templates.assets.path)
         let currentTemplateViews =
             currentTemplate
-                .appendingPathIfPresent(config.templates.views.path)
+            .appendingPathIfPresent(config.templates.views.path)
 
         let currentTemplateOverrides =
             templates
-                .appendingPathIfPresent(config.templates.overrides.path)
-                .appendingPathIfPresent(config.templates.current.path)
+            .appendingPathIfPresent(config.templates.overrides.path)
+            .appendingPathIfPresent(config.templates.current.path)
         let currentTemplateAssetOverrides =
             currentTemplateOverrides
-                .appendingPathIfPresent(config.templates.assets.path)
+            .appendingPathIfPresent(config.templates.assets.path)
         let currentTemplateViewsOverrides =
             currentTemplateOverrides
-                .appendingPathIfPresent(config.templates.views.path)
+            .appendingPathIfPresent(config.templates.views.path)
 
         self.baseURL = base
         self.contentsURL = contents
@@ -123,7 +120,7 @@ extension BuiltTargetSourceLocations: LoggerMetadataRepresentable {
     /// This metadata can be used to provide additional context in log output.
     public var logMetadata: [String: Logger.MetadataValue] {
         [
-            "baseUrl": .string(baseURL.absoluteString),
+            "baseUrl": .string(baseURL.absoluteString)
         ]
     }
 }

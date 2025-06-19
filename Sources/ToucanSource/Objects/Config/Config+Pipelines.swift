@@ -8,15 +8,12 @@
 public extension Config {
     /// Represents the location of pipeline configuration files.
     struct Pipelines: Codable, Equatable {
-        // MARK: - Nested Types
 
         // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
         }
-
-        // MARK: - Static Computed Properties
 
         // MARK: - Defaults
 
@@ -25,14 +22,10 @@ public extension Config {
             .init(path: "pipelines")
         }
 
-        // MARK: - Properties
-
         /// The relative or absolute path to the folder containing pipeline configuration files.
         ///
         /// Example: `"pipelines"` (default), or `"config/pipelines"`
         public var path: String
-
-        // MARK: - Lifecycle
 
         // MARK: - Initialization
 

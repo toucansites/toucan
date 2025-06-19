@@ -80,8 +80,6 @@ public enum Condition: Codable, Equatable {
         }
     }
 
-    // MARK: - Functions
-
     /// Encodes this `Condition` instance into the given encoder.
     ///
     /// - Parameter encoder: The encoder to write data to.

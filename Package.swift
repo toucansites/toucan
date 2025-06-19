@@ -80,10 +80,6 @@ let package = Package(
             url: "https://github.com/mxcl/Version.git",
             from: "2.2.0"
         ),
-//        .package(
-//            url: "https://github.com/swiftlang/swift-subprocess",
-//            branch: "main"
-//        ),
     ],
     targets: [
         // MARK: - executable targets
@@ -97,7 +93,6 @@ let package = Package(
                 ),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
-//                .product(name: "Subprocess", package: "swift-subprocess")
                 .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings

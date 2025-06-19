@@ -14,7 +14,6 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-    // MARK: - Static Properties
 
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
@@ -65,7 +64,7 @@ struct Entrypoint: AsyncParsableCommand {
 
         if generator.generateAndLogErrors(logger) {
             let metadata: Logger.Metadata = [
-                "input": "\(input)",
+                "input": "\(input)"
             ]
             logger.info("Site generated successfully.", metadata: metadata)
         }

@@ -12,20 +12,20 @@ import ToucanSource
 
 extension Mocks.E2E {
     static func types(
-        postType: ContentDefinition
+        postType: ContentType
     ) -> Directory {
         Directory(name: "types") {
             YAMLFile(
                 name: "page",
-                contents: Mocks.ContentDefinitions.page()
+                contents: Mocks.ContentTypes.page()
             )
             YAMLFile(
                 name: "author",
-                contents: Mocks.ContentDefinitions.author()
+                contents: Mocks.ContentTypes.author()
             )
             YAMLFile(
                 name: "tag",
-                contents: Mocks.ContentDefinitions.tag()
+                contents: Mocks.ContentTypes.tag()
             )
             YAMLFile(
                 name: "post",
@@ -33,11 +33,11 @@ extension Mocks.E2E {
             )
             YAMLFile(
                 name: "category",
-                contents: Mocks.ContentDefinitions.category()
+                contents: Mocks.ContentTypes.category()
             )
             YAMLFile(
                 name: "guide",
-                contents: Mocks.ContentDefinitions.guide()
+                contents: Mocks.ContentTypes.guide()
             )
         }
     }
@@ -94,42 +94,42 @@ extension Mocks.E2E {
                         File(
                             name: "template.css",
                             string: """
-                            body { background: #000; }
-                            """
+                                body { background: #000; }
+                                """
                         )
                     }
                 }
                 Directory(name: "views") {
                     MustacheFile(
                         name: "test",
-                        template: Mocks.Views.page()
+                        contents: Mocks.Views.page()
                     )
                     Directory(name: "docs") {
                         Directory(name: "category") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Views.category()
+                                contents: Mocks.Views.category()
                             )
                         }
                         Directory(name: "guide") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Views.guide()
+                                contents: Mocks.Views.guide()
                             )
                         }
                     }
                     Directory(name: "pages") {
                         MustacheFile(
                             name: "default",
-                            template: Mocks.Views.page()
+                            contents: Mocks.Views.page()
                         )
                         MustacheFile(
                             name: "404",
-                            template: Mocks.Views.notFound()
+                            contents: Mocks.Views.notFound()
                         )
                         MustacheFile(
                             name: "context",
-                            template: Mocks.Views.context(
+                            contents: Mocks.Views.context(
                                 value: debugContext
                             )
                         )
@@ -138,19 +138,19 @@ extension Mocks.E2E {
                         Directory(name: "tag") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Views.tag()
+                                contents: Mocks.Views.tag()
                             )
                         }
                         Directory(name: "post") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Views.post()
+                                contents: Mocks.Views.post()
                             )
                         }
                         Directory(name: "author") {
                             MustacheFile(
                                 name: "default",
-                                template: Mocks.Views.author()
+                                contents: Mocks.Views.author()
                             )
                         }
                     }
@@ -158,43 +158,43 @@ extension Mocks.E2E {
                         Directory(name: "blog") {
                             MustacheFile(
                                 name: "author",
-                                template: Mocks.Views.partialAuthor()
+                                contents: Mocks.Views.partialAuthor()
                             )
                             MustacheFile(
                                 name: "tag",
-                                template: Mocks.Views.partialTag()
+                                contents: Mocks.Views.partialTag()
                             )
                             MustacheFile(
                                 name: "post",
-                                template: Mocks.Views.partialPost()
+                                contents: Mocks.Views.partialPost()
                             )
                         }
                         Directory(name: "docs") {
                             MustacheFile(
                                 name: "category",
-                                template: Mocks.Views.partialCategory()
+                                contents: Mocks.Views.partialCategory()
                             )
                             MustacheFile(
                                 name: "guide",
-                                template: Mocks.Views.partialGuide()
+                                contents: Mocks.Views.partialGuide()
                             )
                         }
                     }
                     MustacheFile(
                         name: "html",
-                        template: Mocks.Views.html()
+                        contents: Mocks.Views.html()
                     )
                     MustacheFile(
                         name: "redirect",
-                        template: Mocks.Views.redirect()
+                        contents: Mocks.Views.redirect()
                     )
                     MustacheFile(
                         name: "rss",
-                        template: Mocks.Views.rss()
+                        contents: Mocks.Views.rss()
                     )
                     MustacheFile(
                         name: "sitemap",
-                        template: Mocks.Views.sitemap()
+                        contents: Mocks.Views.sitemap()
                     )
                 }
             }
@@ -211,7 +211,8 @@ extension Mocks.E2E {
             dateConfig: config.dataTypes.date
         )
 
-        let postType = Mocks.ContentDefinitions.post()
+        let postType = Mocks.ContentTypes.post()
+
         guard
             case let .date(
                 publicationConfig

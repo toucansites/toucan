@@ -16,6 +16,7 @@ import ToucanSerialization
 
 @Suite
 struct RawContentLoaderTestSuite {
+    
     private func testSourceContentsHierarchy(
         @FileManagerPlayground.DirectoryBuilder _ builder: () ->
             [FileManagerPlayground.Item]
@@ -68,7 +69,7 @@ struct RawContentLoaderTestSuite {
     private func testBlogArticleOrigin() -> Origin {
         .init(
             path: .init("blog/articles/first-beta-release"),
-            slug: "blog/first-beta-release",
+            slug: "blog/first-beta-release"
         )
     }
 
@@ -151,7 +152,7 @@ struct RawContentLoaderTestSuite {
                         .replacingOccurrences(of: "[", with: "%5B")
                         .replacingOccurrences(of: "]", with: "%5D")
                 ),
-                slug: "blog/articles/first-beta-release",
+                slug: "blog/articles/first-beta-release"
             )
             #expect(result == expected)
         }
@@ -182,7 +183,7 @@ struct RawContentLoaderTestSuite {
                         .replacingOccurrences(of: "[", with: "%5B")
                         .replacingOccurrences(of: "]", with: "%5D")
                 ),
-                slug: "blog/first-beta-release",
+                slug: "blog/first-beta-release"
             )
             #expect(result == expected)
         }
@@ -217,17 +218,17 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate,
+                .modificationDate: modificationDate
             ],
             string: """
-            ---
-            title: "Hello index.\(ext)"
-            ---
+                ---
+                title: "Hello index.\(ext)"
+                ---
 
-            # Hello index.\(ext)
+                # Hello index.\(ext)
 
-            Lorem ipsum dolor sit amet
-            """
+                Lorem ipsum dolor sit amet
+                """
         )
     }
 
@@ -238,11 +239,11 @@ struct RawContentLoaderTestSuite {
         File(
             name: "index.\(ext)",
             attributes: [
-                .modificationDate: modificationDate,
+                .modificationDate: modificationDate
             ],
             string: """
-            title: "Hello index.\(ext)"
-            """
+                title: "Hello index.\(ext)"
+                """
         )
     }
 
@@ -263,7 +264,7 @@ struct RawContentLoaderTestSuite {
             origin: testBlogArticleOrigin(),
             markdown: .init(
                 frontMatter: [
-                    "title": "Hello index.\(ext)",
+                    "title": "Hello index.\(ext)"
                 ],
                 contents: emptyContents
                     ? ""
@@ -274,6 +275,7 @@ struct RawContentLoaderTestSuite {
                     """
             ),
             lastModificationDate: modificationDate.timeIntervalSince1970,
+            assetsPath: "assets",
             assets: [
                 "cover.png",
                 "main.js",
@@ -378,15 +380,16 @@ struct RawContentLoaderTestSuite {
                 origin: testBlogArticleOrigin(),
                 markdown: .init(
                     frontMatter: [
-                        "title": "Hello index.yml",
+                        "title": "Hello index.yml"
                     ],
                     contents: """
-                    # Hello index.md
+                        # Hello index.md
 
-                    Lorem ipsum dolor sit amet
-                    """
+                        Lorem ipsum dolor sit amet
+                        """
                 ),
                 lastModificationDate: now.timeIntervalSince1970,
+                assetsPath: "assets",
                 assets: [
                     "cover.png",
                     "main.js",
@@ -433,12 +436,13 @@ struct RawContentLoaderTestSuite {
                     markdown: .init(
                         frontMatter: ["title": "Hello index.md"],
                         contents: """
-                        # Hello index.md
+                            # Hello index.md
 
-                        Lorem ipsum dolor sit amet
-                        """
+                            Lorem ipsum dolor sit amet
+                            """
                     ),
                     lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
                     assets: []
                 ),
                 .init(
@@ -451,6 +455,7 @@ struct RawContentLoaderTestSuite {
                         contents: ""
                     ),
                     lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
                     assets: []
                 ),
             ]

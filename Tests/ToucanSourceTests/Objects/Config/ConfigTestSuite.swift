@@ -41,52 +41,52 @@ struct ConfigTestSuite {
     @Test
     func custom() throws {
         let value = """
-        blocks:
-          path: custom1
-        contents:
-          assets:
-            path: custom2
-          path: custom3
-        dataTypes:
-          date:
-            formats:
-              test1:
-                format: his
-                locale: hu-HU
-                timeZone: CET
-            input:
-              format: ymd
-            output:
-              locale: en-GB
-              timeZone: PST
-        pipelines:
-          path: custom4
-        renderer:
-          outlineLevels:
-          - 4
-          paragraphStyles:
-            test:
-            - test1
-          wordsPerMinute: 42
-        site:
-          assets:
-            path: custom5
-          settings:
-            path: custom6
-        templates:
-          assets:
-            path: custom7
-          current:
-            path: custom8
-          location:
-            path: custom9
-          overrides:
-            path: custom10
-          views:
-            path: custom11
-        types:
-          path: custom12
-        """ + "\n"
+            blocks:
+              path: custom1
+            contents:
+              assets:
+                path: custom2
+              path: custom3
+            dataTypes:
+              date:
+                formats:
+                  test1:
+                    format: his
+                    locale: hu-HU
+                    timeZone: CET
+                input:
+                  format: ymd
+                output:
+                  locale: en-GB
+                  timeZone: PST
+            pipelines:
+              path: custom4
+            renderer:
+              outlineLevels:
+              - 4
+              paragraphStyles:
+                test:
+                - test1
+              wordsPerMinute: 42
+            site:
+              assets:
+                path: custom5
+              settings:
+                path: custom6
+            templates:
+              assets:
+                path: custom7
+              current:
+                path: custom8
+              location:
+                path: custom9
+              overrides:
+                path: custom10
+              views:
+                path: custom11
+            types:
+              path: custom12
+            """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()
@@ -107,7 +107,7 @@ struct ConfigTestSuite {
         expectation.dataTypes.date.formats["test1"] = .init(
             localization: .init(
                 locale: "hu-HU",
-                timeZone: "CET",
+                timeZone: "CET"
             ),
             format: "his"
         )
@@ -115,8 +115,8 @@ struct ConfigTestSuite {
         expectation.renderer.outlineLevels = [4]
         expectation.renderer.paragraphStyles.styles = [
             "test": [
-                "test1",
-            ],
+                "test1"
+            ]
         ]
         expectation.renderer.wordsPerMinute = 42
         expectation.site.assets.path = "custom5"

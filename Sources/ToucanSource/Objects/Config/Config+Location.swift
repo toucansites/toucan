@@ -8,7 +8,6 @@
 public extension Config {
     /// Represents a named location within the file system.
     struct Location: Codable, Equatable {
-        // MARK: - Properties
 
         /// The file system path for this location (e.g., `"assets"`, `"public/images"`).
         public var path: String

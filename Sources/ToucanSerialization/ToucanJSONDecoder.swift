@@ -9,7 +9,6 @@ import class Foundation.JSONDecoder
 
 /// An implementation of `ToucanDecoder` that uses `JSONDecoder`.
 public struct ToucanJSONDecoder: ToucanDecoder {
-    // MARK: - Lifecycle
 
     /// Initializes a new instance of `ToucanJSONDecoder`.
     ///

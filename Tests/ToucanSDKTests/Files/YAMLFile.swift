@@ -10,13 +10,10 @@ import FileManagerKitBuilder
 import ToucanSerialization
 
 struct YAMLFile<T: Encodable> {
-    // MARK: - Properties
 
     var name: String
     var ext: String
     var contents: T
-
-    // MARK: - Lifecycle
 
     init(
         name: String,
@@ -30,6 +27,7 @@ struct YAMLFile<T: Encodable> {
 }
 
 extension YAMLFile: BuildableItem {
+    
     func buildItem() -> FileManagerPlayground.Item {
         let encoder = ToucanYAMLEncoder()
         return .file(

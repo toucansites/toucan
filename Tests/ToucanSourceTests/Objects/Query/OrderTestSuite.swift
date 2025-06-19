@@ -32,8 +32,8 @@ struct OrderTestSuite {
     @Test
     func defaults() throws {
         let value = """
-        key: foo
-        """
+            key: foo
+            """
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(Order.self, from: value)
         let expectation = Order(key: "foo")
@@ -44,9 +44,9 @@ struct OrderTestSuite {
     @Test
     func custom() throws {
         let value = """
-        direction: desc
-        key: foo
-        """ + "\n"
+            direction: desc
+            key: foo
+            """ + "\n"
 
         let encoder = ToucanYAMLEncoder()
         let decoder = ToucanYAMLDecoder()

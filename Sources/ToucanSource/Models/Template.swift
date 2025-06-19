@@ -9,7 +9,7 @@ import struct Foundation.URL
 
 /**
  Templates directory structure:
-
+ 
  ```
  templates
     default
@@ -24,8 +24,7 @@ import struct Foundation.URL
 
 /// Represents a template used by the Toucan system, including paths to assets and templates for both base and override components.
 public struct Template {
-
-    // MARK: - Properties
+    
     public var metadata: Metadata
     /// The primary components of the template.
     public var components: Components
@@ -33,9 +32,7 @@ public struct Template {
     public var overrides: Components
     /// Content-specific components such as assets and templates used within the template.
     public var content: Components
-
-    // MARK: - Lifecycle
-
+    
     /// Creates a new instance.
     ///
     /// - Parameters:
@@ -59,12 +56,11 @@ public extension Template {
     
     /// A group of assets and templates that make up a template component.
     struct Components {
-    
         /// A list of asset file paths associated with the component.
         public var assets: [String]
         /// A list of templates associated with the component.
         public var views: [View]
-
+        
         /// Creates a new `Components` instance.
         ///
         /// - Parameters:
@@ -90,7 +86,7 @@ extension Template {
         let result = views.reduce(into: [String: String]()) {
             $0[$1.id] = $1.contents
         }
-
+        
         return .init(uniqueKeysWithValues: result.sorted { $0.key < $1.key })
     }
 }

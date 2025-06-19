@@ -9,8 +9,7 @@ public extension Pipeline {
     /// Represents a sequence of content transformers to run before rendering,
     /// along with an indicator of whether the final result is Markdown.
     struct Transformers: Codable {
-        // MARK: - Properties
-
+        
         /// An ordered list of transformers (external commands or scripts) to execute.
         ///
         /// Each `ContentTransformer` represents an individual transformation step.
@@ -20,8 +19,6 @@ public extension Pipeline {
         ///
         /// If `false`, the renderer may treat the output as already-formatted HTML or another format.
         public var isMarkdownResult: Bool
-
-        // MARK: - Lifecycle
 
         /// Initializes a new `TransformerPipeline`.
         ///
