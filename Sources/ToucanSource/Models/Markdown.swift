@@ -8,16 +8,6 @@
 /// A representation of a Markdown document that includes front matter metadata and raw content.
 ///
 /// This model is useful for parsing, transforming, and rendering Markdown files.
-///
-/// ## Example
-/// ```swift
-/// let markdown = Markdown(
-///     frontMatter: ["title": AnyCodable("Hello World")],
-///     contents: "# Hello World\nThis is the body."
-/// )
-/// print(markdown.frontMatter["title"]) // Optional(AnyCodable("Hello World"))
-/// print(markdown.contents)             // "# Hello World\nThis is the body."
-/// ```
 public struct Markdown: Equatable {
 
     /// A dictionary containing parsed front matter metadata.
