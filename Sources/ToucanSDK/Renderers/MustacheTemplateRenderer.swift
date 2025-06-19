@@ -51,7 +51,7 @@ public struct MustacheTemplateRenderer {
             logger.error(
                 "Missing or invalid template file.",
                 metadata: [
-                    "id": "\(template)"
+                    "id": .string(id)
                 ]
             )
             return nil
