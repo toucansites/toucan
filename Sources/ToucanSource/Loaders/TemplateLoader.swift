@@ -151,7 +151,7 @@ public struct TemplateLoader {
             components: .init(
                 assets: assets,
                 views: templates.map {
-                    try loadTemplate(
+                    try loadView(
                         at: locations.currentTemplateViewsURL,
                         path: $0
                     )
