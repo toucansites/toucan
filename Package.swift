@@ -77,7 +77,7 @@ let package = Package(
             from: "0.1.2"
         ),
         .package(
-            url: "https://github.com/mxcl/Version.git",
+            url: "https://github.com/mxcl/Version",
             from: "2.2.0"
         ),
     ],
