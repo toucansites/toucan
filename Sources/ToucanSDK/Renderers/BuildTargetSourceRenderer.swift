@@ -63,7 +63,6 @@ public struct BuildTargetSourceRenderer {
     ///
     /// - Parameters:
     ///   - buildTargetSource: The structured bundle containing settings, pipelines, and contents.
-    ///   - templates: The template IDs and contents used by the Mustache renderer.
     ///   - generatorInfo: Info about the content generator (defaults to `.current`).
     ///   - logger: Logger for reporting issues or metrics.
     public init(
@@ -560,11 +559,15 @@ public struct BuildTargetSourceRenderer {
         return result.filter { scope.fields.contains($0.key) }
     }
 
-    /// Starts rendering the source bundle based on current time and pipeline configuration.
+    /// Renders pipelines by processing content using defined resolvers and formatting logic,
+    /// and executes a renderer block with the resulting context bundles.
     ///
-    /// - Parameter now: Current date, used for generation timestamps.
-    /// - Returns: A list of rendered `PipelineResult`s.
-    /// - Throws: Rendering or encoding-related errors.
+    /// - Parameters:
+    ///   - now: The current date used for time-sensitive filtering and formatting.
+    ///   - rendererBlock: A closure that takes a pipeline and its corresponding context bundles,
+    ///     and returns the rendered pipeline results.
+    /// - Returns: An array of `PipelineResult` containing all results from all processed pipelines.
+    /// - Throws: Rethrows any error encountered during content processing or rendering.
     public mutating func render(
         now: Date,
         rendererBlock: @escaping (

@@ -58,6 +58,8 @@ public struct Slug: Equatable {
 
 extension Slug: Codable {
 
+    /// Generates a context-aware identifier string based on the last path component of a value.
+    ///
     public func contextAwareIdentifier() -> String {
         .init(value.split(separator: "/").last ?? "")
     }

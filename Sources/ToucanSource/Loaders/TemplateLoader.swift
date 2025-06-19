@@ -24,11 +24,15 @@ public struct TemplateLoader {
     let decoder: ToucanDecoder
     let logger: Logger
 
-    /// Creates a new instance of `TemplateLoader`.
+    /// Initializes a new instance for handling template rendering with the given configuration.
+    ///
     /// - Parameters:
-    ///   - locations: The locations where template-related files are stored.
-    ///   - extensions: The template file extensions to look for.
-    ///   - fileManager: The file manager utility to use for locating files.
+    ///   - locations: A set of built target source locations where templates are located.
+    ///   - extensions: An optional list of file extensions to be considered as templates. Defaults to ["mustache", "html"].
+    ///   - fileManager: File manager instance to access the file system.
+    ///   - encoder: Encoder used to serialize data for templates.
+    ///   - decoder: Decoder used to deserialize data for templates.
+    ///   - logger: Logger instance for logging template operations.
     public init(
         locations: BuiltTargetSourceLocations,
         extensions: [String] = ["mustache", "html"],
