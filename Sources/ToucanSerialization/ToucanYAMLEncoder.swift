@@ -13,8 +13,6 @@ public struct ToucanYAMLEncoder: ToucanEncoder {
     /// Initializes a new instance of the YAML encoder.
     public init() {}
 
-    // MARK: - Functions
-
     /// Encodes a given `Encodable` object into a YAML `String`.
     ///
     /// - Parameter object: The value to encode.

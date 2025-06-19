@@ -13,7 +13,6 @@ import ToucanSerialization
 
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
-    // MARK: - Properties
 
     /// Source configuration.
     let contentsURL: URL
@@ -32,8 +31,6 @@ public struct RawContentLoader {
 
     /// The logger instance
     let logger: Logger
-
-    // MARK: - Lifecycle
 
     /// Creates a new instance of `RawContentLoader` with the provided dependencies.
     ///
@@ -59,8 +56,6 @@ public struct RawContentLoader {
         self.fileManager = fileManager
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Recursively finds all assets in the given directory.
     ///

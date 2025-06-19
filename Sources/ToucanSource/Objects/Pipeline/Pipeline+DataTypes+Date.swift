@@ -35,8 +35,6 @@ public extension Pipeline.DataTypes {
         /// ```
         public var formats: [String: DateFormatterConfig]
 
-        // MARK: - Initialization
-
         /// Initializes a custom date format configuration.
         ///
         /// - Parameters:
@@ -49,8 +47,6 @@ public extension Pipeline.DataTypes {
             self.output = output
             self.formats = formats
         }
-
-        // MARK: - Decoding
 
         /// Decodes the configuration from a serialized source,
         /// applying default values for missing fields.

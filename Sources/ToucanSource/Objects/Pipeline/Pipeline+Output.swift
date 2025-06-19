@@ -28,10 +28,6 @@ public extension Pipeline {
         /// The file extension of the output file (e.g., `"html"`, `"json"`, `"xml"`).
         public var ext: String
 
-        // MARK: - Lifecycle
-
-        // MARK: - Initialization
-
         /// Initializes a new `Output` configuration.
         ///
         /// - Parameters:
@@ -47,8 +43,6 @@ public extension Pipeline {
             self.file = file
             self.ext = ext
         }
-
-        // MARK: - Decoding
 
         /// Decodes the `Output` configuration from a serialized format (e.g., JSON/YAML).
         ///

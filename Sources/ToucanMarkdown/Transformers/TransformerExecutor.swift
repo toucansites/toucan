@@ -21,8 +21,6 @@ public struct TransformerExecutor {
     /// Logger instance.
     public var logger: Logger
 
-    // MARK: - Lifecycle
-
     /// Initializes a `TransformerExecutor` with a transformation pipeline and file manager.
     ///
     /// - Parameters:
@@ -38,8 +36,6 @@ public struct TransformerExecutor {
         self.fileManager = fileManager
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Transforms the given content string using the defined pipeline.
     ///

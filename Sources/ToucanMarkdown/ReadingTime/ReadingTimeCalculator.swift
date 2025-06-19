@@ -15,8 +15,6 @@ public struct ReadingTimeCalculator {
     /// Logger instance
     public var logger: Logger
 
-    // MARK: - Lifecycle
-
     /// Initializes a new instance of `ReadingTimeCalculator`.
     ///
     /// - Parameters:
@@ -29,8 +27,6 @@ public struct ReadingTimeCalculator {
         self.wordsPerMinute = wordsPerMinute
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Calculates the estimated reading time for a given string.
     ///

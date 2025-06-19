@@ -38,8 +38,6 @@ public struct BuildTargetSource {
     /// A list of custom block directives used in Markdown rendering.
     public var blocks: [Block]
 
-    // MARK: - Initialization
-
     /// Initializes a fully populated `BuildTargetSource` from its constituent components.
     ///
     /// - Parameters:

@@ -14,8 +14,6 @@ struct CompileSASSBehavior: Behavior {
 
     var compiler: Compiler
 
-    // MARK: - Lifecycle
-
     init() throws {
         self.compiler = try .init()
     }

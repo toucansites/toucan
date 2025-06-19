@@ -14,8 +14,6 @@ enum TemplateValidatorError: ToucanError {
     case invalidVersion(String)
     case noSupportedGeneratorVersion(version: Version, supported: [Version])
 
-    // MARK: - Computed Properties
-
     var logMessage: String {
         switch self {
         case let .invalidVersion(value):

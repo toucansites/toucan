@@ -18,8 +18,6 @@ public struct MarkdownBlockDirective: Codable, Equatable {
         /// A default value for the parameter, used if it is not explicitly specified in the directive.
         public var `default`: String?
 
-        // MARK: - Lifecycle
-
         /// Initializes a `Parameter` for a directive.
         ///
         /// - Parameters:
@@ -39,15 +37,12 @@ public struct MarkdownBlockDirective: Codable, Equatable {
 
     /// Represents a static HTML attribute that will be rendered on the directive's HTML tag.
     public struct Attribute: Codable, Equatable {
-        // MARK: - Properties
 
         /// The name of the HTML attribute (e.g., `class`, `id`).
         public var name: String
 
         /// The corresponding value of the attribute.
         public var value: String
-
-        // MARK: - Lifecycle
 
         /// Initializes an `Attribute` for the rendered directive HTML tag.
         ///
@@ -62,8 +57,6 @@ public struct MarkdownBlockDirective: Codable, Equatable {
             self.value = value
         }
     }
-
-    // MARK: - Properties
 
     /// The name of the directive (e.g., `"note"`, `"warning"`, `"info"`).
     public var name: String
@@ -85,8 +78,6 @@ public struct MarkdownBlockDirective: Codable, Equatable {
 
     /// Custom output HTML string that overrides default rendering behavior, if provided.
     public var output: String?
-
-    // MARK: - Lifecycle
 
     /// Initializes a `MarkdownBlockDirective`.
     ///

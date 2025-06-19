@@ -17,8 +17,6 @@ public struct PipelineResult: Sendable {
         /// The final transformed content (e.g., HTML, Markdown, etc.).
         case content(String)
 
-        // MARK: - Computed Properties
-
         /// A Boolean value indicating whether the pipeline result's source is content-based.
         /// Returns `true` if the source is `.content`, otherwise `false`.
         public var isContent: Bool {
@@ -39,15 +37,11 @@ public struct PipelineResult: Sendable {
         }
     }
 
-    // MARK: - Properties
-
     /// The source material.
     public var source: Source
 
     /// The destination metadata describing where or how the content should be output.
     public var destination: Destination
-
-    // MARK: - Lifecycle
 
     /// Initializes a new `PipelineResult` with transformed content and a destination.
     ///

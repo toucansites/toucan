@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct RelationTestSuite {
-    // MARK: - order
 
     @Test
     func basicOrdering() throws {

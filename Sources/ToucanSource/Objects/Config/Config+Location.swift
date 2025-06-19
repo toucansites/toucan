@@ -12,10 +12,6 @@ public extension Config {
         /// The file system path for this location (e.g., `"assets"`, `"public/images"`).
         public var path: String
 
-        // MARK: - Lifecycle
-
-        // MARK: - Initialization
-
         /// Initializes a new `Location` with a given path.
         ///
         /// - Parameter path: A relative or absolute path in the project.

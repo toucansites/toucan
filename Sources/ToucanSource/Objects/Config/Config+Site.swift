@@ -9,14 +9,10 @@ public extension Config {
     /// Defines file system paths for locating site related resources.
     struct Site: Codable, Equatable {
 
-        // MARK: - Coding Keys
-
         private enum CodingKeys: CodingKey {
             case assets
             case settings
         }
-
-        // MARK: - Defaults
 
         /// Provides a default content configuration
         public static var defaults: Self {
@@ -32,8 +28,6 @@ public extension Config {
         /// The location of the site settings.
         public var settings: Location
 
-        // MARK: - Initialization
-
         /// Initializes a custom `Site` configuration.
         ///
         /// - Parameters:
@@ -46,8 +40,6 @@ public extension Config {
             self.assets = assets
             self.settings = settings
         }
-
-        // MARK: - Decoding
 
         /// Decodes a `Site` configuration from a serialized format.
         ///

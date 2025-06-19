@@ -99,8 +99,6 @@ public struct MarkdownRenderer {
         }
     }
 
-    // MARK: - Output
-
     /// Final output of the rendering pipeline.
     public struct Output {
         /// The fully rendered HTML output.

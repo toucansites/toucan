@@ -12,8 +12,6 @@ public struct ToucanYAMLDecoder: ToucanDecoder {
     /// Creates a new YAML decoder instance for use in the Toucan system.
     public init() {}
 
-    // MARK: - Functions
-
     /// Decodes a YAML-formatted `Data` object into a strongly typed model.
     ///
     /// - Parameters:

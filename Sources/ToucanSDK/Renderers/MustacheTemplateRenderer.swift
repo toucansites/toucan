@@ -12,7 +12,6 @@ import ToucanSource
 
 /// Renders Mustache templates using a predefined template library and a dynamic context object.
 public struct MustacheTemplateRenderer {
-    // MARK: - Properties
 
     /// A list of all available template IDs in the library.
     var ids: [String]
@@ -22,10 +21,6 @@ public struct MustacheTemplateRenderer {
 
     /// Logger used for reporting missing templates or rendering failures.
     var logger: Logger
-
-    // MARK: - Lifecycle
-
-    // MARK: - Initialization
 
     /// Initializes a renderer with a set of compiled Mustache templates and a logger.
     ///
@@ -40,10 +35,6 @@ public struct MustacheTemplateRenderer {
         self.library = .init(templates: templates)
         self.logger = logger
     }
-
-    // MARK: - Functions
-
-    // MARK: - Rendering
 
     /// Renders a Mustache template using the given context object.
     ///

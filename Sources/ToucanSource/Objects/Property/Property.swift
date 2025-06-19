@@ -15,8 +15,6 @@ public struct Property: Codable, Equatable {
         case `default`
     }
 
-    // MARK: - Properties
-
     /// The type of the property (e.g., string, number, boolean, etc.).
     public var type: PropertyType
 
@@ -27,10 +25,6 @@ public struct Property: Codable, Equatable {
 
     /// An optional default value to use if the property is missing in the content.
     public var `default`: AnyCodable?
-
-    // MARK: - Lifecycle
-
-    // MARK: - Initialization
 
     /// Initializes a new `Property` definition.
     ///
@@ -47,8 +41,6 @@ public struct Property: Codable, Equatable {
         self.required = isRequired
         self.default = defaultValue
     }
-
-    // MARK: - Decoding
 
     /// Decodes a `Property` from a serialized representation, handling both the
     /// core type and optional metadata (required flag and default value).

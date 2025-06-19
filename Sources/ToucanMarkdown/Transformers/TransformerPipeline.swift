@@ -19,8 +19,6 @@ public struct TransformerPipeline {
     /// If `false`, the renderer may treat the output as already-formatted HTML or another format.
     public var isMarkdownResult: Bool
 
-    // MARK: - Lifecycle
-
     /// Initializes a new `TransformerPipeline`.
     ///
     /// - Parameters:

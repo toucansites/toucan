@@ -19,10 +19,6 @@ public enum Condition: Codable, Equatable {
     /// A logical OR of multiple conditions (at least one must be true).
     case or([Condition])
 
-    // MARK: - Nested Types
-
-    // MARK: - Internal Keys for Decoding
-
     /// Internal keys used for encoding and decoding `Condition` enum cases.
     private enum CodingKeys: CodingKey {
         case key
@@ -31,10 +27,6 @@ public enum Condition: Codable, Equatable {
         case and
         case or
     }
-
-    // MARK: - Lifecycle
-
-    // MARK: - Decoding
 
     /// Decodes a `Condition` from a decoder, supporting `.field`, `.and`, and `.or` branches.
     ///

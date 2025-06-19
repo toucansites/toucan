@@ -31,12 +31,8 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - arguments
-
     @Argument(parsing: .allUnrecognized)
     var subcommand: [String]
-
-    // MARK: - Functions
 
     func run() async throws {
         var args = CommandLine.arguments

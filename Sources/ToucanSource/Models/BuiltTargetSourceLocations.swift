@@ -41,8 +41,6 @@ public struct BuiltTargetSourceLocations {
     /// The URL for overridden views in the current template.
     public var currentTemplateViewsOverridesURL: URL
 
-    // MARK: - Initialization
-
     /// Creates a new `BuiltTargetSourceLocations` instance by computing file paths based on the project configuration.
     ///
     /// - Parameters:

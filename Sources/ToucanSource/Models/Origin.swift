@@ -17,8 +17,6 @@ public struct Origin: Equatable {
     /// This slug is used to generate URLs, permalinks, or unique identifiers in the rendered site.
     public var slug: String
 
-    // MARK: - Lifecycle
-
     /// Initializes a new `Origin` instance with the given path and slug.
     ///
     /// - Parameters:

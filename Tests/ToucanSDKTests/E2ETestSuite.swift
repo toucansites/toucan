@@ -38,7 +38,7 @@ struct E2ETestSuite {
         }
     }
 
-    // MARK: non-html files
+    // MARK: - non-html files
 
     @Test
     func rss() throws {

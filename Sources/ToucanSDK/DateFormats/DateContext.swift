@@ -27,8 +27,6 @@ public struct DateContext: Codable {
         /// A short-form date format (e.g., `"M/d/yy"`).
         public var short: String
 
-        // MARK: - Lifecycle
-
         /// Initializes a new `Standard` date format set.
         ///
         /// - Parameters:
@@ -49,8 +47,6 @@ public struct DateContext: Codable {
         }
     }
 
-    // MARK: - Properties
-
     /// Standardized date format strings (e.g., full, medium, short).
     public var date: Standard
 
@@ -67,8 +63,6 @@ public struct DateContext: Codable {
     ///
     /// These can be used for custom formatting beyond the standard levels.
     public var formats: [String: String]
-
-    // MARK: - Lifecycle
 
     /// Initializes a `DateFormats` configuration.
     ///

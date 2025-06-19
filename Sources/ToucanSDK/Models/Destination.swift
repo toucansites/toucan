@@ -16,8 +16,6 @@ public struct Destination: Sendable {
     /// The file extension (e.g., "html", "json", "md").
     public var ext: String
 
-    // MARK: - Lifecycle
-
     /// Initializes a new `Destination` describing where and how a file should be written.
     ///
     /// - Parameters:

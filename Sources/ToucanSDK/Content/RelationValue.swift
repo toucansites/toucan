@@ -20,8 +20,6 @@ public struct RelationValue {
     /// For `.one`, this should typically contain a single ID; for `.many`, multiple.
     public var identifiers: [String]
 
-    // MARK: - Lifecycle
-
     /// Initializes a new `RelationValue` representing the resolved target(s) of a content relation.
     ///
     /// - Parameters:

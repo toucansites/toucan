@@ -19,8 +19,6 @@ public struct MarkdownToHTMLRenderer {
     /// Logger instance
     public let logger: Logger
 
-    // MARK: - Lifecycle
-
     /// Initializes a `MarkdownToHTMLRenderer`.
     ///
     /// - Parameters:
@@ -36,8 +34,6 @@ public struct MarkdownToHTMLRenderer {
         self.paragraphStyles = paragraphStyles
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     // MARK: - render api
 

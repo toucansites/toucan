@@ -27,8 +27,6 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - arguments
-
     @Argument(help: "The root directory (default: docs).")
     var root: String = "./docs"
 

@@ -9,8 +9,7 @@ public extension Config.DataTypes {
     
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
-        // MARK: - Coding Keys
-
+        
         private enum CodingKeys: CodingKey {
             case input
             case output
@@ -25,8 +24,6 @@ public extension Config.DataTypes {
                 formats: [:]
             )
         }
-
-        // MARK: - Properties
 
         /// The expected format for parsing date input strings (typically from front matter or JSON).
         ///
@@ -46,8 +43,6 @@ public extension Config.DataTypes {
         /// ```
         public var formats: [String: DateFormatterConfig]
 
-        // MARK: - Initialization
-
         /// Initializes a custom date format configuration.
         ///
         /// - Parameters:
@@ -63,8 +58,6 @@ public extension Config.DataTypes {
             self.output = output
             self.formats = formats
         }
-
-        // MARK: - Decoding
 
         /// Decodes the configuration from a serialized source,
         /// applying default values for missing fields.

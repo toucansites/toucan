@@ -14,8 +14,6 @@ public struct ToucanJSONDecoder: ToucanDecoder {
     /// Uses a `JSONDecoder` that allows JSON5 parsing by default.
     public init() {}
 
-    // MARK: - Functions
-
     /// Decodes a JSON or JSON5-encoded `Data` object into a strongly-typed model.
     ///
     /// - Parameters:

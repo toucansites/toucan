@@ -36,8 +36,6 @@ public struct Toucan {
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
 
-    // MARK: - Lifecycle
-
     /// Initialize a new instance.
     /// - Parameters:
     ///   - input: The input url as a path string.

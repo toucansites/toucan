@@ -27,19 +27,11 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - Properties
-
-    // MARK: - arguments
-
     @Argument(help: "The name of the site directory (default: site).")
     var siteDirectory: String = "site"
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
-
-    // MARK: - Functions
-
-    // MARK: - run
 
     func run() async throws {
         var logger = Logger(label: "toucan")

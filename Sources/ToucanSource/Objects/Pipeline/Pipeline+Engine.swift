@@ -8,8 +8,7 @@
 public extension Pipeline {
     /// Represents the rendering engine configuration used in a content pipeline.
     struct Engine: Codable {
-        // MARK: - Coding Keys
-
+        
         private enum CodingKeys: CodingKey {
             case id
             case options
@@ -24,10 +23,6 @@ public extension Pipeline {
         /// file extensions, or custom behaviors.
         public var options: [String: AnyCodable]
 
-        // MARK: - Lifecycle
-
-        // MARK: - Initialization
-
         /// Initializes a new engine configuration.
         ///
         /// - Parameters:
@@ -40,8 +35,6 @@ public extension Pipeline {
             self.id = id
             self.options = options
         }
-
-        // MARK: - Decoding
 
         /// Decodes an `Engine` instance from a configuration source.
         ///

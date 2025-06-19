@@ -36,8 +36,6 @@ public struct CopyManager {
         self.destination = destination
     }
 
-    // MARK: - Copy Operation
-
     /// Copies all default, overridden, and site-level assets into the working directory.
     ///
     /// - Throws: Errors from the file system if copying fails.

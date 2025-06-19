@@ -35,12 +35,8 @@ public struct Content {
     /// These are typically useful for extensibility or plugin features.
     public var userDefined: [String: AnyCodable]
 
-    // MARK: - Iteration Support
-
     /// Optional iterator metadata if the content is generated through iteration (e.g., paginated or list item).
     public var iteratorInfo: IteratorInfo?
-
-    // MARK: - Computed Properties
 
     /// A computed flag indicating whether this content instance was generated via iteration.
     public var isIterator: Bool { iteratorInfo != nil }

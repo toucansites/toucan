@@ -16,8 +16,6 @@ public struct OutlineParser {
     /// Logger instance
     public var logger: Logger
 
-    // MARK: - Lifecycle
-
     /// Initializes an `OutlineParser` with optional levels and a logger.
     ///
     /// - Parameters:

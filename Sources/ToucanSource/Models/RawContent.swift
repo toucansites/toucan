@@ -24,8 +24,6 @@ public struct RawContent: Equatable {
     /// A list of asset paths associated with this content (e.g., images, attachments).
     public var assets: [String]
 
-    // MARK: - Lifecycle
-
     /// Initializes a new `RawContent` instance.
     ///
     /// - Parameters:

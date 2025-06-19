@@ -9,13 +9,9 @@ public extension Config {
     /// Represents the location of pipeline configuration files.
     struct Pipelines: Codable, Equatable {
 
-        // MARK: - Coding Keys
-
         private enum CodingKeys: CodingKey {
             case path
         }
-
-        // MARK: - Defaults
 
         /// Provides a default `Pipelines` configuration pointing to `"pipelines"`.
         public static var defaults: Self {
@@ -27,16 +23,12 @@ public extension Config {
         /// Example: `"pipelines"` (default), or `"config/pipelines"`
         public var path: String
 
-        // MARK: - Initialization
-
         /// Initializes a new pipelines configuration.
         ///
         /// - Parameter path: The directory where pipeline configuration files are stored.
         public init(path: String) {
             self.path = path
         }
-
-        // MARK: - Decoding
 
         /// Decodes the `Pipelines` configuration from a structured source.
         ///

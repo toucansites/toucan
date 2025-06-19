@@ -18,8 +18,6 @@ struct ContextBundleToJSONRenderer {
     let keyPath: String?
     let keyPaths: [String: AnyCodable]?
 
-    // MARK: - Lifecycle
-
     init(
         pipeline: Pipeline,
         logger: Logger

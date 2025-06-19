@@ -12,7 +12,6 @@ import Logging
 
 /// A loader responsible for building a `Template` by collecting assets and templates from various locations.
 public struct TemplateLoader {
-    // MARK: - Properties
 
     /// The file system locations relevant to the template loading process.
     let locations: BuiltTargetSourceLocations
@@ -24,8 +23,6 @@ public struct TemplateLoader {
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
     let logger: Logger
-
-    // MARK: - Lifecycle
 
     /// Creates a new instance of `TemplateLoader`.
     /// - Parameters:
@@ -47,8 +44,6 @@ public struct TemplateLoader {
         self.decoder = decoder
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     func loadTemplate(
         at url: URL,

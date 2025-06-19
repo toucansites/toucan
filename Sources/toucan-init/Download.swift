@@ -14,8 +14,6 @@ struct Download {
     let targetDirURL: URL
     let fileManager: FileManager
 
-    // MARK: - Computed Properties
-
     private var url: URL {
         fileManager.temporaryDirectory.appendingPathComponent(id)
     }

@@ -8,13 +8,10 @@
 public extension Config {
     /// Represents the location of type configuration files.
     struct Types: Sendable, Codable, Equatable {
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
         }
-
-        // MARK: - Defaults
 
         /// Provides a default `Types` configuration pointing to `"types"`.
         public static var defaults: Self {
@@ -26,8 +23,6 @@ public extension Config {
         /// Example: `"types"` (default), or `"config/types"`
         public var path: String
 
-        // MARK: - Initialization
-
         /// Initializes a new types configuration.
         ///
         /// - Parameter path: The directory where type configuration files are stored.
@@ -36,8 +31,6 @@ public extension Config {
         ) {
             self.path = path
         }
-
-        // MARK: - Decoding
 
         /// Decodes the `Types` configuration from a structured source.
         ///

@@ -15,7 +15,6 @@ import ToucanSerialization
 ///
 /// Uses dependency-injected tools to fetch, decode, and construct structured data from source files.
 public struct BuildTargetSourceLoader {
-    // MARK: - Properties
 
     /// The URL of the root source directory.
     var sourceURL: URL
@@ -31,10 +30,6 @@ public struct BuildTargetSourceLoader {
 
     /// Logger instance for emitting structured debug information.
     var logger: Logger
-
-    // MARK: - Lifecycle
-
-    // MARK: -
 
     /// Initializes a new instance of `BuildTargetSourceLoader`.
     ///
@@ -60,8 +55,6 @@ public struct BuildTargetSourceLoader {
         self.decoder = decoder
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     /// Loads raw contents from the source using the provided configuration.
     ///

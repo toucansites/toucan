@@ -23,12 +23,8 @@ private extension [DirectiveArgument] {
     }
 }
 
-// MARK: - HTML visitor
-
 struct HTMLVisitor: MarkupVisitor {
     typealias Result = String
-
-    // MARK: - Properties
 
     var customBlockDirectives: [MarkdownBlockDirective]
     var paragraphStyles: [String: [String]]
@@ -52,8 +48,6 @@ struct HTMLVisitor: MarkupVisitor {
         self.baseURL = baseURL
         self.logger = logger
     }
-
-    // MARK: - Functions
 
     // MARK: - visitor functions
 

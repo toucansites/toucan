@@ -20,8 +20,6 @@ public struct Outline: Equatable, Codable {
     /// A list of child outlines, representing nested structure under this node.
     public var children: [Outline]
 
-    // MARK: - Lifecycle
-
     /// Initializes a new `Outline` instance.
     ///
     /// - Parameters:
