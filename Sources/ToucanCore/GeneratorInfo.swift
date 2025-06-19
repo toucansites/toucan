@@ -17,8 +17,6 @@ public struct GeneratorInfo: Codable, Sendable {
     /// A URL pointing to the generator’s homepage or documentation.
     public let link: String
 
-    // MARK: - Lifecycle
-
     /// Initializes a generator metadata instance.
     ///
     /// - Parameters:

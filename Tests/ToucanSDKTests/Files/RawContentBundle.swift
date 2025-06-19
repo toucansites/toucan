@@ -9,13 +9,16 @@ import FileManagerKit
 import FileManagerKitBuilder
 import ToucanSerialization
 import ToucanSource
+import Foundation
 
 struct RawContentBundle {
     var name: String
     var rawContent: RawContent
+    var modificationDate: Date = Date()
 }
 
 extension RawContentBundle: BuildableItem {
+    
     func buildItem() -> FileManagerPlayground.Item {
         .directory(
             Directory(name: name) {
@@ -26,7 +29,8 @@ extension RawContentBundle: BuildableItem {
                 }
                 MarkdownFile(
                     name: "index",
-                    markdown: rawContent.markdown
+                    markdown: rawContent.markdown,
+                    modificationDate: modificationDate
                 )
             }
         )

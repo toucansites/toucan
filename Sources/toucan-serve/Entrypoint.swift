@@ -42,10 +42,6 @@ struct Entrypoint: AsyncParsableCommand {
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
 
-    // MARK: - Functions
-
-    // MARK: - run
-
     func run() async throws {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         var rootPath = root.replacingOccurrences(of: "~", with: home)

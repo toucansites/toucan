@@ -315,7 +315,8 @@ extension Mocks.E2E {
                                 featured: false,
                                 authorIDs: [1, 2],
                                 tagIDs: [1, 2]
-                            )
+                            ),
+                            modificationDate: now
                         )
                         RawContentBundle(
                             name: "post-2",
@@ -339,7 +340,8 @@ extension Mocks.E2E {
                                 featured: true,
                                 authorIDs: [1, 2, 3],
                                 tagIDs: [2]
-                            )
+                            ),
+                            modificationDate: now
                         )
                         RawContentBundle(
                             name: "post-3",
@@ -363,7 +365,8 @@ extension Mocks.E2E {
                                 featured: false,
                                 authorIDs: [2, 3],
                                 tagIDs: [2, 3]
-                            )
+                            ),
+                            modificationDate: now
                         )
                         Directory(name: "pages") {
                             RawContentBundle(
