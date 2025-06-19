@@ -32,7 +32,7 @@ struct MarkdownFile {
 }
 
 extension MarkdownFile: BuildableItem {
-    
+
     func buildItem() -> FileManagerPlayground.Item {
         let encoder = ToucanYAMLEncoder()
         let yml = try! encoder.encode(markdown.frontMatter)

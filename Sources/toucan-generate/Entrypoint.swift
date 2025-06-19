@@ -19,11 +19,11 @@ struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "toucan-generate",
         abstract: """
-        Toucan Generate Command
-        """,
+            Toucan Generate Command
+            """,
         discussion: """
-        A markdown-based Static Site Generator (SSG) written in Swift.
-        """,
+            A markdown-based Static Site Generator (SSG) written in Swift.
+            """,
         version: GeneratorInfo.current.version
     )
 

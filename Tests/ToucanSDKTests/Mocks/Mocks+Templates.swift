@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  Mocks+Templates.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 06. 17..
 //
@@ -8,12 +8,12 @@
 @testable import ToucanSource
 
 extension Mocks.Templates {
-    
+
     static func metadata(
         generatorVersions: [String] = ["1.0.0-beta.5"]
     ) -> Template.Metadata {
         let url = "http://localhost:8080/"
-        
+
         return .init(
             name: "Test Template",
             description: "Test Template description",
@@ -33,11 +33,11 @@ extension Mocks.Templates {
             ),
             tags: [
                 "blog",
-                "adaptive-colors"
+                "adaptive-colors",
             ]
         )
     }
-    
+
     static func example(
         generatorVersions: [String] = ["1.0.0-beta.5"]
     ) -> Template {

@@ -19,7 +19,7 @@ public struct CopyManager {
 
     /// The target directory where all assets should be written.
     let destination: URL
-    
+
     /// Initializes a new asset writer for copying static files.
     ///
     /// - Parameters:

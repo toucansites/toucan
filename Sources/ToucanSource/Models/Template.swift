@@ -9,7 +9,7 @@ import struct Foundation.URL
 
 /**
  Templates directory structure:
- 
+
  ```
  templates
     default
@@ -24,7 +24,7 @@ import struct Foundation.URL
 
 /// Represents a template used by the Toucan system, including paths to assets and templates for both base and override components.
 public struct Template {
-    
+
     public var metadata: Metadata
     /// The primary components of the template.
     public var components: Components
@@ -32,7 +32,7 @@ public struct Template {
     public var overrides: Components
     /// Content-specific components such as assets and templates used within the template.
     public var content: Components
-    
+
     /// Creates a new instance.
     ///
     /// - Parameters:
@@ -53,14 +53,14 @@ public struct Template {
 }
 
 public extension Template {
-    
+
     /// A group of assets and templates that make up a template component.
     struct Components {
         /// A list of asset file paths associated with the component.
         public var assets: [String]
         /// A list of templates associated with the component.
         public var views: [View]
-        
+
         /// Creates a new `Components` instance.
         ///
         /// - Parameters:
@@ -77,7 +77,7 @@ public extension Template {
 }
 
 extension Template {
-    
+
     /// Returns a dictionary of template IDs and their contents.
     ///
     /// - Returns: A dictionary where the keys are template IDs and the values are their contents.
@@ -86,13 +86,13 @@ extension Template {
         let result = views.reduce(into: [String: String]()) {
             $0[$1.id] = $1.contents
         }
-        
+
         return .init(uniqueKeysWithValues: result.sorted { $0.key < $1.key })
     }
 }
 
 public extension Template {
-    
+
     struct Metadata: Codable {
         public var name: String
         public var description: String
@@ -107,7 +107,7 @@ public extension Template {
 }
 
 public extension Template.Metadata {
-    
+
     struct License: Codable {
         let name: String
         let url: String
@@ -115,7 +115,7 @@ public extension Template.Metadata {
 }
 
 public extension Template.Metadata {
-    
+
     struct Author: Codable {
         let name: String
         let url: String
@@ -123,7 +123,7 @@ public extension Template.Metadata {
 }
 
 public extension Template.Metadata {
-    
+
     struct Demo: Codable {
         let url: String
     }

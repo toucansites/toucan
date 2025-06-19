@@ -568,7 +568,9 @@ public struct BuildTargetSourceRenderer {
     /// - Throws: Rendering or encoding-related errors.
     public mutating func render(
         now: Date,
-        rendererBlock: @escaping ((_ : Pipeline, _ : [ContextBundle]) throws -> [PipelineResult])
+        rendererBlock: @escaping (
+            (_: Pipeline, _: [ContextBundle]) throws -> [PipelineResult]
+        )
     ) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
 

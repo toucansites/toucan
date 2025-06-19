@@ -183,7 +183,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <blockquote class="warning"><p>Lorem ipsum dolor sit amet.</p></blockquote>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -196,7 +196,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <blockquote class="warning"><p>Lorem ipsum dolor sit amet.</p></blockquote>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -211,7 +211,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <blockquote><p>Lorem ipsum</p><blockquote><p>dolor <strong>sit</strong> amet.</p></blockquote></blockquote>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -224,7 +224,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p>Lorem <em>ipsum</em> dolor <em>sit</em> amet.</p>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -239,7 +239,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <h1>Lorem ipsum dolor sit amet.</h1>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -252,7 +252,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <h2 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h2>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -278,7 +278,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <h4>Lorem ipsum dolor sit amet.</h4>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -291,7 +291,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <h5>Lorem ipsum dolor sit amet.</h5>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -318,7 +318,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p>####### Lorem ipsum dolor sit amet.</p>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -335,7 +335,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <ul><li>foo</li><li>bar</li><li>baz</li></ul>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -393,7 +393,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p><a href="https://swift.org/" target="_blank">Swift</a></p>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -419,7 +419,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p><a href="./foo">Swift</a></p>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -471,7 +471,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p><a name="anchor">Swift</a></p>
             """#
-        
+
         #expect(output == expectation)
     }
 
@@ -484,7 +484,7 @@ struct HTMLVisitorTestSuite {
         let expectation = #"""
             <p><img src="lorem.jpg" alt="Lorem"></p>
             """#
-        
+
         #expect(output == expectation)
     }
 

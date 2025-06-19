@@ -27,7 +27,7 @@ struct MustacheFile {
 }
 
 extension MustacheFile: BuildableItem {
-    
+
     func buildItem() -> FileManagerPlayground.Item {
         .file(
             .init(

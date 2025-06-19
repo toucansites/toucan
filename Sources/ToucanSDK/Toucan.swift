@@ -126,7 +126,7 @@ public struct Toucan {
                     "Building target: \(target.name)",
                     metadata: [:]
                 )
-                
+
                 let buildTargetSourceLoader = BuildTargetSourceLoader(
                     sourceURL: inputURL,
                     target: target,
@@ -158,8 +158,10 @@ public struct Toucan {
                     decoder: decoder,
                     logger: logger
                 )
-                
-                let results = try renderer.render(now: now) { pipeline, contextBundles in
+
+                let results = try renderer.render(now: now) {
+                    pipeline,
+                    contextBundles in
                     switch pipeline.engine.id {
                     case "json":
                         let renderer = ContextBundleToJSONRenderer(
@@ -169,12 +171,12 @@ public struct Toucan {
                         return renderer.render(contextBundles)
                     case "mustache":
                         let template = try templateLoader.load()
-                        
+
                         let templateValidator = try TemplateValidator(
                             generatorInfo: generatorInfo
                         )
                         try templateValidator.validate(template)
-                        
+
                         let renderer = try ContextBundleToHTMLRenderer(
                             pipeline: pipeline,
                             templates: template.getTemplatesIDsWithContents(),
@@ -232,7 +234,7 @@ public struct Toucan {
                 }
 
                 // MARK: - Finalize and cleanup
-                
+
                 var outputURL = getSafeURL(
                     for: target.output,
                     using: fileManager

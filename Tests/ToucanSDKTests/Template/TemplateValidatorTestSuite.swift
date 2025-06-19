@@ -1,5 +1,5 @@
 //
-//  BuildTargetSourceValidatorTestSuite.swift
+//  TemplateValidatorTestSuite.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 23..
@@ -20,7 +20,7 @@ struct TemplateValidatorTestSuite {
         let templateValidator = try TemplateValidator(
             generatorInfo: .init(version: "1.0.0-beta.5")
         )
-        
+
         try templateValidator.validate(
             Mocks.Templates.example(
                 generatorVersions: [
@@ -31,11 +31,11 @@ struct TemplateValidatorTestSuite {
             )
         )
     }
-    
+
     @Test
     func invalidVersion() throws {
         let templateValidator = try TemplateValidator()
-        
+
         do {
             try templateValidator.validate(
                 Mocks.Templates.example(generatorVersions: ["invalid"])
@@ -49,13 +49,13 @@ struct TemplateValidatorTestSuite {
             #expect(value == "invalid")
         }
     }
-    
+
     @Test
     func unsupportedVersion() throws {
         let templateValidator = try TemplateValidator(
             generatorInfo: .init(version: "1.0.0-beta.5")
         )
-        
+
         do {
             try templateValidator.validate(
                 Mocks.Templates.example(
@@ -68,15 +68,22 @@ struct TemplateValidatorTestSuite {
             )
         }
         catch {
-            guard case let .noSupportedGeneratorVersion(version, supported) = error else {
-                Issue.record("Expected .noSupportedGeneratorVersion error, got: \(error)")
+            guard
+                case let .noSupportedGeneratorVersion(version, supported) =
+                    error
+            else {
+                Issue.record(
+                    "Expected .noSupportedGeneratorVersion error, got: \(error)"
+                )
                 return
             }
-            
+
             #expect(version.description == "1.0.0-beta.5")
             #expect(
-                supported.map { $0.description
-                } == ["1.0.0-beta.5", "1.0.0", "2.0.0"])
+                supported.map {
+                    $0.description
+                } == ["1.0.0-beta.5", "1.0.0", "2.0.0"]
+            )
         }
     }
 }

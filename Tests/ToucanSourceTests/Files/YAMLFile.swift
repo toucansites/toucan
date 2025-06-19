@@ -27,7 +27,7 @@ struct YAMLFile<T: Encodable> {
 }
 
 extension YAMLFile: BuildableItem {
-    
+
     func buildItem() -> FileManagerPlayground.Item {
         let encoder = ToucanYAMLEncoder()
         return .file(

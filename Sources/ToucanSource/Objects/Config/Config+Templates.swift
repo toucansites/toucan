@@ -88,15 +88,15 @@ public extension Config {
 
             self.location =
                 try container.decodeIfPresent(Location.self, forKey: .location)
-                    ?? defaults.location
+                ?? defaults.location
 
             self.current =
                 try container.decodeIfPresent(Location.self, forKey: .current)
-                    ?? defaults.current
+                ?? defaults.current
 
             self.assets =
                 try container.decodeIfPresent(Location.self, forKey: .assets)
-                    ?? defaults.assets
+                ?? defaults.assets
 
             self.views =
                 try container.decodeIfPresent(Location.self, forKey: .views)
@@ -104,7 +104,7 @@ public extension Config {
 
             self.overrides =
                 try container.decodeIfPresent(Location.self, forKey: .overrides)
-                    ?? defaults.overrides
+                ?? defaults.overrides
         }
     }
 }

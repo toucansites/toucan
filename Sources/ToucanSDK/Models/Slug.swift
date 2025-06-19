@@ -57,11 +57,11 @@ public struct Slug: Equatable {
 }
 
 extension Slug: Codable {
-    
+
     public func contextAwareIdentifier() -> String {
         .init(value.split(separator: "/").last ?? "")
     }
-    
+
     /// Creates a new instance by decoding from the given decoder.
     ///
     /// This initializer attempts to decode the value as a single string.

@@ -53,7 +53,7 @@ struct PropertyTypeTestSuite {
         let object = """
             type: bool
             """
-        
+
         let decoder = ToucanYAMLDecoder()
         let result = try decoder.decode(PropertyType.self, from: object)
         let encoder = ToucanYAMLEncoder()

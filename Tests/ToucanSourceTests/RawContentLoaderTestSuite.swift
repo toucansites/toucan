@@ -16,7 +16,7 @@ import ToucanSerialization
 
 @Suite
 struct RawContentLoaderTestSuite {
-    
+
     private func testSourceContentsHierarchy(
         @FileManagerPlayground.DirectoryBuilder _ builder: () ->
             [FileManagerPlayground.Item]

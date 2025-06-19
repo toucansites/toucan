@@ -420,7 +420,7 @@ struct ContentQueryTestSuite {
                 ),
             ]),
             orderBy: [
-                .init(key: "name", direction: .desc),
+                .init(key: "name", direction: .desc)
             ]
         )
 
@@ -454,7 +454,7 @@ struct ContentQueryTestSuite {
                 ),
             ]),
             orderBy: [
-                .init(key: "name", direction: .desc),
+                .init(key: "name", direction: .desc)
             ]
         )
 
@@ -482,7 +482,7 @@ struct ContentQueryTestSuite {
                 ),
             ]),
             orderBy: [
-                .init(key: "name", direction: .desc),
+                .init(key: "name", direction: .desc)
             ]
         )
 
@@ -506,7 +506,7 @@ struct ContentQueryTestSuite {
                 value: .init(["Author #2", "Author #3"])
             ),
             orderBy: [
-                .init(key: "name"),
+                .init(key: "name")
             ]
         )
 
@@ -533,7 +533,7 @@ struct ContentQueryTestSuite {
                 value: .init([21, 42])
             ),
             orderBy: [
-                .init(key: "name"),
+                .init(key: "name")
             ]
         )
 
@@ -795,7 +795,7 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "publication",
                     direction: .asc
-                ),
+                )
             ]
         )
         let results1 = contents.run(
@@ -865,7 +865,7 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "order",
                     direction: .asc
-                ),
+                )
             ]
         )
 
@@ -892,12 +892,12 @@ struct ContentQueryTestSuite {
                 .init(
                     key: "order",
                     direction: .asc
-                ),
+                )
             ]
         )
         .resolveFilterParameters(
             with: [
-                "id": "category-1",
+                "id": "category-1"
             ]
         )
 

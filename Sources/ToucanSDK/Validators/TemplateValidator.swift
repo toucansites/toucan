@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  toucan
+//  TemplateValidator.swift
+//  Toucan
 //
 //  Created by Viasz-Kádi Ferenc on 2025. 06. 17..
 //
@@ -21,8 +21,10 @@ enum TemplateValidatorError: ToucanError {
         case let .invalidVersion(value):
             return "Invalid version: `\(value)`."
         case let .noSupportedGeneratorVersion(version, supported):
-            let supportedList = supported.map { "`\($0)`" }.joined(separator: ", ")
-            return "Generator version `\(version)` is not supported. Supported versions: \(supportedList)."
+            let supportedList = supported.map { "`\($0)`" }
+                .joined(separator: ", ")
+            return
+                "Generator version `\(version)` is not supported. Supported versions: \(supportedList)."
         }
     }
 
@@ -32,9 +34,9 @@ enum TemplateValidatorError: ToucanError {
 }
 
 struct TemplateValidator {
-    
+
     let version: Version
-    
+
     init(generatorInfo: GeneratorInfo = .current) throws {
         let rawVersion = generatorInfo.version
         let version = Version(rawVersion)
@@ -43,7 +45,7 @@ struct TemplateValidator {
         }
         self.version = version
     }
-    
+
     func validate(_ template: Template) throws(TemplateValidatorError) {
         let versions = try template.metadata.generatorVersions
             .map { version throws(TemplateValidatorError) -> Version in
@@ -53,7 +55,7 @@ struct TemplateValidator {
                 return version
             }
             .sorted()
-        
+
         if !versions.contains(version) {
             throw .noSupportedGeneratorVersion(
                 version: version,

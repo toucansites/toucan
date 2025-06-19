@@ -18,7 +18,7 @@ struct RawContentBundle {
 }
 
 extension RawContentBundle: BuildableItem {
-    
+
     func buildItem() -> FileManagerPlayground.Item {
         .directory(
             Directory(name: name) {

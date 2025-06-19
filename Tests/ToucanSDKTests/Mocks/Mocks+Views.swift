@@ -33,21 +33,57 @@ extension Mocks.Views {
 
                     .init(id: "pages.default", path: "", contents: page()),
                     .init(id: "pages.404", path: "", contents: notFound()),
-                    .init(id: "pages.context", path: "", contents: context(value: contextValue)),
+                    .init(
+                        id: "pages.context",
+                        path: "",
+                        contents: context(value: contextValue)
+                    ),
 
-                    .init(id: "docs.category.default", path: "", contents: category()),
-                    .init(id: "docs.guide.default", path: "", contents: guide()),
+                    .init(
+                        id: "docs.category.default",
+                        path: "",
+                        contents: category()
+                    ),
+                    .init(
+                        id: "docs.guide.default",
+                        path: "",
+                        contents: guide()
+                    ),
 
                     .init(id: "blog.post.default", path: "", contents: post()),
-                    .init(id: "blog.author.default", path: "", contents: author()),
+                    .init(
+                        id: "blog.author.default",
+                        path: "",
+                        contents: author()
+                    ),
                     .init(id: "blog.tag.default", path: "", contents: tag()),
 
-                    .init(id: "partials.blog.author", path: "", contents: partialAuthor()),
-                    .init(id: "partials.blog.tag", path: "", contents: partialTag()),
-                    .init(id: "partials.blog.post", path: "", contents: partialPost()),
+                    .init(
+                        id: "partials.blog.author",
+                        path: "",
+                        contents: partialAuthor()
+                    ),
+                    .init(
+                        id: "partials.blog.tag",
+                        path: "",
+                        contents: partialTag()
+                    ),
+                    .init(
+                        id: "partials.blog.post",
+                        path: "",
+                        contents: partialPost()
+                    ),
 
-                    .init(id: "partials.docs.category", path: "", contents: partialCategory()),
-                    .init(id: "partials.docs.guide", path: "", contents: partialGuide()),
+                    .init(
+                        id: "partials.docs.category",
+                        path: "",
+                        contents: partialCategory()
+                    ),
+                    .init(
+                        id: "partials.docs.guide",
+                        path: "",
+                        contents: partialGuide()
+                    ),
                 ]
             ),
             overrides: .init(assets: [], views: []),

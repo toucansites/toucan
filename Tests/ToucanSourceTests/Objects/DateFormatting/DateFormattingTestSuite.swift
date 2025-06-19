@@ -85,7 +85,7 @@ struct DateFormattingTestSuite {
             format: yyyy
             """
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        
+
         #expect(
             yamlString.trimmingCharacters(in: .whitespacesAndNewlines) == exp
         )

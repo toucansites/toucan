@@ -80,7 +80,7 @@ public extension Config {
 
             self.wordsPerMinute =
                 try container.decodeIfPresent(Int.self, forKey: .wordsPerMinute)
-                    ?? defaults.wordsPerMinute
+                ?? defaults.wordsPerMinute
 
             self.outlineLevels =
                 try container.decodeIfPresent(

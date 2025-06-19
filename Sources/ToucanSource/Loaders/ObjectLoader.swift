@@ -71,13 +71,13 @@ public struct ObjectLoader {
         do {
             return
                 try locations
-                    .map {
-                        let fileURL = url.appendingPathComponent($0)
-                        lastURL = fileURL
-                        return fileURL
-                    }
-                    .map { try Data(contentsOf: $0) }
-                    .map { try decoder.decode(T.self, from: $0) }
+                .map {
+                    let fileURL = url.appendingPathComponent($0)
+                    lastURL = fileURL
+                    return fileURL
+                }
+                .map { try Data(contentsOf: $0) }
+                .map { try decoder.decode(T.self, from: $0) }
         }
         catch {
             throw .init(
@@ -98,24 +98,24 @@ public struct ObjectLoader {
         logger.debug(
             "Loading and combining \(type(of: value)) files (\(locations)) at: `\(url.absoluteString)`"
         )
-        
+
         var lastURL: URL?
         do {
             let combinedRawCodableObject =
                 try locations
-                    .map {
-                        let fileURL = url.appendingPathComponent($0)
-                        lastURL = fileURL
-                        return fileURL
-                    }
-                    .map { try Data(contentsOf: $0) }
-                    .map {
-                        try decoder.decode(
-                            [String: AnyCodable].self,
-                            from: $0
-                        )
-                    }
-                    .reduce([:]) { $0.recursivelyMerged(with: $1) }
+                .map {
+                    let fileURL = url.appendingPathComponent($0)
+                    lastURL = fileURL
+                    return fileURL
+                }
+                .map { try Data(contentsOf: $0) }
+                .map {
+                    try decoder.decode(
+                        [String: AnyCodable].self,
+                        from: $0
+                    )
+                }
+                .reduce([:]) { $0.recursivelyMerged(with: $1) }
 
             // TODO: Tries to decode 0 files too
             let data: Data = try encoder.encode(combinedRawCodableObject)

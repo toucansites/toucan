@@ -16,7 +16,7 @@ public struct MarkdownRenderer {
 
         /// Configuration specific to Markdown processing.
         public struct Markdown {
-            
+
             /// Custom block directives to extend the Markdown grammar.
             public var customBlockDirectives: [MarkdownBlockDirective]
 

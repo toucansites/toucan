@@ -20,7 +20,7 @@ public struct TemplateLoader {
     let extensions: [String]
     /// The file manager utility used to search and retrieve files.
     let fileManager: FileManagerKit
-    
+
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
     let logger: Logger
@@ -57,9 +57,9 @@ public struct TemplateLoader {
     ) throws -> View {
         let basePath =
             path
-                .split(separator: ".")
-                .dropLast()
-                .joined(separator: ".")
+            .split(separator: ".")
+            .dropLast()
+            .joined(separator: ".")
 
         let id =
             if isContentOverride {
@@ -82,7 +82,7 @@ public struct TemplateLoader {
             contents: contents
         )
     }
-    
+
     func loadTemplateMetadata(
         at url: URL
     ) throws(TemplateLoaderError) -> Template.Metadata {
@@ -142,11 +142,11 @@ public struct TemplateLoader {
             recursively: true,
             at: locations.contentsURL
         )
-        
+
         let metadata = try loadTemplateMetadata(
             at: locations.currentTemplateURL
         )
-        
+
         let template = try Template(
             metadata: metadata,
             components: .init(

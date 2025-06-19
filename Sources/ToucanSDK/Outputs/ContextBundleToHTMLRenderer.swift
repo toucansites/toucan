@@ -27,7 +27,7 @@ struct ContextBundleToHTMLRenderer {
             },
             logger: logger
         )
-        
+
         let engineOptions = pipeline.engine.options
         self.engineContentTypesOptions = engineOptions.dict("contentTypes")
         self.pipelineViewKey = ["views", pipeline.id].joined(separator: ".")

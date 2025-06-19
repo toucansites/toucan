@@ -8,7 +8,7 @@
 public extension Pipeline {
     /// Describes a rendering scope within a content pipeline.
     struct Scope: Codable {
-        
+
         private enum CodingKeys: CodingKey {
             case id
             case context
@@ -46,7 +46,7 @@ public extension Pipeline {
         /// The default fallback scope set, applied to all content types via the `*` wildcard.
         public static var `default`: [String: [String: Scope]] {
             [
-                "*": standard,
+                "*": standard
             ]
         }
 

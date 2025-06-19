@@ -301,7 +301,7 @@ extension AnyCodable: Hashable {
         case let value as [AnyCodable]:
             hasher.combine(value)
         default:
-            break // Non-hashable values are ignored
+            break  // Non-hashable values are ignored
         }
     }
 }

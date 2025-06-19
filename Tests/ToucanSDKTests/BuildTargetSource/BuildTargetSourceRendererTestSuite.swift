@@ -15,13 +15,13 @@ import ToucanSerialization
 
 @Suite
 struct BuildTargetSourceRendererTestSuite {
-    
+
     func renderBlock(
         pipeline: Pipeline,
         contextBundles: [ContextBundle]
     ) throws -> [PipelineResult] {
         let logger = Logger(label: "test")
-        
+
         switch pipeline.engine.id {
         case "json":
             let renderer = ContextBundleToJSONRenderer(
@@ -41,12 +41,12 @@ struct BuildTargetSourceRendererTestSuite {
                 logger: logger
             )
             let template = try templateLoader.load()
-            
+
             let templateValidator = try TemplateValidator(
                 generatorInfo: .current
             )
             try templateValidator.validate(template)
-            
+
             let renderer = try ContextBundleToHTMLRenderer(
                 pipeline: pipeline,
                 templates: template.getTemplatesIDsWithContents(),
@@ -59,7 +59,7 @@ struct BuildTargetSourceRendererTestSuite {
             )
         }
     }
-    
+
     // MARK: - api
 
     private func getMockAPIBuildTargetSource(
@@ -292,7 +292,7 @@ struct BuildTargetSourceRendererTestSuite {
         let results = try renderer.render(now: now) {
             try renderBlock(pipeline: $0, contextBundles: $1)
         }
-        
+
         #expect(results.count == 1)
         guard case let .content(value) = results[0].source else {
             Issue.record("Source type is not a valid content.")
@@ -426,7 +426,8 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(results.count == 3)
 
-        let contents = results
+        let contents =
+            results
             .filter(\.source.isContent)
             .filter { $0.destination.file == "api" }
 

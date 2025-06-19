@@ -20,11 +20,11 @@ struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "toucan-serve",
         abstract: """
-        Toucan Serve Command
-        """,
+            Toucan Serve Command
+            """,
         discussion: """
-        Serves a directory over a local web-server.
-        """,
+            Serves a directory over a local web-server.
+            """,
         version: GeneratorInfo.current.version
     )
 

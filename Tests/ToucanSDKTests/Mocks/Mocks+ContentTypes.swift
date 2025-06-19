@@ -8,7 +8,7 @@
 import ToucanSource
 
 extension Mocks.ContentTypes {
-    
+
     static func page() -> ContentType {
         .init(
             id: "page",
