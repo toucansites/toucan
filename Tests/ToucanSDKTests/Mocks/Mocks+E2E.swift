@@ -85,6 +85,10 @@ extension Mocks.E2E {
     ) -> Directory {
         Directory(name: "templates") {
             Directory(name: "default") {
+                YAMLFile(
+                    name: "template",
+                    contents: Mocks.Templates.metadata()
+                )
                 Directory(name: "assets") {
                     Directory(name: "css") {
                         File(

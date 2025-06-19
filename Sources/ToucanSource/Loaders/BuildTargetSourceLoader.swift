@@ -109,7 +109,7 @@ public struct BuildTargetSourceLoader {
                 url: url,
                 locations: fileManager.find(
                     name: name,
-                    extensions: ["yml", "yaml"],
+                    extensions: ["yaml", "yml"],
                     at: url
                 ),
                 encoder: encoder,
@@ -138,7 +138,7 @@ public struct BuildTargetSourceLoader {
             return try ObjectLoader(
                 url: url,
                 locations: fileManager.find(
-                    extensions: ["yml", "yaml"],
+                    extensions: ["yaml", "yml"],
                     at: url
                 ),
                 encoder: encoder,
@@ -167,7 +167,7 @@ public struct BuildTargetSourceLoader {
             let targetConfigName = "config-\(target.name)"
             let targetConfigLocation =
                 fileManager
-                    .find(extensions: ["yml", "yaml"], at: configURL)
+                    .find(extensions: ["yaml", "yml"], at: configURL)
                     .first { $0.hasPrefix(targetConfigName) }
 
             if targetConfigLocation != nil {

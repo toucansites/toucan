@@ -76,6 +76,10 @@ let package = Package(
             url: "https://github.com/stackotter/swift-css-parser",
             from: "0.1.2"
         ),
+        .package(
+            url: "https://github.com/mxcl/Version.git",
+            from: "2.2.0"
+        ),
 //        .package(
 //            url: "https://github.com/swiftlang/swift-subprocess",
 //            branch: "main"
@@ -188,6 +192,7 @@ let package = Package(
             dependencies: [
                 .target(name: "ToucanCore"),
                 .target(name: "ToucanSerialization"),
+                .product(name: "Version", package: "Version"),
             ],
             swiftSettings: swiftSettings
         ),

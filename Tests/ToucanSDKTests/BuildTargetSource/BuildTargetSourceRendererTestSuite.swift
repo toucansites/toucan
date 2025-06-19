@@ -11,9 +11,55 @@ import Testing
 import ToucanCore
 @testable import ToucanSDK
 import ToucanSource
+import ToucanSerialization
 
 @Suite
 struct BuildTargetSourceRendererTestSuite {
+    
+    func renderBlock(
+        pipeline: Pipeline,
+        contextBundles: [ContextBundle]
+    ) throws -> [PipelineResult] {
+        let logger = Logger(label: "test")
+        
+        switch pipeline.engine.id {
+        case "json":
+            let renderer = ContextBundleToJSONRenderer(
+                pipeline: pipeline,
+                logger: logger
+            )
+            return renderer.render(contextBundles)
+        case "mustache":
+            let templateLoader = TemplateLoader(
+                locations: .init(
+                    sourceURL: .init(filePath: ""),
+                    config: .defaults
+                ),
+                fileManager: FileManager.default,
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder(),
+                logger: logger
+            )
+            let template = try templateLoader.load()
+            
+            let templateValidator = try TemplateValidator(
+                generatorInfo: .current
+            )
+            try templateValidator.validate(template)
+            
+            let renderer = try ContextBundleToHTMLRenderer(
+                pipeline: pipeline,
+                templates: template.getTemplatesIDsWithContents(),
+                logger: logger
+            )
+            return renderer.render(contextBundles)
+        default:
+            throw BuildTargetSourceRendererError.invalidEngine(
+                pipeline.engine.id
+            )
+        }
+    }
+    
     // MARK: - api
 
     private func getMockAPIBuildTargetSource(
@@ -116,12 +162,12 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:],
-            generatorInfo: .current
+            buildTargetSource: buildTargetSource
         )
 
-        _ = try renderer.render(now: now)
+        _ = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
     }
 
     @Test
@@ -150,13 +196,13 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:],
-            generatorInfo: .current
+            buildTargetSource: buildTargetSource
         )
 
         do {
-            _ = try renderer.render(now: now)
+            _ = try renderer.render(now: now) {
+                try renderBlock(pipeline: $0, contextBundles: $1)
+            }
         }
         catch let error as BuildTargetSourceRendererError {
             switch error {
@@ -238,11 +284,12 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
-
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
+        
         #expect(results.count == 1)
         guard case let .content(value) = results[0].source else {
             Issue.record("Source type is not a valid content.")
@@ -351,11 +398,12 @@ struct BuildTargetSourceRendererTestSuite {
         buildTargetSource.contentDefinitions = contentDefinitions
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
-
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
+        
         #expect(results.isEmpty)
     }
 
@@ -368,14 +416,16 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 3)
 
-        let contents = results.filter(\.source.isContent)
+        let contents = results
+            .filter(\.source.isContent)
             .filter { $0.destination.file == "api" }
 
         #expect(contents.count == 1)
@@ -415,10 +465,11 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 3)
 
@@ -475,10 +526,11 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 3)
 
@@ -519,10 +571,11 @@ struct BuildTargetSourceRendererTestSuite {
         )
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         let contents = results.filter(\.source.isContent)
             .filter { $0.destination.file == "api" }
@@ -575,10 +628,19 @@ struct BuildTargetSourceRendererTestSuite {
         }
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: Mocks.Views.all()
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            // try renderBlock(pipeline: $0, contextBundles: $1)
+            /// We provide the template manually for this test. Skipping parsing and validation.
+            let template = Mocks.Templates.example()
+            let renderer = try ContextBundleToHTMLRenderer(
+                pipeline: $0,
+                templates: template.getTemplatesIDsWithContents(),
+                logger: .init(label: "test")
+            )
+            return renderer.render($1)
+        }
 
         #expect(results.count == 2)
 
@@ -671,10 +733,11 @@ struct BuildTargetSourceRendererTestSuite {
         buildTargetSource.contentDefinitions = contentDefinitions
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 1)
 
@@ -774,10 +837,11 @@ struct BuildTargetSourceRendererTestSuite {
         buildTargetSource.contentDefinitions = contentDefinitions
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 1)
 
@@ -874,10 +938,11 @@ struct BuildTargetSourceRendererTestSuite {
         buildTargetSource.contentDefinitions = contentDefinitions
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 1)
 
@@ -968,10 +1033,11 @@ struct BuildTargetSourceRendererTestSuite {
         buildTargetSource.contentDefinitions = contentDefinitions
 
         var renderer = BuildTargetSourceRenderer(
-            buildTargetSource: buildTargetSource,
-            templates: [:]
+            buildTargetSource: buildTargetSource
         )
-        let results = try renderer.render(now: now)
+        let results = try renderer.render(now: now) {
+            try renderBlock(pipeline: $0, contextBundles: $1)
+        }
 
         #expect(results.count == 1)
 

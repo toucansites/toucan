@@ -1096,7 +1096,7 @@ struct E2ETestSuite {
         let rootName = "FileManagerPlayground_\(UUID().uuidString)"
 
         try FileManagerPlayground(
-            rootURL: rootURL,
+            rootUrl: rootURL,
             rootName: rootName,
             fileManager: fileManager
         ) {

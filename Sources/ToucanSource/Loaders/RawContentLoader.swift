@@ -153,7 +153,7 @@ public struct RawContentLoader {
     ) -> [String] {
         fileManager.find(
             name: "index",
-            extensions: ["yml", "yaml", "md", "markdown"],
+            extensions: ["yaml", "yml", "markdown", "md"],
             at: url
         )
     }

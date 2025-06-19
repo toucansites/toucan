@@ -54,7 +54,7 @@ enum ContentResolverError: ToucanError {
         case let .missingRelation(name, slug):
             "Missing property `\(name)` for content: \(slug)."
         case let .invalidProperty(name, value, slug):
-            "Invalid property `\(name): \(value)` for content: \(value)."
+            "Invalid property `\(name): \(value)` for content: \(slug)."
         case let .unknown(error):
             error.localizedDescription
         }
@@ -69,7 +69,7 @@ enum ContentResolverError: ToucanError {
         case let .missingRelation(name, slug):
             "Missing property `\(name)` for content: `\(slug)`."
         case let .invalidProperty(name, value, slug):
-            "Invalid property `\(name): \(value)` for content: \(value)."
+            "Invalid property `\(name): \(value)` for content: \(slug)."
         case .unknown:
             "Unknown content conversion error."
         }

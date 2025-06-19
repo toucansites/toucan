@@ -98,7 +98,7 @@ public struct ObjectLoader {
         logger.debug(
             "Loading and combining \(type(of: value)) files (\(locations)) at: `\(url.absoluteString)`"
         )
-
+        
         var lastURL: URL?
         do {
             let combinedRawCodableObject =
@@ -117,6 +117,7 @@ public struct ObjectLoader {
                     }
                     .reduce([:]) { $0.recursivelyMerged(with: $1) }
 
+            // TODO: Tries to decode 0 files too
             let data: Data = try encoder.encode(combinedRawCodableObject)
             return try decoder.decode(T.self, from: data)
         }

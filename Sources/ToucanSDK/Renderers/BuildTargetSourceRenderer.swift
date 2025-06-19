@@ -56,8 +56,6 @@ public struct BuildTargetSourceRenderer {
 
     /// Site configuration + all raw content
     let buildTargetSource: BuildTargetSource
-    /// Template identifiers and contents.
-    let templates: [String: String]
     /// Generator metadata (e.g., version, name)
     let generatorInfo: GeneratorInfo
     /// Logger for warnings and errors
@@ -66,7 +64,7 @@ public struct BuildTargetSourceRenderer {
     var contentContextCache: [String: [String: AnyCodable]] = [:]
 
     // MARK: - Lifecycle
-
+    
     /// Initializes a renderer from a source bundle.
     ///
     /// - Parameters:
@@ -76,12 +74,10 @@ public struct BuildTargetSourceRenderer {
     ///   - logger: Logger for reporting issues or metrics.
     public init(
         buildTargetSource: BuildTargetSource,
-        templates: [String: String],
         generatorInfo: GeneratorInfo = .current,
         logger: Logger = .subsystem("build-target-source-renderer")
     ) {
         self.buildTargetSource = buildTargetSource
-        self.templates = templates
         self.generatorInfo = generatorInfo
         self.logger = logger
     }
@@ -580,7 +576,8 @@ public struct BuildTargetSourceRenderer {
     /// - Returns: A list of rendered `PipelineResult`s.
     /// - Throws: Rendering or encoding-related errors.
     public mutating func render(
-        now: Date
+        now: Date,
+        rendererBlock: @escaping ((_ : Pipeline, _ : [ContextBundle]) throws -> [PipelineResult])
     ) throws -> [PipelineResult] {
         let now = now.timeIntervalSince1970
 
@@ -616,6 +613,8 @@ public struct BuildTargetSourceRenderer {
         )
 
         var results: [PipelineResult] = []
+        
+        // TODO: Probably should happen in Toucan.swift
         for pipeline in buildTargetSource.pipelines {
             let filteredContents = contentResolver.apply(
                 filterRules: pipeline.contentTypes.filterRules,
@@ -694,25 +693,7 @@ public struct BuildTargetSourceRenderer {
                 ]
             )
 
-            switch pipeline.engine.id {
-            case "json":
-                let renderer = ContextBundleToJSONRenderer(
-                    pipeline: pipeline,
-                    logger: logger
-                )
-                results += renderer.render(contextBundles)
-            case "mustache":
-                let renderer = try ContextBundleToHTMLRenderer(
-                    pipeline: pipeline,
-                    templates: templates,
-                    logger: logger
-                )
-                results += renderer.render(contextBundles)
-            default:
-                throw BuildTargetSourceRendererError.invalidEngine(
-                    pipeline.engine.id
-                )
-            }
+            results += try rendererBlock(pipeline, contextBundles)
         }
         return results
     }
