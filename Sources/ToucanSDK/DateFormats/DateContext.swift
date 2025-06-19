@@ -15,7 +15,6 @@ public struct DateContext: Codable {
     ///
     /// These levels mirror common locale-aware date style options.
     public struct Standard: Codable {
-
         /// A fully verbose date format (e.g., `"EEEE, MMMM d, yyyy"`).
         public var full: String
 

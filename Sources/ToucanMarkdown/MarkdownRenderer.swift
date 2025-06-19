@@ -13,12 +13,13 @@ public struct MarkdownRenderer {
 
     /// Holds all the settings required for rendering and processing content.
     public struct Configuration {
-
         /// Configuration specific to Markdown processing.
         public struct Markdown {
 
             /// Custom block directives to extend the Markdown grammar.
             public var customBlockDirectives: [MarkdownBlockDirective]
+
+            //
 
             /// Initializes a Markdown configuration.
             public init(
@@ -34,6 +35,8 @@ public struct MarkdownRenderer {
             /// Which heading levels to include in the parsed outline.
             public var levels: [Int]
 
+            //
+
             /// Initializes an Outline configuration.
             public init(
                 levels: [Int]
@@ -47,6 +50,8 @@ public struct MarkdownRenderer {
 
             /// Estimated words per minute reading speed.
             public var wordsPerMinute: Int
+
+            //
 
             /// Initializes a ReadingTime configuration.
             public init(

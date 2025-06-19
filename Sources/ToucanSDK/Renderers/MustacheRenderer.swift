@@ -22,10 +22,6 @@ public struct MustacheRenderer {
     /// Logger used for reporting missing templates or rendering failures.
     var logger: Logger
 
-    // MARK: - Lifecycle
-
-    // MARK: - Initialization
-
     /// Initializes a renderer with a set of compiled Mustache templates and a logger.
     ///
     /// - Parameters:
@@ -39,10 +35,6 @@ public struct MustacheRenderer {
         self.library = .init(templates: templates)
         self.logger = logger
     }
-
-    // MARK: - Functions
-
-    // MARK: - Rendering
 
     /// Renders a Mustache template using the given context object.
     ///

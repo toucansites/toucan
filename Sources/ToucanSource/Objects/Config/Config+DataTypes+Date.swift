@@ -6,6 +6,7 @@
 //
 
 public extension Config.DataTypes {
+    
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
         // MARK: - Coding Keys
@@ -15,10 +16,6 @@ public extension Config.DataTypes {
             case output
             case formats
         }
-
-        // MARK: - Static Computed Properties
-
-        // MARK: - Defaults
 
         /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
         public static var defaults: Self {

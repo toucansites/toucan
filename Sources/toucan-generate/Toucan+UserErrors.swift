@@ -18,29 +18,6 @@ extension Toucan {
             try generate()
             return true
         }
-
-        // TODO: restore errors if needed
-
-        //        catch let error as FileLoader.Error {
-        //            switch error {
-        //            case .missing(let url):
-        //                logger.error(
-        //                    "Missing file at: `\(url.absoluteString)`"
-        //                )
-        //            case .file(let error, let url):
-        //                let message = "File error at: `\(url.absoluteString)`"
-        //                let metadata: Logger.Metadata = [
-        //                    "description": "\(String(describing: error))"
-        //                ]
-        //                logger.error(.init(stringLiteral: message), metadata: metadata)
-        //            }
-        //        }
-        //        catch let error as Toucan.Error {
-        //            switch error {
-        //            case .duplicateSlugs(let slugs):
-        //                logger.error("Duplicate slugs: \(slugs)")
-        //            }
-        //        }
         catch let error as ToucanDecoderError {
             logger.error("\(error.logMessageStack())")
         }
@@ -63,30 +40,6 @@ extension Toucan {
                 logger.error("\(String(describing: error))")
             }
         }
-        //        catch let error as PageBundleLoader.Error {
-        //            switch error {
-        //            case .pageBundle(let error):
-        //                logger.error(
-        //                    "Page bundle error: `\(String(describing: error))`"
-        //                )
-        //            }
-        //        }
-        //        catch let error as MustacheToHTMLRenderer.Error {
-        //            switch error {
-        //            case .missingTemplate(let value):
-        //                logger.error(
-        //                    "Missing template file: `\(value)`"
-        //                )
-        //            }
-        //        }
-        //        catch let error as SiteLoader.Error {
-        //            switch error {
-        //            case .missing(let url):
-        //                logger.error(
-        //                    "Missing site file at: `\(url.absoluteString)`"
-        //                )
-        //            }
-        //        }
         catch let error as ToucanError {
             logger.error("\(error.logMessageStack())")
         }

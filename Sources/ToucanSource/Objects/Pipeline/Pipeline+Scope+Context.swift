@@ -112,8 +112,6 @@ public extension Pipeline.Scope {
             }
         }
 
-        // MARK: - Decoding
-
         /// Decodes the context from either a single string or an array of strings.
         ///
         /// Supports user-friendly formats like:

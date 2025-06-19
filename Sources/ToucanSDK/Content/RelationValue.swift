@@ -10,7 +10,6 @@ import ToucanSource
 /// Represents the resolved value of a relation in content, including the target content type,
 /// the relation's cardinality, and the identifiers of related items.
 public struct RelationValue {
-
     /// The type of content this relation points to (e.g., `"author"`, `"post"`, `"product"`).
     public var contentType: String
 

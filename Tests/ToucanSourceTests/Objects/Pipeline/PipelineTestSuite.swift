@@ -152,4 +152,58 @@ struct PipelineTestSuite {
         #expect(result.contentTypes.include.isEmpty)
         #expect(result.engine.id == "test")
     }
+
+    @Test
+    func assets() throws {
+        let data = """
+            id: test
+            assets:
+                properties:
+                    - action: add
+                      property: js
+                      resolvePath: false
+                      input:
+                        name: main
+                        ext: js
+                    - action: set
+                      property: image
+                      resolvePath: true
+                      input:
+                        name: cover
+                        ext: jpg
+                    - action: load
+                      property: svgs
+                      resolvePath: false
+                      input:
+                        name: "*"
+                        ext: svg
+                    - action: parse
+                      property: data
+                      resolvePath: false
+                      input:
+                        name: "*"
+                        ext: json
+            engine: 
+                id: engine
+            output:
+                path: path
+                file: file
+                ext: ext
+            """
+            .data(using: .utf8)!
+
+        let decoder = ToucanYAMLDecoder()
+
+        let result = try decoder.decode(
+            Pipeline.self,
+            from: data
+        )
+
+        #expect(result.assets.behaviors.isEmpty)
+        #expect(result.assets.properties.count == 4)
+        #expect(result.assets.properties[0].action == .add)
+        #expect(result.assets.properties[1].action == .set)
+        #expect(result.assets.properties[2].action == .load)
+        #expect(result.assets.properties[3].action == .parse)
+    }
 }

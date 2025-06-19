@@ -26,6 +26,8 @@ public extension Pipeline {
             /// The file extension (e.g., `"css"`, `"js"`).
             public var ext: String
 
+            //
+
             /// Initializes a new `Input` describing an asset file.
             ///
             /// - Parameters:

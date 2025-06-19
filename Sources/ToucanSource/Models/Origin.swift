@@ -7,7 +7,6 @@
 
 /// Represents the source origin of a content item.
 public struct Origin: Equatable {
-
     /// The original path of the page bundle directory.
     ///
     /// This also acts as a unique identifier for the content within the file system.

@@ -56,6 +56,7 @@ public extension Template {
 
     /// A group of assets and templates that make up a template component.
     struct Components {
+
         /// A list of asset file paths associated with the component.
         public var assets: [String]
         /// A list of templates associated with the component.

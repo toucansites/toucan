@@ -8,10 +8,8 @@
 /// Provides pagination and iteration metadata for a content collection,
 /// used when rendering paginated list views.
 public struct IteratorInfo {
-
     /// Represents a navigation link within a paginated content sequence.
     public struct Link: Codable {
-
         /// The page number this link points to.
         public var number: Int
 

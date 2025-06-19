@@ -9,7 +9,6 @@ import class Foundation.JSONDecoder
 
 /// An implementation of `ToucanDecoder` that uses `JSONDecoder`.
 public struct ToucanJSONDecoder: ToucanDecoder {
-
     /// Initializes a new instance of `ToucanJSONDecoder`.
     ///
     /// Uses a `JSONDecoder` that allows JSON5 parsing by default.

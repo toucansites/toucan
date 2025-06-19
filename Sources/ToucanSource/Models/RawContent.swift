@@ -9,7 +9,6 @@
 ///
 /// Includes both the Markdown body and its front matter metadata, along with file origin and assets.
 public struct RawContent: Equatable {
-
     /// The origin of the content file, including its path and slug.
     public var origin: Origin
 

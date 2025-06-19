@@ -23,10 +23,6 @@ public struct Order: Sendable, Codable, Equatable {
     /// The direction to sort the field (`asc` or `desc`).
     public var direction: Direction
 
-    // MARK: - Lifecycle
-
-    // MARK: - Initialization
-
     /// Creates a new `Order` instance.
     ///
     /// - Parameters:
@@ -39,8 +35,6 @@ public struct Order: Sendable, Codable, Equatable {
         self.key = key
         self.direction = direction
     }
-
-    // MARK: - Decoding
 
     /// Decodes an `Order` from a decoder.
     ///

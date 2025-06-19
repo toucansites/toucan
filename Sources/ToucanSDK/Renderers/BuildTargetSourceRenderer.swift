@@ -50,7 +50,6 @@ enum BuildTargetSourceRendererError: ToucanError {
 /// resolves content and site-level context, and outputs rendered content using templates
 /// or encoded formats.
 public struct BuildTargetSourceRenderer {
-
     /// Site configuration + all raw content
     let buildTargetSource: BuildTargetSource
     /// Generator metadata (e.g., version, name)

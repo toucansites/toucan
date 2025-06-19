@@ -26,8 +26,6 @@ public extension Config {
             )
         }
 
-        // MARK: - Properties
-
         /// The root directory path where raw content files (e.g., Markdown, YAML) are located.
         ///
         /// Example: `"contents"` or `"src/content"`

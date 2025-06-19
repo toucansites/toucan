@@ -10,7 +10,6 @@ import SwiftSoup
 
 /// A parser that extracts heading elements (`<h1>` to `<h6>`) from HTML and converts them into a structured outline.
 public struct OutlineParser {
-
     /// The heading levels (e.g., `[1, 2, 3]` for `<h1>`, `<h2>`, and `<h3>`) to include in the outline.
     public var levels: [Int]
 

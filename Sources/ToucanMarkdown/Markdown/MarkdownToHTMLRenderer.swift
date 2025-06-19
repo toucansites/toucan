@@ -10,7 +10,6 @@ import Markdown
 
 /// A renderer that converts Markdown text to HTML, with support for custom block directives and paragraph styling.
 public struct MarkdownToHTMLRenderer {
-
     /// Custom block directives to extend Markdown syntax.
     public let customBlockDirectives: [MarkdownBlockDirective]
 

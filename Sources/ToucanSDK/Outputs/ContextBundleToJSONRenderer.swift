@@ -10,7 +10,6 @@ import Logging
 import ToucanSource
 
 struct ContextBundleToJSONRenderer {
-
     let pipeline: Pipeline
     let encoder: JSONEncoder
 

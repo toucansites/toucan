@@ -37,10 +37,6 @@ public struct Query: Codable, Equatable {
     /// A list of fields and directions for ordering results.
     public var orderBy: [Order]
 
-    // MARK: - Lifecycle
-
-    // MARK: - Initialization
-
     /// Initializes a `Query` with specified properties.
     ///
     /// - Parameters:
@@ -65,8 +61,6 @@ public struct Query: Codable, Equatable {
         self.filter = filter
         self.orderBy = orderBy
     }
-
-    // MARK: - Decoding
 
     /// Decodes a `Query` instance from a decoder, applying defaults for optional values.
     public init(

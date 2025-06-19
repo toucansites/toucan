@@ -7,7 +7,6 @@
 
 /// Represents the destination location and filename for rendered or transformed content.
 public struct Destination: Sendable {
-
     /// The relative or absolute path to the target directory where the file should be placed.
     public var path: String
 

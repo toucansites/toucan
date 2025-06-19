@@ -15,7 +15,6 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
-
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-init",

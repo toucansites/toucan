@@ -9,7 +9,6 @@ import Foundation
 import SwiftCommand
 
 struct Download {
-
     let id = UUID().uuidString
     let sourceURL: URL
     let targetDirURL: URL

@@ -7,7 +7,6 @@
 
 /// Metadata describing the content generator, including its name, version, and homepage link.
 public struct GeneratorInfo: Codable, Sendable {
-
     /// The name of the generator.
     public let name: String
 

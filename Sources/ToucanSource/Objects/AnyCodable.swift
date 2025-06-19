@@ -16,7 +16,6 @@ import Foundation
 /// Supports dynamic type resolution during encoding/decoding,
 /// literal initialization, value extraction, and hashing.
 public struct AnyCodable: Codable {
-
     /// The wrapped value (may be `nil`, scalar, array, dictionary, etc.).
     public var value: Any?
 
