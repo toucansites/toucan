@@ -49,7 +49,7 @@ struct BuildTargetSourceRendererTestSuite {
 
             let renderer = try ContextBundleToHTMLRenderer(
                 pipeline: pipeline,
-                templates: template.getTemplatesIDsWithContents(),
+                templates: template.getViewIDsWithContents(),
                 logger: logger
             )
             return renderer.render(contextBundles)
@@ -639,7 +639,7 @@ struct BuildTargetSourceRendererTestSuite {
             let template = Mocks.Templates.example()
             let renderer = try ContextBundleToHTMLRenderer(
                 pipeline: $0,
-                templates: template.getTemplatesIDsWithContents(),
+                templates: template.getViewIDsWithContents(),
                 logger: .init(label: "test")
             )
             return renderer.render($1)

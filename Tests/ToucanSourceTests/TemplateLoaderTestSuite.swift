@@ -188,7 +188,7 @@ struct TemplateLoaderTestSuite {
                     .sorted()
             )
 
-            let results = template.getTemplatesIDsWithContents()
+            let results = template.getViewIDsWithContents()
 
             let exp: [String: String] = [
                 "pages.test": "test.html",

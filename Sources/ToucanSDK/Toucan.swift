@@ -177,7 +177,7 @@ public struct Toucan {
 
                         let renderer = try ContextBundleToHTMLRenderer(
                             pipeline: pipeline,
-                            templates: template.getTemplatesIDsWithContents(),
+                            templates: template.getViewIDsWithContents(),
                             logger: logger
                         )
                         return renderer.render(contextBundles)
