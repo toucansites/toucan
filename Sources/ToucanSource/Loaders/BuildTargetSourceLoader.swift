@@ -233,7 +233,7 @@ public struct BuildTargetSourceLoader {
     /// Loads content types
     ///
     /// - Parameter locations: The source locations to use.
-    /// - Returns: An array of `ContentDefinition` objects.
+    /// - Returns: An array of `ContentType` objects.
     /// - Throws: A `SourceLoaderError` if loading fails.
     func loadTypes(
         using locations: BuiltTargetSourceLocations
