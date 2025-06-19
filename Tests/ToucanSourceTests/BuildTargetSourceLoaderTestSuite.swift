@@ -15,7 +15,7 @@ import ToucanSerialization
 
 @Suite
 struct BuildTargetSourceLoaderTestSuite {
-    
+
     // MARK: - private helpers
 
     private func testSourceHierarchy(

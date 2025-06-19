@@ -6,10 +6,10 @@
 //
 
 public extension Config.DataTypes {
-    
+
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
-        
+
         private enum CodingKeys: CodingKey {
             case input
             case output

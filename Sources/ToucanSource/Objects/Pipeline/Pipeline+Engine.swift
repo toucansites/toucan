@@ -8,7 +8,7 @@
 public extension Pipeline {
     /// Represents the rendering engine configuration used in a content pipeline.
     struct Engine: Codable {
-        
+
         private enum CodingKeys: CodingKey {
             case id
             case options
