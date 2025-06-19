@@ -5,8 +5,6 @@
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
 
-// TODO: docs
-
 import ToucanCore
 
 /// A custom error type representing failures during the source loading process.

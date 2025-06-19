@@ -323,7 +323,6 @@ public struct RawContentLoader {
                 contents: contents
             ),
             lastModificationDate: modificationDate.timeIntervalSince1970,
-            // TODO: check this! not sure if assetsPAth what we need here
             assetsPath: assetsPath,
             assets: assets.sorted()
         )
