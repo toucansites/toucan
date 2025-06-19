@@ -1,5 +1,5 @@
 //
-//  MustacheTemplateRenderer.swift
+//  MustacheRenderer.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 02. 16..
