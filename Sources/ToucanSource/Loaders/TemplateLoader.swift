@@ -49,7 +49,7 @@ public struct TemplateLoader {
         self.logger = logger
     }
 
-    func loadTemplate(
+    func loadView(
         at url: URL,
         path: String,
         isContentOverride: Bool = false
