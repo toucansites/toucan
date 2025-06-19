@@ -65,7 +65,7 @@ public struct MustacheTemplateRenderer {
             logger.error(
                 "Could not render HTML using the template file.",
                 metadata: [
-                    "id": "\(template)"
+                    "id": .string(id)
                 ]
             )
             return nil
