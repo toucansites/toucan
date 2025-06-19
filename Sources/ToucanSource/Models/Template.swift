@@ -84,7 +84,7 @@ extension Template {
     /// Returns a dictionary of template IDs and their contents.
     ///
     /// - Returns: A dictionary where the keys are template IDs and the values are their contents.
-    public func getTemplatesIDsWithContents() -> [String: String] {
+    public func getViewIDsWithContents() -> [String: String] {
         let views = components.views + overrides.views + content.views
         let result = views.reduce(into: [String: String]()) {
             $0[$1.id] = $1.contents
