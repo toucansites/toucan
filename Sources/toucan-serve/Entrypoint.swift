@@ -27,8 +27,8 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    @Argument(help: "The root directory (default: docs).")
-    var root: String = "./docs"
+    @Argument(help: "The root directory (default: dist).")
+    var root: String = "./dist"
 
     @Option(name: .shortAndLong)
     var hostname: String = "127.0.0.1"

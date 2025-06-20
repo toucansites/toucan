@@ -45,8 +45,8 @@ if [ ${#EXECUTABLES[@]} -eq 0 ]; then
   exit 1
 fi
 
-# Optionally include docs
-cp -f LICENSE README.md "$WORKDIR/${NAME}-${VERSION}/" 2>/dev/null || echo "ℹ️ Docs not found"
+# Optionally include license file and readme file
+cp -f LICENSE README.md "$WORKDIR/${NAME}-${VERSION}/" 2>/dev/null || echo "ℹ️ File(s) not found"
 
 # Create source tarball for rpmbuild
 tar -czf "$TOPDIR/SOURCES/$TARBALL" -C "$WORKDIR" "${NAME}-${VERSION}"

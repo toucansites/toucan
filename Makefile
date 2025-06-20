@@ -59,13 +59,14 @@ docker-image:
 		--load \
 		.
 
-# docker run --rm -v $(pwd):/app/site toucan generate /app/site/src /app/site/docs
-# docker run --rm -v $(pwd):/app/site toucan generate ./site/src ./site/docs --base-url "http://localhost:3000"
-# docker run --rm -v $(pwd):/app/site --entrypoint /app/toucan toucan generate ./site/src ./site/docs --base-url "http://localhost:3000"
-# docker run --rm -p 3000:3000 -v $(pwd):/app/site toucan serve --hostname "0.0.0.0" --port 3000 ./site/docs
+# docker run --rm -v $(pwd):/app/site toucan generate /app/site/src /app/site/dist
+# docker run --rm -v $(pwd):/app/site toucan generate ./site/src ./site/dist --base-url "http://localhost:3000"
+# docker run --rm -v $(pwd):/app/site --entrypoint /app/toucan toucan generate ./site/src ./site/dist --base-url "http://localhost:3000"
+# docker run --rm -p 3000:3000 -v $(pwd):/app/site toucan serve --hostname "0.0.0.0" --port 3000 ./site/dist
+# docker run --rm -v $(pwd):/app/site --entrypoint toucan toucansites/toucan generate /app/site/src /app/site/dist
 
 docker-tests:
 	docker build -t toucan-tests . -f ./Docker/Dockerfile.testing && docker run --rm toucan-tests
 
 diff:
-	diff --color=always -r docs-live docs --exclude=api || true
+	diff --color=always -r dist-live dist --exclude=api || true
