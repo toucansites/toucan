@@ -7,7 +7,6 @@
 
 /// Represents a deployment target configuration for a Toucan project.
 public struct Target: Codable, Equatable {
-    // MARK: - Coding Keys
 
     /// Keys explicitly defined for decoding known fields from the input source.
     enum CodingKeys: CodingKey, CaseIterable {
@@ -31,8 +30,6 @@ public struct Target: Codable, Equatable {
         )
     }
 
-    // MARK: - Defaults
-
     /// Standard target value
     public static var standard: Self {
         var target = Self.base
@@ -55,8 +52,6 @@ public struct Target: Codable, Equatable {
     /// A flag indicating if this is the default target.
     public var isDefault: Bool
 
-    // MARK: - Initialization
-
     /// Creates a new target configuration.
     /// - Parameters:
     ///   - name: The unique name of the target.
@@ -77,8 +72,6 @@ public struct Target: Codable, Equatable {
         self.output = output
         self.isDefault = isDefault
     }
-
-    // MARK: - Decoding Logic
 
     /// Custom decoder with fallback values.
     public init(

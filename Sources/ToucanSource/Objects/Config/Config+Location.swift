@@ -8,10 +8,9 @@
 public extension Config {
     /// Represents a named location within the file system.
     struct Location: Codable, Equatable {
+
         /// The file system path for this location (e.g., `"assets"`, `"public/images"`).
         public var path: String
-
-        // MARK: - Initialization
 
         /// Initializes a new `Location` with a given path.
         ///

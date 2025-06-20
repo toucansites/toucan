@@ -23,8 +23,6 @@ private extension [DirectiveArgument] {
     }
 }
 
-// MARK: - HTML visitor
-
 struct HTMLVisitor: MarkupVisitor {
     typealias Result = String
 

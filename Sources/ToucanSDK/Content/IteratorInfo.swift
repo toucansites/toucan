@@ -36,8 +36,6 @@ public struct IteratorInfo {
         }
     }
 
-    // MARK: - Pagination Info
-
     /// The current page number (1-based).
     public var current: Int
 
@@ -47,23 +45,17 @@ public struct IteratorInfo {
     /// The number of items per page.
     public var limit: Int
 
-    // MARK: - Content & Navigation
-
     /// The subset of `Content` items that belong to the current page.
     public var items: [Content]
 
     /// A list of links to all available pages for UI navigation.
     public var links: [Link]
 
-    // MARK: - Scope
-
     /// An optional scope key used to identify the context or view this iterator belongs to.
     ///
     /// This can help differentiate between multiple iterators for the same content type
     /// (e.g., "allPosts", "featuredPosts").
     public var scope: String?
-
-    // MARK: - Initialization
 
     /// Initializes a new iterator metadata structure.
     ///

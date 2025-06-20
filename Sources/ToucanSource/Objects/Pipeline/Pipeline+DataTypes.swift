@@ -11,13 +11,10 @@ public extension Pipeline {
     /// `DataTypes` is a configuration layer that allows pipelines to specify
     /// localized or project-specific formatting and handling logic for structured data.
     struct DataTypes: Codable, Equatable {
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case date
         }
-
-        // MARK: - Defaults
 
         /// Returns the default `DataTypes` configuration, using `.defaults` for date formatting.
         public static var defaults: Self {
@@ -27,8 +24,6 @@ public extension Pipeline {
         /// The configuration used to handle and format date values.
         public var date: Date
 
-        // MARK: - Initialization
-
         /// Initializes a new `DataTypes` instance.
         ///
         /// - Parameter date: Date format configuration to apply.
@@ -37,8 +32,6 @@ public extension Pipeline {
         ) {
             self.date = date
         }
-
-        // MARK: - Decoding
 
         /// Decodes a `DataTypes` configuration from serialized input.
         ///

@@ -1,5 +1,5 @@
 //
-//  SourceLoaderError.swift
+//  TemplateLoaderError.swift
 //  Toucan
 //
 //  Created by Tibor Bödecs on 2025. 05. 21..
@@ -10,7 +10,7 @@ import ToucanCore
 /// A custom error type representing failures during the source loading process.
 ///
 /// Wraps the type of failure and an optional underlying error for context.
-public struct SourceLoaderError: ToucanError {
+public struct TemplateLoaderError: ToucanError {
 
     /// A string representing the type of component that failed to load.
     let type: String
@@ -29,7 +29,7 @@ public struct SourceLoaderError: ToucanError {
 
     /// A user-facing message indicating a generic failure to load source content.
     public var userFriendlyMessage: String {
-        "Could not load source."
+        "Could not load template metadata."
     }
 
     /// Initializes a new `SourceLoaderError`.

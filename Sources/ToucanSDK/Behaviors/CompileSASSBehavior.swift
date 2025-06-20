@@ -9,6 +9,7 @@ import DartSass
 import Foundation
 
 struct CompileSASSBehavior: Behavior {
+
     static let id = "compile-sass"
 
     var compiler: Compiler

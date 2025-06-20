@@ -10,13 +10,11 @@ import Logging
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
 public struct MarkdownRenderer {
-    // MARK: - Configuration
 
     /// Holds all the settings required for rendering and processing content.
     public struct Configuration {
         /// Configuration specific to Markdown processing.
         public struct Markdown {
-            //
 
             /// Custom block directives to extend the Markdown grammar.
             public var customBlockDirectives: [MarkdownBlockDirective]
@@ -33,7 +31,6 @@ public struct MarkdownRenderer {
 
         /// Configuration for outlining logic, such as which heading levels to parse.
         public struct Outline {
-            //
 
             /// Which heading levels to include in the parsed outline.
             public var levels: [Int]
@@ -50,7 +47,6 @@ public struct MarkdownRenderer {
 
         /// Configuration for estimating reading time.
         public struct ReadingTime {
-            //
 
             /// Estimated words per minute reading speed.
             public var wordsPerMinute: Int
@@ -103,8 +99,6 @@ public struct MarkdownRenderer {
         }
     }
 
-    // MARK: - Output
-
     /// Final output of the rendering pipeline.
     public struct Output {
         /// The fully rendered HTML output.
@@ -131,8 +125,6 @@ public struct MarkdownRenderer {
 
     /// Logger for diagnostics and error reporting during rendering.
     public var logger: Logger
-
-    // MARK: - Initialization
 
     /// Creates a new `ContentRenderer` instance with the provided configuration, file manager, and logger.
     ///
@@ -163,8 +155,6 @@ public struct MarkdownRenderer {
 
         self.logger = logger
     }
-
-    // MARK: - Rendering
 
     /// Processes the input Markdown content, optionally transforms it, renders it as HTML,
     /// calculates reading time, and generates an outline.

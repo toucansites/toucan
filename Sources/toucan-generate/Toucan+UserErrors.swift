@@ -7,10 +7,11 @@
 
 import Logging
 import ToucanSDK
+import ToucanSerialization
+import ToucanSource
 import ToucanCore
 
 extension Toucan {
-
     @discardableResult
     func generateAndLogErrors(_ logger: Logger) -> Bool {
         do {

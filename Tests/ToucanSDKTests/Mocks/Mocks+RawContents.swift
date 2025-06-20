@@ -206,8 +206,6 @@ extension Mocks.RawContents {
         )
     }
 
-    // MARK: -
-
     static func page(
         id: Int,
         now: Date = .init()

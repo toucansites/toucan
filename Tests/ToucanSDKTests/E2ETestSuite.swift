@@ -38,7 +38,7 @@ struct E2ETestSuite {
         }
     }
 
-    // MARK: non-html files
+    // MARK: - non-html files
 
     @Test
     func rss() throws {
@@ -999,6 +999,10 @@ struct E2ETestSuite {
                 }
                 Directory(name: "templates") {
                     Directory(name: "default") {
+                        YAMLFile(
+                            name: "template",
+                            contents: Mocks.Templates.metadata()
+                        )
                         Directory(name: "views") {
                             MustacheFile(
                                 name: "foo",
@@ -1051,7 +1055,6 @@ struct E2ETestSuite {
                         name: "test",
                         contents: Pipeline(
                             id: "test",
-
                             transformers: [
                                 "test": .init(
                                     run: [

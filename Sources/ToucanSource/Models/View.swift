@@ -9,6 +9,7 @@ import Foundation
 
 /// Represents the physical location of a Mustache file, identified by a logical ID.
 public struct View: Equatable {
+
     /// A unique identifier for the template
     public var id: String
 

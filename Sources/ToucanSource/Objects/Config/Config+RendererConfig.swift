@@ -10,15 +10,12 @@ public extension Config {
     /// including reading time settings, outline parsing depth, and
     /// paragraph styling rules for directive blocks.
     struct RendererConfig: Codable, Equatable {
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case wordsPerMinute
             case outlineLevels
             case paragraphStyles
         }
-
-        // MARK: - Defaults
 
         /// Returns a `ContentConfigurations` instance with sensible default values.
         public static var defaults: Self {
@@ -42,8 +39,6 @@ public extension Config {
         /// Aliases for styled paragraph blocks (e.g., "note", "tip", "error").
         public var paragraphStyles: ParagraphStyles
 
-        // MARK: - Initialization
-
         /// Initializes a custom `ContentConfigurations` instance.
         ///
         /// - Parameters:
@@ -59,8 +54,6 @@ public extension Config {
             self.outlineLevels = outlineLevels
             self.paragraphStyles = paragraphStyles
         }
-
-        // MARK: - Decoding
 
         /// Decodes a `ContentConfigurations` instance, applying defaults for missing fields.
         ///

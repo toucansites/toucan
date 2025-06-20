@@ -9,7 +9,6 @@
 ///
 /// Each `Order` defines a content field to sort by and the direction of sorting.
 public struct Order: Sendable, Codable, Equatable {
-    // MARK: - Coding Keys
 
     /// Internal keys used for encoding and decoding `Order` instances.
     /// Keys used for decoding an `Order` from external sources (e.g., YAML, JSON).
@@ -24,8 +23,6 @@ public struct Order: Sendable, Codable, Equatable {
     /// The direction to sort the field (`asc` or `desc`).
     public var direction: Direction
 
-    // MARK: - Initialization
-
     /// Creates a new `Order` instance.
     ///
     /// - Parameters:
@@ -38,8 +35,6 @@ public struct Order: Sendable, Codable, Equatable {
         self.key = key
         self.direction = direction
     }
-
-    // MARK: - Decoding
 
     /// Decodes an `Order` from a decoder.
     ///

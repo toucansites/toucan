@@ -7,9 +7,12 @@
 
 import FileManagerKit
 import struct Foundation.URL
+import ToucanSerialization
+import Logging
 
 /// A loader responsible for building a `Template` by collecting assets and templates from various locations.
 public struct TemplateLoader {
+
     /// The file system locations relevant to the template loading process.
     let locations: BuiltTargetSourceLocations
     /// The list of file extensions considered as templates.
@@ -17,19 +20,33 @@ public struct TemplateLoader {
     /// The file manager utility used to search and retrieve files.
     let fileManager: FileManagerKit
 
-    /// Creates a new instance of `TemplateLoader`.
+    let encoder: ToucanEncoder
+    let decoder: ToucanDecoder
+    let logger: Logger
+
+    /// Initializes a new instance for handling template rendering with the given configuration.
+    ///
     /// - Parameters:
-    ///   - locations: The locations where template-related files are stored.
-    ///   - extensions: The template file extensions to look for.
-    ///   - fileManager: The file manager utility to use for locating files.
+    ///   - locations: A set of built target source locations where templates are located.
+    ///   - extensions: An optional list of file extensions to be considered as templates. Defaults to ["mustache", "html"].
+    ///   - fileManager: File manager instance to access the file system.
+    ///   - encoder: Encoder used to serialize data for templates.
+    ///   - decoder: Decoder used to deserialize data for templates.
+    ///   - logger: Logger instance for logging template operations.
     public init(
         locations: BuiltTargetSourceLocations,
         extensions: [String] = ["mustache", "html"],
-        fileManager: FileManagerKit
+        fileManager: FileManagerKit,
+        encoder: ToucanEncoder,
+        decoder: ToucanDecoder,
+        logger: Logger
     ) {
         self.locations = locations
         self.extensions = extensions
         self.fileManager = fileManager
+        self.encoder = encoder
+        self.decoder = decoder
+        self.logger = logger
     }
 
     func loadView(
@@ -63,6 +80,28 @@ public struct TemplateLoader {
             path: path,
             contents: contents
         )
+    }
+
+    func loadTemplateMetadata(
+        at url: URL
+    ) throws(TemplateLoaderError) -> Template.Metadata {
+        do {
+            return try ObjectLoader(
+                url: url,
+                locations: fileManager.find(
+                    name: "template",
+                    extensions: ["yaml", "yml"],
+                    at: url
+                ),
+                encoder: encoder,
+                decoder: decoder,
+                logger: logger
+            )
+            .load(Template.Metadata.self)
+        }
+        catch {
+            throw .init(type: "\(Template.Metadata.self)", error: error)
+        }
     }
 
     ///
@@ -103,8 +142,12 @@ public struct TemplateLoader {
             at: locations.contentsURL
         )
 
+        let metadata = try loadTemplateMetadata(
+            at: locations.currentTemplateURL
+        )
+
         let template = try Template(
-            baseURL: locations.templatesURL,
+            metadata: metadata,
             components: .init(
                 assets: assets,
                 views: templates.map {
@@ -135,27 +178,5 @@ public struct TemplateLoader {
             )
         )
         return template
-    }
-
-    /// Returns a dictionary of template IDs and their contents.
-    ///
-    /// - Parameter template: The `Template` instance to extract templates from.
-    /// - Returns: A dictionary where the keys are template IDs and the values are their contents.
-    public func getTemplatesIDsWithContents(
-        _ template: Template
-    ) -> [String: String] {
-        var results: [String: String] = [:]
-
-        let views =
-            template.components.views + template.overrides.views
-            + template.content.views
-
-        for view in views {
-            results[view.id] = view.contents
-        }
-
-        return .init(
-            uniqueKeysWithValues: results.sorted { $0.key < $1.key }
-        )
     }
 }

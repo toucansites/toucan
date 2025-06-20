@@ -37,6 +37,7 @@ public struct MarkdownBlockDirective: Codable, Equatable {
 
     /// Represents a static HTML attribute that will be rendered on the directive's HTML tag.
     public struct Attribute: Codable, Equatable {
+
         /// The name of the HTML attribute (e.g., `class`, `id`).
         public var name: String
 

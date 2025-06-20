@@ -88,6 +88,7 @@ enum BuildTargetSourceValidatorError: ToucanError {
 }
 
 struct BuildTargetSourceValidator {
+
     var buildTargetSource: BuildTargetSource
 
     func validate() throws(BuildTargetSourceValidatorError) {

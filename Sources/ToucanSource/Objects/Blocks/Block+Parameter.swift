@@ -8,6 +8,7 @@
 public extension Block {
     /// Defines a configurable parameter for a directive, which may be required and have a default value.
     struct Parameter: Sendable, Codable, Equatable {
+
         /// The label of the parameter.
         public var label: String
 

@@ -13,6 +13,7 @@ import ToucanSerialization
 
 /// A utility structure responsible for loading and parsing raw content files
 public struct RawContentLoader {
+
     /// Source configuration.
     let contentsURL: URL
 
@@ -147,7 +148,7 @@ public struct RawContentLoader {
     ) -> [String] {
         fileManager.find(
             name: "index",
-            extensions: ["yml", "yaml", "md", "markdown"],
+            extensions: ["yaml", "yml", "markdown", "md"],
             at: url
         )
     }

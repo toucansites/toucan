@@ -26,6 +26,7 @@ extension EncodingError: ToucanError {
 ///
 /// Wraps an optional underlying error and includes the associated type information.
 public struct ToucanEncoderError: ToucanError {
+
     /// The type that failed to encode.
     let type: Any.Type
     /// An optional underlying error providing additional context.

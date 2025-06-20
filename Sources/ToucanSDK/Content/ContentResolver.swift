@@ -12,6 +12,7 @@ import ToucanSerialization
 import ToucanSource
 
 private extension Path {
+
     func getTypeAwareIdentifier() -> String {
         let newRawPath =
             value
@@ -76,6 +77,7 @@ enum ContentResolverError: ToucanError {
 }
 
 struct ContentResolver {
+
     var contentTypeResolver: ContentTypeResolver
     var encoder: ToucanEncoder
     var decoder: ToucanDecoder
@@ -350,6 +352,7 @@ struct ContentResolver {
         }
 
         var typeAwareID = rawContent.origin.path.getTypeAwareIdentifier()
+
         if let id = rawContent.markdown.frontMatter.string("id") {
             typeAwareID = id
         }

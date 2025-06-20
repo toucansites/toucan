@@ -8,7 +8,6 @@
 public extension Pipeline.Scope {
     /// Represents the available data context for a rendering `Scope`.
     struct Context: OptionSet, Codable {
-        // MARK: - Bitmask Flags (Simple Contexts)
 
         /// Includes user-defined metadata and settings.
         public static var userDefined: Self { .init(rawValue: 1 << 0) }
@@ -24,8 +23,6 @@ public extension Pipeline.Scope {
 
         /// Includes output from named or inline queries.
         public static var queries: Self { .init(rawValue: 1 << 4) }
-
-        // MARK: - Compound Contexts
 
         /// A context optimized for minimal, linked summaries.
         public static var reference: Self {
@@ -60,8 +57,6 @@ public extension Pipeline.Scope {
             ]
         }
 
-        // MARK: - Raw Value Backing
-
         /// The underlying raw bitmask value used to represent the context.
         public let rawValue: UInt
 
@@ -91,8 +86,6 @@ public extension Pipeline.Scope {
             self.rawValue = rawValue
         }
 
-        // MARK: - String-Based Initialization
-
         /// Initializes the context using a string name (e.g., "properties", "detail").
         ///
         /// - Parameter stringValue: The string representation of the context.
@@ -118,8 +111,6 @@ public extension Pipeline.Scope {
                 self = []
             }
         }
-
-        // MARK: - Decoding
 
         /// Decodes the context from either a single string or an array of strings.
         ///

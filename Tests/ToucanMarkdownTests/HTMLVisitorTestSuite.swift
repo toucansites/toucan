@@ -45,7 +45,6 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             <b>https://swift.org</b>
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -60,7 +59,6 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -76,7 +74,6 @@ struct HTMLVisitorTestSuite {
             This is the first line.
             And this is the second line.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -92,7 +89,6 @@ struct HTMLVisitorTestSuite {
             a\
             b
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -113,7 +109,6 @@ struct HTMLVisitorTestSuite {
             _________________
             amet.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -128,7 +123,6 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             Lorem **ipsum** dolor __sit__ amet.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -143,7 +137,6 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             Lorem ipsum ~~dolor sit amet~~.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -158,7 +151,6 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             > Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -173,7 +165,6 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             > NOTE: Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
@@ -188,9 +179,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             > WARN: Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <blockquote class="warning"><p>Lorem ipsum dolor sit amet.</p></blockquote>
             """#
@@ -203,9 +192,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             > warning: Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <blockquote class="warning"><p>Lorem ipsum dolor sit amet.</p></blockquote>
             """#
@@ -220,9 +207,7 @@ struct HTMLVisitorTestSuite {
             >
             >> dolor __sit__ amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <blockquote><p>Lorem ipsum</p><blockquote><p>dolor <strong>sit</strong> amet.</p></blockquote></blockquote>
             """#
@@ -235,9 +220,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             Lorem *ipsum* dolor _sit_ amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p>Lorem <em>ipsum</em> dolor <em>sit</em> amet.</p>
             """#
@@ -252,9 +235,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             # Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <h1>Lorem ipsum dolor sit amet.</h1>
             """#
@@ -267,9 +248,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ## Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <h2 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h2>
             """#
@@ -282,9 +261,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ### Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <h3 id="lorem-ipsum-dolor-sit-amet.">Lorem ipsum dolor sit amet.</h3>
             """#
@@ -297,9 +274,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             #### Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <h4>Lorem ipsum dolor sit amet.</h4>
             """#
@@ -312,9 +287,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ##### Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <h5>Lorem ipsum dolor sit amet.</h5>
             """#
@@ -327,9 +300,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ###### Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <h6>Lorem ipsum dolor sit amet.</h6>
             """#
@@ -343,9 +314,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ####### Lorem ipsum dolor sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p>####### Lorem ipsum dolor sit amet.</p>
             """#
@@ -362,9 +331,7 @@ struct HTMLVisitorTestSuite {
             - bar
             - baz
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <ul><li>foo</li><li>bar</li><li>baz</li></ul>
             """#
@@ -379,9 +346,7 @@ struct HTMLVisitorTestSuite {
             2. bar
             3. baz
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <ol><li>foo</li><li>bar</li><li>baz</li></ol>
             """#
@@ -396,9 +361,7 @@ struct HTMLVisitorTestSuite {
             - bar
             - baz
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <ul><li>foo <code>aaa</code></li><li>bar</li><li>baz</li></ul>
             """#
@@ -413,9 +376,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             Lorem `ipsum dolor` sit amet.
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p>Lorem <code>ipsum dolor</code> sit amet.</p>
             """#
@@ -428,9 +389,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift](https://swift.org/)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a href="https://swift.org/" target="_blank">Swift</a></p>
             """#
@@ -443,9 +402,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift]()
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a>Swift</a></p>
             """#
@@ -458,9 +415,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift](./foo)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a href="./foo">Swift</a></p>
             """#
@@ -473,9 +428,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift](/foo)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a href="http://localhost:3000/foo">Swift</a></p>
             """#
@@ -488,9 +441,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift](foo/bar)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a href="foo/bar" target="_blank">Swift</a></p>
             """#
@@ -503,9 +454,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift](#anchor)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a href="#anchor">Swift</a></p>
             """#
@@ -518,9 +467,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             [Swift](#[name]anchor)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><a name="anchor">Swift</a></p>
             """#
@@ -533,9 +480,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem](lorem.jpg)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><img src="lorem.jpg" alt="Lorem"></p>
             """#
@@ -548,9 +493,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem](./assets/lorem.jpg)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><img src="http://localhost:3000/assets/slug/lorem.jpg" alt="Lorem"></p>
             """#
@@ -562,12 +505,11 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem]()
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p></p>
             """#
+
         #expect(output == expectation)
     }
 
@@ -576,9 +518,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem](lorem.jpg "Image title")
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><img src="lorem.jpg" alt="Lorem" title="Image title"></p>
             """#
@@ -591,9 +531,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem](/lorem.jpg "Image title")
             """#
-
         let output = renderHTML(markdown: input, baseURL: "")
-
         let expectation = #"""
             <p><img src="/lorem.jpg" alt="Lorem" title="Image title"></p>
             """#
@@ -606,9 +544,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem](/lorem.jpg)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><img src="http://localhost:3000/lorem.jpg" alt="Lorem"></p>
             """#
@@ -621,9 +557,7 @@ struct HTMLVisitorTestSuite {
         let input = #"""
             ![Lorem](/lorem.jpg)
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <p><img src="http://localhost:3000/lorem.jpg" alt="Lorem"></p>
             """#
@@ -642,9 +576,7 @@ struct HTMLVisitorTestSuite {
             amet
             ```
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <pre><code class="language-js">Lorem
             ipsum
@@ -670,9 +602,7 @@ struct HTMLVisitorTestSuite {
             amet
             ```
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <pre><code class="language-css">Lorem
             <span class="highlight">
@@ -697,9 +627,7 @@ struct HTMLVisitorTestSuite {
             }
             ```
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <pre><code class="language-swift"><span class="highlight">func main() -&gt; String</span> {
                 dump("Hello world")
@@ -721,9 +649,7 @@ struct HTMLVisitorTestSuite {
             | Codecademy Tee    |  False   | 19.99 |
             | Codecademy Hoodie |  False   | 42.99 |
             """#
-
         let output = renderHTML(markdown: input)
-
         let expectation = #"""
             <table><thead><td>Item</td><td>In Stock</td><td>Price</td></thead><tbody><tr><td>Python Hat</td><td>True</td><td>23.99</td></tr><tr><td>SQL Hat</td><td>True</td><td>23.99</td></tr><tr><td>Codecademy Tee</td><td>False</td><td>19.99</td></tr><tr><td>Codecademy Hoodie</td><td>False</td><td>42.99</td></tr></tbody></table>
             """#

@@ -7,6 +7,7 @@
 
 /// A representation of a custom block directive in Markdown, used for extending Markdown syntax with special tags or behaviors.
 public struct Block: Sendable, Codable, Equatable {
+
     /// The name of the directive.
     public var name: String
 

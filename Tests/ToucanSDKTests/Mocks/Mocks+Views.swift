@@ -5,36 +5,90 @@
 //  Created by Tibor Bödecs on 2025. 05. 21..
 //
 
-import ToucanSource
+@testable import ToucanSource
 
 extension Mocks.Views {
     static func all(
         contextValue: String = "{{.}}"
-    ) -> [String: String] {
-        [
-            "html": html(),
-            "redirect": redirect(),
-            "rss": rss(),
-            "sitemap": sitemap(),
+    ) -> Template {
+        .init(
+            metadata: .init(
+                name: "Mock",
+                description: "Mock template",
+                url: nil,
+                version: "1.0.0-beta.5",
+                generatorVersions: ["1.0.0-beta.5"],
+                license: nil,
+                authors: [],
+                demo: nil,
+                tags: []
+            ),
+            components: .init(
+                assets: [],
+                views: [
+                    .init(id: "html", path: "", contents: html()),
+                    .init(id: "redirect", path: "", contents: redirect()),
+                    .init(id: "rss", path: "", contents: rss()),
+                    .init(id: "sitemap", path: "", contents: sitemap()),
 
-            "pages.default": page(),
-            "pages.404": notFound(),
-            "pages.context": context(value: contextValue),
+                    .init(id: "pages.default", path: "", contents: page()),
+                    .init(id: "pages.404", path: "", contents: notFound()),
+                    .init(
+                        id: "pages.context",
+                        path: "",
+                        contents: context(value: contextValue)
+                    ),
 
-            "docs.category.default": category(),
-            "docs.guide.default": guide(),
+                    .init(
+                        id: "docs.category.default",
+                        path: "",
+                        contents: category()
+                    ),
+                    .init(
+                        id: "docs.guide.default",
+                        path: "",
+                        contents: guide()
+                    ),
 
-            "blog.post.default": post(),
-            "blog.author.default": author(),
-            "blog.tag.default": tag(),
+                    .init(id: "blog.post.default", path: "", contents: post()),
+                    .init(
+                        id: "blog.author.default",
+                        path: "",
+                        contents: author()
+                    ),
+                    .init(id: "blog.tag.default", path: "", contents: tag()),
 
-            "partials.blog.author": partialAuthor(),
-            "partials.blog.tag": partialTag(),
-            "partials.blog.post": partialPost(),
+                    .init(
+                        id: "partials.blog.author",
+                        path: "",
+                        contents: partialAuthor()
+                    ),
+                    .init(
+                        id: "partials.blog.tag",
+                        path: "",
+                        contents: partialTag()
+                    ),
+                    .init(
+                        id: "partials.blog.post",
+                        path: "",
+                        contents: partialPost()
+                    ),
 
-            "partials.docs.category": partialCategory(),
-            "partials.docs.guide": partialGuide(),
-        ]
+                    .init(
+                        id: "partials.docs.category",
+                        path: "",
+                        contents: partialCategory()
+                    ),
+                    .init(
+                        id: "partials.docs.guide",
+                        path: "",
+                        contents: partialGuide()
+                    ),
+                ]
+            ),
+            overrides: .init(assets: [], views: []),
+            content: .init(assets: [], views: [])
+        )
     }
 
     static func redirect() -> String {

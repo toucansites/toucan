@@ -19,14 +19,10 @@ public struct AnyCodable: Codable {
     /// The wrapped value (may be `nil`, scalar, array, dictionary, etc.).
     public var value: Any?
 
-    // MARK: - Initialization
-
     /// Initializes with any optional value.
     public init(_ value: (some Any)?) {
         self.value = value
     }
-
-    // MARK: - Decoding
 
     /// Decodes a value from the given decoder and stores it in a type-erased wrapper.
     ///
@@ -68,8 +64,6 @@ public struct AnyCodable: Codable {
         }
     }
 
-    // MARK: - Typed Value Access
-
     /// Attempts to cast the internal value to a concrete type.
     ///
     /// - Parameter _: The target type.
@@ -77,8 +71,6 @@ public struct AnyCodable: Codable {
     public func value<T>(as _: T.Type) -> T? {
         value as? T
     }
-
-    // MARK: - Encoding
 
     /// Encodes the wrapped value using the provided encoder.
     ///

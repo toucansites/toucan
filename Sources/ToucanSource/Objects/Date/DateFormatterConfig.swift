@@ -10,6 +10,7 @@
 /// This type holds both localization options and a format string, allowing
 /// dates to be formatted according to locale, time zone, and pattern.
 public struct DateFormatterConfig: Sendable, Codable, Equatable {
+
     /// The keys used for encoding and decoding top-level date formatter properties.
     private enum CodingKeys: String, CodingKey {
         case format

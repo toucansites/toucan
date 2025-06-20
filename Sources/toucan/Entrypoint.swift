@@ -31,8 +31,6 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - arguments
-
     @Argument(parsing: .allUnrecognized)
     var subcommand: [String]
 

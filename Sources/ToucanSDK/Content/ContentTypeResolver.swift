@@ -41,6 +41,7 @@ enum ContentTypeResolverError: ToucanError {
 }
 
 struct ContentTypeResolver {
+
     let contentTypes: [ContentType]
 
     init(

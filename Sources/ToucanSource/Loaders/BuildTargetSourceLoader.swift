@@ -15,6 +15,7 @@ import ToucanSerialization
 ///
 /// Uses dependency-injected tools to fetch, decode, and construct structured data from source files.
 public struct BuildTargetSourceLoader {
+
     /// The URL of the root source directory.
     var sourceURL: URL
     /// Metadata describing the current build target.
@@ -29,8 +30,6 @@ public struct BuildTargetSourceLoader {
 
     /// Logger instance for emitting structured debug information.
     var logger: Logger
-
-    // MARK: -
 
     /// Initializes a new instance of `BuildTargetSourceLoader`.
     ///
@@ -103,7 +102,7 @@ public struct BuildTargetSourceLoader {
                 url: url,
                 locations: fileManager.find(
                     name: name,
-                    extensions: ["yml", "yaml"],
+                    extensions: ["yaml", "yml"],
                     at: url
                 ),
                 encoder: encoder,
@@ -132,7 +131,7 @@ public struct BuildTargetSourceLoader {
             return try ObjectLoader(
                 url: url,
                 locations: fileManager.find(
-                    extensions: ["yml", "yaml"],
+                    extensions: ["yaml", "yml"],
                     at: url
                 ),
                 encoder: encoder,
@@ -161,7 +160,7 @@ public struct BuildTargetSourceLoader {
             let targetConfigName = "config-\(target.name)"
             let targetConfigLocation =
                 fileManager
-                .find(extensions: ["yml", "yaml"], at: configURL)
+                .find(extensions: ["yaml", "yml"], at: configURL)
                 .first { $0.hasPrefix(targetConfigName) }
 
             if targetConfigLocation != nil {

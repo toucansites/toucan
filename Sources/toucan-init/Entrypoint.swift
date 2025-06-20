@@ -9,6 +9,7 @@ import FileManagerKit
 import Foundation
 import Logging
 import ToucanCore
+import ToucanSource
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
@@ -27,15 +28,11 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - arguments
-
     @Argument(help: "The name of the site directory (default: site).")
     var siteDirectory: String = "site"
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
-
-    // MARK: - run
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -100,6 +97,10 @@ extension Entrypoint {
     }
 
     var defaultTemplatesURL: URL {
-        siteDirectoryURL.appendingPathComponent("src/templates/default")
+        BuiltTargetSourceLocations(
+            sourceURL: siteDirectoryURL,
+            config: .defaults
+        )
+        .currentTemplateURL
     }
 }

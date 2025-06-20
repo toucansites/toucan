@@ -9,7 +9,6 @@ import Foundation
 
 /// Represents the top-level configuration for a content rendering system.
 public struct Config: Codable, Equatable {
-    // MARK: - Coding Keys
 
     private enum CodingKeys: CodingKey {
         case site
@@ -21,8 +20,6 @@ public struct Config: Codable, Equatable {
         case dataTypes
         case renderer
     }
-
-    // MARK: - Defaults
 
     /// Provides a default `Config` instance using defaults from all subcomponents.
     ///
@@ -64,8 +61,6 @@ public struct Config: Codable, Equatable {
     /// Additional content-specific overrides or configuration extensions.
     public var renderer: RendererConfig
 
-    // MARK: - Initialization
-
     /// Initializes a full `Config` instance.
     ///
     /// - Parameters:
@@ -96,8 +91,6 @@ public struct Config: Codable, Equatable {
         self.dataTypes = dataTypes
         self.renderer = renderer
     }
-
-    // MARK: - Decoding
 
     /// Decodes the `Config` from a structured data source (e.g., YAML or JSON),
     /// applying defaults to any missing fields for robust deserialization.

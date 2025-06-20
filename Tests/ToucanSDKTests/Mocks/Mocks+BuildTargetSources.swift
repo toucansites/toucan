@@ -23,6 +23,7 @@ extension Mocks {
         )
 
         let postType = Mocks.ContentTypes.post()
+
         guard
             case let .date(
                 publicationConfig

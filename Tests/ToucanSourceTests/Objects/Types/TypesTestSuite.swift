@@ -12,7 +12,6 @@ import ToucanSerialization
 
 @Suite
 struct TypesTestSuite {
-    // MARK: - order
 
     @Test
     func minimal() throws {

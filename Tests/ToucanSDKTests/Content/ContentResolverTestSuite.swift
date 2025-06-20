@@ -1065,16 +1065,6 @@ struct ContentResolverTestSuite {
 
     // MARK: - iterators
 
-    //    @Test
-    //    func testExtractIteratorId() throws {
-    //        let slug = Slug(value: "posts/page/{{post.pagination}}")
-    //        #expect(slug.extractIteratorId() == "post.pagination")
-    //    }    //    @Test
-    //    func testExtractNoneIteratorId() throws {
-    //        let slug = Slug(value: "slugWithNoPagination")
-    //        #expect(slug.extractIteratorId() == nil)
-    //    }
-
     @Test
     func iteratorResolution() async throws {
         let now = Date()

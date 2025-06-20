@@ -12,6 +12,7 @@ import ToucanSerialization
 
 /// A utility to load and decode objects from files using a specified set of encoders and decoders.
 public struct ObjectLoader {
+
     /// The base directory where the files are located.
     let url: URL
 
@@ -111,6 +112,7 @@ public struct ObjectLoader {
                 }
                 .reduce([:]) { $0.recursivelyMerged(with: $1) }
 
+            // TODO: Tries to decode 0 files too
             let data: Data = try encoder.encode(combinedRawCodableObject)
             return try decoder.decode(T.self, from: data)
         }
