@@ -96,6 +96,6 @@ extension Entrypoint {
     }
 
     var defaultTemplatesURL: URL {
-        siteDirectoryURL.appendingPathComponent("src/templates/default")
+        siteDirectoryURL.appendingPathComponent("./templates/default")
     }
 }
