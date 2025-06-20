@@ -54,7 +54,7 @@ struct TargetTestSuite {
         #expect(result.name == "dev")
         #expect(result.config == "")
         #expect(result.url == "http://localhost:3000")
-        #expect(result.output == "docs")
+        #expect(result.output == "dist")
         #expect(result.isDefault == false)
     }
 }

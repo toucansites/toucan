@@ -22,7 +22,7 @@ struct TargetConfigTestSuite {
                 url: "http://localhost:3000"
                 locale: "en-US"
                 timeZone: "Europe/Budapest"
-                output: "./docs/"
+                output: "./dist/"
                 default: true
               - name: live
                 url: "https://example.com"

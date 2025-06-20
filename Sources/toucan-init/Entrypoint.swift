@@ -92,7 +92,7 @@ extension Entrypoint {
     var minimalTemplateURL: URL {
         .init(
             string:
-                "https://github.com/toucansites/minimal-theme/archive/refs/heads/main.zip"
+                "https://github.com/toucansites/minimal-template/archive/refs/heads/main.zip"
         )!
     }
 
