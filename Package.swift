@@ -108,6 +108,7 @@ let package = Package(
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
                 .target(name: "ToucanCore"),
+                .target(name: "ToucanSource")
             ],
             swiftSettings: swiftSettings
         ),

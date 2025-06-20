@@ -9,6 +9,7 @@ import FileManagerKit
 import Foundation
 import Logging
 import ToucanCore
+import ToucanSource
 
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
@@ -96,6 +97,10 @@ extension Entrypoint {
     }
 
     var defaultTemplatesURL: URL {
-        siteDirectoryURL.appendingPathComponent("./templates/default")
+        BuiltTargetSourceLocations(
+            sourceURL: siteDirectoryURL,
+            config: .defaults
+        )
+        .currentTemplateURL
     }
 }
