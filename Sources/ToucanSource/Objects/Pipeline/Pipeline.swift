@@ -100,13 +100,13 @@ public struct Pipeline: Codable {
             try container.decodeIfPresent(Bool.self, forKey: .definesType)
             ?? false
 
-        //        let defaultScopes = Scope.default
+        let defaultScopes = Scope.default
         let userScopes =
             try container.decodeIfPresent(
                 [String: [String: Scope]].self,
                 forKey: .scopes
             ) ?? [:]
-        //        let scopes = defaultScopes.recursivelyMerged(with: userScopes)
+        let scopes = defaultScopes.recursivelyMerged(with: userScopes)
 
         let queries =
             try container.decodeIfPresent(
@@ -150,7 +150,7 @@ public struct Pipeline: Codable {
         self.init(
             id: id,
             definesType: definesType,
-            scopes: userScopes,  // TODO: fix this
+            scopes: scopes,
             queries: queries,
             dataTypes: dataTypes,
             contentTypes: contentTypes,

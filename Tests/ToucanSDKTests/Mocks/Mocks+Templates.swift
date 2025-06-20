@@ -24,10 +24,12 @@ extension Mocks.Templates {
                 name: "Test License",
                 url: url
             ),
-            author: .init(
-                name: "Test Template Author",
-                url: url
-            ),
+            authors: [
+                .init(
+                    name: "Test Template Author",
+                    url: url
+                )
+            ],
             demo: .init(
                 url: url
             ),

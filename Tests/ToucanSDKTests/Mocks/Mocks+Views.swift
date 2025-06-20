@@ -15,12 +15,12 @@ extension Mocks.Views {
             metadata: .init(
                 name: "Mock",
                 description: "Mock template",
-                url: "",
+                url: nil,
                 version: "1.0.0-beta.5",
                 generatorVersions: ["1.0.0-beta.5"],
-                license: .init(name: "", url: ""),
-                author: .init(name: "", url: ""),
-                demo: .init(url: ""),
+                license: nil,
+                authors: [],
+                demo: nil,
                 tags: []
             ),
             components: .init(

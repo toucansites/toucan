@@ -103,17 +103,17 @@ public extension Template {
         /// A short description of the template.
         public var description: String
         /// The URL where the template can be found or referenced.
-        public var url: String
+        public var url: String?
         /// The version of the template.
-        public var version: String
+        public var version: String?
         /// The versions of the generator used to produce this template.
         public var generatorVersions: [String]
         /// Licensing information for the template.
-        public var license: License
+        public var license: License?
         /// Author information for the template.
-        public var author: Author
+        public var authors: [Author]?
         /// A demo link showing the template in action.
-        public var demo: Demo
+        public var demo: Demo?
         /// A list of tags to classify or describe the template.
         public var tags: [String]
     }
@@ -126,7 +126,7 @@ public extension Template.Metadata {
         /// The name of the license.
         let name: String
         /// The URL to the license text or information.
-        let url: String
+        let url: String?
     }
 }
 
@@ -137,7 +137,7 @@ public extension Template.Metadata {
         /// The author's name.
         let name: String
         /// A URL to the author's website or profile.
-        let url: String
+        let url: String?
     }
 }
 
