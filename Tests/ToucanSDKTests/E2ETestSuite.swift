@@ -30,7 +30,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let notFoundURL = output.appendingPathIfPresent("404.html")
             let notFound = try String(contentsOf: notFoundURL)
 
@@ -51,7 +51,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let rssXML = output.appendingPathIfPresent("rss.xml")
             let rss = try String(contentsOf: rssXML)
 
@@ -129,7 +129,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let sitemapXML = output.appendingPathIfPresent("sitemap.xml")
             let sitemap = try String(contentsOf: sitemapXML)
 
@@ -208,7 +208,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
 
             let redirect1URL = output.appendingPathIfPresent(
                 "redirects/home-old/index.html"
@@ -280,7 +280,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let htmlURL = output.appendingPathIfPresent("context/index.html")
             let html = try String(contentsOf: htmlURL)
             let exp = "Context page description"
@@ -385,7 +385,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             //            let context = try String(contentsOf: contextURL)
             let data = try Data(contentsOf: contextURL)
@@ -472,7 +472,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             //            let context = try String(contentsOf: contextURL)
             let data = try Data(contentsOf: contextURL)
@@ -565,7 +565,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             //            let context = try String(contentsOf: contextURL)
             let data = try Data(contentsOf: contextURL)
@@ -655,7 +655,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             //            let context = try String(contentsOf: contextURL)
             let data = try Data(contentsOf: contextURL)
@@ -748,7 +748,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let cssURL = output.appendingPathIfPresent(
                 "assets/test/style.min.css"
             )
@@ -836,7 +836,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let cssURL = output.appendingPathIfPresent(
                 "assets/test/style.css"
             )
@@ -934,7 +934,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let cssURL = output.appendingPathIfPresent(
                 "assets/test/style.css"
             )
@@ -1025,7 +1025,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
 
             let fileURL = output.appendingPathIfPresent("test/index.html")
             let html = try String(contentsOf: fileURL)
@@ -1153,7 +1153,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
 
             let fileURL = output.appendingPathIfPresent("test/index.html")
             let html = try String(contentsOf: fileURL)
@@ -1173,7 +1173,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
 
             let fileURL1 = output.appendingPathIfPresent(
                 "blog/posts/pages/1/index.html"
@@ -1259,7 +1259,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             let data = try Data(contentsOf: contextURL)
 
@@ -1391,7 +1391,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             let data = try Data(contentsOf: contextURL)
 
@@ -1514,7 +1514,7 @@ struct E2ETestSuite {
             let input = $1.appendingPathIfPresent("src")
             try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("docs")
+            let output = $1.appendingPathIfPresent("dist")
             let contextURL = output.appendingPathIfPresent("context.json")
             let data = try Data(contentsOf: contextURL)
 

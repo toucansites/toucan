@@ -25,7 +25,7 @@ public struct Target: Codable, Equatable {
             name: "dev",
             config: "",
             url: "http://localhost:3000",
-            output: "docs",
+            output: "dist",
             isDefault: false
         )
     }

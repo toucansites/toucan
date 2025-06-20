@@ -14,7 +14,7 @@ import ToucanSource
 /// target:
 ///     dev:
 ///        input: ./src
-///        output: ./docs
+///        output: ./dist
 ///        config: ./src/config.dev.yml => auto lookup like this?
 ///    -> default looks up for config.yml
 ///
