@@ -12,49 +12,61 @@ import ToucanCore
 import ToucanSerialization
 import ToucanSource
 
-private func getSafeURL(
-    for path: String,
-    using fileManager: FileManagerKit
-) -> URL {
-    let home = fileManager.homeDirectoryForCurrentUser.path
-    return
-        .init(
-            fileURLWithPath: path.replacingOccurrences(["~": home])
-        )
-        .standardized
-}
-
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
 
-    let inputURL: URL
-    let targetsToBuild: [String]
-    let logger: Logger
-
     let fileManager: FileManagerKit
-    //    let markdownParser: MarkdownParser
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
+    let logger: Logger
 
     /// Initialize a new instance.
+    ///
     /// - Parameters:
-    ///   - input: The input url as a path string.
-    ///   - targetsToBuild: The list of target names to build.
+    ///   - fileManager: The file manager used to perform file operations.
+    ///   - encoder: The encoder used to encode data. Defaults to a YAML encoder.
+    ///   - decoder: The decoder used to decode data. Defaults to a YAML decoder.
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "toucan".
     public init(
-        input: String,
-        targetsToBuild: [String] = [],
+        fileManager: FileManagerKit = FileManager.default,
+        encoder: ToucanEncoder = ToucanYAMLEncoder(),
+        decoder: ToucanDecoder = ToucanYAMLDecoder(),
         logger: Logger = .init(label: "toucan")
     ) {
-        self.fileManager = FileManager.default
-        self.encoder = ToucanYAMLEncoder()
-        self.decoder = ToucanYAMLDecoder()
-        self.inputURL = getSafeURL(for: input, using: fileManager)
-        self.targetsToBuild = targetsToBuild
+        self.fileManager = fileManager
+        self.encoder = encoder
+        self.decoder = decoder
         self.logger = logger
     }
 
-    // MARK: - helpers
+    func resolveHomeURL(
+        for path: String
+    ) -> URL {
+        let home = fileManager.homeDirectoryForCurrentUser.path
+        return
+            .init(
+                fileURLWithPath: path.replacingOccurrences(["~": home])
+            )
+            .standardized
+    }
+
+    func absoluteURL(
+        for path: String,
+        cwd: String? = nil
+    ) -> URL {
+        if path.hasPrefix("/") {
+            return URL(filePath: path)
+        }
+        if path.hasPrefix("~") {
+            return resolveHomeURL(for: path)
+        }
+        let cwd = cwd ?? fileManager.currentDirectoryPath
+        let cwdURL = URL(filePath: cwd)
+        if path == "." || path == "./" {
+            return cwdURL
+        }
+        return cwdURL.appendingPathIfPresent(path)
+    }
 
     func resetDirectory(at url: URL) throws {
         if fileManager.exists(at: url) {
@@ -63,7 +75,7 @@ public struct Toucan {
         try fileManager.createDirectory(at: url)
     }
 
-    func prepareWorkingDirectory() throws -> URL {
+    func prepareTemporaryWorkingDirectory() throws -> URL {
         let url = fileManager
             .temporaryDirectory
             .appendingPathComponent("toucan")
@@ -71,22 +83,27 @@ public struct Toucan {
 
         try resetDirectory(at: url)
 
-        logger.debug("Working at: `\(url.absoluteString)`.")
+        logger.debug(
+            "Working at temporary directory.",
+            metadata: [
+                "path": .string(url.path())
+            ]
+        )
 
         return url
     }
 
-    // MARK: -
-
-    func loadTargetConfig() throws -> TargetConfig {
+    func loadTargetConfig(
+        workDirURL: URL
+    ) throws -> TargetConfig {
         try ObjectLoader(
-            url: inputURL,
+            url: workDirURL,
             locations:
                 fileManager
                 .find(
                     name: "toucan",
                     extensions: ["yml", "yaml"],
-                    at: inputURL
+                    at: workDirURL
                 ),
             encoder: encoder,
             decoder: decoder,
@@ -96,7 +113,8 @@ public struct Toucan {
     }
 
     func getActiveBuildTargets(
-        _ targetConfig: TargetConfig
+        targetConfig: TargetConfig,
+        targetsToBuild: [String]
     ) -> [Target] {
         var buildTargets = targetConfig.targets.filter {
             targetsToBuild.contains($0.name)
@@ -109,24 +127,53 @@ public struct Toucan {
 
     // MARK: - api
 
-    /// generates the static site
+    /// Generates the static site.
+    ///
+    /// - Parameters:
+    ///   - workDir: The working directory URL as a path string.
+    ///   - targetsToBuild: The list of target names to build.
+    ///   - now: The current date used during the build.
+    /// - Throws: An error if the generation fails.
     public func generate(
+        workDir: String,
+        targetsToBuild: [String] = [],
         now: Date = .init()
     ) throws {
-        let workDirURL = try prepareWorkingDirectory()
+        let workDirURL = absoluteURL(for: workDir)
+        let temporaryWorkDirURL = try prepareTemporaryWorkingDirectory()
 
         do {
-            let targetConfig = try loadTargetConfig()
-            let activeBuildTargets = getActiveBuildTargets(targetConfig)
+            let targetConfig = try loadTargetConfig(
+                workDirURL: workDirURL
+            )
+            let activeBuildTargets = getActiveBuildTargets(
+                targetConfig: targetConfig,
+                targetsToBuild: targetsToBuild
+            )
 
             for target in activeBuildTargets {
-                logger.info(
-                    "Building target: \(target.name)",
-                    metadata: [:]
+                let sourceURL = absoluteURL(
+                    for: target.input,
+                    cwd: workDirURL.path()
+                )
+                let distURL = absoluteURL(
+                    for: target.output,
+                    cwd: workDirURL.path()
+                )
+
+                logger.debug(
+                    "Building target.",
+                    metadata: [
+                        "name": .string(target.name),
+                        "workDir": .string(workDirURL.path()),
+                        "srcDir": .string(sourceURL.path()),
+                        "distDir": .string(distURL.path()),
+                        "tmpDir": .string(temporaryWorkDirURL.path()),
+                    ]
                 )
 
                 let buildTargetSourceLoader = BuildTargetSourceLoader(
-                    sourceURL: inputURL,
+                    sourceURL: workDirURL,
                     target: target,
                     fileManager: fileManager,
                     encoder: encoder,
@@ -157,9 +204,20 @@ public struct Toucan {
                     logger: logger
                 )
 
-                let results = try renderer.render(now: now) {
-                    pipeline,
-                    contextBundles in
+                let results = try renderer.render(
+                    now: now
+                ) { pipeline, contextBundles in
+
+                    logger.trace(
+                        "Rendering pipeline",
+                        metadata: [
+                            "id": .string(pipeline.id),
+                            "contextBundleCount": .string(
+                                String(contextBundles.count)
+                            ),
+                        ]
+                    )
+
                     switch pipeline.engine.id {
                     case "json":
                         let renderer = ContextBundleToJSONRenderer(
@@ -188,7 +246,15 @@ public struct Toucan {
                     }
                 }
 
-                try resetDirectory(at: workDirURL)
+                logger.debug(
+                    "Target ready.",
+                    metadata: [
+                        "name": .string(target.name),
+                        "resultsCount": .string(String(results.count)),
+                    ]
+                )
+
+                try resetDirectory(at: temporaryWorkDirURL)
 
                 // MARK: - Copy default assets
 
@@ -200,27 +266,28 @@ public struct Toucan {
                             .currentTemplateAssetOverridesURL,
                         buildTargetSource.locations.siteAssetsURL,
                     ],
-                    destination: workDirURL
+                    destination: temporaryWorkDirURL
                 )
                 try copyManager.copy()
 
                 // MARK: - Writing results
 
                 for result in results {
-                    let destinationFolder = workDirURL.appending(
-                        path: result.destination.path
-                    )
+                    let destinationFolder =
+                        temporaryWorkDirURL
+                        .appendingPathIfPresent(result.destination.path)
+
                     try fileManager.createDirectory(at: destinationFolder)
 
                     let resultOutputURL =
                         destinationFolder
-                        .appending(path: result.destination.file)
+                        .appendingPathIfPresent(result.destination.file)
                         .appendingPathExtension(result.destination.ext)
 
                     switch result.source {
                     case let .assetFile(path):
                         let srcURL = buildTargetSource.locations.contentsURL
-                            .appending(path: path)
+                            .appendingPathIfPresent(path)
                         try fileManager.copy(from: srcURL, to: resultOutputURL)
                     case let .asset(string), let .content(string):
                         try string.write(
@@ -233,24 +300,16 @@ public struct Toucan {
 
                 // MARK: - Finalize and cleanup
 
-                var outputURL = getSafeURL(
-                    for: target.output,
-                    using: fileManager
+                try resetDirectory(at: distURL)
+                try fileManager.copyRecursively(
+                    from: temporaryWorkDirURL,
+                    to: distURL
                 )
-                if !outputURL.path().hasPrefix("/") {
-                    outputURL =
-                        inputURL
-                        .deletingLastPathComponent()
-                        .appendingPathIfPresent(target.output)
-                }
-
-                try resetDirectory(at: outputURL)
-                try fileManager.copyRecursively(from: workDirURL, to: outputURL)
-                try? fileManager.delete(at: workDirURL)
+                try fileManager.delete(at: temporaryWorkDirURL)
             }
         }
         catch {
-            try? fileManager.delete(at: workDirURL)
+            try fileManager.delete(at: temporaryWorkDirURL)
             throw error
         }
     }

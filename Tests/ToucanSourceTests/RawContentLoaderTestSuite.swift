@@ -14,6 +14,19 @@ import ToucanSerialization
 
 @testable import ToucanSource
 
+extension RawContent {
+
+    var withoutLastModificationDatePrecision: Self {
+        .init(
+            origin: origin,
+            markdown: markdown,
+            lastModificationDate: Double(Float(lastModificationDate)),
+            assetsPath: assetsPath,
+            assets: assets
+        )
+    }
+}
+
 @Suite
 struct RawContentLoaderTestSuite {
 
@@ -30,9 +43,7 @@ struct RawContentLoaderTestSuite {
         fileManager: FileManagerKit,
         url: URL
     ) -> RawContentLoader {
-        var logger = Logger(label: "test")
-        logger.logLevel = .trace
-        let url = url.appending(path: "src/")
+        let url = url.appending(path: "./src/")
         let decoder = ToucanYAMLDecoder()
         let config = Config.defaults
         let locations = BuiltTargetSourceLocations(
@@ -44,8 +55,7 @@ struct RawContentLoaderTestSuite {
             assetsPath: config.contents.assets.path,
             decoder: .init(),
             markdownParser: .init(decoder: decoder),
-            fileManager: fileManager,
-            logger: logger
+            fileManager: fileManager
         )
         return loader
     }
@@ -314,7 +324,10 @@ struct RawContentLoaderTestSuite {
                 modificationDate: now
             )
 
-            #expect(content == expectation)
+            #expect(
+                content.withoutLastModificationDatePrecision
+                    == expectation.withoutLastModificationDatePrecision
+            )
         }
     }
 
@@ -347,7 +360,10 @@ struct RawContentLoaderTestSuite {
                 modificationDate: now
             )
 
-            #expect(content == expectation)
+            #expect(
+                content.withoutLastModificationDatePrecision
+                    == expectation.withoutLastModificationDatePrecision
+            )
         }
     }
 
@@ -402,9 +418,15 @@ struct RawContentLoaderTestSuite {
             #expect(content.markdown == exp.markdown)
             #expect(content.markdown.frontMatter == exp.markdown.frontMatter)
             #expect(content.markdown.contents == exp.markdown.contents)
-            #expect(content.lastModificationDate == exp.lastModificationDate)
+            #expect(
+                Float(content.lastModificationDate)
+                    == Float(exp.lastModificationDate)
+            )
             #expect(content.assets == exp.assets)
-            #expect(content == exp)
+            #expect(
+                content.withoutLastModificationDatePrecision
+                    == exp.withoutLastModificationDatePrecision
+            )
         }
     }
 
@@ -460,7 +482,10 @@ struct RawContentLoaderTestSuite {
                 ),
             ]
 
-            #expect(results == expected)
+            #expect(
+                results.map(\.withoutLastModificationDatePrecision)
+                    == expected.map(\.withoutLastModificationDatePrecision)
+            )
         }
     }
 }

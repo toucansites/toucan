@@ -615,7 +615,10 @@ struct ContentResolver {
                     if filteredAssets.count == 1 {
                         let asset = filteredAssets[0]
                         let url = assetsURL.appending(path: asset)
-                        let contents = try String(contentsOf: url)
+                        let contents = try String(
+                            contentsOf: url,
+                            encoding: .utf8
+                        )
                         item.properties[property.property] = .init(contents)
                     }
                     else {
@@ -623,7 +626,10 @@ struct ContentResolver {
                         for i in 0..<filteredAssets.count {
                             let asset = filteredAssets[i]
                             let url = assetsURL.appending(path: asset)
-                            let contents = try String(contentsOf: url)
+                            let contents = try String(
+                                contentsOf: url,
+                                encoding: .utf8
+                            )
                             values[assetKeys[i]] = .init(contents)
                         }
                         item.properties[property.property] = .init(values)

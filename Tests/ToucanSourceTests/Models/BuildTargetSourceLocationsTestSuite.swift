@@ -16,9 +16,10 @@ import ToucanSerialization
 
 @Suite
 struct BuildTargetSourceLocationsTestSuite {
+
     @Test()
     func defaults() async throws {
-        let prefix = "src"
+        let prefix = "/src"
         let def = "default"
 
         let templatesPath = "\(prefix)/templates"

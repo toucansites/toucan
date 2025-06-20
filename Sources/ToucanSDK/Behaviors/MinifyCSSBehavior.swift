@@ -14,7 +14,8 @@ struct MinifyCSSBehavior: Behavior {
 
     func run(fileURL: URL) throws -> String {
         let src = try String(
-            contentsOf: fileURL
+            contentsOf: fileURL,
+            encoding: .utf8
         )
         let stylesheet = try Stylesheet.parse(from: src)
         return stylesheet.minified()
