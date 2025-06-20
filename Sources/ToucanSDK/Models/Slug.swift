@@ -7,6 +7,7 @@
 
 /// A value type representing a URL-friendly identifier for a content item.
 public struct Slug: Equatable {
+
     /// The raw slug string (e.g., `"blog/welcome"`, `"about"`, `""`).
     public var value: String
 
@@ -18,8 +19,6 @@ public struct Slug: Equatable {
     ) {
         self.value = value
     }
-
-    // MARK: - Iterator ID Extraction
 
     /// Extracts a dynamic iterator identifier from a slug value containing
     /// a templated range (e.g., `"blog/{{page}}"` → `"page"`).
@@ -37,8 +36,6 @@ public struct Slug: Equatable {
         }
         return .init(value[startRange.upperBound..<endRange.lowerBound])
     }
-
-    // MARK: - Permalink Generation
 
     /// Constructs a permalink from the base URL and the slug.
     ///
@@ -60,6 +57,13 @@ public struct Slug: Equatable {
 }
 
 extension Slug: Codable {
+
+    /// Generates a context-aware identifier string based on the last path component of a value.
+    ///
+    public func contextAwareIdentifier() -> String {
+        .init(value.split(separator: "/").last ?? "")
+    }
+
     /// Creates a new instance by decoding from the given decoder.
     ///
     /// This initializer attempts to decode the value as a single string.

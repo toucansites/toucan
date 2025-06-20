@@ -9,6 +9,7 @@ import Foundation
 
 /// A value type representing a path for a raw content item.
 public struct Path: Equatable {
+
     /// The raw value as a string.
     public var value: String
 

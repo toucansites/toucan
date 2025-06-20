@@ -9,6 +9,7 @@
 ///
 /// This model is useful for parsing, transforming, and rendering Markdown files.
 public struct Markdown: Equatable {
+
     /// A dictionary containing parsed front matter metadata.
     ///
     /// Typically includes key-value pairs defined at the top of the Markdown file (e.g., `title`, `author`, `date`).

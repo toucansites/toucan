@@ -8,7 +8,6 @@
 /// Represents a content query used to fetch or filter content entries
 /// based on content type, pagination, sorting, and filtering criteria.
 public struct Query: Codable, Equatable {
-    // MARK: - Coding Keys
 
     /// Keys used to decode the query from a structured format like YAML or JSON.
     enum CodingKeys: String, CodingKey {
@@ -38,8 +37,6 @@ public struct Query: Codable, Equatable {
     /// A list of fields and directions for ordering results.
     public var orderBy: [Order]
 
-    // MARK: - Initialization
-
     /// Initializes a `Query` with specified properties.
     ///
     /// - Parameters:
@@ -64,8 +61,6 @@ public struct Query: Codable, Equatable {
         self.filter = filter
         self.orderBy = orderBy
     }
-
-    // MARK: - Decoding
 
     /// Decodes a `Query` instance from a decoder, applying defaults for optional values.
     public init(

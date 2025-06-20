@@ -85,6 +85,10 @@ extension Mocks.E2E {
     ) -> Directory {
         Directory(name: "templates") {
             Directory(name: "default") {
+                YAMLFile(
+                    name: "template",
+                    contents: Mocks.Templates.metadata()
+                )
                 Directory(name: "assets") {
                     Directory(name: "css") {
                         File(
@@ -208,6 +212,7 @@ extension Mocks.E2E {
         )
 
         let postType = Mocks.ContentTypes.post()
+
         guard
             case let .date(
                 publicationConfig
@@ -310,7 +315,8 @@ extension Mocks.E2E {
                                 featured: false,
                                 authorIDs: [1, 2],
                                 tagIDs: [1, 2]
-                            )
+                            ),
+                            modificationDate: now
                         )
                         RawContentBundle(
                             name: "post-2",
@@ -334,7 +340,8 @@ extension Mocks.E2E {
                                 featured: true,
                                 authorIDs: [1, 2, 3],
                                 tagIDs: [2]
-                            )
+                            ),
+                            modificationDate: now
                         )
                         RawContentBundle(
                             name: "post-3",
@@ -358,7 +365,8 @@ extension Mocks.E2E {
                                 featured: false,
                                 authorIDs: [2, 3],
                                 tagIDs: [2, 3]
-                            )
+                            ),
+                            modificationDate: now
                         )
                         Directory(name: "pages") {
                             RawContentBundle(

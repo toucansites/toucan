@@ -15,6 +15,7 @@ import ToucanSerialization
 
 @Suite
 struct TemplateLoaderTestSuite {
+
     @Test()
     func standardTemplateLoading() async throws {
         try FileManagerPlayground {
@@ -34,6 +35,28 @@ struct TemplateLoaderTestSuite {
                 }
                 Directory(name: "templates") {
                     Directory(name: "default") {
+                        File(
+                            name: "template.yaml",
+                            string: """
+                                author:
+                                    name: Test Template Author
+                                    url: http://localhost:8080/
+                                demo:
+                                    url: http://localhost:8080/
+                                description: Test Template description
+                                generatorVersions:
+                                    - 1.0.0-beta.5
+                                license:
+                                    name: Test License
+                                    url: http://localhost:8080/
+                                name: Test Template
+                                tags:
+                                    - blog
+                                    - adaptive-colors
+                                url: http://localhost:8080/
+                                version: 1.0.0
+                                """
+                        )
                         Directory(name: "assets") {
                             "template.css"
                         }
@@ -97,6 +120,9 @@ struct TemplateLoaderTestSuite {
             }
         }
         .test {
+            var logger = Logger(label: "test")
+            logger.logLevel = .trace
+
             let sourceURL = $1.appending(path: "src/")
             let config = Config.defaults
             let locations = BuiltTargetSourceLocations(
@@ -106,11 +132,12 @@ struct TemplateLoaderTestSuite {
 
             let loader = TemplateLoader(
                 locations: locations,
-                fileManager: $0
+                fileManager: $0,
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder(),
+                logger: logger
             )
             let template = try loader.load()
-
-            #expect(template.baseURL == locations.templatesURL)
 
             #expect(
                 template.components.assets.sorted()
@@ -161,7 +188,7 @@ struct TemplateLoaderTestSuite {
                     .sorted()
             )
 
-            let results = loader.getTemplatesIDsWithContents(template)
+            let results = template.getViewIDsWithContents()
 
             let exp: [String: String] = [
                 "pages.test": "test.html",

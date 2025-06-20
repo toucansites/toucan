@@ -11,7 +11,6 @@
 /// to its author or related articles. It includes the type of relation,
 /// reference key(s), and optional ordering rules.
 public struct Relation: Codable, Equatable {
-    // MARK: - Coding Keys
 
     /// Keys used to decode the relation from serialized formats like JSON or YAML.
     enum CodingKeys: CodingKey {
@@ -31,8 +30,6 @@ public struct Relation: Codable, Equatable {
     /// Optional sorting logic to apply to related content (e.g., by date or title).
     public var order: Order?
 
-    // MARK: - Initialization
-
     /// Creates a new `Relation` instance with required and optional properties.
     ///
     /// - Parameters:
@@ -48,8 +45,6 @@ public struct Relation: Codable, Equatable {
         self.type = relationType
         self.order = order
     }
-
-    // MARK: - Decoding
 
     /// Decodes a `Relation` from a decoder, applying custom key mapping and optional logic.
     ///

@@ -8,15 +8,12 @@
 public extension Pipeline {
     /// Describes a rendering scope within a content pipeline.
     struct Scope: Codable {
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case id
             case context
             case fields
         }
-
-        // MARK: - Predefined Scopes
 
         /// A scope for rendering lightweight summaries or IDs for use in references.
         public static var reference: Scope {
@@ -32,8 +29,6 @@ public extension Pipeline {
         public static var detail: Scope {
             .init(context: .detail)
         }
-
-        // MARK: - Default Scope Sets
 
         /// A standard mapping of common context names to their default scopes.
         public static var standard: [String: Scope] {
@@ -58,8 +53,6 @@ public extension Pipeline {
         /// If empty, all fields may be included by default.
         public var fields: [String]
 
-        // MARK: - Initialization
-
         /// Initializes a `Scope` with a given context and set of fields.
         ///
         /// - Parameters:
@@ -72,8 +65,6 @@ public extension Pipeline {
             self.context = context
             self.fields = fields
         }
-
-        // MARK: - Decoding
 
         /// Decodes a `Scope` from configuration data, with fallback defaults.
         ///

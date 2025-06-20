@@ -18,7 +18,6 @@ public extension Pipeline {
 
         /// Describes the file location for the asset.
         public struct Location: Codable {
-            //
 
             /// An optional path to the asset file.
             public var path: String?
@@ -56,7 +55,6 @@ public extension Pipeline {
         ///   - input: The source location of the asset.
         ///   - output: The destination location for the processed asset.
         public struct Behavior: Codable {
-            //
 
             private enum CodingKeys: CodingKey {
                 case id
@@ -64,16 +62,12 @@ public extension Pipeline {
                 case output
             }
 
-            //
-
             /// The unique identifier for the behavior.
             public var id: String
             /// The input location for the behavior.
             public var input: Location
             /// The output location for the behavior.
             public var output: Location
-
-            //
 
             /// Initializes a behavior
             ///
@@ -131,7 +125,6 @@ public extension Pipeline {
 
         /// Represents a single asset manipulation instruction within the `Assets` configuration.
         public struct Property: Codable {
-            //
 
             /// Defines how the asset should be applied or processed.
             public enum Action: String, Codable {
@@ -145,8 +138,6 @@ public extension Pipeline {
                 case parse
             }
 
-            //
-
             /// The action to perform for this asset.
             public var action: Action
             /// The logical asset key or category (e.g., `"js"`, `"image"`).
@@ -155,8 +146,6 @@ public extension Pipeline {
             public var resolvePath: Bool
             /// Describes the input file for the asset.
             public var input: Location
-
-            //
 
             /// Initializes a new `Property` describing an asset manipulation.
             ///

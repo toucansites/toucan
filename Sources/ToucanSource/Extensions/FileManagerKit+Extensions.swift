@@ -61,6 +61,7 @@ public extension FileManagerKit {
         if skipHiddenFiles {
             items = items.filter { !$0.hasPrefix(".") }
         }
+
         return items.filter { fileName in
             let fileURL = URL(fileURLWithPath: fileName)
             let baseName = fileURL.deletingPathExtension().lastPathComponent

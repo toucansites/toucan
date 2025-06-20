@@ -13,6 +13,7 @@ import struct Foundation.URL
 /// Typically, this structure is built after parsing a content directory
 /// and used as input to render or transform content.
 public struct BuildTargetSource {
+
     /// The root location of the source on the filesystem.
     public var locations: BuiltTargetSourceLocations
 
@@ -36,8 +37,6 @@ public struct BuildTargetSource {
 
     /// A list of custom block directives used in Markdown rendering.
     public var blocks: [Block]
-
-    // MARK: - Initialization
 
     /// Initializes a fully populated `BuildTargetSource` from its constituent components.
     ///

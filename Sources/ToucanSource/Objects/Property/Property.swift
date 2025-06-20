@@ -8,6 +8,7 @@
 /// Represents a single content property definition, including its type,
 /// whether it's required, and an optional default value.
 public struct Property: Codable, Equatable {
+
     /// Coding keys used for decoding optional metadata fields.
     enum CodingKeys: String, CodingKey {
         case required
@@ -25,8 +26,6 @@ public struct Property: Codable, Equatable {
     /// An optional default value to use if the property is missing in the content.
     public var `default`: AnyCodable?
 
-    // MARK: - Initialization
-
     /// Initializes a new `Property` definition.
     ///
     /// - Parameters:
@@ -42,8 +41,6 @@ public struct Property: Codable, Equatable {
         self.required = isRequired
         self.default = defaultValue
     }
-
-    // MARK: - Decoding
 
     /// Decodes a `Property` from a serialized representation, handling both the
     /// core type and optional metadata (required flag and default value).

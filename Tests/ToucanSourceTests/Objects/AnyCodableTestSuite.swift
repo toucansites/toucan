@@ -12,6 +12,7 @@ import ToucanSerialization
 
 @Suite
 struct AnyCodableTestSuite {
+
     struct SomeCodable: Codable {
         enum CodingKeys: String, CodingKey {
             case string
@@ -258,6 +259,7 @@ struct AnyCodableTestSuite {
             }
             """
             .data(using: .utf8)!
+
         let expectedJSONObject =
             try JSONSerialization.jsonObject(
                 with: expected,

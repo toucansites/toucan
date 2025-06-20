@@ -7,14 +7,11 @@
 
 /// A structure that holds a list of deployment targets and resolves the default one.
 public struct TargetConfig: Codable, Equatable {
-    // MARK: - Coding Keys
 
     /// Keys explicitly defined for decoding known fields from the input source.
     enum CodingKeys: CodingKey {
         case targets
     }
-
-    // MARK: - Defaults
 
     /// Default values used when decoding fails or fields are missing.
     private static var base: Self {
@@ -28,8 +25,6 @@ public struct TargetConfig: Codable, Equatable {
     public var `default`: Target {
         targets.first(where: { $0.isDefault }) ?? targets[0]
     }
-
-    // MARK: - Initialization
 
     /// Creates a new `Targets` object.
     /// - Parameter targets: An array of deployment targets.
@@ -49,8 +44,6 @@ public struct TargetConfig: Codable, Equatable {
         }
         self.targets = all.isEmpty ? Self.base.targets : all
     }
-
-    // MARK: - Decoding Logic
 
     /// Custom decoder with fallback values and default validation.
     ///

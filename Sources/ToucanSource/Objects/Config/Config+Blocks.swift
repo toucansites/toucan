@@ -8,13 +8,10 @@
 public extension Config {
     /// Represents the location of block configuration files.
     struct Blocks: Codable, Equatable {
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
         }
-
-        // MARK: - Defaults
 
         /// Provides a default `Blocks` configuration pointing to `"blocks"`.
         public static var defaults: Self {
@@ -26,16 +23,12 @@ public extension Config {
         /// Example: `"blocks"` (default), or `"config/blocks"`
         public var path: String
 
-        // MARK: - Initialization
-
         /// Initializes a new blocks configuration.
         ///
         /// - Parameter path: The directory where blocks configuration files are stored.
         public init(path: String) {
             self.path = path
         }
-
-        // MARK: - Decoding
 
         /// Decodes the `Pipelines` configuration from a structured source.
         ///

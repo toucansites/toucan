@@ -26,6 +26,7 @@ private func getSafeURL(
 
 /// Primary entry point for generating a static site using the Toucan framework.
 public struct Toucan {
+
     let inputURL: URL
     let targetsToBuild: [String]
     let logger: Logger
@@ -123,6 +124,7 @@ public struct Toucan {
                     "Building target: \(target.name)",
                     metadata: [:]
                 )
+
                 let buildTargetSourceLoader = BuildTargetSourceLoader(
                     sourceURL: inputURL,
                     target: target,
@@ -134,28 +136,57 @@ public struct Toucan {
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
 
-                let templateLoader = TemplateLoader(
-                    locations: buildTargetSource.locations,
-                    fileManager: fileManager
-                )
-
-                let template = try templateLoader.load()
-                let templates = templateLoader.getTemplatesIDsWithContents(
-                    template
-                )
-
                 let validator = BuildTargetSourceValidator(
                     buildTargetSource: buildTargetSource
                 )
                 try validator.validate()
 
+                let generatorInfo = GeneratorInfo.current
                 var renderer = BuildTargetSourceRenderer(
                     buildTargetSource: buildTargetSource,
-                    templates: templates,
+                    generatorInfo: generatorInfo,
                     logger: logger
                 )
 
-                let results = try renderer.render(now: now)
+                let templateLoader = TemplateLoader(
+                    locations: buildTargetSource.locations,
+
+                    fileManager: fileManager,
+                    encoder: encoder,
+                    decoder: decoder,
+                    logger: logger
+                )
+
+                let results = try renderer.render(now: now) {
+                    pipeline,
+                    contextBundles in
+                    switch pipeline.engine.id {
+                    case "json":
+                        let renderer = ContextBundleToJSONRenderer(
+                            pipeline: pipeline,
+                            logger: logger
+                        )
+                        return renderer.render(contextBundles)
+                    case "mustache":
+                        let template = try templateLoader.load()
+
+                        let templateValidator = try TemplateValidator(
+                            generatorInfo: generatorInfo
+                        )
+                        try templateValidator.validate(template)
+
+                        let renderer = try ContextBundleToHTMLRenderer(
+                            pipeline: pipeline,
+                            templates: template.getViewIDsWithContents(),
+                            logger: logger
+                        )
+                        return renderer.render(contextBundles)
+                    default:
+                        throw BuildTargetSourceRendererError.invalidEngine(
+                            pipeline.engine.id
+                        )
+                    }
+                }
 
                 try resetDirectory(at: workDirURL)
 

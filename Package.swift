@@ -76,10 +76,10 @@ let package = Package(
             url: "https://github.com/stackotter/swift-css-parser",
             from: "0.1.2"
         ),
-//        .package(
-//            url: "https://github.com/swiftlang/swift-subprocess",
-//            branch: "main"
-//        ),
+        .package(
+            url: "https://github.com/mxcl/Version",
+            from: "2.2.0"
+        ),
     ],
     targets: [
         // MARK: - executable targets
@@ -93,7 +93,6 @@ let package = Package(
                 ),
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
-//                .product(name: "Subprocess", package: "swift-subprocess")
                 .target(name: "ToucanCore"),
             ],
             swiftSettings: swiftSettings
@@ -109,6 +108,7 @@ let package = Package(
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
                 .product(name: "SwiftCommand", package: "SwiftCommand"),
                 .target(name: "ToucanCore"),
+                .target(name: "ToucanSource")
             ],
             swiftSettings: swiftSettings
         ),
@@ -188,6 +188,7 @@ let package = Package(
             dependencies: [
                 .target(name: "ToucanCore"),
                 .target(name: "ToucanSerialization"),
+                .product(name: "Version", package: "Version"),
             ],
             swiftSettings: swiftSettings
         ),

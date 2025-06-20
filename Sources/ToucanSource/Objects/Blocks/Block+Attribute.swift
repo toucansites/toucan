@@ -8,6 +8,7 @@
 public extension Block {
     /// Represents a static HTML attribute that will be rendered on the directive's HTML tag.
     struct Attribute: Sendable, Codable, Equatable {
+
         /// The name of the HTML attribute (e.g., `class`, `id`).
         public var name: String
 

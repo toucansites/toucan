@@ -27,8 +27,6 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    // MARK: - arguments
-
     @Argument(help: "The root directory (default: docs).")
     var root: String = "./docs"
 
@@ -40,8 +38,6 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
-
-    // MARK: - run
 
     func run() async throws {
         let home = FileManager.default.homeDirectoryForCurrentUser.path

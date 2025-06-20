@@ -13,6 +13,7 @@ import struct Foundation.TimeZone
 /// This type holds the locale and time zone identifiers that will be used
 /// by a date formatter to localize its output.
 public struct DateLocalization: Sendable, Codable, Equatable {
+
     /// The keys used for encoding and decoding top-level date formatter properties.
     enum CodingKeys: CodingKey {
         case locale

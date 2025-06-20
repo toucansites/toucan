@@ -8,14 +8,11 @@
 public extension Config {
     /// Defines file system paths for locating raw content and its associated assets.
     struct Contents: Codable, Equatable {
-        // MARK: - Coding Keys
 
         private enum CodingKeys: CodingKey {
             case path
             case assets
         }
-
-        // MARK: - Defaults
 
         /// Provides a default content configuration using `contents` for source files
         /// and `assets` for media or supporting files.
@@ -34,8 +31,6 @@ public extension Config {
         /// The location configuration for assets (e.g., images, attachments) linked to the content.
         public var assets: Location
 
-        // MARK: - Initialization
-
         /// Initializes a custom `Contents` configuration.
         ///
         /// - Parameters:
@@ -48,8 +43,6 @@ public extension Config {
             self.path = path
             self.assets = assets
         }
-
-        // MARK: - Decoding
 
         /// Decodes a `Contents` configuration from a serialized format.
         ///

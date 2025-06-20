@@ -12,6 +12,7 @@ import ToucanCore
 ///
 /// Wraps the file URL and an optional underlying error for context and debugging.
 public struct ObjectLoaderError: ToucanError {
+
     /// The URL of the file that caused the error.
     let url: URL
     /// The underlying error that occurred during loading or decoding.

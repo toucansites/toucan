@@ -10,6 +10,7 @@ import class Foundation.JSONEncoder
 
 /// An implementation of `ToucanEncoder` that uses JSON`.
 public struct ToucanJSONEncoder: ToucanEncoder {
+
     /// Initializes a new instance of the JSON encoder.
     public init() {}
 

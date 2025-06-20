@@ -13,6 +13,7 @@ import ToucanSerialization
 ///
 /// Utilizes a configurable separator, a decoder conforming to `ToucanDecoder`, and a logger.
 public struct MarkdownParser {
+
     /// The string used to separate front matter from content in the markdown input.
     var separator: String
     /// A decoder used to parse front matter into a typed dictionary.

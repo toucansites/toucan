@@ -106,6 +106,7 @@ private extension DateFormatter {
 
 /// Holds system date and time style `DateFormatter` instances and an ISO8601 formatter.
 private struct SystemDateFormatters {
+
     struct Date {
         var full: DateFormatter
         var long: DateFormatter
@@ -129,6 +130,7 @@ private struct SystemDateFormatters {
 ///
 /// Combines input parsing, system-style formatters, and user-defined formats.
 public struct ToucanInputDateFormatter {
+
     private var dateConfig: Config.DataTypes.Date
     private var inputFormatter: DateFormatter
     private var ephemeralFormatter: DateFormatter
@@ -191,6 +193,7 @@ public struct ToucanInputDateFormatter {
 ///
 /// Combines input parsing, system-style formatters, and user-defined formats.
 public struct ToucanOutputDateFormatter {
+
     private var dateConfig: Config.DataTypes.Date
     private var pipelineDateConfig: Pipeline.DataTypes.Date?
     private var systemFormatters: SystemDateFormatters

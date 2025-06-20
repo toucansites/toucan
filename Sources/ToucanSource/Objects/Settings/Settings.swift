@@ -7,6 +7,7 @@
 
 /// A custom coding key type for encoding and decoding dynamic keys.
 private struct DynamicCodingKeys: CodingKey {
+
     var stringValue: String
 
     var intValue: Int? { nil }
@@ -22,7 +23,6 @@ private struct DynamicCodingKeys: CodingKey {
 
 /// Represents site-wide configuration settings, allowing for dynamic, user-defined values.
 public struct Settings: Codable, Equatable {
-    // MARK: - Initialization
 
     /// The default, empty settings instance.
     public static var defaults: Self {
@@ -40,8 +40,6 @@ public struct Settings: Codable, Equatable {
     ) {
         self.values = values
     }
-
-    // MARK: - Decoding Logic
 
     /// Initializes a `Settings` instance by decoding from the given decoder.
     ///

@@ -11,6 +11,7 @@ import ToucanCore
 
 /// A computed mapping of project-relative URLs based on the loaded configuration and project root.
 public struct BuiltTargetSourceLocations {
+
     /// The base URL of the source directory.
     public var baseURL: URL
     /// The URL where content files are located.
@@ -39,8 +40,6 @@ public struct BuiltTargetSourceLocations {
     public var currentTemplateAssetOverridesURL: URL
     /// The URL for overridden views in the current template.
     public var currentTemplateViewsOverridesURL: URL
-
-    // MARK: - Initialization
 
     /// Creates a new `BuiltTargetSourceLocations` instance by computing file paths based on the project configuration.
     ///

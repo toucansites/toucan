@@ -10,7 +10,6 @@
 /// `ContentType` is used to declare how a particular content type (e.g., blog, project, product)
 /// should be parsed, validated, and queried in the pipeline.
 public struct ContentType: Codable, Equatable {
-    // MARK: - Coding Keys
 
     private enum CodingKeys: CodingKey {
         case id
@@ -50,8 +49,6 @@ public struct ContentType: Codable, Equatable {
     /// Named queries that can be used within scopes or as reusable filters for rendering this type.
     public var queries: [String: Query]
 
-    // MARK: - Initialization
-
     /// Creates a new instance.
     ///
     /// - Parameters:
@@ -76,8 +73,6 @@ public struct ContentType: Codable, Equatable {
         self.relations = relations
         self.queries = queries
     }
-
-    // MARK: - Decoding
 
     /// Decode from a structured format (e.g., YAML or JSON),
     /// applying defaults for missing optional fields.

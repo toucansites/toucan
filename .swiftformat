@@ -45,4 +45,3 @@
 --enable acronyms
     --acronyms "ID,URL,UUID,HTTP,YML,YAML,JSON,XML"
     --preserveacronyms "rootUrl"
-
