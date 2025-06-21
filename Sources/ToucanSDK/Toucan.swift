@@ -55,17 +55,17 @@ public struct Toucan {
         cwd: String? = nil
     ) -> URL {
         if path.hasPrefix("/") {
-            return URL(filePath: path)
+            return URL(filePath: path).standardized
         }
         if path.hasPrefix("~") {
-            return resolveHomeURL(for: path)
+            return resolveHomeURL(for: path).standardized
         }
         let cwd = cwd ?? fileManager.currentDirectoryPath
         let cwdURL = URL(filePath: cwd)
         if path == "." || path == "./" {
-            return cwdURL
+            return cwdURL.standardized
         }
-        return cwdURL.appendingPathIfPresent(path)
+        return cwdURL.appendingPathIfPresent(path).standardized
     }
 
     func resetDirectory(at url: URL) throws {
