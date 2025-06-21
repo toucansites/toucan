@@ -15,7 +15,6 @@ import ToucanSource
 
 @Suite
 struct E2ETestSuite {
-    // MARK: - html files
 
     @Test
     func notFound() throws {
@@ -27,12 +26,16 @@ struct E2ETestSuite {
             )
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let notFoundURL = output.appendingPathIfPresent("404.html")
-            let notFound = try String(contentsOf: notFoundURL)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let notFoundURL = distURL.appendingPathIfPresent("404.html")
+            let notFound = try String(contentsOf: notFoundURL, encoding: .utf8)
 
             #expect(notFound.contains("Not found page contents"))
         }
@@ -48,12 +51,16 @@ struct E2ETestSuite {
             Mocks.E2E.src(now: now)
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let rssXML = output.appendingPathIfPresent("rss.xml")
-            let rss = try String(contentsOf: rssXML)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let rssXML = distURL.appendingPathIfPresent("rss.xml")
+            let rss = try String(contentsOf: rssXML, encoding: .utf8)
 
             let formatter = ToucanOutputDateFormatter(
                 dateConfig: Config.defaults.dataTypes.date,
@@ -126,12 +133,18 @@ struct E2ETestSuite {
             Mocks.E2E.src(now: now)
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
 
-            let output = $1.appendingPathIfPresent("dist")
-            let sitemapXML = output.appendingPathIfPresent("sitemap.xml")
-            let sitemap = try String(contentsOf: sitemapXML)
+            let workDir = $1.appendingPathIfPresent("src")
+
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
+
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let sitemapXML = distURL.appendingPathIfPresent("sitemap.xml")
+            let sitemap = try String(contentsOf: sitemapXML, encoding: .utf8)
 
             let formatter = ToucanOutputDateFormatter(
                 dateConfig: Config.defaults.dataTypes.date,
@@ -205,15 +218,22 @@ struct E2ETestSuite {
             Mocks.E2E.src(now: now)
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
+            let distURL = workDir.appendingPathIfPresent("dist")
 
-            let redirect1URL = output.appendingPathIfPresent(
+            let redirect1URL = distURL.appendingPathIfPresent(
                 "redirects/home-old/index.html"
             )
-            let redirect1 = try String(contentsOf: redirect1URL)
+            let redirect1 = try String(
+                contentsOf: redirect1URL,
+                encoding: .utf8
+            )
             let expectation1 = #"""
                 <!DOCTYPE html>
                 <html lang="en-US">
@@ -235,10 +255,13 @@ struct E2ETestSuite {
                     )
             )
 
-            let redirect2URL = output.appendingPathIfPresent(
+            let redirect2URL = distURL.appendingPathIfPresent(
                 "redirects/about-old/index.html"
             )
-            let redirect2 = try String(contentsOf: redirect2URL)
+            let redirect2 = try String(
+                contentsOf: redirect2URL,
+                encoding: .utf8
+            )
             let expectation2 = #"""
                 <!DOCTYPE html>
                 <html lang="en-US">
@@ -277,12 +300,16 @@ struct E2ETestSuite {
             )
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let htmlURL = output.appendingPathIfPresent("context/index.html")
-            let html = try String(contentsOf: htmlURL)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let htmlURL = distURL.appendingPathIfPresent("context/index.html")
+            let html = try String(contentsOf: htmlURL, encoding: .utf8)
             let exp = "Context page description"
             #expect(html.trimmingCharacters(in: .whitespacesAndNewlines) == exp)
         }
@@ -382,12 +409,16 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
-            //            let context = try String(contentsOf: contextURL)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL, encoding: .utf8)
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()
@@ -469,12 +500,16 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
-            //            let context = try String(contentsOf: contextURL)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL, encoding: .utf8)
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()
@@ -562,12 +597,16 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
-            //            let context = try String(contentsOf: contextURL)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL, encoding: .utf8)
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()
@@ -652,12 +691,16 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
-            //            let context = try String(contentsOf: contextURL)
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
+            //            let context = try String(contentsOf: contextURL, encoding: .utf8)
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()
@@ -745,15 +788,19 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let cssURL = output.appendingPathIfPresent(
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let cssURL = distURL.appendingPathIfPresent(
                 "assets/test/style.min.css"
             )
 
-            let css = try String(contentsOf: cssURL)
+            let css = try String(contentsOf: cssURL, encoding: .utf8)
 
             #expect(
                 css.contains(
@@ -833,15 +880,19 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let cssURL = output.appendingPathIfPresent(
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let cssURL = distURL.appendingPathIfPresent(
                 "assets/test/style.css"
             )
 
-            let css = try String(contentsOf: cssURL)
+            let css = try String(contentsOf: cssURL, encoding: .utf8)
 
             #expect(
                 css.contains(
@@ -931,15 +982,19 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let cssURL = output.appendingPathIfPresent(
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let cssURL = distURL.appendingPathIfPresent(
                 "assets/test/style.css"
             )
 
-            let css = try String(contentsOf: cssURL)
+            let css = try String(contentsOf: cssURL, encoding: .utf8)
 
             #expect(
                 css.contains(
@@ -1022,13 +1077,17 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
+            let distURL = workDir.appendingPathIfPresent("dist")
 
-            let fileURL = output.appendingPathIfPresent("test/index.html")
-            let html = try String(contentsOf: fileURL)
+            let fileURL = distURL.appendingPathIfPresent("test/index.html")
+            let html = try String(contentsOf: fileURL, encoding: .utf8)
 
             #expect(html.contains("bar"))
         }
@@ -1150,13 +1209,17 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
+            let distURL = workDir.appendingPathIfPresent("dist")
 
-            let fileURL = output.appendingPathIfPresent("test/index.html")
-            let html = try String(contentsOf: fileURL)
+            let fileURL = distURL.appendingPathIfPresent("test/index.html")
+            let html = try String(contentsOf: fileURL, encoding: .utf8)
 
             #expect(html.contains("Character to replace => -"))
         }
@@ -1170,22 +1233,26 @@ struct E2ETestSuite {
             Mocks.E2E.src(now: now)
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
+            let distURL = workDir.appendingPathIfPresent("dist")
 
-            let fileURL1 = output.appendingPathIfPresent(
+            let fileURL1 = distURL.appendingPathIfPresent(
                 "blog/posts/pages/1/index.html"
             )
-            let html1 = try String(contentsOf: fileURL1)
+            let html1 = try String(contentsOf: fileURL1, encoding: .utf8)
             #expect(html1.contains("<title>Post pagination page 1 / 2</title>"))
             #expect(html1.contains("<h1>Post pagination page 1 / 2</h1>"))
 
-            let fileURL2 = output.appendingPathIfPresent(
+            let fileURL2 = distURL.appendingPathIfPresent(
                 "blog/posts/pages/2/index.html"
             )
-            let html2 = try String(contentsOf: fileURL2)
+            let html2 = try String(contentsOf: fileURL2, encoding: .utf8)
 
             #expect(html2.contains("<title>Post pagination page 2 / 2</title>"))
             #expect(html2.contains("<h1>Post pagination page 2 / 2</h1>"))
@@ -1256,11 +1323,15 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()
@@ -1388,11 +1459,15 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()
@@ -1511,11 +1586,15 @@ struct E2ETestSuite {
             }
         }
         .test {
-            let input = $1.appendingPathIfPresent("src")
-            try Toucan(input: input.path()).generate(now: now)
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
 
-            let output = $1.appendingPathIfPresent("dist")
-            let contextURL = output.appendingPathIfPresent("context.json")
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let contextURL = distURL.appendingPathIfPresent("context.json")
             let data = try Data(contentsOf: contextURL)
 
             let decoder = JSONDecoder()

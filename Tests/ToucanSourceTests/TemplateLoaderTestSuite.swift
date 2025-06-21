@@ -120,9 +120,6 @@ struct TemplateLoaderTestSuite {
             }
         }
         .test {
-            var logger = Logger(label: "test")
-            logger.logLevel = .trace
-
             let sourceURL = $1.appending(path: "src/")
             let config = Config.defaults
             let locations = BuiltTargetSourceLocations(
@@ -134,8 +131,7 @@ struct TemplateLoaderTestSuite {
                 locations: locations,
                 fileManager: $0,
                 encoder: ToucanYAMLEncoder(),
-                decoder: ToucanYAMLDecoder(),
-                logger: logger
+                decoder: ToucanYAMLDecoder()
             )
             let template = try loader.load()
 
