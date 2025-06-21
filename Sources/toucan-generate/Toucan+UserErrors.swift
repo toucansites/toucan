@@ -5,6 +5,7 @@
 //  Created by Tibor Bödecs on 2024. 10. 07..
 //
 
+import Foundation
 import Logging
 import ToucanSDK
 import ToucanSerialization
@@ -12,10 +13,20 @@ import ToucanSource
 import ToucanCore
 
 extension Toucan {
+
     @discardableResult
-    func generateAndLogErrors(_ logger: Logger) -> Bool {
+    func generateAndLogErrors(
+        workDir: String,
+        targetsToBuild: [String],
+        now: Date,
+        logger: Logger
+    ) -> Bool {
         do {
-            try generate()
+            try generate(
+                workDir: workDir,
+                targetsToBuild: targetsToBuild,
+                now: now
+            )
             return true
         }
         catch let error as ToucanError {

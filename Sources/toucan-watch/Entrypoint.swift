@@ -28,7 +28,7 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    @Argument(help: "The input directory (default: cwd).")
+    @Argument(help: "The input directory (default: current working directory).")
     var input: String = "."
 
     @Option(

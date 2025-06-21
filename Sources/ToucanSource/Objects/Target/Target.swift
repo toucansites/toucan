@@ -13,8 +13,7 @@ public struct Target: Codable, Equatable {
         case name
         case config
         case url
-        case locale
-        case timeZone
+        case input
         case output
         case `default`
     }
@@ -25,6 +24,7 @@ public struct Target: Codable, Equatable {
             name: "dev",
             config: "",
             url: "http://localhost:3000",
+            input: ".",
             output: "dist",
             isDefault: false
         )
@@ -46,6 +46,9 @@ public struct Target: Codable, Equatable {
     /// The base URL of the site or project without a trailing slash (e.g., `"https://example.com"`).
     public var url: String
 
+    /// The input path for the source files.
+    public var input: String
+
     /// The output path for generated files.
     public var output: String
 
@@ -57,18 +60,21 @@ public struct Target: Codable, Equatable {
     ///   - name: The unique name of the target.
     ///   - config: The path to the configuration file.
     ///   - url: The base URL for the target.
+    ///   - input: The input path for the source files.
     ///   - output: The output path for generated files.
     ///   - isDefault: A flag indicating if this is the default target.
     public init(
         name: String,
         config: String,
         url: String,
+        input: String,
         output: String,
         isDefault: Bool
     ) {
         self.name = name
         self.config = config
         self.url = url
+        self.input = input
         self.output = output
         self.isDefault = isDefault
     }
@@ -82,27 +88,40 @@ public struct Target: Codable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         self.name =
-            try container.decodeIfPresent(String.self, forKey: .name)
-            ?? base.name
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .name
+            ) ?? base.name
 
         self.config =
-            try container.decodeIfPresent(String.self, forKey: .config)
-            ?? base.config
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .config
+            ) ?? base.config
 
         self.url =
-            try container
-            .decodeIfPresent(
+            try container.decodeIfPresent(
                 String.self,
                 forKey: .url
             ) ?? base.url
 
+        self.input =
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .input
+            ) ?? base.input
+
         self.output =
-            try container.decodeIfPresent(String.self, forKey: .output)
-            ?? base.output
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .output
+            ) ?? base.output
 
         self.isDefault =
-            try container.decodeIfPresent(Bool.self, forKey: .default)
-            ?? base.isDefault
+            try container.decodeIfPresent(
+                Bool.self,
+                forKey: .default
+            ) ?? base.isDefault
     }
 
     /// Encodes this instance into the given encoder.
@@ -117,6 +136,7 @@ public struct Target: Codable, Equatable {
         try container.encode(name, forKey: .name)
         try container.encode(config, forKey: .config)
         try container.encode(url, forKey: .url)
+        try container.encode(input, forKey: .input)
         try container.encode(output, forKey: .output)
         try container.encode(isDefault, forKey: .default)
     }

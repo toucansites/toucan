@@ -26,8 +26,14 @@ struct Entrypoint: AsyncParsableCommand {
         version: GeneratorInfo.current.version
     )
 
-    @Argument(help: "The input directory (default: cwd).")
-    var input: String = "."
+    @Argument(
+        help: """
+                The working directory to look for a `toucan.yml` file.  
+                
+                Default: current working directory
+            """
+    )
+    var workDir: String = "."
 
     @Option(
         name: .shortAndLong,
@@ -48,14 +54,17 @@ struct Entrypoint: AsyncParsableCommand {
         }
 
         let generator = Toucan(
-            input: input,
-            targetsToBuild: targetsToBuild,
             logger: logger
         )
 
-        if generator.generateAndLogErrors(logger) {
+        if generator.generateAndLogErrors(
+            workDir: workDir,
+            targetsToBuild: targetsToBuild,
+            now: .init(),
+            logger: logger
+        ) {
             let metadata: Logger.Metadata = [
-                "input": "\(input)"
+                "workDir": .string(workDir)
             ]
             logger.info("Site generated successfully.", metadata: metadata)
         }

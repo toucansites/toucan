@@ -9,6 +9,7 @@ import FileManagerKit
 import struct Foundation.URL
 import ToucanSerialization
 import Logging
+import ToucanCore
 
 /// A loader responsible for building a `Template` by collecting assets and templates from various locations.
 public struct TemplateLoader {
@@ -39,7 +40,7 @@ public struct TemplateLoader {
         fileManager: FileManagerKit,
         encoder: ToucanEncoder,
         decoder: ToucanDecoder,
-        logger: Logger
+        logger: Logger = .subsystem("template-loader")
     ) {
         self.locations = locations
         self.extensions = extensions
