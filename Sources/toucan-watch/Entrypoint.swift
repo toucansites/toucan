@@ -65,18 +65,11 @@ struct Entrypoint: AsyncParsableCommand {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
 
-        let toucan = "/usr/local/bin/toucan"
-
-        /// test -x /usr/local/bin/toucan && /usr/local/bin/toucan --version || echo ""
-        //        let versionCheck = try await Command.findInPath(withName: "sh")?
-        //            .addArgument("-c")
-        //            .addArgument(
-        //                "test -x \(toucan) && \(toucan) --version || echo \"\""
-        //            )
-        //            .output
-        //            .stdout
-
-        guard FileManager.default.isExecutableFile(atPath: toucan) else {
+        var toucanCommandUrl: String? = nil
+        
+        let currentToucanCommand = Command.findInPath(withName: "toucan")
+        toucanCommandUrl = currentToucanCommand?.executablePath.string
+        guard let toucan = toucanCommandUrl, FileManager.default.isExecutableFile(atPath: toucan) else {
             logger.error("Toucan is not installed.")
             return
         }
