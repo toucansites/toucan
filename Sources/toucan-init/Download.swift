@@ -29,7 +29,7 @@ struct Download {
             withIntermediateDirectories: true
         )
         let zipURL = url.appendingPathExtension("zip")
-        
+
         /// check for target directory exists
         if !fileManager.fileExists(at: targetDirURL) {
             try fileManager.createDirectory(

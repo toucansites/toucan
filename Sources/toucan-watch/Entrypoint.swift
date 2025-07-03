@@ -66,10 +66,12 @@ struct Entrypoint: AsyncParsableCommand {
         logger.logLevel = logLevel
 
         var toucanCommandUrl: String? = nil
-        
+
         let currentToucanCommand = Command.findInPath(withName: "toucan")
         toucanCommandUrl = currentToucanCommand?.executablePath.string
-        guard let toucan = toucanCommandUrl, FileManager.default.isExecutableFile(atPath: toucan) else {
+        guard let toucan = toucanCommandUrl,
+            FileManager.default.isExecutableFile(atPath: toucan)
+        else {
             logger.error("Toucan is not installed.")
             return
         }
