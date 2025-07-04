@@ -65,10 +65,8 @@ struct Entrypoint: AsyncParsableCommand {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
 
-        var toucanCommandUrl: String? = nil
-
         let currentToucanCommand = Command.findInPath(withName: "toucan")
-        toucanCommandUrl = currentToucanCommand?.executablePath.string
+        let toucanCommandUrl = currentToucanCommand?.executablePath.string
         guard let toucan = toucanCommandUrl,
             FileManager.default.isExecutableFile(atPath: toucan)
         else {
