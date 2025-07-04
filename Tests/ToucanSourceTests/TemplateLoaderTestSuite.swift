@@ -45,7 +45,7 @@ struct TemplateLoaderTestSuite {
                                     url: http://localhost:8080/
                                 description: Test Template description
                                 generatorVersions:
-                                    - 1.0.0-beta.5
+                                    - 1.0.0-beta.6
                                 license:
                                     name: Test License
                                     url: http://localhost:8080/
