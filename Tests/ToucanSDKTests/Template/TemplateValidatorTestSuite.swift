@@ -18,12 +18,13 @@ struct TemplateValidatorTestSuite {
     @Test
     func valid() throws {
         let templateValidator = try TemplateValidator(
-            generatorInfo: .init(version: "1.0.0-beta.5")
+            generatorInfo: .init(version: "1.0.0-beta.6")
         )
 
         try templateValidator.validate(
             Mocks.Templates.example(
                 generatorVersions: [
+                    "1.0.0-beta.6",
                     "1.0.0-beta.5",
                     "1.0.0-beta.4",
                     "1.0.0",
@@ -53,7 +54,7 @@ struct TemplateValidatorTestSuite {
     @Test
     func unsupportedVersion() throws {
         let templateValidator = try TemplateValidator(
-            generatorInfo: .init(version: "1.0.0-beta.5")
+            generatorInfo: .init(version: "1.0.0-beta.6")
         )
 
         do {
@@ -61,7 +62,7 @@ struct TemplateValidatorTestSuite {
                 Mocks.Templates.example(
                     generatorVersions: [
                         "1.0.0",
-                        "1.0.0-beta.5",
+                        "1.0.0-beta.6",
                         "2.0.0",
                     ]
                 )
@@ -78,11 +79,11 @@ struct TemplateValidatorTestSuite {
                 return
             }
 
-            #expect(version.description == "1.0.0-beta.5")
+            #expect(version.description == "1.0.0-beta.6")
             #expect(
                 supported.map {
                     $0.description
-                } == ["1.0.0-beta.5", "1.0.0", "2.0.0"]
+                } == ["1.0.0-beta.6", "1.0.0", "2.0.0"]
             )
         }
     }

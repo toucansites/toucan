@@ -10,7 +10,7 @@
 extension Mocks.Templates {
 
     static func metadata(
-        generatorVersions: [String] = ["1.0.0-beta.5"]
+        generatorVersions: [String] = ["1.0.0-beta.6"]
     ) -> Template.Metadata {
         let url = "http://localhost:8080/"
 
@@ -41,7 +41,7 @@ extension Mocks.Templates {
     }
 
     static func example(
-        generatorVersions: [String] = ["1.0.0-beta.5"]
+        generatorVersions: [String] = ["1.0.0-beta.6"]
     ) -> Template {
         .init(
             metadata: Self.metadata(generatorVersions: generatorVersions),

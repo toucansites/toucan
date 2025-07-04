@@ -36,7 +36,7 @@ public struct GeneratorInfo: Codable, Sendable {
 public extension GeneratorInfo {
     /// Returns the most current version of the generator.
     static var current: Self {
-        .v1_0_0_beta_5
+        .v1_0_0_beta_6
     }
 }
 
@@ -44,6 +44,7 @@ public extension GeneratorInfo {
 extension GeneratorInfo {
     static let v1_0_0 = GeneratorInfo(version: "1.0.0")
     static let v1_0_0_rc_1 = GeneratorInfo(version: "1.0.0-rc.1")
+    static let v1_0_0_beta_6 = GeneratorInfo(version: "1.0.0-beta.6")
     static let v1_0_0_beta_5 = GeneratorInfo(version: "1.0.0-beta.5")
     static let v1_0_0_beta_4 = GeneratorInfo(version: "1.0.0-beta.4")
     static let v1_0_0_beta_3 = GeneratorInfo(version: "1.0.0-beta.3")
