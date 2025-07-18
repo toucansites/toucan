@@ -280,8 +280,7 @@ struct ContentResolverTestSuite {
         let content = try #require(targetContents.first)
         #expect(content.type.id == "post")
     }
-    
-    
+
     @Test()
     func missingContentType() async throws {
         let now = Date()
@@ -294,7 +293,7 @@ struct ContentResolverTestSuite {
                 .init(
                     id: "page",
                     default: true
-                ),
+                )
             ],
             rawContents: [
                 .init(
