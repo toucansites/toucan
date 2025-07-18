@@ -280,6 +280,80 @@ struct ContentResolverTestSuite {
         let content = try #require(targetContents.first)
         #expect(content.type.id == "post")
     }
+    
+    
+    @Test()
+    func missingContentType() async throws {
+        let now = Date()
+        let buildTargetSource = BuildTargetSource(
+            locations: .init(
+                sourceURL: .init(filePath: ""),
+                config: .defaults
+            ),
+            types: [
+                .init(
+                    id: "page",
+                    default: true
+                ),
+            ],
+            rawContents: [
+                .init(
+                    origin: .init(
+                        path: .init("foo/bar"),
+                        slug: "foo/bar"
+                    ),
+                    markdown: .init(
+                        frontMatter: [
+                            "type": "foo"
+                        ]
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+        try validator.validate()
+
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let resolver = ContentResolver(
+            contentTypeResolver: .init(
+                types: buildTargetSource.types,
+                pipelines: buildTargetSource.pipelines
+            ),
+            encoder: encoder,
+            decoder: decoder,
+            dateFormatter: .init(
+                dateConfig: buildTargetSource.config.dataTypes.date
+            )
+        )
+
+        do {
+            _ = try resolver.convert(
+                rawContents: buildTargetSource.rawContents
+            )
+            Issue.record("Should result in an missing content type error.")
+        }
+        catch {
+            switch error {
+            case let .contentType(typeError):
+                switch typeError {
+                case let .missingContentType(id, path):
+                    #expect(id == "foo")
+                    #expect(path == "foo/bar")
+                default:
+                    Issue.record("Invalid content type error result.")
+                }
+            default:
+                Issue.record("Invalid content resolver error result.")
+            }
+        }
+    }
 
     @Test()
     func allPropertyTypeConversion() async throws {
