@@ -114,7 +114,23 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitOrderedList(
         _ orderedList: OrderedList
     ) -> Result {
-        HTML(name: "ol", contents: visit(orderedList.children)).render()
+        var attributes: [HTML.Attribute] = []
+        if orderedList.startIndex > 1 {
+            attributes.append(
+                .init(
+                    key: "start",
+                    value: String(
+                        orderedList.startIndex
+                    )
+                )
+            )
+        }
+        return HTML(
+            name: "ol",
+            attributes: attributes,
+            contents: visit(orderedList.children)
+        )
+        .render()
     }
 
     mutating func visitUnorderedList(

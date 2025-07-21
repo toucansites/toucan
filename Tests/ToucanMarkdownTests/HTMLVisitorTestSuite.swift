@@ -355,6 +355,21 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test
+    func orderedListWithStartIndex() {
+        let input = #"""
+            2. foo
+            3. bar
+            4. baz
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <ol start="2"><li>foo</li><li>bar</li><li>baz</li></ol>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
     func listWithCode() {
         let input = #"""
             - foo `aaa`
