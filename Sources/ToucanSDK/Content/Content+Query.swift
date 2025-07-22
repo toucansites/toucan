@@ -90,8 +90,11 @@ public extension [Content] {
                 guard
                     let valueA = a.properties[order.key],
                     let valueB = b.properties[order.key]
-                else { return false }
-
+                else {
+                    // TODO: log if properties do not exist
+                    return false
+                }
+                
                 return compare(
                     valueA,
                     valueB,
