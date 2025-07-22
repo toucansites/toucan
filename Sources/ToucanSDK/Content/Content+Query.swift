@@ -94,7 +94,7 @@ public extension [Content] {
                     // TODO: log if properties do not exist
                     return false
                 }
-                
+
                 return compare(
                     valueA,
                     valueB,
