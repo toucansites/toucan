@@ -5,12 +5,14 @@
 //  Created by Viasz-Kádi Ferenc on 2025. 06. 17..
 //
 
-@testable import ToucanSource
+import ToucanCore
+@testable
+import ToucanSource
 
 extension Mocks.Templates {
 
     static func metadata(
-        generatorVersions: [String] = ["1.0.0-beta.6"]
+        generatorVersions: [String] = [GeneratorInfo.current.release]
     ) -> Template.Metadata {
         let url = "http://localhost:8080/"
 
@@ -41,7 +43,7 @@ extension Mocks.Templates {
     }
 
     static func example(
-        generatorVersions: [String] = ["1.0.0-beta.6"]
+        generatorVersions: [String] = [GeneratorInfo.current.release]
     ) -> Template {
         .init(
             metadata: Self.metadata(generatorVersions: generatorVersions),

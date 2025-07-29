@@ -601,14 +601,14 @@ struct BuildTargetSourceRendererTestSuite {
 
             struct Info: Decodable {
                 let name: String
-                let version: String
+                let release: String
             }
 
             let items: [Item]
             let info: Info
         }
 
-        let decoder = JSONDecoder()
+        let decoder = JSONDecoder()        
         let result = try decoder.decode(Expected.self, from: data)
 
         #expect(result.items.count == 3)
