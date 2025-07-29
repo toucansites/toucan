@@ -671,4 +671,30 @@ struct HTMLVisitorTestSuite {
 
         #expect(output == expectation)
     }
+
+    @Test
+    func headingWithAngleBracket() {
+        let input = #"""
+            ## This <is a> bracket
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <h2 id="this-is-a-bracket">This &lt;is a&gt; bracket</h2>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func codeWithAngleBracket() {
+        let input = #"""
+            See the `<head>` tag.
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <p>See the <code>&lt;head&gt;</code> tag.</p>
+            """#
+
+        #expect(output == expectation)
+    }
 }
