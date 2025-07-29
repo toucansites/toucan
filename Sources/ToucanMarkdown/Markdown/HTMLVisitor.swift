@@ -12,15 +12,15 @@ import ToucanCore
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
 private extension String {
-    
+
     func escapeAngleBrackets() -> String {
         replacingOccurrences(
             [
                 #"<"#: #"&lt;"#,
                 #">"#: #"&gt;"#,
-                // #"&"#: #"&amp;"#,
-                // #"'"#: #"&apos;"#,
-                // #"""#: #"&quot;"#,
+                    // #"&"#: #"&amp;"#,
+                    // #"'"#: #"&apos;"#,
+                    // #"""#: #"&quot;"#,
             ]
         )
     }
@@ -160,7 +160,8 @@ struct HTMLVisitor: MarkupVisitor {
         HTML(
             name: "code",
             contents: inlineCode.code.escapeAngleBrackets()
-        ).render()
+        )
+        .render()
     }
 
     mutating func visitEmphasis(
@@ -255,7 +256,7 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitCodeBlock(
         _ codeBlock: CodeBlock
     ) -> Result {
-        
+
         var attributes: [HTML.Attribute] = []
         if let language = codeBlock.language {
             attributes.append(

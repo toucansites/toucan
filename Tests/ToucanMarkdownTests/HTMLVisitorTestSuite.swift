@@ -671,7 +671,7 @@ struct HTMLVisitorTestSuite {
 
         #expect(output == expectation)
     }
-    
+
     @Test
     func headingWithAngleBracket() {
         let input = #"""
@@ -684,7 +684,7 @@ struct HTMLVisitorTestSuite {
 
         #expect(output == expectation)
     }
-    
+
     @Test
     func codeWithAngleBracket() {
         let input = #"""
