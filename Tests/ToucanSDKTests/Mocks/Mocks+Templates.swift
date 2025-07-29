@@ -6,8 +6,7 @@
 //
 
 import ToucanCore
-@testable
-import ToucanSource
+@testable import ToucanSource
 
 extension Mocks.Templates {
 

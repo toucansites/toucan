@@ -608,7 +608,7 @@ struct BuildTargetSourceRendererTestSuite {
             let info: Info
         }
 
-        let decoder = JSONDecoder()        
+        let decoder = JSONDecoder()
         let result = try decoder.decode(Expected.self, from: data)
 
         #expect(result.items.count == 3)
