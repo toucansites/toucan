@@ -23,7 +23,7 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
-        version: GeneratorInfo.current.version
+        version: GeneratorInfo.current.release
     )
 
     @Argument(

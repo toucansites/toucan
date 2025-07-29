@@ -5,6 +5,15 @@ let swiftSettings: [SwiftSetting] = [
     .enableExperimentalFeature("StrictConcurrency=complete"),
 ]
 
+/// Git commit hash information based on context.
+var gitCommitHash: String {
+    if let git = Context.gitInformation {
+        let base = git.currentCommit
+        return git.hasUncommittedChanges ? "\(base)-dev" : base
+    }
+    return "untracked"
+}
+
 let package = Package(
     name: "toucan",
     platforms: [
@@ -82,6 +91,12 @@ let package = Package(
         ),
     ],
     targets: [
+        .target(
+            name: "_GitCommitHash",
+            cSettings: [
+                .define("GIT_COMMIT_HASH", to: #""\#(gitCommitHash)""#)
+            ]
+        ),
         // MARK: - executable targets
 
         .executableTarget(
@@ -159,6 +174,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .target(name: "_GitCommitHash"),
             ],
             swiftSettings: swiftSettings
         ),

@@ -1,4 +1,6 @@
 .*
+*.c
+*.h
 *.txt
 *.html
 *.yaml

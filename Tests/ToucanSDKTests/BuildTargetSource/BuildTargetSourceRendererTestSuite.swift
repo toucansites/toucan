@@ -314,7 +314,7 @@ struct BuildTargetSourceRendererTestSuite {
         let info = GeneratorInfo.current
 
         #expect(exp.generator.name == info.name)
-        #expect(exp.generator.version == info.version)
+        #expect(exp.generator.release == info.release)
         #expect(exp.generation.iso8601 == nowISO8601String)
     }
 

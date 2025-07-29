@@ -36,7 +36,7 @@ struct TemplateValidator {
     let version: Version
 
     init(generatorInfo: GeneratorInfo = .current) throws {
-        let rawVersion = generatorInfo.version
+        let rawVersion = generatorInfo.release
         let version = Version(rawVersion)
         guard let version else {
             throw TemplateValidatorError.invalidVersion(rawVersion)
