@@ -42,7 +42,9 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/binarybirds/file-manager-kit",
-            from: "0.3.0"
+            .upToNextMinor(
+                from: "0.4.0"
+            )
         ),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird",
