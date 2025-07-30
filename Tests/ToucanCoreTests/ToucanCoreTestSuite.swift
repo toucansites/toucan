@@ -6,11 +6,18 @@
 //
 
 import Testing
-
 @testable import ToucanCore
 
 @Suite
 struct ToucanCoreTestSuite {
+
     @Test()
-    func example() async throws {}
+    func currentRelease() async throws {
+
+        // Make sure to update the target release
+        let targetRelease = GeneratorInfo.v1_0_0_beta_6.release
+
+        let currentRelease = GeneratorInfo.current.release
+        #expect(targetRelease == currentRelease)
+    }
 }

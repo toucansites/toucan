@@ -28,6 +28,7 @@ struct E2ETestSuite {
         .test {
             let workDir = $1.appendingPathIfPresent("src")
             let toucan = Toucan()
+
             try toucan.generate(
                 workDir: workDir.path(),
                 now: now
