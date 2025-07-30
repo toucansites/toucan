@@ -31,7 +31,7 @@ extension RawContent {
 struct RawContentLoaderTestSuite {
 
     private func testSourceContentsHierarchy(
-        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+        @FileManagerPlayground.ItemBuilder _ builder: () ->
             [FileManagerPlayground.Item]
     ) -> Directory {
         Directory(name: "src") {
@@ -63,7 +63,7 @@ struct RawContentLoaderTestSuite {
     // MARK: - locate origin index file types
 
     private func testBlogArticleHierarchy(
-        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+        @FileManagerPlayground.ItemBuilder _ builder: () ->
             [FileManagerPlayground.Item]
     ) -> Directory {
         testSourceContentsHierarchy {
@@ -159,8 +159,6 @@ struct RawContentLoaderTestSuite {
             let expected = Origin(
                 path: .init(
                     "[01]blog/[01]articles/[01]first-beta-release"
-                        .replacingOccurrences(of: "[", with: "%5B")
-                        .replacingOccurrences(of: "]", with: "%5D")
                 ),
                 slug: "blog/articles/first-beta-release"
             )
@@ -190,8 +188,6 @@ struct RawContentLoaderTestSuite {
             let expected = Origin(
                 path: .init(
                     "[01]blog/[articles]/[02]first-beta-release"
-                        .replacingOccurrences(of: "[", with: "%5B")
-                        .replacingOccurrences(of: "]", with: "%5D")
                 ),
                 slug: "blog/first-beta-release"
             )

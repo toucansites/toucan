@@ -1,5 +1,5 @@
 {
-  "originHash" : "4414e3e8d379ee188f6d1ce85b94566643164056683f740487a9a59ba2ae7ac1",
+  "originHash" : "7441d82229ee44109a53914fd78b5ca5198a8071219fc66569d78814176d99a2",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/binarybirds/file-manager-kit",
       "state" : {
-        "revision" : "df5a24ad8c3e9733a7ede859215afab0d55e22f7",
-        "version" : "0.3.0"
+        "revision" : "89a7485d5564aafd77d846fe4366f7e67d6b4b9b",
+        "version" : "0.4.0"
       }
     },
     {
@@ -303,8 +303,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system",
       "state" : {
-        "revision" : "41daa93a5d229e1548ec86ab527ce4783ca84dda",
-        "version" : "1.6.0"
+        "revision" : "b63d24d465e237966c3f59f47dcac6c70fb0bca3",
+        "version" : "1.6.1"
       }
     },
     {
@@ -321,8 +321,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup",
       "state" : {
-        "revision" : "dee225a3da7b68d34936abc4dc8f34f2264db647",
-        "version" : "2.9.6"
+        "revision" : "a81b1a5ac933dee8c6cfccf05d5ffcc5eb8c7ec4",
+        "version" : "2.10.0"
       }
     },
     {
