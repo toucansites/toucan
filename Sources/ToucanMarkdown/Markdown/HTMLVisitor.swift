@@ -11,6 +11,21 @@ import ToucanCore
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
+private extension String {
+
+    func escapeAngleBrackets() -> String {
+        replacingOccurrences(
+            [
+                #"<"#: #"&lt;"#,
+                #">"#: #"&gt;"#,
+                    // #"&"#: #"&amp;"#,
+                    // #"'"#: #"&apos;"#,
+                    // #"""#: #"&quot;"#,
+            ]
+        )
+    }
+}
+
 private extension Markup {
     var isInsideList: Bool {
         self is ListItemContainer || parent?.isInsideList == true
@@ -114,7 +129,23 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitOrderedList(
         _ orderedList: OrderedList
     ) -> Result {
-        HTML(name: "ol", contents: visit(orderedList.children)).render()
+        var attributes: [HTML.Attribute] = []
+        if orderedList.startIndex > 1 {
+            attributes.append(
+                .init(
+                    key: "start",
+                    value: String(
+                        orderedList.startIndex
+                    )
+                )
+            )
+        }
+        return HTML(
+            name: "ol",
+            attributes: attributes,
+            contents: visit(orderedList.children)
+        )
+        .render()
     }
 
     mutating func visitUnorderedList(
@@ -126,7 +157,11 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitInlineCode(
         _ inlineCode: InlineCode
     ) -> Result {
-        HTML(name: "code", contents: inlineCode.code).render()
+        HTML(
+            name: "code",
+            contents: inlineCode.code.escapeAngleBrackets()
+        )
+        .render()
     }
 
     mutating func visitEmphasis(
@@ -221,6 +256,7 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitCodeBlock(
         _ codeBlock: CodeBlock
     ) -> Result {
+
         var attributes: [HTML.Attribute] = []
         if let language = codeBlock.language {
             attributes.append(
@@ -234,15 +270,7 @@ struct HTMLVisitor: MarkupVisitor {
             name: "code",
             attributes: attributes,
             contents: codeBlock.code
-                .replacingOccurrences(
-                    [
-                        #"<"#: #"&lt;"#,
-                        #">"#: #"&gt;"#,
-                            // #"&"#: #"&amp;"#,
-                            // #"'"#: #"&apos;"#,
-                            // #"""#: #"&quot;"#,
-                    ]
-                )
+                .escapeAngleBrackets()
                 .replacingOccurrences(
                     [
                         #"/*!*/"#: #"<span class="highlight">"#,
@@ -267,7 +295,7 @@ struct HTMLVisitor: MarkupVisitor {
         return HTML(
             name: "h\(heading.level)",
             attributes: attributes,
-            contents: visit(heading.children)
+            contents: visit(heading.children).escapeAngleBrackets()
         )
         .render()
     }

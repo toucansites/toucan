@@ -355,6 +355,21 @@ struct HTMLVisitorTestSuite {
     }
 
     @Test
+    func orderedListWithStartIndex() {
+        let input = #"""
+            2. foo
+            3. bar
+            4. baz
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <ol start="2"><li>foo</li><li>bar</li><li>baz</li></ol>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
     func listWithCode() {
         let input = #"""
             - foo `aaa`
@@ -652,6 +667,32 @@ struct HTMLVisitorTestSuite {
         let output = renderHTML(markdown: input)
         let expectation = #"""
             <table><thead><td>Item</td><td>In Stock</td><td>Price</td></thead><tbody><tr><td>Python Hat</td><td>True</td><td>23.99</td></tr><tr><td>SQL Hat</td><td>True</td><td>23.99</td></tr><tr><td>Codecademy Tee</td><td>False</td><td>19.99</td></tr><tr><td>Codecademy Hoodie</td><td>False</td><td>42.99</td></tr></tbody></table>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func headingWithAngleBracket() {
+        let input = #"""
+            ## This <is a> bracket
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <h2 id="this-is-a-bracket">This &lt;is a&gt; bracket</h2>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func codeWithAngleBracket() {
+        let input = #"""
+            See the `<head>` tag.
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <p>See the <code>&lt;head&gt;</code> tag.</p>
             """#
 
         #expect(output == expectation)

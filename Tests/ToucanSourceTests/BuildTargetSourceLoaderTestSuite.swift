@@ -19,14 +19,14 @@ struct BuildTargetSourceLoaderTestSuite {
     // MARK: - private helpers
 
     private func testSourceHierarchy(
-        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+        @FileManagerPlayground.ItemBuilder _ builder: () ->
             [FileManagerPlayground.Item]
     ) -> Directory {
         Directory(name: "src", builder)
     }
 
     private func testSourceTypesHierarchy(
-        @FileManagerPlayground.DirectoryBuilder _ builder: () ->
+        @FileManagerPlayground.ItemBuilder _ builder: () ->
             [FileManagerPlayground.Item]
     ) -> Directory {
         testSourceHierarchy {

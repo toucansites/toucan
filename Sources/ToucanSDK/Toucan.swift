@@ -72,7 +72,10 @@ public struct Toucan {
         if fileManager.exists(at: url) {
             try fileManager.delete(at: url)
         }
-        try fileManager.createDirectory(at: url)
+        try fileManager.createDirectory(
+            at: url,
+            attributes: nil
+        )
     }
 
     func prepareTemporaryWorkingDirectory() throws -> URL {
@@ -277,7 +280,10 @@ public struct Toucan {
                         temporaryWorkDirURL
                         .appendingPathIfPresent(result.destination.path)
 
-                    try fileManager.createDirectory(at: destinationFolder)
+                    try fileManager.createDirectory(
+                        at: destinationFolder,
+                        attributes: nil
+                    )
 
                     let resultOutputURL =
                         destinationFolder
