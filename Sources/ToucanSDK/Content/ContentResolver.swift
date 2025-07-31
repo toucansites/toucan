@@ -47,8 +47,8 @@ enum ContentResolverError: ToucanError {
 
     var logMessage: String {
         switch self {
-        case let .contentType(error):
-            "Content type related error: \(error.logMessage)."
+        case .contentType(_):
+            "Content type related error."
         case let .missingProperty(name, slug):
             "Missing property `\(name)` for content: \(slug)."
         case let .missingRelation(name, slug):
@@ -62,8 +62,8 @@ enum ContentResolverError: ToucanError {
 
     var userFriendlyMessage: String {
         switch self {
-        case let .contentType(error):
-            "Content type related error: \(error.userFriendlyMessage)"
+        case .contentType(_):
+            "Content type related error."
         case let .missingProperty(name, slug):
             "Missing property `\(name)` for content: `\(slug)`."
         case let .missingRelation(name, slug):
