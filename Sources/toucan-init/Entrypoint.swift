@@ -51,17 +51,9 @@ struct Entrypoint: AsyncParsableCommand {
                 targetDirURL: siteDirectoryURL,
                 fileManager: fileManager
             )
-            let template = Download(
-                sourceURL: minimalTemplateURL,
-                targetDirURL: defaultTemplatesURL,
-                fileManager: fileManager
-            )
 
-            logger.info("Preparing source files.")
+            logger.info("Preparing files.")
             try await source.resolve()
-
-            logger.info("Preparing template files.")
-            try await template.resolve()
 
             logger.info("'\(siteDirectory)' was prepared successfully.")
         }
@@ -85,14 +77,7 @@ extension Entrypoint {
     var minimalSourceURL: URL {
         .init(
             string:
-                "https://github.com/toucansites/minimal-example/archive/refs/heads/main.zip"
-        )!
-    }
-
-    var minimalTemplateURL: URL {
-        .init(
-            string:
-                "https://github.com/toucansites/minimal-template/archive/refs/heads/main.zip"
+                "https://github.com/toucansites/minimal-template-demo/archive/refs/heads/main.zip"
         )!
     }
 
