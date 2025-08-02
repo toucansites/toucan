@@ -33,6 +33,12 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
+    
+    @Option(
+        name: .shortAndLong,
+        help: "Specifies the repository to download as the starting point. If not specified, a minimal setup will be used."
+    )
+    var repository: String?
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -46,8 +52,10 @@ struct Entrypoint: AsyncParsableCommand {
         }
 
         do {
+            let sourceUrl = repository.flatMap { URL(string: $0) }
+            
             let source = Download(
-                sourceURL: minimalSourceURL,
+                sourceURL: sourceUrl ?? minimalSourceURL,
                 targetDirURL: siteDirectoryURL,
                 fileManager: fileManager
             )
