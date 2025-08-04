@@ -36,9 +36,9 @@ struct Entrypoint: AsyncParsableCommand {
     
     @Option(
         name: .shortAndLong,
-        help: "Specifies the repository to download as the starting point. If not specified, a minimal setup will be used."
+        help: "Specifies a URL to a remote zip file containing a demo project to use as the starting point. If not specified, a minimal setup will be used."
     )
-    var repository: String?
+    var demoSourceZipURL: String?
 
     func run() async throws {
         var logger = Logger(label: "toucan")
@@ -52,7 +52,7 @@ struct Entrypoint: AsyncParsableCommand {
         }
 
         do {
-            let sourceUrl = repository.flatMap { URL(string: $0) }
+            let sourceUrl = demoSourceZipURL.flatMap { URL(string: $0) }
             
             let source = Download(
                 sourceURL: sourceUrl ?? minimalSourceURL,
@@ -87,13 +87,5 @@ extension Entrypoint {
             string:
                 "https://github.com/toucansites/minimal-template-demo/archive/refs/heads/main.zip"
         )!
-    }
-
-    var defaultTemplatesURL: URL {
-        BuiltTargetSourceLocations(
-            sourceURL: siteDirectoryURL,
-            config: .defaults
-        )
-        .currentTemplateURL
     }
 }
