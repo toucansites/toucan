@@ -34,6 +34,13 @@ struct Entrypoint: AsyncParsableCommand {
     @Option(name: .shortAndLong, help: "The log level to use.")
     var logLevel: Logger.Level = .info
 
+    @Option(
+        name: .shortAndLong,
+        help:
+            "Specifies a URL to a remote zip file containing a demo project to use as the starting point. If not specified, a minimal setup will be used."
+    )
+    var demoSourceZipURL: String?
+
     func run() async throws {
         var logger = Logger(label: "toucan")
         logger.logLevel = logLevel
@@ -46,8 +53,10 @@ struct Entrypoint: AsyncParsableCommand {
         }
 
         do {
+            let sourceUrl = demoSourceZipURL.flatMap { URL(string: $0) }
+
             let source = Download(
-                sourceURL: minimalSourceURL,
+                sourceURL: sourceUrl ?? minimalSourceURL,
                 targetDirURL: siteDirectoryURL,
                 fileManager: fileManager
             )
@@ -79,13 +88,5 @@ extension Entrypoint {
             string:
                 "https://github.com/toucansites/minimal-template-demo/archive/refs/heads/main.zip"
         )!
-    }
-
-    var defaultTemplatesURL: URL {
-        BuiltTargetSourceLocations(
-            sourceURL: siteDirectoryURL,
-            config: .defaults
-        )
-        .currentTemplateURL
     }
 }
