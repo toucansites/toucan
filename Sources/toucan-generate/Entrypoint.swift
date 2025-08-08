@@ -44,7 +44,7 @@ struct Entrypoint: AsyncParsableCommand {
 
     func run() async throws {
         let logger = Logger.subsystem("generate")
-        
+
         var targetsToBuild: [String] = []
         if let target, !target.isEmpty {
             targetsToBuild.append(target)

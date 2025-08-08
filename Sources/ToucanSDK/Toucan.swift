@@ -18,7 +18,7 @@ public struct Toucan {
     let fileManager: FileManagerKit
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
-    public let logger: Logger
+    let logger: Logger
 
     /// Initialize a new instance.
     ///
@@ -312,5 +312,35 @@ public struct Toucan {
             try fileManager.delete(at: temporaryWorkDirURL)
             throw error
         }
+    }
+
+    /// Attempts to generate the static site and logs any errors encountered.
+    /// - Parameters:
+    ///   - workDir: The working directory URL as a path string.
+    ///   - targetsToBuild: The list of target names to build.
+    ///   - now: The current date used during the build.
+    /// - Returns: `true` if generation succeeds without errors; otherwise, `false`.
+    ///
+    @discardableResult
+    public func generateAndLogErrors(
+        workDir: String,
+        targetsToBuild: [String],
+        now: Date
+    ) -> Bool {
+        do {
+            try generate(
+                workDir: workDir,
+                targetsToBuild: targetsToBuild,
+                now: now
+            )
+            return true
+        }
+        catch let error as ToucanError {
+            logger.error("\(error.logMessageStack())")
+        }
+        catch {
+            logger.error("\(error)")
+        }
+        return false
     }
 }

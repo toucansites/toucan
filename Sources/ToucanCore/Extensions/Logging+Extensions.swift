@@ -32,7 +32,7 @@ public extension Logger {
 }
 
 private extension Logger {
-    
+
     /// Returns the log level from environment variables for the given subsystem identifier.
     ///
     /// Checks for a subsystem-specific log level key and a global log level key (`TOUCAN_LOG_LEVEL`)
@@ -44,18 +44,17 @@ private extension Logger {
         let env = ProcessInfo.processInfo.environment
         let keys = [
             id.subsystemLogLevelKey(),
-            "TOUCAN_LOG_LEVEL"
+            "TOUCAN_LOG_LEVEL",
         ]
-        
+
         for key in keys {
-            if 
-                let rawLevel = env[key]?.lowercased(),
-                let level = Logger.Level(rawValue: rawLevel) 
+            if let rawLevel = env[key]?.lowercased(),
+                let level = Logger.Level(rawValue: rawLevel)
             {
                 return level
             }
         }
-        
+
         return nil
     }
 }
