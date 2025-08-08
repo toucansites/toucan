@@ -436,7 +436,7 @@ public struct BuildTargetSourceRenderer {
                     },
                     paragraphStyles: buildTargetSource.config.renderer
                         .paragraphStyles.styles
-                ),
+                )
             )
 
             let contents = renderer.render(

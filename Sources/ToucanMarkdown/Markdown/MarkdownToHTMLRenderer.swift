@@ -66,7 +66,7 @@ public struct MarkdownToHTMLRenderer {
             paragraphStyles: paragraphStyles,
             slug: slug,
             assetsPath: assetsPath,
-            baseURL: baseURL,
+            baseURL: baseURL
         )
 
         // Generate HTML by visiting the document tree.

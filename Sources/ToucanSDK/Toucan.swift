@@ -220,7 +220,7 @@ public struct Toucan {
                     switch pipeline.engine.id {
                     case "json":
                         let renderer = ContextBundleToJSONRenderer(
-                            pipeline: pipeline,
+                            pipeline: pipeline
                         )
                         return renderer.render(contextBundles)
                     case "mustache":
@@ -233,7 +233,7 @@ public struct Toucan {
 
                         let renderer = try ContextBundleToHTMLRenderer(
                             pipeline: pipeline,
-                            templates: template.getViewIDsWithContents(),
+                            templates: template.getViewIDsWithContents()
                         )
                         return renderer.render(contextBundles)
                     default:

@@ -140,15 +140,15 @@ public struct MarkdownRenderer {
 
         self.markdownToHTMLRenderer = MarkdownToHTMLRenderer(
             customBlockDirectives: configuration.markdown.customBlockDirectives,
-            paragraphStyles: configuration.paragraphStyles,
+            paragraphStyles: configuration.paragraphStyles
         )
 
         self.outlineParser = OutlineParser(
-            levels: configuration.outline.levels,
+            levels: configuration.outline.levels
         )
 
         self.readingTimeCalculator = ReadingTimeCalculator(
-            wordsPerMinute: configuration.readingTime.wordsPerMinute,
+            wordsPerMinute: configuration.readingTime.wordsPerMinute
         )
 
         self.logger = logger
@@ -180,7 +180,7 @@ public struct MarkdownRenderer {
             if !transformerPipeline.run.isEmpty {
                 shouldRenderMarkdown = transformerPipeline.isMarkdownResult
                 let executor = TransformerExecutor(
-                    pipeline: transformerPipeline,
+                    pipeline: transformerPipeline
                 )
                 do {
                     finalHtml = try executor.transform(
