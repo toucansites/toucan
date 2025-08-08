@@ -20,7 +20,7 @@ struct ContextBundleToJSONRenderer {
 
     init(
         pipeline: Pipeline,
-        logger: Logger
+        logger: Logger = .subsystem("context-bundle-to-json-renderer")
     ) {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [

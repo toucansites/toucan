@@ -18,8 +18,7 @@ extension Toucan {
     func generateAndLogErrors(
         workDir: String,
         targetsToBuild: [String],
-        now: Date,
-        logger: Logger
+        now: Date
     ) -> Bool {
         do {
             try generate(

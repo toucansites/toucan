@@ -18,7 +18,7 @@ public struct Toucan {
     let fileManager: FileManagerKit
     let encoder: ToucanEncoder
     let decoder: ToucanDecoder
-    let logger: Logger
+    public let logger: Logger
 
     /// Initialize a new instance.
     ///
@@ -31,7 +31,7 @@ public struct Toucan {
         fileManager: FileManagerKit = FileManager.default,
         encoder: ToucanEncoder = ToucanYAMLEncoder(),
         decoder: ToucanDecoder = ToucanYAMLDecoder(),
-        logger: Logger = .init(label: "toucan")
+        logger: Logger = .subsystem("main")
     ) {
         self.fileManager = fileManager
         self.encoder = encoder
@@ -109,8 +109,7 @@ public struct Toucan {
                     at: workDirURL
                 ),
             encoder: encoder,
-            decoder: decoder,
-            logger: logger
+            decoder: decoder
         )
         .load(TargetConfig.self)
     }
@@ -180,8 +179,7 @@ public struct Toucan {
                     target: target,
                     fileManager: fileManager,
                     encoder: encoder,
-                    decoder: decoder,
-                    logger: logger
+                    decoder: decoder
                 )
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
@@ -194,8 +192,7 @@ public struct Toucan {
                 let generatorInfo = GeneratorInfo.current
                 var renderer = BuildTargetSourceRenderer(
                     buildTargetSource: buildTargetSource,
-                    generatorInfo: generatorInfo,
-                    logger: logger
+                    generatorInfo: generatorInfo
                 )
 
                 let templateLoader = TemplateLoader(
@@ -203,8 +200,7 @@ public struct Toucan {
 
                     fileManager: fileManager,
                     encoder: encoder,
-                    decoder: decoder,
-                    logger: logger
+                    decoder: decoder
                 )
 
                 let results = try renderer.render(
@@ -225,7 +221,6 @@ public struct Toucan {
                     case "json":
                         let renderer = ContextBundleToJSONRenderer(
                             pipeline: pipeline,
-                            logger: logger
                         )
                         return renderer.render(contextBundles)
                     case "mustache":
@@ -239,7 +234,6 @@ public struct Toucan {
                         let renderer = try ContextBundleToHTMLRenderer(
                             pipeline: pipeline,
                             templates: template.getViewIDsWithContents(),
-                            logger: logger
                         )
                         return renderer.render(contextBundles)
                     default:

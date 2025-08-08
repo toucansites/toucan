@@ -62,7 +62,7 @@ struct Entrypoint: AsyncParsableCommand {
     }
 
     func run() async throws {
-        var logger = Logger(label: "toucan")
+        var logger = Logger.subsystem("main")
         logger.logLevel = logLevel
 
         let currentToucanCommand = Command.findInPath(withName: "toucan")

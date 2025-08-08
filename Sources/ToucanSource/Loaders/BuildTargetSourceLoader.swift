@@ -74,8 +74,7 @@ public struct BuildTargetSourceLoader {
                 assetsPath: config.contents.assets.path,
                 decoder: .init(),
                 markdownParser: .init(decoder: decoder),
-                fileManager: fileManager,
-                logger: logger
+                fileManager: fileManager
             )
             return try rawContentsLoader.load()
         }
@@ -106,8 +105,7 @@ public struct BuildTargetSourceLoader {
                     at: url
                 ),
                 encoder: encoder,
-                decoder: decoder,
-                logger: logger
+                decoder: decoder
             )
             .load(type)
         }
@@ -135,8 +133,7 @@ public struct BuildTargetSourceLoader {
                     at: url
                 ),
                 encoder: encoder,
-                decoder: decoder,
-                logger: logger
+                decoder: decoder
             )
             .load(type)
         }

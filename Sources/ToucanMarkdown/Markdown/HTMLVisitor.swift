@@ -54,7 +54,7 @@ struct HTMLVisitor: MarkupVisitor {
         slug: String,
         assetsPath: String,
         baseURL: String,
-        logger: Logger = .init(label: "HTMLVisitor")
+        logger: Logger = .subsystem("html-visitor")
     ) {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles

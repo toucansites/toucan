@@ -14,6 +14,7 @@ extension Logger.Level: @retroactive ExpressibleByArgument {}
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan-generate",
@@ -45,7 +46,7 @@ struct Entrypoint: AsyncParsableCommand {
     var logLevel: Logger.Level = .info
 
     func run() async throws {
-        var logger = Logger(label: "toucan")
+        var logger = Logger.subsystem("main")
         logger.logLevel = logLevel
 
         var targetsToBuild: [String] = []
@@ -53,15 +54,12 @@ struct Entrypoint: AsyncParsableCommand {
             targetsToBuild.append(target)
         }
 
-        let generator = Toucan(
-            logger: logger
-        )
+        let generator = Toucan()
 
         if generator.generateAndLogErrors(
             workDir: workDir,
             targetsToBuild: targetsToBuild,
-            now: .init(),
-            logger: logger
+            now: .init()
         ) {
             let metadata: Logger.Metadata = [
                 "workDir": .string(workDir)

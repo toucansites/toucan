@@ -9,6 +9,7 @@ import Foundation
 import Logging
 import Mustache
 import ToucanSource
+import ToucanCore
 
 /// Renders Mustache templates using a predefined template library and a dynamic context object.
 public struct MustacheRenderer {
@@ -29,7 +30,7 @@ public struct MustacheRenderer {
     ///   - logger: A logger instance used for error reporting.
     public init(
         templates: [String: MustacheTemplate],
-        logger: Logger
+        logger: Logger = .subsystem("mustache-renderer")
     ) {
         self.ids = Array(templates.keys)
         self.library = .init(templates: templates)

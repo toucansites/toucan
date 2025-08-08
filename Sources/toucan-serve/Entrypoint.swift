@@ -48,7 +48,7 @@ struct Entrypoint: AsyncParsableCommand {
         }
 
         let router = Router()
-        var logger = Logger(label: "toucan-server")
+        var logger = Logger.subsystem("server")
         logger.logLevel = logLevel
 
         router.addMiddleware {

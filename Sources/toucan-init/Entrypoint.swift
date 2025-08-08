@@ -42,7 +42,7 @@ struct Entrypoint: AsyncParsableCommand {
     var demoSourceZipURL: String?
 
     func run() async throws {
-        var logger = Logger(label: "toucan")
+        var logger = Logger.subsystem("main")
         logger.logLevel = logLevel
 
         let siteExists = fileManager.directoryExists(at: siteDirectoryURL)
@@ -61,10 +61,10 @@ struct Entrypoint: AsyncParsableCommand {
                 fileManager: fileManager
             )
 
-            logger.info("Preparing files.")
+            logger.trace("Preparing files.")
             try await source.resolve()
 
-            logger.info("'\(siteDirectory)' was prepared successfully.")
+            logger.trace("'\(siteDirectory)' was prepared successfully.")
         }
         catch {
             logger.error("\(String(describing: error))")
