@@ -9,22 +9,22 @@ import ToucanCore
 import ToucanSource
 
 enum ContentTypeResolverError: ToucanError {
-    case missingContentType(String)
+    case missingContentType(String, String)
     case unknown(Error)
 
     var underlyingErrors: [any Error] {
         switch self {
+        case .missingContentType:
+            []
         case let .unknown(error):
             [error]
-        default:
-            []
         }
     }
 
     var logMessage: String {
         switch self {
-        case .missingContentType:
-            "Missing content type."
+        case let .missingContentType(id, path):
+            "Missing content type for identifier: `\(id)` at `\(path)`."
         case let .unknown(error):
             error.localizedDescription
         }
@@ -63,8 +63,7 @@ struct ContentTypeResolver {
             guard
                 let result = contentTypes.first(where: { $0.id == id })
             else {
-                //                logger.info("Explicit content type (\(explicitType)) not found")
-                throw .missingContentType(id)
+                throw .missingContentType(id, origin.path.value)
             }
             return result
         }
