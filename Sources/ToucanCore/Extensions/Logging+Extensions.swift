@@ -21,7 +21,7 @@ public extension Logger {
     ///   - level: The default log level to use if not specified elsewhere. Defaults to `.info`.
     /// - Returns: A configured `Logger` instance for the subsystem.
     static func subsystem(
-        _ id: String,
+        _ id: String = "",
         _ level: Logger.Level = .info
     ) -> Logger {
         var logger = Logger(label: id.loggerLabel())
@@ -72,7 +72,8 @@ private extension String {
     ///   - For `"generate"`: `"TOUCAN-generate"`
     ///   - For `"object-loader"`: `"TOUCAN-object-loader"`
     func loggerLabel() -> String {
-        let parts = isEmpty ? ["TOUCAN"] : ["TOUCAN", self]
+        let prefix = "toucan"
+        let parts = isEmpty ? [prefix] : [prefix, self]
         return parts.joined(separator: "-")
     }
 

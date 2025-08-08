@@ -36,9 +36,6 @@ struct Entrypoint: AsyncParsableCommand {
     @Option(name: .shortAndLong)
     var port: Int = 3000
 
-    @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .info
-
     func run() async throws {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         var rootPath = root.replacingOccurrences(of: "~", with: home)
@@ -48,8 +45,7 @@ struct Entrypoint: AsyncParsableCommand {
         }
 
         let router = Router()
-        var logger = Logger.subsystem("server")
-        logger.logLevel = logLevel
+        let logger = Logger.subsystem("serve")
 
         router.addMiddleware {
             NotFoundMiddleware()

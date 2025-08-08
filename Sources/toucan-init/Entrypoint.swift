@@ -31,9 +31,6 @@ struct Entrypoint: AsyncParsableCommand {
     @Argument(help: "The name of the site directory (default: site).")
     var siteDirectory: String = "site"
 
-    @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .info
-
     @Option(
         name: .shortAndLong,
         help:
@@ -42,8 +39,7 @@ struct Entrypoint: AsyncParsableCommand {
     var demoSourceZipURL: String?
 
     func run() async throws {
-        var logger = Logger.subsystem("main")
-        logger.logLevel = logLevel
+        let logger = Logger.subsystem("init")
 
         let siteExists = fileManager.directoryExists(at: siteDirectoryURL)
 

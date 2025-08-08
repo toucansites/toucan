@@ -42,13 +42,9 @@ struct Entrypoint: AsyncParsableCommand {
     )
     var target: String?
 
-    @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .info
-
     func run() async throws {
-        var logger = Logger.subsystem("main")
-        logger.logLevel = logLevel
-
+        let logger = Logger.subsystem("generate")
+        
         var targetsToBuild: [String] = []
         if let target, !target.isEmpty {
             targetsToBuild.append(target)

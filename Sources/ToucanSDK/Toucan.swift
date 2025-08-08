@@ -31,7 +31,7 @@ public struct Toucan {
         fileManager: FileManagerKit = FileManager.default,
         encoder: ToucanEncoder = ToucanYAMLEncoder(),
         decoder: ToucanDecoder = ToucanYAMLDecoder(),
-        logger: Logger = .subsystem("main")
+        logger: Logger = .subsystem()
     ) {
         self.fileManager = fileManager
         self.encoder = encoder
