@@ -64,12 +64,12 @@ private extension String {
     /// Returns the logger label for a subsystem.
     ///
     /// Constructs a logger label by joining "TOUCAN" and the subsystem identifier with a hyphen.
-    /// If the identifier is empty, returns "TOUCAN".
+    /// If the identifier is empty, returns "toucan".
     ///
     /// - Examples:
-    ///   - For an empty string: `"TOUCAN"`
-    ///   - For `"generate"`: `"TOUCAN-generate"`
-    ///   - For `"object-loader"`: `"TOUCAN-object-loader"`
+    ///   - For an empty string: `"toucan"`
+    ///   - For `"generate"`: `"toucan-generate"`
+    ///   - For `"object-loader"`: `"toucan-object-loader"`
     func loggerLabel() -> String {
         let prefix = "toucan"
         let parts = isEmpty ? [prefix] : [prefix, self]
