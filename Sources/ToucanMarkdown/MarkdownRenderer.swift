@@ -6,6 +6,7 @@
 //
 
 import Logging
+import ToucanCore
 
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
@@ -133,24 +134,21 @@ public struct MarkdownRenderer {
     ///   - logger: Optional logger for tracking events and issues.
     public init(
         configuration: Configuration,
-        logger: Logger = .init(label: "ContentRenderer")
+        logger: Logger = .subsystem("content-renderer")
     ) {
         self.configuration = configuration
 
         self.markdownToHTMLRenderer = MarkdownToHTMLRenderer(
             customBlockDirectives: configuration.markdown.customBlockDirectives,
-            paragraphStyles: configuration.paragraphStyles,
-            logger: logger
+            paragraphStyles: configuration.paragraphStyles
         )
 
         self.outlineParser = OutlineParser(
-            levels: configuration.outline.levels,
-            logger: logger
+            levels: configuration.outline.levels
         )
 
         self.readingTimeCalculator = ReadingTimeCalculator(
-            wordsPerMinute: configuration.readingTime.wordsPerMinute,
-            logger: logger
+            wordsPerMinute: configuration.readingTime.wordsPerMinute
         )
 
         self.logger = logger
@@ -182,8 +180,7 @@ public struct MarkdownRenderer {
             if !transformerPipeline.run.isEmpty {
                 shouldRenderMarkdown = transformerPipeline.isMarkdownResult
                 let executor = TransformerExecutor(
-                    pipeline: transformerPipeline,
-                    logger: logger
+                    pipeline: transformerPipeline
                 )
                 do {
                     finalHtml = try executor.transform(

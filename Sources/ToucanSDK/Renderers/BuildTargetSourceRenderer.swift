@@ -436,8 +436,7 @@ public struct BuildTargetSourceRenderer {
                     },
                     paragraphStyles: buildTargetSource.config.renderer
                         .paragraphStyles.styles
-                ),
-                logger: logger
+                )
             )
 
             let contents = renderer.render(
@@ -580,8 +579,7 @@ public struct BuildTargetSourceRenderer {
         let decoder = ToucanYAMLDecoder()
 
         let inputDateFormatter = ToucanInputDateFormatter(
-            dateConfig: buildTargetSource.config.dataTypes.date,
-            logger: logger
+            dateConfig: buildTargetSource.config.dataTypes.date
         )
 
         // TODO: This should be in a .toucaninfo file or similar
@@ -599,8 +597,7 @@ public struct BuildTargetSourceRenderer {
             contentTypeResolver: contentTypeResolver,
             encoder: encoder,
             decoder: decoder,
-            dateFormatter: inputDateFormatter,
-            logger: logger
+            dateFormatter: inputDateFormatter
         )
 
         let baseContents = try contentResolver.convert(
@@ -633,8 +630,7 @@ public struct BuildTargetSourceRenderer {
 
             let dateFormatter = ToucanOutputDateFormatter(
                 dateConfig: buildTargetSource.config.dataTypes.date,
-                pipelineDateConfig: pipeline.dataTypes.date,
-                logger: logger
+                pipelineDateConfig: pipeline.dataTypes.date
             )
 
             let assetResults = try contentResolver.applyBehaviors(

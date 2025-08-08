@@ -43,17 +43,12 @@ struct Entrypoint: AsyncParsableCommand {
     )
     var seconds: Int = 3
 
-    @Option(name: .shortAndLong, help: "The log level to use.")
-    var logLevel: Logger.Level = .info
-
     var arguments: [String] {
         [input] + options
     }
 
     var options: [String] {
-        var options: [String] = [
-            "--log-level", "\(logLevel)",
-        ]
+        var options: [String] = []
         if let target, !target.isEmpty {
             options.append("--target")
             options.append(target)
@@ -62,8 +57,7 @@ struct Entrypoint: AsyncParsableCommand {
     }
 
     func run() async throws {
-        var logger = Logger(label: "toucan")
-        logger.logLevel = logLevel
+        let logger = Logger.subsystem("watch")
 
         let currentToucanCommand = Command.findInPath(withName: "toucan")
         let toucanCommandUrl = currentToucanCommand?.executablePath.string

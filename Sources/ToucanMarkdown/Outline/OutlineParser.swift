@@ -7,6 +7,7 @@
 
 import Logging
 import SwiftSoup
+import ToucanCore
 
 /// A parser that extracts heading elements (`<h1>` to `<h6>`) from HTML and converts them into a structured outline.
 public struct OutlineParser {
@@ -23,7 +24,7 @@ public struct OutlineParser {
     ///   - logger: A `Logger` instance for capturing logs. Defaults to a logger labeled "OutlineParser".
     public init(
         levels: [Int] = [1, 2, 3, 4, 5, 6],
-        logger: Logger = .init(label: "OutlineParser")
+        logger: Logger = .subsystem("outline-parser")
     ) {
         // Ensure levels are within the valid range of HTML headings.
         precondition(

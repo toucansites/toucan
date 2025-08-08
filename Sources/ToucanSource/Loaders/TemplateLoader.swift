@@ -95,8 +95,7 @@ public struct TemplateLoader {
                     at: url
                 ),
                 encoder: encoder,
-                decoder: decoder,
-                logger: logger
+                decoder: decoder
             )
             .load(Template.Metadata.self)
         }

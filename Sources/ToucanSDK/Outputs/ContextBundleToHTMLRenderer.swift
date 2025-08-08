@@ -19,13 +19,12 @@ struct ContextBundleToHTMLRenderer {
     init(
         pipeline: Pipeline,
         templates: [String: String],
-        logger: Logger
+        logger: Logger = .subsystem("context-bundle-to-html-renderer")
     ) throws {
         self.mustacheRenderer = try MustacheRenderer(
             templates: templates.mapValues {
                 try .init(string: $0)
-            },
-            logger: logger
+            }
         )
 
         let engineOptions = pipeline.engine.options

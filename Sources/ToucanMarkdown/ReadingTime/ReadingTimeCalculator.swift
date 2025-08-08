@@ -6,6 +6,7 @@
 //
 
 import Logging
+import ToucanCore
 
 /// A utility to estimate the reading time of a given string of text based on words per minute.
 public struct ReadingTimeCalculator {
@@ -22,7 +23,7 @@ public struct ReadingTimeCalculator {
     ///   - logger: A `Logger` instance for logging internal operations. Defaults to a logger labeled "ReadingTimeCalculator".
     public init(
         wordsPerMinute: Int = 238,
-        logger: Logger = .init(label: "ReadingTimeCalculator")
+        logger: Logger = .subsystem("reading-time-calculator")
     ) {
         self.wordsPerMinute = wordsPerMinute
         self.logger = logger

@@ -7,6 +7,7 @@
 
 import Logging
 import Markdown
+import ToucanCore
 
 /// A renderer that converts Markdown text to HTML, with support for custom block directives and paragraph styling.
 public struct MarkdownToHTMLRenderer {
@@ -28,7 +29,7 @@ public struct MarkdownToHTMLRenderer {
     public init(
         customBlockDirectives: [MarkdownBlockDirective] = [],
         paragraphStyles: [String: [String]] = [:],
-        logger: Logger = .init(label: "MarkdownToHTMLRenderer")
+        logger: Logger = .subsystem("markdown-to-html-renderer")
     ) {
         self.customBlockDirectives = customBlockDirectives
         self.paragraphStyles = paragraphStyles
@@ -65,8 +66,7 @@ public struct MarkdownToHTMLRenderer {
             paragraphStyles: paragraphStyles,
             slug: slug,
             assetsPath: assetsPath,
-            baseURL: baseURL,
-            logger: logger
+            baseURL: baseURL
         )
 
         // Generate HTML by visiting the document tree.

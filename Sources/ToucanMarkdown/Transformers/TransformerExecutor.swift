@@ -8,6 +8,7 @@
 import Foundation
 import Logging
 import SwiftCommand
+import ToucanCore
 
 /// Executes a sequence of shell-based transformation commands defined in a `TransformerPipeline`,
 /// allowing content to be programmatically modified.
@@ -30,7 +31,7 @@ public struct TransformerExecutor {
     public init(
         pipeline: TransformerPipeline,
         fileManager: FileManager = .default,
-        logger: Logger = .init(label: "TransformerExecutor")
+        logger: Logger = .subsystem("transformer-executor")
     ) {
         self.pipeline = pipeline
         self.fileManager = fileManager

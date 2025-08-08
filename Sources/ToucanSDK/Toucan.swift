@@ -31,7 +31,7 @@ public struct Toucan {
         fileManager: FileManagerKit = FileManager.default,
         encoder: ToucanEncoder = ToucanYAMLEncoder(),
         decoder: ToucanDecoder = ToucanYAMLDecoder(),
-        logger: Logger = .init(label: "toucan")
+        logger: Logger = .subsystem()
     ) {
         self.fileManager = fileManager
         self.encoder = encoder
@@ -109,8 +109,7 @@ public struct Toucan {
                     at: workDirURL
                 ),
             encoder: encoder,
-            decoder: decoder,
-            logger: logger
+            decoder: decoder
         )
         .load(TargetConfig.self)
     }
@@ -180,8 +179,7 @@ public struct Toucan {
                     target: target,
                     fileManager: fileManager,
                     encoder: encoder,
-                    decoder: decoder,
-                    logger: logger
+                    decoder: decoder
                 )
 
                 let buildTargetSource = try buildTargetSourceLoader.load()
@@ -194,8 +192,7 @@ public struct Toucan {
                 let generatorInfo = GeneratorInfo.current
                 var renderer = BuildTargetSourceRenderer(
                     buildTargetSource: buildTargetSource,
-                    generatorInfo: generatorInfo,
-                    logger: logger
+                    generatorInfo: generatorInfo
                 )
 
                 let templateLoader = TemplateLoader(
@@ -203,8 +200,7 @@ public struct Toucan {
 
                     fileManager: fileManager,
                     encoder: encoder,
-                    decoder: decoder,
-                    logger: logger
+                    decoder: decoder
                 )
 
                 let results = try renderer.render(
@@ -224,8 +220,7 @@ public struct Toucan {
                     switch pipeline.engine.id {
                     case "json":
                         let renderer = ContextBundleToJSONRenderer(
-                            pipeline: pipeline,
-                            logger: logger
+                            pipeline: pipeline
                         )
                         return renderer.render(contextBundles)
                     case "mustache":
@@ -238,8 +233,7 @@ public struct Toucan {
 
                         let renderer = try ContextBundleToHTMLRenderer(
                             pipeline: pipeline,
-                            templates: template.getViewIDsWithContents(),
-                            logger: logger
+                            templates: template.getViewIDsWithContents()
                         )
                         return renderer.render(contextBundles)
                     default:
@@ -318,5 +312,35 @@ public struct Toucan {
             try fileManager.delete(at: temporaryWorkDirURL)
             throw error
         }
+    }
+
+    /// Attempts to generate the static site and logs any errors encountered.
+    /// - Parameters:
+    ///   - workDir: The working directory URL as a path string.
+    ///   - targetsToBuild: The list of target names to build.
+    ///   - now: The current date used during the build.
+    /// - Returns: `true` if generation succeeds without errors; otherwise, `false`.
+    ///
+    @discardableResult
+    public func generateAndLogErrors(
+        workDir: String,
+        targetsToBuild: [String],
+        now: Date
+    ) -> Bool {
+        do {
+            try generate(
+                workDir: workDir,
+                targetsToBuild: targetsToBuild,
+                now: now
+            )
+            return true
+        }
+        catch let error as ToucanError {
+            logger.error("\(error.logMessageStack())")
+        }
+        catch {
+            logger.error("\(error)")
+        }
+        return false
     }
 }
