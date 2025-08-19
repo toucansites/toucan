@@ -10,7 +10,7 @@ import Foundation
 /// Represents the top-level configuration for a content rendering system.
 public struct Config: Codable, Equatable {
 
-    private enum CodingKeys: CodingKey {
+    private enum CodingKeys: CodingKey, CaseIterable {
         case site
         case pipelines
         case contents
@@ -100,6 +100,8 @@ public struct Config: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let defaults = Self.defaults
         let container = try? decoder.container(keyedBy: CodingKeys.self)
 

@@ -10,7 +10,7 @@ public extension Config.DataTypes {
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case input
             case output
             case formats
@@ -64,6 +64,8 @@ public extension Config.DataTypes {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
 
             guard
@@ -72,7 +74,7 @@ public extension Config.DataTypes {
                 self = defaults
                 return
             }
-
+    
             self.input =
                 try container.decodeIfPresent(
                     DateFormatterConfig.self,
