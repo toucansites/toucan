@@ -29,7 +29,8 @@ extension Decoder {
         let unknownKeys = actualKeys.subtracting(expectedKeys)
 
         if !unknownKeys.isEmpty {
-            let keys = unknownKeys
+            let keys =
+                unknownKeys
                 .sorted()
                 .map { "`\($0)`" }
                 .joined(separator: ", ")

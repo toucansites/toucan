@@ -74,7 +74,7 @@ public extension Config.DataTypes {
                 self = defaults
                 return
             }
-    
+
             self.input =
                 try container.decodeIfPresent(
                     DateFormatterConfig.self,

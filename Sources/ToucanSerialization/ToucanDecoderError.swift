@@ -18,10 +18,11 @@ extension DecodingError.Context {
         if !codingPath.isEmpty {
             components.append("Coding path:")
 
-            let path = codingPath
+            let path =
+                codingPath
                 .map(\.stringValue)
                 .joined(separator: ".")
-            
+
             components.append("`\(path)`.")
         }
 
