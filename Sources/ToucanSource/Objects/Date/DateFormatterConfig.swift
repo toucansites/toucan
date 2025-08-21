@@ -15,7 +15,7 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
     private enum CodingKeys: String, CodingKey, CaseIterable {
         case format
         // NOTE: Multiple types are parsed from the same container. The keys listed below help make validation easier. Refer to `DateLocalization` for a related implementation.
-        case locale 
+        case locale
         case timeZone
     }
 

@@ -64,7 +64,7 @@ public struct ObjectLoader {
 
         var lastURL: URL?
         var result: [T] = []
-        
+
         do {
             for location in locations {
                 let fileURL = url.appendingPathIfPresent(location)
@@ -99,15 +99,19 @@ public struct ObjectLoader {
 
         var lastURL: URL?
         var combinedRawCodableObject: [String: AnyCodable] = [:]
-        
+
         do {
             for location in locations {
                 let fileURL = url.appendingPathIfPresent(location)
                 lastURL = fileURL
                 let data = try Data(contentsOf: fileURL)
-                let decoded = try decoder.decode([String: AnyCodable].self, from: data)
+                let decoded = try decoder.decode(
+                    [String: AnyCodable].self,
+                    from: data
+                )
 
-                combinedRawCodableObject = combinedRawCodableObject.recursivelyMerged(with: decoded)
+                combinedRawCodableObject =
+                    combinedRawCodableObject.recursivelyMerged(with: decoded)
             }
 
             // TODO: Tries to decode 0 files too
