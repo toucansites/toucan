@@ -11,7 +11,7 @@
 /// A pipeline defines how data flows from content source to final rendered output.
 public struct Pipeline: Codable {
 
-    private enum CodingKeys: CodingKey {
+    private enum CodingKeys: CodingKey, CaseIterable {
         case id
         case definesType
         case scopes
@@ -93,6 +93,8 @@ public struct Pipeline: Codable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let id = try container.decode(String.self, forKey: .id)

@@ -10,7 +10,7 @@
 public struct Query: Codable, Equatable {
 
     /// Keys used to decode the query from a structured format like YAML or JSON.
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case contentType
         case scope
         case limit
@@ -66,6 +66,8 @@ public struct Query: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let contentType = try container.decode(

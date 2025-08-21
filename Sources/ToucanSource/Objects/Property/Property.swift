@@ -10,9 +10,12 @@
 public struct Property: Codable, Equatable {
 
     /// Coding keys used for decoding optional metadata fields.
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
+        case type
         case required
-        case `default`
+        case defaultValue
+        // NOTE: Multiple types are parsed from the same container. The keys listed below help make validation easier. Refer to `PropertyType` for a related implementation.
+        case config
     }
 
     /// The type of the property (e.g., string, number, boolean, etc.).
@@ -24,7 +27,7 @@ public struct Property: Codable, Equatable {
     public var required: Bool
 
     /// An optional default value to use if the property is missing in the content.
-    public var `default`: AnyCodable?
+    public var defaultValue: AnyCodable?
 
     /// Initializes a new `Property` definition.
     ///
@@ -39,7 +42,7 @@ public struct Property: Codable, Equatable {
     ) {
         self.type = propertyType
         self.required = isRequired
-        self.default = defaultValue
+        self.defaultValue = defaultValue
     }
 
     /// Decodes a `Property` from a serialized representation, handling both the
@@ -49,6 +52,8 @@ public struct Property: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let type = try decoder.singleValueContainer().decode(PropertyType.self)
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -58,7 +63,7 @@ public struct Property: Codable, Equatable {
 
         let anyValue = try container.decodeIfPresent(
             AnyCodable.self,
-            forKey: .default
+            forKey: .defaultValue
         )
 
         self.init(
@@ -78,6 +83,6 @@ public struct Property: Codable, Equatable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try type.encode(to: encoder)
         try container.encode(required, forKey: .required)
-        try container.encodeIfPresent(self.default, forKey: .default)
+        try container.encodeIfPresent(self.defaultValue, forKey: .defaultValue)
     }
 }

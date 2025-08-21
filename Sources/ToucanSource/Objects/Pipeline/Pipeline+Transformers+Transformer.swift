@@ -11,7 +11,7 @@ public extension Pipeline.Transformers {
     /// Represents a content transformer command used in a transformation pipeline.
     struct Transformer: Codable {
         /// Coding keys for decoding path and name properties.
-        private enum CodingKeys: String, CodingKey {
+        private enum CodingKeys: String, CodingKey, CaseIterable {
             case path
             case name
         }
@@ -42,6 +42,8 @@ public extension Pipeline.Transformers {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.path =
                 (try? container.decode(String.self, forKey: .path))

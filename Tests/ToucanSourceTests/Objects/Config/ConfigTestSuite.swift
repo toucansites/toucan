@@ -142,4 +142,35 @@ struct ConfigTestSuite {
         #expect(result == expectation)
         #expect(value == encodedValue)
     }
+
+    @Test
+    func invalidKey() throws {
+        let value = """
+            dataTypesss:
+              date:
+                input:
+                  format: ymd
+            """ + "\n"
+
+        let decoder = ToucanYAMLDecoder()
+
+        do {
+            let _ = try decoder.decode(Config.self, from: value)
+        }
+        catch {
+            if let context = error.lookup({
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
+                let expected =
+                    "Unknown keys found: `dataTypesss`. Expected keys: `blocks`, `contents`, `dataTypes`, `pipelines`, `renderer`, `site`, `templates`, `types`."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
+    }
 }

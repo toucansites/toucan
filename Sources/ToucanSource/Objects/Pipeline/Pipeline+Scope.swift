@@ -9,7 +9,7 @@ public extension Pipeline {
     /// Describes a rendering scope within a content pipeline.
     struct Scope: Codable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case id
             case context
             case fields
@@ -73,6 +73,8 @@ public extension Pipeline {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let context =

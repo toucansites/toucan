@@ -11,7 +11,7 @@ public extension Config {
     /// Defines the structure and paths for working with templates in the system.
     struct Templates: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case location
             case current
             case assets
@@ -71,6 +71,8 @@ public extension Config {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
             let container = try? decoder.container(keyedBy: CodingKeys.self)
 

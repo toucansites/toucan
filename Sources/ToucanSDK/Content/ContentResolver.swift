@@ -236,7 +236,7 @@ struct ContentResolver {
         forKey key: String,
         slug: String
     ) throws(ContentResolverError) -> AnyCodable? {
-        let value = rawValue ?? property.default
+        let value = rawValue ?? property.defaultValue
 
         switch property.type {
         case let .date(config):
@@ -284,7 +284,7 @@ struct ContentResolver {
         let missingProperties = contentType.properties
             .filter { name, property in
                 property.required && frontMatter[name] == nil
-                    && property.default?.value == nil
+                    && property.defaultValue?.value == nil
             }
 
         for name in missingProperties.keys {

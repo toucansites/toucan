@@ -18,7 +18,9 @@ extension Decoder {
     public func validateUnknownKeys<K: CodingKey & CaseIterable>(
         keyType: K.Type
     ) throws {
-        let container = try container(keyedBy: keyType)
+        guard let _ = try? container(keyedBy: keyType) else {
+            return
+        }
 
         // Decode raw dictionary
         let raw = try singleValueContainer().decode([String: AnyCodable].self)
@@ -29,16 +31,24 @@ extension Decoder {
         let unknownKeys = actualKeys.subtracting(expectedKeys)
 
         if !unknownKeys.isEmpty {
-            let keys =
+            let inputKeys =
                 unknownKeys
                 .sorted()
                 .map { "`\($0)`" }
                 .joined(separator: ", ")
 
-            throw DecodingError.dataCorruptedError(
-                forKey: K.allCases.first!,
-                in: container,
-                debugDescription: "Unknown keys found: \(keys)."
+            let expectedKeys =
+                expectedKeys
+                .sorted()
+                .map { "`\($0)`" }
+                .joined(separator: ", ")
+
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: codingPath,
+                    debugDescription:
+                        "Unknown keys found: \(inputKeys). Expected keys: \(expectedKeys)."
+                )
             )
         }
     }

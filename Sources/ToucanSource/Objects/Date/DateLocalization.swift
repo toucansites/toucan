@@ -15,9 +15,11 @@ import struct Foundation.TimeZone
 public struct DateLocalization: Sendable, Codable, Equatable {
 
     /// The keys used for encoding and decoding top-level date formatter properties.
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: CodingKey, CaseIterable {
         case locale
         case timeZone
+        // NOTE: Multiple types are parsed from the same container. The keys listed below help make validation easier. Refer to `DateFormatterConfig` for a related implementation.
+        case format
     }
 
     /// The default date localization options using the system’s default locale
@@ -57,6 +59,8 @@ public struct DateLocalization: Sendable, Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let defaults = Self.defaults
 

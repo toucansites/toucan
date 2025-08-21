@@ -12,7 +12,7 @@ public struct Order: Sendable, Codable, Equatable {
 
     /// Internal keys used for encoding and decoding `Order` instances.
     /// Keys used for decoding an `Order` from external sources (e.g., YAML, JSON).
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: CodingKey, CaseIterable {
         case key
         case direction
     }
@@ -42,6 +42,8 @@ public struct Order: Sendable, Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let key = try container.decode(String.self, forKey: .key)
         let direction =
