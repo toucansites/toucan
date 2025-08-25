@@ -381,7 +381,8 @@ struct ContentResolver {
         }
 
         // Filter out reserved keys and schema-mapped fields to extract user-defined fields
-        let keysToRemove = SystemPropertyKeys.allCases
+        let keysToRemove =
+            SystemPropertyKeys.allCases
             .map { $0.rawValue }
             + contentType.properties.keys
             + contentType.relations.keys
