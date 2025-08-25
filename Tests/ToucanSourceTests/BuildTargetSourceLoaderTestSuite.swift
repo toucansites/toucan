@@ -77,11 +77,31 @@ struct BuildTargetSourceLoaderTestSuite {
 
     @Test()
     func validContentTypes() async throws {
+        let systemProperties = [
+            SystemPropertyKeys.id.rawValue: Property(
+                propertyType: .string,
+                isRequired: true
+            ),
+            SystemPropertyKeys.lastUpdate.rawValue: Property(
+                propertyType: .string,
+                isRequired: true
+            ),
+            SystemPropertyKeys.slug.rawValue: Property(
+                propertyType: .string,
+                isRequired: true
+            ),
+            SystemPropertyKeys.type.rawValue: Property(
+                propertyType: .string,
+                isRequired: true
+            ),
+        ]
         let type1 = ContentType(
-            id: "post"
+            id: "post",
+            properties: systemProperties
         )
         let type2 = ContentType(
-            id: "tag"
+            id: "tag",
+            properties: systemProperties
         )
         try FileManagerPlayground {
             testSourceTypesHierarchy {

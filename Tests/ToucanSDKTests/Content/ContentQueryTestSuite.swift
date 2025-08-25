@@ -46,7 +46,8 @@ struct ContentQueryTestSuite {
         )
         let results = contents.run(
             query: query,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
         try #require(results.count == 1)
         #expect(
@@ -67,7 +68,8 @@ struct ContentQueryTestSuite {
 
         let results = contents.run(
             query: query,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
         try #require(results.count == 2)
         #expect(
@@ -94,7 +96,8 @@ struct ContentQueryTestSuite {
 
         let results = contents.run(
             query: query,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
         try #require(results.count == 1)
         #expect(
@@ -116,7 +119,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #3"
@@ -131,13 +138,17 @@ struct ContentQueryTestSuite {
         let query = Query(
             contentType: "author",
             filter: .field(
-                key: "lastUpdate",
+                key: SystemPropertyKeys.lastUpdate.rawValue,
                 operator: .lessThanOrEquals,
                 value: .init(now.timeIntervalSince1970)
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 3)
     }
 
@@ -155,7 +166,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 0)
     }
 
@@ -173,7 +188,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -197,7 +216,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -223,7 +246,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 3)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -253,7 +280,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["title"]?.value(as: String.self) == "Post #1"
@@ -274,7 +305,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self)
@@ -300,7 +335,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -322,7 +361,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -348,7 +391,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self)
@@ -374,7 +421,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self)
@@ -396,7 +447,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         #expect(results.count == 0)
     }
 
@@ -424,7 +479,11 @@ struct ContentQueryTestSuite {
             ]
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #3"
@@ -458,7 +517,11 @@ struct ContentQueryTestSuite {
             ]
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         #expect(results.isEmpty)
     }
 
@@ -486,7 +549,11 @@ struct ContentQueryTestSuite {
             ]
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -510,7 +577,11 @@ struct ContentQueryTestSuite {
             ]
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -537,7 +608,11 @@ struct ContentQueryTestSuite {
             ]
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #2"
@@ -564,7 +639,11 @@ struct ContentQueryTestSuite {
             ]
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
         #expect(
             results[0].properties["title"]?.value(as: String.self) == "Post #1"
@@ -588,7 +667,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 3)
     }
 
@@ -606,7 +689,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 0)
     }
 
@@ -624,7 +711,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
         #expect(
             results[0].properties["name"]?.value(as: String.self) == "Author #1"
@@ -645,7 +736,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 0)
     }
 
@@ -663,7 +758,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
     }
 
@@ -681,7 +780,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 1)
     }
 
@@ -699,7 +802,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
     }
 
@@ -717,7 +824,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 0)
     }
 
@@ -735,7 +846,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 3)
     }
 
@@ -753,7 +868,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 2)
     }
 
@@ -771,7 +890,11 @@ struct ContentQueryTestSuite {
             )
         )
 
-        let results = contents.run(query: query, now: now.timeIntervalSince1970)
+        let results = contents.run(
+            query: query,
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
+        )
         try #require(results.count == 0)
     }
 
@@ -800,7 +923,8 @@ struct ContentQueryTestSuite {
         )
         let results1 = contents.run(
             query: query1,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
 
         try #require(results1.count == 2)
@@ -830,7 +954,8 @@ struct ContentQueryTestSuite {
 
         let results2 = contents.run(
             query: query,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
 
         try #require(results2.count == 1)
@@ -871,7 +996,8 @@ struct ContentQueryTestSuite {
 
         let results1 = contents.run(
             query: query1,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
         try #require(results1.count == 1)
     }
@@ -903,7 +1029,8 @@ struct ContentQueryTestSuite {
 
         let results1 = contents.run(
             query: query1,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentQueryTestSuite")
         )
         try #require(results1.count == 3)
     }

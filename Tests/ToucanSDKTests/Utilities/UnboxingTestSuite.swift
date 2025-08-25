@@ -126,35 +126,38 @@ struct UnboxingTests {
                                 ),
                                 "title": AnyCodable("Gábor Lengyel"),
                                 "order": AnyCodable(10),
-                                "lastUpdate": AnyCodable(
-                                    Optional(
-                                        DateContext(
-                                            date: .init(
-                                                full: "Friday, April 18, 2025",
-                                                long: "April 18, 2025",
-                                                medium: "Apr 18, 2025",
-                                                short: "4/18/25"
-                                            ),
-                                            time:
-                                                .init(
+                                SystemPropertyKeys.lastUpdate.rawValue:
+                                    AnyCodable(
+                                        Optional(
+                                            DateContext(
+                                                date: .init(
                                                     full:
-                                                        "12:45:44 PM Greenwich Mean Time",
-                                                    long: "12:45:44 PM GMT",
-                                                    medium: "12:45:44 PM",
-                                                    short: "12:45 PM"
+                                                        "Friday, April 18, 2025",
+                                                    long: "April 18, 2025",
+                                                    medium: "Apr 18, 2025",
+                                                    short: "4/18/25"
                                                 ),
-                                            timestamp: 1744980344.8431244,
-                                            iso8601: "2025-04-18T12:45:44.843Z",
-                                            formats: [
-                                                "rss":
-                                                    "Fri, 18 Apr 2025 12:45:44 +0000",
-                                                "sitemap": "2025-04-18",
+                                                time:
+                                                    .init(
+                                                        full:
+                                                            "12:45:44 PM Greenwich Mean Time",
+                                                        long: "12:45:44 PM GMT",
+                                                        medium: "12:45:44 PM",
+                                                        short: "12:45 PM"
+                                                    ),
+                                                timestamp: 1744980344.8431244,
+                                                iso8601:
+                                                    "2025-04-18T12:45:44.843Z",
+                                                formats: [
+                                                    "rss":
+                                                        "Fri, 18 Apr 2025 12:45:44 +0000",
+                                                    "sitemap": "2025-04-18",
 
-                                                "year": "2025",
-                                            ]
+                                                    "year": "2025",
+                                                ]
+                                            )
                                         )
-                                    )
-                                ),
+                                    ),
                             ]
                         ]),
                         "image": AnyCodable(nil),

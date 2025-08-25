@@ -96,12 +96,13 @@ public struct BuildTargetSourceRenderer {
                         limit: 1,
                         orderBy: [
                             .init(
-                                key: "lastUpdate",
+                                key: SystemPropertyKeys.lastUpdate.rawValue,
                                 direction: .desc
                             )
                         ]
                     ),
-                    now: now
+                    now: now,
+                    logger: logger
                 )
                 return items.first?.rawValue.lastModificationDate
             }
@@ -181,7 +182,7 @@ public struct BuildTargetSourceRenderer {
     ) -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
-            let results = contents.run(query: query, now: now)
+            let results = contents.run(query: query, now: now, logger: logger)
 
             rawContext[key] = .init(
                 results.map {
@@ -373,13 +374,12 @@ public struct BuildTargetSourceRenderer {
                 }
             }
 
-            result["slug"] = .init(content.slug)
+            result[SystemPropertyKeys.slug.rawValue] = .init(content.slug)
+            result[SystemPropertyKeys.lastUpdate.rawValue] = .init(
+                dateFormatter.format(content.rawValue.lastModificationDate)
+            )
             result["permalink"] = .init(
                 content.slug.permalink(baseURL: baseURL())
-            )
-
-            result["lastUpdate"] = .init(
-                dateFormatter.format(content.rawValue.lastModificationDate)
             )
         }
 
@@ -473,7 +473,8 @@ public struct BuildTargetSourceRenderer {
                         ),
                         orderBy: orderBy
                     ),
-                    now: now
+                    now: now,
+                    logger: logger
                 )
 
                 let relationContexts = relationContents.map {
@@ -505,7 +506,8 @@ public struct BuildTargetSourceRenderer {
                     query: query.resolveFilterParameters(
                         with: content.queryFields
                     ),
-                    now: now
+                    now: now,
+                    logger: logger
                 )
 
                 result[key] = .init(
@@ -653,7 +655,9 @@ public struct BuildTargetSourceRenderer {
                 contents: finalContents,
                 context: globalContext.recursivelyMerged(
                     with: [
-                        "lastUpdate": .init(dateFormatter.format(lastUpdate)),
+                        SystemPropertyKeys.lastUpdate.rawValue: .init(
+                            dateFormatter.format(lastUpdate)
+                        ),
                         "generation": .init(dateFormatter.format(now)),
                         "site": .init(buildTargetSource.settings.values),
                     ]

@@ -100,11 +100,29 @@ public struct ContentType: Codable, Equatable {
                 forKey: .paths
             ) ?? []
 
-        let properties =
+        var properties =
             try container.decodeIfPresent(
                 [String: Property].self,
                 forKey: .properties
             ) ?? [:]
+
+        // Providing system properties
+        properties[SystemPropertyKeys.id.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
+        properties[SystemPropertyKeys.lastUpdate.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
+        properties[SystemPropertyKeys.slug.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
+        properties[SystemPropertyKeys.type.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
 
         let relations =
             try container.decodeIfPresent(
