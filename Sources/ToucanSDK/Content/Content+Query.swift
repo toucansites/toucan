@@ -63,6 +63,7 @@ public extension [Content] {
     /// - Parameters:
     ///   - query: The `Query` object containing filtering, ordering, and limit logic.
     ///   - now: The current timestamp used for time-based filtering.
+    ///   - logger: A `Logger` instance for capturing logs.
     /// - Returns: A filtered, sorted, and paginated array of `Content` items.
     func run(
         query: Query,
