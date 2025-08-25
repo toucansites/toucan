@@ -374,7 +374,7 @@ public struct BuildTargetSourceRenderer {
                 }
             }
 
-            result[SystemPropertyKeys.slug.rawValue] = .init(content.slug)
+            result[SystemPropertyKeys.slug.rawValue] = .init(content.slug.value)
             result[SystemPropertyKeys.lastUpdate.rawValue] = .init(
                 dateFormatter.format(content.rawValue.lastModificationDate)
             )
