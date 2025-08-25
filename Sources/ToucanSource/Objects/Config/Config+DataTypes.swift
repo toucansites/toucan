@@ -12,7 +12,7 @@ public extension Config {
     /// localized or project-specific formatting and handling logic for structured data.
     struct DataTypes: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case date
         }
 
@@ -42,6 +42,8 @@ public extension Config {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let date =

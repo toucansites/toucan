@@ -63,16 +63,17 @@ public struct ObjectLoader {
         )
 
         var lastURL: URL?
+        var result: [T] = []
+
         do {
-            return
-                try locations
-                .map {
-                    let fileURL = url.appendingPathIfPresent($0)
-                    lastURL = fileURL
-                    return fileURL
-                }
-                .map { try Data(contentsOf: $0) }
-                .map { try decoder.decode(T.self, from: $0) }
+            for location in locations {
+                let fileURL = url.appendingPathIfPresent(location)
+                lastURL = fileURL
+                let data = try Data(contentsOf: fileURL)
+                let decoded = try decoder.decode(T.self, from: data)
+
+                result.append(decoded)
+            }
         }
         catch {
             throw .init(
@@ -80,6 +81,8 @@ public struct ObjectLoader {
                 error: error
             )
         }
+
+        return result
     }
 
     /// Loads, merges, and decodes multiple files into a single instance of the specified type.
@@ -95,22 +98,21 @@ public struct ObjectLoader {
         )
 
         var lastURL: URL?
+        var combinedRawCodableObject: [String: AnyCodable] = [:]
+
         do {
-            let combinedRawCodableObject =
-                try locations
-                .map {
-                    let fileURL = url.appendingPathIfPresent($0)
-                    lastURL = fileURL
-                    return fileURL
-                }
-                .map { try Data(contentsOf: $0) }
-                .map {
-                    try decoder.decode(
-                        [String: AnyCodable].self,
-                        from: $0
-                    )
-                }
-                .reduce([:]) { $0.recursivelyMerged(with: $1) }
+            for location in locations {
+                let fileURL = url.appendingPathIfPresent(location)
+                lastURL = fileURL
+                let data = try Data(contentsOf: fileURL)
+                let decoded = try decoder.decode(
+                    [String: AnyCodable].self,
+                    from: data
+                )
+
+                combinedRawCodableObject =
+                    combinedRawCodableObject.recursivelyMerged(with: decoded)
+            }
 
             // TODO: Tries to decode 0 files too
             let data: Data = try encoder.encode(combinedRawCodableObject)

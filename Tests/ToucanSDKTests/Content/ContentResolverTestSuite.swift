@@ -1169,7 +1169,8 @@ struct ContentResolverTestSuite {
 
         let results = contents.run(
             query: query,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentResolverTestSuite")
         )
 
         try #require(results.count == 2)
@@ -1210,7 +1211,8 @@ struct ContentResolverTestSuite {
 
         let results1 = contents.run(
             query: query1,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentResolverTestSuite")
         )
 
         try #require(results1.count == 3)
@@ -1238,7 +1240,8 @@ struct ContentResolverTestSuite {
 
         let results2 = contents.run(
             query: query2,
-            now: now.timeIntervalSince1970
+            now: now.timeIntervalSince1970,
+            logger: .init(label: "ContentResolverTestSuite")
         )
 
         try #require(results2.count == 1)

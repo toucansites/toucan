@@ -16,7 +16,7 @@ struct PropertyTestSuite {
     @Test
     func stringType() throws {
         let data = """
-            default: hello
+            defaultValue: hello
             required: false
             type: string
             """
@@ -28,7 +28,7 @@ struct PropertyTestSuite {
 
         #expect(result.type == .string)
         #expect(result.required == false)
-        #expect(result.default?.value as? String == "hello")
+        #expect(result.defaultValue?.value as? String == "hello")
 
         #expect(
             data.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -65,7 +65,6 @@ struct PropertyTestSuite {
                 format: "ymd"
                 locale: en-US
                 timeZone: EST
-
             """
 
         let decoder = ToucanYAMLDecoder()
@@ -84,7 +83,7 @@ struct PropertyTestSuite {
                 )
         )
         #expect(result.required == true)
-        #expect(result.default == nil)
+        #expect(result.defaultValue == nil)
     }
 
     @Test
@@ -99,6 +98,6 @@ struct PropertyTestSuite {
 
         #expect(result.type == .date(config: nil))
         #expect(result.required == true)
-        #expect(result.default == nil)
+        #expect(result.defaultValue == nil)
     }
 }

@@ -275,7 +275,10 @@ extension Mocks.Pipelines {
                     contentType: "post",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
+                        .init(
+                            key: SystemPropertyKeys.lastUpdate.rawValue,
+                            direction: .desc
+                        )
                     ]
                 )
             ],
@@ -331,28 +334,41 @@ extension Mocks.Pipelines {
                     contentType: "page",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
+                        .init(
+                            key: SystemPropertyKeys.lastUpdate.rawValue,
+                            direction: .desc
+                        ),
+                        .init(key: "id", direction: .desc),
                     ]
                 ),
                 "posts": .init(
                     contentType: "post",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
+                        .init(
+                            key: SystemPropertyKeys.lastUpdate.rawValue,
+                            direction: .desc
+                        )
                     ]
                 ),
                 "authors": .init(
                     contentType: "author",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
+                        .init(
+                            key: SystemPropertyKeys.lastUpdate.rawValue,
+                            direction: .desc
+                        )
                     ]
                 ),
                 "tags": .init(
                     contentType: "tag",
                     scope: "list",
                     orderBy: [
-                        .init(key: "lastUpdate", direction: .desc)
+                        .init(
+                            key: SystemPropertyKeys.lastUpdate.rawValue,
+                            direction: .desc
+                        )
                     ]
                 ),
             ],

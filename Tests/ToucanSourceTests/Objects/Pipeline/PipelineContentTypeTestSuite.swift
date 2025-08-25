@@ -13,7 +13,7 @@ import ToucanSerialization
 @Suite
 struct PipelineContentTypeTestSuite {
     @Test
-    func empty() throws {
+    func invalidKey() throws {
         let data = """
             foo: bar
             """
@@ -21,13 +21,24 @@ struct PipelineContentTypeTestSuite {
 
         let decoder = ToucanYAMLDecoder()
 
-        let result = try decoder.decode(
-            Pipeline.ContentTypes.self,
-            from: data
-        )
-
-        #expect(result.include.isEmpty)
-        #expect(result.lastUpdate.isEmpty)
+        do {
+            let _ = try decoder.decode(Pipeline.ContentTypes.self, from: data)
+        }
+        catch {
+            if let context = error.lookup({
+                if case let DecodingError.dataCorrupted(ctx) = $0 {
+                    return ctx
+                }
+                return nil
+            }) {
+                let expected =
+                    "Unknown keys found: `foo`. Expected keys: `exclude`, `filterRules`, `include`, `lastUpdate`."
+                #expect(context.debugDescription == expected)
+            }
+            else {
+                throw error
+            }
+        }
     }
 
     @Test

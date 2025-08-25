@@ -13,7 +13,7 @@
 public struct Relation: Codable, Equatable {
 
     /// Keys used to decode the relation from serialized formats like JSON or YAML.
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: CodingKey, CaseIterable {
         case references
         case type
         case order
@@ -52,6 +52,8 @@ public struct Relation: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let references = try container.decode(String.self, forKey: .references)

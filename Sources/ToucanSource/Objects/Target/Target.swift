@@ -83,6 +83,8 @@ public struct Target: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let base = Self.base
 
         let container = try decoder.container(keyedBy: CodingKeys.self)

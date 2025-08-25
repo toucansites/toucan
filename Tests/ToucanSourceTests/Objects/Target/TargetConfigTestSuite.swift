@@ -20,13 +20,10 @@ struct TargetConfigTestSuite {
               - name: dev
                 config: "./dev.yml"
                 url: "http://localhost:3000"
-                locale: "en-US"
-                timeZone: "Europe/Budapest"
                 output: "./dist/"
                 default: true
               - name: live
                 url: "https://example.com"
-                locale: "en-GB"
             """
             .data(using: .utf8)!
 
@@ -62,24 +59,6 @@ struct TargetConfigTestSuite {
         #expect(result.targets.count == 2)
         #expect(result.default.name == "fallback")
         #expect(result.default.isDefault == true)
-    }
-
-    @Test
-    func missingKeyFallback() throws {
-        let data = """
-            irrelevant: true
-            """
-            .data(using: .utf8)!
-
-        let decoder = ToucanYAMLDecoder()
-
-        let result = try decoder.decode(
-            TargetConfig.self,
-            from: data
-        )
-
-        #expect(result.targets.count == 1)
-        #expect(result.default.name == "dev")
     }
 
     @Test
@@ -148,20 +127,5 @@ struct TargetConfigTestSuite {
 
         #expect(!result.targets.isEmpty)
         #expect(result.default == Target.standard)
-    }
-
-    @Test
-    func missingTargetsKeyFallsBackToDefaults() throws {
-        let data = """
-            unrelated: true
-            """
-            .data(using: .utf8)!
-
-        let decoder = ToucanYAMLDecoder()
-
-        let result = try decoder.decode(TargetConfig.self, from: data)
-
-        #expect(result.targets.count == 1)
-        #expect(result.default.name == "dev")
     }
 }

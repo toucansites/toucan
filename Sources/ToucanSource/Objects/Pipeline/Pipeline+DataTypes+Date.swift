@@ -9,7 +9,7 @@ public extension Pipeline.DataTypes {
     /// Provides a configuration for parsing and formatting dates across the site or contents.
     struct Date: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case output
             case formats
         }
@@ -53,6 +53,8 @@ public extension Pipeline.DataTypes {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
 
             guard

@@ -11,7 +11,7 @@ public extension Config {
     /// paragraph styling rules for directive blocks.
     struct RendererConfig: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case wordsPerMinute
             case outlineLevels
             case paragraphStyles
@@ -61,6 +61,8 @@ public extension Config {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
 
             guard

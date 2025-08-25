@@ -12,8 +12,11 @@
 public struct DateFormatterConfig: Sendable, Codable, Equatable {
 
     /// The keys used for encoding and decoding top-level date formatter properties.
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey, CaseIterable {
         case format
+        // NOTE: Multiple types are parsed from the same container. The keys listed below help make validation easier. Refer to `DateLocalization` for a related implementation.
+        case locale
+        case timeZone
     }
 
     /// Returns a default configuration using ISO 8601 parsing and no predefined output formats.
@@ -50,11 +53,11 @@ public struct DateFormatterConfig: Sendable, Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         self.localization = try DateLocalization(from: decoder)
 
-        let container = try decoder.container(
-            keyedBy: CodingKeys.self
-        )
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         let format = try container.decode(String.self, forKey: .format)
 
         guard !format.isEmpty else {

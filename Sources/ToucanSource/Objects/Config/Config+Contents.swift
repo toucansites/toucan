@@ -9,7 +9,7 @@ public extension Config {
     /// Defines file system paths for locating raw content and its associated assets.
     struct Contents: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case path
             case assets
         }
@@ -50,6 +50,8 @@ public extension Config {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
 
             guard

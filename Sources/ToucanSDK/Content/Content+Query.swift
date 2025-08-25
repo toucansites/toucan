@@ -7,6 +7,7 @@
 
 import Foundation
 import ToucanSource
+import Logging
 
 public extension Content {
     /// Flattens the content's core properties, relations, and metadata into a single dictionary
@@ -44,9 +45,11 @@ public extension Content {
         }
 
         // Append metadata fields
-        fields["id"] = .init(typeAwareID)
-        fields["slug"] = .init(slug.value)
-        fields["lastUpdate"] = .init(rawValue.lastModificationDate)
+        fields[SystemPropertyKeys.id.rawValue] = .init(typeAwareID)
+        fields[SystemPropertyKeys.lastUpdate.rawValue] = .init(
+            rawValue.lastModificationDate
+        )
+        fields[SystemPropertyKeys.slug.rawValue] = .init(slug.value)
         fields["iterator"] = .init(isIterator)
 
         return fields
@@ -60,10 +63,12 @@ public extension [Content] {
     /// - Parameters:
     ///   - query: The `Query` object containing filtering, ordering, and limit logic.
     ///   - now: The current timestamp used for time-based filtering.
+    ///   - logger: A `Logger` instance for capturing logs.
     /// - Returns: A filtered, sorted, and paginated array of `Content` items.
     func run(
         query: Query,
-        now: TimeInterval
+        now: TimeInterval,
+        logger: Logger
     ) -> [Content] {
         let contents = filter { query.contentType == $0.type.id }
         return filter(
@@ -72,14 +77,16 @@ public extension [Content] {
                 with: [
                     "date.now": .init(now)
                 ]
-            )
+            ),
+            logger: logger
         )
     }
 
     /// Filters, sorts, and slices the given content array based on a query.
     private func filter(
         contents: [Content],
-        using query: Query
+        using query: Query,
+        logger: Logger
     ) -> [Content] {
         var filteredContents = contents.filter { element in
             evaluate(condition: query.filter, with: element.queryFields)
@@ -87,11 +94,24 @@ public extension [Content] {
 
         for order in query.orderBy.reversed() {
             filteredContents.sort { a, b in
+                let propertyForOrderKey: (Content) -> AnyCodable? = { item in
+                    guard let value = item.properties[order.key] else {
+                        logger.warning(
+                            "Missing order property key: `\(order.key)`.",
+                            metadata: [
+                                "slug": .string(item.slug.value),
+                                "contentType": .string(query.contentType),
+                            ]
+                        )
+                        return nil
+                    }
+                    return value
+                }
+
                 guard
-                    let valueA = a.properties[order.key],
-                    let valueB = b.properties[order.key]
+                    let valueA = propertyForOrderKey(a),
+                    let valueB = propertyForOrderKey(b)
                 else {
-                    // TODO: log if properties do not exist
                     return false
                 }
 

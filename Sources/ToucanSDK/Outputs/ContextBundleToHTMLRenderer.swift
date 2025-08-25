@@ -55,7 +55,7 @@ struct ContextBundleToHTMLRenderer {
             logger.warning(
                 "No view has been specified for this content.",
                 metadata: [
-                    "slug": "\(contextBundle.content.slug)",
+                    "slug": "\(contextBundle.content.slug.value)",
                     "type": "\(contextBundle.content.type.id)",
                 ]
             )
