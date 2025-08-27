@@ -20,7 +20,7 @@ public enum Condition: Codable, Equatable {
     case or([Condition])
 
     /// Internal keys used for encoding and decoding `Condition` enum cases.
-    private enum CodingKeys: CodingKey {
+    private enum CodingKeys: CodingKey, CaseIterable {
         case key
         case `operator`
         case value
@@ -34,6 +34,8 @@ public enum Condition: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let key = try? container.decode(String.self, forKey: .key),

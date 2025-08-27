@@ -158,21 +158,21 @@ struct E2ETestSuite {
                 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                     <url>
 
-                        <loc>http://localhost:3000/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/about/</loc>
-                        <lastmod>\#(nowString)</lastmod>
                         <loc>http://localhost:3000/blog/posts/pages/1/</loc>
                         <lastmod>\#(nowString)</lastmod>
                         <loc>http://localhost:3000/blog/posts/pages/2/</loc>
                         <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/context/</loc>
-                        <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/pages/page-1/</loc>
+                        <loc>http://localhost:3000/pages/page-3/</loc>
                         <lastmod>\#(nowString)</lastmod>
                         <loc>http://localhost:3000/pages/page-2/</loc>
                         <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/pages/page-3/</loc>
+                        <loc>http://localhost:3000/pages/page-1/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/context/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/about/</loc>
+                        <lastmod>\#(nowString)</lastmod>
+                        <loc>http://localhost:3000/</loc>
                         <lastmod>\#(nowString)</lastmod>
 
                         <loc>http://localhost:3000/blog/posts/post-1/</loc>
@@ -182,18 +182,18 @@ struct E2ETestSuite {
                         <loc>http://localhost:3000/blog/posts/post-3/</loc>
                         <lastmod>\#(nowString)</lastmod>
 
-                        <loc>http://localhost:3000/blog/authors/author-1/</loc>
+                        <loc>http://localhost:3000/blog/authors/author-3/</loc>
                         <lastmod>\#(nowString)</lastmod>
                         <loc>http://localhost:3000/blog/authors/author-2/</loc>
                         <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/authors/author-3/</loc>
+                        <loc>http://localhost:3000/blog/authors/author-1/</loc>
                         <lastmod>\#(nowString)</lastmod>
 
-                        <loc>http://localhost:3000/blog/tags/tag-1/</loc>
+                        <loc>http://localhost:3000/blog/tags/tag-3/</loc>
                         <lastmod>\#(nowString)</lastmod>
                         <loc>http://localhost:3000/blog/tags/tag-2/</loc>
                         <lastmod>\#(nowString)</lastmod>
-                        <loc>http://localhost:3000/blog/tags/tag-3/</loc>
+                        <loc>http://localhost:3000/blog/tags/tag-1/</loc>
                         <lastmod>\#(nowString)</lastmod>
 
 

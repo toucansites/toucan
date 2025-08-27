@@ -11,7 +11,7 @@
 /// should be parsed, validated, and queried in the pipeline.
 public struct ContentType: Codable, Equatable {
 
-    private enum CodingKeys: CodingKey {
+    private enum CodingKeys: CodingKey, CaseIterable {
         case id
         case `default`
         case paths
@@ -79,6 +79,8 @@ public struct ContentType: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         let id = try container.decode(
@@ -98,11 +100,29 @@ public struct ContentType: Codable, Equatable {
                 forKey: .paths
             ) ?? []
 
-        let properties =
+        var properties =
             try container.decodeIfPresent(
                 [String: Property].self,
                 forKey: .properties
             ) ?? [:]
+
+        // Providing system properties
+        properties[SystemPropertyKeys.id.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
+        properties[SystemPropertyKeys.lastUpdate.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
+        properties[SystemPropertyKeys.slug.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
+        properties[SystemPropertyKeys.type.rawValue] = .init(
+            propertyType: .string,
+            isRequired: true
+        )
 
         let relations =
             try container.decodeIfPresent(

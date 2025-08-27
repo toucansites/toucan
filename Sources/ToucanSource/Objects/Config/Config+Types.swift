@@ -9,7 +9,7 @@ public extension Config {
     /// Represents the location of type configuration files.
     struct Types: Sendable, Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case path
         }
 
@@ -38,6 +38,8 @@ public extension Config {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
             let container = try? decoder.container(keyedBy: CodingKeys.self)
 

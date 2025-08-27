@@ -12,7 +12,7 @@ public extension Pipeline {
     /// optional tracking for last modification timestamps.
     struct ContentTypes: Codable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case include
             case exclude
             case lastUpdate
@@ -76,6 +76,8 @@ public extension Pipeline {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let include =

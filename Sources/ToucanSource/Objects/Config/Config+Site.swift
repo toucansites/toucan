@@ -9,7 +9,7 @@ public extension Config {
     /// Defines file system paths for locating site related resources.
     struct Site: Codable, Equatable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case assets
             case settings
         }
@@ -47,6 +47,8 @@ public extension Config {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let defaults = Self.defaults
 
             guard

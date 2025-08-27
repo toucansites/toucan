@@ -11,7 +11,8 @@ public extension Pipeline {
     /// Assets include static files like JavaScript, CSS, and images that are attached
     /// to the output content, either by setting paths, loading files, or parsing content.
     struct Assets: Codable {
-        private enum CodingKeys: CodingKey {
+
+        private enum CodingKeys: CodingKey, CaseIterable {
             case behaviors
             case properties
         }
@@ -56,7 +57,7 @@ public extension Pipeline {
         ///   - output: The destination location for the processed asset.
         public struct Behavior: Codable {
 
-            private enum CodingKeys: CodingKey {
+            private enum CodingKeys: CodingKey, CaseIterable {
                 case id
                 case input
                 case output
@@ -91,6 +92,8 @@ public extension Pipeline {
             public init(
                 from decoder: any Decoder
             ) throws {
+                try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
                 let container = try decoder.container(keyedBy: CodingKeys.self)
 
                 let id = try container.decode(String.self, forKey: .id)
@@ -201,6 +204,8 @@ public extension Pipeline {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let defaults = Self.defaults

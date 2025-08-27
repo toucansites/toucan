@@ -13,10 +13,20 @@ import ToucanCore
 extension DecodingError.Context {
     /// A string representation of the decoding path or debug description.
     var logMessage: String {
-        if codingPath.isEmpty {
-            return debugDescription
+        var components = [debugDescription]
+
+        if !codingPath.isEmpty {
+            components.append("Coding path:")
+
+            let path =
+                codingPath
+                .map(\.stringValue)
+                .joined(separator: ".")
+
+            components.append("`\(path)`.")
         }
-        return codingPath.map(\.description).joined(separator: ".")
+
+        return components.joined(separator: " ")
     }
 }
 

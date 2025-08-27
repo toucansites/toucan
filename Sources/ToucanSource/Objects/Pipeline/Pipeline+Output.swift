@@ -9,7 +9,7 @@ public extension Pipeline {
     /// Describes the output configuration for a content pipeline.
     struct Output: Codable {
 
-        private enum CodingKeys: CodingKey {
+        private enum CodingKeys: CodingKey, CaseIterable {
             case path
             case file
             case ext
@@ -50,6 +50,8 @@ public extension Pipeline {
         public init(
             from decoder: any Decoder
         ) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
             let container = try decoder.container(keyedBy: CodingKeys.self)
 
             let path = try container.decode(String.self, forKey: .path)

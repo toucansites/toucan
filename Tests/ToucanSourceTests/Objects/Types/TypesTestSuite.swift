@@ -48,7 +48,7 @@ struct TypesTestSuite {
                     type: many
                     order: 
                         key: priority
-                        sort: desc
+                        direction: desc
             queries:
                 prev:
                     contentType: post

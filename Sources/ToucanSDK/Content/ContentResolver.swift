@@ -236,7 +236,7 @@ struct ContentResolver {
         forKey key: String,
         slug: String
     ) throws(ContentResolverError) -> AnyCodable? {
-        let value = rawValue ?? property.default
+        let value = rawValue ?? property.defaultValue
 
         switch property.type {
         case let .date(config):
@@ -270,7 +270,9 @@ struct ContentResolver {
     func convert(
         rawContent: RawContent
     ) throws(ContentResolverError) -> Content {
-        let typeID = rawContent.markdown.frontMatter.string("type")
+        let typeID = rawContent.markdown.frontMatter.string(
+            SystemPropertyKeys.type.rawValue
+        )
 
         let contentType = try getContentType(
             for: rawContent.origin,
@@ -283,8 +285,15 @@ struct ContentResolver {
         let frontMatter = rawContent.markdown.frontMatter
         let missingProperties = contentType.properties
             .filter { name, property in
-                property.required && frontMatter[name] == nil
-                    && property.default?.value == nil
+                let isRequiredButMissing =
+                    property.required && frontMatter[name] == nil
+                let hasNoDefaultValue = property.defaultValue?.value == nil
+                let isNotSystemProperty = !SystemPropertyKeys.allCases
+                    .map { $0.rawValue }
+                    .contains(name)
+
+                return isRequiredButMissing && hasNoDefaultValue
+                    && isNotSystemProperty
             }
 
         for name in missingProperties.keys {
@@ -300,11 +309,42 @@ struct ContentResolver {
             throw .missingRelation(name, rawContent.origin.slug)
         }
 
+        // Extrant `id` from front matter or path or fallback to origin path
+        var typeAwareID = rawContent.origin.path.getTypeAwareIdentifier()
+
+        if let id = rawContent.markdown.frontMatter.string(
+            SystemPropertyKeys.id.rawValue
+        ) {
+            typeAwareID = id
+        }
+
+        // Extract `slug` from front matter or fallback to origin slug
+        var slug: String = rawContent.origin.slug
+        if let rawSlug = rawContent.markdown.frontMatter.string(
+            SystemPropertyKeys.slug.rawValue,
+            allowingEmptyValue: true
+        ) {
+            slug = rawSlug
+        }
+
         // Convert schema-defined properties
         for (key, property) in contentType.properties.sorted(by: {
             $0.key < $1.key
         }) {
-            let rawValue = rawContent.markdown.frontMatter[key]
+            var rawValue: AnyCodable?
+
+            switch key {
+            case SystemPropertyKeys.id.rawValue:
+                rawValue = .init(typeAwareID)
+            case SystemPropertyKeys.lastUpdate.rawValue:
+                rawValue = .init(rawContent.lastModificationDate)
+            case SystemPropertyKeys.slug.rawValue:
+                rawValue = .init(slug)
+            case SystemPropertyKeys.type.rawValue:
+                rawValue = .init(typeID)
+            default:
+                rawValue = rawContent.markdown.frontMatter[key]
+            }
 
             properties[key] = try convert(
                 property: property,
@@ -342,28 +382,14 @@ struct ContentResolver {
 
         // Filter out reserved keys and schema-mapped fields to extract user-defined fields
         let keysToRemove =
-            ["id", "type", "slug"]
+            SystemPropertyKeys.allCases
+            .map { $0.rawValue }
             + contentType.properties.keys
             + contentType.relations.keys
 
         var userDefined = rawContent.markdown.frontMatter
         for key in keysToRemove {
             userDefined.removeValue(forKey: key)
-        }
-
-        var typeAwareID = rawContent.origin.path.getTypeAwareIdentifier()
-
-        if let id = rawContent.markdown.frontMatter.string("id") {
-            typeAwareID = id
-        }
-
-        // Extract `slug` from front matter or fallback to origin slug
-        var slug: String = rawContent.origin.slug
-        if let rawSlug = rawContent.markdown.frontMatter.string(
-            "slug",
-            allowingEmptyValue: true
-        ) {
-            slug = rawSlug
         }
 
         logger.trace(
@@ -417,7 +443,8 @@ struct ContentResolver {
                         contentType: id,
                         filter: condition
                     ),
-                    now: now
+                    now: now,
+                    logger: logger
                 )
                 result.append(contentsOf: items)
             }
@@ -455,7 +482,9 @@ struct ContentResolver {
                     orderBy: query.orderBy
                 )
 
-                let total = contents.run(query: countQuery, now: now).count
+                let total =
+                    contents.run(query: countQuery, now: now, logger: logger)
+                    .count
                 let limit = max(1, query.limit ?? 10)
                 let numberOfPages = (total + limit - 1) / limit
 
@@ -516,7 +545,8 @@ struct ContentResolver {
                             filter: query.filter,
                             orderBy: query.orderBy
                         ),
-                        now: now
+                        now: now,
+                        logger: logger
                     )
 
                     alteredContent.iteratorInfo = .init(

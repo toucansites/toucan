@@ -9,7 +9,7 @@
 public struct TargetConfig: Codable, Equatable {
 
     /// Keys explicitly defined for decoding known fields from the input source.
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: CodingKey, CaseIterable {
         case targets
     }
 
@@ -52,6 +52,8 @@ public struct TargetConfig: Codable, Equatable {
     public init(
         from decoder: any Decoder
     ) throws {
+        try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
         let container = try? decoder.container(keyedBy: CodingKeys.self)
         let all =
             try container?
