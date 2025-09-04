@@ -28,6 +28,7 @@ enum ContentResolverError: ToucanError {
     case missingProperty(String, String)
     case missingRelation(String, String)
     case invalidProperty(String, String, String)
+    case invalidSlug(String)
     case unknown(Error)
 
     var underlyingErrors: [any Error] {
@@ -39,6 +40,8 @@ enum ContentResolverError: ToucanError {
         case .missingRelation:
             []
         case .invalidProperty:
+            []
+        case .invalidSlug:
             []
         case let .unknown(error):
             [error]
@@ -55,6 +58,8 @@ enum ContentResolverError: ToucanError {
             "Missing property `\(name)` for content: \(slug)."
         case let .invalidProperty(name, value, slug):
             "Invalid property `\(name): \(value)` for content: \(slug)."
+        case let .invalidSlug(slug):
+            "Invalid slug for content: \(slug)."
         case let .unknown(error):
             error.localizedDescription
         }
@@ -70,6 +75,8 @@ enum ContentResolverError: ToucanError {
             "Missing property `\(name)` for content: `\(slug)`."
         case let .invalidProperty(name, value, slug):
             "Invalid property `\(name): \(value)` for content: \(slug)."
+        case let .invalidSlug(slug):
+            "Invalid slug for content: \(slug)."
         case .unknown:
             "Unknown content conversion error."
         }
@@ -324,7 +331,10 @@ struct ContentResolver {
             SystemPropertyKeys.slug.rawValue,
             allowingEmptyValue: true
         ) {
-            slug = rawSlug
+            guard rawSlug.containsOnlyValidURLCharacters() else {
+                throw .invalidSlug(rawSlug)
+            }
+            slug = rawSlug.slugify()
         }
 
         // Convert schema-defined properties

@@ -151,4 +151,37 @@ public extension String {
             .filter { !$0.isEmpty }
             .joined(separator: "/")
     }
+
+    /// Checks if a string contains only valid URL characters.
+    ///
+    /// Allowed: unreserved (`A–Z a–z 0–9 - . _ ~`), reserved
+    /// (`:/?#[]@!$&'()*+,;=`), and `%` for encoding.
+    ///
+    /// - Returns: `true` if all characters are valid, otherwise `false`.
+    func containsOnlyValidURLCharacters() -> Bool {
+        let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        let numerics = "0123456789"
+        let special = "-._~{}%"
+        let reserved = ":/?#[]@!$&'()*+,;="
+
+        let allowed = CharacterSet(
+            charactersIn: alphabet + numerics + special + reserved
+        )
+
+        return unicodeScalars.allSatisfy { allowed.contains($0) }
+    }
+
+    /// Checks if a string contains only valid URL characters.
+    ///
+    /// Allowed: unreserved (`A–Z a–z 0–9 - . _ ~`), reserved
+    /// (`:/?#[]@!$&'()*+,;=`), and `%` for encoding.
+    ///
+    /// - Returns: `true` if all characters are valid, otherwise `false`.
+    func containsOnlyValidPathCharacters() -> Bool {
+        let disallowed = CharacterSet(
+            charactersIn: "%?#&="
+        )
+        return unicodeScalars.allSatisfy { !disallowed.contains($0) }
+    }
+
 }

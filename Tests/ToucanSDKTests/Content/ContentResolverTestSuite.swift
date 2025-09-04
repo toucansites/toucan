@@ -1263,4 +1263,71 @@ struct ContentResolverTestSuite {
             ]
         )
     }
+
+    @Test()
+    func contentFrontMatterSlugInvalidValue() async throws {
+        let now = Date()
+        let buildTargetSource = BuildTargetSource(
+            locations: .init(
+                sourceURL: .init(filePath: ""),
+                config: .defaults
+            ),
+            types: [
+                .init(
+                    id: "test",
+                    default: true,
+                )
+            ],
+            rawContents: [
+                .init(
+                    origin: .init(
+                        path: .init("test"),
+                        slug: "test"
+                    ),
+                    markdown: .init(
+                        frontMatter: [
+                            "slug": "te st"
+                        ]
+                    ),
+                    lastModificationDate: now.timeIntervalSince1970,
+                    assetsPath: "assets",
+                    assets: []
+                )
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+        try validator.validate()
+
+        let encoder = ToucanYAMLEncoder()
+        let decoder = ToucanYAMLDecoder()
+        let resolver = ContentResolver(
+            contentTypeResolver: .init(
+                types: buildTargetSource.types,
+                pipelines: buildTargetSource.pipelines
+            ),
+            encoder: encoder,
+            decoder: decoder,
+            dateFormatter: .init(
+                dateConfig: buildTargetSource.config.dataTypes.date
+            )
+        )
+
+        do {
+            _ = try resolver.convert(
+                rawContents: buildTargetSource.rawContents
+            )
+            Issue.record("Should result in an invalid slug error.")
+        }
+        catch {
+            switch error {
+            case let .invalidSlug(slug):
+                #expect(slug == "te st")
+            default:
+                Issue.record("Invalid error result.")
+            }
+        }
+    }
 }

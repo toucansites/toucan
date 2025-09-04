@@ -14,6 +14,7 @@ import ToucanSource
 
 @Suite
 struct BuildTargetSourceValidatorTestSuite {
+
     @Test
     func emptyContentTypes() throws {
         let buildTargetSource = BuildTargetSource(
@@ -29,6 +30,7 @@ struct BuildTargetSourceValidatorTestSuite {
 
         do {
             try validator.validate()
+            Issue.record("Should trigger an error.")
         }
         catch {
             guard case .noDefaultContentType = error else {
@@ -57,6 +59,7 @@ struct BuildTargetSourceValidatorTestSuite {
 
         do {
             try validator.validate()
+            Issue.record("Should trigger an error.")
         }
         catch {
             guard case .noDefaultContentType = error else {
@@ -91,6 +94,7 @@ struct BuildTargetSourceValidatorTestSuite {
 
         do {
             try validator.validate()
+            Issue.record("Should trigger an error.")
         }
         catch {
             guard case let .multipleDefaultContentTypes(values) = error else {
@@ -100,4 +104,48 @@ struct BuildTargetSourceValidatorTestSuite {
             #expect(values == ["foo", "bar"].sorted())
         }
     }
+
+    @Test
+    func invalidOriginPath() throws {
+        let buildTargetSource = BuildTargetSource(
+            locations: .init(
+                sourceURL: .init(filePath: ""),
+                config: .defaults
+            ),
+            types: [
+                .init(
+                    id: "page",
+                    default: true
+                )
+            ],
+            rawContents: [
+                .init(
+                    origin: .init(
+                        path: .init("foo?bar"),
+                        slug: "foo-bar"
+                    ),
+                    lastModificationDate: Date().timeIntervalSinceNow,
+                    assetsPath: "",
+                    assets: []
+                )
+            ]
+        )
+
+        let validator = BuildTargetSourceValidator(
+            buildTargetSource: buildTargetSource
+        )
+
+        do {
+            try validator.validate()
+            Issue.record("Should trigger an error.")
+        }
+        catch {
+            guard case let .invalidRawContentOriginPath(path) = error else {
+                Issue.record("Invalid error.")
+                return
+            }
+            #expect(path == "foo?bar")
+        }
+    }
+
 }

@@ -342,9 +342,10 @@ public struct RawContentLoader {
                 "path": .string(contentsURL.path())
             ]
         )
-        return try locateOrigins()
-            .map {
-                try loadRawContent(at: $0)
-            }
+        let origins = locateOrigins()
+
+        return try origins.map {
+            return try loadRawContent(at: $0)
+        }
     }
 }

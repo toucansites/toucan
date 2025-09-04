@@ -15,10 +15,13 @@ enum BuildTargetSourceValidatorError: ToucanError {
     case noDefaultContentType
     case multipleDefaultContentTypes([String])
     case duplicatePipelines([String])
+    case invalidRawContentOriginPath(String)
+    case invalidRawContentOriginSlug(String)
     case duplicateRawContentSlugs([String])
     case duplicateBlocks([String])
     case invalidLocale(String)
     case invalidTimeZone(String)
+
     case unknown(Error)
 
     var underlyingErrors: [any Error] {
@@ -43,6 +46,10 @@ enum BuildTargetSourceValidatorError: ToucanError {
         case let .duplicatePipelines(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate pipelines: \(items)."
+        case let .invalidRawContentOriginPath(path):
+            return "Invalid path: \(path)."
+        case let .invalidRawContentOriginSlug(slug):
+            return "Invalid slug: \(slug)."
         case let .duplicateRawContentSlugs(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate slugs: \(items)."
@@ -71,6 +78,10 @@ enum BuildTargetSourceValidatorError: ToucanError {
         case let .duplicatePipelines(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate pipelines: \(items)."
+        case let .invalidRawContentOriginPath(path):
+            return "Invalid path: \(path)."
+        case let .invalidRawContentOriginSlug(slug):
+            return "Invalid slug: \(slug)."
         case let .duplicateRawContentSlugs(values):
             let items = values.map { "`\($0)`" }.joined(separator: ", ")
             return "Duplicate slugs: \(items)."
@@ -95,6 +106,7 @@ struct BuildTargetSourceValidator {
         try validatePipelines()
         try validateBlocks()
         try validateContentTypes()
+        try validateRawContentOrigins()
         try validateRawContents()
     }
 
@@ -141,6 +153,18 @@ struct BuildTargetSourceValidator {
         }
         if items.count > 1 {
             throw .multipleDefaultContentTypes(items.map(\.id).sorted())
+        }
+    }
+
+    func validateRawContentOrigins() throws(BuildTargetSourceValidatorError) {
+        let origins = buildTargetSource.rawContents.map(\.origin)
+        for origin in origins {
+            guard origin.path.value.containsOnlyValidPathCharacters() else {
+                throw .invalidRawContentOriginPath(origin.path.value)
+            }
+            guard origin.slug.containsOnlyValidURLCharacters() else {
+                throw .invalidRawContentOriginSlug(origin.slug)
+            }
         }
     }
 
