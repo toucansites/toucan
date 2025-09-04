@@ -1174,7 +1174,11 @@ struct E2ETestSuite {
             let fileURL = distURL.appendingPathIfPresent("test/index.html")
             let html = try String(contentsOf: fileURL, encoding: .utf8)
 
-            #expect(html.contains("thisisnotok"))
+            #expect(
+                html.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ) == "thisisnotok"
+            )
         }
     }
 
