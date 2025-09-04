@@ -6,6 +6,7 @@
 //
 
 import ToucanSource
+import ToucanSDK
 
 extension Mocks.Pipelines {
     static func html() -> Pipeline {
@@ -16,7 +17,7 @@ extension Mocks.Pipelines {
             queries: [
                 "featured": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     filter: .field(
                         key: "featured",
                         operator: .equals,
@@ -165,22 +166,27 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "page": [
-                            "view": "pages.default"
+                            ViewFrontMatterKeys.view.rawValue: "pages.default"
                         ],
                         "post": [
-                            "view": "blog.post.default"
+                            ViewFrontMatterKeys.view.rawValue:
+                                "blog.post.default"
                         ],
                         "author": [
-                            "view": "blog.author.default"
+                            ViewFrontMatterKeys.view.rawValue:
+                                "blog.author.default"
                         ],
                         "tag": [
-                            "view": "blog.tag.default"
+                            ViewFrontMatterKeys.view.rawValue:
+                                "blog.tag.default"
                         ],
                         "category": [
-                            "view": "docs.category.default"
+                            ViewFrontMatterKeys.view.rawValue:
+                                "docs.category.default"
                         ],
                         "guide": [
-                            "view": "docs.guide.default"
+                            ViewFrontMatterKeys.view.rawValue:
+                                "docs.guide.default"
                         ],
                     ]
                 ]
@@ -216,7 +222,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "not-found": [
-                            "view": "pages.404"
+                            ViewFrontMatterKeys.view.rawValue: "pages.404"
                         ]
                     ]
                 ]
@@ -252,7 +258,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "redirect": [
-                            "view": "redirect"
+                            ViewFrontMatterKeys.view.rawValue: "redirect"
                         ]
                     ]
                 ]
@@ -273,7 +279,7 @@ extension Mocks.Pipelines {
             queries: [
                 "posts": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     orderBy: [
                         .init(
                             key: SystemPropertyKeys.lastUpdate.rawValue,
@@ -311,7 +317,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "rss": [
-                            "view": "rss"
+                            ViewFrontMatterKeys.view.rawValue: "rss"
                         ]
                     ]
                 ]
@@ -332,7 +338,7 @@ extension Mocks.Pipelines {
             queries: [
                 "pages": .init(
                     contentType: "page",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     orderBy: [
                         .init(
                             key: SystemPropertyKeys.lastUpdate.rawValue,
@@ -343,7 +349,7 @@ extension Mocks.Pipelines {
                 ),
                 "posts": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     orderBy: [
                         .init(
                             key: SystemPropertyKeys.lastUpdate.rawValue,
@@ -353,7 +359,7 @@ extension Mocks.Pipelines {
                 ),
                 "authors": .init(
                     contentType: "author",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     orderBy: [
                         .init(
                             key: SystemPropertyKeys.lastUpdate.rawValue,
@@ -363,7 +369,7 @@ extension Mocks.Pipelines {
                 ),
                 "tags": .init(
                     contentType: "tag",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     orderBy: [
                         .init(
                             key: SystemPropertyKeys.lastUpdate.rawValue,
@@ -407,7 +413,7 @@ extension Mocks.Pipelines {
                 options: [
                     "contentTypes": [
                         "sitemap": [
-                            "view": "sitemap"
+                            ViewFrontMatterKeys.view.rawValue: "sitemap"
                         ]
                     ]
                 ]
@@ -428,7 +434,7 @@ extension Mocks.Pipelines {
             queries: [
                 "posts": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     orderBy: [
                         .init(
                             key: "publication",

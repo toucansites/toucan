@@ -74,7 +74,7 @@ struct BuildTargetSourceRendererTestSuite {
                 queries: [
                     "posts": .init(
                         contentType: "post",
-                        scope: "list",
+                        scope: Pipeline.Scope.Keys.list.rawValue,
                         orderBy: [
                             .init(
                                 key: "publication",

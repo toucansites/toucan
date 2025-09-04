@@ -82,7 +82,7 @@ struct QueryTestSuite {
         )
 
         #expect(result.contentType == "post")
-        #expect(result.scope == "list")
+        #expect(result.scope == Pipeline.Scope.Keys.list.rawValue)
         #expect(result.limit == 1)
         #expect(result.offset == 0)
 

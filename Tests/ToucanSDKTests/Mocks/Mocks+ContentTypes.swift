@@ -73,7 +73,7 @@ extension Mocks.ContentTypes {
             queries: [
                 "posts": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     filter: .field(
                         key: "authors",
                         operator: .contains,
@@ -115,7 +115,7 @@ extension Mocks.ContentTypes {
             queries: [
                 "posts": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     filter: .field(
                         key: "tags",
                         operator: .contains,
@@ -232,7 +232,7 @@ extension Mocks.ContentTypes {
                 ),
                 "related": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     limit: 4,
                     filter: .and(
                         [
@@ -253,7 +253,7 @@ extension Mocks.ContentTypes {
 
                 "similar": .init(
                     contentType: "post",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     limit: 4,
                     filter: .and(
                         [
@@ -305,7 +305,7 @@ extension Mocks.ContentTypes {
             queries: [
                 "guides": .init(
                     contentType: "guide",
-                    scope: "list",
+                    scope: Pipeline.Scope.Keys.list.rawValue,
                     filter: .field(
                         key: "category",
                         operator: .equals,

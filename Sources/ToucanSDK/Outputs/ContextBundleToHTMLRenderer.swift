@@ -29,7 +29,10 @@ struct ContextBundleToHTMLRenderer {
 
         let engineOptions = pipeline.engine.options
         self.engineContentTypesOptions = engineOptions.dict("contentTypes")
-        self.pipelineViewKey = ["views", pipeline.id].joined(separator: ".")
+        self.pipelineViewKey = [
+            ViewFrontMatterKeys.views.rawValue, pipeline.id,
+        ]
+        .joined(separator: ".")
         self.logger = logger
     }
 
@@ -46,8 +49,12 @@ struct ContextBundleToHTMLRenderer {
             contextBundle.content.type.id
         )
         let frontMatter = contextBundle.content.rawValue.markdown.frontMatter
-        let contentTypeView = contentTypeOptions.string("view")
-        let genericContentView = frontMatter.string("views.*")
+        let contentTypeView = contentTypeOptions.string(
+            ViewFrontMatterKeys.view.rawValue
+        )
+        let genericContentView = frontMatter.string(
+            ViewFrontMatterKeys.any.rawValue
+        )
         let contentView = frontMatter.string(pipelineViewKey)
         let viewId = contentView ?? genericContentView ?? contentTypeView
 

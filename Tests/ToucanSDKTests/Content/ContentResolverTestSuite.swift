@@ -1161,7 +1161,7 @@ struct ContentResolverTestSuite {
         let query = Query(
             contentType: "page",
             filter: .field(
-                key: "iterator",
+                key: RootContextKeys.iterator.rawValue,
                 operator: .equals,
                 value: true
             )

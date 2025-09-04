@@ -1028,7 +1028,8 @@ struct E2ETestSuite {
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "view": "foo"
+                                            ViewFrontMatterKeys.view.rawValue:
+                                                "foo"
                                         ]
                                     ]
                                 ]
@@ -1132,7 +1133,8 @@ struct E2ETestSuite {
                                 options: [
                                     "contentTypes": [
                                         "test": [
-                                            "view": "test"
+                                            ViewFrontMatterKeys.view.rawValue:
+                                                "test"
                                         ]
                                     ]
                                 ]
@@ -1280,7 +1282,7 @@ struct E2ETestSuite {
                                             "slug"
                                         ]
                                     ),
-                                    "detail": .init(
+                                    Pipeline.Scope.Keys.list.rawValue: .init(
                                         context: .detail,
                                         fields: [
                                             "title",
