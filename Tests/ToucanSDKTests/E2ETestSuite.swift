@@ -1094,6 +1094,90 @@ struct E2ETestSuite {
         }
     }
 
+    @Test
+    func optionalArrayItems() async throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                mockSiteYAMLFile()
+                Directory(name: "pipelines") {
+                    YAMLFile(
+                        name: "html",
+                        contents: Pipeline(
+                            id: "html",
+                            engine: .init(
+                                id: "mustache",
+                                options: [
+                                    "contentTypes": [
+                                        "test": [
+                                            "view": "foo"
+                                        ]
+                                    ]
+                                ]
+                            ),
+                            output: .init(
+                                path: "{{slug}}",
+                                file: "index",
+                                ext: "html"
+                            )
+                        )
+                    )
+                }
+                mockTestTypes()
+                Directory(name: "contents") {
+                    Directory(name: "test") {
+                        File(
+                            name: "index.yaml",
+                            string: """
+                                foo:
+                                    bar:
+                                        baz:
+                                            title: "asdf"
+                                            bug:
+                                                - this
+                                                - is 
+                                                - not
+                                                - ok
+                                """
+                        )
+                    }
+                }
+                Directory(name: "templates") {
+                    Directory(name: "default") {
+                        YAMLFile(
+                            name: "template",
+                            contents: Mocks.Templates.metadata()
+                        )
+                        Directory(name: "views") {
+                            MustacheFile(
+                                name: "foo",
+                                contents: """
+                                    {{#page.foo.bar.baz.bug}}{{.}}{{/page.foo.bar.baz.bug}}
+                                    """
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        .test {
+            let workDir = $1.appendingPathIfPresent("src")
+            let toucan = Toucan()
+            try toucan.generate(
+                workDir: workDir.path(),
+                now: now
+            )
+
+            let distURL = workDir.appendingPathIfPresent("dist")
+
+            let fileURL = distURL.appendingPathIfPresent("test/index.html")
+            let html = try String(contentsOf: fileURL, encoding: .utf8)
+
+            #expect(html.contains("thisisnotok"))
+        }
+    }
+
     // MARK: - transformers
 
     @Test
