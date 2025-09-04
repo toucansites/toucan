@@ -2,7 +2,7 @@
 //  ContextKeys.swift
 //  Toucan
 //
-//  Created by Codex on 2025-08-28.
+//  Created by Viasz-Kádi Ferenc on 2025. 09. 04..
 //
 
 /// Root-level keys used in the rendered context bundles.
