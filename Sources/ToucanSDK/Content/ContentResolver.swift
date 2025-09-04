@@ -334,7 +334,7 @@ struct ContentResolver {
             guard rawSlug.containsOnlyValidURLCharacters() else {
                 throw .invalidSlug(rawSlug)
             }
-            slug = rawSlug // .slugify()
+            slug = rawSlug  // .slugify()
         }
 
         // Convert schema-defined properties
