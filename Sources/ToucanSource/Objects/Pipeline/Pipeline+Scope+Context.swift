@@ -63,14 +63,14 @@ public extension Pipeline.Scope {
         /// Returns the mapping of context options to their string names.
         private var allOptions: [(Context, String)] {
             [
-                (.userDefined, "userDefined"),
-                (.properties, "properties"),
-                (.contents, "contents"),
-                (.relations, "relations"),
-                (.queries, "queries"),
-                (.reference, "reference"),
-                (.list, "list"),
-                (.detail, "detail"),
+                (.userDefined, Keys.userDefined.rawValue),
+                (.properties, Keys.properties.rawValue),
+                (.contents, Keys.contents.rawValue),
+                (.relations, Keys.relations.rawValue),
+                (.queries, Keys.queries.rawValue),
+                (.reference, Keys.reference.rawValue),
+                (.list, Keys.list.rawValue),
+                (.detail, Keys.detail.rawValue),
             ]
         }
 
@@ -91,21 +91,21 @@ public extension Pipeline.Scope {
         /// - Parameter stringValue: The string representation of the context.
         public init(stringValue: String) {
             switch stringValue.lowercased() {
-            case "userdefined":
+            case Keys.userDefined.rawValue:
                 self = .userDefined
-            case "properties":
+            case Keys.properties.rawValue:
                 self = .properties
-            case "contents":
+            case Keys.contents.rawValue:
                 self = .contents
-            case "relations":
+            case Keys.relations.rawValue:
                 self = .relations
-            case "queries":
+            case Keys.queries.rawValue:
                 self = .queries
-            case "reference":
+            case Keys.reference.rawValue:
                 self = .reference
-            case "list":
+            case Keys.list.rawValue:
                 self = .list
-            case "detail":
+            case Keys.detail.rawValue:
                 self = .detail
             default:
                 self = []
@@ -162,5 +162,20 @@ public extension Pipeline.Scope {
                 try container.encode(parts)
             }
         }
+    }
+}
+
+extension Pipeline.Scope.Context {
+
+    /// String keys used to identify pipeline scope contexts.
+    public enum Keys: String, CaseIterable {
+        case userDefined
+        case properties
+        case contents
+        case relations
+        case queries
+        case reference
+        case list
+        case detail
     }
 }

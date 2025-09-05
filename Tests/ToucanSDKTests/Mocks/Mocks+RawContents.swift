@@ -7,6 +7,7 @@
 
 import Foundation
 import ToucanSource
+import ToucanSDK
 
 extension Mocks.RawContents {
     static func homePage(
@@ -105,7 +106,7 @@ extension Mocks.RawContents {
                     "title": "Context page",
                     "description": "Context page description",
 
-                    "views": [
+                    ViewFrontMatterKeys.views.rawValue: [
                         "*": "pages.context",
                         "invalid-pipeline": "invalid-view",
                     ],

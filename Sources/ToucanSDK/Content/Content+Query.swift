@@ -50,7 +50,7 @@ public extension Content {
             rawValue.lastModificationDate
         )
         fields[SystemPropertyKeys.slug.rawValue] = .init(slug.value)
-        fields["iterator"] = .init(isIterator)
+        fields[RootContextKeys.iterator.rawValue] = .init(isIterator)
 
         return fields
     }

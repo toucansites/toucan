@@ -151,15 +151,25 @@ struct PipelineTestSuite {
 
         #expect(result.contentTypes.include.isEmpty)
         #expect(result.engine.id == "test")
-        let defaultScope = try #require(result.scopes["*"])
-        let defaultReferenceScope = try #require(defaultScope["reference"])
-        let defaultListScope = try #require(defaultScope["list"])
-        let defaultDetailScope = try #require(defaultScope["detail"])
+        let defaultScope = try #require(
+            result.scopes[Pipeline.Scope.Keys.wildcard.rawValue]
+        )
+        let defaultReferenceScope = try #require(
+            defaultScope[Pipeline.Scope.Context.Keys.reference.rawValue]
+        )
+        let defaultListScope = try #require(
+            defaultScope[Pipeline.Scope.Context.Keys.list.rawValue]
+        )
+        let defaultDetailScope = try #require(
+            defaultScope[Pipeline.Scope.Context.Keys.detail.rawValue]
+        )
         #expect(defaultReferenceScope.context == .reference)
         #expect(defaultListScope.context == .list)
         #expect(defaultDetailScope.context == .detail)
         let postScope = try #require(result.scopes["post"])
-        let postListScope = try #require(postScope["list"])
+        let postListScope = try #require(
+            postScope[Pipeline.Scope.Keys.list.rawValue]
+        )
         #expect(postListScope.context == .detail)
     }
 

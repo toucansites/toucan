@@ -18,7 +18,7 @@ struct UnboxingTests {
     @Test
     func unboxing() throws {
         let value: [String: AnyCodable] = [
-            "context": [
+            RootContextKeys.context.rawValue: [
                 "posts": [
                     [
                         "publication": AnyCodable(
@@ -51,9 +51,11 @@ struct UnboxingTests {
                             "Migration guide for Toucan Beta 3: covering changes to content structure, template changes and rendering features."
                         ),
                         "featured": AnyCodable(true),
-                        "contents": AnyCodable([
-                            "readingTime": AnyCodable(2),
-                            "outline": AnyCodable([
+                        PageContextKeys.contents.rawValue: AnyCodable([
+                            PageContentsKeys.readingTime.rawValue: AnyCodable(
+                                2
+                            ),
+                            PageContentsKeys.outline.rawValue: AnyCodable([
                                 AnyCodable(
                                     Optional(
                                         Outline(
@@ -99,16 +101,22 @@ struct UnboxingTests {
                                     )
                                 ),
                             ]),
-                            "html": AnyCodable("<p></p>"),
+                            PageContentsKeys.html.rawValue: AnyCodable(
+                                "<p></p>"
+                            ),
                         ]),
                         "authors": AnyCodable([
                             [
-                                "contents": AnyCodable([
-                                    "outline": AnyCodable([]),
-                                    "html": AnyCodable(""),
-                                    "readingTime": AnyCodable(1),
+                                PageContextKeys.contents.rawValue: AnyCodable([
+                                    PageContentsKeys.outline.rawValue:
+                                        AnyCodable([]),
+                                    PageContentsKeys.html.rawValue: AnyCodable(
+                                        ""
+                                    ),
+                                    PageContentsKeys.readingTime.rawValue:
+                                        AnyCodable(1),
                                 ]),
-                                "permalink": AnyCodable(
+                                PageContextKeys.permalink.rawValue: AnyCodable(
                                     "https://toucansites.com/authors/gabor-lengyel/"
                                 ),
                                 "description": AnyCodable(
@@ -165,7 +173,7 @@ struct UnboxingTests {
                             Optional(Slug("beta-3-migration-guide"))
                         ),
                         "title": AnyCodable("Beta 3 migration guide"),
-                        "permalink": AnyCodable(
+                        PageContextKeys.permalink.rawValue: AnyCodable(
                             "https://toucansites.com/beta-3-migration-guide/"
                         ),
                     ]

@@ -176,7 +176,7 @@ public struct Pipeline: Codable {
         if let scopes = scopes[contentType] {
             return scopes
         }
-        return scopes["*"] ?? [:]
+        return scopes[Scope.Keys.wildcard.rawValue] ?? [:]
     }
 
     /// Returns a single scope for a given content type and scope key (e.g., `"list"`, `"detail"`).

@@ -192,13 +192,14 @@ public struct BuildTargetSourceRenderer {
                         pipeline: pipeline,
                         dateFormatter: dateFormatter,
                         now: now,
-                        scopeKey: query.scope ?? "list"
+                        scopeKey: query.scope
+                            ?? Pipeline.Scope.Keys.list.rawValue
                     )
                 }
             )
         }
         return [
-            "context": .init(rawContext)
+            RootContextKeys.context.rawValue: .init(rawContext)
         ]
     }
 
@@ -219,17 +220,18 @@ public struct BuildTargetSourceRenderer {
                 pipeline: pipeline,
                 dateFormatter: dateFormatter,
                 now: now,
-                scopeKey: iteratorInfo.scope ?? "list"
+                scopeKey: iteratorInfo.scope
+                    ?? Pipeline.Scope.Keys.list.rawValue
             )
         }
         return [
-            "iterator": .init(
+            RootContextKeys.iterator.rawValue: .init(
                 [
-                    "total": .init(iteratorInfo.total),
-                    "limit": .init(iteratorInfo.limit),
-                    "current": .init(iteratorInfo.current),
-                    "items": .init(itemContext),
-                    "links": .init(iteratorInfo.links),
+                    IteratorKeys.total.rawValue: .init(iteratorInfo.total),
+                    IteratorKeys.limit.rawValue: .init(iteratorInfo.limit),
+                    IteratorKeys.current.rawValue: .init(iteratorInfo.current),
+                    IteratorKeys.items.rawValue: .init(itemContext),
+                    IteratorKeys.links.rawValue: .init(iteratorInfo.links),
                 ] as [String: AnyCodable]
             )
         ]
@@ -249,7 +251,7 @@ public struct BuildTargetSourceRenderer {
             pipeline: pipeline,
             dateFormatter: dateFormatter,
             now: now,
-            scopeKey: "detail"
+            scopeKey: Pipeline.Scope.Keys.detail.rawValue
         )
 
         let iteratorContext = getIteratorContext(
@@ -261,7 +263,7 @@ public struct BuildTargetSourceRenderer {
         )
 
         let context: [String: AnyCodable] = [
-            "page": .init(pageContext)
+            RootContextKeys.page.rawValue: .init(pageContext)
         ]
         .recursivelyMerged(with: iteratorContext)
         .recursivelyMerged(with: pipelineContext)
@@ -378,7 +380,7 @@ public struct BuildTargetSourceRenderer {
             result[SystemPropertyKeys.lastUpdate.rawValue] = .init(
                 dateFormatter.format(content.rawValue.lastModificationDate)
             )
-            result["permalink"] = .init(
+            result[PageContextKeys.permalink.rawValue] = .init(
                 content.slug.permalink(baseURL: baseURL())
             )
         }
@@ -447,10 +449,10 @@ public struct BuildTargetSourceRenderer {
                 baseURL: baseURL()
             )
 
-            result["contents"] = [
-                "html": contents.html,
-                "readingTime": contents.readingTime,
-                "outline": contents.outline,
+            result[PageContextKeys.contents.rawValue] = [
+                PageContentsKeys.html.rawValue: contents.html,
+                PageContentsKeys.readingTime.rawValue: contents.readingTime,
+                PageContentsKeys.outline.rawValue: contents.outline,
             ]
         }
 
@@ -484,7 +486,7 @@ public struct BuildTargetSourceRenderer {
                         pipeline: pipeline,
                         dateFormatter: dateFormatter,
                         now: now,
-                        scopeKey: "reference",
+                        scopeKey: Pipeline.Scope.Keys.reference.rawValue,
                         allowSubQueries: false
                     )
                 }
@@ -518,7 +520,8 @@ public struct BuildTargetSourceRenderer {
                             pipeline: pipeline,
                             dateFormatter: dateFormatter,
                             now: now,
-                            scopeKey: query.scope ?? "list",
+                            scopeKey: query.scope
+                                ?? Pipeline.Scope.Keys.list.rawValue,
                             allowSubQueries: false
                         )
                     }
@@ -545,7 +548,8 @@ public struct BuildTargetSourceRenderer {
                             result["slug"]?.stringValue() ?? "nil"
                         ),
                         "permalink": .string(
-                            result["permalink"]?.stringValue() ?? "nil"
+                            result[PageContextKeys.permalink.rawValue]?
+                                .stringValue() ?? "nil"
                         ),
                     ]
                 ),
@@ -587,8 +591,8 @@ public struct BuildTargetSourceRenderer {
 
         // TODO: This should be in a .toucaninfo file or similar
         let globalContext: [String: AnyCodable] = [
-            "baseUrl": .init(baseURL()),
-            "generator": .init(generatorInfo),
+            GlobalContextKeys.baseUrl.rawValue: .init(baseURL()),
+            GlobalContextKeys.generator.rawValue: .init(generatorInfo),
         ]
 
         let contentTypeResolver = ContentTypeResolver(
@@ -659,8 +663,12 @@ public struct BuildTargetSourceRenderer {
                         SystemPropertyKeys.lastUpdate.rawValue: .init(
                             dateFormatter.format(lastUpdate)
                         ),
-                        "generation": .init(dateFormatter.format(now)),
-                        "site": .init(buildTargetSource.settings.values),
+                        GlobalContextKeys.generation.rawValue: .init(
+                            dateFormatter.format(now)
+                        ),
+                        GlobalContextKeys.site.rawValue: .init(
+                            buildTargetSource.settings.values
+                        ),
                     ]
                 ),
                 pipeline: pipeline,

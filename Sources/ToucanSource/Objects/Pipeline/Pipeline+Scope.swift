@@ -15,6 +15,14 @@ public extension Pipeline {
             case fields
         }
 
+        /// String keys used to identify pipeline scopes.
+        public enum Keys: String, CaseIterable {
+            case reference
+            case list
+            case detail
+            case wildcard = "*"
+        }
+
         /// A scope for rendering lightweight summaries or IDs for use in references.
         public static var reference: Scope {
             .init(context: .reference)
@@ -33,16 +41,16 @@ public extension Pipeline {
         /// A standard mapping of common context names to their default scopes.
         public static var standard: [String: Scope] {
             [
-                "reference": reference,
-                "list": list,
-                "detail": detail,
+                Keys.reference.rawValue: reference,
+                Keys.list.rawValue: list,
+                Keys.detail.rawValue: detail,
             ]
         }
 
         /// The default fallback scope set, applied to all content types via the `*` wildcard.
         public static var `default`: [String: [String: Scope]] {
             [
-                "*": standard
+                Keys.wildcard.rawValue: standard
             ]
         }
 
