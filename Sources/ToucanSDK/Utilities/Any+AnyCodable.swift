@@ -29,7 +29,8 @@ public func unwrap(_ value: Any?) -> Any? {
         }
         return result
     }
-    if let array = value as? [Any] {
+
+    if let array = value as? [Any?] {
         return array.compactMap { unwrap($0) }
     }
     return value
