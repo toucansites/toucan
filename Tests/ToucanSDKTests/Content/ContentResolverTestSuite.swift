@@ -1275,7 +1275,7 @@ struct ContentResolverTestSuite {
             types: [
                 .init(
                     id: "test",
-                    default: true,
+                    default: true
                 )
             ],
             rawContents: [
