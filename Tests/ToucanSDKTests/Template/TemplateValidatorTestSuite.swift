@@ -12,79 +12,54 @@ import Testing
 @testable import ToucanSDK
 @testable import ToucanSource
 
+import Version
+
 @Suite
 struct TemplateValidatorTestSuite {
 
     @Test
     func valid() throws {
+        let version = Version("1.0.0-beta.6")!
         let templateValidator = try TemplateValidator(
-            generatorInfo: .init(version: "1.0.0-beta.6")
+            generatorInfo: .init(version: version.description)
         )
 
         try templateValidator.validate(
             Mocks.Templates.example(
-                generatorVersions: [
-                    "1.0.0-beta.6",
-                    "1.0.0-beta.5",
-                    "1.0.0-beta.4",
-                    "1.0.0",
-                ]
+                generatorVersion: .init(value: version, type: .exact)
             )
         )
-    }
-
-    @Test
-    func invalidVersion() throws {
-        let templateValidator = try TemplateValidator()
-
-        do {
-            try templateValidator.validate(
-                Mocks.Templates.example(generatorVersions: ["invalid"])
-            )
-        }
-        catch {
-            guard case let .invalidVersion(value) = error else {
-                Issue.record("Expected .invalidVersion error, got: \(error)")
-                return
-            }
-            #expect(value == "invalid")
-        }
     }
 
     @Test
     func unsupportedVersion() throws {
         let templateValidator = try TemplateValidator(
-            generatorInfo: .init(version: "1.0.0-beta.6")
+            generatorInfo: .init(version: "1.2.0")
         )
 
         do {
             try templateValidator.validate(
                 Mocks.Templates.example(
-                    generatorVersions: [
-                        "1.0.0",
-                        "1.0.0-beta.6",
-                        "2.0.0",
-                    ]
+                    generatorVersion:
+                        .init(value: Version("1.0.0")!, type: .upNextMinor)
                 )
             )
         }
         catch {
             guard
-                case let .noSupportedGeneratorVersion(version, supported) =
-                    error
+                case let .unsupportedGeneratorVersion(
+                    generatorVersion,
+                    currentVersion
+                ) = error
             else {
                 Issue.record(
-                    "Expected .noSupportedGeneratorVersion error, got: \(error)"
+                    "Expected .unsupportedGeneratorVersion error, got: \(error)"
                 )
                 return
             }
 
-            #expect(version.description == "1.0.0-beta.6")
-            #expect(
-                supported.map {
-                    $0.description
-                } == ["1.0.0-beta.6", "1.0.0", "2.0.0"]
-            )
+            #expect(generatorVersion.value.description == "1.0.0")
+            #expect(currentVersion.description == "1.2.0")
         }
     }
 }

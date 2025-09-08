@@ -6,6 +6,7 @@
 //
 
 import struct Foundation.URL
+import Version
 
 /**
  Templates directory structure:
@@ -106,8 +107,8 @@ public extension Template {
         public var url: String?
         /// The version of the template.
         public var version: String?
-        /// The versions of the generator used to produce this template.
-        public var generatorVersions: [String]
+        /// The versions of the generator this template is compatible with.
+        public var generatorVersion: GeneratorVersion
         /// Licensing information for the template.
         public var license: License?
         /// Author information for the template.
@@ -116,6 +117,23 @@ public extension Template {
         public var demo: Demo?
         /// A list of tags to classify or describe the template.
         public var tags: [String]
+    }
+}
+
+public extension Template.Metadata {
+
+    struct GeneratorVersion: Codable, Sendable {
+        public let value: Version
+        public let type: ComparisonType
+    }
+}
+
+public extension Template.Metadata.GeneratorVersion {
+
+    enum ComparisonType: String, Codable, Sendable {
+        case upNextMajor
+        case upNextMinor
+        case exact
     }
 }
 

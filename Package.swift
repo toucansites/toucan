@@ -241,6 +241,7 @@ let package = Package(
         .testTarget(
             name: "ToucanSourceTests",
             dependencies: [
+                .target(name: "ToucanCore"),
                 .target(name: "ToucanSource"),
                 .product(
                     name: "FileManagerKitBuilder",
