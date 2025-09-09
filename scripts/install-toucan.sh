@@ -7,12 +7,12 @@ fatal() { error "$@"; exit 1; }
 
 swift build -c release
 
-if [ ! -d "/usr/local/bin" ]; then
-    sudo mkdir -p "/usr/local/bin"
+INSTALL_DIR="${1:-/usr/local/bin}"
+
+if [ ! -d "$INSTALL_DIR" ]; then
+    sudo mkdir -p "$INSTALL_DIR"
 fi
 
-sudo install .build/release/toucan /usr/local/bin/toucan
-sudo install .build/release/toucan-generate /usr/local/bin/toucan-generate
-sudo install .build/release/toucan-init /usr/local/bin/toucan-init
-sudo install .build/release/toucan-serve /usr/local/bin/toucan-serve
-sudo install .build/release/toucan-watch /usr/local/bin/toucan-watch
+for binary in toucan toucan-generate toucan-init toucan-serve toucan-watch; do
+  sudo install .build/release/${binary} "${INSTALL_DIR}/${binary}"
+done
