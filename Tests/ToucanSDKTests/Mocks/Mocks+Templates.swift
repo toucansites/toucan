@@ -12,7 +12,7 @@ extension Mocks.Templates {
 
     static func metadata(
         generatorVersion: Template.Metadata.GeneratorVersion = .init(
-            value: .init(GeneratorInfo.current.release)!,
+            value: GeneratorInfo.current.release,
             type: .upNextMajor
         )
     ) -> Template.Metadata {
@@ -46,7 +46,7 @@ extension Mocks.Templates {
 
     static func example(
         generatorVersion: Template.Metadata.GeneratorVersion = .init(
-            value: .init(GeneratorInfo.current.release)!,
+            value: GeneratorInfo.current.release,
             type: .upNextMajor
         )
     ) -> Template {

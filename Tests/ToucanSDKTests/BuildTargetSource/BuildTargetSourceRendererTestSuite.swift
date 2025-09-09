@@ -613,6 +613,9 @@ struct BuildTargetSourceRendererTestSuite {
 
         #expect(result.items.count == 3)
         #expect(result.info.name == "Toucan")
+        #expect(
+            result.info.release == GeneratorInfo.current.release.description
+        )
     }
 
     // MARK: - contents

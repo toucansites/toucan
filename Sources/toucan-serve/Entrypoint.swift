@@ -24,7 +24,7 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             Serves a directory over a local web-server.
             """,
-        version: GeneratorInfo.current.release
+        version: GeneratorInfo.current.release.description
     )
 
     @Argument(help: "The root directory (default: dist).")

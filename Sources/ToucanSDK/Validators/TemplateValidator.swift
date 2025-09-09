@@ -11,7 +11,6 @@ import ToucanSource
 import Version
 
 enum TemplateValidatorError: ToucanError {
-    case invalidVersion(String)
     case unsupportedGeneratorVersion(
         generatorVersion: Template.Metadata.GeneratorVersion,
         currentVersion: Version
@@ -19,8 +18,6 @@ enum TemplateValidatorError: ToucanError {
 
     var logMessage: String {
         switch self {
-        case let .invalidVersion(value):
-            return "Invalid version: `\(value)`."
         case let .unsupportedGeneratorVersion(generatorVersion, currentVersion):
             return
                 "Unsupported generator version: `\(generatorVersion.type)(\(generatorVersion.value))`. Current Toucan version: \(currentVersion)."
@@ -37,12 +34,7 @@ struct TemplateValidator {
     let version: Version
 
     init(generatorInfo: GeneratorInfo = .current) throws {
-        let rawVersion = generatorInfo.release
-        let version = Version(rawVersion)
-        guard let version else {
-            throw TemplateValidatorError.invalidVersion(rawVersion)
-        }
-        self.version = version
+        self.version = generatorInfo.release
     }
 
     enum ComparisonType {
