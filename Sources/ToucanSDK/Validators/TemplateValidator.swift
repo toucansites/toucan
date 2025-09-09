@@ -37,12 +37,6 @@ struct TemplateValidator {
         self.version = generatorInfo.release
     }
 
-    enum ComparisonType {
-        case upNextMajor
-        case upNextMinor
-        case exact
-    }
-
     func validate(_ template: Template) throws(TemplateValidatorError) {
         let generatorVersion = template.metadata.generatorVersion
         let isSupported: Bool
