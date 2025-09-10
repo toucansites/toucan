@@ -11,7 +11,10 @@ import ToucanCore
 extension Mocks.Templates {
 
     static func metadata(
-        generatorVersions: [String] = [GeneratorInfo.current.release]
+        generatorVersion: Template.Metadata.GeneratorVersion = .init(
+            value: GeneratorInfo.current.release,
+            type: .upNextMajor
+        )
     ) -> Template.Metadata {
         let url = "http://localhost:8080/"
 
@@ -20,7 +23,7 @@ extension Mocks.Templates {
             description: "Test Template description",
             url: url,
             version: "1.0.0",
-            generatorVersions: generatorVersions,
+            generatorVersion: generatorVersion,
             license: .init(
                 name: "Test License",
                 url: url
@@ -42,10 +45,13 @@ extension Mocks.Templates {
     }
 
     static func example(
-        generatorVersions: [String] = [GeneratorInfo.current.release]
+        generatorVersion: Template.Metadata.GeneratorVersion = .init(
+            value: GeneratorInfo.current.release,
+            type: .upNextMajor
+        )
     ) -> Template {
         .init(
-            metadata: Self.metadata(generatorVersions: generatorVersions),
+            metadata: Self.metadata(generatorVersion: generatorVersion),
             components: .init(
                 assets: [
                     "css/theme.css",

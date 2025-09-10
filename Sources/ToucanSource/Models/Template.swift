@@ -6,6 +6,7 @@
 //
 
 import struct Foundation.URL
+import Version
 
 /**
  Templates directory structure:
@@ -106,8 +107,8 @@ public extension Template {
         public var url: String?
         /// The version of the template.
         public var version: String?
-        /// The versions of the generator used to produce this template.
-        public var generatorVersions: [String]
+        /// The versions of the generator this template is compatible with.
+        public var generatorVersion: GeneratorVersion
         /// Licensing information for the template.
         public var license: License?
         /// Author information for the template.
@@ -116,6 +117,61 @@ public extension Template {
         public var demo: Demo?
         /// A list of tags to classify or describe the template.
         public var tags: [String]
+    }
+}
+
+public extension Template.Metadata {
+
+    struct GeneratorVersion: Codable, Sendable {
+
+        private enum CodingKeys: CodingKey, CaseIterable {
+            case value
+            case type
+        }
+
+        /// The base version value that the template supports.
+        public let value: Version
+
+        /// The version comparison method used during validation.
+        public let type: ComparisonType
+
+        /// Initializes a new instance with the specified version and comparison type.
+        /// - Parameters:
+        ///   - value: The version to be used for comparison.
+        ///   - type: The type of comparison to perform. Defaults to `.upNextMajor`.
+        public init(
+            value: Version,
+            type: ComparisonType = .upNextMajor
+        ) {
+            self.value = value
+            self.type = type
+        }
+
+        /// Initializes a new instance of the model from the given decoder.
+        /// - Parameter decoder: The decoder to read data from.
+        /// - Throws: An error if decoding fails or if unknown keys are present.
+        /// - Note: Validates unknown keys using `CodingKeys`. The `type` property is defaulting to `.upNextMajor` if not present.
+        public init(from decoder: any Decoder) throws {
+            try decoder.validateUnknownKeys(keyType: CodingKeys.self)
+
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            self.value = try container.decode(Version.self, forKey: .value)
+            self.type =
+                try container.decodeIfPresent(
+                    ComparisonType.self,
+                    forKey: .type
+                ) ?? .upNextMajor
+        }
+    }
+}
+
+public extension Template.Metadata.GeneratorVersion {
+
+    enum ComparisonType: String, Codable, Sendable {
+        case upNextMajor
+        case upNextMinor
+        case exact
     }
 }
 

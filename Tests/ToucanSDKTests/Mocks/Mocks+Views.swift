@@ -17,7 +17,10 @@ extension Mocks.Views {
                 description: "Mock template",
                 url: nil,
                 version: "1.0.0-beta.6",
-                generatorVersions: ["1.0.0-beta.6"],
+                generatorVersion: .init(
+                    value: .init("1.0.0-beta.6")!,
+                    type: .exact
+                ),
                 license: nil,
                 authors: [],
                 demo: nil,

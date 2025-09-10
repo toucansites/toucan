@@ -176,6 +176,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "FileManagerKit", package: "file-manager-kit"),
+                .product(name: "Version", package: "Version"),
                 .target(name: "_GitCommitHash"),
             ],
             swiftSettings: swiftSettings
@@ -206,7 +207,6 @@ let package = Package(
             dependencies: [
                 .target(name: "ToucanCore"),
                 .target(name: "ToucanSerialization"),
-                .product(name: "Version", package: "Version"),
             ],
             swiftSettings: swiftSettings
         ),
@@ -241,6 +241,7 @@ let package = Package(
         .testTarget(
             name: "ToucanSourceTests",
             dependencies: [
+                .target(name: "ToucanCore"),
                 .target(name: "ToucanSource"),
                 .product(
                     name: "FileManagerKitBuilder",

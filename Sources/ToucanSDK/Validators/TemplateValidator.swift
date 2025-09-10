@@ -11,18 +11,16 @@ import ToucanSource
 import Version
 
 enum TemplateValidatorError: ToucanError {
-    case invalidVersion(String)
-    case noSupportedGeneratorVersion(version: Version, supported: [Version])
+    case unsupportedGeneratorVersion(
+        generatorVersion: Template.Metadata.GeneratorVersion,
+        currentVersion: Version
+    )
 
     var logMessage: String {
         switch self {
-        case let .invalidVersion(value):
-            return "Invalid version: `\(value)`."
-        case let .noSupportedGeneratorVersion(version, supported):
-            let supportedList = supported.map { "`\($0)`" }
-                .joined(separator: ", ")
+        case let .unsupportedGeneratorVersion(generatorVersion, currentVersion):
             return
-                "Generator version `\(version)` is not supported. Supported versions: \(supportedList)."
+                "Unsupported generator version: `\(generatorVersion.type)(\(generatorVersion.value))`. Current Toucan version: \(currentVersion)."
         }
     }
 
@@ -36,28 +34,34 @@ struct TemplateValidator {
     let version: Version
 
     init(generatorInfo: GeneratorInfo = .current) throws {
-        let rawVersion = generatorInfo.release
-        let version = Version(rawVersion)
-        guard let version else {
-            throw TemplateValidatorError.invalidVersion(rawVersion)
-        }
-        self.version = version
+        self.version = generatorInfo.release
     }
 
     func validate(_ template: Template) throws(TemplateValidatorError) {
-        let versions = try template.metadata.generatorVersions
-            .map { version throws(TemplateValidatorError) -> Version in
-                guard let version = Version(version) else {
-                    throw .invalidVersion(version)
-                }
-                return version
-            }
-            .sorted()
+        let generatorVersion = template.metadata.generatorVersion
+        let isSupported: Bool
 
-        if !versions.contains(version) {
-            throw .noSupportedGeneratorVersion(
-                version: version,
-                supported: versions
+        switch generatorVersion.type {
+        case .upNextMajor:
+            let lowerBound = generatorVersion.value
+            let upperBound = Version(generatorVersion.value.major + 1, 0, 0)
+            isSupported = (lowerBound..<upperBound).contains(version)
+        case .upNextMinor:
+            let lowerBound = generatorVersion.value
+            let upperBound = Version(
+                generatorVersion.value.major,
+                generatorVersion.value.minor + 1,
+                0
+            )
+            isSupported = (lowerBound..<upperBound).contains(version)
+        case .exact:
+            isSupported = generatorVersion.value == version
+        }
+
+        if !isSupported {
+            throw .unsupportedGeneratorVersion(
+                generatorVersion: generatorVersion,
+                currentVersion: version
             )
         }
     }

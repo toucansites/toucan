@@ -10,7 +10,7 @@ import Foundation
 import Logging
 import Testing
 import ToucanSerialization
-
+@testable import ToucanCore
 @testable import ToucanSource
 
 @Suite
@@ -44,8 +44,9 @@ struct TemplateLoaderTestSuite {
                                 demo:
                                     url: http://localhost:8080/
                                 description: Test Template description
-                                generatorVersions:
-                                    - 1.0.0-beta.6
+                                generatorVersion:
+                                    value: "1.0.0-beta.6"
+                                    type: "upNextMajor"
                                 license:
                                     name: Test License
                                     url: http://localhost:8080/
@@ -136,6 +137,12 @@ struct TemplateLoaderTestSuite {
             let template = try loader.load()
 
             #expect(
+                template.metadata.generatorVersion.value.description
+                    == "1.0.0-beta.6"
+            )
+            #expect(template.metadata.generatorVersion.type == .upNextMajor)
+
+            #expect(
                 template.components.assets.sorted()
                     == [
                         "template.css"
@@ -199,6 +206,137 @@ struct TemplateLoaderTestSuite {
                         uniqueKeysWithValues: exp.sorted { $0.key < $1.key }
                     )
             )
+        }
+    }
+
+    @Test
+    func defaultGeneratorVersionComparisonType() async throws {
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                Directory(name: "templates") {
+                    Directory(name: "default") {
+                        File(
+                            name: "template.yaml",
+                            string: """
+                                author:
+                                    name: Test Template Author
+                                    url: http://localhost:8080/
+                                demo:
+                                    url: http://localhost:8080/
+                                description: Test Template description
+                                generatorVersion:
+                                    value: "1.0.0-beta.6"
+                                license:
+                                    name: Test License
+                                    url: http://localhost:8080/
+                                name: Test Template
+                                tags:
+                                    - blog
+                                    - adaptive-colors
+                                url: http://localhost:8080/
+                                version: 1.0.0
+                                """
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let sourceURL = $1.appending(path: "src/")
+            let config = Config.defaults
+            let locations = BuiltTargetSourceLocations(
+                sourceURL: sourceURL,
+                config: config
+            )
+
+            let loader = TemplateLoader(
+                locations: locations,
+                fileManager: $0,
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder()
+            )
+            let template = try loader.load()
+
+            #expect(
+                template.metadata.generatorVersion.value.description
+                    == "1.0.0-beta.6"
+            )
+            #expect(template.metadata.generatorVersion.type == .upNextMajor)
+        }
+    }
+
+    @Test()
+    func invalidGeneratorVersion() async throws {
+        try FileManagerPlayground {
+            Directory(name: "src") {
+                Directory(name: "templates") {
+                    Directory(name: "default") {
+                        File(
+                            name: "template.yaml",
+                            string: """
+                                author:
+                                    name: Test Template Author
+                                    url: http://localhost:8080/
+                                demo:
+                                    url: http://localhost:8080/
+                                description: Test Template description
+                                generatorVersion:
+                                    value: "invalid"
+                                    type: "upNextMajor"
+                                license:
+                                    name: Test License
+                                    url: http://localhost:8080/
+                                name: Test Template
+                                tags:
+                                    - blog
+                                    - adaptive-colors
+                                url: http://localhost:8080/
+                                version: 1.0.0
+                                """
+                        )
+                    }
+                }
+            }
+        }
+        .test {
+            let sourceURL = $1.appending(path: "src/")
+            let config = Config.defaults
+            let locations = BuiltTargetSourceLocations(
+                sourceURL: sourceURL,
+                config: config
+            )
+
+            let loader = TemplateLoader(
+                locations: locations,
+                fileManager: $0,
+                encoder: ToucanYAMLEncoder(),
+                decoder: ToucanYAMLDecoder()
+            )
+
+            do {
+                let _ = try loader.load()
+                Issue.record("Expected DecodingError.dataCorrupted.")
+            }
+            catch let error as ToucanError {
+                guard
+                    let objectLoaderError = error.lookup(
+                        ObjectLoaderError.self
+                    ),
+                    let toucanDecoderError = objectLoaderError.lookup(
+                        ToucanDecoderError.self
+                    ),
+                    let decodingError = toucanDecoderError.lookup(
+                        DecodingError.self
+                    ),
+                    case let DecodingError.dataCorrupted(context) =
+                        decodingError
+                else {
+                    throw error
+                }
+
+                let expected = "Invalid semantic version"
+                #expect(context.debugDescription == expected)
+            }
         }
     }
 }

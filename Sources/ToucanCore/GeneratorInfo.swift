@@ -6,6 +6,7 @@
 //
 
 import _GitCommitHash
+import Version
 
 public extension GeneratorInfo {
 
@@ -33,8 +34,8 @@ public struct GeneratorInfo: Codable, Sendable {
     /// The name of the generator.
     public let name: String
 
-    /// The version string (e.g., `"1.0.0"`, `"1.0.0-beta.4"`).
-    public let release: String
+    /// The version (e.g., `"1.0.0"`, `"1.0.0-beta.4"`).
+    public let release: Version
 
     /// The git commit hash based on the SPM context.
     public var gitCommitHash: String {
@@ -43,7 +44,7 @@ public struct GeneratorInfo: Codable, Sendable {
 
     /// The complete version information based on the version and the git commit hash
     public var version: String {
-        "\(release) (\(gitCommitHash))"
+        "\(release.description) (\(gitCommitHash))"
     }
 
     /// A URL pointing to the generator’s homepage or documentation.
@@ -61,7 +62,7 @@ public struct GeneratorInfo: Codable, Sendable {
         link: String = "https://github.com/toucansites/toucan"
     ) {
         self.name = name
-        self.release = version
+        self.release = Version(version)!
         self.link = link
     }
 }
