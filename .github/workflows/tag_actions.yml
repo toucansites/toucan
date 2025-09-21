@@ -14,14 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract.outputs.version }}
+      original_version: ${{ steps.extract.outputs.original_version }}
     steps:
       - name: Extract version from tag
         id: extract
         run: |
-          VERSION="${GITHUB_REF#refs/tags/}"
-          VERSION="${VERSION//-/.}"  # Replace hyphens for RPM compatibility
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          RAW_VERSION="${GITHUB_REF#refs/tags/}"
+          CLEAN_VERSION="${RAW_VERSION//-/.}"
+          echo "Version: $CLEAN_VERSION"
+          echo "VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
+          echo "version=$CLEAN_VERSION" >> $GITHUB_OUTPUT
 
   linux:
     needs: prepare
@@ -41,3 +43,17 @@ jobs:
       run_pkg: true
       run_dmg: false
     secrets: inherit
+
+  push_formula:
+    name: Push Homebrew Formula
+    needs: [prepare, linux, macos]
+    uses: ./.github/workflows/push-formula.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+      baseurl: https://github.com/toucansites/toucan/releases/download/${{ github.ref_name }}
+      homepage: https://github.com/toucansites/toucan
+      formulafile: toucan.rb
+      formulaclass: Toucan
+      repository: toucansites/homebrew-toucan
+    secrets:
+      HOMEBREW_TAP_PAT: ${{ secrets.HOMEBREW_TAP_PAT }}

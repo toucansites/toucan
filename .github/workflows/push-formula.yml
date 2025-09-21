@@ -1,0 +1,96 @@
+name: Push Homebrew Formula
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      baseurl:
+        required: true
+        type: string
+      homepage:
+        required: true
+        type: string
+      formulafile:
+        required: true
+        type: string
+      formulaclass:
+        required: true
+        type: string
+      repository:
+        required: true
+        type: string
+    secrets:
+      HOMEBREW_TAP_PAT:
+        required: true
+
+jobs:
+  push_formula:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Tap Repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository }} 
+          token: ${{ secrets.HOMEBREW_TAP_PAT }}
+          ref: main
+
+      - name: Set Version Variables
+        run: |
+          echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+          echo "BASE_URL=${{ inputs.baseurl }}" >> $GITHUB_ENV
+          echo "HOMEPAGE=${{ inputs.homepage }}" >> $GITHUB_ENV
+
+      - name: Download SHA256 files from release
+        run: |
+          curl -LO "$BASE_URL/toucan-linux-$VERSION.sha256"
+          curl -LO "$BASE_URL/toucan-macos-$VERSION.sha256"
+
+      - name: Read SHA256 values
+        id: shas
+        run: |
+          macos_sha=$(awk '{print $1}' "toucan-macos-$VERSION.sha256")
+          linux_sha=$(awk '{print $1}' "toucan-linux-$VERSION.sha256")
+          echo "macos_sha=$macos_sha" >> $GITHUB_OUTPUT
+          echo "linux_sha=$linux_sha" >> $GITHUB_OUTPUT
+
+      - name: Write Formula File
+        run: |
+          mkdir -p Formula
+          cat > Formula/${{ inputs.formulafile }} <<EOF
+          class ${{ inputs.formulaclass }} < Formula
+            desc "Toucan is a static site generator written in Swift."
+            homepage "$HOMEPAGE"
+            version "$VERSION"
+
+            if OS.mac?
+              url "$BASE_URL/toucan-macos-$VERSION.zip"
+              sha256 "${{ steps.shas.outputs.macos_sha }}"
+            elsif OS.linux?
+              url "$BASE_URL/toucan-linux-$VERSION.zip"
+              sha256 "${{ steps.shas.outputs.linux_sha }}"
+            end
+
+            def install
+              bin.install "toucan"
+              bin.install "toucan-init"
+              bin.install "toucan-generate"
+              bin.install "toucan-serve"
+              bin.install "toucan-watch"
+            end
+
+            test do
+              assert_match "Usage", shell_output("\#{bin}/toucan --help")
+            end
+          end
+          EOF
+
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/${{ inputs.formulafile }}
+          git commit -m "Update formula to version $VERSION" || echo "No changes to commit"
+          git push

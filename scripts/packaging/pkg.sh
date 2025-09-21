@@ -56,7 +56,7 @@ cp LICENSE "$PKGROOT/usr/local/share/$NAME/LICENSE" || echo "⚠️ LICENSE not 
 
 # Create .pkg
 pkgbuild \
-  --identifier "com.yourcompany.${NAME}" \
+  --identifier "com.binarybirds.${NAME}" \
   --version "$VERSION" \
   --install-location / \
   --root "$PKGROOT" \
