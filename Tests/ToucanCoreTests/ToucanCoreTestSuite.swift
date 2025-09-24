@@ -15,7 +15,7 @@ struct ToucanCoreTestSuite {
     func currentRelease() async throws {
 
         // Make sure to update the target release
-        let targetRelease = GeneratorInfo.v1_0_0_beta_6.release
+        let targetRelease = GeneratorInfo.v1_0_0_rc_1.release
 
         let currentRelease = GeneratorInfo.current.release
         #expect(targetRelease == currentRelease)
