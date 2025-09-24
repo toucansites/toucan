@@ -12,7 +12,7 @@ public extension GeneratorInfo {
 
     /// Returns the most current version of the generator.
     static var current: Self {
-        .v1_0_0_beta_6
+        .v1_0_0_rc_1
     }
 }
 
