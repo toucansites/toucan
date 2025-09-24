@@ -34,26 +34,59 @@ jobs:
   build-binaries:
     needs: precheck
     if: needs.precheck.outputs.should_run == 'true'
-    runs-on: macos-latest
+    runs-on: macos-14
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Swift 6.0
-        run: |
-          curl -L https://download.swift.org/swift-6.0-release/xcode/swift-6.0-RELEASE/swift-6.0-RELEASE-osx.pkg -o swift.pkg
-          sudo installer -pkg swift.pkg -target /
-          echo "/Library/Developer/Toolchains/swift-6.0-RELEASE.xctoolchain/usr/bin" >> $GITHUB_PATH
-          swift --version
-          export PATH="/Library/Developer/Toolchains/swift-6.0-RELEASE.xctoolchain/usr/bin:$PATH"
-
-      - name: Import Developer ID certificates
+      - name: Import certificates
         uses: apple-actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.MAC_CERTIFICATES }}
           p12-password: ${{ secrets.MAC_CERTIFICATES_PASSWORD }}
-        
+
+      - name: Verify certificates
+        run: |
+          set -e
+
+          # Certs to check
+          certs=("Developer ID Application" "Developer ID Installer")
+
+          # Expiration threshold in days (for warnings)
+          warning_days=30
+          warning_secs=$((warning_days * 86400))
+
+          for cert_name in "${certs[@]}"; do
+            # Try to get the certificate
+            if ! cert_pem=$(security find-certificate -c "$cert_name" -p); then
+              echo "❌ Certificate '$cert_name' not found in keychain"
+              exit 1
+            fi
+
+            not_after=$(echo "$cert_pem" | openssl x509 -noout -enddate | cut -d= -f2)
+            expiry_ts=$(date -j -f "%b %e %T %Y %Z" "$not_after" +%s 2>/dev/null || date -d "$not_after" +%s)
+            now_ts=$(date +%s)
+
+            if [ "$expiry_ts" -le "$now_ts" ]; then
+              echo "❌ Certificate '$cert_name' is expired (expired on $not_after)"
+              exit 1
+            fi
+
+            if [ $((expiry_ts - now_ts)) -le "$warning_secs" ]; then
+              echo "⚠️ Certificate '$cert_name' expires soon on $not_after"
+            fi
+          done
+
+      - name: Install Swift 6.1.2
+        run: |
+          curl -L https://download.swift.org/swift-6.1.2-release/xcode/swift-6.1.2-RELEASE/swift-6.1.2-RELEASE-osx.pkg -o swift.pkg
+          sudo installer -pkg swift.pkg -target /
+          export TOOLCHAIN_PATH="/Library/Developer/Toolchains/swift-6.1.2-RELEASE.xctoolchain/usr/bin"
+          echo "$TOOLCHAIN_PATH" >> $GITHUB_PATH
+          export PATH="$TOOLCHAIN_PATH:$PATH"
+          swift --version
+
       - name: Build Swift binaries for arm64 and x86_64
         if: inputs.run_pkg
         run: |
