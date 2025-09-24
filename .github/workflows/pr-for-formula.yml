@@ -87,10 +87,13 @@ jobs:
           end
           EOF
 
-      - name: Commit and Push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Formula/${{ inputs.formulafile }}
-          git commit -m "Update formula to version $VERSION" || echo "No changes to commit"
-          git push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.HOMEBREW_TAP_PAT }}
+          commit-message: "Update formula to version ${{ env.VERSION }}"
+          branch: feature/update-formula-${{ env.VERSION }}
+          base: main
+          title: "Update Homebrew formula to ${{ env.VERSION }}"
+          body: |
+            This PR updates the Homebrew formula to version `${{ env.VERSION }}`.

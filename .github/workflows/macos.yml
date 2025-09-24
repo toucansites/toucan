@@ -38,7 +38,9 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Import certificates
         uses: apple-actions/import-codesign-certs@v3
@@ -80,12 +82,24 @@ jobs:
 
       - name: Install Swift 6.1.2
         run: |
-          curl -L https://download.swift.org/swift-6.1.2-release/xcode/swift-6.1.2-RELEASE/swift-6.1.2-RELEASE-osx.pkg -o swift.pkg
-          sudo installer -pkg swift.pkg -target /
-          export TOOLCHAIN_PATH="/Library/Developer/Toolchains/swift-6.1.2-RELEASE.xctoolchain/usr/bin"
+          curl -L https://download.swift.org/swift-6.1.2-release/xcode/swift-6.1.2-RELEASE/swift-6.1.2-RELEASE-osx.pkg -o /tmp/swift.pkg
+          sudo installer -pkg /tmp/swift.pkg -target /
+          TOOLCHAIN_PATH="/Library/Developer/Toolchains/swift-6.1.2-RELEASE.xctoolchain/usr/bin"
           echo "$TOOLCHAIN_PATH" >> $GITHUB_PATH
           export PATH="$TOOLCHAIN_PATH:$PATH"
           swift --version
+
+      - name: Check for uncommitted changes
+        run: |
+          git_status=$(git status --porcelain)
+          
+          if [[ -n "$git_status" ]]; then
+            echo "❌ Uncommitted changes detected:"
+            echo "$git_status"
+            exit 1
+          else
+            echo "✅ Working directory is clean. No uncommitted changes."
+          fi
 
       - name: Build Swift binaries for arm64 and x86_64
         if: inputs.run_pkg
