@@ -41,14 +41,36 @@ struct HTMLVisitorTestSuite {
     // MARK: - standard elements
 
     @Test
+    func rawHTML() {
+        let input = #"""
+            <p><b>https://swift.org</b></p>
+            """#
+        let output = renderHTML(markdown: input)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let expectation = #"""
+            <p><b>https://swift.org</b></p>
+            """#
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        //        // with escaping
+        //        let expectation = #"""
+        //            &lt;p&gt;&lt;b&gt;https://swift.org&lt;/b&gt;&lt;/p&gt;
+        //            """#
+        //            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        #expect(output == expectation)
+    }
+
+    @Test
     func inlineHTML() {
         let input = #"""
-            <b>https://swift.org</b>
+            lorem <b>https://swift.org</b> ipsum
             """#
         let output = renderHTML(markdown: input)
 
         let expectation = #"""
-            <p><b>https://swift.org</b></p>
+            <p>lorem &lt;b&gt;https://swift.org&lt;/b&gt; ipsum</p>
             """#
 
         #expect(output == expectation)
@@ -317,6 +339,19 @@ struct HTMLVisitorTestSuite {
         let output = renderHTML(markdown: input)
         let expectation = #"""
             <p>####### Lorem ipsum dolor sit amet.</p>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func headingWithCode() {
+        let input = #"""
+            # Lorem <b>ipsum</b> **dolor** `sit` amet.
+            """#
+        let output = renderHTML(markdown: input)
+        let expectation = #"""
+            <h1>Lorem &lt;b&gt;ipsum&lt;/b&gt; <strong>dolor</strong> <code>sit</code> amet.</h1>
             """#
 
         #expect(output == expectation)
