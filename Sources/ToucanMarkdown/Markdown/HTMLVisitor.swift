@@ -91,13 +91,13 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitHTMLBlock(
         _ html: HTMLBlock
     ) -> Result {
-        html.rawHTML
+        html.rawHTML  //.escapeAngleBrackets()
     }
 
     mutating func visitInlineHTML(
         _ inlineHTML: InlineHTML
     ) -> Result {
-        inlineHTML.rawHTML
+        inlineHTML.rawHTML.escapeAngleBrackets()
     }
 
     // MARK: - simple HTML elements
@@ -295,7 +295,7 @@ struct HTMLVisitor: MarkupVisitor {
         return HTML(
             name: "h\(heading.level)",
             attributes: attributes,
-            contents: visit(heading.children).escapeAngleBrackets()
+            contents: visit(heading.children)
         )
         .render()
     }
