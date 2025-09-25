@@ -44,10 +44,10 @@ jobs:
       run_dmg: false
     secrets: inherit
 
-  push_formula:
-    name: Push Homebrew Formula
+  pr_for_formula:
+    name: Create a PR for Homebrew Formula
     needs: [prepare, linux, macos]
-    uses: ./.github/workflows/push-formula.yml
+    uses: ./.github/workflows/pr-for-formula.yml
     with:
       version: ${{ needs.prepare.outputs.version }}
       baseurl: https://github.com/toucansites/toucan/releases/download/${{ github.ref_name }}
