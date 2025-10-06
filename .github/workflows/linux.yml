@@ -102,6 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-artifacts
+          retention-days: 1     #no need to store it for 90 days
           path: |
             ${{ inputs.run_rpm && format('build-rpm/toucan-linux-x86_64-{0}.rpm', inputs.version) || '' }}
             ${{ inputs.run_rpm && format('build-rpm/toucan-linux-{0}.zip', inputs.version) || '' }}
@@ -169,31 +170,3 @@ jobs:
           files: packages/build-deb/toucan-linux-amd64-${{ inputs.version }}.deb
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           release-tag: ${{ github.ref_name }}
-
-  delete-linux-artifacts:
-    runs-on: ubuntu-latest
-    needs: [build-binaries, test-and-upload]
-    if: always()
-    steps:
-      - name: Delete 'linux-artifacts' if it exists
-        run: |
-          echo "🧹 Checking for 'linux-artifacts' to delete..."
-
-          # Check that gh CLI is available
-          if ! command -v gh &> /dev/null; then
-            echo "❌ GitHub CLI not found"
-            exit 1
-          fi
-
-          # Get list of artifacts
-          artifacts=$(gh api repos/${{ github.repository }}/actions/artifacts --paginate)
-          id=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name=="linux-artifacts") | .id' | head -n1)
-
-          if [[ -z "$id" || "$id" == "null" ]]; then
-            echo "ℹ️ No artifact named 'linux-artifacts' found"
-          else
-            echo "🗑 Deleting artifact ID $id"
-            gh api --method DELETE repos/${{ github.repository }}/actions/artifacts/$id || echo "⚠️ Delete failed, continuing"
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
