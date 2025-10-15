@@ -413,6 +413,7 @@ struct HTMLVisitor: MarkupVisitor {
     mutating func visitBlockDirective(
         _ blockDirective: BlockDirective
     ) -> Result {
+
         var parseErrors = [DirectiveArgumentText.ParseError]()
         var arguments: [DirectiveArgument] = []
         let blockName = blockDirective.name.lowercased()
@@ -421,21 +422,38 @@ struct HTMLVisitor: MarkupVisitor {
                 parseErrors: &parseErrors
             )
         }
-        guard parseErrors.isEmpty else {
-            let errors =
-                parseErrors
-                .map { String(describing: $0) }
-                .joined(separator: ", ")
-            logger.warning("\(errors)")
-            return ""
-        }
 
         let block = customBlockDirectives.first {
             $0.name.lowercased() == blockName.lowercased()
         }
         guard let block else {
             logger.warning(
-                "Unrecognized block directive: `\(blockName)`"
+                "Unrecognized block directive: `\(blockName)`",
+                metadata: [
+                    "name": .string(blockName),
+                ]
+            )
+            return ""
+        }
+        
+        guard parseErrors.isEmpty else {
+            let errors = parseErrors.map { error -> String in
+                    switch error {
+                    case let .duplicateArgument(name, _, _):
+                        return "Duplicate argument: `\(name)`."
+                    case let .missingExpectedCharacter(char, _):
+                        return "Misisng expected character: `\(char)`."
+                    case let .unexpectedCharacter(char, _):
+                        return "Unexpected character: `\(char)`."
+                    }
+                }
+                .joined(separator: ", ")
+
+            logger.warning(
+                "\(errors)",
+                metadata: [
+                    "name": .string(blockName),
+                ]
             )
             return ""
         }
@@ -448,7 +466,10 @@ struct HTMLVisitor: MarkupVisitor {
                 }
                 else {
                     logger.warning(
-                        "Parameter `\(p.label)` for `\(block.name)` is required."
+                        "Parameter `\(p.label)` for `\(block.name)` is required.",
+                        metadata: [
+                            "name": .string(blockName),
+                        ]
                     )
                 }
             }
@@ -468,7 +489,10 @@ struct HTMLVisitor: MarkupVisitor {
                 p.name.lowercased() == parent.lowercased()
             else {
                 logger.warning(
-                    "Block directive `\(block.name)` requires parent block `\(parent)`"
+                    "Block directive `\(block.name)` requires parent block `\(parent)`",
+                    metadata: [
+                        "name": .string(blockName),
+                    ]
                 )
                 return ""
             }

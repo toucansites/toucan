@@ -11,6 +11,7 @@ import Logging
 import SwiftCommand
 import ToucanCore
 
+
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
@@ -30,6 +31,9 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Argument(help: "The input directory (default: current working directory).")
     var input: String = "."
+    
+    @Argument(help: "The directories to ignore.")
+    var ignore: String = "dist"
 
     @Option(
         name: .shortAndLong,
@@ -59,8 +63,18 @@ struct Entrypoint: AsyncParsableCommand {
     func run() async throws {
         let logger = Logger.subsystem("watch")
 
+        //
+        // NOTE: To test this feature
+        //
+        // 1. Make sure Toucan is installed somwehere.
+        // 2. Edit scheme in Xcode or use `setenv`, e.g.:
+        //     `setenv("PATH", "/usr/local/bin", 1)`
+        // 3. Set a `PATH` environment variable:
+        //      `PATH=/usr/local/bin`
+        //
         let currentToucanCommand = Command.findInPath(withName: "toucan")
         let toucanCommandUrl = currentToucanCommand?.executablePath.string
+        
         guard let toucan = toucanCommandUrl,
             FileManager.default.isExecutableFile(atPath: toucan)
         else {
@@ -89,7 +103,7 @@ struct Entrypoint: AsyncParsableCommand {
 
         let monitor = try FileMonitor(directory: inputURL)
         try monitor.start()
-        for await _ in monitor.stream {
+        for await event in monitor.stream {
             let now = Date()
             let last = lastGenerationTime
             let diff = abs(last.timeIntervalSince(now))
@@ -98,6 +112,13 @@ struct Entrypoint: AsyncParsableCommand {
                 logger.trace("Skipping generation due to treshold...")
                 continue
             }
+            #warning("TODO, also pakcage swift.")
+            print("---------------------")
+            print(event)
+            print(event.url.path())
+            print("---------------------")
+
+            
             lastGenerationTime = now
             logger.info("Generating site...")
 
@@ -114,5 +135,19 @@ struct Entrypoint: AsyncParsableCommand {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let replaced = path.replacingOccurrences(of: "~", with: home)
         return .init(fileURLWithPath: replaced).standardized
+    }
+}
+
+fileprivate extension FileChange {
+
+    var url: URL {
+        switch self {
+        case let .added(file):
+            return file
+        case let .deleted(file):
+            return file
+        case let .changed(file):
+            return file
+        }
     }
 }
