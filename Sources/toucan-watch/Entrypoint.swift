@@ -32,7 +32,10 @@ struct Entrypoint: AsyncParsableCommand {
     @Argument(help: "The input directory (default: current working directory).")
     var input: String = "."
     
-    @Argument(help: "The directories to ignore.")
+    @Option(
+        name: .shortAndLong,
+        help: "The directory to ignore, relative to the working directory (default: dist)."
+    )
     var ignore: String = "dist"
 
     @Option(
@@ -43,7 +46,7 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Option(
         name: .shortAndLong,
-        help: "The treshold to watch for changes in seconds."
+        help: "The treshold to watch for changes in seconds (default: 3)."
     )
     var seconds: Int = 3
 
@@ -63,6 +66,18 @@ struct Entrypoint: AsyncParsableCommand {
     func run() async throws {
         let logger = Logger.subsystem("watch")
 
+        let metadata: Logger.Metadata = [
+            "input": .string(input),
+            "target": .string(target ?? "(default)"),
+            "ignore": .string(ignore),
+            "treshold": .string(String(seconds)),
+        ]
+
+        logger.info(
+            "👀 Watching Toucan site.",
+            metadata: metadata
+        )
+
         //
         // NOTE: To test this feature
         //
@@ -78,15 +93,16 @@ struct Entrypoint: AsyncParsableCommand {
         guard let toucan = toucanCommandUrl,
             FileManager.default.isExecutableFile(atPath: toucan)
         else {
-            logger.error("Toucan is not installed.")
+            logger.error(
+                "Toucan is not installed.",
+                metadata: metadata
+            )
             return
         }
 
-        logger.info("👀 Watching: `\(input)`.")
+        
 
         let inputURL = safeURL(for: input)
-
-        var lastGenerationTime = Date()
 
         let commandURL = URL(fileURLWithPath: toucan)
         let command = Command(
@@ -97,35 +113,40 @@ struct Entrypoint: AsyncParsableCommand {
         let generate = try await command.output.stdout
 
         if !generate.isEmpty {
-            logger.debug(.init(stringLiteral: generate))
+            logger.debug(
+                .init(stringLiteral: generate),
+                metadata: metadata
+            )
             return
         }
+        
+        let ignoreURL = inputURL.appendingPathIfPresent(ignore)
 
         let monitor = try FileMonitor(directory: inputURL)
         try monitor.start()
-        for await event in monitor.stream {
-            let now = Date()
-            let last = lastGenerationTime
-            let diff = abs(last.timeIntervalSince(now))
+        for await event in monitor.stream.debounce(for: .seconds(seconds)) {
 
-            guard diff > Double(seconds) else {  // 3 sec treshold
-                logger.trace("Skipping generation due to treshold...")
+            let eventPath = event.url.path()
+            guard !eventPath.hasPrefix(ignoreURL.path()) else {
+                logger.trace(
+                    "Skipping generation due to ignore path.",
+                    metadata: metadata
+                )
                 continue
             }
-            #warning("TODO, also pakcage swift.")
-            print("---------------------")
-            print(event)
-            print(event.url.path())
-            print("---------------------")
 
-            
-            lastGenerationTime = now
-            logger.info("Generating site...")
+            logger.info(
+                "Generating site.",
+                metadata: metadata
+            )
 
             let generate = try await command.output.stdout
 
             if !generate.isEmpty {
-                logger.debug(.init(stringLiteral: generate))
+                logger.debug(
+                    .init(stringLiteral: generate),
+                    metadata: metadata
+                )
                 return
             }
         }
@@ -135,19 +156,5 @@ struct Entrypoint: AsyncParsableCommand {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let replaced = path.replacingOccurrences(of: "~", with: home)
         return .init(fileURLWithPath: replaced).standardized
-    }
-}
-
-fileprivate extension FileChange {
-
-    var url: URL {
-        switch self {
-        case let .added(file):
-            return file
-        case let .deleted(file):
-            return file
-        case let .changed(file):
-            return file
-        }
     }
 }
