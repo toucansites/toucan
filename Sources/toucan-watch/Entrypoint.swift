@@ -11,7 +11,6 @@ import Logging
 import SwiftCommand
 import ToucanCore
 
-
 extension Logger.Level: @retroactive ExpressibleByArgument {}
 
 /// The main entry point for the command-line tool.
@@ -31,10 +30,11 @@ struct Entrypoint: AsyncParsableCommand {
 
     @Argument(help: "The input directory (default: current working directory).")
     var input: String = "."
-    
+
     @Option(
         name: .shortAndLong,
-        help: "The directory to ignore, relative to the working directory (default: dist)."
+        help:
+            "The directory to ignore, relative to the working directory (default: dist)."
     )
     var ignore: String = "dist"
 
@@ -89,7 +89,7 @@ struct Entrypoint: AsyncParsableCommand {
         //
         let currentToucanCommand = Command.findInPath(withName: "toucan")
         let toucanCommandUrl = currentToucanCommand?.executablePath.string
-        
+
         guard let toucan = toucanCommandUrl,
             FileManager.default.isExecutableFile(atPath: toucan)
         else {
@@ -99,8 +99,6 @@ struct Entrypoint: AsyncParsableCommand {
             )
             return
         }
-
-        
 
         let inputURL = safeURL(for: input)
 
@@ -119,7 +117,7 @@ struct Entrypoint: AsyncParsableCommand {
             )
             return
         }
-        
+
         let ignoreURL = inputURL.appendingPathIfPresent(ignore)
 
         let monitor = try FileMonitor(directory: inputURL)

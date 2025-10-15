@@ -430,14 +430,15 @@ struct HTMLVisitor: MarkupVisitor {
             logger.warning(
                 "Unrecognized block directive: `\(blockName)`",
                 metadata: [
-                    "name": .string(blockName),
+                    "name": .string(blockName)
                 ]
             )
             return ""
         }
-        
+
         guard parseErrors.isEmpty else {
-            let errors = parseErrors.map { error -> String in
+            let errors =
+                parseErrors.map { error -> String in
                     switch error {
                     case let .duplicateArgument(name, _, _):
                         return "Duplicate argument: `\(name)`."
@@ -452,7 +453,7 @@ struct HTMLVisitor: MarkupVisitor {
             logger.warning(
                 "\(errors)",
                 metadata: [
-                    "name": .string(blockName),
+                    "name": .string(blockName)
                 ]
             )
             return ""
@@ -468,7 +469,7 @@ struct HTMLVisitor: MarkupVisitor {
                     logger.warning(
                         "Parameter `\(p.label)` for `\(block.name)` is required.",
                         metadata: [
-                            "name": .string(blockName),
+                            "name": .string(blockName)
                         ]
                     )
                 }
@@ -491,7 +492,7 @@ struct HTMLVisitor: MarkupVisitor {
                 logger.warning(
                     "Block directive `\(block.name)` requires parent block `\(parent)`",
                     metadata: [
-                        "name": .string(blockName),
+                        "name": .string(blockName)
                     ]
                 )
                 return ""
