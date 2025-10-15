@@ -72,10 +72,9 @@ let package = Package(
             from: "2.8.0"
         ),
         .package(  
-            path: "../FileMonitor"
-//            url: "https://github.com/toucansites/FileMonitor",
-//            branch: "main"
-//            from: "1.2.0"
+//            path: "../FileMonitor"
+            url: "https://github.com/toucansites/FileMonitor",
+            from: "0.1.0"
         ),
         .package(
             url: "https://github.com/Zollerboy1/SwiftCommand",

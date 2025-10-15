@@ -1,5 +1,5 @@
 {
-  "originHash" : "2ade195bfb935ebe628d2d585ec01be86efdb47689341024c1e359d5bd4c1f07",
+  "originHash" : "8884d941f28d898f32457bdb5efc31adc58bb68b74589dc8dd3e152fac0371e5",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "89a7485d5564aafd77d846fe4366f7e67d6b4b9b",
         "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "filemonitor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/toucansites/FileMonitor",
+      "state" : {
+        "revision" : "082b744b35a2f3d53e19bc1925d358590761551f",
+        "version" : "0.1.0"
       }
     },
     {
