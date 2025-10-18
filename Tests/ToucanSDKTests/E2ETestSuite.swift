@@ -17,6 +17,35 @@ import ToucanSource
 struct E2ETestSuite {
 
     @Test
+    func upperLevelDirectoryPathEncoding() throws {
+        let now = Date()
+
+        try FileManagerPlayground {
+            Directory(name: "Hello World") {
+                Mocks.E2E.src(now: now)
+            }
+        }
+        .test {
+            let upperDir = $1.appendingPathIfPresent("Hello World")
+            let workDir = upperDir.appendingPathIfPresent("src")
+
+            let toucan = Toucan()
+            // NOTE: no need to percent encode the input dir in this case
+            let inputDir = workDir.path(percentEncoded: false)
+            try toucan.generate(
+                workDir: inputDir,
+                now: now
+            )
+
+            let distURL = workDir.appendingPathIfPresent("dist")
+            let notFoundURL = distURL.appendingPathIfPresent("404.html")
+            let notFound = try String(contentsOf: notFoundURL, encoding: .utf8)
+
+            #expect(notFound.contains("Not found page contents"))
+        }
+    }
+
+    @Test
     func notFound() throws {
         let now = Date()
 

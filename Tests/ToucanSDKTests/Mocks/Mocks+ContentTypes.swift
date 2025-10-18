@@ -185,7 +185,7 @@ extension Mocks.ContentTypes {
                     references: "author",
                     relationType: .many,
                     order: .init(
-                        key: "title",
+                        key: "name",
                         direction: .asc
                     )
                 ),

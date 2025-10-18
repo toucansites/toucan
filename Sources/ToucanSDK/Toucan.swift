@@ -52,7 +52,7 @@ public struct Toucan {
 
     func absoluteURL(
         for path: String,
-        cwd: String? = nil
+        cwd url: URL? = nil
     ) -> URL {
         if path.hasPrefix("/") {
             return URL(filePath: path).standardized
@@ -60,8 +60,7 @@ public struct Toucan {
         if path.hasPrefix("~") {
             return resolveHomeURL(for: path).standardized
         }
-        let cwd = cwd ?? fileManager.currentDirectoryPath
-        let cwdURL = URL(filePath: cwd)
+        let cwdURL = url ?? URL(filePath: fileManager.currentDirectoryPath)
         if path == "." || path == "./" {
             return cwdURL.standardized
         }
@@ -156,17 +155,19 @@ public struct Toucan {
             for target in activeBuildTargets {
                 let sourceURL = absoluteURL(
                     for: target.input,
-                    cwd: workDirURL.path()
+                    cwd: workDirURL
                 )
                 let distURL = absoluteURL(
                     for: target.output,
-                    cwd: workDirURL.path()
+                    cwd: workDirURL
                 )
 
                 logger.debug(
                     "Building target.",
                     metadata: [
                         "name": .string(target.name),
+                        "input": .string(target.input),
+                        "output": .string(target.output),
                         "workDir": .string(workDirURL.path()),
                         "srcDir": .string(sourceURL.path()),
                         "distDir": .string(distURL.path()),

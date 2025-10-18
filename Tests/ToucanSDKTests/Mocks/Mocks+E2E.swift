@@ -11,6 +11,7 @@ import ToucanSDK
 import ToucanSource
 
 extension Mocks.E2E {
+
     static func types(
         postType: ContentType
     ) -> Directory {
