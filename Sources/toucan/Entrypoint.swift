@@ -44,7 +44,9 @@ struct Entrypoint: AsyncParsableCommand {
             let path = args.popFirst(),
             let subcommand = args.popFirst()
         else {
-            fatalError("Missing arguments, at least one subcommand is required.")
+            fatalError(
+                "Missing arguments, at least one subcommand is required."
+            )
         }
 
         let base = URL(fileURLWithPath: path).lastPathComponent
@@ -58,7 +60,7 @@ struct Entrypoint: AsyncParsableCommand {
             displayVersion()
             return
         }
-        
+
         guard let exe = Command.findInPath(withName: toucanCmd) else {
             fatalError("Subcommand not found: `\(toucanCmd)`.")
         }
@@ -86,7 +88,7 @@ struct Entrypoint: AsyncParsableCommand {
 
         try subprocess.wait()
     }
-    
+
     private func displayVersion() {
         print(Self.configuration.version)
     }
@@ -95,23 +97,23 @@ struct Entrypoint: AsyncParsableCommand {
         print(
             """
             OVERVIEW: \(Self.configuration.abstract)
-            
+
             \(Self.configuration.discussion)
-            
+
             USAGE:
             toucan <subcommand>
-            
+
             SUBCOMMANDS:
             init            Initializes a new Toucan project
             generate        Build static files using configured targets
             watch           Watch for changes and auto-regenerate output
             serve           Start a local web server to preview the site
-            
+
             OPTIONS:
             --version       Show the version.
             -h, --help      Show help information.
             """
         )
     }
-    
+
 }
