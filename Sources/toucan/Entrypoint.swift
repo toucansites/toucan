@@ -7,9 +7,8 @@
 import ArgumentParser
 import Dispatch
 import Foundation
-import ToucanCore
-import SystemPackage
 import SwiftCommand
+import ToucanCore
 
 extension Array {
     mutating func popFirst() -> Element? {
@@ -20,6 +19,7 @@ extension Array {
 /// The main entry point for the command-line tool.
 @main
 struct Entrypoint: AsyncParsableCommand {
+
     /// Configuration for the command-line tool.
     static let configuration = CommandConfiguration(
         commandName: "toucan",
@@ -30,7 +30,7 @@ struct Entrypoint: AsyncParsableCommand {
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
         version: GeneratorInfo.current.version,
-        helpNames: []  // disables auto -h/--help
+        helpNames: []
     )
 
     @Argument(parsing: .allUnrecognized)
@@ -38,39 +38,32 @@ struct Entrypoint: AsyncParsableCommand {
 
     func run() async throws {
         var args = CommandLine.arguments
+
         guard
             args.count > 1,
             let path = args.popFirst(),
             let subcommand = args.popFirst()
         else {
-            fatalError("argument error")
-        }
-
-        if subcommand.isEmpty || subcommand == "--help" || subcommand == "-h" {
-            printHelp()
-            return
+            fatalError("Missing arguments, at least one subcommand is required.")
         }
 
         let base = URL(fileURLWithPath: path).lastPathComponent
         let toucanCmd = base + "-" + subcommand
 
-        let executableDir = URL(fileURLWithPath: path)
-            .deletingLastPathComponent()
-        let siblingBinary = executableDir.appendingPathComponent(toucanCmd).path
-
-        let exe =
-            FileManager.default.isExecutableFile(atPath: siblingBinary)
-            ? Command(executablePath: FilePath(siblingBinary))
-            : Command.findInPath(withName: toucanCmd)
-
-        guard let resolvedExe = exe else {
-            fputs("error: Unknown subcommand '\(subcommand)'\n\n", stderr)
-            printHelp()
+        if subcommand.isEmpty || subcommand == "--help" || subcommand == "-h" {
+            displayHelp()
             return
         }
-
+        if subcommand == "--version" {
+            displayVersion()
+            return
+        }
+        
+        guard let exe = Command.findInPath(withName: toucanCmd) else {
+            fatalError("Subcommand not found: `\(toucanCmd)`.")
+        }
         let cmd =
-            resolvedExe
+            exe
             .addArguments(args)
             .setStdin(.pipe(closeImplicitly: false))
             .setStdout(.inherit)
@@ -93,29 +86,32 @@ struct Entrypoint: AsyncParsableCommand {
 
         try subprocess.wait()
     }
+    
+    private func displayVersion() {
+        print(Self.configuration.version)
+    }
 
-    private func printHelp() {
+    private func displayHelp() {
         print(
             """
-            OVERVIEW: Toucan Command
-
-            A markdown-based Static Site Generator (SSG) written in Swift.
-
+            OVERVIEW: \(Self.configuration.abstract)
+            
+            \(Self.configuration.discussion)
+            
             USAGE:
-            toucan <subcommand> ...
-            or
-            toucan-<subcommand> ...
-
+            toucan <subcommand>
+            
             SUBCOMMANDS:
             init            Initializes a new Toucan project
             generate        Build static files using configured targets
             watch           Watch for changes and auto-regenerate output
             serve           Start a local web server to preview the site
-
+            
             OPTIONS:
             --version       Show the version.
             -h, --help      Show help information.
             """
         )
     }
+    
 }

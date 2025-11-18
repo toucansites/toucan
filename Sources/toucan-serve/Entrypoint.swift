@@ -30,14 +30,8 @@ struct Entrypoint: AsyncParsableCommand {
     @Argument(help: "The root directory (default: dist).")
     var root: String = "./dist"
 
-    @Option(
-        name: [
-            .customLong("host"),
-            .long,
-        ],
-        help: "Host to bind to"
-    )
-    var hostname: String = "127.0.0.1"
+    @Option(name: .shortAndLong)
+    var address: String = "0.0.0.0"
 
     @Option(name: .shortAndLong)
     var port: Int = 3000
@@ -65,7 +59,7 @@ struct Entrypoint: AsyncParsableCommand {
         let app = Application(
             router: router,
             configuration: .init(
-                address: .hostname(hostname, port: port),
+                address: .hostname(address, port: port),
                 serverName: "toucan-server"
             ),
             logger: logger
