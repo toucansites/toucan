@@ -88,7 +88,7 @@ private extension String {
     func subsystemLogLevelKey() -> String {
         loggerLabel()
             .uppercased()
-            .replacingOccurrences(of: "-", with: "_")
+            .replacing("-", with: "_")
             .appending("_LOG_LEVEL")
     }
 }

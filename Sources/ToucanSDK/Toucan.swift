@@ -45,7 +45,7 @@ public struct Toucan {
         let home = fileManager.homeDirectoryForCurrentUser.path
         return
             .init(
-                fileURLWithPath: path.replacingOccurrences(["~": home])
+                fileURLWithPath: path.replacing(["~": home])
             )
             .standardized
     }

@@ -38,7 +38,7 @@ struct Entrypoint: AsyncParsableCommand {
 
     func run() async throws {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
-        var rootPath = root.replacingOccurrences(of: "~", with: home)
+        var rootPath = root.replacing("~", with: home)
         if rootPath.hasPrefix(".") {
             rootPath =
                 FileManager.default.currentDirectoryPath + "/" + rootPath

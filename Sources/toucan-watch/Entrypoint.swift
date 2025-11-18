@@ -152,7 +152,7 @@ struct Entrypoint: AsyncParsableCommand {
 
     func safeURL(for path: String) -> URL {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
-        let replaced = path.replacingOccurrences(of: "~", with: home)
+        let replaced = path.replacing("~", with: home)
         return .init(fileURLWithPath: replaced).standardized
     }
 }

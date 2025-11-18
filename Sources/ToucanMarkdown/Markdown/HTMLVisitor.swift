@@ -14,7 +14,7 @@ import ToucanCore
 private extension String {
 
     func escapeAngleBrackets() -> String {
-        replacingOccurrences(
+        replacing(
             [
                 #"<"#: #"&lt;"#,
                 #">"#: #"&gt;"#,
@@ -271,7 +271,7 @@ struct HTMLVisitor: MarkupVisitor {
             attributes: attributes,
             contents: codeBlock.code
                 .escapeAngleBrackets()
-                .replacingOccurrences(
+                .replacing(
                     [
                         #"/*!*/"#: #"<span class="highlight">"#,
                         #"/*.*/"#: "</span>",
@@ -508,7 +508,7 @@ struct HTMLVisitor: MarkupVisitor {
             var params = templateParams
             params["{{contents}}"] = contents
 
-            return output.replacingOccurrences(params)
+            return output.replacing(params)
         }
 
         if let name = block.tag {
@@ -517,7 +517,7 @@ struct HTMLVisitor: MarkupVisitor {
                 .map { a in
                     .init(
                         key: a.name,
-                        value: a.value.replacingOccurrences(templateParams)
+                        value: a.value.replacing(templateParams)
                     )
                 } ?? []
 

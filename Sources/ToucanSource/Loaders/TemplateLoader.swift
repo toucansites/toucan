@@ -68,8 +68,7 @@ public struct TemplateLoader {
                     .last.map(String.init) ?? ""
             }
             else {
-                basePath
-                    .replacingOccurrences(of: "/", with: ".")
+                basePath.replacing("/", with: ".")
             }
 
         let contents = try String(

@@ -110,7 +110,7 @@ struct ContentResolver {
         pageIndex: Int,
         _ value: inout String
     ) {
-        value = value.replacingOccurrences([
+        value = value.replacing([
             "{{\(iteratorID)}}": String(pageIndex)
         ])
     }
@@ -138,7 +138,7 @@ struct ContentResolver {
         number: Int,
         total: Int
     ) -> String {
-        value.replacingOccurrences([
+        value.replacing([
             "{{number}}": String(number),
             "{{total}}": String(total),
         ])
@@ -540,7 +540,7 @@ struct ContentResolver {
                             )
                             return IteratorInfo.Link(
                                 number: pageIndex,
-                                permalink: permalink.replacingOccurrences(
+                                permalink: permalink.replacing(
                                     ["{{\(iteratorID)}}": String(pageIndex)]
                                 ),
                                 isCurrent: pageIndex == currentPageIndex

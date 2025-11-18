@@ -81,12 +81,12 @@ public extension String {
     /// - Parameter dictionary: A dictionary where each key is a substring to search for,
     ///   and the corresponding value is the string to replace it with.
     /// - Returns: A new string with all specified substrings replaced.
-    func replacingOccurrences(
+    func replacing(
         _ dictionary: [String: String]
     ) -> String {
         var result = self
         for (key, value) in dictionary {
-            result = result.replacingOccurrences(of: key, with: value)
+            result = result.replacing(key, with: value)
         }
         return result
     }

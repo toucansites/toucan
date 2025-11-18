@@ -279,9 +279,9 @@ public struct BuildTargetSourceRenderer {
             outputArgs["{{iterator.limit}}"] = String(info.limit)
         }
 
-        let path = pipeline.output.path.replacingOccurrences(outputArgs)
-        let file = pipeline.output.file.replacingOccurrences(outputArgs)
-        let ext = pipeline.output.ext.replacingOccurrences(outputArgs)
+        let path = pipeline.output.path.replacing(outputArgs)
+        let file = pipeline.output.file.replacing(outputArgs)
+        let ext = pipeline.output.ext.replacing(outputArgs)
 
         return .init(
             content: content,
