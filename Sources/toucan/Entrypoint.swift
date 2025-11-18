@@ -7,8 +7,9 @@
 import ArgumentParser
 import Dispatch
 import Foundation
-import SwiftCommand
 import ToucanCore
+import SystemPackage
+import SwiftCommand
 
 extension Array {
     mutating func popFirst() -> Element? {
@@ -28,7 +29,8 @@ struct Entrypoint: AsyncParsableCommand {
         discussion: """
             A markdown-based Static Site Generator (SSG) written in Swift.
             """,
-        version: GeneratorInfo.current.version
+        version: GeneratorInfo.current.version,
+        helpNames: []  // disables auto -h/--help
     )
 
     @Argument(parsing: .allUnrecognized)
@@ -36,7 +38,6 @@ struct Entrypoint: AsyncParsableCommand {
 
     func run() async throws {
         var args = CommandLine.arguments
-
         guard
             args.count > 1,
             let path = args.popFirst(),
@@ -45,14 +46,31 @@ struct Entrypoint: AsyncParsableCommand {
             fatalError("argument error")
         }
 
+        if subcommand.isEmpty || subcommand == "--help" || subcommand == "-h" {
+            printHelp()
+            return
+        }
+
         let base = URL(fileURLWithPath: path).lastPathComponent
         let toucanCmd = base + "-" + subcommand
 
-        guard let exe = Command.findInPath(withName: toucanCmd) else {
-            fatalError("Command not found (\(toucanCmd)).")
+        let executableDir = URL(fileURLWithPath: path)
+            .deletingLastPathComponent()
+        let siblingBinary = executableDir.appendingPathComponent(toucanCmd).path
+
+        let exe =
+            FileManager.default.isExecutableFile(atPath: siblingBinary)
+            ? Command(executablePath: FilePath(siblingBinary))
+            : Command.findInPath(withName: toucanCmd)
+
+        guard let resolvedExe = exe else {
+            fputs("error: Unknown subcommand '\(subcommand)'\n\n", stderr)
+            printHelp()
+            return
         }
+
         let cmd =
-            exe
+            resolvedExe
             .addArguments(args)
             .setStdin(.pipe(closeImplicitly: false))
             .setStdout(.inherit)
@@ -74,5 +92,30 @@ struct Entrypoint: AsyncParsableCommand {
         signalSource.resume()
 
         try subprocess.wait()
+    }
+
+    private func printHelp() {
+        print(
+            """
+            OVERVIEW: Toucan Command
+
+            A markdown-based Static Site Generator (SSG) written in Swift.
+
+            USAGE:
+            toucan <subcommand> ...
+            or
+            toucan-<subcommand> ...
+
+            SUBCOMMANDS:
+            init            Initializes a new Toucan project
+            generate        Build static files using configured targets
+            watch           Watch for changes and auto-regenerate output
+            serve           Start a local web server to preview the site
+
+            OPTIONS:
+            --version       Show the version.
+            -h, --help      Show help information.
+            """
+        )
     }
 }

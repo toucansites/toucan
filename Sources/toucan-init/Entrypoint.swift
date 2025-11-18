@@ -23,7 +23,7 @@ struct Entrypoint: AsyncParsableCommand {
             Toucan Init Command
             """,
         discussion: """
-            A markdown-based Static Site Generator (SSG) written in Swift.
+            Initializes a new Toucan project. Creates required folders and files in the specified directory.
             """,
         version: GeneratorInfo.current.release.description
     )

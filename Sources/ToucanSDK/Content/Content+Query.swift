@@ -96,7 +96,7 @@ public extension [Content] {
             filteredContents.sort { a, b in
                 let propertyForOrderKey: (Content) -> AnyCodable? = { item in
                     guard let value = item.properties[order.key] else {
-                        logger.warning(
+                        logger.debug(
                             "Missing order property key: `\(order.key)`.",
                             metadata: [
                                 "slug": .string(item.slug.value),

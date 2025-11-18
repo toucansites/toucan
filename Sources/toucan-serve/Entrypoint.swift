@@ -22,7 +22,7 @@ struct Entrypoint: AsyncParsableCommand {
             Toucan Serve Command
             """,
         discussion: """
-            Serves a directory over a local web-server.
+            Starts a local web server to serve a specified directory.
             """,
         version: GeneratorInfo.current.release.description
     )
@@ -30,7 +30,13 @@ struct Entrypoint: AsyncParsableCommand {
     @Argument(help: "The root directory (default: dist).")
     var root: String = "./dist"
 
-    @Option(name: .shortAndLong)
+    @Option(
+        name: [
+            .customLong("host"),
+            .long,
+        ],
+        help: "Host to bind to"
+    )
     var hostname: String = "127.0.0.1"
 
     @Option(name: .shortAndLong)

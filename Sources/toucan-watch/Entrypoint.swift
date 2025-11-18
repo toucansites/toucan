@@ -23,7 +23,7 @@ struct Entrypoint: AsyncParsableCommand {
             Toucan Watch Command
             """,
         discussion: """
-            A markdown-based Static Site Generator (SSG) written in Swift.
+            Watches your project directory for changes and automatically rebuilds output files when content is updated.
             """,
         version: GeneratorInfo.current.release.description
     )
