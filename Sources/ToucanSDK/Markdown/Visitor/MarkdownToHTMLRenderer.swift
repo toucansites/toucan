@@ -49,6 +49,7 @@ public struct MarkdownToHTMLRenderer {
     ///   - baseURL: The base URL used to resolve relative links within the Markdown.
     ///
     /// - Returns: A fully rendered HTML string.
+    /// - Throws: An error if something went wrong with the HTML visitor setup.
     public func renderHTML(
         markdown: String,
         slug: String,

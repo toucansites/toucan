@@ -21,7 +21,7 @@ struct MarkdownRendererTestSuite {
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [
-                        Mocks.Blocks.faq(),
+                        Mocks.Blocks.faq()
                     ]
                 ),
                 outline: .init(

@@ -32,8 +32,8 @@ extension Mocks.Blocks {
                 ),
             ],
             view: #"""
-            <a href="{{url}}"{{#target}} target="{{.}}"{{/target}}{{#class}} class="{{.}}"{{/class}}>{{& contents}}</a>
-            """#
+                <a href="{{url}}"{{#target}} target="{{.}}"{{/target}}{{#class}} class="{{.}}"{{/class}}>{{& contents}}</a>
+                """#
         )
     }
 
@@ -46,8 +46,8 @@ extension Mocks.Blocks {
             removeChildParagraph: nil,
             properties: [:],
             view: #"""
-            <div class="highlighted-text">{{& contents}}</div>
-            """#
+                <div class="highlighted-text">{{& contents}}</div>
+                """#
         )
     }
 
@@ -58,8 +58,8 @@ extension Mocks.Blocks {
             removeChildParagraph: nil,
             properties: [:],
             view: #"""
-            <div class="faq">{{& contents}}</div>
-            """#
+                <div class="faq">{{& contents}}</div>
+                """#
         )
     }
 
@@ -73,14 +73,14 @@ extension Mocks.Blocks {
                     propertyType: .string,
                     isRequired: true,
                     defaultValue: nil
-                ),
+                )
             ],
             view: #"""
-            <div att="none">{{& contents}}</div>
-            """#
+                <div att="none">{{& contents}}</div>
+                """#
         )
     }
-    
+
     static func grid() -> Block {
         .init(
             name: "Grid",
@@ -91,12 +91,12 @@ extension Mocks.Blocks {
                     propertyType: .int,
                     isRequired: true,
                     defaultValue: nil
-                ),
-                
+                )
+
             ],
             view: #"""
-            <div columns="grid-{{columns}}">{{& contents}}</div>
-            """#
+                <div columns="grid-{{columns}}">{{& contents}}</div>
+                """#
         )
     }
 }

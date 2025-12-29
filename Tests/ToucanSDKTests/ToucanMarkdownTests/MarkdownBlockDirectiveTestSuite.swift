@@ -16,7 +16,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func simpleCustomBlockDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.faq(),
+                Mocks.Blocks.faq()
             ],
             paragraphStyles: [:]
         )
@@ -45,7 +45,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func simpleCustomBlockDirectiveUsingOutput() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.faq(),
+                Mocks.Blocks.faq()
             ],
             paragraphStyles: [:]
         )
@@ -74,7 +74,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func customBlockDirectiveParameters() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.grid(),
+                Mocks.Blocks.grid()
             ],
             paragraphStyles: [:]
         )
@@ -103,7 +103,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func customBlockDirectiveParametersUsingOutput() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.grid(),
+                Mocks.Blocks.grid()
             ],
             paragraphStyles: [:]
         )
@@ -132,7 +132,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func unrecognizedDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.faq(),
+                Mocks.Blocks.faq()
             ]
         )
 
@@ -156,7 +156,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func parseError() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.badDirective(),
+                Mocks.Blocks.badDirective()
             ]
         )
         let input = #"""
@@ -177,7 +177,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func requiredParameterErrors() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Mocks.Blocks.badDirective(),
+                Mocks.Blocks.badDirective()
             ]
         )
         let input = #"""

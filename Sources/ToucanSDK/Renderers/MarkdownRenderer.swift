@@ -166,6 +166,7 @@ public struct MarkdownRenderer {
     ///   - baseURL: The base URL for resolving relative paths or links.
     ///
     /// - Returns: A structured `Output` containing HTML, reading time, and outline.
+    /// - Throws: An error if something went wrong with the HTML visitor setup.
     public func render(
         content: String,
         typeAwareID: String,

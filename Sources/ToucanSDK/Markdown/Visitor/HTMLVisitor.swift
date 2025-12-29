@@ -429,9 +429,6 @@ struct HTMLVisitor: MarkupVisitor {
 
     // MARK: - custom block directives
 
-    // TODO: depreccate
-    //  - tag & attributes for block directives
-    //  - output should be called template
     mutating func visitBlockDirective(
         _ blockDirective: BlockDirective
     ) -> Result {
@@ -481,34 +478,32 @@ struct HTMLVisitor: MarkupVisitor {
             return ""
         }
 
-        // TODO: REUSE content resolver property resolution
         var parameters: [String: String] = [:]
-//        for p in block.parameters ?? [] {
-//            if p.isRequired ?? false {
-//                if let v = arguments.getFirstValueBy(key: p.label) {
-//                    parameters[p.label] = v
-//                }
-//                else {
-//                    logger.warning(
-//                        "Parameter `\(p.label)` for `\(block.name)` is required.",
-//                        metadata: [
-//                            "name": .string(blockName)
-//                        ]
-//                    )
-//                }
-//            }
-//            else {
-//                let v =
-//                    arguments.getFirstValueBy(key: p.label) ?? p.defaultValue
-//                    ?? ""
-//
-//                parameters[p.label] = v
-//            }
-//        }
 
-        print(parameters)
-        
-        let templateParams = parameters.mapKeys { "{{\($0)}}" }
+        for (key, property) in block.properties.sorted(by: {
+            $0.key < $1.key
+        }) {
+            if property.required {
+                if let v = arguments.getFirstValueBy(key: key) {
+                    parameters[key] = v
+                }
+                else {
+                    logger.warning(
+                        "Parameter `\(key)` for `\(blockName)` is required.",
+                        metadata: [
+                            "name": .string(blockName)
+                        ]
+                    )
+                }
+            }
+            else {
+                let v =
+                    arguments.getFirstValueBy(key: key) ?? property
+                    .defaultValue?
+                    .stringValue() ?? ""
+                parameters[key] = v
+            }
+        }
 
         if let parent = block.requiredParentBlock, !parent.isEmpty {
             guard
@@ -535,4 +530,75 @@ struct HTMLVisitor: MarkupVisitor {
         let result = library.render(parameters, withTemplate: blockName)
         return result ?? ""
     }
+
+    // MARK: - TODO property type check + asset resolution
+
+    //    func convert(
+    //        property: Property,
+    //        rawValue: AnyCodable?,
+    //        forKey key: String,
+    //        slug: String
+    //    ) throws(ContentResolverError) -> AnyCodable? {
+    //        let value = rawValue ?? property.defaultValue
+    //
+    //        switch property.type {
+    //        case let .date(config):
+    //            guard
+    //                let rawDateValue = value?.value(as: String.self)
+    //            else {
+    //                throw .invalidProperty(
+    //                    key,
+    //                    value?.stringValue() ?? "nil",
+    //                    slug
+    //                )
+    //            }
+    //            guard
+    //                let date = dateFormatter.date(
+    //                    from: rawDateValue,
+    //                    using: config
+    //                )
+    //            else {
+    //                throw .invalidProperty(
+    //                    key,
+    //                    value?.stringValue() ?? "nil",
+    //                    slug
+    //                )
+    //            }
+    //            return .init(date.timeIntervalSince1970)
+    //        default:
+    //            return value
+    //        }
+
+    // asset resolution for properties...
+    //        if let p = content.type.properties[k] {
+    //            switch p.type {
+    //            /// resolve assets
+    //            case .asset:
+    //                guard let rawValue = v.stringValue() else {
+    //                    continue
+    //                }
+    //
+    //                let resolvedValue = rawValue.resolveAsset(
+    //                    baseURL: baseURL(),
+    //                    assetsPath: content.rawValue.assetsPath,
+    //                    slug: content.slug.value
+    //                )
+    //
+    //                result[k] = .init(resolvedValue)
+    //            /// format dates
+    //            case .date:
+    //                guard let rawValue = v.doubleValue() else {
+    //                    continue
+    //                }
+    //                result[k] = .init(
+    //                    dateFormatter.format(rawValue)
+    //                )
+    //            default:
+    //                result[k] = .init(v.value)
+    //            }
+    //        }
+    //        else {
+    //            result[k] = .init(v.value)
+    //        }
+    //    }
 }
