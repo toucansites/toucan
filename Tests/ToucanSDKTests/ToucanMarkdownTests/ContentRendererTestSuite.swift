@@ -13,7 +13,7 @@ import ToucanSource
 
 @Suite
 struct MarkdownRendererTestSuite {
-    
+
     @Test
     func basicRendering() throws {
         let logger = Logger(label: "ContentRendererTestSuite")
@@ -21,7 +21,7 @@ struct MarkdownRendererTestSuite {
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [
-                        Block.Mocks.faq()
+                        Mocks.Blocks.faq(),
                     ]
                 ),
                 outline: .init(

@@ -6,54 +6,44 @@
 //
 
 /// A representation of a custom block directive in Markdown, used for extending Markdown syntax with special tags or behaviors.
-public struct Block: Sendable, Codable, Equatable {
+public struct Block: Codable, Equatable {
 
     /// The name of the directive.
     public var name: String
 
-    /// A list of supported parameters for the directive.
-    public var parameters: [Parameter]?
-
     /// If specified, this directive must appear within another directive of the given name.
-    public var requiresParentDirective: String?
+    public var requiredParentBlock: String?
 
     /// Indicates whether child paragraphs should be removed from the HTML output. Defaults to `nil`.
-    public var removesChildParagraph: Bool?
+    public var removeChildParagraph: Bool?
 
-    /// The HTML tag to render (e.g., `"div"`, `"section"`).
-    public var tag: String?
-
-    /// Static attributes to apply to the rendered HTML tag.
-    public var attributes: [Attribute]?
+    /// A map of property names to their type definitions.
+    public var properties: [String: Property]
 
     /// Custom output HTML string that overrides default rendering behavior, if provided.
-    public var output: String?
+    public var view: String
 
     /// Initializes a `Block`.
     ///
     /// - Parameters:
     ///   - name: The directive's name.
-    ///   - parameters: Optional list of accepted parameters.
-    ///   - requiresParentDirective: Name of a parent directive this one must reside within.
-    ///   - removesChildParagraph: Whether to exclude child `<p>` tags during rendering.
-    ///   - tag: HTML tag to be generated.
-    ///   - attributes: HTML attributes to apply.
-    ///   - output: Optional custom HTML output template.
+    ///   - requiredParentBlock: Name of a parent directive this one must reside within.
+    ///   - removeChildParagraph: Whether to exclude child `<p>` tags during rendering.
+    ///   - properties: A map of property names to their type definitions.
+    ///   - view: The view (Mustache template as a string) for the block
     public init(
         name: String,
-        parameters: [Parameter]? = nil,
-        requiresParentDirective: String? = nil,
-        removesChildParagraph: Bool? = nil,
-        tag: String? = nil,
-        attributes: [Attribute]? = nil,
-        output: String? = nil
+        requiredParentBlock: String? = nil,
+        removeChildParagraph: Bool? = nil,
+        properties: [String: Property] = [:],
+        view: String
     ) {
         self.name = name
-        self.parameters = parameters
-        self.requiresParentDirective = requiresParentDirective
-        self.removesChildParagraph = removesChildParagraph
-        self.tag = tag
-        self.attributes = attributes
-        self.output = output
+
+        self.requiredParentBlock = requiredParentBlock
+        self.removeChildParagraph = removeChildParagraph
+
+        self.properties = properties
+        self.view = view
     }
 }

@@ -49,7 +49,7 @@ struct HTMLVisitor: MarkupVisitor {
     var slug: String
     var assetsPath: String
     var baseURL: String
-    
+
     var library: MustacheLibrary
 
     init(
@@ -66,16 +66,16 @@ struct HTMLVisitor: MarkupVisitor {
         self.assetsPath = assetsPath
         self.baseURL = baseURL
         self.logger = logger
-        
+
         // convert template-based block directives to actual mustache templates
         let keyValuePairs: [(String, MustacheTemplate)] =
             try customBlockDirectives.compactMap { block in
-                guard let output = block.output, !output.isEmpty else {
+                guard !block.view.isEmpty else {
                     return nil
                 }
                 return (
                     block.name.lowercased(),
-                    try MustacheTemplate(string: output)
+                    try MustacheTemplate(string: block.view)
                 )
             }
 
@@ -206,7 +206,7 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         let filterBlocks =
             customBlockDirectives
-            .filter { $0.removesChildParagraph ?? false }
+            .filter { $0.removeChildParagraph ?? false }
             .map(\.name)
 
         if let block = paragraph.parent as? BlockDirective,
@@ -481,32 +481,36 @@ struct HTMLVisitor: MarkupVisitor {
             return ""
         }
 
+        // TODO: REUSE content resolver property resolution
         var parameters: [String: String] = [:]
-        for p in block.parameters ?? [] {
-            if p.isRequired ?? false {
-                if let v = arguments.getFirstValueBy(key: p.label) {
-                    parameters[p.label] = v
-                }
-                else {
-                    logger.warning(
-                        "Parameter `\(p.label)` for `\(block.name)` is required.",
-                        metadata: [
-                            "name": .string(blockName)
-                        ]
-                    )
-                }
-            }
-            else {
-                let v =
-                    arguments.getFirstValueBy(key: p.label) ?? p.defaultValue ?? ""
+//        for p in block.parameters ?? [] {
+//            if p.isRequired ?? false {
+//                if let v = arguments.getFirstValueBy(key: p.label) {
+//                    parameters[p.label] = v
+//                }
+//                else {
+//                    logger.warning(
+//                        "Parameter `\(p.label)` for `\(block.name)` is required.",
+//                        metadata: [
+//                            "name": .string(blockName)
+//                        ]
+//                    )
+//                }
+//            }
+//            else {
+//                let v =
+//                    arguments.getFirstValueBy(key: p.label) ?? p.defaultValue
+//                    ?? ""
+//
+//                parameters[p.label] = v
+//            }
+//        }
 
-                parameters[p.label] = v
-            }
-        }
-
+        print(parameters)
+        
         let templateParams = parameters.mapKeys { "{{\($0)}}" }
 
-        if let parent = block.requiresParentDirective, !parent.isEmpty {
+        if let parent = block.requiredParentBlock, !parent.isEmpty {
             guard
                 let p = blockDirective.parent as? BlockDirective,
                 p.name.lowercased() == parent.lowercased()
@@ -521,35 +525,14 @@ struct HTMLVisitor: MarkupVisitor {
             }
         }
 
-        if let output = block.output, !output.isEmpty {
-            var contents = ""
-            for child in blockDirective.children {
-                contents += visit(child)
-            }
-
-            parameters["contents"] = contents
-
-            let result = library.render(parameters, withTemplate: block.name)
-            return result ?? ""
+        var contents = ""
+        for child in blockDirective.children {
+            contents += visit(child)
         }
 
-        if let name = block.tag {
-            let attributes: [HTML.Attribute] =
-                block.attributes?
-                .map { a in
-                    .init(
-                        key: a.name,
-                        value: a.value.replacing(templateParams)
-                    )
-                } ?? []
+        parameters["contents"] = contents
 
-            return HTML(
-                name: name,
-                attributes: attributes,
-                contents: visit(blockDirective.children)
-            )
-            .render()
-        }
-        return ""
+        let result = library.render(parameters, withTemplate: blockName)
+        return result ?? ""
     }
 }

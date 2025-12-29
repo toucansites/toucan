@@ -16,7 +16,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func simpleCustomBlockDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Block.Mocks.faq()
+                Mocks.Blocks.faq(),
             ],
             paragraphStyles: [:]
         )
@@ -45,15 +45,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func simpleCustomBlockDirectiveUsingOutput() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                .init(
-                    name: "FAQ",
-                    parameters: nil,
-                    requiresParentDirective: nil,
-                    removesChildParagraph: nil,
-                    tag: nil,
-                    attributes: nil,
-                    output: #"<div class="faq">{{contents}}</div>"#
-                )
+                Mocks.Blocks.faq(),
             ],
             paragraphStyles: [:]
         )
@@ -82,23 +74,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func customBlockDirectiveParameters() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                .init(
-                    name: "Grid",
-                    parameters: [
-                        .init(
-                            label: "columns",
-                            isRequired: true,
-                            defaultValue: nil
-                        )
-                    ],
-                    requiresParentDirective: nil,
-                    removesChildParagraph: nil,
-                    tag: "div",
-                    attributes: [
-                        .init(name: "columns", value: "grid-{{columns}}")
-                    ],
-                    output: nil
-                )
+                Mocks.Blocks.grid(),
             ],
             paragraphStyles: [:]
         )
@@ -127,22 +103,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func customBlockDirectiveParametersUsingOutput() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                .init(
-                    name: "Grid",
-                    parameters: [
-                        .init(
-                            label: "columns",
-                            isRequired: true,
-                            defaultValue: nil
-                        )
-                    ],
-                    requiresParentDirective: nil,
-                    removesChildParagraph: nil,
-                    tag: nil,
-                    attributes: nil,
-                    output:
-                        #"<div columns="grid-{{columns}}">{{contents}}</div>"#
-                )
+                Mocks.Blocks.grid(),
             ],
             paragraphStyles: [:]
         )
@@ -171,7 +132,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func unrecognizedDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Block.Mocks.faq()
+                Mocks.Blocks.faq(),
             ]
         )
 
@@ -195,7 +156,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func parseError() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Block.Mocks.badDirective()
+                Mocks.Blocks.badDirective(),
             ]
         )
         let input = #"""
@@ -216,7 +177,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func requiredParameterErrors() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                Block.Mocks.badDirective()
+                Mocks.Blocks.badDirective(),
             ]
         )
         let input = #"""

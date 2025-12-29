@@ -174,29 +174,21 @@ struct BuildTargetSourceLoaderTestSuite {
                     YAMLFile(
                         name: "link",
                         contents: Block(
-                            name: "link"
+                            name: "link",
+                            view: ""
                         )
                     )
                     File(
                         name: "button.yml",
                         string: """
                             name: Button
-                            tag: a
-                            parameters:
-                              - label: url
-                                default: ""
-                              - label: class
-                                default: "button"
-                              - label: target
-                                default: "_blank"
-                            removesChildParagraph: true
-                            attributes:
-                              - name: href
-                                value: "{{url}}"
-                              - name: target
-                                value: "{{target}}"
-                              - name: class
-                                value: "{{class}}"
+                            removeChildParagraph: true
+                            properties:
+                                url: 
+                                    type: string
+                                    required: true
+                            view: |
+                                <a href="{{url}}">{{contents}}</a>
                             """
                     )
                 }
@@ -255,7 +247,8 @@ struct BuildTargetSourceLoaderTestSuite {
                     YAMLFile(
                         name: "link",
                         contents: Block(
-                            name: "link"
+                            name: "link",
+                            view: ""
                         )
                     )
                 }
