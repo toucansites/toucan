@@ -1,20 +1,21 @@
 //
-//  MarkdownBlockDirective+Mock.swift
+//  Block+Mock.swift
 //  Toucan
 //
 //  Created by Binary Birds on 2025. 04. 17..
 
 import Foundation
-import ToucanMarkdown
+import ToucanSDK
+import ToucanSource
 
-public extension MarkdownBlockDirective {
+public extension Block {
     enum Mocks {}
 }
 
-public extension MarkdownBlockDirective.Mocks {
+public extension Block.Mocks {
     static func highlightedTexts(
         max: Int = 10
-    ) -> [MarkdownBlockDirective] {
+    ) -> [Block] {
         (1...max)
             .map { i in
                 .init(
@@ -34,7 +35,7 @@ public extension MarkdownBlockDirective.Mocks {
             }
     }
 
-    static func faq() -> MarkdownBlockDirective {
+    static func faq() -> Block {
         .init(
             name: "FAQ",
             parameters: nil,
@@ -48,7 +49,7 @@ public extension MarkdownBlockDirective.Mocks {
         )
     }
 
-    static func badDirective() -> MarkdownBlockDirective {
+    static func badDirective() -> Block {
         .init(
             name: "BAD",
             parameters: [

@@ -6,6 +6,7 @@
 //
 
 struct HTML {
+
     enum TagType {
         case standard
         case short

@@ -8,7 +8,6 @@
 import Foundation
 import Logging
 import ToucanCore
-import ToucanMarkdown
 import ToucanSerialization
 import ToucanSource
 
@@ -133,7 +132,7 @@ public struct BuildTargetSourceRenderer {
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
     ) throws -> [ContextBundle] {
-        contents.compactMap { content in
+        try contents.compactMap { content in
             let isAllowed = pipeline.contentTypes.isAllowed(
                 contentType: content.type.id
             )
@@ -154,7 +153,7 @@ public struct BuildTargetSourceRenderer {
                 return nil
             }
 
-            let pipelineContext = getPipelineContext(
+            let pipelineContext = try getPipelineContext(
                 contents: contents,
                 pipeline: pipeline,
                 dateFormatter: dateFormatter,
@@ -162,7 +161,7 @@ public struct BuildTargetSourceRenderer {
             )
             .recursivelyMerged(with: globalContext)
 
-            return getContextBundle(
+            return try getContextBundle(
                 contents: contents,
                 content: content,
                 pipeline: pipeline,
@@ -179,14 +178,14 @@ public struct BuildTargetSourceRenderer {
         pipeline: Pipeline,
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
-    ) -> [String: AnyCodable] {
+    ) throws -> [String: AnyCodable] {
         var rawContext: [String: AnyCodable] = [:]
         for (key, query) in pipeline.queries {
             let results = contents.run(query: query, now: now, logger: logger)
 
             rawContext[key] = .init(
-                results.map {
-                    getContentContext(
+                try results.map {
+                    try getContentContext(
                         contents: contents,
                         for: $0,
                         pipeline: pipeline,
@@ -209,12 +208,12 @@ public struct BuildTargetSourceRenderer {
         pipeline: Pipeline,
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
-    ) -> [String: AnyCodable] {
+    ) throws -> [String: AnyCodable] {
         guard let iteratorInfo = content.iteratorInfo else {
             return [:]
         }
-        let itemContext = iteratorInfo.items.map {
-            getContentContext(
+        let itemContext = try iteratorInfo.items.map {
+            try getContentContext(
                 contents: contents,
                 for: $0,
                 pipeline: pipeline,
@@ -244,8 +243,8 @@ public struct BuildTargetSourceRenderer {
         pipelineContext: [String: AnyCodable],
         dateFormatter: ToucanOutputDateFormatter,
         now: TimeInterval
-    ) -> ContextBundle {
-        let pageContext = getContentContext(
+    ) throws -> ContextBundle {
+        let pageContext = try getContentContext(
             contents: contents,
             for: content,
             pipeline: pipeline,
@@ -254,7 +253,7 @@ public struct BuildTargetSourceRenderer {
             scopeKey: Pipeline.Scope.Keys.detail.rawValue
         )
 
-        let iteratorContext = getIteratorContext(
+        let iteratorContext = try getIteratorContext(
             contents: contents,
             content: content,
             pipeline: pipeline,
@@ -302,7 +301,7 @@ public struct BuildTargetSourceRenderer {
         now: TimeInterval,
         scopeKey: String,
         allowSubQueries: Bool = true  // allow top level queries only
-    ) -> [String: AnyCodable] {
+    ) throws -> [String: AnyCodable] {
         var result: [String: AnyCodable] = [:]
 
         let scope = pipeline.getScope(
@@ -389,36 +388,11 @@ public struct BuildTargetSourceRenderer {
             let transformers = pipeline.transformers[
                 content.type.id
             ]
+            // TODO: optimize this, create renderer once, rethink transformers
             let renderer = MarkdownRenderer(
                 configuration: .init(
                     markdown: .init(
                         customBlockDirectives: buildTargetSource.blocks
-                            .map {
-                                .init(
-                                    name: $0.name,
-                                    parameters: $0.parameters?
-                                        .map {
-                                            .init(
-                                                label: $0.label,
-                                                isRequired: $0.isRequired,
-                                                defaultValue: $0.defaultValue
-                                            )
-                                        },
-                                    requiresParentDirective: $0
-                                        .requiresParentDirective,
-                                    removesChildParagraph: $0
-                                        .removesChildParagraph,
-                                    tag: $0.tag,
-                                    attributes: $0.attributes?
-                                        .map {
-                                            .init(
-                                                name: $0.name,
-                                                value: $0.value
-                                            )
-                                        },
-                                    output: $0.output
-                                )
-                            }
                     ),
                     outline: .init(
                         levels: buildTargetSource.config.renderer
@@ -428,20 +402,13 @@ public struct BuildTargetSourceRenderer {
                         wordsPerMinute: buildTargetSource.config
                             .renderer.wordsPerMinute
                     ),
-                    transformerPipeline: transformers.map {
-                        .init(
-                            run: $0.run.map {
-                                .init(path: $0.path, name: $0.name)
-                            },
-                            isMarkdownResult: $0.isMarkdownResult
-                        )
-                    },
+                    transformerPipeline: transformers,
                     paragraphStyles: buildTargetSource.config.renderer
                         .paragraphStyles.styles
                 )
             )
 
-            let contents = renderer.render(
+            let contents = try renderer.render(
                 content: content.rawValue.markdown.contents,
                 typeAwareID: content.typeAwareID,
                 slug: content.slug.value,
@@ -479,8 +446,8 @@ public struct BuildTargetSourceRenderer {
                     logger: logger
                 )
 
-                let relationContexts = relationContents.map {
-                    getContentContext(
+                let relationContexts = try relationContents.map {
+                    try getContentContext(
                         contents: contents,
                         for: $0,
                         pipeline: pipeline,
@@ -513,8 +480,8 @@ public struct BuildTargetSourceRenderer {
                 )
 
                 result[key] = .init(
-                    queryContents.map {
-                        getContentContext(
+                    try queryContents.map {
+                        try getContentContext(
                             contents: contents,
                             for: $0,
                             pipeline: pipeline,

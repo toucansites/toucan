@@ -7,11 +7,13 @@
 import Foundation
 import Logging
 import Testing
+import ToucanSource
 
-@testable import ToucanMarkdown
+@testable import ToucanSDK
 
 @Suite
 struct MarkdownRendererTestSuite {
+    
     @Test
     func basicRendering() throws {
         let logger = Logger(label: "ContentRendererTestSuite")
@@ -19,7 +21,7 @@ struct MarkdownRendererTestSuite {
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [
-                        MarkdownBlockDirective.Mocks.faq()
+                        Block.Mocks.faq()
                     ]
                 ),
                 outline: .init(
@@ -41,7 +43,7 @@ struct MarkdownRendererTestSuite {
             }
             """#
 
-        let contents = renderer.render(
+        let contents = try renderer.render(
             content: input,
             typeAwareID: "",
             slug: "",

@@ -29,7 +29,7 @@ public struct Block: Sendable, Codable, Equatable {
     /// Custom output HTML string that overrides default rendering behavior, if provided.
     public var output: String?
 
-    /// Initializes a `MarkdownBlockDirective`.
+    /// Initializes a `Block`.
     ///
     /// - Parameters:
     ///   - name: The directive's name.

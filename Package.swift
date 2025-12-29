@@ -32,7 +32,6 @@ let package = Package(
 
         .library(name: "ToucanCore", targets: ["ToucanCore"]),
         .library(name: "ToucanSerialization", targets: ["ToucanSerialization"]),
-        .library(name: "ToucanMarkdown", targets: ["ToucanMarkdown"]),
         .library(name: "ToucanSource", targets: ["ToucanSource"]),
         .library(name: "ToucanSDK", targets: ["ToucanSDK"]),
     ],
@@ -71,7 +70,7 @@ let package = Package(
             url: "https://github.com/scinfu/SwiftSoup",
             from: "2.8.0"
         ),
-        .package(  
+        .package(
 //            path: "../FileMonitor"
             url: "https://github.com/toucansites/FileMonitor",
             from: "0.1.0"
@@ -191,22 +190,8 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .target(
-            name: "ToucanMarkdown",
-            dependencies: [
-                // for outline
-                .product(name: "SwiftSoup", package: "SwiftSoup"),
-                // for markdown to html
-                .product(name: "Markdown", package: "swift-markdown"),
-                // for transformers
-                .product(name: "SwiftCommand", package: "SwiftCommand"),
-                .target(name: "ToucanCore"),
-            ],
-            swiftSettings: swiftSettings
-        ),
-        .target(
             name: "ToucanSource",
             dependencies: [
-                .target(name: "ToucanCore"),
                 .target(name: "ToucanSerialization"),
             ],
             swiftSettings: swiftSettings
@@ -214,12 +199,12 @@ let package = Package(
         .target(
             name: "ToucanSDK",
             dependencies: [
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+                .product(name: "Markdown", package: "swift-markdown"),
+                .product(name: "SwiftCommand", package: "SwiftCommand"),
                 .product(name: "Mustache", package: "swift-mustache"),
                 .product(name: "DartSass", package: "swift-sass"),
                 .product(name: "SwiftCSSParser", package: "swift-css-parser"),
-                .target(name: "ToucanCore"),
-                .target(name: "ToucanSerialization"),
-                .target(name: "ToucanMarkdown"),
                 .target(name: "ToucanSource"),
             ],
             swiftSettings: swiftSettings
@@ -234,15 +219,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "ToucanMarkdownTests",
-            dependencies: [
-                .target(name: "ToucanMarkdown"),
-            ]
-        ),
-        .testTarget(
             name: "ToucanSourceTests",
             dependencies: [
-                .target(name: "ToucanCore"),
                 .target(name: "ToucanSource"),
                 .product(
                     name: "FileManagerKitBuilder",

@@ -6,8 +6,9 @@
 
 import Logging
 import Testing
+import ToucanSource
 
-@testable import ToucanMarkdown
+@testable import ToucanSDK
 
 @Suite
 struct MarkdownBlockDirectiveTestSuite {
@@ -15,7 +16,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func simpleCustomBlockDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.faq()
+                Block.Mocks.faq()
             ],
             paragraphStyles: [:]
         )
@@ -26,7 +27,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(
+        let output = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",
@@ -63,7 +64,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(
+        let output = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",
@@ -108,7 +109,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(
+        let output = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",
@@ -152,7 +153,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(
+        let output = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",
@@ -170,7 +171,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func unrecognizedDirective() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.faq()
+                Block.Mocks.faq()
             ]
         )
 
@@ -180,7 +181,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        let output = renderer.renderHTML(
+        let output = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",
@@ -194,7 +195,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func parseError() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.badDirective()
+                Block.Mocks.badDirective()
             ]
         )
         let input = #"""
@@ -203,7 +204,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        _ = renderer.renderHTML(
+        _ = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",
@@ -215,7 +216,7 @@ struct MarkdownBlockDirectiveTestSuite {
     func requiredParameterErrors() throws {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
-                MarkdownBlockDirective.Mocks.badDirective()
+                Block.Mocks.badDirective()
             ]
         )
         let input = #"""
@@ -224,7 +225,7 @@ struct MarkdownBlockDirectiveTestSuite {
             }
             """#
 
-        _ = renderer.renderHTML(
+        _ = try renderer.renderHTML(
             markdown: input,
             slug: "",
             assetsPath: "",

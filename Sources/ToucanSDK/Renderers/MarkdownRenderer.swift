@@ -7,6 +7,7 @@
 
 import Logging
 import ToucanCore
+import ToucanSource
 
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
@@ -18,13 +19,13 @@ public struct MarkdownRenderer {
         public struct Markdown {
 
             /// Custom block directives to extend the Markdown grammar.
-            public var customBlockDirectives: [MarkdownBlockDirective]
+            public var customBlockDirectives: [Block]
 
             //
 
             /// Initializes a Markdown configuration.
             public init(
-                customBlockDirectives: [MarkdownBlockDirective]
+                customBlockDirectives: [Block]
             ) {
                 self.customBlockDirectives = customBlockDirectives
             }
@@ -72,7 +73,7 @@ public struct MarkdownRenderer {
         public var readingTime: ReadingTime
 
         /// Optional transformation pipeline to apply pre-processing on the input.
-        public var transformerPipeline: TransformerPipeline?
+        public var transformerPipeline: Pipeline.Transformers?
 
         /// Paragraph styles for customizing the HTML rendering.
         public var paragraphStyles: [String: [String]]
@@ -89,7 +90,7 @@ public struct MarkdownRenderer {
             markdown: Markdown,
             outline: Outline,
             readingTime: ReadingTime,
-            transformerPipeline: TransformerPipeline?,
+            transformerPipeline: Pipeline.Transformers?,
             paragraphStyles: [String: [String]]
         ) {
             self.markdown = markdown
@@ -171,7 +172,7 @@ public struct MarkdownRenderer {
         slug: String,
         assetsPath: String,
         baseURL: String
-    ) -> Output {
+    ) throws -> Output {
         var finalHtml = content
         var shouldRenderMarkdown = true
 
@@ -200,7 +201,7 @@ public struct MarkdownRenderer {
 
         // Step 2: If the transformer output isn't already HTML, render Markdown to HTML.
         if shouldRenderMarkdown {
-            finalHtml = markdownToHTMLRenderer.renderHTML(
+            finalHtml = try markdownToHTMLRenderer.renderHTML(
                 markdown: content,
                 slug: slug,
                 assetsPath: assetsPath,

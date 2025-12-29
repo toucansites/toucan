@@ -8,6 +8,8 @@
 import Logging
 import Markdown
 import ToucanCore
+import ToucanSource
+import Mustache
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
@@ -41,27 +43,44 @@ private extension [DirectiveArgument] {
 struct HTMLVisitor: MarkupVisitor {
     typealias Result = String
 
-    var customBlockDirectives: [MarkdownBlockDirective]
+    var customBlockDirectives: [Block]
     var paragraphStyles: [String: [String]]
     var logger: Logger
     var slug: String
     var assetsPath: String
     var baseURL: String
+    
+    var library: MustacheLibrary
 
     init(
-        blockDirectives: [MarkdownBlockDirective] = [],
+        blockDirectives: [Block] = [],
         paragraphStyles: [String: [String]],
         slug: String,
         assetsPath: String,
         baseURL: String,
         logger: Logger = .subsystem("html-visitor")
-    ) {
+    ) throws {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
         self.slug = slug
         self.assetsPath = assetsPath
         self.baseURL = baseURL
         self.logger = logger
+        
+        // convert template-based block directives to actual mustache templates
+        let keyValuePairs: [(String, MustacheTemplate)] =
+            try customBlockDirectives.compactMap { block in
+                guard let output = block.output, !output.isEmpty else {
+                    return nil
+                }
+                return (
+                    block.name.lowercased(),
+                    try MustacheTemplate(string: output)
+                )
+            }
+
+        let templatesById = Dictionary(keyValuePairs) { (first, _) in first }
+        self.library = .init(templates: templatesById)
     }
 
     // MARK: - visitor functions
@@ -410,6 +429,9 @@ struct HTMLVisitor: MarkupVisitor {
 
     // MARK: - custom block directives
 
+    // TODO: depreccate
+    //  - tag & attributes for block directives
+    //  - output should be called template
     mutating func visitBlockDirective(
         _ blockDirective: BlockDirective
     ) -> Result {
@@ -461,7 +483,7 @@ struct HTMLVisitor: MarkupVisitor {
 
         var parameters: [String: String] = [:]
         for p in block.parameters ?? [] {
-            if p.required ?? false {
+            if p.isRequired ?? false {
                 if let v = arguments.getFirstValueBy(key: p.label) {
                     parameters[p.label] = v
                 }
@@ -476,7 +498,7 @@ struct HTMLVisitor: MarkupVisitor {
             }
             else {
                 let v =
-                    arguments.getFirstValueBy(key: p.label) ?? p.default ?? ""
+                    arguments.getFirstValueBy(key: p.label) ?? p.defaultValue ?? ""
 
                 parameters[p.label] = v
             }
@@ -499,16 +521,16 @@ struct HTMLVisitor: MarkupVisitor {
             }
         }
 
-        if let output = block.output {
+        if let output = block.output, !output.isEmpty {
             var contents = ""
             for child in blockDirective.children {
                 contents += visit(child)
             }
 
-            var params = templateParams
-            params["{{contents}}"] = contents
+            parameters["contents"] = contents
 
-            return output.replacing(params)
+            let result = library.render(parameters, withTemplate: block.name)
+            return result ?? ""
         }
 
         if let name = block.tag {
