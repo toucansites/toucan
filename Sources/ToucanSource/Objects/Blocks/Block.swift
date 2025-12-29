@@ -17,6 +17,9 @@ public struct Block: Codable, Equatable {
     /// Indicates whether child paragraphs should be removed from the HTML output. Defaults to `nil`.
     public var removeChildParagraph: Bool?
 
+    /// Resolves the content as an asset URL if true.
+    public var resolveContentAsAssset: Bool?
+
     /// A map of property names to their type definitions.
     public var properties: [String: Property]
 
@@ -29,12 +32,14 @@ public struct Block: Codable, Equatable {
     ///   - name: The directive's name.
     ///   - requiredParentBlock: Name of a parent directive this one must reside within.
     ///   - removeChildParagraph: Whether to exclude child `<p>` tags during rendering.
+    ///   - resolveContentAsAssset: Resolves the content as an asset URL if true.
     ///   - properties: A map of property names to their type definitions.
     ///   - view: The view (Mustache template as a string) for the block
     public init(
         name: String,
         requiredParentBlock: String? = nil,
         removeChildParagraph: Bool? = nil,
+        resolveContentAsAssset: Bool? = nil,
         properties: [String: Property] = [:],
         view: String
     ) {
@@ -42,6 +47,7 @@ public struct Block: Codable, Equatable {
 
         self.requiredParentBlock = requiredParentBlock
         self.removeChildParagraph = removeChildParagraph
+        self.resolveContentAsAssset = resolveContentAsAssset
 
         self.properties = properties
         self.view = view

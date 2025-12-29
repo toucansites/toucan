@@ -486,7 +486,17 @@ struct HTMLVisitor: MarkupVisitor {
             // TODO: proper default value type handling
             if property.required {
                 if let value = arguments.getFirstValueBy(key: key) {
-                    parameters[key] = value
+                    if property.type == .asset {
+                        let resolvedValue = value.resolveAsset(
+                            baseURL: baseURL,
+                            assetsPath: assetsPath,
+                            slug: slug
+                        )
+                        parameters[key] = resolvedValue
+                    }
+                    else {
+                        parameters[key] = value
+                    }
                 }
                 else {
                     logger.warning(
@@ -498,10 +508,24 @@ struct HTMLVisitor: MarkupVisitor {
                 }
             }
             else {
-                parameters[key] =
+                let rawValue =
                     arguments.getFirstValueBy(
                         key: key
                     ) ?? property.defaultValue?.description  // TODO: fix this
+
+                if property.type == .asset {
+                    let resolvedValue = rawValue?
+                        .resolveAsset(
+                            baseURL: baseURL,
+                            assetsPath: assetsPath,
+                            slug: slug
+                        )
+                    parameters[key] = resolvedValue
+                }
+                else {
+                    parameters[key] = rawValue
+
+                }
             }
         }
 
@@ -526,6 +550,15 @@ struct HTMLVisitor: MarkupVisitor {
         }
 
         parameters["contents"] = contents
+
+        if block.resolveContentAsAssset ?? false {
+            let resolvedValue = contents.resolveAsset(
+                baseURL: baseURL,
+                assetsPath: assetsPath,
+                slug: slug
+            )
+            parameters["contents"] = resolvedValue
+        }
 
         let result = library.render(parameters, withTemplate: blockName)
         return result ?? ""
@@ -573,18 +606,7 @@ struct HTMLVisitor: MarkupVisitor {
     //        if let p = content.type.properties[k] {
     //            switch p.type {
     //            /// resolve assets
-    //            case .asset:
-    //                guard let rawValue = v.stringValue() else {
-    //                    continue
-    //                }
-    //
-    //                let resolvedValue = rawValue.resolveAsset(
-    //                    baseURL: baseURL(),
-    //                    assetsPath: content.rawValue.assetsPath,
-    //                    slug: content.slug.value
-    //                )
-    //
-    //                result[k] = .init(resolvedValue)
+
     //            /// format dates
     //            case .date:
     //                guard let rawValue = v.doubleValue() else {
