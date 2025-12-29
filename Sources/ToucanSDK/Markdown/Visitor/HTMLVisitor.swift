@@ -483,9 +483,10 @@ struct HTMLVisitor: MarkupVisitor {
         for (key, property) in block.properties.sorted(by: {
             $0.key < $1.key
         }) {
+            // TODO: proper default value type handling
             if property.required {
-                if let v = arguments.getFirstValueBy(key: key) {
-                    parameters[key] = v
+                if let value = arguments.getFirstValueBy(key: key) {
+                    parameters[key] = value
                 }
                 else {
                     logger.warning(
@@ -497,11 +498,10 @@ struct HTMLVisitor: MarkupVisitor {
                 }
             }
             else {
-                let v =
-                    arguments.getFirstValueBy(key: key) ?? property
-                    .defaultValue?
-                    .stringValue() ?? ""
-                parameters[key] = v
+                parameters[key] =
+                    arguments.getFirstValueBy(
+                        key: key
+                    ) ?? property.defaultValue?.description  // TODO: fix this
             }
         }
 
