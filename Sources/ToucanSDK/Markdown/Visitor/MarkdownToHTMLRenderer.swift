@@ -19,6 +19,9 @@ public struct MarkdownToHTMLRenderer {
     /// A collection of paragraph styles.
     public let paragraphStyles: [String: [String]]
 
+    /// Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
+    public let codeBlockLanguagePrefix: String
+
     /// Logger instance
     public let logger: Logger
 
@@ -27,14 +30,17 @@ public struct MarkdownToHTMLRenderer {
     /// - Parameters:
     ///   - customBlockDirectives: A list of custom Markdown block directives to parse during rendering.
     ///   - paragraphStyles: The paragraph styles configuration for styling rendered HTML.
+    ///   - codeBlockLanguagePrefix: Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "MarkdownToHTMLRenderer".
     public init(
         customBlockDirectives: [Block] = [],
         paragraphStyles: [String: [String]] = [:],
+        codeBlockLanguagePrefix: String,
         logger: Logger = .subsystem("markdown-to-html-renderer")
     ) {
         self.customBlockDirectives = customBlockDirectives
         self.paragraphStyles = paragraphStyles
+        self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         self.logger = logger
     }
 
@@ -67,6 +73,7 @@ public struct MarkdownToHTMLRenderer {
         var htmlVisitor = try HTMLVisitor(
             blockDirectives: customBlockDirectives,
             paragraphStyles: paragraphStyles,
+            codeBlockLanguagePrefix: codeBlockLanguagePrefix,
             slug: slug,
             assetsPath: assetsPath,
             baseURL: baseURL

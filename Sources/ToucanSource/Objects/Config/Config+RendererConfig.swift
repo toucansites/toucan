@@ -15,6 +15,7 @@ public extension Config {
             case wordsPerMinute
             case outlineLevels
             case paragraphStyles
+            case codeBlockLanguagePrefix
         }
 
         /// Returns a `ContentConfigurations` instance with sensible default values.
@@ -22,7 +23,8 @@ public extension Config {
             .init(
                 wordsPerMinute: 238,
                 outlineLevels: [2, 3],
-                paragraphStyles: .defaults
+                paragraphStyles: .defaults,
+                codeBlockLanguagePrefix: ""
             )
         }
 
@@ -39,20 +41,26 @@ public extension Config {
         /// Aliases for styled paragraph blocks (e.g., "note", "tip", "error").
         public var paragraphStyles: ParagraphStyles
 
+        /// Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
+        public var codeBlockLanguagePrefix: String
+
         /// Initializes a custom `ContentConfigurations` instance.
         ///
         /// - Parameters:
         ///   - wordsPerMinute: The average reading speed for estimating read time.
         ///   - outlineLevels: Heading levels to extract for outline/toc generation.
         ///   - paragraphStyles: Mappings for styled block directives.
+        ///   - codeBlockLanguagePrefix: Language prefix for pre > code block classes.
         public init(
             wordsPerMinute: Int,
             outlineLevels: [Int],
-            paragraphStyles: ParagraphStyles
+            paragraphStyles: ParagraphStyles,
+            codeBlockLanguagePrefix: String
         ) {
             self.wordsPerMinute = wordsPerMinute
             self.outlineLevels = outlineLevels
             self.paragraphStyles = paragraphStyles
+            self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         }
 
         /// Decodes a `ContentConfigurations` instance, applying defaults for missing fields.
@@ -73,7 +81,10 @@ public extension Config {
             }
 
             self.wordsPerMinute =
-                try container.decodeIfPresent(Int.self, forKey: .wordsPerMinute)
+                try container.decodeIfPresent(
+                    Int.self,
+                    forKey: .wordsPerMinute
+                )
                 ?? defaults.wordsPerMinute
 
             self.outlineLevels =
@@ -89,6 +100,13 @@ public extension Config {
                     forKey: .paragraphStyles
                 )
                 ?? defaults.paragraphStyles
+
+            self.codeBlockLanguagePrefix =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .codeBlockLanguagePrefix
+                )
+                ?? defaults.codeBlockLanguagePrefix
         }
     }
 }

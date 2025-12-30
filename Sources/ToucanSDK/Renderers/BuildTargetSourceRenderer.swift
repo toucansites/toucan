@@ -404,7 +404,9 @@ public struct BuildTargetSourceRenderer {
                     ),
                     transformerPipeline: transformers,
                     paragraphStyles: buildTargetSource.config.renderer
-                        .paragraphStyles.styles
+                        .paragraphStyles.styles,
+                    codeBlockLanguagePrefix: buildTargetSource.config.renderer
+                        .codeBlockLanguagePrefix
                 )
             )
 

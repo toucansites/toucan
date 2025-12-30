@@ -78,6 +78,9 @@ public struct MarkdownRenderer {
         /// Paragraph styles for customizing the HTML rendering.
         public var paragraphStyles: [String: [String]]
 
+        /// Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
+        public var codeBlockLanguagePrefix: String
+
         /// Initializes a new rendering configuration.
         ///
         /// - Parameters:
@@ -86,18 +89,21 @@ public struct MarkdownRenderer {
         ///   - readingTime: Reading time estimation settings.
         ///   - transformerPipeline: Optional content transformation pipeline.
         ///   - paragraphStyles: Block-level style customization for HTML rendering.
+        ///   - codeBlockLanguagePrefix: Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
         public init(
             markdown: Markdown,
             outline: Outline,
             readingTime: ReadingTime,
             transformerPipeline: Pipeline.Transformers?,
-            paragraphStyles: [String: [String]]
+            paragraphStyles: [String: [String]],
+            codeBlockLanguagePrefix: String
         ) {
             self.markdown = markdown
             self.outline = outline
             self.readingTime = readingTime
             self.transformerPipeline = transformerPipeline
             self.paragraphStyles = paragraphStyles
+            self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         }
     }
 
@@ -141,7 +147,8 @@ public struct MarkdownRenderer {
 
         self.markdownToHTMLRenderer = MarkdownToHTMLRenderer(
             customBlockDirectives: configuration.markdown.customBlockDirectives,
-            paragraphStyles: configuration.paragraphStyles
+            paragraphStyles: configuration.paragraphStyles,
+            codeBlockLanguagePrefix: configuration.codeBlockLanguagePrefix
         )
 
         self.outlineParser = OutlineParser(

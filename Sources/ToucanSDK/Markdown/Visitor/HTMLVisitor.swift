@@ -45,7 +45,10 @@ struct HTMLVisitor: MarkupVisitor {
 
     var customBlockDirectives: [Block]
     var paragraphStyles: [String: [String]]
+    var codeBlockLanguagePrefix: String
+
     var logger: Logger
+
     var slug: String
     var assetsPath: String
     var baseURL: String
@@ -55,6 +58,7 @@ struct HTMLVisitor: MarkupVisitor {
     init(
         blockDirectives: [Block] = [],
         paragraphStyles: [String: [String]],
+        codeBlockLanguagePrefix: String,
         slug: String,
         assetsPath: String,
         baseURL: String,
@@ -62,6 +66,7 @@ struct HTMLVisitor: MarkupVisitor {
     ) throws {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
+        self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         self.slug = slug
         self.assetsPath = assetsPath
         self.baseURL = baseURL
@@ -281,7 +286,7 @@ struct HTMLVisitor: MarkupVisitor {
             attributes.append(
                 .init(
                     key: "class",
-                    value: "language-\(language.lowercased())"
+                    value: "\(codeBlockLanguagePrefix)\(language.lowercased())"
                 )
             )
         }

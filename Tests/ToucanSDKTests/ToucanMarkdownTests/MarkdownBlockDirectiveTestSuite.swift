@@ -18,7 +18,8 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 Mocks.Blocks.faq()
             ],
-            paragraphStyles: [:]
+            paragraphStyles: [:],
+            codeBlockLanguagePrefix: ""
         )
 
         let input = #"""
@@ -47,7 +48,8 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 Mocks.Blocks.faq()
             ],
-            paragraphStyles: [:]
+            paragraphStyles: [:],
+            codeBlockLanguagePrefix: ""
         )
 
         let input = #"""
@@ -76,7 +78,8 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 Mocks.Blocks.grid()
             ],
-            paragraphStyles: [:]
+            paragraphStyles: [:],
+            codeBlockLanguagePrefix: ""
         )
 
         let input = #"""
@@ -105,7 +108,8 @@ struct MarkdownBlockDirectiveTestSuite {
             customBlockDirectives: [
                 Mocks.Blocks.grid()
             ],
-            paragraphStyles: [:]
+            paragraphStyles: [:],
+            codeBlockLanguagePrefix: ""
         )
 
         let input = #"""
@@ -133,7 +137,8 @@ struct MarkdownBlockDirectiveTestSuite {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 Mocks.Blocks.faq()
-            ]
+            ],
+            codeBlockLanguagePrefix: ""
         )
 
         let input = #"""
@@ -157,7 +162,8 @@ struct MarkdownBlockDirectiveTestSuite {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 Mocks.Blocks.badDirective()
-            ]
+            ],
+            codeBlockLanguagePrefix: ""
         )
         let input = #"""
             @BAD(columns: bad, columns: bad) {
@@ -178,7 +184,8 @@ struct MarkdownBlockDirectiveTestSuite {
         let renderer = MarkdownToHTMLRenderer(
             customBlockDirectives: [
                 Mocks.Blocks.badDirective()
-            ]
+            ],
+            codeBlockLanguagePrefix: ""
         )
         let input = #"""
             @BAD() {

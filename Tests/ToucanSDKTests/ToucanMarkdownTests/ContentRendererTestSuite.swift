@@ -31,7 +31,8 @@ struct MarkdownRendererTestSuite {
                     wordsPerMinute: 238
                 ),
                 transformerPipeline: nil,
-                paragraphStyles: [:]
+                paragraphStyles: [:],
+                codeBlockLanguagePrefix: ""
             ),
             logger: logger
         )

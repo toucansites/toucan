@@ -15,7 +15,8 @@ struct HTMLVisitorTestSuite {
 
     func renderHTML(
         markdown: String,
-        baseURL: String? = nil
+        baseURL: String? = nil,
+        codeBlockLanguagePrefix: String = "language-"
     ) throws -> String {
         let document = Document(
             parsing: markdown,
@@ -31,6 +32,7 @@ struct HTMLVisitorTestSuite {
                 "important": ["important"],
                 "error": ["error", "caution"],
             ],
+            codeBlockLanguagePrefix: codeBlockLanguagePrefix,
             slug: "slug",
             assetsPath: "assets",
             baseURL: baseURL ?? "http://localhost:3000"
@@ -630,6 +632,33 @@ struct HTMLVisitorTestSuite {
         let output = try renderHTML(markdown: input)
         let expectation = #"""
             <pre><code class="language-js">Lorem
+            ipsum
+            dolor
+            sit
+            amet
+            </code></pre>
+            """#
+
+        #expect(output == expectation)
+    }
+
+    @Test
+    func codeBlockWithoutLanguagePrefix() throws {
+        let input = #"""
+            ```js
+            Lorem
+            ipsum
+            dolor
+            sit
+            amet
+            ```
+            """#
+        let output = try renderHTML(
+            markdown: input,
+            codeBlockLanguagePrefix: ""
+        )
+        let expectation = #"""
+            <pre><code class="js">Lorem
             ipsum
             dolor
             sit
