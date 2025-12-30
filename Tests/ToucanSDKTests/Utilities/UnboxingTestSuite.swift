@@ -10,7 +10,7 @@ import Foundation
 import Testing
 import ToucanSource
 import ToucanSDK
-import ToucanMarkdown
+import ToucanSDK
 
 @Suite
 struct UnboxingTests {

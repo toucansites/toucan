@@ -62,6 +62,7 @@ struct ConfigTestSuite {
             pipelines:
               path: custom4
             renderer:
+              codeBlockLanguagePrefix: ''
               outlineLevels:
               - 4
               paragraphStyles:

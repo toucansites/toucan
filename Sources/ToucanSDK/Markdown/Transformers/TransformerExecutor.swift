@@ -9,12 +9,13 @@ import Foundation
 import Logging
 import SwiftCommand
 import ToucanCore
+import ToucanSource
 
 /// Executes a sequence of shell-based transformation commands defined in a `TransformerPipeline`,
 /// allowing content to be programmatically modified.
 public struct TransformerExecutor {
     /// The transformation pipeline consisting of commands to execute.
-    public var pipeline: TransformerPipeline
+    public var pipeline: Pipeline.Transformers
 
     /// File manager utility for file system interactions, including temp files and cleanup.
     public var fileManager: FileManager
@@ -29,7 +30,7 @@ public struct TransformerExecutor {
     ///   - fileManager: A file manager abstraction for working with files.
     ///   - logger: A logger for capturing stdout, stderr, and errors.
     public init(
-        pipeline: TransformerPipeline,
+        pipeline: Pipeline.Transformers,
         fileManager: FileManager = .default,
         logger: Logger = .subsystem("transformer-executor")
     ) {

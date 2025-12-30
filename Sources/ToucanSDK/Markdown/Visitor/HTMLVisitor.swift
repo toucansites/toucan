@@ -8,6 +8,8 @@
 import Logging
 import Markdown
 import ToucanCore
+import ToucanSource
+import Mustache
 
 /// NOTE: https://www.markdownguide.org/basic-syntax/
 
@@ -41,27 +43,49 @@ private extension [DirectiveArgument] {
 struct HTMLVisitor: MarkupVisitor {
     typealias Result = String
 
-    var customBlockDirectives: [MarkdownBlockDirective]
+    var customBlockDirectives: [Block]
     var paragraphStyles: [String: [String]]
+    var codeBlockLanguagePrefix: String
+
     var logger: Logger
+
     var slug: String
     var assetsPath: String
     var baseURL: String
 
+    var library: MustacheLibrary
+
     init(
-        blockDirectives: [MarkdownBlockDirective] = [],
+        blockDirectives: [Block] = [],
         paragraphStyles: [String: [String]],
+        codeBlockLanguagePrefix: String,
         slug: String,
         assetsPath: String,
         baseURL: String,
         logger: Logger = .subsystem("html-visitor")
-    ) {
+    ) throws {
         self.customBlockDirectives = blockDirectives
         self.paragraphStyles = paragraphStyles
+        self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         self.slug = slug
         self.assetsPath = assetsPath
         self.baseURL = baseURL
         self.logger = logger
+
+        // convert template-based block directives to actual mustache templates
+        let keyValuePairs: [(String, MustacheTemplate)] =
+            try customBlockDirectives.compactMap { block in
+                guard !block.view.isEmpty else {
+                    return nil
+                }
+                return (
+                    block.name.lowercased(),
+                    try MustacheTemplate(string: block.view)
+                )
+            }
+
+        let templatesById = Dictionary(keyValuePairs) { (first, _) in first }
+        self.library = .init(templates: templatesById)
     }
 
     // MARK: - visitor functions
@@ -187,7 +211,7 @@ struct HTMLVisitor: MarkupVisitor {
     ) -> Result {
         let filterBlocks =
             customBlockDirectives
-            .filter { $0.removesChildParagraph ?? false }
+            .filter { $0.removeChildParagraph ?? false }
             .map(\.name)
 
         if let block = paragraph.parent as? BlockDirective,
@@ -262,7 +286,7 @@ struct HTMLVisitor: MarkupVisitor {
             attributes.append(
                 .init(
                     key: "class",
-                    value: "language-\(language.lowercased())"
+                    value: "\(codeBlockLanguagePrefix)\(language.lowercased())"
                 )
             )
         }
@@ -460,14 +484,28 @@ struct HTMLVisitor: MarkupVisitor {
         }
 
         var parameters: [String: String] = [:]
-        for p in block.parameters ?? [] {
-            if p.required ?? false {
-                if let v = arguments.getFirstValueBy(key: p.label) {
-                    parameters[p.label] = v
+
+        for (key, property) in block.properties.sorted(by: {
+            $0.key < $1.key
+        }) {
+            // TODO: proper default value type handling
+            if property.required {
+                if let value = arguments.getFirstValueBy(key: key) {
+                    if property.type == .asset {
+                        let resolvedValue = value.resolveAsset(
+                            baseURL: baseURL,
+                            assetsPath: assetsPath,
+                            slug: slug
+                        )
+                        parameters[key] = resolvedValue
+                    }
+                    else {
+                        parameters[key] = value
+                    }
                 }
                 else {
                     logger.warning(
-                        "Parameter `\(p.label)` for `\(block.name)` is required.",
+                        "Parameter `\(key)` for `\(blockName)` is required.",
                         metadata: [
                             "name": .string(blockName)
                         ]
@@ -475,16 +513,28 @@ struct HTMLVisitor: MarkupVisitor {
                 }
             }
             else {
-                let v =
-                    arguments.getFirstValueBy(key: p.label) ?? p.default ?? ""
+                let rawValue =
+                    arguments.getFirstValueBy(
+                        key: key
+                    ) ?? property.defaultValue?.description  // TODO: fix this
 
-                parameters[p.label] = v
+                if property.type == .asset {
+                    let resolvedValue = rawValue?
+                        .resolveAsset(
+                            baseURL: baseURL,
+                            assetsPath: assetsPath,
+                            slug: slug
+                        )
+                    parameters[key] = resolvedValue
+                }
+                else {
+                    parameters[key] = rawValue
+
+                }
             }
         }
 
-        let templateParams = parameters.mapKeys { "{{\($0)}}" }
-
-        if let parent = block.requiresParentDirective, !parent.isEmpty {
+        if let parent = block.requiredParentBlock, !parent.isEmpty {
             guard
                 let p = blockDirective.parent as? BlockDirective,
                 p.name.lowercased() == parent.lowercased()
@@ -499,35 +549,83 @@ struct HTMLVisitor: MarkupVisitor {
             }
         }
 
-        if let output = block.output {
-            var contents = ""
-            for child in blockDirective.children {
-                contents += visit(child)
-            }
-
-            var params = templateParams
-            params["{{contents}}"] = contents
-
-            return output.replacing(params)
+        var contents = ""
+        for child in blockDirective.children {
+            contents += visit(child)
         }
 
-        if let name = block.tag {
-            let attributes: [HTML.Attribute] =
-                block.attributes?
-                .map { a in
-                    .init(
-                        key: a.name,
-                        value: a.value.replacing(templateParams)
-                    )
-                } ?? []
+        parameters["contents"] = contents
 
-            return HTML(
-                name: name,
-                attributes: attributes,
-                contents: visit(blockDirective.children)
+        if block.resolveContentAsAssset ?? false {
+            let resolvedValue = contents.resolveAsset(
+                baseURL: baseURL,
+                assetsPath: assetsPath,
+                slug: slug
             )
-            .render()
+            parameters["contents"] = resolvedValue
         }
-        return ""
+
+        let result = library.render(parameters, withTemplate: blockName)
+        return result ?? ""
     }
+
+    // MARK: - TODO property type check + asset resolution
+
+    //    func convert(
+    //        property: Property,
+    //        rawValue: AnyCodable?,
+    //        forKey key: String,
+    //        slug: String
+    //    ) throws(ContentResolverError) -> AnyCodable? {
+    //        let value = rawValue ?? property.defaultValue
+    //
+    //        switch property.type {
+    //        case let .date(config):
+    //            guard
+    //                let rawDateValue = value?.value(as: String.self)
+    //            else {
+    //                throw .invalidProperty(
+    //                    key,
+    //                    value?.stringValue() ?? "nil",
+    //                    slug
+    //                )
+    //            }
+    //            guard
+    //                let date = dateFormatter.date(
+    //                    from: rawDateValue,
+    //                    using: config
+    //                )
+    //            else {
+    //                throw .invalidProperty(
+    //                    key,
+    //                    value?.stringValue() ?? "nil",
+    //                    slug
+    //                )
+    //            }
+    //            return .init(date.timeIntervalSince1970)
+    //        default:
+    //            return value
+    //        }
+
+    // asset resolution for properties...
+    //        if let p = content.type.properties[k] {
+    //            switch p.type {
+    //            /// resolve assets
+
+    //            /// format dates
+    //            case .date:
+    //                guard let rawValue = v.doubleValue() else {
+    //                    continue
+    //                }
+    //                result[k] = .init(
+    //                    dateFormatter.format(rawValue)
+    //                )
+    //            default:
+    //                result[k] = .init(v.value)
+    //            }
+    //        }
+    //        else {
+    //            result[k] = .init(v.value)
+    //        }
+    //    }
 }

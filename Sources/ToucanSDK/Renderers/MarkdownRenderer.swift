@@ -7,6 +7,7 @@
 
 import Logging
 import ToucanCore
+import ToucanSource
 
 /// A comprehensive content processing engine that renders Markdown content to HTML,
 /// applies transformations, computes reading time, and generates an outline structure.
@@ -18,13 +19,13 @@ public struct MarkdownRenderer {
         public struct Markdown {
 
             /// Custom block directives to extend the Markdown grammar.
-            public var customBlockDirectives: [MarkdownBlockDirective]
+            public var customBlockDirectives: [Block]
 
             //
 
             /// Initializes a Markdown configuration.
             public init(
-                customBlockDirectives: [MarkdownBlockDirective]
+                customBlockDirectives: [Block]
             ) {
                 self.customBlockDirectives = customBlockDirectives
             }
@@ -72,10 +73,13 @@ public struct MarkdownRenderer {
         public var readingTime: ReadingTime
 
         /// Optional transformation pipeline to apply pre-processing on the input.
-        public var transformerPipeline: TransformerPipeline?
+        public var transformerPipeline: Pipeline.Transformers?
 
         /// Paragraph styles for customizing the HTML rendering.
         public var paragraphStyles: [String: [String]]
+
+        /// Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
+        public var codeBlockLanguagePrefix: String
 
         /// Initializes a new rendering configuration.
         ///
@@ -85,18 +89,21 @@ public struct MarkdownRenderer {
         ///   - readingTime: Reading time estimation settings.
         ///   - transformerPipeline: Optional content transformation pipeline.
         ///   - paragraphStyles: Block-level style customization for HTML rendering.
+        ///   - codeBlockLanguagePrefix: Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
         public init(
             markdown: Markdown,
             outline: Outline,
             readingTime: ReadingTime,
-            transformerPipeline: TransformerPipeline?,
-            paragraphStyles: [String: [String]]
+            transformerPipeline: Pipeline.Transformers?,
+            paragraphStyles: [String: [String]],
+            codeBlockLanguagePrefix: String
         ) {
             self.markdown = markdown
             self.outline = outline
             self.readingTime = readingTime
             self.transformerPipeline = transformerPipeline
             self.paragraphStyles = paragraphStyles
+            self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         }
     }
 
@@ -140,7 +147,8 @@ public struct MarkdownRenderer {
 
         self.markdownToHTMLRenderer = MarkdownToHTMLRenderer(
             customBlockDirectives: configuration.markdown.customBlockDirectives,
-            paragraphStyles: configuration.paragraphStyles
+            paragraphStyles: configuration.paragraphStyles,
+            codeBlockLanguagePrefix: configuration.codeBlockLanguagePrefix
         )
 
         self.outlineParser = OutlineParser(
@@ -165,13 +173,14 @@ public struct MarkdownRenderer {
     ///   - baseURL: The base URL for resolving relative paths or links.
     ///
     /// - Returns: A structured `Output` containing HTML, reading time, and outline.
+    /// - Throws: An error if something went wrong with the HTML visitor setup.
     public func render(
         content: String,
         typeAwareID: String,
         slug: String,
         assetsPath: String,
         baseURL: String
-    ) -> Output {
+    ) throws -> Output {
         var finalHtml = content
         var shouldRenderMarkdown = true
 
@@ -200,7 +209,7 @@ public struct MarkdownRenderer {
 
         // Step 2: If the transformer output isn't already HTML, render Markdown to HTML.
         if shouldRenderMarkdown {
-            finalHtml = markdownToHTMLRenderer.renderHTML(
+            finalHtml = try markdownToHTMLRenderer.renderHTML(
                 markdown: content,
                 slug: slug,
                 assetsPath: assetsPath,

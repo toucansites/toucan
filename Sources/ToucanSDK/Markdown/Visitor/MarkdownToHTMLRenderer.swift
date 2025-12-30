@@ -8,14 +8,19 @@
 import Logging
 import Markdown
 import ToucanCore
+import ToucanSource
 
 /// A renderer that converts Markdown text to HTML, with support for custom block directives and paragraph styling.
 public struct MarkdownToHTMLRenderer {
+
     /// Custom block directives to extend Markdown syntax.
-    public let customBlockDirectives: [MarkdownBlockDirective]
+    public let customBlockDirectives: [Block]
 
     /// A collection of paragraph styles.
     public let paragraphStyles: [String: [String]]
+
+    /// Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
+    public let codeBlockLanguagePrefix: String
 
     /// Logger instance
     public let logger: Logger
@@ -25,14 +30,17 @@ public struct MarkdownToHTMLRenderer {
     /// - Parameters:
     ///   - customBlockDirectives: A list of custom Markdown block directives to parse during rendering.
     ///   - paragraphStyles: The paragraph styles configuration for styling rendered HTML.
+    ///   - codeBlockLanguagePrefix: Code block language prefix (e.g. `langauge-`, if needed for syntax highlighters), default: empty string.
     ///   - logger: A logger instance for logging. Defaults to a logger labeled "MarkdownToHTMLRenderer".
     public init(
-        customBlockDirectives: [MarkdownBlockDirective] = [],
+        customBlockDirectives: [Block] = [],
         paragraphStyles: [String: [String]] = [:],
+        codeBlockLanguagePrefix: String,
         logger: Logger = .subsystem("markdown-to-html-renderer")
     ) {
         self.customBlockDirectives = customBlockDirectives
         self.paragraphStyles = paragraphStyles
+        self.codeBlockLanguagePrefix = codeBlockLanguagePrefix
         self.logger = logger
     }
 
@@ -47,12 +55,13 @@ public struct MarkdownToHTMLRenderer {
     ///   - baseURL: The base URL used to resolve relative links within the Markdown.
     ///
     /// - Returns: A fully rendered HTML string.
+    /// - Throws: An error if something went wrong with the HTML visitor setup.
     public func renderHTML(
         markdown: String,
         slug: String,
         assetsPath: String,
         baseURL: String
-    ) -> String {
+    ) throws -> String {
         // Create a Markdown document, enabling block directives if any are provided.
         let document = Document(
             parsing: markdown,
@@ -61,9 +70,10 @@ public struct MarkdownToHTMLRenderer {
         )
 
         // Initialize the HTML visitor with the current configuration.
-        var htmlVisitor = HTMLVisitor(
+        var htmlVisitor = try HTMLVisitor(
             blockDirectives: customBlockDirectives,
             paragraphStyles: paragraphStyles,
+            codeBlockLanguagePrefix: codeBlockLanguagePrefix,
             slug: slug,
             assetsPath: assetsPath,
             baseURL: baseURL

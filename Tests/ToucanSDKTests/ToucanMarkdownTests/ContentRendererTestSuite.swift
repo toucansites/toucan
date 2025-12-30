@@ -7,11 +7,13 @@
 import Foundation
 import Logging
 import Testing
+import ToucanSource
 
-@testable import ToucanMarkdown
+@testable import ToucanSDK
 
 @Suite
 struct MarkdownRendererTestSuite {
+
     @Test
     func basicRendering() throws {
         let logger = Logger(label: "ContentRendererTestSuite")
@@ -19,7 +21,7 @@ struct MarkdownRendererTestSuite {
             configuration: .init(
                 markdown: .init(
                     customBlockDirectives: [
-                        MarkdownBlockDirective.Mocks.faq()
+                        Mocks.Blocks.faq()
                     ]
                 ),
                 outline: .init(
@@ -29,7 +31,8 @@ struct MarkdownRendererTestSuite {
                     wordsPerMinute: 238
                 ),
                 transformerPipeline: nil,
-                paragraphStyles: [:]
+                paragraphStyles: [:],
+                codeBlockLanguagePrefix: ""
             ),
             logger: logger
         )
@@ -41,7 +44,7 @@ struct MarkdownRendererTestSuite {
             }
             """#
 
-        let contents = renderer.render(
+        let contents = try renderer.render(
             content: input,
             typeAwareID: "",
             slug: "",
