@@ -39,7 +39,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser",
-            "1.5.0"..<"1.7.1"
+            "1.5.0"..<"1.7.1" // breaks dep graph for 6.0
         ),
         .package(
             url: "https://github.com/apple/swift-markdown",
@@ -51,17 +51,15 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/apple/swift-nio",
-            "2.0.0"..<"2.97.1"
+            "2.0.0"..<"2.97.1" // breaks dep graph for 6.0
         ),
         .package(
             url: "https://github.com/binarybirds/file-manager-kit",
-            .upToNextMinor(
-                from: "0.4.0"
-            )
+            exact: "0.4.0"
         ),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird",
-            "2.0.0"..<"2.21.1"
+            "2.0.0"..<"2.17.0" // swift configuration breaks on 6.3.1
         ),
         .package(
             url: "https://github.com/hummingbird-project/swift-mustache",
@@ -75,8 +73,7 @@ let package = Package(
             url: "https://github.com/scinfu/SwiftSoup",
             from: "2.8.0"
         ),
-        .package(  
-//            path: "../FileMonitor"
+        .package(
             url: "https://github.com/toucansites/FileMonitor",
             from: "0.1.0"
         ),
