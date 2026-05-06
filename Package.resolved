@@ -1,5 +1,5 @@
 {
-  "originHash" : "2b2e5abb289f0e949af494e2d5647ec20191b4d9043889a8806d30d73ad2627f",
+  "originHash" : "e84d21837b8fa3afb404364dba5bcd72744c84692f5b535d3d9e642ab603a48d",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird",
       "state" : {
-        "revision" : "d1ce7bbd2f1b17f22031ca4c0daeb39eff07a92e",
-        "version" : "2.21.1"
+        "revision" : "282f55d605bf9324d2da7cbebbf30112a0ae575d",
+        "version" : "2.21.0"
       }
     },
     {
@@ -222,8 +222,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "f71c8d2a5e74a2c6d11a0fbe324774b5d6084237",
-        "version" : "2.99.0"
+        "revision" : "bdf004b44f77c56fca752cd1cf243c802f8469c9",
+        "version" : "2.97.0"
       }
     },
     {

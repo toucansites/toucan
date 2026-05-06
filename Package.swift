@@ -50,6 +50,10 @@ let package = Package(
             "1.6.0"..<"1.10.0"
         ),
         .package(
+            url: "https://github.com/apple/swift-nio",
+            "2.0.0"..<"2.97.1"
+        ),
+        .package(
             url: "https://github.com/binarybirds/file-manager-kit",
             .upToNextMinor(
                 from: "0.4.0"
@@ -57,7 +61,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird",
-            from: "2.14.0"
+            "2.0.0"..<"2.21.1"
         ),
         .package(
             url: "https://github.com/hummingbird-project/swift-mustache",
