@@ -66,7 +66,7 @@ docker-image:
 # docker run --rm -v $(pwd):/app/site --entrypoint toucan toucansites/toucan generate /app/site/src /app/site/dist
 
 docker-run:
-	docker run --rm -v $(pwd):/app -it swift:6.0
+	docker run --rm -v $(pwd):/app -it swift:6.1
 
 docker-tests:
 	docker build -t toucan-tests . -f ./Docker/Dockerfile.testing && docker run --rm toucan-tests

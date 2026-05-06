@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [
@@ -56,6 +56,10 @@ let package = Package(
         .package(
             url: "https://github.com/binarybirds/file-manager-kit",
             exact: "0.4.0"
+        ),
+        .package(
+            url: "https://github.com/swift-server/async-http-client",
+            "1.0.0"..<"1.30.3" // swift configuration breaks on 6.3.1
         ),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird",
