@@ -39,7 +39,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser",
-            from: "1.5.0"
+            "1.5.0"..<"1.7.1"
         ),
         .package(
             url: "https://github.com/apple/swift-markdown",
@@ -47,7 +47,11 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/apple/swift-log",
-            from: "1.6.0"
+            "1.6.0"..<"1.10.0"
+        ),
+        .package(
+            url: "https://github.com/apple/swift-nio",
+            "2.0.0"..<"2.97.1"
         ),
         .package(
             url: "https://github.com/binarybirds/file-manager-kit",
@@ -57,7 +61,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird",
-            from: "2.14.0"
+            "2.0.0"..<"2.21.1"
         ),
         .package(
             url: "https://github.com/hummingbird-project/swift-mustache",
