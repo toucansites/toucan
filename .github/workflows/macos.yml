@@ -80,11 +80,11 @@ jobs:
             fi
           done
 
-      - name: Install Swift 6.3.0
+      - name: Install Swift 6.3.1
         run: |
-          curl -L https://download.swift.org/swift-6.3.0-release/xcode/swift-6.3.0-RELEASE/swift-6.3.0-RELEASE-osx.pkg -o /tmp/swift.pkg
+          curl -L https://download.swift.org/swift-6.3.1-release/xcode/swift-6.3.1-RELEASE/swift-6.3.1-RELEASE-osx.pkg -o /tmp/swift.pkg
           sudo installer -pkg /tmp/swift.pkg -target /
-          TOOLCHAIN_PATH="/Library/Developer/Toolchains/swift-6.3.0-RELEASE.xctoolchain/usr/bin"
+          TOOLCHAIN_PATH="/Library/Developer/Toolchains/swift-6.3.1-RELEASE.xctoolchain/usr/bin"
           echo "$TOOLCHAIN_PATH" >> $GITHUB_PATH
           export PATH="$TOOLCHAIN_PATH:$PATH"
           swift --version
