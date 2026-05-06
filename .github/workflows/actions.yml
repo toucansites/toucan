@@ -34,4 +34,4 @@ jobs:
     with:
       enable_windows_checks : false
       linux_build_command: "swift test --parallel --enable-code-coverage"
-      linux_exclude_swift_versions: "[{\"swift_version\": \"5.8\"}, {\"swift_version\": \"5.9\"}, {\"swift_version\": \"5.10\"}, {\"swift_version\": \"6.0\"}, {\"swift_version\": \"nightly\"}, {\"swift_version\": \"nightly-main\"}, {\"swift_version\": \"nightly-6.0\"}, {\"swift_version\": \"nightly-6.1\"}]"
+      linux_exclude_swift_versions: "[{\"swift_version\": \"5.8\"}, {\"swift_version\": \"5.9\"}, {\"swift_version\": \"5.10\"}, {\"swift_version\": \"6.0\"}, {\"swift_version\": \"nightly\"}, {\"swift_version\": \"nightly-main\"}, {\"swift_version\": \"nightly-6.0\"}, {\"swift_version\": \"nightly-6.1\"}, {\"swift_version\": \"nightly-6.3\"}]"
