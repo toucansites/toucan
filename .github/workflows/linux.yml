@@ -39,7 +39,7 @@ jobs:
     if: needs.precheck.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     container:
-      image: swift:6.0
+      image: swift:6.3
     permissions:
       contents: write
     steps:
