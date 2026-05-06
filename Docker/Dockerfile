@@ -1,4 +1,4 @@
-FROM swift:6.1-noble AS build
+FROM swift:6.3-noble AS build
 
 WORKDIR /build
 COPY ./Package.* ./
